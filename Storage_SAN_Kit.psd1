@@ -18,7 +18,7 @@
     CompatiblePSEditions = @('Desktop', 'Core')
     
     # ID used to uniquely identify this module
-    GUID = ''
+    GUID = 'df28ca15-8568-48f4-8eb4-29d96fd44bad'
     
     # Author of this module
     Author = 'ToolDoc'
