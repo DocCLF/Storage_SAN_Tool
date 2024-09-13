@@ -29,6 +29,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="auto" MinHeight="80"/>
             <RowDefinition Height="*" />
+            <RowDefinition Height="auto" />
         </Grid.RowDefinitions>
         <StackPanel Orientation="Horizontal" Margin="5" >
             <!--Storage FS & SVC-->
@@ -49,5 +50,6 @@
                 <Image x:Name="LogoImage" Margin="30,0,30,0" /> 
             </StackPanel>
         </Grid>
+        <Label Grid.Row="2" Content="v1.0.0" Margin="10,0" VerticalAlignment="Bottom" HorizontalAlignment="Right" />
     </Grid>
 </Window>
