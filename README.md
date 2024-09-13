@@ -1,42 +1,41 @@
-# Powershell Collection
-Various Powershell scripts that I use for my daily work in the storage and SAN environment. Mainly written for pwsh7 but most of them should also work with 5.1.
+# How to install (offline)
 
-How to install
+Download the package here and place it in an area of your choice and unzip it.
 
-download the package here and place it in an area of your choice and unzip it.
-After it is unziped open a Powershell window and navigate to the gui directory.
+Now copy the downloaded module to 
+```pwershell
+PowerShell 5.1
+C:\Program Files\WindowsPowerShell\Modules
+----------
+PowerShell 7.4.x
+C:\Users\(yourname)\Documents\PowerShell\Modules
+```
+Installation is complete*, now you can validate if this module is available.
+
+*Sometimes you may still need to use this command to make the module usable.
+```powershell
+Import-Module Storage_SAN_Kit
+```
+
 Example:
 ```powershell
-PowerShell 7.4.x
-PS C:\Users\mailt> cd D:\ps_collection-main\ps_collection-main\GUI\
+Get-Module -ListAvailable Storage_SAN_Kit
 ```
-You can start the GUi by calling the following *ps1 file.
-Example:
+<img width="721" alt="image" src="https://github.com/user-attachments/assets/202f70bb-0f07-449f-9acd-6135f606ac9f">
+
+
+And finally we can get list of available commands for installed module.
+<img width="675" alt="image" src="https://github.com/user-attachments/assets/87f3642d-01d2-4da8-b423-372a9b6f7b98">
+
+You can start the GUi by calling the following.
 ```powershell
-PS D:\ps_collection-main\ps_collection-main\GUI> .\GUI_Control.ps1
+Storage_SAN_Kit
 ```
-Depending on the powershell settings, you may have to answer the warnings with "r", as shown in the picture
-<img width="1821" alt="image" src="https://github.com/DocCLF/ps_collection/assets/9890682/d76a4e7b-21e6-45b9-8c2b-1925c0c74d20">
 
-At the end you should see this small window.
-<img width="1027" alt="image" src="https://github.com/DocCLF/ps_collection/assets/9890682/36551463-28ea-4b26-b438-5bd17f6111ef">
+Then it should look like this ...
 
-When you click on drive-info, for example, the function is called in the background and you only need to enter the user name, IP address etc., just like before.
-The window is only intended to free you from having to call up the files every time. 
-To exit, either click on exit or close the powershell window.
-<img width="1338" alt="image" src="https://github.com/DocCLF/ps_collection/assets/9890682/d9157da8-6d55-41ab-b6c1-d1e3a85edb77">
+<img width="684" alt="image" src="https://github.com/user-attachments/assets/e3531f18-7315-4f8a-82f2-dc3c3483bce9">
 
 
-Attention, the Expand_Volume and Vdisk files are currently not supported, you can use them by calling them normally in the Powershell window.
-Example:
-```powershell
-PowerShell 7.4.x
-PS C:\Users\mailt> cd D:\ps_collection-main\ps_collection-main\
-PS D:\ps_collection-main\ps_collection-main> .\IBM_Expand_HyperswapVolume.ps1
-```
-or for non-HyperSwap
-```powershell
-PowerShell 7.4.x
-PS C:\Users\mailt> cd D:\ps_collection-main\ps_collection-main\
-PS D:\ps_collection-main\ps_collection-main> .\IBM_Expand_VdiskSize.ps1
-```
+... or the home page should be shown (possibly also in the background)
+<img width="1653" alt="image" src="https://github.com/user-attachments/assets/bf3c2855-ffdf-4191-b105-8ae57203f9ab">
