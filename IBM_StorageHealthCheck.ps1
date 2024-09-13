@@ -283,7 +283,7 @@ function IBM_StorageHealthCheck {
                 {($_ -like "Fourth")} { $TD_DeviceName = $TD_btn_HC_OpenGUI_Four.Content }
                 Default { <# Write a Message in the ToolLog #> }
             }
-            $TD_DeviceName = $TD_btn_HC_OpenGUI_One.Content 
+            
             $TD_HostLogHistoryFiles = Get-ChildItem -Path $PSPath\DeviceLog\ -Filter "*_$($TD_DeviceName)_HostLog.csv"
             #Write-Host $TD_HostLogHistoryFiles -ForegroundColor Magenta
             $TD_HostLogHistoryFile = Get-ChildItem -Path $TD_HostLogHistoryFiles |Sort-Object Fullname -Desc |Select-Object -First 1
