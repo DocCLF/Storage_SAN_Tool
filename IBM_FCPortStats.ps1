@@ -46,6 +46,8 @@ function IBM_FCPortStats {
         [int]$ProgCounter=0
         [int]$i=0
         $test =@('enclosure_serial_number','panel_name','id','name','WWNN','Nn_stats','type','port','wwpn','lf','lsy','lsi','pspe','itw','icrc','bbcz','tmp','txpwr','rxpwr')
+
+        $ProgressBar = New-ProgressBar
         <# Connect to Device and get all needed Data #>
         if($TD_Storage -eq "FSystem"){
             if($TD_RefreshView -eq "Update"){
@@ -68,11 +70,11 @@ function IBM_FCPortStats {
                 }
             }
         }
-        Start-Sleep -Seconds 1
+        #Start-Sleep -Seconds 0.5
+        #$TD_CollectInfos = Get-Content -Path C:\Users\mailt\Documents\lsportstats.txt
     }
     process {
         
-        $ProgressBar = New-ProgressBar
         foreach($TD_CollectInfo in $TD_CollectInfos){
             if(Select-String -InputObject $TD_CollectInfo -Pattern $test){ 
                 <# Node Info#>
@@ -132,8 +134,7 @@ function IBM_FCPortStats {
             }
             <# Progressbar  #>
             $ProgCounter++
-            $Completed = ($ProgCounter/$NodeList.Count) * 100
-            Write-ProgressBar -ProgressBar $ProgressBar -Activity "Collect data for Device $($TD_Line_ID)" -PercentComplete $Completed
+            Write-ProgressBar -ProgressBar $ProgressBar -Activity "Collect data for Device $($TD_Line_ID)" -PercentComplete (($ProgCounter/$TD_CollectInfos.Count) * 100)
         }
     }
     end {
@@ -146,15 +147,15 @@ function IBM_FCPortStats {
             }else {
                 $TD_PortStats_Overview | Export-Csv -Path $PSScriptRoot\Export\$($TD_Line_ID)_FCPortStatsOverview_$(Get-Date -Format "yyyy-MM-dd").csv -NoTypeInformation
             }
-            Write-Host "The Export can be found at $TD_Exportpath " -ForegroundColor Green
+            #Write-Host "The Export can be found at $TD_Exportpath " -ForegroundColor Green
             #Invoke-Item "$TD_Exportpath\FCPortStatsOverview_$(Get-Date -Format "yyyy-MM-dd").csv"
         }else {
             <# output on the promt #>
-            Write-Host "Result:`n" -ForegroundColor Yellow
-            Start-Sleep -Seconds 2.5
+            #Write-Host "Result:`n" -ForegroundColor Yellow
+            Start-Sleep -Seconds 0.5
             return $TD_PortStats_Overview
         }
-	Write-Host $TD_PortStats_Overview -ForegroundColor Yellow
+	    #Write-Host $TD_PortStats_Overview -ForegroundColor Yellow
         return $TD_PortStats_Overview
         <# wait a moment #>
         #Start-Sleep -Seconds 1

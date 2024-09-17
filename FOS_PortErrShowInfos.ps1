@@ -42,7 +42,9 @@ function FOS_PortErrShowInfos {
         Write-Debug -Message "Begin GET_PortErrShowInfos |$(Get-Date)"
         Write-Debug -Message "Counted MainInformation $($FOS_MainInformation.count) - UsedPorts: $($FOS_GetUsedPorts)"`
         <# Create a Array for the unique information of the switch used at Porterrshow #>
-        $FOS_PortErrShowfiltered =@()
+
+        [int]$ProgCounter=0
+        $ProgressBar = New-ProgressBar
 
         if($TD_Device_ConnectionTyp -eq "ssh"){
             Write-Debug -Message "ssh |$(Get-Date)"
@@ -68,7 +70,7 @@ function FOS_PortErrShowInfos {
     process{
         Write-Debug -Message "Start of Process from GET_PortErrShowInfos |$(Get-Date) ` "
         
-        foreach ($FOS_port in $FOS_perrsh_temp){
+        $FOS_PortErrShowfiltered = foreach ($FOS_port in $FOS_perrsh_temp){
             
             # create a var and pipe some objects in
             $FOS_PortErr = "" | Select-Object Port,frames_tx,frames_rx,enc_in,crc_err,crc_g_eof,too_shrt,too_long,bad_eof,enc_out,disc_c3,link_fail,loss_sync,loss_sig,f_rejected,f_busied,c3timeout_tx,c3timeout_rx,psc_err,uncor_err
@@ -119,14 +121,20 @@ function FOS_PortErrShowInfos {
                     # The number of uncorrectable forward error corrections (FEC).
                     $FOS_PortErr.uncor_err = (($FOS_port |Select-String -Pattern '(\d+\.\d\w|\d+)' -AllMatches).Matches.Value[19])
                     # Put Line by Line into the array
-                    $FOS_PortErrShowfiltered += $FOS_PortErr
+                    $FOS_PortErr
                 #}
             #}
+            <# Progressbar  #>
+            $ProgCounter++
+            Write-ProgressBar -ProgressBar $ProgressBar -Activity "Collect data for Device $($TD_Line_ID)" -PercentComplete (($ProgCounter/$FOS_perrsh_temp.Count) * 100)
         }
         
     }
 
     end {
+
+        Close-ProgressBar -ProgressBar $ProgressBar
+
         <# returns the hashtable for further processing, not mandatory but the safe way #>
         Write-Debug -Message "Start End-Block GET_PortErrShowInfos |$(Get-Date) ` "
 
@@ -148,6 +156,6 @@ function FOS_PortErrShowInfos {
         return $FOS_PortErrShowfiltered
 
         <# Cleanup all TD* Vars #>
-        Clear-Variable FOS* -Scope Global
+        #Clear-Variable FOS* -Scope Global
     }
 }

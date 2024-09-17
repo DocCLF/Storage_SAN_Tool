@@ -77,6 +77,8 @@ foreach($file in $UserCxamlFile){
 $TD_tb_Exportpath.Text = "$PSRootPath\Export\"
 <# MainWindow Background IMG #>
 $TD_LogoImage.Source = "$PSRootPath\Resources\PROFI_Logo_2022_dark.png"
+$TD_LogoImageSmall.Source = "$PSRootPath\Resources\PROFI_Logo_2022_dark.png"
+$TD_LogoImageSmall.Visibility = "hidden"
 #$TD_tb_sanIPAdr             
 #$TD_tb_sanIPAdrOne          
 #$TD_tb_sanIPAdrThree        
@@ -280,6 +282,7 @@ $TD_btn_IBM_SV.add_click({
     $TD_UserContrArea.Children.Remove($TD_UserControl2)
     $TD_UserContrArea.Children.Remove($TD_UserControl3)
     $TD_UserContrArea.Children.Remove($TD_UserControl4)
+    if($TD_LogoImageSmall.Visibility -eq "hidden"){$TD_LogoImageSmall.Visibility = "visible"}
     
 })
 $TD_btn_Broc_SAN.add_click({
@@ -288,6 +291,7 @@ $TD_btn_Broc_SAN.add_click({
     $TD_UserContrArea.Children.Remove($TD_UserControl1)
     $TD_UserContrArea.Children.Remove($TD_UserControl3)
     $TD_UserContrArea.Children.Remove($TD_UserControl4)
+    if($TD_LogoImageSmall.Visibility -eq "hidden"){$TD_LogoImageSmall.Visibility = "visible"}
 })
 $TD_btn_Stor_San.add_click({
     $TD_label_ExpPath.Content ="Export Path: $($TD_tb_ExportPath.Text)"
@@ -295,12 +299,14 @@ $TD_btn_Stor_San.add_click({
     $TD_UserContrArea.Children.Remove($TD_UserControl1)
     $TD_UserContrArea.Children.Remove($TD_UserControl2)
     $TD_UserContrArea.Children.Remove($TD_UserControl4)
+    if($TD_LogoImageSmall.Visibility -eq "hidden"){$TD_LogoImageSmall.Visibility = "visible"}
 })
 $TD_btn_Settings.add_click({
     if(!($TD_UserControl4.IsLoaded)){$TD_UserContrArea.Children.Add($TD_UserControl4)}
     $TD_UserContrArea.Children.Remove($TD_UserControl1)
     $TD_UserContrArea.Children.Remove($TD_UserControl2)
     $TD_UserContrArea.Children.Remove($TD_UserControl3)
+    if($TD_LogoImageSmall.Visibility -eq "hidden"){$TD_LogoImageSmall.Visibility = "visible"}
 })
 <# Button SettingsArea Storage #>
 $TD_tbn_storageaddrmLine.add_click({
@@ -383,7 +389,7 @@ $TD_btn_ChangeExportPath.add_click({
     $TD_ChPathdialog = New-Object System.Windows.Forms.FolderBrowserDialog
     if ($TD_ChPathdialog.ShowDialog() -eq [System.Windows.Forms.DialogResult]::OK) {
         $TD_DirectoryName = $TD_ChPathdialog.SelectedPath
-        Write-Host "Directory selected is $TD_DirectoryName"
+        #Write-Host "Directory selected is $TD_DirectoryName"
         $TD_tb_ExportPath.Text = $TD_DirectoryName
     }
     $TD_label_ExpPath.Content ="Export Path: $($TD_tb_ExportPath.Text)"
@@ -404,7 +410,7 @@ $TD_btn_ExportCred.add_click({
     if ($TD_tb_storageIPAdrThree.Text -ne "") {
         $TD_ExportCred += ExportCred -TD_DeviceType "Storage" -STP_ID 4 -TD_ConnectionTyp $TD_cb_storageConnectionTypThree.Text -TD_IPAdresse $TD_tb_storageIPAdrThree.Text -TD_UserName $TD_tb_storageUserNameThree.Text
     }
-    Write-Host $TD_ExportCred -ForegroundColor Yellow
+    #Write-Host $TD_ExportCred -ForegroundColor Yellow
     <#SAN#>
     if($TD_tb_sanIPAdr.Text -ne ""){
         $TD_ExportCred += ExportCred -TD_DeviceType "SAN" -STP_ID 1 -TD_ConnectionTyp $TD_cb_sanConnectionTyp.Text -TD_IPAdresse $TD_tb_sanIPAdr.Text -TD_UserName $TD_tb_sanUserName.Text
@@ -418,9 +424,9 @@ $TD_btn_ExportCred.add_click({
     if ($TD_tb_sanIPAdrThree.Text -ne "") {
         $TD_ExportCred += ExportCred -TD_DeviceType "SAN" -STP_ID 4 -TD_ConnectionTyp $TD_cb_sanConnectionTypThree.Text -TD_IPAdresse $TD_tb_sanIPAdrThree.Text -TD_UserName $TD_tb_sanUserNameThree.Text
     }
-    Write-Host $TD_ExportCred -ForegroundColor Red
+    #Write-Host $TD_ExportCred -ForegroundColor Red
     $TD_SaveCred = SaveFile_to_Directory -TD_UserDataObject $TD_ExportCred
-    Write-Host $TD_SaveCred.FileName -ForegroundColor Green
+    #Write-Host $TD_SaveCred.FileName -ForegroundColor Green
 })
 $TD_btn_ImportCred.add_click({
 
@@ -429,7 +435,7 @@ $TD_btn_ImportCred.add_click({
     $TD_tb_sanIPAdr.CLear(); $TD_tb_sanIPAdrOne.CLear(); $TD_tb_sanIPAdrTwo.CLear(); $TD_tb_sanIPAdrThree.CLear();$TD_tb_sanPassword.CLear(); $TD_tb_sanPasswordOne.CLear(); $TD_tb_sanPasswordTwo.CLear(); $TD_tb_sanPasswordThree.CLear(); $TD_tb_sanUserName.CLear(); $TD_tb_sanUserNameOne.CLear(); $TD_tb_sanUserNameTwo.CLear(); $TD_tb_sanUserNameThree.CLear();    
     $TD_ImportedCredentials = ImportCred
     $TD_ImportedCredentials | Format-Table
-    Write-Host $TD_ImportedCredentials -ForegroundColor Yellow
+    #Write-Host $TD_ImportedCredentials -ForegroundColor Yellow
     foreach($TD_Cred in $TD_ImportedCredentials){
         if($TD_Cred.DeviceType -eq "Storage"){
             switch ($TD_Cred.ID) {
@@ -500,16 +506,7 @@ $TD_tb_UserName.Add_TextChanged({
 })
 #>
 
-<# Update View for Host Volume Map #>
-$TD_btn_UpFilHVM.add_click({
-    $TD_Host_Volume_Map = IBM_Host_Volume_Map -TD_Line_ID $TD_cb_ListFilterStorageHVM.Text -FilterType $TD_cb_StorageHVM.Text -TD_RefreshView "Update"
-    Start-Sleep -Seconds 0.5
-    $TD_stp_DriveInfo.Visibility="Collapsed"
-    $TD_stp_FCPortStats.Visibility="Collapsed"
-    $TD_stp_HostVolInfo.Visibility="Visible"
-    <# switched into the fun in the end-block #>
-    #$TD_lb_HostVolInfo.ItemsSource = $TD_Host_Volume_Map
-})
+
 #$TD_btn_UpFilFCPS.add_click({
     <# need a implem. for more as one Storage #>
     #$TD_FCPortStats = IBM_FCPortStats -FilterType $TD_FCPortStats.Text -TD_RefreshView "Update"
@@ -518,7 +515,7 @@ $TD_btn_UpFilHVM.add_click({
     #$TD_stp_DriveInfo.Visibility="Collapsed"
     #$TD_stp_HostVolInfo.Visibility="Collapsed"
     #$TD_stp_FCPortStats.Visibility="Visible"
-    #$TD_lb_HostVolInfo.ItemsSource = $TD_FCPortStats
+    #$TD_dg_HostVolInfo.ItemsSource = $TD_FCPortStats
 #})
 
 <# Storage Button #>
@@ -642,36 +639,48 @@ $TD_btn_IBM_HostVolumeMap.add_click({
     $TD_Credentials=@()
     $TD_Credentials_Checked = Get_CredGUIInfos -STP_ID 1 -TD_ConnectionTyp $TD_cb_storageConnectionTyp.Text -TD_IPAdresse $TD_tb_storageIPAdr.Text -TD_UserName $TD_tb_storageUserName.Text -TD_Password $TD_tb_storagePassword
     $TD_Credentials += $TD_Credentials_Checked
-    Start-Sleep -Seconds 0.5
+    Start-Sleep -Seconds 0.2
 
     $TD_Credentials_Checked = Get_CredGUIInfos -STP_ID 2 -TD_ConnectionTyp $TD_cb_storageConnectionTypOne.Text -TD_IPAdresse $TD_tb_storageIPAdrOne.Text -TD_UserName $TD_tb_storageUserNameOne.Text -TD_Password $TD_tb_storagePasswordOne
     $TD_Credentials += $TD_Credentials_Checked
-    Start-Sleep -Seconds 0.5
+    Start-Sleep -Seconds 0.2
 
     $TD_Credentials_Checked = Get_CredGUIInfos -STP_ID 3 -TD_ConnectionTyp $TD_cb_storageConnectionTypTwo.Text -TD_IPAdresse $TD_tb_storageIPAdrTwo.Text -TD_UserName $TD_tb_storageUserNameTwo.Text -TD_Password $TD_tb_storagePasswordTwo
     $TD_Credentials += $TD_Credentials_Checked
-    Start-Sleep -Seconds 0.5
+    Start-Sleep -Seconds 0.2
 
     $TD_Credentials_Checked = Get_CredGUIInfos -STP_ID 4 -TD_ConnectionTyp $TD_cb_storageConnectionTypThree.Text -TD_IPAdresse $TD_tb_storageIPAdrThree.Text -TD_UserName $TD_tb_storageUserNameThree.Text -TD_Password $TD_tb_storagePasswordThree
     $TD_Credentials += $TD_Credentials_Checked
-    Start-Sleep -Seconds 0.5
+    Start-Sleep -Seconds 0.2
 
     foreach($TD_Credential in $TD_Credentials){
         <# QaD needs a Codeupdate #>
-        $TD_Host_Volume_Map =@()
+        #$TD_Host_Volume_Map =@()
         #Write-Debug -Message $TD_Credential
         switch ($TD_Credential.ID) {
             {($_ -eq 1)} 
             {   
-                $TD_Host_Volume_Map += IBM_Host_Volume_Map -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.StorageUserName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $TD_Credential.StoragePassword -FilterType $TD_cb_StorageHVM.Text -TD_Exportpath $TD_tb_ExportPath.Text
-                Start-Sleep -Seconds 0.5
-                $TD_lb_HostVolInfo.ItemsSource =$TD_Host_Volume_Map
+                $TD_Host_Volume_Map = IBM_Host_Volume_Map -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.StorageUserName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $TD_Credential.StoragePassword -FilterType $TD_cb_StorageHVM.Text -TD_Exportpath $TD_tb_ExportPath.Text
+                Start-Sleep -Seconds 0.2
+                $TD_dg_HostVolInfo.ItemsSource =$TD_Host_Volume_Map
             }
             {($_ -eq 2) } 
             {            
-                $TD_Host_Volume_Map += IBM_Host_Volume_Map -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.StorageUserName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $TD_Credential.StoragePassword -FilterType $TD_cb_StorageHVM.Text -TD_Exportpath $TD_tb_ExportPath.Text
-                Start-Sleep -Seconds 0.5
-                $TD_lb_HostVolInfoTwo.ItemsSource =$TD_Host_Volume_Map
+                $TD_Host_Volume_Map = IBM_Host_Volume_Map -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.StorageUserName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $TD_Credential.StoragePassword -FilterType $TD_cb_StorageHVM.Text -TD_Exportpath $TD_tb_ExportPath.Text
+                Start-Sleep -Seconds 0.2
+                $TD_dg_HostVolInfoTwo.ItemsSource =$TD_Host_Volume_Map
+            }
+            {($_ -eq 3) } 
+            {            
+                $TD_Host_Volume_Map = IBM_Host_Volume_Map -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.StorageUserName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $TD_Credential.StoragePassword -FilterType $TD_cb_StorageHVM.Text -TD_Exportpath $TD_tb_ExportPath.Text
+                Start-Sleep -Seconds 0.2
+                $TD_dg_HostVolInfoThree.ItemsSource =$TD_Host_Volume_Map
+            }
+            {($_ -eq 4) } 
+            {            
+                $TD_Host_Volume_Map = IBM_Host_Volume_Map -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.StorageUserName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $TD_Credential.StoragePassword -FilterType $TD_cb_StorageHVM.Text -TD_Exportpath $TD_tb_ExportPath.Text
+                Start-Sleep -Seconds 0.2
+                $TD_dg_HostVolInfoFour.ItemsSource =$TD_Host_Volume_Map
             }
             Default {Write-Debug "Nothing" }
         }
@@ -684,8 +693,18 @@ $TD_btn_IBM_HostVolumeMap.add_click({
     $TD_stp_BackUpConfig.Visibility="Collapsed"
     $TD_stp_HostVolInfo.Visibility="Visible"
 })
+<# Update View for Host Volume Map #>
+$TD_btn_UpFilHVM.add_click({
+    IBM_Host_Volume_Map -TD_Line_ID $TD_cb_ListFilterStorageHVM.Text -FilterType $TD_cb_StorageHVM.Text -TD_RefreshView "Update"
+})
+
 
 $TD_btn_IBM_DriveInfo.add_click({
+    $TD_lb_DriveInfoOne.Visibility = "Hidden";
+    $TD_lb_DriveInfoTwo.Visibility = "Hidden";
+    $TD_lb_DriveInfoThree.Visibility = "Hidden";
+    $TD_lb_DriveInfoFour.Visibility = "Hidden"; 
+
     $TD_Credentials=@()
     $TD_Credentials_Checked = Get_CredGUIInfos -STP_ID 1 -TD_ConnectionTyp $TD_cb_storageConnectionTyp.Text -TD_IPAdresse $TD_tb_storageIPAdr.Text -TD_UserName $TD_tb_storageUserName.Text -TD_Password $TD_tb_storagePassword
     $TD_Credentials += $TD_Credentials_Checked
@@ -706,31 +725,31 @@ $TD_btn_IBM_DriveInfo.add_click({
     foreach($TD_Credential in $TD_Credentials){
         <# QaD needs a Codeupdate #>
         $TD_DriveInfo =@()
-        Write-Host  $TD_Credential.ID -ForegroundColor Green
+        #Write-Host  $TD_Credential.ID -ForegroundColor Green
         switch ($TD_Credential.ID) {
             {($_ -eq 1)} 
             {            
                 $TD_DriveInfo = IBM_DriveInfo -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.StorageUserName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $TD_Credential.StoragePassword -TD_Exportpath $TD_tb_ExportPath.Text
                 Start-Sleep -Seconds 0.5
-                $TD_lb_DriveInfo.ItemsSource = $TD_DriveInfo
+                $TD_dg_DriveInfo.ItemsSource = $TD_DriveInfo
             }
             {($_ -eq 2)} 
             {            
                 $TD_DriveInfo = IBM_DriveInfo -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.StorageUserName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $TD_Credential.StoragePassword -TD_Exportpath $TD_tb_ExportPath.Text
                 Start-Sleep -Seconds 0.5
-                $TD_lb_DriveInfoTwo.ItemsSource = $TD_DriveInfo
+                $TD_dg_DriveInfoTwo.ItemsSource = $TD_DriveInfo
             }
             {($_ -eq 3)} 
             {            
                 $TD_DriveInfo = IBM_DriveInfo -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.StorageUserName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $TD_Credential.StoragePassword -TD_Exportpath $TD_tb_ExportPath.Text
                 Start-Sleep -Seconds 0.5
-                $TD_lb_DriveInfoThree.ItemsSource = $TD_DriveInfo
+                $TD_dg_DriveInfoThree.ItemsSource = $TD_DriveInfo
             }
             {($_ -eq 4)} 
             {            
                 $TD_DriveInfo = IBM_DriveInfo -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.StorageUserName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $TD_Credential.StoragePassword -TD_Exportpath $TD_tb_ExportPath.Text
                 Start-Sleep -Seconds 0.5
-                $TD_lb_DriveInfoFour.ItemsSource = $TD_DriveInfo
+                $TD_dg_DriveInfoFour.ItemsSource = $TD_DriveInfo
             }
         Default {Write-Debug "Nothing" }
     }
@@ -778,25 +797,25 @@ $TD_btn_IBM_FCPortStats.add_click({
             {            
                 $TD_FCPortStats = IBM_FCPortStats -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.StorageUserName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $TD_Credential.StoragePassword -TD_Storage $TD_cb_FCPortStatsDevice -TD_Exportpath $TD_tb_ExportPath.Text
                 Start-Sleep -Seconds 0.5
-                $TD_lb_FCPortStatsOne.ItemsSource = $TD_FCPortStats
+                $TD_dg_FCPortStatsOne.ItemsSource = $TD_FCPortStats
             }
             {($_ -eq 2)} 
             {            
                 $TD_FCPortStats = IBM_FCPortStats -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.StorageUserName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $TD_Credential.StoragePassword -TD_Exportpath $TD_tb_ExportPath.Text
                 Start-Sleep -Seconds 0.5
-                $TD_lb_FCPortStatsTwo.ItemsSource = $TD_FCPortStats
+                $TD_dg_FCPortStatsTwo.ItemsSource = $TD_FCPortStats
             }
             {($_ -eq 3)} 
             {            
                 $TD_FCPortStats = IBM_FCPortStats -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.StorageUserName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $TD_Credential.StoragePassword -TD_Exportpath $TD_tb_ExportPath.Text
                 Start-Sleep -Seconds 0.5
-                $TD_lb_FCPortStatsThree.ItemsSource = $TD_FCPortStats
+                $TD_dg_FCPortStatsThree.ItemsSource = $TD_FCPortStats
             }
             {($_ -eq 4)} 
             {            
                 $TD_FCPortStats = IBM_FCPortStats -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.StorageUserName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $TD_Credential.StoragePassword -TD_Exportpath $TD_tb_ExportPath.Text
                 Start-Sleep -Seconds 0.5
-                $TD_lb_FCPortStatsFour.ItemsSource = $TD_FCPortStats
+                $TD_dg_FCPortStatsFour.ItemsSource = $TD_FCPortStats
             }
             Default {Write-Debug "Nothing" }
         }
@@ -1251,6 +1270,10 @@ $TD_btn_FOS_SwitchShow.add_click({
 })
 
 $TD_btn_FOS_ZoneDetailsShow.add_click({
+
+    $TD_lb_FabricOne.Visibility = "Hidden";
+    $TD_lb_FabricTwo.Visibility = "Hidden";
+
     $TD_Credentials=@()
     $TD_Credentials_Checked = Get_CredGUIInfos -STP_ID 1 -TD_ConnectionTyp $TD_cb_sanConnectionTyp.Text -TD_IPAdresse $TD_tb_sanIPAdr.Text -TD_UserName $TD_tb_sanUserName.Text -TD_Password $TD_tb_sanPassword
     $TD_Credentials += $TD_Credentials_Checked
@@ -1273,30 +1296,31 @@ $TD_btn_FOS_ZoneDetailsShow.add_click({
         #Write-Debug -Message $TD_Credential
         switch ($TD_Credential.ID) {
             {($_ -eq 1)} 
-            {   Write-Host $TD_Credential.ID -ForegroundColor Green
+            {   
                 $TD_FOS_ZoneShow, $FOS_EffeZoneNameOne = FOS_ZoneDetails -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.SANUserName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $TD_Credential.SANPassword -TD_Exportpath $TD_tb_ExportPath.Text
-                Write-Host $TD_FOS_ZoneShow -ForegroundColor Yellow
-                Write-Host $FOS_EffeZoneNameOne -ForegroundColor Green
                 Start-Sleep -Seconds 0.5
-                $TD_lb_ZoneDetailsOne.ItemsSource =$TD_FOS_ZoneShow
+                $TD_dg_ZoneDetailsOne.ItemsSource =$TD_FOS_ZoneShow
+                $TD_lb_FabricOne.Visibility = "Visible";
+                $TD_lb_FabricOne.Content = $FOS_EffeZoneNameOne
             }
             {($_ -eq 2) } <# -or ($_ -eq 3) -or ($_ -eq 4)}  for later use maybe #>
             {            
                 $TD_FOS_ZoneShow, $FOS_EffeZoneNameTwo = FOS_ZoneDetails -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.SANUserName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $TD_Credential.SANPassword -TD_Exportpath $TD_tb_ExportPath.Text
-                Write-Host $FOS_EffeZoneNameOne $FOS_EffeZoneNameTwo
                 if($FOS_EffeZoneNameOne -ne $FOS_EffeZoneNameTwo){
                 Start-Sleep -Seconds 0.5
-                $TD_lb_ZoneDetailsTwo.ItemsSource =$TD_FOS_ZoneShow}
+                $TD_dg_ZoneDetailsTwo.ItemsSource =$TD_FOS_ZoneShow
+                $TD_lb_FabricTwo.Visibility = "Visible";
+                $TD_lb_FabricTwo.Content = $FOS_EffeZoneNameTwo
+                }
             }
             {($_ -eq 3) } <# -or ($_ -eq 3) -or ($_ -eq 4)}  for later use maybe #>
             {            
                 $TD_FOS_ZoneShow, $FOS_EffeZoneNameThree = FOS_ZoneDetails  -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.SANUserName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $TD_Credential.SANPassword -TD_Exportpath $TD_tb_ExportPath.Text
                 Start-Sleep -Seconds 0.5
-                Write-Host $FOS_EffeZoneNameOne $FOS_EffeZoneNameThree
                 if($FOS_EffeZoneNameOne -ne $FOS_EffeZoneNameThree){
                     if($FOS_EffeZoneNameThree -ne $FOS_EffeZoneNameTwo){
                         Start-Sleep -Seconds 0.5
-                        $TD_lb_ZoneDetailsTwo.ItemsSource =$TD_FOS_ZoneShow}
+                        $TD_dg_ZoneDetailsTwo.ItemsSource =$TD_FOS_ZoneShow}
                     }
             }
             <# not needed becaus max support at moment are 2 fabs #>
@@ -1472,7 +1496,7 @@ $TD_btn_StatsClear.add_click({
                 if($TD_Credential.ConnectionTyp -eq "ssh"){
                     try {
                         $TD_FOS_StatsClear = ssh $SANUserName@$Device_IP "statsClear"
-                        Write-Host $TD_FOS_StatsClear
+                        #Write-Host $TD_FOS_StatsClear
                         $TD_FOS_StatsClearDone = $true
                     }
                     catch {

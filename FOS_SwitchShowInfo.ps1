@@ -37,7 +37,7 @@ function FOS_SwitchShowInfo {
         $FOS_usedPorts =@()
         <# int for the progressbar #>
         [int]$ProgCounter=0
-
+        $ProgressBar = New-ProgressBar
         <# Connection to the system via ssh and filtering and provision of data #>
         <# Action when all if and elseif conditions are false #>
         if($TD_Device_ConnectionTyp -eq "ssh"){
@@ -62,7 +62,7 @@ function FOS_SwitchShowInfo {
     }
     
     process {
-        $ProgressBar = New-ProgressBar
+
         Write-Debug -Message "Process Func GET_SwitchShowInfo |$(Get-Date)`n "
         <# fill the var with a dummy #>
         $FOS_PortConnect = "empty"
@@ -130,11 +130,12 @@ function FOS_SwitchShowInfo {
             }
             # if the Portnumber is not empty and there is a SFP pluged in, push the Port in the FOS_usedPorts array
             if(($FOS_SWsh.Port -ne "") -and ($FOS_SWsh.Media -eq "id")){$FOS_usedPorts += $FOS_SWsh.Port}
-        }
+
             <# Progressbar  #>
             $ProgCounter++
-            $Completed = ($ProgCounter/$FOS_SwShowArry_temp.Count) * 100
-            Write-ProgressBar -ProgressBar $ProgressBar -Activity "Collect data for Device $($TD_Line_ID)" -PercentComplete $Completed
+            Write-ProgressBar -ProgressBar $ProgressBar -Activity "Collect data for Device $($TD_Line_ID)" -PercentComplete (($ProgCounter/$FOS_SwShowArry_temp.Count) * 100)
+        }
+
     }
     
     end {

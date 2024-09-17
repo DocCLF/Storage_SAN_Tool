@@ -77,7 +77,7 @@ function IBM_StorageHealthCheck {
         
         foreach ($TD_LineInfo in $TD_TD_DeviceNameTemp) {
                 [string]$TD_DeviceName = ($TD_LineInfo |Select-String -Pattern '([a-zA-Z0-9-_]+)\s+local|remote' -AllMatches).Matches.Groups[1].Value
-                Write-Host $TD_DeviceName -ForegroundColor lightgreen
+                #Write-Host $TD_DeviceName -ForegroundColor lightgreen
                 #$TD_btn_HC_OpenGUI_One.Content = $TD_DeviceName LightGreen
                 
                 switch ($TD_cb_Device_HealthCheck.Text) {
@@ -283,7 +283,7 @@ function IBM_StorageHealthCheck {
                 {($_ -like "Fourth")} { $TD_DeviceName = $TD_btn_HC_OpenGUI_Four.Content }
                 Default { <# Write a Message in the ToolLog #> }
             }
-            $TD_DeviceName = $TD_btn_HC_OpenGUI_One.Content 
+            
             $TD_HostLogHistoryFiles = Get-ChildItem -Path $PSPath\DeviceLog\ -Filter "*_$($TD_DeviceName)_HostLog.csv"
             #Write-Host $TD_HostLogHistoryFiles -ForegroundColor Magenta
             $TD_HostLogHistoryFile = Get-ChildItem -Path $TD_HostLogHistoryFiles |Sort-Object Fullname -Desc |Select-Object -First 1
@@ -320,7 +320,7 @@ function IBM_StorageHealthCheck {
                     }else{
                         #Write-Host $_.HostName -ForegroundColor Yellow
                         #$TD_HostChostClusterResaultTemp.ACKHosts = $_.ACKHosts
-                        Write-Host "is nicht so"
+                        #Write-Host "is nicht so"
                     }
                 }
 
@@ -332,7 +332,7 @@ function IBM_StorageHealthCheck {
             $TD_HostChostClusterResaultTemp | Export-Csv -Path $PSPath\DeviceLog\$(Get-Date -Format "yyyy-MM-dd")_$($TD_DeviceName)_HostLog.csv -Delimiter ';'
         })
 
-        Write-Host $TD_HostChostClusterResault
+        #Write-Host $TD_HostChostClusterResault
         $TD_dg_HostStatusInfoText.ItemsSource=$EmptyVar
         if($TD_HostChostClusterResault.Count -gt 0){
             $TD_el_HostStatusLight.Fill = "red"

@@ -57,7 +57,7 @@ function IBM_BackUpConfig {
     process{
         Write-Debug -Message "IBM_BackUpConfig Process block |$(Get-Date)"
         try {
-            $TD_ExportFiles = Get-ChildItem -Path $TD_Exportpath
+            $TD_ExportFiles = Get-ChildItem -Path $TD_Exportpath -Filter "svc.config.backup.* "
             <# maybe add a filter #>
         }
         catch {

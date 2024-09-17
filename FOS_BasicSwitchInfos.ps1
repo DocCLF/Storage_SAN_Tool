@@ -32,7 +32,8 @@ function FOS_BasicSwitchInfos {
         Write-Debug -Message "Start Func GET_BasicSwitchInfos |$(Get-Date)` "
         <# suppresses error messages #>
         $ErrorActionPreference="SilentlyContinue"
-
+        [int]$ProgCounter=0
+        $ProgressBar = New-ProgressBar
         <# Connect to Device and get all needed Data #>
         if($TD_Device_ConnectionTyp -eq "ssh"){
             $FOS_MainInformation = ssh $TD_Device_UserName@$TD_Device_DeviceIP 'firmwareshow && ipaddrshow && chassisshow && switchshow'
@@ -40,7 +41,7 @@ function FOS_BasicSwitchInfos {
             $FOS_MainInformation = plink $TD_Device_UserName@$TD_Device_DeviceIP -pw $TD_Device_PW -batch 'firmwareshow && ipaddrshow && chassisshow && switchshow'
         }
         <# next line is for tests #>
-        #[System.Object]$FOS_MainInformation = Get-Content -Path "C:\Users\mailt\Documents\Export\san2.txt"
+        #[System.Object]$FOS_MainInformation = Get-Content -Path "C:\Users\mailt\Documents\182.txt"
 
         <# Hashtable for BasicSwitch Info #>
         $FOS_SwGeneralInfos =[ordered]@{}
@@ -90,20 +91,26 @@ function FOS_BasicSwitchInfos {
 
         foreach ($lineUp in $FOS_MainInformation) {
             if($lineUp -match '^Index'){break}
-            $FOS_SwGeneralInfos.Add('Fabric OS',(($lineUp| Select-String -Pattern 'FOS\s+([v?][\d]\.[\d+]\.[\d]\w)$').Matches.Groups[1].Value))
+            $FOS_SwGeneralInfos.Add('Fabric OS',(($lineUp| Select-String -Pattern 'FOS\s+([v?][\d]\.[\d+]\.[\d].*)$').Matches.Groups[1].Value))
             $FOS_SwGeneralInfos.Add('Ethernet IP Address',(($lineUp| Select-String -Pattern 'Ethernet IP Address:\s+([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3})').Matches.Groups[1].Value))
             $FOS_SwGeneralInfos.Add('Ethernet Subnet mask',(($lineUp| Select-String -Pattern 'Ethernet Subnet mask:\s+([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3})').Matches.Groups[1].Value))
             $FOS_SwGeneralInfos.Add('Gateway IP Address',(($lineUp| Select-String -Pattern 'Gateway IP Address:\s+([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3})').Matches.Groups[1].Value))
             $FOS_SwGeneralInfos.Add('DHCP',((($lineUp| Select-String -Pattern '^DHCP:\s(\w+)$' -AllMatches).Matches.Groups[1].Value)))
             $FOS_SwGeneralInfos.Add('Switch State',(($lineUp| Select-String -Pattern 'switchState:\s+(.*)$').Matches.Groups[1].Value))
             $FOS_SwGeneralInfos.Add('Switch Role',(($lineUp| Select-String -Pattern 'switchRole:\s+(.*)$').Matches.Groups[1].Value))
+
+            <# Progressbar  #>
+            $ProgCounter++
+            #$Completed = ($ProgCounter/$TD_HostInfos.Count) * 100
+            Write-ProgressBar -ProgressBar $ProgressBar -Activity "Collect data for Device $($TD_Line_ID)" -PercentComplete (($ProgCounter/$FOS_MainInformation.Count) * 100)
         }
         
     }
     
     end {
-        <# returns the hashtable for further processing, not mandatory but the safe way #>
+
         Write-Debug -Message "End Func FOS_BasicSwitchInfo |$(Get-Date)`n "
+        Close-ProgressBar -ProgressBar $ProgressBar
         <# export y or n #>
         if($TD_Export -eq "yes"){
             <# exported to .\Host_Volume_Map_Result.csv #>
@@ -122,7 +129,5 @@ function FOS_BasicSwitchInfos {
         Write-Debug -Message "return $FOS_SwGeneralInfos ` $(Get-Date)` "
         return $FOS_SwGeneralInfos
         
-        <# Cleanup all TD* Vars #>
-        Clear-Variable FOS* -Scope Global
     }
 }
