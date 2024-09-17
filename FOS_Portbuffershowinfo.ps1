@@ -37,6 +37,10 @@ function FOS_PortbufferShowInfo {
         $ErrorActionPreference="SilentlyContinue"
         Write-Debug -Message "Start Func Get_PortbufferShowInfo |$(Get-Date)` "
 
+        <# int for the progressbar #>
+        [int]$ProgCounter=0
+        $ProgressBar = New-ProgressBar
+
         if($TD_Device_ConnectionTyp -eq "ssh"){
             Write-Debug -Message "ssh |$(Get-Date)"
             $FOS_MainInformation = ssh $TD_Device_UserName@$TD_Device_DeviceIP "portbuffershow"
@@ -49,7 +53,7 @@ function FOS_PortbufferShowInfo {
         Out-File -FilePath $Env:TEMP\$($TD_Line_ID)_PortBufferShow_Temp.txt -InputObject $FOS_MainInformation
 
         <# Create an array #>
-        $FOS_pbs =@()
+        
         $FOS_InfoCount = $FOS_MainInformation.count
         0..$FOS_InfoCount |ForEach-Object {
             # Pull only the effective ZoneCFG back into ZoneList
@@ -62,7 +66,7 @@ function FOS_PortbufferShowInfo {
     }
 
     process{
-        foreach ($FOS_thisLine in $FOS_Temp_var) {
+        $FOS_pbs= foreach ($FOS_thisLine in $FOS_Temp_var) {
             <# Only collect data up to the next section, marked by Defined #>
             if($FOS_thisLine -match '^Defined'){break}
 
@@ -91,11 +95,18 @@ function FOS_PortbufferShowInfo {
             $FOS_PortBuff.Buffer = ($FOS_thisLine |Select-String -Pattern '\s+(\d+)$' -AllMatches).Matches.Groups.Value[1]
             
             <# add the values to the array #>
-            $FOS_pbs += $FOS_PortBuff
+            $FOS_PortBuff
+
+            <# Progressbar  #>
+            $ProgCounter++
+            Write-ProgressBar -ProgressBar $ProgressBar -Activity "Collect data for Device $($TD_Line_ID)" -PercentComplete (($ProgCounter/$FOS_Temp_var.Count) * 100)
         }
     }
 
     end {
+
+        Close-ProgressBar -ProgressBar $ProgressBar
+
         <# returns the hashtable for further processing, not mandatory but the safe way #>
         Write-Debug -Message "Start End-Block GET_PortBufferShowInfos |$(Get-Date) ` "
 
@@ -115,9 +126,6 @@ function FOS_PortbufferShowInfo {
         }
 
         return $FOS_pbs
-        
-        <# Cleanup all TD* Vars #>
-        Clear-Variable FOS* -Scope Global  
         
     }
 }

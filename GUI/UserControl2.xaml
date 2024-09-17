@@ -119,6 +119,15 @@
                     <StackPanel Grid.Row="0" Grid.Column="0" >
                         <Label Content="Switch 1" />
                         <DataGrid Name="dg_sanBasicSwitchInfoOne" AutoGenerateColumns="False" Height="Auto" Width="Auto" Margin="5,0,5,5" >
+                            <DataGrid.Style>
+                                <Style TargetType="DataGrid">
+                                    <Style.Triggers>
+                                        <Trigger Property="HasItems" Value="False">
+                                          <Setter Property="Visibility" Value="Collapsed"></Setter>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGrid.Style>
                             <DataGrid.Columns>
                                 <DataGridTextColumn Header="Name" Binding="{Binding Key}" IsReadOnly="True"/>
                                 <DataGridTextColumn Header="Value" Binding="{Binding Value}" IsReadOnly="True"/>
@@ -128,6 +137,15 @@
                     <StackPanel Grid.Row="0" Grid.Column="1"  >
                         <Label Content="Switch 2" />
                         <DataGrid Name="dg_sanBasicSwitchInfoTwo" AutoGenerateColumns="False" Height="Auto" Width="Auto" Margin="5,0,5,5" >
+                            <DataGrid.Style>
+                                <Style TargetType="DataGrid">
+                                    <Style.Triggers>
+                                        <Trigger Property="HasItems" Value="False">
+                                          <Setter Property="Visibility" Value="Collapsed"></Setter>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGrid.Style>
                             <DataGrid.Columns>
                                 <DataGridTextColumn Header="Name" Binding="{Binding Key}" IsReadOnly="True"/>
                                 <DataGridTextColumn Header="Value" Binding="{Binding Value}" IsReadOnly="True"/>
@@ -137,6 +155,15 @@
                     <StackPanel Grid.Row="1" Grid.Column="0"  >
                         <Label Content="Switch 3" />
                         <DataGrid Name="dg_sanBasicSwitchInfoThree" AutoGenerateColumns="False" Height="Auto" Width="Auto" Margin="5,0,5,5" >
+                            <DataGrid.Style>
+                                <Style TargetType="DataGrid">
+                                    <Style.Triggers>
+                                        <Trigger Property="HasItems" Value="False">
+                                          <Setter Property="Visibility" Value="Collapsed"></Setter>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGrid.Style>
                             <DataGrid.Columns>
                                 <DataGridTextColumn Header="Name" Binding="{Binding Key}" IsReadOnly="True"/>
                                 <DataGridTextColumn Header="Value" Binding="{Binding Value}" IsReadOnly="True"/>
@@ -146,6 +173,15 @@
                     <StackPanel Grid.Row="1" Grid.Column="1" >
                         <Label Content="Switch 4" />
                         <DataGrid Name="dg_sanBasicSwitchInfoFour" AutoGenerateColumns="False" Height="Auto" Width="Auto" Margin="5,0,5,5" >
+                            <DataGrid.Style>
+                                <Style TargetType="DataGrid">
+                                    <Style.Triggers>
+                                        <Trigger Property="HasItems" Value="False">
+                                          <Setter Property="Visibility" Value="Collapsed"></Setter>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGrid.Style>
                             <DataGrid.Columns>
                                 <DataGridTextColumn Header="Name" Binding="{Binding Key}" IsReadOnly="True"/>
                                 <DataGridTextColumn Header="Value" Binding="{Binding Value}" IsReadOnly="True"/>
@@ -166,19 +202,19 @@
                     </Grid.RowDefinitions>
                     <StackPanel Grid.Row="0" Grid.Column="0" >
                         <Label Content="Switch 1" />
-                        <TextBox HorizontalAlignment="Left" TextWrapping="WrapWithOverflow" x:Name="lb_SANInfoOne" Margin="5,0,5,5"/>
+                        <TextBox HorizontalAlignment="Left" TextWrapping="WrapWithOverflow" x:Name="lb_SANInfoOne" Margin="5,0,5,5" IsReadOnly="True"/>
                     </StackPanel>
                     <StackPanel Grid.Row="0" Grid.Column="1"  >
                         <Label Content="Switch 2" />
-                        <TextBox HorizontalAlignment="Left" TextWrapping="WrapWithOverflow" x:Name="lb_SANInfoTwo" Margin="5,0,5,5"/>
+                        <TextBox HorizontalAlignment="Left" TextWrapping="WrapWithOverflow" x:Name="lb_SANInfoTwo" Margin="5,0,5,5" IsReadOnly="True"/>
                     </StackPanel>
                     <StackPanel Grid.Row="1" Grid.Column="0"  >
                         <Label Content="Switch 3" />
-                        <TextBox HorizontalAlignment="Left" TextWrapping="WrapWithOverflow" x:Name="lb_SANInfoThree" Margin="5,0,5,5"/>
+                        <TextBox HorizontalAlignment="Left" TextWrapping="WrapWithOverflow" x:Name="lb_SANInfoThree" Margin="5,0,5,5" IsReadOnly="True"/>
                     </StackPanel>
                     <StackPanel Grid.Row="1" Grid.Column="1" >
                         <Label Content="Switch 4" />
-                        <TextBox HorizontalAlignment="Left" TextWrapping="WrapWithOverflow" x:Name="lb_SANInfoFour" Margin="5,0,5,5">
+                        <TextBox HorizontalAlignment="Left" TextWrapping="WrapWithOverflow" x:Name="lb_SANInfoFour" Margin="5,0,5,5" IsReadOnly="True">
                             <TextBox.ToolTip>
                                 <StackPanel>
                                     <Image Source="data\flower.jpg"/>
@@ -612,46 +648,42 @@
                         <RowDefinition Height="auto" />
                     </Grid.RowDefinitions>
                     <StackPanel Grid.Row="0" Grid.Column="0" >
-                        <Label Content="Fabric A" />
-                        <ListView x:Name="lb_ZoneDetailsOne" MinWidth="800" Height="400" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="5">
-                            <ListView.Style>
-                              <Style TargetType="ListView">
-                                <Style.Triggers>
-                                  <Trigger Property="HasItems" Value="False">
-                                    <Setter Property="Visibility" Value="Collapsed"></Setter>
-                                  </Trigger>
-                                </Style.Triggers>
-                              </Style>
-                            </ListView.Style>
-                            <ListView.View>
-                                <GridView> 
-                                    <GridViewColumn Header="Zone"  DisplayMemberBinding ="{Binding Zone}" Width="auto"/>  
-                                    <GridViewColumn Header="WWPN" DisplayMemberBinding ="{Binding WWPN}" Width="auto"/>  
-                                    <GridViewColumn Header="Alias" DisplayMemberBinding ="{Binding Alias}" Width="auto"/>
-                                </GridView>
-                            </ListView.View>
-                        </ListView >
+                        <Label x:Name="lb_FabricOne" Content="Fabric A" Margin="0,5" FontSize="14" Height="26"/>
+                        <DataGrid x:Name="dg_ZoneDetailsOne" AutoGenerateColumns="False" Margin="5" MaxHeight="400" CanUserSortColumns="False">
+                            <DataGrid.Style>
+                                <Style TargetType="DataGrid">
+                                    <Style.Triggers>
+                                        <Trigger Property="HasItems" Value="False">
+                                          <Setter Property="Visibility" Value="Collapsed"></Setter>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGrid.Style>
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Width="400" Header="Zone" Binding="{Binding Zone}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="150" Header="WWPN" Binding="{Binding WWPN}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="350" Header="Alias" Binding="{Binding Alias}" IsReadOnly="True"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
                     </StackPanel>
                     <StackPanel Grid.Row="0" Grid.Column="1"  >
-                        <Label Content="Fabric B" />
-                        <ListView x:Name="lb_ZoneDetailsTwo" MinWidth="400" Height="600" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="5">
-                            <ListView.Style>
-                              <Style TargetType="ListView">
-                                <Style.Triggers>
-                                  <Trigger Property="HasItems" Value="False">
-                                    <Setter Property="Visibility" Value="Collapsed"></Setter>
-                                  </Trigger>
-                                </Style.Triggers>
-                              </Style>
-                            </ListView.Style>
-                            <ListView.View>
-                                <GridView> 
-                                    <GridViewColumn Header="Zone"  DisplayMemberBinding ="{Binding Zone}" Width="auto"/>  
-                                    <GridViewColumn Header="WWPN" DisplayMemberBinding ="{Binding WWPN}" Width="auto"/>  
-                                    <GridViewColumn Header="Alias" DisplayMemberBinding ="{Binding Alias}" Width="auto"/>
-                                </GridView>
-                            </ListView.View>
-                        </ListView >
+                        <Label x:Name="lb_FabricTwo" Content="Fabric B" Margin="0,5" FontSize="14" Height="26"/>
+                        <DataGrid x:Name="dg_ZoneDetailsTwo" AutoGenerateColumns="False" Margin="5" MaxHeight="400" CanUserSortColumns="False">
+                            <DataGrid.Style>
+                                <Style TargetType="DataGrid">
+                                    <Style.Triggers>
+                                        <Trigger Property="HasItems" Value="False">
+                                          <Setter Property="Visibility" Value="Collapsed"></Setter>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGrid.Style>
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Width="400" Header="Zone" Binding="{Binding Zone}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="150" Header="WWPN" Binding="{Binding WWPN}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="350" Header="Alias" Binding="{Binding Alias}" IsReadOnly="True"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
                     </StackPanel>
                 </Grid>
             </StackPanel>

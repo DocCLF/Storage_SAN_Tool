@@ -54,6 +54,7 @@ function IBM_DriveInfo {
 
         <# suppresses error messages #>
         $ErrorActionPreference="SilentlyContinue"
+        $ProgressBar = New-ProgressBar
         $TD_DriveOverview = @()
         [int]$ProgCounter=0
         <# Connect to Device and get all needed Data #>
@@ -62,7 +63,7 @@ function IBM_DriveInfo {
         }else {
             $TD_CollectInfos = plink $TD_Device_UserName@$TD_Device_DeviceIP -pw $TD_Device_PW -batch 'lsnodecanister -nohdr |while read id name IO_group_id;do lsnodecanister $id;echo;done && lsdrive -nohdr |while read id name IO_group_id;do lsdrive $id ;echo;done'
         }
-        
+        #$TD_CollectInfos = Get-Content -Path "C:\Users\mailt\Documents\lsdrive.txt"
         Write-Debug -Message "Number of Lines: $($TD_CollectInfos.count) "
         0..$TD_CollectInfos.count |ForEach-Object {
             <# Split the infos in 2 var #>
@@ -79,10 +80,10 @@ function IBM_DriveInfo {
     }
     
     process {
-        $ProgressBar = New-ProgressBar
+        
         <# Node Info#>
         $TD_NodeSplitInfo = "" | Select-Object NodeName,ProdName,NodeFW
-        foreach($TD_NodeInfoLine in $TD_NodeInfoTemp){
+        [arry]$TD_NodeSplitInfo = foreach($TD_NodeInfoLine in $TD_NodeInfoTemp){
             $TD_NodeSplitInfo.NodeName = ($TD_NodeInfoLine|Select-String -Pattern '^failover_name\s+([a-zA-Z0-9-_]+)' -AllMatches).Matches.Groups[1].Value
             $TD_NodeSplitInfo.ProdName = ($TD_NodeInfoLine|Select-String -Pattern '^product_mtm\s+([a-zA-Z0-9-_]+)' -AllMatches).Matches.Groups[1].Value
             $TD_NodeSplitInfo.NodeFW = ($TD_NodeInfoLine|Select-String -Pattern '^code_level\s+([a-zA-Z0-9-_.]+)' -AllMatches).Matches.Groups[1].Value
@@ -119,14 +120,18 @@ function IBM_DriveInfo {
 
             <# Progressbar  #>
             $ProgCounter++
-            $Completed = ($ProgCounter/$TD_CollectInfosTemp.Count) * 100
-            Write-ProgressBar -ProgressBar $ProgressBar -Activity "Collect data for Device $($TD_Line_ID)" -PercentComplete $Completed
-            
+            Write-ProgressBar -ProgressBar $ProgressBar -Activity "Collect data for Device $($TD_Line_ID)" -PercentComplete (($ProgCounter/$TD_CollectInfosTemp.Count) * 100)
+
         }
     }
 
     end{
         Close-ProgressBar -ProgressBar $ProgressBar
+        if($TD_Line_ID -eq 1){$TD_lb_DriveInfoOne.Visibility = "Visible"; $TD_lb_DriveInfoOne.Content = "Node Name: $($TD_NodeSplitInfo.NodeName)  Product-Type: $($TD_NodeSplitInfo.ProdName)"}
+        if($TD_Line_ID -eq 2){$TD_lb_DriveInfoTwo.Visibility = "Visible"; $TD_lb_DriveInfoTwo.Content = "Node Name: $($TD_NodeSplitInfo.NodeName)  Product-Type: $($TD_NodeSplitInfo.ProdName)"}
+        if($TD_Line_ID -eq 3){$TD_lb_DriveInfoThree.Visibility = "Visible"; $TD_lb_DriveInfoThree.Content = "Node Name: $($TD_NodeSplitInfo.NodeName)  Product-Type: $($TD_NodeSplitInfo.ProdName)"}
+        if($TD_Line_ID -eq 4){$TD_lb_DriveInfoFour.Visibility = "Visible"; $TD_lb_DriveInfoFour.Content = "Node Name: $($TD_NodeSplitInfo.NodeName)  Product-Type: $($TD_NodeSplitInfo.ProdName)"}
+        
         <# export y or n #>
         if($TD_export -eq "yes"){
             <# exported to .\Drive_Overview_(Date).csv #>
@@ -144,7 +149,7 @@ function IBM_DriveInfo {
         }else {
             <# output on the promt #>
             Write-Host "Result for:`nName: $($TD_NodeSplitInfo.NodeName) `nProduct: $($TD_NodeSplitInfo.ProdName) `nFirmware: $($TD_NodeSplitInfo.NodeFW)`n`n" -ForegroundColor Yellow
-            Start-Sleep -Seconds 1.5
+            Start-Sleep -Seconds 0.5
             return $TD_DriveOverview
         }
         return $TD_DriveOverview

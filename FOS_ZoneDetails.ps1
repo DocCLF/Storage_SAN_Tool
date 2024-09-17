@@ -29,8 +29,10 @@ function FOS_ZoneDetails  {
     )
     begin{
         Write-Debug -Message "Begin GET_ZoneDetails |$(Get-Date)"
+        
         $ErrorActionPreference="SilentlyContinue"
-
+        [int]$ProgCounter=0
+        $ProgressBar = New-ProgressBar
         <# Connect to Device and get all needed Data #>
         if($TD_Device_ConnectionTyp -eq "ssh"){
             $FOS_MainInformation = ssh $TD_Device_UserName@$TD_Device_DeviceIP 'zoneshow'
@@ -38,9 +40,7 @@ function FOS_ZoneDetails  {
             $FOS_MainInformation = plink $TD_Device_UserName@$TD_Device_DeviceIP -pw $TD_Device_PW -batch 'zoneshow'
         }
         <# next line is only for tests #>
-        #$FOS_MainInformation = Get-Content -Path "C:\Users\mailt\Documents\Export\zoneshow_fab1.txt"
-        
-        $FOS_ZoneCollection = @()
+        #$FOS_MainInformation = Get-Content -Path "C:\Users\mailt\Documents\Schl_Fab1.txt"
 
         $FOS_ZoneCount = $FOS_MainInformation.count
         0..$FOS_ZoneCount |ForEach-Object {
@@ -63,12 +63,12 @@ function FOS_ZoneDetails  {
         Write-Debug -Message "FOS_Operand Default`n, Search: zoneshow`n, Zoneliste`n $FOS_ZoneCount, `nZoneEntrys`n $FOS_MainInformation, `nZoneCount`n $FOS_ZoneList "
 
         # is not necessary, but even a system needs a break from time to time
-        Start-Sleep -Seconds 2;
+        Start-Sleep -Seconds 0.5;
 
         # Creat a List of Aliases with WWPN based on switch-case decision
         if(($FOS_ZoneList.count) -ge 4){
             #Create PowerShell Objects out of the Aliases
-            foreach ($FOS_Zone in $FOS_ZoneList) {
+            $FOS_ZoneCollection = foreach ($FOS_Zone in $FOS_ZoneList) {
                 $FOS_TempCollection = "" | Select-Object Zone,WWPN,Alias
                 # Get the ZoneName
                 if(Select-String -InputObject $FOS_Zone -Pattern '^ zone:\s+(.*)'){
@@ -111,13 +111,15 @@ function FOS_ZoneDetails  {
                     <# Action when all if and elseif conditions are false #>
                     Write-Host "`n"
                 }
-                $FOS_ZoneCollection += $FOS_TempCollection
+                if(-Not (([string]::IsNullOrEmpty($FOS_TempCollection.Zone)) -and ([string]::IsNullOrEmpty($FOS_TempCollection.WWPN)) -and ([string]::IsNullOrEmpty($FOS_TempCollection.Alias)))){
+                    $FOS_TempCollection
+                }
+
+            <# Progressbar  #>
+            $ProgCounter++
+            Write-ProgressBar -ProgressBar $ProgressBar -Activity "Collect data for Device $($TD_Line_ID)" -PercentComplete (($ProgCounter/$FOS_ZoneList.Count) * 100)
+
             }
-
-            #Write-Host "Here is the list of zones with WWPNs and their corresponding aliases:" -ForegroundColor Green
-            #$FOS_ZoneCollection
-
-            #Write-Debug -Message "$FOS_ZoneCollection `nEnd of Process block |$(Get-Date)"
 
         }else {
              <# Action when all if and elseif conditions are false #>
@@ -127,6 +129,8 @@ function FOS_ZoneDetails  {
 
     }
     end {
+
+        Close-ProgressBar -ProgressBar $ProgressBar
         <# returns the hashtable for further processing, not mandatory but the safe way #>
         Write-Debug -Message "End Func FOS_ZoneDetails |$(Get-Date)`n "
         <# export y or n #>
@@ -145,9 +149,8 @@ function FOS_ZoneDetails  {
         }
         Write-Debug -Message "$(Get-Date) return:`n $FOS_ZoneCollection `n "
         Write-Debug -Message "$(Get-Date) return:`n $FOS_ZoneName `n "
-
         <# FOS_usedPorts commented out can be used later via filter option if necessary #>
-        return $FOS_ZoneCollection, $FOS_ZoneName 
+        return $FOS_ZoneCollection, $FOS_ZoneName
         
         <# Cleanup all TD* Vars #>
         Clear-Variable FOS* -Scope Global
