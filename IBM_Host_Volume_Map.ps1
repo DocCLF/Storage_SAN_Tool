@@ -34,13 +34,10 @@ function IBM_Host_Volume_Map {
         [string]$TD_Device_DeviceIP,
         [string]$TD_Device_PW,
         [Parameter(ValueFromPipeline)]
-        [ValidateSet("Host","Hostcluster","Nofilter")]
-        [string]$FilterType = "Host",
-        [Parameter(ValueFromPipeline)]
         [ValidateSet("yes","no")]
         [string]$TD_Export = "yes",
-        [string]$TD_Exportpath,
-        [string]$TD_RefreshView
+        [string]$TD_Exportpath
+
     )
     begin{
         <# suppresses error messages #>
@@ -50,24 +47,10 @@ function IBM_Host_Volume_Map {
         <# int for the progressbar #>
         [int]$ProgCounter=0
         <# Connection to the system via ssh and filtering and provision of data #>
-        if($TD_RefreshView -eq "Update"){
-            <# needs a workaround with try-catch #>
-            $TD_CollectVolInfo = Get-Content -Path $Env:TEMP\$($TD_Line_ID)_Host_Vol_Map_Temp.txt
-            if($TD_CollectVolInfo.Count -lt 1){
-                if($TD_Device_ConnectionTyp -eq "ssh"){
-                    $TD_CollectVolInfo = ssh $TD_Device_UserName@$TD_Device_DeviceIP "lshostvdiskmap -delim : && lsvdisk -delim :"
-                }else {
-                    $TD_CollectVolInfo = plink $TD_Device_UserName@$TD_Device_DeviceIP -pw $TD_Device_PW -batch "lshostvdiskmap -delim : && lsvdisk -delim :"
-                }
-            }
+        if($TD_Device_ConnectionTyp -eq "ssh"){
+            $TD_CollectVolInfo = ssh $TD_Device_UserName@$TD_Device_DeviceIP "lshostvdiskmap -delim : && lsvdisk -delim :"
         }else {
-            <# Action when all if and elseif conditions are false #>
-            if($TD_Device_ConnectionTyp -eq "ssh"){
-                $TD_CollectVolInfo = ssh $TD_Device_UserName@$TD_Device_DeviceIP "lshostvdiskmap -delim : && lsvdisk -delim :"
-            }else {
-                $TD_CollectVolInfo = plink $TD_Device_UserName@$TD_Device_DeviceIP -pw $TD_Device_PW -batch "lshostvdiskmap -delim : && lsvdisk -delim :"
-            }
-            Out-File -FilePath $Env:TEMP\$($TD_Line_ID)_Host_Vol_Map_Temp.txt -InputObject $TD_CollectVolInfo
+            $TD_CollectVolInfo = plink $TD_Device_UserName@$TD_Device_DeviceIP -pw $TD_Device_PW -batch "lshostvdiskmap -delim : && lsvdisk -delim :"
         }
         <# next line one for testing #>
         #$TD_CollectVolInfo = Get-Content -Path "C:\Users\mailt\Documents\lsvdho.txt"
@@ -80,67 +63,39 @@ function IBM_Host_Volume_Map {
                 $i = $_
             }
         }       
-        $TD_HostInfos = $TD_CollectVolInfo | Select-Object -First (($TD_CollectVolInfo.count)-($TD_Resaults.Count)-1)
-
     }
     process{
         $ProgressBar = New-ProgressBar
-        foreach($line in $TD_HostInfos){
+        $TD_Mappingresault = foreach($line in $TD_HostInfos){
             <# creates the objects for the array #>
             $TD_SplitInfos = "" | Select-Object HostID,HostName,HostClusterID,HostCluster,VolumeID,VolumeName,UID,Capacity
             if($i -ge 1){
-                if($FilterType -eq "Host"){
-                    $TD_SplitInfos.HostID = ($line | Select-String -Pattern '([a-zA-Z0-9_-]+)' -AllMatches).Matches.Value[0]
-                    $TD_SplitInfos.HostName = ($line | Select-String -Pattern '([a-zA-Z0-9_-]+)' -AllMatches).Matches.Value[1]
-                    $TD_SplitInfos.VolumeID = ($line | Select-String -Pattern '([a-zA-Z0-9_-]+)' -AllMatches).Matches.Value[3]
-                    $TD_SplitInfos.VolumeName = ($line | Select-String -Pattern '([a-zA-Z0-9_-]+)' -AllMatches).Matches.Value[4]
-                    $TD_SplitInfos.UID = ($line | Select-String -Pattern '([a-zA-Z0-9_-]+)' -AllMatches).Matches.Value[5]
-
-                    #$TD_HostIDold = $TD_SplitInfos.HostID
-                    $FilterTypeHost =$true
-                }
-                elseif(((($line | Select-String -Pattern '([a-zA-Z0-9_-]+)' -AllMatches).Matches.Value[9])-ne "scsi")-and ($FilterType -eq "Hostcluster")){
+                $TD_SplitInfos.HostID = ($line | Select-String -Pattern '([a-zA-Z0-9_-]+)' -AllMatches).Matches.Value[0]
+                $TD_SplitInfos.HostName = ($line | Select-String -Pattern '([a-zA-Z0-9_-]+)' -AllMatches).Matches.Value[1]
+                if((($line | Select-String -Pattern '([a-zA-Z0-9_-]+)' -AllMatches).Matches.Value[9])-ne "scsi"){
                     $TD_SplitInfos.HostClusterID = ($line | Select-String -Pattern '([a-zA-Z0-9_-]+)' -AllMatches).Matches.Value[9]
-                    $TD_SplitInfos.HostCluster = ($line | Select-String -Pattern '([a-zA-Z0-9_-]+)' -AllMatches).Matches.Value[10]
-                    $TD_SplitInfos.VolumeID = ($line | Select-String -Pattern '([a-zA-Z0-9_-]+)' -AllMatches).Matches.Value[3]
-                    $TD_SplitInfos.VolumeName = ($line | Select-String -Pattern '([a-zA-Z0-9_-]+)' -AllMatches).Matches.Value[4]
-                    $TD_SplitInfos.UID = ($line | Select-String -Pattern '([a-zA-Z0-9_-]+)' -AllMatches).Matches.Value[5]
-
-                    $FilterTypeHostCluster =$true
+                    $TD_SplitInfos.HostCluster = ($line | Select-String -Pattern '([a-zA-Z0-9_-]+)' -AllMatches).Matches.Value[10]    
                 }
-                elseif (($FilterType -eq "Nofilter")) {
-                    $TD_SplitInfos.HostID = ($line | Select-String -Pattern '([a-zA-Z0-9_-]+)' -AllMatches).Matches.Value[0]
-                    $TD_SplitInfos.HostName = ($line | Select-String -Pattern '([a-zA-Z0-9_-]+)' -AllMatches).Matches.Value[1]
-                    if((($line | Select-String -Pattern '([a-zA-Z0-9_-]+)' -AllMatches).Matches.Value[9])-ne "scsi"){
-                        $TD_SplitInfos.HostClusterID = ($line | Select-String -Pattern '([a-zA-Z0-9_-]+)' -AllMatches).Matches.Value[9]
-                        $TD_SplitInfos.HostCluster = ($line | Select-String -Pattern '([a-zA-Z0-9_-]+)' -AllMatches).Matches.Value[10]    
-                    }
-                    $TD_SplitInfos.VolumeID = ($line | Select-String -Pattern '([a-zA-Z0-9_-]+)' -AllMatches).Matches.Value[3]
-                    $TD_SplitInfos.VolumeName = ($line | Select-String -Pattern '([a-zA-Z0-9_-]+)' -AllMatches).Matches.Value[4]
-                    $TD_SplitInfos.UID = ($line | Select-String -Pattern '([a-zA-Z0-9_-]+)' -AllMatches).Matches.Value[5]
-                }
+                $TD_SplitInfos.VolumeID = ($line | Select-String -Pattern '([a-zA-Z0-9_-]+)' -AllMatches).Matches.Value[3]
+                $TD_SplitInfos.VolumeName = ($line | Select-String -Pattern '([a-zA-Z0-9_-]+)' -AllMatches).Matches.Value[4]
+                $TD_SplitInfos.UID = ($line | Select-String -Pattern '([a-zA-Z0-9_-]+)' -AllMatches).Matches.Value[5]
+                
                 $TD_Resaults | ForEach-Object {
                     if(($TD_SplitInfos.UID) -eq (($_ | Select-String -Pattern '([0-9A-F]{32})' -AllMatches).Matches.Groups[1].Value)){
                         $TD_SplitInfos.Capacity = ($_ | Select-String -Pattern '(\d+\.\d+[B-T]+)' -AllMatches).Matches.Groups[1].Value
                     }
                 }
-
                 <#
                     Is required to avoid empty lines and to ensure that only the required data is made available.
                     A better option is currently being tested 
                 #>
-                if($FilterTypeHost -or $FilterTypeHostCluster){
-                    $FilterTypeHost = $false; $FilterTypeHostCluster = $false
-                    $TD_Mappingresault += $TD_SplitInfos
-                }elseif($FilterType -eq "Nofilter") {
-                    $TD_Mappingresault += $TD_SplitInfos
-                }
                 $i--
             }
+            $TD_SplitInfos
             <# Progressbar  #>
             $ProgCounter++
-            #$Completed = ($ProgCounter/$TD_HostInfos.Count) * 100
-            Write-ProgressBar -ProgressBar $ProgressBar -Activity "Collect data for Device $($TD_Line_ID)" -PercentComplete (($ProgCounter/$TD_HostInfos.Count) * 100)
+            $Completed = ($ProgCounter/$TD_CollectVolInfo.Count) * 100
+            Write-ProgressBar -ProgressBar $ProgressBar -Activity "Collect data for Device $($TD_Line_ID)" -PercentComplete $Completed
         
         }
         
@@ -150,28 +105,23 @@ function IBM_Host_Volume_Map {
         <# if update is clicked update the right list #>
         if($TD_RefreshView -eq "Update"){
             if($TD_Line_ID -eq 1){
-                $TD_dg_HostVolInfo.ItemsSource = $TD_Mappingresault
+                $TD_lb_HostVolInfo.ItemsSource = $TD_Host_Volume_Map
             }elseif($TD_Line_ID -eq 2){
-                $TD_dg_HostVolInfoTwo.ItemsSource = $TD_Mappingresault
-            }elseif($TD_Line_ID -eq 3){
-                $TD_dg_HostVolInfoThree.ItemsSource = $TD_Mappingresault
-            }elseif($TD_Line_ID -eq 4){
-                $TD_dg_HostVolInfoFour.ItemsSource = $TD_Mappingresault
+                $TD_lb_HostVolInfoTwo.ItemsSource = $TD_Host_Volume_Map
             }
-
         }
         Close-ProgressBar -ProgressBar $ProgressBar
         <# export y or n #>
         if($TD_Export -eq "yes"){
-            <# exported to .\Host_Volume_Map_Result.csv #>
+            <# exported as .\<nbr>_Host_Volume_Map_Result_<date>.csv #>
             if([string]$TD_Exportpath -ne "$PSCommandPath\Export\"){
                 $TD_Mappingresault | Export-Csv -Path $TD_Exportpath\$($TD_Line_ID)_Host_Volume_Map_Result_$(Get-Date -Format "yyyy-MM-dd").csv -NoTypeInformation
-                #Write-Host "The Export can be found at $TD_Exportpath " -ForegroundColor Green
+                Write-Host "The Export can be found at $TD_Exportpath " -ForegroundColor Green
             }else {
                 $TD_Mappingresault | Export-Csv -Path $PSCommandPath\Export\$($TD_Line_ID)_Host_Volume_Map_Result_$(Get-Date -Format "yyyy-MM-dd").csv -NoTypeInformation
-                #Write-Host "The Export can be found at $PSCommandPath\Export\ " -ForegroundColor Green
+                Write-Host "The Export can be found at $PSCommandPath\Export\ " -ForegroundColor Green
             }
-
+            #Invoke-Item "$TD_Exportpath\Host_Volume_Map_Result_$(Get-Date -Format "yyyy-MM-dd").csv"
         }else {
             <# output on the promt #>
             return $TD_Mappingresault
