@@ -2,7 +2,7 @@ Add-Type -AssemblyName PresentationCore,PresentationFramework
 Add-Type -AssemblyName System.Windows.Forms
 
 <# Create the xaml Files / Base of GUI Mainwindow #>
-function Storage_San_Kit {
+#function Storage_San_Kit {
 
 $MainxamlFile ="$PSScriptRoot\MainWindow.xaml"
 $inputXAML=Get-Content -Path $MainxamlFile -raw
@@ -74,7 +74,24 @@ foreach($file in $UserCxamlFile){
 
 
 <# Set some Vars #>
-$TD_tb_Exportpath.Text = "$PSRootPath\Export\"
+<# create a export Folder in my documents#>
+try {
+    $TD_ExporttoOD = [Environment]::GetFolderPath("mydocuments")
+    $ExportFolderPath="$TD_ExporttoOD\StorageSANKit"
+    If(!(Test-Path -Path $ExportFolderPath)){
+        $TD_tb_Exportpath.Text = $ExportFolderPath
+    }else{
+        #PowerShell Create directory if not exists
+        $TD_ExportFolderCreated = New-Item $ExportFolderPath -ItemType Directory
+        $TD_tb_Exportpath.Text = $TD_ExportFolderCreated.Name
+    }
+}
+catch {
+    <#Do this if a terminating exception happens#>
+    Write-Host "Something went wrong" -ForegroundColor DarkMagenta
+    Write-Host $_.Exception.Message
+    $label_ExpPath.Content = $_.Exception.Message
+}
 <# MainWindow Background IMG #>
 $TD_LogoImage.Source = "$PSRootPath\Resources\PROFI_Logo_2022_dark.png"
 $TD_LogoImageSmall.Source = "$PSRootPath\Resources\PROFI_Logo_2022_dark.png"
@@ -485,38 +502,6 @@ $TD_btn_ImportCred.add_click({
     }
     #Write-Host $TD_GetSavedCred.FileName -ForegroundColor Green
 })
-<# Button Connect Test #>
-#$TD_btn_ConnectTest.add_click({
-    <#looking for a better way, to support pws 5.1#>
-    #Get-TestConnection -TD_StorageIPAdresse $TD_tb_storageIPAdr.Text -TD_StorageIPAdresseOne $TD_tb_storageIPAdrOne.Text -TD_StorageIPAdresseTwo $TD_tb_storageIPAdrTwo.Text -TD_StorageIPAdresseThree $TD_tb_storageIPAdrThree.Text
-    <# looking for a good color-marker, later #>
-    #if($TD_PingTest -eq "Success"){
-    #    $TD_btn_ConnectTest.Background = "lightgreen"
-    #}else{
-    #    $TD_btn_ConnectTest.Background = "red"
-    #}
-#})
-
-<#$TD_btn_IBM_test.add_click({
-    Get_CredGUIInfos  
-})
- maybe for later use as filter option
-$TD_tb_UserName.Add_TextChanged({
-    Get_CredGUIInfos
-})
-#>
-
-
-#$TD_btn_UpFilFCPS.add_click({
-    <# need a implem. for more as one Storage #>
-    #$TD_FCPortStats = IBM_FCPortStats -FilterType $TD_FCPortStats.Text -TD_RefreshView "Update"
-    #Start-Sleep -Seconds 0.5
-    #$TD_label_ExpPFCPS.Content ="Export Path: $($TD_tb_ExportPath.Text)"
-    #$TD_stp_DriveInfo.Visibility="Collapsed"
-    #$TD_stp_HostVolInfo.Visibility="Collapsed"
-    #$TD_stp_FCPortStats.Visibility="Visible"
-    #$TD_dg_HostVolInfo.ItemsSource = $TD_FCPortStats
-#})
 
 <# Storage Button #>
 $TD_btn_IBM_Eventlog.add_click({
@@ -693,10 +678,36 @@ $TD_btn_IBM_HostVolumeMap.add_click({
     $TD_stp_BackUpConfig.Visibility="Collapsed"
     $TD_stp_HostVolInfo.Visibility="Visible"
 })
-<# Update View for Host Volume Map #>
-$TD_btn_UpFilHVM.add_click({
-    IBM_Host_Volume_Map -TD_Line_ID $TD_cb_ListFilterStorageHVM.Text -FilterType $TD_cb_StorageHVM.Text -TD_RefreshView "Update"
+<# filter View for Host Volume Map #>
+<# to keep this file clean :D export the following lines to a func in one if the next Version #>
+$TD_btn_FilterHVM.Add_Click({
+    [string]$filter= $TD_tb_filter.Text
+    [string]$TD_Filter_DG_Colum = $TD_cb_StorageHVM.Text
+    try {
+        [array]$TD_CollectVolInfo = Import-Csv -Path $Env:TEMP\$($TD_cb_ListFilterStorageHVM.Text)_Host_Vol_Map_Temp.csv
+        $TD_Host_Volume_Map = $TD_dg_HostVolInfo.ItemsSource
+        if($TD_Host_Volume_Map.Count -ne $TD_CollectVolInfo.Count){
+            $TD_Host_Volume_Map = $TD_CollectVolInfo }
+             
+            switch ($TD_Filter_DG_Colum) {
+                "Host" { [array]$WPF_dataGrid = $TD_Host_Volume_Map | Where-Object { $_.HostName -Match $filter } }
+                "HostCluster" { [array]$WPF_dataGrid = $TD_Host_Volume_Map | Where-Object { $_.HostCluster -Match $filter } }
+                "Volume" { [array]$WPF_dataGrid = $TD_Host_Volume_Map | Where-Object { $_.VolumeName -Match $filter } }
+                "UID" { [array]$WPF_dataGrid = $TD_Host_Volume_Map | Where-Object { $_.UID -Match $filter } }
+                "Capacity" { [array]$WPF_dataGrid = $TD_Host_Volume_Map | Where-Object { $_.Capacity -Match $filter } }
+                Default {Write-Host "Something went wrong" -ForegroundColor DarkMagenta}
+            }
+            
+            $TD_dg_HostVolInfo.ItemsSource = $WPF_dataGrid
+        }
+    catch {
+        <#Do this if a terminating exception happens#>
+        Write-Host "Something went wrong" -ForegroundColor DarkMagenta
+        Write-Host $_.Exception.Message
+        $TD_lb_ErrorMsgHVM.Content = $_.Exception.Message
+    }
 })
+
 
 
 $TD_btn_IBM_DriveInfo.add_click({
@@ -1775,4 +1786,4 @@ Get-Variable TD_*
 $Mainform.showDialog()
 $Mainform.activate()
 
-}
+#}
