@@ -177,43 +177,83 @@
                             <Button x:Name="btn_FilterHVM" Style="{StaticResource MainBtnStyle}" Content="Apply Filter" />
                             <Label x:Name="lb_ErrorMsgHVM" Foreground="Red" Content="" Style="{StaticResource MainLabelStyle}" Padding="2" Margin="25,5,0,5"/>
                         </StackPanel>
-                        <ListView Grid.Row="1" x:Name="lb_HostVolInfo" MinWidth="800" Height="400" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="5">
-                            <ListView.View>
-                                <GridView>
-                                    <GridViewColumn Header="HostID"  DisplayMemberBinding ="{Binding HostID}"/>  
-                                    <GridViewColumn Header="HostName" DisplayMemberBinding ="{Binding HostName}"/>  
-                                    <GridViewColumn Header="HostClusterID" DisplayMemberBinding ="{Binding HostClusterID}"/>
-                                    <GridViewColumn Header="HostCluster" DisplayMemberBinding ="{Binding HostCluster}"/>
-                                    <GridViewColumn Header="VolumeID"  DisplayMemberBinding ="{Binding VolumeID}"/>  
-                                    <GridViewColumn Header="VolumeName" DisplayMemberBinding ="{Binding VolumeName}"/>  
-                                    <GridViewColumn Header="UID" DisplayMemberBinding ="{Binding UID}"/> 
-                                    <GridViewColumn Header="Capacity" DisplayMemberBinding ="{Binding Capacity}"/> 
-                                </GridView>
-                            </ListView.View>
-                        </ListView >
-                         <ListView Grid.Row="2" x:Name="lb_HostVolInfoTwo" MinWidth="800" Height="400" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="5">
-                            <ListView.Style>
-                              <Style TargetType="ListView">
-                                <Style.Triggers>
-                                  <Trigger Property="HasItems" Value="False">
-                                    <Setter Property="Visibility" Value="Collapsed"></Setter>
-                                  </Trigger>
-                                </Style.Triggers>
-                              </Style>
-                            </ListView.Style>
-                            <ListView.View>
-                                <GridView>
-                                    <GridViewColumn Header="HostID"  DisplayMemberBinding ="{Binding HostID}"/>  
-                                    <GridViewColumn Header="HostName" DisplayMemberBinding ="{Binding HostName}"/>  
-                                    <GridViewColumn Header="HostClusterID" DisplayMemberBinding ="{Binding HostClusterID}"/>
-                                    <GridViewColumn Header="HostCluster" DisplayMemberBinding ="{Binding HostCluster}"/>
-                                    <GridViewColumn Header="VolumeID"  DisplayMemberBinding ="{Binding VolumeID}"/>  
-                                    <GridViewColumn Header="VolumeName" DisplayMemberBinding ="{Binding VolumeName}"/>  
-                                    <GridViewColumn Header="UID" DisplayMemberBinding ="{Binding UID}"/> 
-                                    <GridViewColumn Header="Capacity" DisplayMemberBinding ="{Binding Capacity}"/> 
-                                </GridView>
-                            </ListView.View>
-                        </ListView >
+                        <StackPanel Grid.Row="1" Orientation="Vertical" >
+                        <DataGrid x:Name="dg_HostVolInfo" AutoGenerateColumns="False" Margin="5,5,5,5" MaxHeight="400">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Width="auto" Header="HostID" Binding="{Binding HostID}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="HostName" Binding="{Binding HostName}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="HostClusterID" Binding="{Binding HostClusterID}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="HostCluster" Binding="{Binding HostCluster}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="VolumeID" Binding="{Binding VolumeID}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="VolumeName" Binding="{Binding VolumeName}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="UID" Binding="{Binding UID}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Capacity" Binding="{Binding Capacity}" IsReadOnly="True"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                        <DataGrid x:Name="dg_HostVolInfoTwo" AutoGenerateColumns="False" Margin="5,25,5,5" MaxHeight="400">
+                            <DataGrid.Style>
+                                <Style TargetType="DataGrid">
+                                    <Style.Triggers>
+                                        <Trigger Property="HasItems" Value="False">
+                                          <Setter Property="Visibility" Value="Collapsed"></Setter>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGrid.Style>
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Width="auto" Header="HostID" Binding="{Binding HostID}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="HostName" Binding="{Binding HostName}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="HostClusterID" Binding="{Binding HostClusterID}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="HostCluster" Binding="{Binding HostCluster}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="VolumeID" Binding="{Binding VolumeID}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="VolumeName" Binding="{Binding VolumeName}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="UID" Binding="{Binding UID}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Capacity" Binding="{Binding Capacity}" IsReadOnly="True"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                        <DataGrid x:Name="dg_HostVolInfoThree" AutoGenerateColumns="False" Margin="5,25,5,5" MaxHeight="400">
+                            <DataGrid.Style>
+                                <Style TargetType="DataGrid">
+                                    <Style.Triggers>
+                                        <Trigger Property="HasItems" Value="False">
+                                          <Setter Property="Visibility" Value="Collapsed"></Setter>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGrid.Style>
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Width="auto" Header="HostID" Binding="{Binding HostID}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="HostName" Binding="{Binding HostName}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="HostClusterID" Binding="{Binding HostClusterID}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="HostCluster" Binding="{Binding HostCluster}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="VolumeID" Binding="{Binding VolumeID}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="VolumeName" Binding="{Binding VolumeName}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="UID" Binding="{Binding UID}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Capacity" Binding="{Binding Capacity}" IsReadOnly="True"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                        <DataGrid x:Name="dg_HostVolInfoFour" AutoGenerateColumns="False" Margin="5,25,5,5" MaxHeight="400">
+                            <DataGrid.Style>
+                                <Style TargetType="DataGrid">
+                                    <Style.Triggers>
+                                        <Trigger Property="HasItems" Value="False">
+                                          <Setter Property="Visibility" Value="Collapsed"></Setter>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGrid.Style>
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Width="auto" Header="HostID" Binding="{Binding HostID}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="HostName" Binding="{Binding HostName}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="HostClusterID" Binding="{Binding HostClusterID}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="HostCluster" Binding="{Binding HostCluster}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="VolumeID" Binding="{Binding VolumeID}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="VolumeName" Binding="{Binding VolumeName}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="UID" Binding="{Binding UID}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Capacity" Binding="{Binding Capacity}" IsReadOnly="True"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                        </StackPanel>
                     </Grid>
                 </StackPanel>
                 <StackPanel  x:Name="stp_DriveInfo" Orientation="Vertical" Margin="2" Visibility="{Binding ElementName=btn_IBM_DriveInfo, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
