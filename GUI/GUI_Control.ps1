@@ -648,24 +648,28 @@ $TD_btn_IBM_HostVolumeMap.add_click({
                 $TD_Host_Volume_Map = IBM_Host_Volume_Map -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.StorageUserName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $TD_Credential.StoragePassword -FilterType $TD_cb_StorageHVM.Text -TD_Exportpath $TD_tb_ExportPath.Text
                 Start-Sleep -Seconds 0.2
                 $TD_dg_HostVolInfo.ItemsSource =$TD_Host_Volume_Map
+                $TD_Host_Volume_Map | Export-Csv -Path $Env:TEMP\$($_)_Host_Vol_Map_Temp.csv
             }
             {($_ -eq 2) } 
             {            
                 $TD_Host_Volume_Map = IBM_Host_Volume_Map -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.StorageUserName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $TD_Credential.StoragePassword -FilterType $TD_cb_StorageHVM.Text -TD_Exportpath $TD_tb_ExportPath.Text
                 Start-Sleep -Seconds 0.2
                 $TD_dg_HostVolInfoTwo.ItemsSource =$TD_Host_Volume_Map
+                $TD_Host_Volume_Map | Export-Csv -Path $Env:TEMP\$($_)_Host_Vol_Map_Temp.csv
             }
             {($_ -eq 3) } 
             {            
                 $TD_Host_Volume_Map = IBM_Host_Volume_Map -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.StorageUserName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $TD_Credential.StoragePassword -FilterType $TD_cb_StorageHVM.Text -TD_Exportpath $TD_tb_ExportPath.Text
                 Start-Sleep -Seconds 0.2
                 $TD_dg_HostVolInfoThree.ItemsSource =$TD_Host_Volume_Map
+                $TD_Host_Volume_Map | Export-Csv -Path $Env:TEMP\$($_)_Host_Vol_Map_Temp.csv
             }
             {($_ -eq 4) } 
             {            
                 $TD_Host_Volume_Map = IBM_Host_Volume_Map -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.StorageUserName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $TD_Credential.StoragePassword -FilterType $TD_cb_StorageHVM.Text -TD_Exportpath $TD_tb_ExportPath.Text
                 Start-Sleep -Seconds 0.2
                 $TD_dg_HostVolInfoFour.ItemsSource =$TD_Host_Volume_Map
+                $TD_Host_Volume_Map | Export-Csv -Path $Env:TEMP\$($_)_Host_Vol_Map_Temp.csv
             }
             Default {Write-Debug "Nothing" }
         }
@@ -1311,6 +1315,7 @@ $TD_btn_FOS_ZoneDetailsShow.add_click({
                 $TD_dg_ZoneDetailsOne.ItemsSource =$TD_FOS_ZoneShow
                 $TD_lb_FabricOne.Visibility = "Visible";
                 $TD_lb_FabricOne.Content = $FOS_EffeZoneNameOne
+                $TD_FOS_ZoneShow | Export-Csv -Path $Env:TEMP\$($FOS_EffeZoneNameOne)_ZoneShow_Temp.csv
             }
             {($_ -eq 2) } <# -or ($_ -eq 3) -or ($_ -eq 4)}  for later use maybe #>
             {            
@@ -1320,6 +1325,7 @@ $TD_btn_FOS_ZoneDetailsShow.add_click({
                 $TD_dg_ZoneDetailsTwo.ItemsSource =$TD_FOS_ZoneShow
                 $TD_lb_FabricTwo.Visibility = "Visible";
                 $TD_lb_FabricTwo.Content = $FOS_EffeZoneNameTwo
+                $TD_FOS_ZoneShow | Export-Csv -Path $Env:TEMP\$($FOS_EffeZoneNameTwo)_ZoneShow_Temp.csv
                 }
             }
             {($_ -eq 3) } <# -or ($_ -eq 3) -or ($_ -eq 4)}  for later use maybe #>
@@ -1330,6 +1336,7 @@ $TD_btn_FOS_ZoneDetailsShow.add_click({
                     if($FOS_EffeZoneNameThree -ne $FOS_EffeZoneNameTwo){
                         Start-Sleep -Seconds 0.5
                         $TD_dg_ZoneDetailsTwo.ItemsSource =$TD_FOS_ZoneShow}
+                        $TD_FOS_ZoneShow | Export-Csv -Path $Env:TEMP\$($FOS_EffeZoneNameThree)_ZoneShow_Temp.csv
                     }
             }
             <# not needed becaus max support at moment are 2 fabs #>
@@ -1353,6 +1360,35 @@ $TD_btn_FOS_ZoneDetailsShow.add_click({
     $TD_stp_sanPortBufferShow.Visibility="Collapsed"
     $TD_stp_sanZoneDetailsShow.Visibility="Visible"
 })
+<# filter View for Host Volume Map #>
+<# to keep this file clean :D export the following lines to a func in one if the next Version #>
+$btn_FilterFabricOne.Add_Click({
+    [string]$FOS_filter= $tb_FilterFabricOne.Text
+    [string]$TD_Filter_DG_Colum = $cb_FilterFabricOne.Text
+    try {
+        [array]$TD_CollectZoneInfo = Import-Csv -Path $Env:TEMP\$($TD_cb_ListFilterStorageHVM.Text)_ZoneShow_Temp.csv
+        $TD_FOS_ZoneShow = $TD_dg_ZoneDetailsOne.ItemsSource
+        if($TD_FOS_ZoneShow.Count -ne $TD_CollectZoneInfo.Count){
+            $TD_FOS_ZoneShow = $TD_CollectZoneInfo }
+             
+            switch ($TD_Filter_DG_Colum) {
+                "Zone" { [array]$WPF_dataGrid = $TD_FOS_ZoneShow | Where-Object { $_.HostName -Match $FOS_filter } }
+                "WWPN" { [array]$WPF_dataGrid = $TD_FOS_ZoneShow | Where-Object { $_.HostCluster -Match $FOS_filter } }
+                "Alias" { [array]$WPF_dataGrid = $TD_FOS_ZoneShow | Where-Object { $_.VolumeName -Match $FOS_filter } }
+                Default {Write-Host "Something went wrong" -ForegroundColor DarkMagenta}
+            }
+            
+            $TD_dg_ZoneDetailsOne.ItemsSource = $WPF_dataGrid
+        }
+    catch {
+        <#Do this if a terminating exception happens#>
+        Write-Host "Something went wrong" -ForegroundColor DarkMagenta
+        Write-Host $_.Exception.Message
+        #$TD_lb_ErrorMsgHVM.Content = $_.Exception.Message
+    }
+})
+
+
 
 $TD_btn_FOS_PortLicenseShow.add_click({
 

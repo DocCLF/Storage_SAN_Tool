@@ -648,7 +648,16 @@
                         <RowDefinition Height="auto" />
                     </Grid.RowDefinitions>
                     <StackPanel Grid.Row="0" Grid.Column="0" >
-                        <Label x:Name="lb_FabricOne" Content="Fabric A" Margin="0,5" FontSize="14" Height="26"/>
+                        <Label x:Name="lb_FabricOne" Content="Fabric A" Style="{StaticResource MainLabelStyle}" />
+                        <StackPanel Orientation="Horizontal" >
+                        <ComboBox x:Name="cb_FilterFabricOne" ToolTip="Selcet your Filter" SelectedIndex="0" SelectedValuePath="Content" Style="{StaticResource MainComboBoxStyle}">
+                                <ComboBoxItem>Zone</ComboBoxItem>
+                                <ComboBoxItem>WWPN</ComboBoxItem>
+                                <ComboBoxItem>Alias</ComboBoxItem>
+                        </ComboBox>        
+                        <TextBox x:Name="tb_FilterFabricOne" HorizontalAlignment="Left" MinWidth="150" MaxWidth="300" Margin="5" Text="Filter" TextWrapping="Wrap" FontSize="14" VerticalContentAlignment="Center" />
+                        <Button x:Name="btn_FilterFabricOne" Content="Apply Filter " Style="{StaticResource MainBtnStyle}" />
+                        </StackPanel>
                         <DataGrid x:Name="dg_ZoneDetailsOne" AutoGenerateColumns="False" Margin="5" MaxHeight="400" CanUserSortColumns="False">
                             <DataGrid.Style>
                                 <Style TargetType="DataGrid">
@@ -667,7 +676,16 @@
                         </DataGrid>
                     </StackPanel>
                     <StackPanel Grid.Row="0" Grid.Column="1"  >
-                        <Label x:Name="lb_FabricTwo" Content="Fabric B" Margin="0,5" FontSize="14" Height="26"/>
+                        <Label x:Name="lb_FabricTwo" Content="Fabric B" Style="{StaticResource MainLabelStyle}" />
+                        <StackPanel Orientation="Horizontal" >
+                        <ComboBox x:Name="cb_FilterFabricTwo" ToolTip="Selcet your Filter" SelectedIndex="0" SelectedValuePath="Content" Style="{StaticResource MainComboBoxStyle}">
+                                <ComboBoxItem>Zone</ComboBoxItem>
+                                <ComboBoxItem>WWPN</ComboBoxItem>
+                                <ComboBoxItem>Alias</ComboBoxItem>
+                        </ComboBox>        
+                        <TextBox x:Name="tb_FilterFabricTwo" HorizontalAlignment="Left" MinWidth="150" MaxWidth="300" Margin="5" Text="Filter" TextWrapping="Wrap" FontSize="14" VerticalContentAlignment="Center" />
+                        <Button x:Name="btn_FilterFabricTwo" Content="Apply Filter " Style="{StaticResource MainBtnStyle}" />
+                        </StackPanel>
                         <DataGrid x:Name="dg_ZoneDetailsTwo" AutoGenerateColumns="False" Margin="5" MaxHeight="400" CanUserSortColumns="False">
                             <DataGrid.Style>
                                 <Style TargetType="DataGrid">
