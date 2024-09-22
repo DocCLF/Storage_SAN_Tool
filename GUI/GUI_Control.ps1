@@ -79,11 +79,11 @@ try {
     $TD_ExporttoOD = [Environment]::GetFolderPath("mydocuments")
     $ExportFolderPath="$TD_ExporttoOD\StorageSANKit"
     If(!(Test-Path -Path $ExportFolderPath)){
-        $TD_tb_Exportpath.Text = $ExportFolderPath
-    }else{
-        #PowerShell Create directory if not exists
         $TD_ExportFolderCreated = New-Item $ExportFolderPath -ItemType Directory
         $TD_tb_Exportpath.Text = $TD_ExportFolderCreated.Name
+    }else{
+        $TD_tb_Exportpath.Text = $ExportFolderPath
+        #PowerShell Create directory if not exists
     }
 }
 catch {
@@ -1286,6 +1286,8 @@ $TD_btn_FOS_ZoneDetailsShow.add_click({
 
     $TD_lb_FabricOne.Visibility = "Hidden";
     $TD_lb_FabricTwo.Visibility = "Hidden";
+    $TD_stp_FilterFabricOneVisibilty.Visibility = "Collapsed"
+    $TD_stp_FilterFabricTwoVisibilty.Visibility = "Collapsed"
 
     $TD_Credentials=@()
     $TD_Credentials_Checked = Get_CredGUIInfos -STP_ID 1 -TD_ConnectionTyp $TD_cb_sanConnectionTyp.Text -TD_IPAdresse $TD_tb_sanIPAdr.Text -TD_UserName $TD_tb_sanUserName.Text -TD_Password $TD_tb_sanPassword
@@ -1315,6 +1317,7 @@ $TD_btn_FOS_ZoneDetailsShow.add_click({
                 $TD_dg_ZoneDetailsOne.ItemsSource =$TD_FOS_ZoneShow
                 $TD_lb_FabricOne.Visibility = "Visible";
                 $TD_lb_FabricOne.Content = $FOS_EffeZoneNameOne
+                $TD_stp_FilterFabricOneVisibilty.Visibility = "Visible"
                 $TD_FOS_ZoneShow | Export-Csv -Path $Env:TEMP\$($FOS_EffeZoneNameOne)_ZoneShow_Temp.csv
             }
             {($_ -eq 2) } <# -or ($_ -eq 3) -or ($_ -eq 4)}  for later use maybe #>
@@ -1324,6 +1327,7 @@ $TD_btn_FOS_ZoneDetailsShow.add_click({
                 Start-Sleep -Seconds 0.5
                 $TD_dg_ZoneDetailsTwo.ItemsSource =$TD_FOS_ZoneShow
                 $TD_lb_FabricTwo.Visibility = "Visible";
+                $TD_stp_FilterFabricTwoVisibilty.Visibility = "Visible"
                 $TD_lb_FabricTwo.Content = $FOS_EffeZoneNameTwo
                 $TD_FOS_ZoneShow | Export-Csv -Path $Env:TEMP\$($FOS_EffeZoneNameTwo)_ZoneShow_Temp.csv
                 }
@@ -1362,23 +1366,48 @@ $TD_btn_FOS_ZoneDetailsShow.add_click({
 })
 <# filter View for Host Volume Map #>
 <# to keep this file clean :D export the following lines to a func in one if the next Version #>
-$btn_FilterFabricOne.Add_Click({
-    [string]$FOS_filter= $tb_FilterFabricOne.Text
-    [string]$TD_Filter_DG_Colum = $cb_FilterFabricOne.Text
+$TD_btn_FilterFabricOne.Add_Click({
+    [string]$FOS_filter= $TD_tb_FilterFabricOne.Text
+    [string]$TD_Filter_DG_Colum = $TD_cb_FilterFabricOne.Text
     try {
-        [array]$TD_CollectZoneInfo = Import-Csv -Path $Env:TEMP\$($TD_cb_ListFilterStorageHVM.Text)_ZoneShow_Temp.csv
+        [array]$TD_CollectZoneInfo = Import-Csv -Path $Env:TEMP\$($TD_lb_FabricOne.Content)_ZoneShow_Temp.csv
         $TD_FOS_ZoneShow = $TD_dg_ZoneDetailsOne.ItemsSource
         if($TD_FOS_ZoneShow.Count -ne $TD_CollectZoneInfo.Count){
             $TD_FOS_ZoneShow = $TD_CollectZoneInfo }
              
             switch ($TD_Filter_DG_Colum) {
-                "Zone" { [array]$WPF_dataGrid = $TD_FOS_ZoneShow | Where-Object { $_.HostName -Match $FOS_filter } }
-                "WWPN" { [array]$WPF_dataGrid = $TD_FOS_ZoneShow | Where-Object { $_.HostCluster -Match $FOS_filter } }
-                "Alias" { [array]$WPF_dataGrid = $TD_FOS_ZoneShow | Where-Object { $_.VolumeName -Match $FOS_filter } }
+                "Zone" { [array]$WPF_dataGrid = $TD_FOS_ZoneShow | Where-Object { $_.Zone -Match $FOS_filter } }
+                "WWPN" { [array]$WPF_dataGrid = $TD_FOS_ZoneShow | Where-Object { $_.WWPN -Match $FOS_filter } }
+                "Alias" { [array]$WPF_dataGrid = $TD_FOS_ZoneShow | Where-Object { $_.Alias -Match $FOS_filter } }
                 Default {Write-Host "Something went wrong" -ForegroundColor DarkMagenta}
             }
             
             $TD_dg_ZoneDetailsOne.ItemsSource = $WPF_dataGrid
+        }
+    catch {
+        <#Do this if a terminating exception happens#>
+        Write-Host "Something went wrong" -ForegroundColor DarkMagenta
+        Write-Host $_.Exception.Message
+        #$TD_lb_ErrorMsgHVM.Content = $_.Exception.Message
+    }
+})
+$TD_btn_FilterFabricTwo.Add_Click({
+    [string]$FOS_filter= $TD_tb_FilterFabricTwo.Text
+    [string]$TD_Filter_DG_Colum = $TD_cb_FilterFabricTwo.Text
+    try {
+        [array]$TD_CollectZoneInfo = Import-Csv -Path $Env:TEMP\$($TD_lb_FabricTwo.Content)_ZoneShow_Temp.csv
+        $TD_FOS_ZoneShow = $TD_dg_ZoneDetailsTwo.ItemsSource
+        if($TD_FOS_ZoneShow.Count -ne $TD_CollectZoneInfo.Count){
+            $TD_FOS_ZoneShow = $TD_CollectZoneInfo }
+             
+            switch ($TD_Filter_DG_Colum) {
+                "Zone" { [array]$WPF_dataGrid = $TD_FOS_ZoneShow | Where-Object { $_.Zone -Match $FOS_filter } }
+                "WWPN" { [array]$WPF_dataGrid = $TD_FOS_ZoneShow | Where-Object { $_.WWPN -Match $FOS_filter } }
+                "Alias" { [array]$WPF_dataGrid = $TD_FOS_ZoneShow | Where-Object { $_.Alias -Match $FOS_filter } }
+                Default {Write-Host "Something went wrong" -ForegroundColor DarkMagenta}
+            }
+            
+            $TD_dg_ZoneDetailsTwo.ItemsSource = $WPF_dataGrid
         }
     catch {
         <#Do this if a terminating exception happens#>
@@ -1809,6 +1838,7 @@ $TD_btn_HC_OpenGUI_Four.add_click({
 $TD_btn_CloseAll.add_click({
     <#CleanUp before close #>
     Remove-Item -Path $Env:TEMP\* -Filter '*_Host_Vol_Map_Temp.txt' -Force
+    Remove-Item -Path $Env:TEMP\* -Filter '*_ZoneShow_Temp.csv' -Force
 
     $Mainform.Close()
 })
