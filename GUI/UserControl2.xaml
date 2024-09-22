@@ -649,7 +649,7 @@
                     </Grid.RowDefinitions>
                     <StackPanel Grid.Row="0" Grid.Column="0" >
                         <Label x:Name="lb_FabricOne" Content="Fabric A" Style="{StaticResource MainLabelStyle}" />
-                        <StackPanel Orientation="Horizontal" >
+                        <StackPanel x:Name="stp_FilterFabricOneVisibilty" Orientation="Horizontal" >
                         <ComboBox x:Name="cb_FilterFabricOne" ToolTip="Selcet your Filter" SelectedIndex="0" SelectedValuePath="Content" Style="{StaticResource MainComboBoxStyle}">
                                 <ComboBoxItem>Zone</ComboBoxItem>
                                 <ComboBoxItem>WWPN</ComboBoxItem>
@@ -677,7 +677,7 @@
                     </StackPanel>
                     <StackPanel Grid.Row="0" Grid.Column="1"  >
                         <Label x:Name="lb_FabricTwo" Content="Fabric B" Style="{StaticResource MainLabelStyle}" />
-                        <StackPanel Orientation="Horizontal" >
+                        <StackPanel x:Name="stp_FilterFabricTwoVisibilty" Orientation="Horizontal" >
                         <ComboBox x:Name="cb_FilterFabricTwo" ToolTip="Selcet your Filter" SelectedIndex="0" SelectedValuePath="Content" Style="{StaticResource MainComboBoxStyle}">
                                 <ComboBoxItem>Zone</ComboBoxItem>
                                 <ComboBoxItem>WWPN</ComboBoxItem>
