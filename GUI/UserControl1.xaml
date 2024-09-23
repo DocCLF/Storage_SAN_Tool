@@ -576,7 +576,7 @@
                                 <DataGridTextColumn Width="auto" Header="RXPwr" Binding ="{Binding RXPwr}" IsReadOnly="True"/>
                             </DataGrid.Columns>
                         </DataGrid>
-                        <DataGrid Grid.Row="1" Grid.Column="1" x:Name="dg_FCPortStatsTwo" AutoGenerateColumns="False" Margin="5" MaxHeight="400">
+                        <DataGrid Grid.Row="1" Grid.Column="1" x:Name="dg_FCPortStatsTwo" AutoGenerateColumns="False" Margin="5,20,5,5" MaxHeight="400">
                             <DataGrid.Style>
                                 <Style TargetType="DataGrid">
                                     <Style.Triggers>
@@ -616,7 +616,7 @@
                                 <DataGridTextColumn Width="auto" Header="RXPwr" Binding ="{Binding RXPwr}" IsReadOnly="True"/>
                             </DataGrid.Columns>
                         </DataGrid>
-                        <DataGrid Grid.Row="1" Grid.Column="1" x:Name="dg_FCPortStatsThree" AutoGenerateColumns="False" Margin="5" MaxHeight="400">
+                        <DataGrid Grid.Row="1" Grid.Column="1" x:Name="dg_FCPortStatsThree" AutoGenerateColumns="False" Margin="5,20,5,5" MaxHeight="400">
                             <DataGrid.Style>
                                 <Style TargetType="DataGrid">
                                     <Style.Triggers>
@@ -656,7 +656,7 @@
                                 <DataGridTextColumn Width="auto" Header="RXPwr" Binding ="{Binding RXPwr}" IsReadOnly="True"/>
                             </DataGrid.Columns>
                         </DataGrid>
-                        <DataGrid Grid.Row="1" Grid.Column="1" x:Name="dg_FCPortStatsFour" AutoGenerateColumns="False" Margin="5" MaxHeight="400">
+                        <DataGrid Grid.Row="1" Grid.Column="1" x:Name="dg_FCPortStatsFour" AutoGenerateColumns="False" Margin="5,20,5,5" MaxHeight="400">
                             <DataGrid.Style>
                                 <Style TargetType="DataGrid">
                                     <Style.Triggers>
