@@ -34,13 +34,13 @@ function FOS_ZoneDetails  {
         [int]$ProgCounter=0
         $ProgressBar = New-ProgressBar
         <# Connect to Device and get all needed Data #>
-        #if($TD_Device_ConnectionTyp -eq "ssh"){
-        #    $FOS_MainInformation = ssh $TD_Device_UserName@$TD_Device_DeviceIP 'zoneshow'
-        #}else {
-        #    $FOS_MainInformation = plink $TD_Device_UserName@$TD_Device_DeviceIP -pw $TD_Device_PW -batch 'zoneshow'
-        #}
+        if($TD_Device_ConnectionTyp -eq "ssh"){
+            $FOS_MainInformation = ssh $TD_Device_UserName@$TD_Device_DeviceIP 'zoneshow'
+        }else {
+            $FOS_MainInformation = plink $TD_Device_UserName@$TD_Device_DeviceIP -pw $TD_Device_PW -batch 'zoneshow'
+        }
         <# next line is only for tests #>
-        $FOS_MainInformation = Get-Content -Path "C:\Users\mailt\Documents\Schl_Fab1.txt"
+        #$FOS_MainInformation = Get-Content -Path "C:\Users\mailt\Documents\Schl_Fab1.txt"
 
         $FOS_ZoneCount = $FOS_MainInformation.count
         0..$FOS_ZoneCount |ForEach-Object {

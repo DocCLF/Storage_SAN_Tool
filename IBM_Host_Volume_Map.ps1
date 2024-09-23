@@ -63,6 +63,7 @@ function IBM_Host_Volume_Map {
                 $i = $_
             }
         }       
+        $TD_HostInfos = $TD_CollectVolInfo | Select-Object -First (($TD_CollectVolInfo.count)-($TD_Resaults.Count)-1)
     }
     process{
         $ProgressBar = New-ProgressBar
@@ -93,9 +94,9 @@ function IBM_Host_Volume_Map {
             }
             $TD_SplitInfos
             <# Progressbar  #>
-            $ProgCounter++
-            $Completed = ($ProgCounter/$TD_CollectVolInfo.Count) * 100
-            Write-ProgressBar -ProgressBar $ProgressBar -Activity "Collect data for Device $($TD_Line_ID)" -PercentComplete $Completed
+            #$ProgCounter++
+            #$Completed = ($ProgCounter/$TD_CollectVolInfo.Count) * 100
+            #Write-ProgressBar -ProgressBar $ProgressBar -Activity "Collect data for Device $($TD_Line_ID)" -PercentComplete $Completed
         
         }
         
