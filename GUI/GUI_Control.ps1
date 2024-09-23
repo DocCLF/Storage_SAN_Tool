@@ -908,7 +908,7 @@ $TD_btn_IBM_BackUpConfig.add_click({
                 if($TD_Credential.ConnectionTyp -eq "ssh"){
                     try {
                         $TD_BUInfoTwo = ssh $StorageUserName@$Device_IP "svcconfig backup"
-                        $TD_tb_BackUpInfoDeviceTwo.Text = $TD_BUInfoTwo
+                        $TD_tb_BackUpInfoDeviceTwo.Text = $TD_BUInfoTwo.TrimStart('.')
                         Start-Sleep -Seconds 0.5
                         pscp -unsafe $StorageUserName@$($Device_IP):/dumps/svc.config.backup.* $($TD_tb_ExportPath.Text)
                     }
@@ -921,7 +921,7 @@ $TD_btn_IBM_BackUpConfig.add_click({
                 }else{
                     try {
                         $TD_BUInfoTwo = plink $StorageUserName@$Device_IP -pw $($TD_Credential.StoragePassword) -batch "svcconfig backup"
-                        $TD_tb_BackUpInfoDeviceTwo.Text = $TD_BUInfoTwo
+                        $TD_tb_BackUpInfoDeviceTwo.Text = $TD_BUInfoTwo.TrimStart('.')
                         Start-Sleep -Seconds 0.5
                         pscp -unsafe -pw $($TD_Credential.StoragePassword) $StorageUserName@$($Device_IP):/dumps/svc.config.backup.* $($TD_tb_ExportPath.Text)
                     }
@@ -939,7 +939,7 @@ $TD_btn_IBM_BackUpConfig.add_click({
                 if($TD_Credential.ConnectionTyp -eq "ssh"){
                     try {
                         $TD_BUInfoThree = ssh $StorageUserName@$Device_IP "svcconfig backup"
-                        $TD_tb_BackUpInfoDeviceThree.Text = $TD_BUInfoThree
+                        $TD_tb_BackUpInfoDeviceThree.Text = $TD_BUInfoThree.TrimStart('.')
                         Start-Sleep -Seconds 0.5
                         pscp -unsafe $StorageUserName@$($Device_IP):/dumps/svc.config.backup.* $($TD_tb_ExportPath.Text)
                     }
@@ -952,7 +952,7 @@ $TD_btn_IBM_BackUpConfig.add_click({
                 }else{
                     try {
                         $TD_BUInfoThree = plink $StorageUserName@$Device_IP -pw $($TD_Credential.StoragePassword) -batch "svcconfig backup"
-                        $TD_tb_BackUpInfoDeviceThree.Text = $TD_BUInfoThree
+                        $TD_tb_BackUpInfoDeviceThree.Text = $TD_BUInfoThree.TrimStart('.')
                         Start-Sleep -Seconds 0.5
                         pscp -unsafe -pw $($TD_Credential.StoragePassword) $StorageUserName@$($Device_IP):/dumps/svc.config.backup.* $($TD_tb_ExportPath.Text)
                     }
@@ -970,7 +970,7 @@ $TD_btn_IBM_BackUpConfig.add_click({
                 if($TD_Credential.ConnectionTyp -eq "ssh"){
                     try {
                         $TD_BUInfoFour = ssh ssh $StorageUserName@$Device_IP "svcconfig backup"
-                        $TD_tb_BackUpInfoDeviceFour.Text = $TD_BUInfoFour
+                        $TD_tb_BackUpInfoDeviceFour.Text = $TD_BUInfoFour.TrimStart('.')
                         Start-Sleep -Seconds 0.5
                         pscp -unsafe $StorageUserName@$($Device_IP):/dumps/svc.config.backup.* $($TD_tb_ExportPath.Text)
                     }
@@ -983,7 +983,7 @@ $TD_btn_IBM_BackUpConfig.add_click({
                 }else{
                     try {
                         $TD_BUInfoFour = plink $StorageUserName@$Device_IP -pw $($TD_Credential.StoragePassword) -batch "svcconfig backup"
-                        $TD_tb_BackUpInfoDeviceFour.Text = $TD_BUInfoFour
+                        $TD_tb_BackUpInfoDeviceFour.Text = $TD_BUInfoFour.TrimStart('.')
                         Start-Sleep -Seconds 0.5
                         pscp -unsafe -pw $($TD_Credential.StoragePassword) $StorageUserName@$($Device_IP):/dumps/svc.config.backup.* $($TD_tb_ExportPath.Text)
                     }
@@ -999,7 +999,7 @@ $TD_btn_IBM_BackUpConfig.add_click({
         }
     }
     try {
-        $TD_ExportFiles = Get-ChildItem -Path $TD_tb_Exportpath.Text
+        $TD_ExportFiles = Get-ChildItem -Path $TD_tb_Exportpath.Text -Filter "svc.config.backup.*"
         #Write-Host $TD_ExportFiles.count = $TD_ExportFiles
         #$TD_tb_BackUpFileErrorInfo.Text = $TD_tb_Exportpath
         $TD_tb_BackUpFileInfoDevice.ItemsSource = $TD_ExportFiles
@@ -1048,24 +1048,24 @@ $TD_btn_IBM_CleanUpConfigDir.add_click({
                         if($TD_Credential.ConnectionTyp -eq "ssh"){
                             try {
                                 $TD_BUInfoOne = ssh $StorageUserName@$Device_IP "svcconfig clear"
-                                #$TD_tb_BackUpInfoDeviceOne.Text = $TD_BUInfoOne.TrimStart('.')
+                                $TD_tb_BackUpInfoDeviceOne.Text = $TD_BUInfoOne.TrimStart('.')
                             }
                             catch {
                                 <#Do this if a terminating exception happens#>
                                 Write-Host "Something went wrong" -ForegroundColor DarkMagenta
                                 Write-Host $_.Exception.Message
-                                #$TD_tb_BackUpInfoDeviceOne.Text = $_.Exception.Message
+                                $TD_tb_BackUpInfoDeviceOne.Text = $_.Exception.Message
                             }
                         }else{
                             try {
                                 $TD_BUInfoOne = plink $StorageUserName@$Device_IP -pw $($TD_Credential.StoragePassword) -batch "svcconfig clear"
-                                #$TD_tb_BackUpInfoDeviceOne.Text = $TD_BUInfoOne.TrimStart('.')
+                                $TD_tb_BackUpInfoDeviceOne.Text = $TD_BUInfoOne.TrimStart('.')
                             }
                             catch {
                                 <#Do this if a terminating exception happens#>
                                 Write-Host "Something went wrong" -ForegroundColor DarkMagenta
                                 Write-Host $_.Exception.Message
-                                #$TD_tb_BackUpInfoDeviceOne.Text = $_.Exception.Message
+                                $TD_tb_BackUpInfoDeviceOne.Text = $_.Exception.Message
                             }
                         }
                     }
@@ -1075,24 +1075,24 @@ $TD_btn_IBM_CleanUpConfigDir.add_click({
                         if($TD_Credential.ConnectionTyp -eq "ssh"){
                             try {
                                 $TD_BUInfoOne = ssh $StorageUserName@$Device_IP "svcconfig clear"
-                                #$TD_tb_BackUpInfoDeviceTwo.Text = $TD_BUInfoOne.TrimStart('.')
+                                $TD_tb_BackUpInfoDeviceTwo.Text = $TD_BUInfoOne.TrimStart('.')
                             }
                             catch {
                                 <#Do this if a terminating exception happens#>
                                 Write-Host "Something went wrong" -ForegroundColor DarkMagenta
                                 Write-Host $_.Exception.Message
-                                #$TD_tb_BackUpInfoDeviceTwo.Text = $_.Exception.Message
+                                $TD_tb_BackUpInfoDeviceTwo.Text = $_.Exception.Message
                             }
                         }else{
                             try {
                                 $TD_BUInfoOne = plink $StorageUserName@$Device_IP -pw $($TD_Credential.StoragePassword) -batch "svcconfig clear"
-                                #$TD_tb_BackUpInfoDeviceTwo.Text = $TD_BUInfoOne.TrimStart('.')
+                                $TD_tb_BackUpInfoDeviceTwo.Text = $TD_BUInfoOne.TrimStart('.')
                             }
                             catch {
                                 <#Do this if a terminating exception happens#>
                                 Write-Host "Something went wrong" -ForegroundColor DarkMagenta
                                 Write-Host $_.Exception.Message
-                                #$TD_tb_BackUpInfoDeviceTwo.Text = $_.Exception.Message
+                                $TD_tb_BackUpInfoDeviceTwo.Text = $_.Exception.Message
                             }
                         }
                     }
@@ -1102,24 +1102,24 @@ $TD_btn_IBM_CleanUpConfigDir.add_click({
                         if($TD_Credential.ConnectionTyp -eq "ssh"){
                             try {
                                 $TD_BUInfoOne = ssh $StorageUserName@$Device_IP "svcconfig clear"
-                                #$TD_tb_BackUpInfoDeviceThree.Text = $TD_BUInfoOne.TrimStart('.')
+                                $TD_tb_BackUpInfoDeviceThree.Text = $TD_BUInfoOne.TrimStart('.')
                             }
                             catch {
                                 <#Do this if a terminating exception happens#>
                                 Write-Host "Something went wrong" -ForegroundColor DarkMagenta
                                 Write-Host $_.Exception.Message
-                                #$TD_tb_BackUpInfoDeviceThree.Text = $_.Exception.Message
+                                $TD_tb_BackUpInfoDeviceThree.Text = $_.Exception.Message
                             }
                         }else{
                             try {
                                 $TD_BUInfoOne = plink $StorageUserName@$Device_IP -pw $($TD_Credential.StoragePassword) -batch "svcconfig clear"
-                                #$TD_tb_BackUpInfoDeviceThree.Text = $TD_BUInfoOne.TrimStart('.')
+                                $TD_tb_BackUpInfoDeviceThree.Text = $TD_BUInfoOne.TrimStart('.')
                             }
                             catch {
                                 <#Do this if a terminating exception happens#>
                                 Write-Host "Something went wrong" -ForegroundColor DarkMagenta
                                 Write-Host $_.Exception.Message
-                                #$TD_tb_BackUpInfoDeviceThree.Text = $_.Exception.Message
+                                $TD_tb_BackUpInfoDeviceThree.Text = $_.Exception.Message
                             }
                         }
                     }
@@ -1129,24 +1129,24 @@ $TD_btn_IBM_CleanUpConfigDir.add_click({
                         if($TD_Credential.ConnectionTyp -eq "ssh"){
                             try {
                                 $TD_BUInfoOne = ssh $StorageUserName@$Device_IP "svcconfig clear"
-                                #$TD_tb_BackUpInfoDeviceFour.Text = $TD_BUInfoOne.TrimStart('.')
+                                $TD_tb_BackUpInfoDeviceFour.Text = $TD_BUInfoOne.TrimStart('.')
                             }
                             catch {
                                 <#Do this if a terminating exception happens#>
                                 Write-Host "Something went wrong" -ForegroundColor DarkMagenta
                                 Write-Host $_.Exception.Message
-                                #$TD_tb_BackUpInfoDeviceFour.Text = $_.Exception.Message
+                                $TD_tb_BackUpInfoDeviceFour.Text = $_.Exception.Message
                             }
                         }else{
                             try {
                                 $TD_BUInfoOne = plink $StorageUserName@$Device_IP -pw $($TD_Credential.StoragePassword) -batch "svcconfig clear"
-                                #$TD_tb_BackUpInfoDeviceFour.Text = $TD_BUInfoOne.TrimStart('.')
+                                $TD_tb_BackUpInfoDeviceFour.Text = $TD_BUInfoOne.TrimStart('.')
                             }
                             catch {
                                 <#Do this if a terminating exception happens#>
                                 Write-Host "Something went wrong" -ForegroundColor DarkMagenta
                                 Write-Host $_.Exception.Message
-                                #$TD_tb_BackUpInfoDeviceFour.Text = $_.Exception.Message
+                                $TD_tb_BackUpInfoDeviceFour.Text = $_.Exception.Message
                             }
                         }
                     }
