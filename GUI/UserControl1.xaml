@@ -88,7 +88,7 @@
         <GroupBox Grid.Column="1" Grid.Row="1" Header="Results" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,10,0,0" >
             <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" >
                 <Grid>
-                <StackPanel x:Name="stp_StorageEventLog" Orientation="Vertical" Margin="2" Visibility="{Binding ElementName=btn_IBM_Eventlog, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
+<StackPanel x:Name="stp_StorageEventLog" Orientation="Vertical" Margin="2" Visibility="{Binding ElementName=btn_IBM_Eventlog, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto" />
@@ -99,24 +99,123 @@
                             <RowDefinition Height="auto" />
                         </Grid.RowDefinitions>
                         <StackPanel Grid.Row="0" Grid.Column="0" >
-                            <Label Content="Device 1" />
-                            <DataGrid Name="lb_StorageEventLogOne" AutoGenerateColumns="True" IsReadOnly="True" Height="Auto" Width="Auto" Margin="5,0,5,5" >
-                            </DataGrid>
+                            <Label Content="Device 1" />   
+                            <DataGrid x:Name="lb_StorageEventLogOne" AutoGenerateColumns="False" Margin="5,0,5,5" MaxHeight="420">
+                            <DataGrid.RowStyle>
+                                <Style TargetType="DataGridRow">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding Status}" Value="alert">
+                                            <Setter Property="Background" Value="Red" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGrid.RowStyle>
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Width="auto" Header="Time" Binding="{Binding LastTime}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="ObjectType" Binding="{Binding ObjectType}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="ObjectName" Binding="{Binding ObjectName}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Status" Binding="{Binding Status}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Fixed" Binding="{Binding Fixed}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="ErrorCode" Binding="{Binding ErrorCode}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Description" Binding="{Binding Description}" IsReadOnly="True"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
                         </StackPanel>
-                        <StackPanel Grid.Row="0" Grid.Column="1"  >
+                        <StackPanel Grid.Row="0" Grid.Column="1" >
                             <Label Content="Device 2" />
-                            <DataGrid Name="lb_StorageEventLogTwo" AutoGenerateColumns="True" IsReadOnly="True" Height="Auto" Width="Auto" Margin="5,0,5,5" >
-                            </DataGrid>
+                            <DataGrid x:Name="lb_StorageEventLogTwo" AutoGenerateColumns="False" Margin="5,0,5,5" MaxHeight="420">
+                            <DataGrid.Style>
+                                <Style TargetType="DataGrid">
+                                    <Style.Triggers>
+                                        <Trigger Property="HasItems" Value="False">
+                                          <Setter Property="Visibility" Value="Collapsed"></Setter>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGrid.Style>
+                            <DataGrid.RowStyle>
+                                <Style TargetType="DataGridRow">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding Status}" Value="alert">
+                                            <Setter Property="Background" Value="Red" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGrid.RowStyle>
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Width="auto" Header="Time" Binding="{Binding LastTime}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="ObjectType" Binding="{Binding ObjectType}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="ObjectName" Binding="{Binding ObjectName}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Status" Binding="{Binding Status}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Fixed" Binding="{Binding Fixed}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="ErrorCode" Binding="{Binding ErrorCode}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Description" Binding="{Binding Description}" IsReadOnly="True"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
                         </StackPanel>
                         <StackPanel Grid.Row="1" Grid.Column="0"  >
                             <Label Content="Device 3" />
-                            <DataGrid Name="lb_StorageEventLogThree" AutoGenerateColumns="True" IsReadOnly="True" Height="Auto" Width="Auto" Margin="5,0,5,5" >
-                            </DataGrid>
+                            <DataGrid x:Name="lb_StorageEventLogThree" AutoGenerateColumns="False" Margin="5,0,5,5" MaxHeight="420">
+                            <DataGrid.Style>
+                                <Style TargetType="DataGrid">
+                                    <Style.Triggers>
+                                        <Trigger Property="HasItems" Value="False">
+                                          <Setter Property="Visibility" Value="Collapsed"></Setter>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGrid.Style>
+                            <DataGrid.RowStyle>
+                                <Style TargetType="DataGridRow">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding Status}" Value="alert">
+                                            <Setter Property="Background" Value="Red" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGrid.RowStyle>
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Width="auto" Header="Time" Binding="{Binding LastTime}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="ObjectType" Binding="{Binding ObjectType}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="ObjectName" Binding="{Binding ObjectName}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Status" Binding="{Binding Status}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Fixed" Binding="{Binding Fixed}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="ErrorCode" Binding="{Binding ErrorCode}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Description" Binding="{Binding Description}" IsReadOnly="True"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
                         </StackPanel>
                         <StackPanel Grid.Row="1" Grid.Column="1" >
                             <Label Content="Device 4" />
-                            <DataGrid Name="lb_StorageEventLogFour" AutoGenerateColumns="True" IsReadOnly="True" Height="Auto" Width="Auto" Margin="5,0,5,5" >
-                            </DataGrid>
+                            <DataGrid x:Name="lb_StorageEventLogFour" AutoGenerateColumns="False" Margin="5,0,5,5" MaxHeight="420">
+                            <DataGrid.Style>
+                                <Style TargetType="DataGrid">
+                                    <Style.Triggers>
+                                        <Trigger Property="HasItems" Value="False">
+                                          <Setter Property="Visibility" Value="Collapsed"></Setter>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGrid.Style>
+                            <DataGrid.RowStyle>
+                                <Style TargetType="DataGridRow">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding Status}" Value="alert">
+                                            <Setter Property="Background" Value="Red" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGrid.RowStyle>
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Width="auto" Header="Time" Binding="{Binding LastTime}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="ObjectType" Binding="{Binding ObjectType}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="ObjectName" Binding="{Binding ObjectName}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Status" Binding="{Binding Status}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Fixed" Binding="{Binding Fixed}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="ErrorCode" Binding="{Binding ErrorCode}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Description" Binding="{Binding Description}" IsReadOnly="True"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
                         </StackPanel>
                     </Grid>
                 </StackPanel>
@@ -266,99 +365,160 @@
                             <ColumnDefinition Width="auto" />
                             <ColumnDefinition Width="auto" />
                         </Grid.ColumnDefinitions>
-                        <!--Label need a better place to avoid repetition of code 
+                      <!--Label need a better place to avoid repetition of code 
                         <Label Grid.Row="0" x:Name="label_ExpPDI" Content="Export Path :" Style="{StaticResource MainLabelStyle}" Margin="2,5,0,5"/> -->
-                        <ListView Grid.Row="0" Grid.Column="0" x:Name="lb_DriveInfo" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="5" MaxHeight="400">
-                            <ListView.View>
-                                <GridView>
-                                    <GridViewColumn Header="DriveID"  DisplayMemberBinding ="{Binding DriveID}"/>  
-                                    <GridViewColumn Header="DriveCap" DisplayMemberBinding ="{Binding DriveCap}"/>  
-                                    <GridViewColumn Header="PhyDriveCap" DisplayMemberBinding ="{Binding PhyDriveCap}"/>
-                                    <GridViewColumn Header="PhyUsedDriveCap"  DisplayMemberBinding ="{Binding PhyUsedDriveCap}"/>  
-                                    <GridViewColumn Header="EffeUsedDriveCap" DisplayMemberBinding ="{Binding EffeUsedDriveCap}"/>  
-                                    <GridViewColumn Header="DriveStatus" DisplayMemberBinding ="{Binding DriveStatus}"/> 
-                                    <GridViewColumn Header="DriveCap" DisplayMemberBinding ="{Binding DriveCap}"/> 
-                                    <GridViewColumn Header="ProductID" DisplayMemberBinding ="{Binding ProductID}"/>  
-                                    <GridViewColumn Header="FWlev" DisplayMemberBinding ="{Binding FWlev}"/> 
-                                    <GridViewColumn Header="Slot" DisplayMemberBinding ="{Binding Slot}"/> 
-                                </GridView>
-                            </ListView.View>
-                        </ListView >
-                        <ListView Grid.Row="0" Grid.Column="1" x:Name="lb_DriveInfoTwo" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="5" MaxHeight="400">
-                            <ListView.Style>
-                              <Style TargetType="ListView">
-                                <Style.Triggers>
-                                  <Trigger Property="HasItems" Value="False">
-                                    <Setter Property="Visibility" Value="Collapsed"></Setter>
-                                  </Trigger>
-                                </Style.Triggers>
-                              </Style>
-                            </ListView.Style>
-                            <ListView.View>
-                                <GridView>
-                                    <GridViewColumn Header="DriveID"  DisplayMemberBinding ="{Binding DriveID}"/>  
-                                    <GridViewColumn Header="DriveCap" DisplayMemberBinding ="{Binding DriveCap}"/>  
-                                    <GridViewColumn Header="PhyDriveCap" DisplayMemberBinding ="{Binding PhyDriveCap}"/>
-                                    <GridViewColumn Header="PhyUsedDriveCap"  DisplayMemberBinding ="{Binding PhyUsedDriveCap}"/>  
-                                    <GridViewColumn Header="EffeUsedDriveCap" DisplayMemberBinding ="{Binding EffeUsedDriveCap}"/>  
-                                    <GridViewColumn Header="DriveStatus" DisplayMemberBinding ="{Binding DriveStatus}"/> 
-                                    <GridViewColumn Header="DriveCap" DisplayMemberBinding ="{Binding DriveCap}"/> 
-                                    <GridViewColumn Header="ProductID" DisplayMemberBinding ="{Binding ProductID}"/>  
-                                    <GridViewColumn Header="FWlev" DisplayMemberBinding ="{Binding FWlev}"/> 
-                                    <GridViewColumn Header="Slot" DisplayMemberBinding ="{Binding Slot}"/> 
-                                </GridView>
-                            </ListView.View>
-                        </ListView >
-                        <ListView Grid.Row="1" Grid.Column="0" x:Name="lb_DriveInfoThree" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="5" MaxHeight="400">
-                            <ListView.Style>
-                              <Style TargetType="ListView">
-                                <Style.Triggers>
-                                  <Trigger Property="HasItems" Value="False">
-                                    <Setter Property="Visibility" Value="Collapsed"></Setter>
-                                  </Trigger>
-                                </Style.Triggers>
-                              </Style>
-                            </ListView.Style>
-                            <ListView.View>
-                                <GridView>
-                                    <GridViewColumn Header="DriveID"  DisplayMemberBinding ="{Binding DriveID}"/>  
-                                    <GridViewColumn Header="DriveCap" DisplayMemberBinding ="{Binding DriveCap}"/>  
-                                    <GridViewColumn Header="PhyDriveCap" DisplayMemberBinding ="{Binding PhyDriveCap}"/>
-                                    <GridViewColumn Header="PhyUsedDriveCap"  DisplayMemberBinding ="{Binding PhyUsedDriveCap}"/>  
-                                    <GridViewColumn Header="EffeUsedDriveCap" DisplayMemberBinding ="{Binding EffeUsedDriveCap}"/>  
-                                    <GridViewColumn Header="DriveStatus" DisplayMemberBinding ="{Binding DriveStatus}"/> 
-                                    <GridViewColumn Header="DriveCap" DisplayMemberBinding ="{Binding DriveCap}"/> 
-                                    <GridViewColumn Header="ProductID" DisplayMemberBinding ="{Binding ProductID}"/>  
-                                    <GridViewColumn Header="FWlev" DisplayMemberBinding ="{Binding FWlev}"/> 
-                                    <GridViewColumn Header="Slot" DisplayMemberBinding ="{Binding Slot}"/> 
-                                </GridView>
-                            </ListView.View>
-                        </ListView >
-                        <ListView Grid.Row="1" Grid.Column="1" x:Name="lb_DriveInfoFour" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="5" MaxHeight="400">
-                            <ListView.Style>
-                              <Style TargetType="ListView">
-                                <Style.Triggers>
-                                  <Trigger Property="HasItems" Value="False">
-                                    <Setter Property="Visibility" Value="Collapsed"></Setter>
-                                  </Trigger>
-                                </Style.Triggers>
-                              </Style>
-                            </ListView.Style>
-                            <ListView.View>
-                                <GridView>
-                                    <GridViewColumn Header="DriveID"  DisplayMemberBinding ="{Binding DriveID}"/>  
-                                    <GridViewColumn Header="DriveCap" DisplayMemberBinding ="{Binding DriveCap}"/>  
-                                    <GridViewColumn Header="PhyDriveCap" DisplayMemberBinding ="{Binding PhyDriveCap}"/>
-                                    <GridViewColumn Header="PhyUsedDriveCap"  DisplayMemberBinding ="{Binding PhyUsedDriveCap}"/>  
-                                    <GridViewColumn Header="EffeUsedDriveCap" DisplayMemberBinding ="{Binding EffeUsedDriveCap}"/>  
-                                    <GridViewColumn Header="DriveStatus" DisplayMemberBinding ="{Binding DriveStatus}"/> 
-                                    <GridViewColumn Header="DriveCap" DisplayMemberBinding ="{Binding DriveCap}"/> 
-                                    <GridViewColumn Header="ProductID" DisplayMemberBinding ="{Binding ProductID}"/>  
-                                    <GridViewColumn Header="FWlev" DisplayMemberBinding ="{Binding FWlev}"/> 
-                                    <GridViewColumn Header="Slot" DisplayMemberBinding ="{Binding Slot}"/> 
-                                </GridView>
-                            </ListView.View>
-                        </ListView >
+                        <StackPanel Grid.Row="0" Grid.Column="0" Orientation="Vertical">
+                        <Label x:Name="lb_DriveInfoOne" Content="No Device Info" Margin="0,5" FontSize="14" Height="26"/>
+                        <DataGrid x:Name="dg_DriveInfo" AutoGenerateColumns="False" Margin="5" MaxHeight="400">
+                            <DataGrid.Style>
+                                <Style TargetType="DataGrid">
+                                    <Style.Triggers>
+                                        <Trigger Property="HasItems" Value="False">
+                                          <Setter Property="Visibility" Value="Collapsed"></Setter>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGrid.Style>
+                            <DataGrid.RowStyle>
+                                <Style TargetType="DataGridRow">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding DriveStatus}" Value="offline">
+                                            <Setter Property="Background" Value="Red" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding DriveStatus}" Value="degraded">
+                                            <Setter Property="Background" Value="yellow" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGrid.RowStyle>
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Width="auto" Header="DriveID" Binding="{Binding DriveID}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="DriveCap" Binding="{Binding DriveCap}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="PhyDriveCap" Binding="{Binding PhyDriveCap}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="PhyUsedDriveCap" Binding="{Binding PhyUsedDriveCap}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="EffeUsedDriveCap" Binding="{Binding EffeUsedDriveCap}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="DriveStatus" Binding="{Binding DriveStatus}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="DriveCap" Binding="{Binding DriveCap}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="ProductID" Binding="{Binding ProductID}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="FWlev" Binding="{Binding FWlev}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Slot" Binding="{Binding Slot}" IsReadOnly="True"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                        </StackPanel>
+                        <StackPanel Grid.Row="0" Grid.Column="1" Orientation="Vertical">
+                        <Label x:Name="lb_DriveInfoTwo" Content="No Device Info" Margin="0,5" FontSize="14" Height="26"/>
+                        <DataGrid x:Name="dg_DriveInfoTwo" AutoGenerateColumns="False" Margin="5" MaxHeight="400">
+                            <DataGrid.Style>
+                                <Style TargetType="DataGrid">
+                                    <Style.Triggers>
+                                        <Trigger Property="HasItems" Value="False">
+                                          <Setter Property="Visibility" Value="Collapsed"></Setter>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGrid.Style>
+                            <DataGrid.RowStyle>
+                                <Style TargetType="DataGridRow">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding DriveStatus}" Value="offline">
+                                            <Setter Property="Background" Value="Red" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding DriveStatus}" Value="degraded">
+                                            <Setter Property="Background" Value="yellow" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGrid.RowStyle>
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Width="auto" Header="DriveID" Binding="{Binding DriveID}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="DriveCap" Binding="{Binding DriveCap}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="PhyDriveCap" Binding="{Binding PhyDriveCap}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="PhyUsedDriveCap" Binding="{Binding PhyUsedDriveCap}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="EffeUsedDriveCap" Binding="{Binding EffeUsedDriveCap}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="DriveStatus" Binding="{Binding DriveStatus}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="DriveCap" Binding="{Binding DriveCap}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="ProductID" Binding="{Binding ProductID}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="FWlev" Binding="{Binding FWlev}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Slot" Binding="{Binding Slot}" IsReadOnly="True"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                        </StackPanel>
+                        <StackPanel Grid.Row="1" Grid.Column="0" Orientation="Vertical">
+                        <Label x:Name="lb_DriveInfoThree" Content="No Device Info" Margin="0,5" FontSize="14" Height="26"/>
+                        <DataGrid x:Name="dg_DriveInfoThree" AutoGenerateColumns="False" Margin="5" MaxHeight="400">
+                            <DataGrid.Style>
+                                <Style TargetType="DataGrid">
+                                    <Style.Triggers>
+                                        <Trigger Property="HasItems" Value="False">
+                                          <Setter Property="Visibility" Value="Collapsed"></Setter>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGrid.Style>
+                            <DataGrid.RowStyle>
+                                <Style TargetType="DataGridRow">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding DriveStatus}" Value="offline">
+                                            <Setter Property="Background" Value="Red" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding DriveStatus}" Value="degraded">
+                                            <Setter Property="Background" Value="yellow" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGrid.RowStyle>
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Width="auto" Header="DriveID" Binding="{Binding DriveID}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="DriveCap" Binding="{Binding DriveCap}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="PhyDriveCap" Binding="{Binding PhyDriveCap}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="PhyUsedDriveCap" Binding="{Binding PhyUsedDriveCap}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="EffeUsedDriveCap" Binding="{Binding EffeUsedDriveCap}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="DriveStatus" Binding="{Binding DriveStatus}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="DriveCap" Binding="{Binding DriveCap}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="ProductID" Binding="{Binding ProductID}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="FWlev" Binding="{Binding FWlev}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Slot" Binding="{Binding Slot}" IsReadOnly="True"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                        </StackPanel>
+                        <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Vertical">
+                        <Label x:Name="lb_DriveInfoFour" Content="No Device Info" Margin="0,5" FontSize="14" Height="26"/>
+                        <DataGrid x:Name="dg_DriveInfoFour" AutoGenerateColumns="False" Margin="5" MaxHeight="400">
+                            <DataGrid.Style>
+                                <Style TargetType="DataGrid">
+                                    <Style.Triggers>
+                                        <Trigger Property="HasItems" Value="False">
+                                          <Setter Property="Visibility" Value="Collapsed"></Setter>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGrid.Style>
+                            <DataGrid.RowStyle>
+                                <Style TargetType="DataGridRow">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding DriveStatus}" Value="offline">
+                                            <Setter Property="Background" Value="Red" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding DriveStatus}" Value="degraded">
+                                            <Setter Property="Background" Value="yellow" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGrid.RowStyle>
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Width="auto" Header="DriveID" Binding="{Binding DriveID}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="DriveCap" Binding="{Binding DriveCap}" IsReadOnly="True" />
+                                <DataGridTextColumn Width="auto" Header="PhyDriveCap" Binding="{Binding PhyDriveCap}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="PhyUsedDriveCap" Binding="{Binding PhyUsedDriveCap}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="EffeUsedDriveCap" Binding="{Binding EffeUsedDriveCap}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="DriveStatus" Binding="{Binding DriveStatus}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="DriveCap" Binding="{Binding DriveCap}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="ProductID" Binding="{Binding ProductID}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="FWlev" Binding="{Binding FWlev}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Slot" Binding="{Binding Slot}" IsReadOnly="True"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                        </StackPanel>
                     </Grid>
                 </StackPanel>
                 <StackPanel  x:Name="stp_FCPortStats" Orientation="Horizontal" Margin="2" Visibility="{Binding ElementName=btn_IBM_FCPortStats, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
@@ -376,106 +536,170 @@
                         <!-- <Label Content="You need admin rights to use this command." Style="{StaticResource MainLabelStyle}" Margin="10,5,0,5"/> -->
                         </StackPanel>
                         <StackPanel Orientation="Vertical" Grid.Row="1">
-                        <ListView x:Name="lb_FCPortStatsOne" HorizontalAlignment="Left" VerticalAlignment="Top">
-                            <ListView.View>
-                                <GridView>
-                                    <GridViewColumn Header="NodeID"  DisplayMemberBinding ="{Binding NodeID}"/>  
-                                    <GridViewColumn Header="NodeSN" DisplayMemberBinding ="{Binding NodeSN}"/>  
-                                    <GridViewColumn Header="NodeName" DisplayMemberBinding ="{Binding NodeName}"/>
-                                    <GridViewColumn Header="NodeWWNN"  DisplayMemberBinding ="{Binding NodeWWNN}"/>  
-                                    <GridViewColumn Header="CardType" DisplayMemberBinding ="{Binding CardType}"/>  
-                                    <GridViewColumn Header="CardID" DisplayMemberBinding ="{Binding CardID}"/> 
-                                    <GridViewColumn Header="PortID" DisplayMemberBinding ="{Binding PortID}"/> 
-                                    <GridViewColumn Header="WWPN" DisplayMemberBinding ="{Binding WWPN}"/>  
-                                    <GridViewColumn Header="LinkFailure" DisplayMemberBinding ="{Binding LinkFailure}"/> 
-                                    <GridViewColumn Header="LoseSync" DisplayMemberBinding ="{Binding LoseSync}"/> 
-                                    <GridViewColumn Header="LoseSig" DisplayMemberBinding ="{Binding LoseSig}"/> 
-                                    <GridViewColumn Header="PSErrCount" DisplayMemberBinding ="{Binding PSErrCount}"/> 
-                                    <GridViewColumn Header="InvTransErr" DisplayMemberBinding ="{Binding InvTransErr}"/>  
-                                    <GridViewColumn Header="CRCErr" DisplayMemberBinding ="{Binding CRCErr}"/> 
-                                    <GridViewColumn Header="ZeroBtB" DisplayMemberBinding ="{Binding ZeroBtB}"/> 
-                                    <GridViewColumn Header="SFPTemp" DisplayMemberBinding ="{Binding SFPTemp}"/> 
-                                    <GridViewColumn Header="TXPwr" DisplayMemberBinding ="{Binding TXPwr}"/>  
-                                    <GridViewColumn Header="RXPwr" DisplayMemberBinding ="{Binding RXPwr}"/> 
-                                </GridView>
-                            </ListView.View>
-                        </ListView >
-                        <ListView x:Name="lb_FCPortStatsTwo" HorizontalAlignment="Left" VerticalAlignment="Top">
-                            <ListView.View>
-                                <GridView>
-                                    <GridViewColumn Header="NodeID"  DisplayMemberBinding ="{Binding NodeID}"/>  
-                                    <GridViewColumn Header="NodeSN" DisplayMemberBinding ="{Binding NodeSN}"/>  
-                                    <GridViewColumn Header="NodeName" DisplayMemberBinding ="{Binding NodeName}"/>
-                                    <GridViewColumn Header="NodeWWNN"  DisplayMemberBinding ="{Binding NodeWWNN}"/>  
-                                    <GridViewColumn Header="CardType" DisplayMemberBinding ="{Binding CardType}"/>  
-                                    <GridViewColumn Header="CardID" DisplayMemberBinding ="{Binding CardID}"/> 
-                                    <GridViewColumn Header="PortID" DisplayMemberBinding ="{Binding PortID}"/> 
-                                    <GridViewColumn Header="WWPN" DisplayMemberBinding ="{Binding WWPN}"/>  
-                                    <GridViewColumn Header="LinkFailure" DisplayMemberBinding ="{Binding LinkFailure}"/> 
-                                    <GridViewColumn Header="LoseSync" DisplayMemberBinding ="{Binding LoseSync}"/> 
-                                    <GridViewColumn Header="LoseSig" DisplayMemberBinding ="{Binding LoseSig}"/> 
-                                    <GridViewColumn Header="PSErrCount" DisplayMemberBinding ="{Binding PSErrCount}"/> 
-                                    <GridViewColumn Header="InvTransErr" DisplayMemberBinding ="{Binding InvTransErr}"/>  
-                                    <GridViewColumn Header="CRCErr" DisplayMemberBinding ="{Binding CRCErr}"/> 
-                                    <GridViewColumn Header="ZeroBtB" DisplayMemberBinding ="{Binding ZeroBtB}"/> 
-                                    <GridViewColumn Header="SFPTemp" DisplayMemberBinding ="{Binding SFPTemp}"/> 
-                                    <GridViewColumn Header="TXPwr" DisplayMemberBinding ="{Binding TXPwr}"/>  
-                                    <GridViewColumn Header="RXPwr" DisplayMemberBinding ="{Binding RXPwr}"/> 
-                                </GridView>
-                            </ListView.View>
-                        </ListView >
-                        <ListView x:Name="lb_FCPortStatsThree" HorizontalAlignment="Left" VerticalAlignment="Top">
-                            <ListView.View>
-                                <GridView>
-                                    <GridViewColumn Header="NodeID"  DisplayMemberBinding ="{Binding NodeID}"/>  
-                                    <GridViewColumn Header="NodeSN" DisplayMemberBinding ="{Binding NodeSN}"/>  
-                                    <GridViewColumn Header="NodeName" DisplayMemberBinding ="{Binding NodeName}"/>
-                                    <GridViewColumn Header="NodeWWNN"  DisplayMemberBinding ="{Binding NodeWWNN}"/>  
-                                    <GridViewColumn Header="CardType" DisplayMemberBinding ="{Binding CardType}"/>  
-                                    <GridViewColumn Header="CardID" DisplayMemberBinding ="{Binding CardID}"/> 
-                                    <GridViewColumn Header="PortID" DisplayMemberBinding ="{Binding PortID}"/> 
-                                    <GridViewColumn Header="WWPN" DisplayMemberBinding ="{Binding WWPN}"/>  
-                                    <GridViewColumn Header="LinkFailure" DisplayMemberBinding ="{Binding LinkFailure}"/> 
-                                    <GridViewColumn Header="LoseSync" DisplayMemberBinding ="{Binding LoseSync}"/> 
-                                    <GridViewColumn Header="LoseSig" DisplayMemberBinding ="{Binding LoseSig}"/> 
-                                    <GridViewColumn Header="PSErrCount" DisplayMemberBinding ="{Binding PSErrCount}"/> 
-                                    <GridViewColumn Header="InvTransErr" DisplayMemberBinding ="{Binding InvTransErr}"/>  
-                                    <GridViewColumn Header="CRCErr" DisplayMemberBinding ="{Binding CRCErr}"/> 
-                                    <GridViewColumn Header="ZeroBtB" DisplayMemberBinding ="{Binding ZeroBtB}"/> 
-                                    <GridViewColumn Header="SFPTemp" DisplayMemberBinding ="{Binding SFPTemp}"/> 
-                                    <GridViewColumn Header="TXPwr" DisplayMemberBinding ="{Binding TXPwr}"/>  
-                                    <GridViewColumn Header="RXPwr" DisplayMemberBinding ="{Binding RXPwr}"/> 
-                                </GridView>
-                            </ListView.View>
-                        </ListView >
-                        <ListView x:Name="lb_FCPortStatsFour" HorizontalAlignment="Left" VerticalAlignment="Top">
-                            <ListView.View>
-                                <GridView>
-                                    <GridViewColumn Header="NodeID"  DisplayMemberBinding ="{Binding NodeID}"/>  
-                                    <GridViewColumn Header="NodeSN" DisplayMemberBinding ="{Binding NodeSN}"/>  
-                                    <GridViewColumn Header="NodeName" DisplayMemberBinding ="{Binding NodeName}"/>
-                                    <GridViewColumn Header="NodeWWNN"  DisplayMemberBinding ="{Binding NodeWWNN}"/>  
-                                    <GridViewColumn Header="CardType" DisplayMemberBinding ="{Binding CardType}"/>  
-                                    <GridViewColumn Header="CardID" DisplayMemberBinding ="{Binding CardID}"/> 
-                                    <GridViewColumn Header="PortID" DisplayMemberBinding ="{Binding PortID}"/> 
-                                    <GridViewColumn Header="WWPN" DisplayMemberBinding ="{Binding WWPN}"/>  
-                                    <GridViewColumn Header="LinkFailure" DisplayMemberBinding ="{Binding LinkFailure}"/> 
-                                    <GridViewColumn Header="LoseSync" DisplayMemberBinding ="{Binding LoseSync}"/> 
-                                    <GridViewColumn Header="LoseSig" DisplayMemberBinding ="{Binding LoseSig}"/> 
-                                    <GridViewColumn Header="PSErrCount" DisplayMemberBinding ="{Binding PSErrCount}"/> 
-                                    <GridViewColumn Header="InvTransErr" DisplayMemberBinding ="{Binding InvTransErr}"/>  
-                                    <GridViewColumn Header="CRCErr" DisplayMemberBinding ="{Binding CRCErr}"/> 
-                                    <GridViewColumn Header="ZeroBtB" DisplayMemberBinding ="{Binding ZeroBtB}"/> 
-                                    <GridViewColumn Header="SFPTemp" DisplayMemberBinding ="{Binding SFPTemp}"/> 
-                                    <GridViewColumn Header="TXPwr" DisplayMemberBinding ="{Binding TXPwr}"/>  
-                                    <GridViewColumn Header="RXPwr" DisplayMemberBinding ="{Binding RXPwr}"/> 
-                                </GridView>
-                            </ListView.View>
-                        </ListView >
+                        <DataGrid Grid.Row="1" Grid.Column="1" x:Name="dg_FCPortStatsOne" AutoGenerateColumns="False" Margin="5" MaxHeight="400">
+                            <DataGrid.Style>
+                                <Style TargetType="DataGrid">
+                                    <Style.Triggers>
+                                        <Trigger Property="HasItems" Value="False">
+                                          <Setter Property="Visibility" Value="Collapsed"></Setter>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGrid.Style>
+                            <DataGrid.RowStyle>
+                                <Style TargetType="DataGridRow">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding LinkFailure}" Value="True">
+                                            <Setter Property="Background" Value="Red" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGrid.RowStyle>
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Width="auto" Header="NodeID"  Binding ="{Binding NodeID}" IsReadOnly="True"/>
+                                <!-- <DataGridTextColumn Width="auto" Header="NodeSN" Binding ="{Binding NodeSN}" IsReadOnly="True"/>  -->
+                                <DataGridTextColumn Width="auto" Header="NodeName" Binding ="{Binding NodeName}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="NodeWWNN"  Binding ="{Binding NodeWWNN}" IsReadOnly="True"/>  
+                                <DataGridTextColumn Width="auto" Header="CardType" Binding ="{Binding CardType}" IsReadOnly="True"/>  
+                                <DataGridTextColumn Width="auto" Header="CardID" Binding ="{Binding CardID}" IsReadOnly="True"/> 
+                                <DataGridTextColumn Width="auto" Header="PortID" Binding ="{Binding PortID}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="WWPN" Binding ="{Binding WWPN}" IsReadOnly="True"/>  
+                                <DataGridTextColumn Width="auto" Header="LinkFailure" Binding ="{Binding LinkFailure}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="LoseSync" Binding ="{Binding LoseSync}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="LoseSig" Binding ="{Binding LoseSig}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="PSErrCount" Binding ="{Binding PSErrCount}" IsReadOnly="True"/> 
+                                <DataGridTextColumn Width="auto" Header="InvTransErr" Binding ="{Binding InvTransErr}" IsReadOnly="True"/>  
+                                <DataGridTextColumn Width="auto" Header="CRCErr" Binding ="{Binding CRCErr}" IsReadOnly="True"/> 
+                                <DataGridTextColumn Width="auto" Header="ZeroBtB" Binding ="{Binding ZeroBtB}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="SFPTemp" Binding ="{Binding SFPTemp}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="TXPwr" Binding ="{Binding TXPwr}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="RXPwr" Binding ="{Binding RXPwr}" IsReadOnly="True"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                        <DataGrid Grid.Row="1" Grid.Column="1" x:Name="dg_FCPortStatsTwo" AutoGenerateColumns="False" Margin="5" MaxHeight="400">
+                            <DataGrid.Style>
+                                <Style TargetType="DataGrid">
+                                    <Style.Triggers>
+                                        <Trigger Property="HasItems" Value="False">
+                                          <Setter Property="Visibility" Value="Collapsed"></Setter>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGrid.Style>
+                            <DataGrid.RowStyle>
+                                <Style TargetType="DataGridRow">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding LinkFailure}" Value="True">
+                                            <Setter Property="Background" Value="Red" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGrid.RowStyle>
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Width="auto" Header="NodeID"  Binding ="{Binding NodeID}" IsReadOnly="True"/>
+                                <!-- <DataGridTextColumn Width="auto" Header="NodeSN" Binding ="{Binding NodeSN}" IsReadOnly="True"/>  -->
+                                <DataGridTextColumn Width="auto" Header="NodeName" Binding ="{Binding NodeName}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="NodeWWNN"  Binding ="{Binding NodeWWNN}" IsReadOnly="True"/>  
+                                <DataGridTextColumn Width="auto" Header="CardType" Binding ="{Binding CardType}" IsReadOnly="True"/>  
+                                <DataGridTextColumn Width="auto" Header="CardID" Binding ="{Binding CardID}" IsReadOnly="True"/> 
+                                <DataGridTextColumn Width="auto" Header="PortID" Binding ="{Binding PortID}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="WWPN" Binding ="{Binding WWPN}" IsReadOnly="True"/>  
+                                <DataGridTextColumn Width="auto" Header="LinkFailure" Binding ="{Binding LinkFailure}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="LoseSync" Binding ="{Binding LoseSync}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="LoseSig" Binding ="{Binding LoseSig}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="PSErrCount" Binding ="{Binding PSErrCount}" IsReadOnly="True"/> 
+                                <DataGridTextColumn Width="auto" Header="InvTransErr" Binding ="{Binding InvTransErr}" IsReadOnly="True"/>  
+                                <DataGridTextColumn Width="auto" Header="CRCErr" Binding ="{Binding CRCErr}" IsReadOnly="True"/> 
+                                <DataGridTextColumn Width="auto" Header="ZeroBtB" Binding ="{Binding ZeroBtB}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="SFPTemp" Binding ="{Binding SFPTemp}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="TXPwr" Binding ="{Binding TXPwr}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="RXPwr" Binding ="{Binding RXPwr}" IsReadOnly="True"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                        <DataGrid Grid.Row="1" Grid.Column="1" x:Name="dg_FCPortStatsThree" AutoGenerateColumns="False" Margin="5" MaxHeight="400">
+                            <DataGrid.Style>
+                                <Style TargetType="DataGrid">
+                                    <Style.Triggers>
+                                        <Trigger Property="HasItems" Value="False">
+                                          <Setter Property="Visibility" Value="Collapsed"></Setter>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGrid.Style>
+                            <DataGrid.RowStyle>
+                                <Style TargetType="DataGridRow">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding LinkFailure}" Value="True">
+                                            <Setter Property="Background" Value="Red" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGrid.RowStyle>
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Width="auto" Header="NodeID"  Binding ="{Binding NodeID}" IsReadOnly="True"/>
+                                <!-- <DataGridTextColumn Width="auto" Header="NodeSN" Binding ="{Binding NodeSN}" IsReadOnly="True"/>  -->
+                                <DataGridTextColumn Width="auto" Header="NodeName" Binding ="{Binding NodeName}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="NodeWWNN"  Binding ="{Binding NodeWWNN}" IsReadOnly="True"/>  
+                                <DataGridTextColumn Width="auto" Header="CardType" Binding ="{Binding CardType}" IsReadOnly="True"/>  
+                                <DataGridTextColumn Width="auto" Header="CardID" Binding ="{Binding CardID}" IsReadOnly="True"/> 
+                                <DataGridTextColumn Width="auto" Header="PortID" Binding ="{Binding PortID}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="WWPN" Binding ="{Binding WWPN}" IsReadOnly="True"/>  
+                                <DataGridTextColumn Width="auto" Header="LinkFailure" Binding ="{Binding LinkFailure}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="LoseSync" Binding ="{Binding LoseSync}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="LoseSig" Binding ="{Binding LoseSig}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="PSErrCount" Binding ="{Binding PSErrCount}" IsReadOnly="True"/> 
+                                <DataGridTextColumn Width="auto" Header="InvTransErr" Binding ="{Binding InvTransErr}" IsReadOnly="True"/>  
+                                <DataGridTextColumn Width="auto" Header="CRCErr" Binding ="{Binding CRCErr}" IsReadOnly="True"/> 
+                                <DataGridTextColumn Width="auto" Header="ZeroBtB" Binding ="{Binding ZeroBtB}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="SFPTemp" Binding ="{Binding SFPTemp}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="TXPwr" Binding ="{Binding TXPwr}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="RXPwr" Binding ="{Binding RXPwr}" IsReadOnly="True"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                        <DataGrid Grid.Row="1" Grid.Column="1" x:Name="dg_FCPortStatsFour" AutoGenerateColumns="False" Margin="5" MaxHeight="400">
+                            <DataGrid.Style>
+                                <Style TargetType="DataGrid">
+                                    <Style.Triggers>
+                                        <Trigger Property="HasItems" Value="False">
+                                          <Setter Property="Visibility" Value="Collapsed"></Setter>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGrid.Style>
+                            <DataGrid.RowStyle>
+                                <Style TargetType="DataGridRow">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding LinkFailure}" Value="True">
+                                            <Setter Property="Background" Value="Red" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGrid.RowStyle>
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Width="auto" Header="NodeID"  Binding ="{Binding NodeID}" IsReadOnly="True"/>
+                                <!-- <DataGridTextColumn Width="auto" Header="NodeSN" Binding ="{Binding NodeSN}" IsReadOnly="True"/>  -->
+                                <DataGridTextColumn Width="auto" Header="NodeName" Binding ="{Binding NodeName}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="NodeWWNN"  Binding ="{Binding NodeWWNN}" IsReadOnly="True"/>  
+                                <DataGridTextColumn Width="auto" Header="CardType" Binding ="{Binding CardType}" IsReadOnly="True"/>  
+                                <DataGridTextColumn Width="auto" Header="CardID" Binding ="{Binding CardID}" IsReadOnly="True"/> 
+                                <DataGridTextColumn Width="auto" Header="PortID" Binding ="{Binding PortID}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="WWPN" Binding ="{Binding WWPN}" IsReadOnly="True"/>  
+                                <DataGridTextColumn Width="auto" Header="LinkFailure" Binding ="{Binding LinkFailure}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="LoseSync" Binding ="{Binding LoseSync}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="LoseSig" Binding ="{Binding LoseSig}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="PSErrCount" Binding ="{Binding PSErrCount}" IsReadOnly="True"/> 
+                                <DataGridTextColumn Width="auto" Header="InvTransErr" Binding ="{Binding InvTransErr}" IsReadOnly="True"/>  
+                                <DataGridTextColumn Width="auto" Header="CRCErr" Binding ="{Binding CRCErr}" IsReadOnly="True"/> 
+                                <DataGridTextColumn Width="auto" Header="ZeroBtB" Binding ="{Binding ZeroBtB}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="SFPTemp" Binding ="{Binding SFPTemp}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="TXPwr" Binding ="{Binding TXPwr}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="RXPwr" Binding ="{Binding RXPwr}" IsReadOnly="True"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
                         </StackPanel>  
                     </Grid>
-                </StackPanel>   
-                <StackPanel  x:Name="stp_BackUpConfig" Orientation="Horizontal" Margin="2" Visibility="{Binding ElementName=btn_IBM_BackUpConfig, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed }">
+                </StackPanel>     
+                <StackPanel x:Name="stp_BackUpConfig" Orientation="Horizontal" Margin="2" Visibility="{Binding ElementName=btn_IBM_BackUpConfig, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed }">
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto" />
