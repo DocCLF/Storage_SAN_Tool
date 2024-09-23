@@ -645,28 +645,28 @@ $TD_btn_IBM_HostVolumeMap.add_click({
         switch ($TD_Credential.ID) {
             {($_ -eq 1)} 
             {   
-                $TD_Host_Volume_Map = IBM_Host_Volume_Map -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.StorageUserName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $TD_Credential.StoragePassword -FilterType $TD_cb_StorageHVM.Text -TD_Exportpath $TD_tb_ExportPath.Text
+                $TD_Host_Volume_Map = IBM_Host_Volume_Map -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.StorageUserName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $TD_Credential.StoragePassword -TD_Exportpath $TD_tb_ExportPath.Text
                 Start-Sleep -Seconds 0.2
                 $TD_dg_HostVolInfo.ItemsSource =$TD_Host_Volume_Map
                 $TD_Host_Volume_Map | Export-Csv -Path $Env:TEMP\$($_)_Host_Vol_Map_Temp.csv
             }
             {($_ -eq 2) } 
             {            
-                $TD_Host_Volume_Map = IBM_Host_Volume_Map -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.StorageUserName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $TD_Credential.StoragePassword -FilterType $TD_cb_StorageHVM.Text -TD_Exportpath $TD_tb_ExportPath.Text
+                $TD_Host_Volume_Map = IBM_Host_Volume_Map -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.StorageUserName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $TD_Credential.StoragePassword -TD_Exportpath $TD_tb_ExportPath.Text
                 Start-Sleep -Seconds 0.2
                 $TD_dg_HostVolInfoTwo.ItemsSource =$TD_Host_Volume_Map
                 $TD_Host_Volume_Map | Export-Csv -Path $Env:TEMP\$($_)_Host_Vol_Map_Temp.csv
             }
             {($_ -eq 3) } 
             {            
-                $TD_Host_Volume_Map = IBM_Host_Volume_Map -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.StorageUserName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $TD_Credential.StoragePassword -FilterType $TD_cb_StorageHVM.Text -TD_Exportpath $TD_tb_ExportPath.Text
+                $TD_Host_Volume_Map = IBM_Host_Volume_Map -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.StorageUserName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $TD_Credential.StoragePassword -TD_Exportpath $TD_tb_ExportPath.Text
                 Start-Sleep -Seconds 0.2
                 $TD_dg_HostVolInfoThree.ItemsSource =$TD_Host_Volume_Map
                 $TD_Host_Volume_Map | Export-Csv -Path $Env:TEMP\$($_)_Host_Vol_Map_Temp.csv
             }
             {($_ -eq 4) } 
             {            
-                $TD_Host_Volume_Map = IBM_Host_Volume_Map -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.StorageUserName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $TD_Credential.StoragePassword -FilterType $TD_cb_StorageHVM.Text -TD_Exportpath $TD_tb_ExportPath.Text
+                $TD_Host_Volume_Map = IBM_Host_Volume_Map -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.StorageUserName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $TD_Credential.StoragePassword -TD_Exportpath $TD_tb_ExportPath.Text
                 Start-Sleep -Seconds 0.2
                 $TD_dg_HostVolInfoFour.ItemsSource =$TD_Host_Volume_Map
                 $TD_Host_Volume_Map | Export-Csv -Path $Env:TEMP\$($_)_Host_Vol_Map_Temp.csv
@@ -701,8 +701,14 @@ $TD_btn_FilterHVM.Add_Click({
                 "Capacity" { [array]$WPF_dataGrid = $TD_Host_Volume_Map | Where-Object { $_.Capacity -Match $filter } }
                 Default {Write-Host "Something went wrong" -ForegroundColor DarkMagenta}
             }
+            switch ($TD_cb_ListFilterStorageHVM.Text) {
+                1 { $TD_dg_HostVolInfo.ItemsSource = $WPF_dataGrid }
+                2 { $TD_dg_HostVolInfoTwo.ItemsSource = $WPF_dataGrid }
+                3 { $TD_dg_HostVolInfoThree.ItemsSource = $WPF_dataGrid }
+                4 { $TD_dg_HostVolInfoFour.ItemsSource = $WPF_dataGrid }
+                Default {}
+            }
             
-            $TD_dg_HostVolInfo.ItemsSource = $WPF_dataGrid
         }
     catch {
         <#Do this if a terminating exception happens#>
@@ -1837,7 +1843,7 @@ $TD_btn_HC_OpenGUI_Four.add_click({
 
 $TD_btn_CloseAll.add_click({
     <#CleanUp before close #>
-    Remove-Item -Path $Env:TEMP\* -Filter '*_Host_Vol_Map_Temp.txt' -Force
+    Remove-Item -Path $Env:TEMP\* -Filter '*_Host_Vol_Map_Temp.csv' -Force
     Remove-Item -Path $Env:TEMP\* -Filter '*_ZoneShow_Temp.csv' -Force
 
     $Mainform.Close()
