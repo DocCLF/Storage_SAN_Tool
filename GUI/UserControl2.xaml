@@ -111,11 +111,116 @@
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />
                         <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="auto" />
                         <RowDefinition Height="auto" />
                     </Grid.RowDefinitions>
+                    <StackPanel Grid.RowSpan="3" Grid.Column="3" Margin="25,20,0,0" >
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="auto" />
+                                <RowDefinition Height="auto" />
+                                <RowDefinition Height="auto" />
+                                <RowDefinition Height="auto" />
+                                <RowDefinition Height="auto" />
+                                <RowDefinition Height="auto" />
+                                <RowDefinition Height="auto" />
+                                <RowDefinition Height="auto" />
+                                <RowDefinition Height="auto" />
+                                <RowDefinition Height="auto" />
+                                <RowDefinition Height="auto" />
+                                <RowDefinition Height="auto" />
+                                <RowDefinition Height="auto" />
+                                <RowDefinition Height="auto" />
+                                <RowDefinition Height="auto" />
+                                <RowDefinition Height="auto" />
+                                <RowDefinition Height="auto" />
+                                <RowDefinition Height="auto" />
+                            </Grid.RowDefinitions>
+                            <TextBox Padding="2" Width="650" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Text="Latest Major Version (Supported): FOS v9.2.X " FontSize="20" FontWeight="Bold" Foreground="White" Background="DarkGreen" Margin="5,5,5,0" IsReadOnly="True"/>
+                            <StackPanel Orientation="Horizontal" Grid.Row="1" Margin="5,0,0,0">
+                                <TextBox Width="150" Padding="2" Text="Version" FontSize="15" FontWeight="Bold" Background="LightGreen" IsReadOnly="True"/>
+                                <TextBox Width="100" Padding="2" Text="GA Date" FontSize="15" FontWeight="Bold" IsReadOnly="True"/>
+                                <TextBox Width="100" Padding="2" Text="Target Path" FontSize="15" FontWeight="Bold" Background="LightGreen" IsReadOnly="True"/>
+                                <TextBox Width="300" Padding="2" Text="Notes" FontSize="15" FontWeight="Bold" IsReadOnly="True"/>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Grid.Row="2" Margin="5,0,0,0" ToolTip="FICON qualified version.">
+                                <TextBox Width="150" Padding="2" Text="FOS v9.2.1a" Background="LightGreen"IsReadOnly="True" />
+                                <TextBox Width="100" Padding="2" Text="March 1, 2024" IsReadOnly="True"/>
+                                <TextBox Width="100" Padding="2" Text="" IsReadOnly="True"/>
+                                <TextBox Width="300" Padding="2" Text="latest Release" IsReadOnly="True"/>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Grid.Row="3" Margin="5,0,0,0" ToolTip="Target Path version.">
+                                <TextBox Width="150" Padding="2" Text="FOS v9.2.0b1" Background="LightGreen" IsReadOnly="True"/>
+                                <TextBox Width="100" Padding="2" Text="June 27, 2024" IsReadOnly="True"/>
+                                <TextBox Width="100" Padding="2" Text=" Yes" Background="LightGreen" IsReadOnly="True"/>
+                                <TextBox Width="300" Padding="2" Text="No Notes" IsReadOnly="True"/>
+                            </StackPanel>
+                            <TextBox Grid.Row="4" Padding="2" Width="650" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Text="Latest Major Version (Supported): FOS v9.1.X " FontSize="20" FontWeight="Bold" Foreground="White" Background="DarkGreen" Margin="5,20,5,0" IsReadOnly="True"/>
+                            <StackPanel Orientation="Horizontal" Grid.Row="5" Margin="5,0,0,0">
+                                <TextBox Width="150" Padding="2" Text="FOS v9.1.1d/d1/d2" Background="LightGreen" IsReadOnly="True"/>
+                                <TextBox Width="100" Padding="2" Text="January 11, 2024" IsReadOnly="True"/>
+                                <TextBox Width="100" Padding="2" Text="Yes" Background="LightGreen" IsReadOnly="True"/>
+                                <TextBox Width="300" Padding="2" Text="FOS v9.1.1d1 is available with a critical security vulnerability fix. FOS v9.1.1d2 is available with additional fixes including security vulnerability fixes also included in FOS v9.2.x."  TextWrapping="Wrap" IsReadOnly="True"/>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Grid.Row="6" Margin="5,0,0,0">
+                                <TextBox Width="150" Padding="2" Text="FOS v9.1.1c" Background="LightGreen" IsReadOnly="True"/>
+                                <TextBox Width="100" Padding="2" Text="June 23, 2023" IsReadOnly="True"/>
+                                <TextBox Width="100" Padding="2" Text="Yes" Background="LightGreen" IsReadOnly="True"/>
+                                <TextBox Width="300" Padding="2" Text="No Notes"  TextWrapping="Wrap" IsReadOnly="True"/>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Grid.Row="7" Margin="5,0,0,0">
+                                <TextBox Width="150" Padding="2" Text="FOS v9.1.1b" Background="LightCoral" IsReadOnly="True"/>
+                                <TextBox Width="100" Padding="2" Text="January 20, 2023" IsReadOnly="True"/>
+                                <TextBox Width="100" Padding="2" Text="Retired" Background="LightGreen" IsReadOnly="True"/>
+                                <TextBox Width="300" Padding="2" Text="If possible, please perform an update!" Background="LightCoral" TextWrapping="Wrap" IsReadOnly="True"/>
+                            </StackPanel>
+                            <TextBox Grid.Row="8" Padding="2" Width="650" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Text="Latest Major Version (Supported): FOS v9.0.X " FontSize="20" FontWeight="Bold" Foreground="White" Background="DarkGreen" Margin="5,20,5,0" IsReadOnly="True"/>
+                            <StackPanel Orientation="Horizontal" Grid.Row="9" Margin="5,0,0,0">
+                                <TextBox Width="150" Padding="2" Text="FOS v9.0.1e/e1" Background="LightGreen" IsReadOnly="True"/>
+                                <TextBox Width="100" Padding="2" Text="August 19, 2022" IsReadOnly="True"/>
+                                <TextBox Width="100" Padding="2" Text="Yes" Background="LightGreen" IsReadOnly="True"/>
+                                <TextBox Width="300" Padding="2" Text="FOS v9.0.1e1 is available with a critical security vulnerability fix." TextWrapping="Wrap" IsReadOnly="True"/>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Grid.Row="10" Margin="5,0,0,0">
+                                <TextBox Width="150" Padding="2" Text="FOS v9.0.1d" Background="LightGreen" IsReadOnly="True"/>
+                                <TextBox Width="100" Padding="2" Text="March 16, 2022" IsReadOnly="True"/>
+                                <TextBox Width="100" Padding="2" Text="Yes" Background="LightGreen" IsReadOnly="True"/>
+                                <TextBox Width="300" Padding="2" Text="No Notes" TextWrapping="Wrap" IsReadOnly="True"/>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Grid.Row="11" Margin="5,0,0,0">
+                                <TextBox Width="150" Padding="2" Text="FOS v9.0.1c" Background="LightCoral" IsReadOnly="True"/>
+                                <TextBox Width="100" Padding="2" Text="Sep 24, 2021" IsReadOnly="True"/>
+                                <TextBox Width="100" Padding="2" Text="Retired" Background="LightGreen" IsReadOnly="True"/>
+                                <TextBox Width="300" Padding="2" Text="If possible, please perform an update!" Background="LightCoral" TextWrapping="Wrap" IsReadOnly="True"/>
+                            </StackPanel>
+                            <TextBox Grid.Row="12" Padding="2" Width="650" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Text="Legacy Support and Availability Version (Supported Only as Specified): FOS v8.2.X" TextWrapping="Wrap" FontSize="20" FontWeight="Bold" Background="OrangeRed" Margin="5,20,5,0" IsReadOnly="True"/>
+                            <StackPanel Orientation="Horizontal" Grid.Row="13" Margin="5,0,0,0">
+                                <TextBox Width="150" Padding="2" Text="FOS v8.2.3e/e1" Background="LightGreen" IsReadOnly="True"/>
+                                <TextBox Width="100" Padding="2" Text="April 17, 2024" IsReadOnly="True"/>
+                                <TextBox Width="100" Padding="2" Text="Yes" Background="LightGreen" IsReadOnly="True"/>
+                                <TextBox Width="300" Padding="2" Text="Available for supported Gen 5 platforms only. FOS v8.2.3e1 is available with a critical fix. " TextWrapping="Wrap" IsReadOnly="True"/>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Grid.Row="14" Margin="5,0,0,0">
+                                <TextBox Width="150" Padding="2" Text="FOS v8.2.3d" Background="LightGreen" />
+                                <TextBox Width="100" Padding="2" Text="April 14, 2023" />
+                                <TextBox Width="100" Padding="2" Text="Yes" Background="LightGreen" />
+                                <TextBox Width="300" Padding="2" Text="Available and supported for Gen 5 platforms only. FICON qualified for Brocade 7840 only." TextWrapping="Wrap" IsReadOnly="True"/>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Grid.Row="15" Margin="5,0,0,0">
+                                <TextBox Width="150" Padding="2" Text="FOS v8.2.3c/c1" Background="LightCoral" IsReadOnly="True"/>
+                                <TextBox Width="100" Padding="2" Text="July 19, 2022" IsReadOnly="True"/>
+                                <TextBox Width="100" Padding="2" Text="Retired" Background="LightGreen" IsReadOnly="True"/>
+                                <TextBox Width="300" Padding="2" Text="FOS v8.2.3c1 is available with a critical security vulnerability fix. If possible, please perform an update!" Background="LightCoral" TextWrapping="Wrap" IsReadOnly="True"/>
+                            </StackPanel>
+                            <TextBox Grid.Row="16" Padding="5" Margin="0,20,0,0" Foreground="White" Background="red"  Width="650" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Text="Effective October 2024, upgrades from FOS v7.x to FOS v8.2.x will only be supported by migrating through FOS v8.0.x. This is a disruptive upgrade migration path." TextWrapping="Wrap" IsReadOnly="True"/>
+                        </Grid>
+                    </StackPanel>
                     <StackPanel Grid.Row="0" Grid.Column="0" >
                         <Label Content="Switch 1" />
                         <DataGrid Name="dg_sanBasicSwitchInfoOne" AutoGenerateColumns="False" Height="Auto" Width="Auto" Margin="5,0,5,5" >
