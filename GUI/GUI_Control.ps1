@@ -688,8 +688,14 @@ $TD_btn_FilterHVM.Add_Click({
     [string]$filter= $TD_tb_filter.Text
     [string]$TD_Filter_DG_Colum = $TD_cb_StorageHVM.Text
     try {
-        [array]$TD_CollectVolInfo = Import-Csv -Path $Env:TEMP\$($TD_cb_ListFilterStorageHVM.Text)_Host_Vol_Map_Temp.csv
-        $TD_Host_Volume_Map = $TD_dg_HostVolInfo.ItemsSource
+        [array]$TD_CollectVolInfo = Import-Csv -Path $Env:TEMP\$($TD_Filter_DG_Colum)_Host_Vol_Map_Temp.csv
+        switch ($TD_Filter_DG_Colum) {
+            "1" { $TD_Host_Volume_Map = $TD_dg_HostVolInfo.ItemsSource }
+            "2" { $TD_Host_Volume_Map = $TD_dg_HostVolInfoTwo.ItemsSource }
+            "3" { $TD_Host_Volume_Map = $TD_dg_HostVolInfoThree.ItemsSource }
+            "4" { $TD_Host_Volume_Map = $TD_dg_HostVolInfoFour.ItemsSource }
+            Default {}
+        }
         if($TD_Host_Volume_Map.Count -ne $TD_CollectVolInfo.Count){
             $TD_Host_Volume_Map = $TD_CollectVolInfo }
              
@@ -701,11 +707,11 @@ $TD_btn_FilterHVM.Add_Click({
                 "Capacity" { [array]$WPF_dataGrid = $TD_Host_Volume_Map | Where-Object { $_.Capacity -Match $filter } }
                 Default {Write-Host "Something went wrong" -ForegroundColor DarkMagenta}
             }
-            switch ($TD_cb_ListFilterStorageHVM.Text) {
-                1 { $TD_dg_HostVolInfo.ItemsSource = $WPF_dataGrid }
-                2 { $TD_dg_HostVolInfoTwo.ItemsSource = $WPF_dataGrid }
-                3 { $TD_dg_HostVolInfoThree.ItemsSource = $WPF_dataGrid }
-                4 { $TD_dg_HostVolInfoFour.ItemsSource = $WPF_dataGrid }
+            switch ($TD_Filter_DG_Colum) {
+                "1" { $TD_dg_HostVolInfo.ItemsSource = $WPF_dataGrid }
+                "2" { $TD_dg_HostVolInfoTwo.ItemsSource = $WPF_dataGrid }
+                "3" { $TD_dg_HostVolInfoThree.ItemsSource = $WPF_dataGrid }
+                "4" { $TD_dg_HostVolInfoFour.ItemsSource = $WPF_dataGrid }
                 Default {}
             }
             
@@ -1252,26 +1258,30 @@ $TD_btn_FOS_SwitchShow.add_click({
             {($_ -eq 1)} 
             {   
                 $FOS_SwitchShow += FOS_SwitchShowInfo -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.SANUserName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $TD_Credential.SANPassword -TD_Exportpath $TD_tb_ExportPath.Text
-                Start-Sleep -Seconds 0.5
+                Start-Sleep -Seconds 0.2
                 $TD_lb_SwitchShowOne.ItemsSource =$FOS_SwitchShow
+                $FOS_SwitchShow | Export-Csv -Path $Env:TEMP\$($_)_SwitchShow_Temp.csv
             }
             {($_ -eq 2) } <# -or ($_ -eq 3) -or ($_ -eq 4)}  for later use maybe #>
             {            
                 $FOS_SwitchShow += FOS_SwitchShowInfo -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.SANUserName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $TD_Credential.SANPassword -TD_Exportpath $TD_tb_ExportPath.Text
-                Start-Sleep -Seconds 0.5
+                Start-Sleep -Seconds 0.2
                 $TD_lb_SwitchShowTwo.ItemsSource =$FOS_SwitchShow
+                $FOS_SwitchShow | Export-Csv -Path $Env:TEMP\$($_)_SwitchShow_Temp.csv
             }
             {($_ -eq 3) } <# -or ($_ -eq 3) -or ($_ -eq 4)}  for later use maybe #>
             {            
                 $FOS_SwitchShow += FOS_SwitchShowInfo -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.SANUserName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $TD_Credential.SANPassword -TD_Exportpath $TD_tb_ExportPath.Text
-                Start-Sleep -Seconds 0.5
+                Start-Sleep -Seconds 0.2
                 $TD_lb_SwitchShowThree.ItemsSource =$FOS_SwitchShow
+                $FOS_SwitchShow | Export-Csv -Path $Env:TEMP\$($_)_SwitchShow_Temp.csv
             }
             {($_ -eq 4) }
             {            
                 $FOS_SwitchShow += FOS_SwitchShowInfo -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.SANUserName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $TD_Credential.SANPassword -TD_Exportpath $TD_tb_ExportPath.Text
-                Start-Sleep -Seconds 0.5
+                Start-Sleep -Seconds 0.2
                 $TD_lb_SwitchShowFour.ItemsSource =$FOS_SwitchShow
+                $FOS_SwitchShow | Export-Csv -Path $Env:TEMP\$($_)_SwitchShow_Temp.csv
             }
             Default {Write-Debug "Nothing" }
         }
@@ -1286,6 +1296,46 @@ $TD_btn_FOS_SwitchShow.add_click({
     $TD_stp_sanPortErrorShow.Visibility="Collapsed"
     $TD_stp_sanZoneDetailsShow.Visibility="Collapsed"
     $TD_stp_sanSwitchShow.Visibility="Visible"
+})
+<# filter View for Host Volume Map #>
+<# to keep this file clean :D export the following lines to a func in one if the next Version #>
+$TD_btn_FilterSANSwShow.Add_Click({
+    [string]$filter= $tb_FilterWordSANSwShow.Text
+    [string]$TD_SANFilter_DG_Colum = $TD_cb_ListFilterSANSwShow.Text
+    Write-Host $TD_SANFilter_DG_Colum
+    try {
+        [array]$TD_CollectVolInfo = Import-Csv -Path $Env:TEMP\$($TD_SANFilter_DG_Colum)_SwitchShow_Temp.csv
+        switch ($TD_SANFilter_DG_Colum) {
+            "1" { $FOS_SwitchShow = $TD_lb_SwitchShowOne.ItemsSource }
+            "2" { $FOS_SwitchShow = $TD_lb_SwitchShowTwo.ItemsSource }
+            "3" { $FOS_SwitchShow = $TD_lb_SwitchShowThree.ItemsSource }
+            "4" { $FOS_SwitchShow = $TD_lb_SwitchShowFour.ItemsSource }
+            Default {Write-Host "Something went wrong at Switchshow" -ForegroundColor DarkMagenta}
+        }
+        if($FOS_SwitchShow.Count -ne $TD_CollectVolInfo.Count){
+            $FOS_SwitchShow = $TD_CollectVolInfo }
+             
+            switch ($TD_cb_FilterColumSANSwShow) {
+                "Port" { [array]$WPF_dataGrid = $FOS_SwitchShow | Where-Object { $_.Port -Match $filter } }
+                "Speed" { [array]$WPF_dataGrid = $FOS_SwitchShow | Where-Object { $_.Speed -Match $filter } }
+                "State" { [array]$WPF_dataGrid = $FOS_SwitchShow | Where-Object { $_.State -Match $filter } }
+                "PortConnect" { [array]$WPF_dataGrid = $FOS_SwitchShow | Where-Object { $_.PortConnect -Match $filter } }
+                Default {Write-Host "Something went wrong at Switchshow" -ForegroundColor DarkMagenta}
+            }
+            switch ($TD_SANFilter_DG_Colum) {
+                "1" { $TD_lb_SwitchShowOne.ItemsSource = $WPF_dataGrid }
+                "2" { $TD_lb_SwitchShowTwo.ItemsSource = $WPF_dataGrid }
+                "3" { $TD_lb_SwitchShowThree.ItemsSource = $WPF_dataGrid }
+                "4" { $TD_lb_SwitchShowFour.ItemsSource = $WPF_dataGrid }
+                Default {Write-Host "Something went wrong at Switchshow" -ForegroundColor DarkMagenta}
+            }
+        }
+    catch {
+        <#Do this if a terminating exception happens#>
+        Write-Host "Something went wrong at Switchshow" -ForegroundColor DarkMagenta
+        Write-Host $_.Exception.Message
+        $TD_lb_ErrorMsgSANSwShow.Content = $_.Exception.Message
+    }
 })
 
 $TD_btn_FOS_ZoneDetailsShow.add_click({

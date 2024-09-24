@@ -627,8 +627,26 @@
                     <Grid.RowDefinitions>
                         <RowDefinition Height="auto" />
                         <RowDefinition Height="auto" />
+                        <RowDefinition Height="auto" />
                     </Grid.RowDefinitions>
-                    <StackPanel Grid.Row="0" Grid.Column="0" >
+                        <StackPanel Grid.Row="0" Grid.ColumnSpan="2" Orientation="Horizontal" Margin="2">
+                            <ComboBox x:Name="cb_ListFilterSANSwShow" ToolTip="Selcet your Device Panel" SelectedIndex="0" SelectedValuePath="Content" Style="{StaticResource MainComboBoxStyle}">
+                                    <ComboBoxItem>1</ComboBoxItem>
+                                    <ComboBoxItem>2</ComboBoxItem>
+                                    <ComboBoxItem>3</ComboBoxItem>
+                                    <ComboBoxItem>4</ComboBoxItem>
+                                </ComboBox>
+                            <ComboBox x:Name="cb_FilterColumSANSwShow" ToolTip="Selcet your Filter" SelectedIndex="0" SelectedValuePath="Content" Style="{StaticResource MainComboBoxStyle}">
+                                <ComboBoxItem>Port</ComboBoxItem>
+                                <ComboBoxItem>Speed</ComboBoxItem>
+                                <ComboBoxItem>State</ComboBoxItem>
+                                <ComboBoxItem>PortConnect</ComboBoxItem>
+                            </ComboBox>
+                            <TextBox x:Name="tb_FilterWordSANSwShow" HorizontalAlignment="Left" MinWidth="100" MaxWidth="250" Margin="5" Text="Filter" TextWrapping="Wrap" FontSize="14" VerticalContentAlignment="Center"/>
+                            <Button x:Name="btn_FilterSANSwShow" Style="{StaticResource MainBtnStyle}" Content="Apply Filter" />
+                            <Label x:Name="lb_ErrorMsgSANSwShow" Foreground="Red" Content="" Style="{StaticResource MainLabelStyle}" Padding="2" Margin="25,5,0,5"/>
+                        </StackPanel>
+                    <StackPanel Grid.Row="1" Grid.Column="0" >
                         <Label Content="Switch 1" />
                         <DataGrid x:Name="lb_SwitchShowOne" AutoGenerateColumns="False" Margin="5" MinWidth="800" Height="400">
                             <DataGrid.Style>
@@ -652,7 +670,7 @@
                             </DataGrid.Columns>
                         </DataGrid>
                     </StackPanel>
-                    <StackPanel Grid.Row="0" Grid.Column="2"  >
+                    <StackPanel Grid.Row="1" Grid.Column="1"  >
                         <Label Content="Switch 2" />
                         <DataGrid x:Name="lb_SwitchShowTwo" AutoGenerateColumns="False" Margin="5" MinWidth="800" Height="400">
                             <DataGrid.Style>
@@ -676,7 +694,7 @@
                             </DataGrid.Columns>
                         </DataGrid>
                     </StackPanel>
-                    <StackPanel Grid.Row="1" Grid.Column="0"  >
+                    <StackPanel Grid.Row="2" Grid.Column="0"  >
                         <Label Content="Switch 3" />
                         <DataGrid x:Name="lb_SwitchShowThree" AutoGenerateColumns="False" Margin="5" MinWidth="800" Height="400">
                             <DataGrid.Style>
@@ -700,7 +718,7 @@
                             </DataGrid.Columns>
                         </DataGrid>
                     </StackPanel>
-                    <StackPanel Grid.Row="1" Grid.Column="1" >
+                    <StackPanel Grid.Row="2" Grid.Column="1" >
                         <Label Content="Switch 4" />
                         <DataGrid x:Name="lb_SwitchShowFour" AutoGenerateColumns="False" Margin="5" MinWidth="800" Height="400">
                             <DataGrid.Style>
