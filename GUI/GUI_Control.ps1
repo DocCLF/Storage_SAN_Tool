@@ -1300,33 +1300,34 @@ $TD_btn_FOS_SwitchShow.add_click({
 <# filter View for Host Volume Map #>
 <# to keep this file clean :D export the following lines to a func in one if the next Version #>
 $TD_btn_FilterSANSwShow.Add_Click({
-    [string]$filter= $tb_FilterWordSANSwShow.Text
-    [string]$TD_SANFilter_DG_Colum = $TD_cb_ListFilterSANSwShow.Text
-    Write-Host $TD_SANFilter_DG_Colum
+    [string]$filter= $TD_tb_FilterWordSANSwShow.Text
+    [string]$ColumFilter= $TD_cb_FilterColumSANSwShow.Text
+    [int]$TD_SANFilter_DG_Colum = $TD_cb_ListFilterSANSwShow.Text
     try {
         [array]$TD_CollectVolInfo = Import-Csv -Path $Env:TEMP\$($TD_SANFilter_DG_Colum)_SwitchShow_Temp.csv
         switch ($TD_SANFilter_DG_Colum) {
-            "1" { $FOS_SwitchShow = $TD_lb_SwitchShowOne.ItemsSource }
-            "2" { $FOS_SwitchShow = $TD_lb_SwitchShowTwo.ItemsSource }
-            "3" { $FOS_SwitchShow = $TD_lb_SwitchShowThree.ItemsSource }
-            "4" { $FOS_SwitchShow = $TD_lb_SwitchShowFour.ItemsSource }
+            1 { $FOS_SwitchShow = $TD_lb_SwitchShowOne.ItemsSource }
+            2 { $FOS_SwitchShow = $TD_lb_SwitchShowTwo.ItemsSource }
+            3 { $FOS_SwitchShow = $TD_lb_SwitchShowThree.ItemsSource }
+            4 { $FOS_SwitchShow = $TD_lb_SwitchShowFour.ItemsSource }
             Default {Write-Host "Something went wrong at Switchshow" -ForegroundColor DarkMagenta}
         }
         if($FOS_SwitchShow.Count -ne $TD_CollectVolInfo.Count){
             $FOS_SwitchShow = $TD_CollectVolInfo }
-             
-            switch ($TD_cb_FilterColumSANSwShow) {
+
+            switch ($ColumFilter) {
                 "Port" { [array]$WPF_dataGrid = $FOS_SwitchShow | Where-Object { $_.Port -Match $filter } }
                 "Speed" { [array]$WPF_dataGrid = $FOS_SwitchShow | Where-Object { $_.Speed -Match $filter } }
                 "State" { [array]$WPF_dataGrid = $FOS_SwitchShow | Where-Object { $_.State -Match $filter } }
                 "PortConnect" { [array]$WPF_dataGrid = $FOS_SwitchShow | Where-Object { $_.PortConnect -Match $filter } }
                 Default {Write-Host "Something went wrong at Switchshow" -ForegroundColor DarkMagenta}
             }
+
             switch ($TD_SANFilter_DG_Colum) {
-                "1" { $TD_lb_SwitchShowOne.ItemsSource = $WPF_dataGrid }
-                "2" { $TD_lb_SwitchShowTwo.ItemsSource = $WPF_dataGrid }
-                "3" { $TD_lb_SwitchShowThree.ItemsSource = $WPF_dataGrid }
-                "4" { $TD_lb_SwitchShowFour.ItemsSource = $WPF_dataGrid }
+                1 { $TD_lb_SwitchShowOne.ItemsSource = $WPF_dataGrid }
+                2 { $TD_lb_SwitchShowTwo.ItemsSource = $WPF_dataGrid }
+                3 { $TD_lb_SwitchShowThree.ItemsSource = $WPF_dataGrid }
+                4 { $TD_lb_SwitchShowFour.ItemsSource = $WPF_dataGrid }
                 Default {Write-Host "Something went wrong at Switchshow" -ForegroundColor DarkMagenta}
             }
         }

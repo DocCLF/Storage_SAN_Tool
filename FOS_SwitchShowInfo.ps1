@@ -47,7 +47,7 @@ function FOS_SwitchShowInfo {
         }
         <# next line one for testing #>
         #$FOS_MainInformation = Get-Content -Path "C:\Users\mailt\Documents\swsh.txt"
-        Out-File -FilePath $Env:TEMP\$($TD_Line_ID)_SwitchShow_Temp.txt -InputObject $FOS_MainInformation
+        #Out-File -FilePath $Env:TEMP\$($TD_Line_ID)_SwitchShow_Temp.txt -InputObject $FOS_MainInformation
         
         $FOS_InfoCount = $FOS_MainInformation.count
         Write-Debug -Message "Number of Lines: $FOS_InfoCount "
@@ -124,7 +124,7 @@ function FOS_SwitchShowInfo {
                         }
                     }
                 }else{
-                    $FOS_SwBasicPortDetails += $FOS_SWsh
+                   $FOS_SwBasicPortDetails += $FOS_SWsh
                 }
                 
             }
