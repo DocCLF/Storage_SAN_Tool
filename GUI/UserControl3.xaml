@@ -261,6 +261,47 @@
                             <ColumnDefinition Width="auto" MaxWidth="150" SharedSizeGroup="Alpha"/>
                             <ColumnDefinition Width="auto" SharedSizeGroup="Alpha"/>
                             <ColumnDefinition MinWidth="400" MaxWidth="800" />
+                        </Grid.ColumnDefinitions>
+                        <Label Grid.Column="0" Content="Quorum Check" Margin="10,10,20,0" VerticalAlignment="Center" Height="26"/>
+                        <Canvas Grid.Column="1" Margin="10,10,10,0" Grid.RowSpan="2" >
+                            <Ellipse x:Name="el_QuorumStatusLight" Width="25" Height="25" Fill="gray" Stroke="Black" StrokeThickness="2" />
+                        </Canvas>
+                         <TextBox Grid.Column="2" x:Name="tb_QuorumErrorMsg" Text="" Visibility="Collapsed" IsReadOnly="True" Background="Transparent" Foreground="Coral" VerticalAlignment="Center" VerticalContentAlignment="Center" Height="60" FontSize="14" TextWrapping="Wrap"/>
+                        <DataGrid Grid.Column="2" x:Name="dg_QuorumStatusInfo" AutoGenerateColumns="False" Margin="10" MaxHeight="400">
+                            <DataGrid.Style>
+                                <Style TargetType="DataGrid">
+                                    <Style.Triggers>
+                                        <Trigger Property="HasItems" Value="False">
+                                            <Setter Property="Visibility" Value="Collapsed"></Setter>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGrid.Style>
+                            <DataGrid.RowStyle>
+                                <Style TargetType="DataGridRow">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding Status}" Value="offline">
+                                            <Setter Property="Background" Value="Red" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGrid.RowStyle>
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="Quorum ID" Width="Auto" Binding="{Binding QuorumIndex}" IsReadOnly="True"/>
+                                <DataGridTextColumn Header="Status" Width="Auto" Binding="{Binding Status}" IsReadOnly="True"/>
+                                <DataGridTextColumn Header="ID" Width="Auto" Binding="{Binding ID}" IsReadOnly="True"/>
+                                <DataGridTextColumn Header="Name" Width="Auto"  Binding="{Binding Name}" IsReadOnly="True"/>
+                                <DataGridTextColumn Header="Site Name" Width="Auto" Binding="{Binding SiteName}" IsReadOnly="True"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </Grid>
+                </StackPanel>                
+                <StackPanel Grid.Row="5" Orientation="Horizontal">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="auto" MaxWidth="150" SharedSizeGroup="Alpha"/>
+                            <ColumnDefinition Width="auto" SharedSizeGroup="Alpha"/>
+                            <ColumnDefinition MinWidth="400" MaxWidth="800" />
                         </Grid.ColumnDefinitions>                    
                     <Label Grid.Column="0" Content="User Check" Margin="10,0,20,0" VerticalAlignment="Center" Height="26"/>
                     <Canvas Grid.Column="1" Margin="10,10,10,0" Grid.RowSpan="2" >

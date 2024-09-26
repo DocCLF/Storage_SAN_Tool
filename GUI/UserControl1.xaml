@@ -36,7 +36,7 @@
                 <Setter Property="Height" Value="25" />
                 <Setter Property="HorizontalContentAlignment" Value="Center" />
                 <Setter Property="VerticalContentAlignment" Value="Center" />
-                <Setter Property="FontSize" Value="13" />
+                <Setter Property="FontSize" Value="14" />
                 <Setter Property="FontWeight" Value="Bold" />
             </Style>
             <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
@@ -88,7 +88,7 @@
         <GroupBox Grid.Column="1" Grid.Row="1" Header="Results" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,10,0,0" >
             <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" >
                 <Grid>
-                <StackPanel x:Name="stp_StorageEventLog" Orientation="Vertical" Margin="2" Visibility="{Binding ElementName=btn_IBM_Eventlog, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
+<StackPanel x:Name="stp_StorageEventLog" Orientation="Vertical" Margin="2" Visibility="{Binding ElementName=btn_IBM_Eventlog, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto" />
@@ -255,23 +255,26 @@
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="auto" />
+                            <RowDefinition Height="auto" />
                             <RowDefinition Height="*" />
                         </Grid.RowDefinitions>
                         <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="2">
-                        <ComboBox  x:Name="cb_StorageHVM" SelectedIndex="0" SelectedValuePath="Content" Style="{StaticResource MainComboBoxStyle}">
-                            <ComboBoxItem>NoFilter</ComboBoxItem>
-                            <ComboBoxItem>Host</ComboBoxItem>
-                            <ComboBoxItem>HostCluster</ComboBoxItem>
-                        </ComboBox>
-                        <ComboBox  x:Name="cb_ListFilterStorageHVM" SelectedIndex="0" SelectedValuePath="Content" Style="{StaticResource MainComboBoxStyle}">
-                            <ComboBoxItem>1</ComboBoxItem>
-                            <ComboBoxItem>2</ComboBoxItem>
-                            <ComboBoxItem>3</ComboBoxItem>
-                            <ComboBoxItem>4</ComboBoxItem>
-                        </ComboBox>
-                        <Button x:Name="btn_UpFilHVM" Style="{StaticResource MainBtnStyle}" Content="Update Filter" />
-                        <!--Label need a better place to avoid repetition of code 
-                        <Label x:Name="label_ExpPath" Content="Export Path :" Style="{StaticResource MainLabelStyle}" Margin="25,5,0,5"/> -->
+                            <ComboBox x:Name="cb_ListFilterStorageHVM" ToolTip="Selcet your Device Panel" SelectedIndex="0" SelectedValuePath="Content" Style="{StaticResource MainComboBoxStyle}">
+                                    <ComboBoxItem>1</ComboBoxItem>
+                                    <ComboBoxItem>2</ComboBoxItem>
+                                    <ComboBoxItem>3</ComboBoxItem>
+                                    <ComboBoxItem>4</ComboBoxItem>
+                                </ComboBox>
+                            <ComboBox x:Name="cb_StorageHVM" ToolTip="Selcet your Filter" SelectedIndex="0" SelectedValuePath="Content" Style="{StaticResource MainComboBoxStyle}">
+                                <ComboBoxItem>Host</ComboBoxItem>
+                                <ComboBoxItem>HostCluster</ComboBoxItem>
+                                <ComboBoxItem>Volume</ComboBoxItem>
+                                <ComboBoxItem>UID</ComboBoxItem>
+                                <ComboBoxItem>Capacity</ComboBoxItem>
+                            </ComboBox>
+                            <TextBox x:Name="tb_filter" HorizontalAlignment="Left" MinWidth="100" MaxWidth="250" Margin="5" Text="Filter" TextWrapping="Wrap" FontSize="14" VerticalContentAlignment="Center"/>
+                            <Button x:Name="btn_FilterHVM" Style="{StaticResource MainBtnStyle}" Content="Apply Filter" />
+                            <Label x:Name="lb_ErrorMsgHVM" Foreground="Red" Content="" Style="{StaticResource MainLabelStyle}" Padding="2" Margin="25,5,0,5"/>
                         </StackPanel>
                         <StackPanel Grid.Row="1" Orientation="Vertical" >
                         <DataGrid x:Name="dg_HostVolInfo" AutoGenerateColumns="False" Margin="5,5,5,5" MaxHeight="400">
@@ -362,7 +365,7 @@
                             <ColumnDefinition Width="auto" />
                             <ColumnDefinition Width="auto" />
                         </Grid.ColumnDefinitions>
-                        <!--Label need a better place to avoid repetition of code 
+                      <!--Label need a better place to avoid repetition of code 
                         <Label Grid.Row="0" x:Name="label_ExpPDI" Content="Export Path :" Style="{StaticResource MainLabelStyle}" Margin="2,5,0,5"/> -->
                         <StackPanel Grid.Row="0" Grid.Column="0" Orientation="Vertical">
                         <Label x:Name="lb_DriveInfoOne" Content="No Device Info" Margin="0,5" FontSize="14" Height="26"/>
@@ -573,7 +576,7 @@
                                 <DataGridTextColumn Width="auto" Header="RXPwr" Binding ="{Binding RXPwr}" IsReadOnly="True"/>
                             </DataGrid.Columns>
                         </DataGrid>
-                        <DataGrid Grid.Row="1" Grid.Column="1" x:Name="dg_FCPortStatsTwo" AutoGenerateColumns="False" Margin="5" MaxHeight="400">
+                        <DataGrid Grid.Row="1" Grid.Column="1" x:Name="dg_FCPortStatsTwo" AutoGenerateColumns="False" Margin="5,20,5,5" MaxHeight="400">
                             <DataGrid.Style>
                                 <Style TargetType="DataGrid">
                                     <Style.Triggers>
@@ -613,7 +616,7 @@
                                 <DataGridTextColumn Width="auto" Header="RXPwr" Binding ="{Binding RXPwr}" IsReadOnly="True"/>
                             </DataGrid.Columns>
                         </DataGrid>
-                        <DataGrid Grid.Row="1" Grid.Column="1" x:Name="dg_FCPortStatsThree" AutoGenerateColumns="False" Margin="5" MaxHeight="400">
+                        <DataGrid Grid.Row="1" Grid.Column="1" x:Name="dg_FCPortStatsThree" AutoGenerateColumns="False" Margin="5,20,5,5" MaxHeight="400">
                             <DataGrid.Style>
                                 <Style TargetType="DataGrid">
                                     <Style.Triggers>
@@ -653,7 +656,7 @@
                                 <DataGridTextColumn Width="auto" Header="RXPwr" Binding ="{Binding RXPwr}" IsReadOnly="True"/>
                             </DataGrid.Columns>
                         </DataGrid>
-                        <DataGrid Grid.Row="1" Grid.Column="1" x:Name="dg_FCPortStatsFour" AutoGenerateColumns="False" Margin="5" MaxHeight="400">
+                        <DataGrid Grid.Row="1" Grid.Column="1" x:Name="dg_FCPortStatsFour" AutoGenerateColumns="False" Margin="5,20,5,5" MaxHeight="400">
                             <DataGrid.Style>
                                 <Style TargetType="DataGrid">
                                     <Style.Triggers>
@@ -695,8 +698,8 @@
                         </DataGrid>
                         </StackPanel>  
                     </Grid>
-                </StackPanel>   
-                <StackPanel  x:Name="stp_BackUpConfig" Orientation="Horizontal" Margin="2" Visibility="{Binding ElementName=btn_IBM_BackUpConfig, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed }">
+                </StackPanel>     
+                <StackPanel x:Name="stp_BackUpConfig" Orientation="Horizontal" Margin="2" Visibility="{Binding ElementName=btn_IBM_BackUpConfig, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed }">
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto" />

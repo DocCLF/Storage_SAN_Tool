@@ -74,7 +74,24 @@ foreach($file in $UserCxamlFile){
 
 
 <# Set some Vars #>
-$TD_tb_Exportpath.Text = "$PSRootPath\Export\"
+<# create a export Folder in my documents#>
+try {
+    $TD_ExporttoOD = [Environment]::GetFolderPath("mydocuments")
+    $ExportFolderPath="$TD_ExporttoOD\StorageSANKit"
+    If(!(Test-Path -Path $ExportFolderPath)){
+        $TD_ExportFolderCreated = New-Item $ExportFolderPath -ItemType Directory
+        $TD_tb_Exportpath.Text = $TD_ExportFolderCreated.Name
+    }else{
+        $TD_tb_Exportpath.Text = $ExportFolderPath
+        #PowerShell Create directory if not exists
+    }
+}
+catch {
+    <#Do this if a terminating exception happens#>
+    Write-Host "Something went wrong" -ForegroundColor DarkMagenta
+    Write-Host $_.Exception.Message
+    $label_ExpPath.Content = $_.Exception.Message
+}
 <# MainWindow Background IMG #>
 $TD_LogoImage.Source = "$PSRootPath\Resources\PROFI_Logo_2022_dark.png"
 $TD_LogoImageSmall.Source = "$PSRootPath\Resources\PROFI_Logo_2022_dark.png"
@@ -485,38 +502,6 @@ $TD_btn_ImportCred.add_click({
     }
     #Write-Host $TD_GetSavedCred.FileName -ForegroundColor Green
 })
-<# Button Connect Test #>
-#$TD_btn_ConnectTest.add_click({
-    <#looking for a better way, to support pws 5.1#>
-    #Get-TestConnection -TD_StorageIPAdresse $TD_tb_storageIPAdr.Text -TD_StorageIPAdresseOne $TD_tb_storageIPAdrOne.Text -TD_StorageIPAdresseTwo $TD_tb_storageIPAdrTwo.Text -TD_StorageIPAdresseThree $TD_tb_storageIPAdrThree.Text
-    <# looking for a good color-marker, later #>
-    #if($TD_PingTest -eq "Success"){
-    #    $TD_btn_ConnectTest.Background = "lightgreen"
-    #}else{
-    #    $TD_btn_ConnectTest.Background = "red"
-    #}
-#})
-
-<#$TD_btn_IBM_test.add_click({
-    Get_CredGUIInfos  
-})
- maybe for later use as filter option
-$TD_tb_UserName.Add_TextChanged({
-    Get_CredGUIInfos
-})
-#>
-
-
-#$TD_btn_UpFilFCPS.add_click({
-    <# need a implem. for more as one Storage #>
-    #$TD_FCPortStats = IBM_FCPortStats -FilterType $TD_FCPortStats.Text -TD_RefreshView "Update"
-    #Start-Sleep -Seconds 0.5
-    #$TD_label_ExpPFCPS.Content ="Export Path: $($TD_tb_ExportPath.Text)"
-    #$TD_stp_DriveInfo.Visibility="Collapsed"
-    #$TD_stp_HostVolInfo.Visibility="Collapsed"
-    #$TD_stp_FCPortStats.Visibility="Visible"
-    #$TD_dg_HostVolInfo.ItemsSource = $TD_FCPortStats
-#})
 
 <# Storage Button #>
 $TD_btn_IBM_Eventlog.add_click({
@@ -660,27 +645,31 @@ $TD_btn_IBM_HostVolumeMap.add_click({
         switch ($TD_Credential.ID) {
             {($_ -eq 1)} 
             {   
-                $TD_Host_Volume_Map = IBM_Host_Volume_Map -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.StorageUserName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $TD_Credential.StoragePassword -FilterType $TD_cb_StorageHVM.Text -TD_Exportpath $TD_tb_ExportPath.Text
+                $TD_Host_Volume_Map = IBM_Host_Volume_Map -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.StorageUserName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $TD_Credential.StoragePassword -TD_Exportpath $TD_tb_ExportPath.Text
                 Start-Sleep -Seconds 0.2
                 $TD_dg_HostVolInfo.ItemsSource =$TD_Host_Volume_Map
+                $TD_Host_Volume_Map | Export-Csv -Path $Env:TEMP\$($_)_Host_Vol_Map_Temp.csv
             }
             {($_ -eq 2) } 
             {            
-                $TD_Host_Volume_Map = IBM_Host_Volume_Map -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.StorageUserName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $TD_Credential.StoragePassword -FilterType $TD_cb_StorageHVM.Text -TD_Exportpath $TD_tb_ExportPath.Text
+                $TD_Host_Volume_Map = IBM_Host_Volume_Map -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.StorageUserName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $TD_Credential.StoragePassword -TD_Exportpath $TD_tb_ExportPath.Text
                 Start-Sleep -Seconds 0.2
                 $TD_dg_HostVolInfoTwo.ItemsSource =$TD_Host_Volume_Map
+                $TD_Host_Volume_Map | Export-Csv -Path $Env:TEMP\$($_)_Host_Vol_Map_Temp.csv
             }
             {($_ -eq 3) } 
             {            
-                $TD_Host_Volume_Map = IBM_Host_Volume_Map -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.StorageUserName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $TD_Credential.StoragePassword -FilterType $TD_cb_StorageHVM.Text -TD_Exportpath $TD_tb_ExportPath.Text
+                $TD_Host_Volume_Map = IBM_Host_Volume_Map -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.StorageUserName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $TD_Credential.StoragePassword -TD_Exportpath $TD_tb_ExportPath.Text
                 Start-Sleep -Seconds 0.2
                 $TD_dg_HostVolInfoThree.ItemsSource =$TD_Host_Volume_Map
+                $TD_Host_Volume_Map | Export-Csv -Path $Env:TEMP\$($_)_Host_Vol_Map_Temp.csv
             }
             {($_ -eq 4) } 
             {            
-                $TD_Host_Volume_Map = IBM_Host_Volume_Map -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.StorageUserName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $TD_Credential.StoragePassword -FilterType $TD_cb_StorageHVM.Text -TD_Exportpath $TD_tb_ExportPath.Text
+                $TD_Host_Volume_Map = IBM_Host_Volume_Map -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.StorageUserName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $TD_Credential.StoragePassword -TD_Exportpath $TD_tb_ExportPath.Text
                 Start-Sleep -Seconds 0.2
                 $TD_dg_HostVolInfoFour.ItemsSource =$TD_Host_Volume_Map
+                $TD_Host_Volume_Map | Export-Csv -Path $Env:TEMP\$($_)_Host_Vol_Map_Temp.csv
             }
             Default {Write-Debug "Nothing" }
         }
@@ -693,11 +682,47 @@ $TD_btn_IBM_HostVolumeMap.add_click({
     $TD_stp_BackUpConfig.Visibility="Collapsed"
     $TD_stp_HostVolInfo.Visibility="Visible"
 })
-<# Update View for Host Volume Map #>
-$TD_btn_UpFilHVM.add_click({
-    IBM_Host_Volume_Map -TD_Line_ID $TD_cb_ListFilterStorageHVM.Text -FilterType $TD_cb_StorageHVM.Text -TD_RefreshView "Update"
+<# filter View for Host Volume Map #>
+<# to keep this file clean :D export the following lines to a func in one if the next Version #>
+$TD_btn_FilterHVM.Add_Click({
+    [string]$filter= $TD_tb_filter.Text
+    [string]$TD_Filter_DG_Colum = $TD_cb_StorageHVM.Text
+    try {
+        [array]$TD_CollectVolInfo = Import-Csv -Path $Env:TEMP\$($TD_Filter_DG_Colum)_Host_Vol_Map_Temp.csv
+        switch ($TD_Filter_DG_Colum) {
+            "1" { $TD_Host_Volume_Map = $TD_dg_HostVolInfo.ItemsSource }
+            "2" { $TD_Host_Volume_Map = $TD_dg_HostVolInfoTwo.ItemsSource }
+            "3" { $TD_Host_Volume_Map = $TD_dg_HostVolInfoThree.ItemsSource }
+            "4" { $TD_Host_Volume_Map = $TD_dg_HostVolInfoFour.ItemsSource }
+            Default {}
+        }
+        if($TD_Host_Volume_Map.Count -ne $TD_CollectVolInfo.Count){
+            $TD_Host_Volume_Map = $TD_CollectVolInfo }
+             
+            switch ($TD_Filter_DG_Colum) {
+                "Host" { [array]$WPF_dataGrid = $TD_Host_Volume_Map | Where-Object { $_.HostName -Match $filter } }
+                "HostCluster" { [array]$WPF_dataGrid = $TD_Host_Volume_Map | Where-Object { $_.HostCluster -Match $filter } }
+                "Volume" { [array]$WPF_dataGrid = $TD_Host_Volume_Map | Where-Object { $_.VolumeName -Match $filter } }
+                "UID" { [array]$WPF_dataGrid = $TD_Host_Volume_Map | Where-Object { $_.UID -Match $filter } }
+                "Capacity" { [array]$WPF_dataGrid = $TD_Host_Volume_Map | Where-Object { $_.Capacity -Match $filter } }
+                Default {Write-Host "Something went wrong" -ForegroundColor DarkMagenta}
+            }
+            switch ($TD_Filter_DG_Colum) {
+                "1" { $TD_dg_HostVolInfo.ItemsSource = $WPF_dataGrid }
+                "2" { $TD_dg_HostVolInfoTwo.ItemsSource = $WPF_dataGrid }
+                "3" { $TD_dg_HostVolInfoThree.ItemsSource = $WPF_dataGrid }
+                "4" { $TD_dg_HostVolInfoFour.ItemsSource = $WPF_dataGrid }
+                Default {}
+            }
+            
+        }
+    catch {
+        <#Do this if a terminating exception happens#>
+        Write-Host "Something went wrong" -ForegroundColor DarkMagenta
+        Write-Host $_.Exception.Message
+        $TD_lb_ErrorMsgHVM.Content = $_.Exception.Message
+    }
 })
-
 
 $TD_btn_IBM_DriveInfo.add_click({
     $TD_lb_DriveInfoOne.Visibility = "Hidden";
@@ -889,7 +914,7 @@ $TD_btn_IBM_BackUpConfig.add_click({
                 if($TD_Credential.ConnectionTyp -eq "ssh"){
                     try {
                         $TD_BUInfoTwo = ssh $StorageUserName@$Device_IP "svcconfig backup"
-                        $TD_tb_BackUpInfoDeviceTwo.Text = $TD_BUInfoTwo
+                        $TD_tb_BackUpInfoDeviceTwo.Text = $TD_BUInfoTwo.TrimStart('.')
                         Start-Sleep -Seconds 0.5
                         pscp -unsafe $StorageUserName@$($Device_IP):/dumps/svc.config.backup.* $($TD_tb_ExportPath.Text)
                     }
@@ -902,7 +927,7 @@ $TD_btn_IBM_BackUpConfig.add_click({
                 }else{
                     try {
                         $TD_BUInfoTwo = plink $StorageUserName@$Device_IP -pw $($TD_Credential.StoragePassword) -batch "svcconfig backup"
-                        $TD_tb_BackUpInfoDeviceTwo.Text = $TD_BUInfoTwo
+                        $TD_tb_BackUpInfoDeviceTwo.Text = $TD_BUInfoTwo.TrimStart('.')
                         Start-Sleep -Seconds 0.5
                         pscp -unsafe -pw $($TD_Credential.StoragePassword) $StorageUserName@$($Device_IP):/dumps/svc.config.backup.* $($TD_tb_ExportPath.Text)
                     }
@@ -920,7 +945,7 @@ $TD_btn_IBM_BackUpConfig.add_click({
                 if($TD_Credential.ConnectionTyp -eq "ssh"){
                     try {
                         $TD_BUInfoThree = ssh $StorageUserName@$Device_IP "svcconfig backup"
-                        $TD_tb_BackUpInfoDeviceThree.Text = $TD_BUInfoThree
+                        $TD_tb_BackUpInfoDeviceThree.Text = $TD_BUInfoThree.TrimStart('.')
                         Start-Sleep -Seconds 0.5
                         pscp -unsafe $StorageUserName@$($Device_IP):/dumps/svc.config.backup.* $($TD_tb_ExportPath.Text)
                     }
@@ -933,7 +958,7 @@ $TD_btn_IBM_BackUpConfig.add_click({
                 }else{
                     try {
                         $TD_BUInfoThree = plink $StorageUserName@$Device_IP -pw $($TD_Credential.StoragePassword) -batch "svcconfig backup"
-                        $TD_tb_BackUpInfoDeviceThree.Text = $TD_BUInfoThree
+                        $TD_tb_BackUpInfoDeviceThree.Text = $TD_BUInfoThree.TrimStart('.')
                         Start-Sleep -Seconds 0.5
                         pscp -unsafe -pw $($TD_Credential.StoragePassword) $StorageUserName@$($Device_IP):/dumps/svc.config.backup.* $($TD_tb_ExportPath.Text)
                     }
@@ -951,7 +976,7 @@ $TD_btn_IBM_BackUpConfig.add_click({
                 if($TD_Credential.ConnectionTyp -eq "ssh"){
                     try {
                         $TD_BUInfoFour = ssh ssh $StorageUserName@$Device_IP "svcconfig backup"
-                        $TD_tb_BackUpInfoDeviceFour.Text = $TD_BUInfoFour
+                        $TD_tb_BackUpInfoDeviceFour.Text = $TD_BUInfoFour.TrimStart('.')
                         Start-Sleep -Seconds 0.5
                         pscp -unsafe $StorageUserName@$($Device_IP):/dumps/svc.config.backup.* $($TD_tb_ExportPath.Text)
                     }
@@ -964,7 +989,7 @@ $TD_btn_IBM_BackUpConfig.add_click({
                 }else{
                     try {
                         $TD_BUInfoFour = plink $StorageUserName@$Device_IP -pw $($TD_Credential.StoragePassword) -batch "svcconfig backup"
-                        $TD_tb_BackUpInfoDeviceFour.Text = $TD_BUInfoFour
+                        $TD_tb_BackUpInfoDeviceFour.Text = $TD_BUInfoFour.TrimStart('.')
                         Start-Sleep -Seconds 0.5
                         pscp -unsafe -pw $($TD_Credential.StoragePassword) $StorageUserName@$($Device_IP):/dumps/svc.config.backup.* $($TD_tb_ExportPath.Text)
                     }
@@ -980,7 +1005,7 @@ $TD_btn_IBM_BackUpConfig.add_click({
         }
     }
     try {
-        $TD_ExportFiles = Get-ChildItem -Path $TD_tb_Exportpath.Text
+        $TD_ExportFiles = Get-ChildItem -Path $TD_tb_Exportpath.Text -Filter "svc.config.backup.*"
         #Write-Host $TD_ExportFiles.count = $TD_ExportFiles
         #$TD_tb_BackUpFileErrorInfo.Text = $TD_tb_Exportpath
         $TD_tb_BackUpFileInfoDevice.ItemsSource = $TD_ExportFiles
@@ -1029,24 +1054,24 @@ $TD_btn_IBM_CleanUpConfigDir.add_click({
                         if($TD_Credential.ConnectionTyp -eq "ssh"){
                             try {
                                 $TD_BUInfoOne = ssh $StorageUserName@$Device_IP "svcconfig clear"
-                                #$TD_tb_BackUpInfoDeviceOne.Text = $TD_BUInfoOne.TrimStart('.')
+                                $TD_tb_BackUpInfoDeviceOne.Text = $TD_BUInfoOne.TrimStart('.')
                             }
                             catch {
                                 <#Do this if a terminating exception happens#>
                                 Write-Host "Something went wrong" -ForegroundColor DarkMagenta
                                 Write-Host $_.Exception.Message
-                                #$TD_tb_BackUpInfoDeviceOne.Text = $_.Exception.Message
+                                $TD_tb_BackUpInfoDeviceOne.Text = $_.Exception.Message
                             }
                         }else{
                             try {
                                 $TD_BUInfoOne = plink $StorageUserName@$Device_IP -pw $($TD_Credential.StoragePassword) -batch "svcconfig clear"
-                                #$TD_tb_BackUpInfoDeviceOne.Text = $TD_BUInfoOne.TrimStart('.')
+                                $TD_tb_BackUpInfoDeviceOne.Text = $TD_BUInfoOne.TrimStart('.')
                             }
                             catch {
                                 <#Do this if a terminating exception happens#>
                                 Write-Host "Something went wrong" -ForegroundColor DarkMagenta
                                 Write-Host $_.Exception.Message
-                                #$TD_tb_BackUpInfoDeviceOne.Text = $_.Exception.Message
+                                $TD_tb_BackUpInfoDeviceOne.Text = $_.Exception.Message
                             }
                         }
                     }
@@ -1056,24 +1081,24 @@ $TD_btn_IBM_CleanUpConfigDir.add_click({
                         if($TD_Credential.ConnectionTyp -eq "ssh"){
                             try {
                                 $TD_BUInfoOne = ssh $StorageUserName@$Device_IP "svcconfig clear"
-                                #$TD_tb_BackUpInfoDeviceTwo.Text = $TD_BUInfoOne.TrimStart('.')
+                                $TD_tb_BackUpInfoDeviceTwo.Text = $TD_BUInfoOne.TrimStart('.')
                             }
                             catch {
                                 <#Do this if a terminating exception happens#>
                                 Write-Host "Something went wrong" -ForegroundColor DarkMagenta
                                 Write-Host $_.Exception.Message
-                                #$TD_tb_BackUpInfoDeviceTwo.Text = $_.Exception.Message
+                                $TD_tb_BackUpInfoDeviceTwo.Text = $_.Exception.Message
                             }
                         }else{
                             try {
                                 $TD_BUInfoOne = plink $StorageUserName@$Device_IP -pw $($TD_Credential.StoragePassword) -batch "svcconfig clear"
-                                #$TD_tb_BackUpInfoDeviceTwo.Text = $TD_BUInfoOne.TrimStart('.')
+                                $TD_tb_BackUpInfoDeviceTwo.Text = $TD_BUInfoOne.TrimStart('.')
                             }
                             catch {
                                 <#Do this if a terminating exception happens#>
                                 Write-Host "Something went wrong" -ForegroundColor DarkMagenta
                                 Write-Host $_.Exception.Message
-                                #$TD_tb_BackUpInfoDeviceTwo.Text = $_.Exception.Message
+                                $TD_tb_BackUpInfoDeviceTwo.Text = $_.Exception.Message
                             }
                         }
                     }
@@ -1083,24 +1108,24 @@ $TD_btn_IBM_CleanUpConfigDir.add_click({
                         if($TD_Credential.ConnectionTyp -eq "ssh"){
                             try {
                                 $TD_BUInfoOne = ssh $StorageUserName@$Device_IP "svcconfig clear"
-                                #$TD_tb_BackUpInfoDeviceThree.Text = $TD_BUInfoOne.TrimStart('.')
+                                $TD_tb_BackUpInfoDeviceThree.Text = $TD_BUInfoOne.TrimStart('.')
                             }
                             catch {
                                 <#Do this if a terminating exception happens#>
                                 Write-Host "Something went wrong" -ForegroundColor DarkMagenta
                                 Write-Host $_.Exception.Message
-                                #$TD_tb_BackUpInfoDeviceThree.Text = $_.Exception.Message
+                                $TD_tb_BackUpInfoDeviceThree.Text = $_.Exception.Message
                             }
                         }else{
                             try {
                                 $TD_BUInfoOne = plink $StorageUserName@$Device_IP -pw $($TD_Credential.StoragePassword) -batch "svcconfig clear"
-                                #$TD_tb_BackUpInfoDeviceThree.Text = $TD_BUInfoOne.TrimStart('.')
+                                $TD_tb_BackUpInfoDeviceThree.Text = $TD_BUInfoOne.TrimStart('.')
                             }
                             catch {
                                 <#Do this if a terminating exception happens#>
                                 Write-Host "Something went wrong" -ForegroundColor DarkMagenta
                                 Write-Host $_.Exception.Message
-                                #$TD_tb_BackUpInfoDeviceThree.Text = $_.Exception.Message
+                                $TD_tb_BackUpInfoDeviceThree.Text = $_.Exception.Message
                             }
                         }
                     }
@@ -1110,24 +1135,24 @@ $TD_btn_IBM_CleanUpConfigDir.add_click({
                         if($TD_Credential.ConnectionTyp -eq "ssh"){
                             try {
                                 $TD_BUInfoOne = ssh $StorageUserName@$Device_IP "svcconfig clear"
-                                #$TD_tb_BackUpInfoDeviceFour.Text = $TD_BUInfoOne.TrimStart('.')
+                                $TD_tb_BackUpInfoDeviceFour.Text = $TD_BUInfoOne.TrimStart('.')
                             }
                             catch {
                                 <#Do this if a terminating exception happens#>
                                 Write-Host "Something went wrong" -ForegroundColor DarkMagenta
                                 Write-Host $_.Exception.Message
-                                #$TD_tb_BackUpInfoDeviceFour.Text = $_.Exception.Message
+                                $TD_tb_BackUpInfoDeviceFour.Text = $_.Exception.Message
                             }
                         }else{
                             try {
                                 $TD_BUInfoOne = plink $StorageUserName@$Device_IP -pw $($TD_Credential.StoragePassword) -batch "svcconfig clear"
-                                #$TD_tb_BackUpInfoDeviceFour.Text = $TD_BUInfoOne.TrimStart('.')
+                                $TD_tb_BackUpInfoDeviceFour.Text = $TD_BUInfoOne.TrimStart('.')
                             }
                             catch {
                                 <#Do this if a terminating exception happens#>
                                 Write-Host "Something went wrong" -ForegroundColor DarkMagenta
                                 Write-Host $_.Exception.Message
-                                #$TD_tb_BackUpInfoDeviceFour.Text = $_.Exception.Message
+                                $TD_tb_BackUpInfoDeviceFour.Text = $_.Exception.Message
                             }
                         }
                     }
@@ -1233,26 +1258,30 @@ $TD_btn_FOS_SwitchShow.add_click({
             {($_ -eq 1)} 
             {   
                 $FOS_SwitchShow += FOS_SwitchShowInfo -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.SANUserName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $TD_Credential.SANPassword -TD_Exportpath $TD_tb_ExportPath.Text
-                Start-Sleep -Seconds 0.5
+                Start-Sleep -Seconds 0.2
                 $TD_lb_SwitchShowOne.ItemsSource =$FOS_SwitchShow
+                $FOS_SwitchShow | Export-Csv -Path $Env:TEMP\$($_)_SwitchShow_Temp.csv
             }
             {($_ -eq 2) } <# -or ($_ -eq 3) -or ($_ -eq 4)}  for later use maybe #>
             {            
                 $FOS_SwitchShow += FOS_SwitchShowInfo -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.SANUserName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $TD_Credential.SANPassword -TD_Exportpath $TD_tb_ExportPath.Text
-                Start-Sleep -Seconds 0.5
+                Start-Sleep -Seconds 0.2
                 $TD_lb_SwitchShowTwo.ItemsSource =$FOS_SwitchShow
+                $FOS_SwitchShow | Export-Csv -Path $Env:TEMP\$($_)_SwitchShow_Temp.csv
             }
             {($_ -eq 3) } <# -or ($_ -eq 3) -or ($_ -eq 4)}  for later use maybe #>
             {            
                 $FOS_SwitchShow += FOS_SwitchShowInfo -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.SANUserName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $TD_Credential.SANPassword -TD_Exportpath $TD_tb_ExportPath.Text
-                Start-Sleep -Seconds 0.5
+                Start-Sleep -Seconds 0.2
                 $TD_lb_SwitchShowThree.ItemsSource =$FOS_SwitchShow
+                $FOS_SwitchShow | Export-Csv -Path $Env:TEMP\$($_)_SwitchShow_Temp.csv
             }
             {($_ -eq 4) }
             {            
                 $FOS_SwitchShow += FOS_SwitchShowInfo -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.SANUserName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $TD_Credential.SANPassword -TD_Exportpath $TD_tb_ExportPath.Text
-                Start-Sleep -Seconds 0.5
+                Start-Sleep -Seconds 0.2
                 $TD_lb_SwitchShowFour.ItemsSource =$FOS_SwitchShow
+                $FOS_SwitchShow | Export-Csv -Path $Env:TEMP\$($_)_SwitchShow_Temp.csv
             }
             Default {Write-Debug "Nothing" }
         }
@@ -1268,11 +1297,54 @@ $TD_btn_FOS_SwitchShow.add_click({
     $TD_stp_sanZoneDetailsShow.Visibility="Collapsed"
     $TD_stp_sanSwitchShow.Visibility="Visible"
 })
+<# filter View for Host Volume Map #>
+<# to keep this file clean :D export the following lines to a func in one if the next Version #>
+$TD_btn_FilterSANSwShow.Add_Click({
+    [string]$filter= $TD_tb_FilterWordSANSwShow.Text
+    [string]$ColumFilter= $TD_cb_FilterColumSANSwShow.Text
+    [int]$TD_SANFilter_DG_Colum = $TD_cb_ListFilterSANSwShow.Text
+    try {
+        [array]$TD_CollectVolInfo = Import-Csv -Path $Env:TEMP\$($TD_SANFilter_DG_Colum)_SwitchShow_Temp.csv
+        switch ($TD_SANFilter_DG_Colum) {
+            1 { $FOS_SwitchShow = $TD_lb_SwitchShowOne.ItemsSource }
+            2 { $FOS_SwitchShow = $TD_lb_SwitchShowTwo.ItemsSource }
+            3 { $FOS_SwitchShow = $TD_lb_SwitchShowThree.ItemsSource }
+            4 { $FOS_SwitchShow = $TD_lb_SwitchShowFour.ItemsSource }
+            Default {Write-Host "Something went wrong at Switchshow" -ForegroundColor DarkMagenta}
+        }
+        if($FOS_SwitchShow.Count -ne $TD_CollectVolInfo.Count){
+            $FOS_SwitchShow = $TD_CollectVolInfo }
+
+            switch ($ColumFilter) {
+                "Port" { [array]$WPF_dataGrid = $FOS_SwitchShow | Where-Object { $_.Port -Match $filter } }
+                "Speed" { [array]$WPF_dataGrid = $FOS_SwitchShow | Where-Object { $_.Speed -Match $filter } }
+                "State" { [array]$WPF_dataGrid = $FOS_SwitchShow | Where-Object { $_.State -Match $filter } }
+                "PortConnect" { [array]$WPF_dataGrid = $FOS_SwitchShow | Where-Object { $_.PortConnect -Match $filter } }
+                Default {Write-Host "Something went wrong at Switchshow" -ForegroundColor DarkMagenta}
+            }
+
+            switch ($TD_SANFilter_DG_Colum) {
+                1 { $TD_lb_SwitchShowOne.ItemsSource = $WPF_dataGrid }
+                2 { $TD_lb_SwitchShowTwo.ItemsSource = $WPF_dataGrid }
+                3 { $TD_lb_SwitchShowThree.ItemsSource = $WPF_dataGrid }
+                4 { $TD_lb_SwitchShowFour.ItemsSource = $WPF_dataGrid }
+                Default {Write-Host "Something went wrong at Switchshow" -ForegroundColor DarkMagenta}
+            }
+        }
+    catch {
+        <#Do this if a terminating exception happens#>
+        Write-Host "Something went wrong at Switchshow" -ForegroundColor DarkMagenta
+        Write-Host $_.Exception.Message
+        $TD_lb_ErrorMsgSANSwShow.Content = $_.Exception.Message
+    }
+})
 
 $TD_btn_FOS_ZoneDetailsShow.add_click({
 
     $TD_lb_FabricOne.Visibility = "Hidden";
     $TD_lb_FabricTwo.Visibility = "Hidden";
+    $TD_stp_FilterFabricOneVisibilty.Visibility = "Collapsed"
+    $TD_stp_FilterFabricTwoVisibilty.Visibility = "Collapsed"
 
     $TD_Credentials=@()
     $TD_Credentials_Checked = Get_CredGUIInfos -STP_ID 1 -TD_ConnectionTyp $TD_cb_sanConnectionTyp.Text -TD_IPAdresse $TD_tb_sanIPAdr.Text -TD_UserName $TD_tb_sanUserName.Text -TD_Password $TD_tb_sanPassword
@@ -1302,6 +1374,8 @@ $TD_btn_FOS_ZoneDetailsShow.add_click({
                 $TD_dg_ZoneDetailsOne.ItemsSource =$TD_FOS_ZoneShow
                 $TD_lb_FabricOne.Visibility = "Visible";
                 $TD_lb_FabricOne.Content = $FOS_EffeZoneNameOne
+                $TD_stp_FilterFabricOneVisibilty.Visibility = "Visible"
+                $TD_FOS_ZoneShow | Export-Csv -Path $Env:TEMP\$($FOS_EffeZoneNameOne)_ZoneShow_Temp.csv
             }
             {($_ -eq 2) } <# -or ($_ -eq 3) -or ($_ -eq 4)}  for later use maybe #>
             {            
@@ -1310,7 +1384,9 @@ $TD_btn_FOS_ZoneDetailsShow.add_click({
                 Start-Sleep -Seconds 0.5
                 $TD_dg_ZoneDetailsTwo.ItemsSource =$TD_FOS_ZoneShow
                 $TD_lb_FabricTwo.Visibility = "Visible";
+                $TD_stp_FilterFabricTwoVisibilty.Visibility = "Visible"
                 $TD_lb_FabricTwo.Content = $FOS_EffeZoneNameTwo
+                $TD_FOS_ZoneShow | Export-Csv -Path $Env:TEMP\$($FOS_EffeZoneNameTwo)_ZoneShow_Temp.csv
                 }
             }
             {($_ -eq 3) } <# -or ($_ -eq 3) -or ($_ -eq 4)}  for later use maybe #>
@@ -1321,6 +1397,7 @@ $TD_btn_FOS_ZoneDetailsShow.add_click({
                     if($FOS_EffeZoneNameThree -ne $FOS_EffeZoneNameTwo){
                         Start-Sleep -Seconds 0.5
                         $TD_dg_ZoneDetailsTwo.ItemsSource =$TD_FOS_ZoneShow}
+                        $TD_FOS_ZoneShow | Export-Csv -Path $Env:TEMP\$($FOS_EffeZoneNameThree)_ZoneShow_Temp.csv
                     }
             }
             <# not needed becaus max support at moment are 2 fabs #>
@@ -1344,6 +1421,60 @@ $TD_btn_FOS_ZoneDetailsShow.add_click({
     $TD_stp_sanPortBufferShow.Visibility="Collapsed"
     $TD_stp_sanZoneDetailsShow.Visibility="Visible"
 })
+<# filter View for Host Volume Map #>
+<# to keep this file clean :D export the following lines to a func in one if the next Version #>
+$TD_btn_FilterFabricOne.Add_Click({
+    [string]$FOS_filter= $TD_tb_FilterFabricOne.Text
+    [string]$TD_Filter_DG_Colum = $TD_cb_FilterFabricOne.Text
+    try {
+        [array]$TD_CollectZoneInfo = Import-Csv -Path $Env:TEMP\$($TD_lb_FabricOne.Content)_ZoneShow_Temp.csv
+        $TD_FOS_ZoneShow = $TD_dg_ZoneDetailsOne.ItemsSource
+        if($TD_FOS_ZoneShow.Count -ne $TD_CollectZoneInfo.Count){
+            $TD_FOS_ZoneShow = $TD_CollectZoneInfo }
+             
+            switch ($TD_Filter_DG_Colum) {
+                "Zone" { [array]$WPF_dataGrid = $TD_FOS_ZoneShow | Where-Object { $_.Zone -Match $FOS_filter } }
+                "WWPN" { [array]$WPF_dataGrid = $TD_FOS_ZoneShow | Where-Object { $_.WWPN -Match $FOS_filter } }
+                "Alias" { [array]$WPF_dataGrid = $TD_FOS_ZoneShow | Where-Object { $_.Alias -Match $FOS_filter } }
+                Default {Write-Host "Something went wrong" -ForegroundColor DarkMagenta}
+            }
+            
+            $TD_dg_ZoneDetailsOne.ItemsSource = $WPF_dataGrid
+        }
+    catch {
+        <#Do this if a terminating exception happens#>
+        Write-Host "Something went wrong" -ForegroundColor DarkMagenta
+        Write-Host $_.Exception.Message
+        #$TD_lb_ErrorMsgHVM.Content = $_.Exception.Message
+    }
+})
+$TD_btn_FilterFabricTwo.Add_Click({
+    [string]$FOS_filter= $TD_tb_FilterFabricTwo.Text
+    [string]$TD_Filter_DG_Colum = $TD_cb_FilterFabricTwo.Text
+    try {
+        [array]$TD_CollectZoneInfo = Import-Csv -Path $Env:TEMP\$($TD_lb_FabricTwo.Content)_ZoneShow_Temp.csv
+        $TD_FOS_ZoneShow = $TD_dg_ZoneDetailsTwo.ItemsSource
+        if($TD_FOS_ZoneShow.Count -ne $TD_CollectZoneInfo.Count){
+            $TD_FOS_ZoneShow = $TD_CollectZoneInfo }
+             
+            switch ($TD_Filter_DG_Colum) {
+                "Zone" { [array]$WPF_dataGrid = $TD_FOS_ZoneShow | Where-Object { $_.Zone -Match $FOS_filter } }
+                "WWPN" { [array]$WPF_dataGrid = $TD_FOS_ZoneShow | Where-Object { $_.WWPN -Match $FOS_filter } }
+                "Alias" { [array]$WPF_dataGrid = $TD_FOS_ZoneShow | Where-Object { $_.Alias -Match $FOS_filter } }
+                Default {Write-Host "Something went wrong" -ForegroundColor DarkMagenta}
+            }
+            
+            $TD_dg_ZoneDetailsTwo.ItemsSource = $WPF_dataGrid
+        }
+    catch {
+        <#Do this if a terminating exception happens#>
+        Write-Host "Something went wrong" -ForegroundColor DarkMagenta
+        Write-Host $_.Exception.Message
+        #$TD_lb_ErrorMsgHVM.Content = $_.Exception.Message
+    }
+})
+
+
 
 $TD_btn_FOS_PortLicenseShow.add_click({
 
@@ -1763,7 +1894,8 @@ $TD_btn_HC_OpenGUI_Four.add_click({
 
 $TD_btn_CloseAll.add_click({
     <#CleanUp before close #>
-    Remove-Item -Path $Env:TEMP\* -Filter '*_Host_Vol_Map_Temp.txt' -Force
+    Remove-Item -Path $Env:TEMP\* -Filter '*_Host_Vol_Map_Temp.csv' -Force
+    Remove-Item -Path $Env:TEMP\* -Filter '*_ZoneShow_Temp.csv' -Force
 
     $Mainform.Close()
 })

@@ -111,11 +111,119 @@
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />
                         <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="auto" />
                         <RowDefinition Height="auto" />
                     </Grid.RowDefinitions>
+                    <StackPanel Grid.RowSpan="3" Grid.Column="3" Margin="25,20,0,0" >
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="auto" />
+                                <RowDefinition Height="auto" />
+                                <RowDefinition Height="auto" />
+                                <RowDefinition Height="auto" />
+                                <RowDefinition Height="auto" />
+                                <RowDefinition Height="auto" />
+                                <RowDefinition Height="auto" />
+                                <RowDefinition Height="auto" />
+                                <RowDefinition Height="auto" />
+                                <RowDefinition Height="auto" />
+                                <RowDefinition Height="auto" />
+                                <RowDefinition Height="auto" />
+                                <RowDefinition Height="auto" />
+                                <RowDefinition Height="auto" />
+                                <RowDefinition Height="auto" />
+                                <RowDefinition Height="auto" />
+                                <RowDefinition Height="auto" />
+                                <RowDefinition Height="auto" />
+                            </Grid.RowDefinitions>
+                            <TextBox Padding="2" Width="650" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Text="Latest Major Version (Supported): FOS v9.2.X " FontSize="20" FontWeight="Bold" Foreground="White" Background="DarkGreen" Margin="5,5,5,0" IsReadOnly="True"/>
+                            <StackPanel Orientation="Horizontal" Grid.Row="1" Margin="5,0,0,0">
+                                <TextBox Width="150" Padding="2" Text="Version" FontSize="15" FontWeight="Bold" Background="LightGreen" IsReadOnly="True"/>
+                                <TextBox Width="100" Padding="2" Text="GA Date" FontSize="15" FontWeight="Bold" IsReadOnly="True"/>
+                                <TextBox Width="100" Padding="2" Text="Target Path" FontSize="15" FontWeight="Bold" Background="LightGreen" IsReadOnly="True"/>
+                                <TextBox Width="300" Padding="2" Text="Notes" FontSize="15" FontWeight="Bold" IsReadOnly="True"/>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Grid.Row="2" Margin="5,0,0,0" ToolTip="FICON qualified version.">
+                                <TextBox Width="150" Padding="2" Text="FOS v9.2.1a" Background="LightGreen" IsReadOnly="True" />
+                                <TextBox Width="100" Padding="2" Text="March 1, 2024" IsReadOnly="True"/>
+                                <TextBox Width="100" Padding="2" Text="" IsReadOnly="True"/>
+                                <TextBox Width="300" Padding="2" Text="latest Release" IsReadOnly="True"/>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Grid.Row="3" Margin="5,0,0,0" ToolTip="Target Path version.">
+                                <TextBox Width="150" Padding="2" Text="FOS v9.2.0b1" Background="LightGreen" IsReadOnly="True"/>
+                                <TextBox Width="100" Padding="2" Text="June 27, 2024" IsReadOnly="True"/>
+                                <TextBox Width="100" Padding="2" Text=" Yes" Background="LightGreen" IsReadOnly="True"/>
+                                <TextBox Width="300" Padding="2" Text="No Notes" IsReadOnly="True"/>
+                            </StackPanel>
+                            <TextBox Grid.Row="4" Padding="2" Width="650" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Text="Latest Major Version (Supported): FOS v9.1.X " FontSize="20" FontWeight="Bold" Foreground="White" Background="DarkGreen" Margin="5,20,5,0" IsReadOnly="True"/>
+                            <StackPanel Orientation="Horizontal" Grid.Row="5" Margin="5,0,0,0">
+                                <TextBox Width="150" Padding="2" Text="FOS v9.1.1d/d1/d2" Background="LightGreen" IsReadOnly="True"/>
+                                <TextBox Width="100" Padding="2" Text="January 11, 2024" IsReadOnly="True"/>
+                                <TextBox Width="100" Padding="2" Text="Yes" Background="LightGreen" IsReadOnly="True"/>
+                                <TextBox Width="300" Padding="2" Text="FOS v9.1.1d1 is available with a critical security vulnerability fix. FOS v9.1.1d2 is available with additional fixes including security vulnerability fixes also included in FOS v9.2.x."  TextWrapping="Wrap" IsReadOnly="True"/>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Grid.Row="6" Margin="5,0,0,0">
+                                <TextBox Width="150" Padding="2" Text="FOS v9.1.1c" Background="LightGreen" IsReadOnly="True"/>
+                                <TextBox Width="100" Padding="2" Text="June 23, 2023" IsReadOnly="True"/>
+                                <TextBox Width="100" Padding="2" Text="Yes" Background="LightGreen" IsReadOnly="True"/>
+                                <TextBox Width="300" Padding="2" Text="No Notes"  TextWrapping="Wrap" IsReadOnly="True"/>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Grid.Row="7" Margin="5,0,0,0">
+                                <TextBox Width="150" Padding="2" Text="FOS v9.1.1b" Background="LightCoral" IsReadOnly="True"/>
+                                <TextBox Width="100" Padding="2" Text="January 20, 2023" IsReadOnly="True"/>
+                                <TextBox Width="100" Padding="2" Text="Retired" Background="LightGreen" IsReadOnly="True"/>
+                                <TextBox Width="300" Padding="2" Text="If possible, please perform an update!" Background="LightCoral" TextWrapping="Wrap" IsReadOnly="True"/>
+                            </StackPanel>
+                            <TextBox Grid.Row="8" Padding="2" Width="650" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Text="Latest Major Version (Supported): FOS v9.0.X " FontSize="20" FontWeight="Bold" Foreground="White" Background="DarkGreen" Margin="5,20,5,0" IsReadOnly="True"/>
+                            <StackPanel Orientation="Horizontal" Grid.Row="9" Margin="5,0,0,0">
+                                <TextBox Width="150" Padding="2" Text="FOS v9.0.1e/e1" Background="LightGreen" IsReadOnly="True"/>
+                                <TextBox Width="100" Padding="2" Text="August 19, 2022" IsReadOnly="True"/>
+                                <TextBox Width="100" Padding="2" Text="Yes" Background="LightGreen" IsReadOnly="True"/>
+                                <TextBox Width="300" Padding="2" Text="FOS v9.0.1e1 is available with a critical security vulnerability fix." TextWrapping="Wrap" IsReadOnly="True"/>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Grid.Row="10" Margin="5,0,0,0">
+                                <TextBox Width="150" Padding="2" Text="FOS v9.0.1d" Background="LightGreen" IsReadOnly="True"/>
+                                <TextBox Width="100" Padding="2" Text="March 16, 2022" IsReadOnly="True"/>
+                                <TextBox Width="100" Padding="2" Text="Yes" Background="LightGreen" IsReadOnly="True"/>
+                                <TextBox Width="300" Padding="2" Text="No Notes" TextWrapping="Wrap" IsReadOnly="True"/>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Grid.Row="11" Margin="5,0,0,0">
+                                <TextBox Width="150" Padding="2" Text="FOS v9.0.1c" Background="LightCoral" IsReadOnly="True"/>
+                                <TextBox Width="100" Padding="2" Text="Sep 24, 2021" IsReadOnly="True"/>
+                                <TextBox Width="100" Padding="2" Text="Retired" Background="LightGreen" IsReadOnly="True"/>
+                                <TextBox Width="300" Padding="2" Text="If possible, please perform an update!" Background="LightCoral" TextWrapping="Wrap" IsReadOnly="True"/>
+                            </StackPanel>
+                            <TextBox Grid.Row="12" Padding="2" Width="650" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Text="Legacy Support and Availability Version (Supported Only as Specified): FOS v8.2.X" TextWrapping="Wrap" FontSize="20" FontWeight="Bold" Background="OrangeRed" Margin="5,20,5,0" IsReadOnly="True"/>
+                            <StackPanel Orientation="Horizontal" Grid.Row="13" Margin="5,0,0,0">
+                                <TextBox Width="150" Padding="2" Text="FOS v8.2.3e/e1" Background="LightGreen" IsReadOnly="True"/>
+                                <TextBox Width="100" Padding="2" Text="April 17, 2024" IsReadOnly="True"/>
+                                <TextBox Width="100" Padding="2" Text="Yes" Background="LightGreen" IsReadOnly="True"/>
+                                <TextBox Width="300" Padding="2" Text="Available for supported Gen 5 platforms only. FOS v8.2.3e1 is available with a critical fix. " TextWrapping="Wrap" IsReadOnly="True"/>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Grid.Row="14" Margin="5,0,0,0">
+                                <TextBox Width="150" Padding="2" Text="FOS v8.2.3d" Background="LightGreen" />
+                                <TextBox Width="100" Padding="2" Text="April 14, 2023" />
+                                <TextBox Width="100" Padding="2" Text="Yes" Background="LightGreen" />
+                                <TextBox Width="300" Padding="2" Text="Available and supported for Gen 5 platforms only. FICON qualified for Brocade 7840 only." TextWrapping="Wrap" IsReadOnly="True"/>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Grid.Row="15" Margin="5,0,0,0">
+                                <TextBox Width="150" Padding="2" Text="FOS v8.2.3c/c1" Background="LightCoral" IsReadOnly="True"/>
+                                <TextBox Width="100" Padding="2" Text="July 19, 2022" IsReadOnly="True"/>
+                                <TextBox Width="100" Padding="2" Text="Retired" Background="LightGreen" IsReadOnly="True"/>
+                                <TextBox Width="300" Padding="2" Text="FOS v8.2.3c1 is available with a critical security vulnerability fix. If possible, please perform an update!" Background="LightCoral" TextWrapping="Wrap" IsReadOnly="True"/>
+                            </StackPanel>
+                            <StackPanel Orientation="Vertical" Grid.Row="16" Margin="0,20,0,0">
+                            <TextBox Padding="5" Foreground="White" Background="red"  Width="650" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Text="Effective October 2024, upgrades from FOS v7.x to FOS v8.2.x will only be supported by migrating through FOS v8.0.x. This is a disruptive upgrade migration path." TextWrapping="Wrap" IsReadOnly="True"/>
+                            <TextBox Padding="5" Margin="0,25,0,0" Foreground="White" Background="red"  Width="650" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Text="Quelle: https://docs.broadcom.com/doc/Brocade-SW-Support-RM" TextWrapping="Wrap" IsReadOnly="True"/>
+                            </StackPanel>
+                        </Grid>
+                    </StackPanel>
                     <StackPanel Grid.Row="0" Grid.Column="0" >
                         <Label Content="Switch 1" />
                         <DataGrid Name="dg_sanBasicSwitchInfoOne" AutoGenerateColumns="False" Height="Auto" Width="Auto" Margin="5,0,5,5" >
@@ -369,155 +477,147 @@
                     </StackPanel>
                     <StackPanel Grid.Row="1" Grid.Column="0" >
                         <Label Content="Switch 1" />
-                        <ListView x:Name="lb_PortErrorShowOne" MinWidth="800" Height="400" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="5">
-                            <ListView.Style>
-                              <Style TargetType="ListView">
-                                <Style.Triggers>
-                                  <Trigger Property="HasItems" Value="False">
-                                    <Setter Property="Visibility" Value="Collapsed"></Setter>
-                                  </Trigger>
-                                </Style.Triggers>
-                              </Style>
-                            </ListView.Style>
-                            <ListView.View>
-                                <GridView>
-                                    <GridViewColumn Header="Port"  DisplayMemberBinding ="{Binding Port}" Width="60"/>  
-                                    <GridViewColumn Header="Frames_TX" DisplayMemberBinding ="{Binding Frames_TX}" Width="60"/>  
-                                    <GridViewColumn Header="Frames_RX" DisplayMemberBinding ="{Binding Frames_RX}" Width="60"/>
-                                    <GridViewColumn Header="enc_in"  DisplayMemberBinding ="{Binding enc_in}" Width="60"/>  
-                                    <GridViewColumn Header="crc_err" DisplayMemberBinding ="{Binding crc_err}" Width="60"/>  
-                                    <GridViewColumn Header="crc_g_eof" DisplayMemberBinding ="{Binding crc_g_eof}" Width="60"/> 
-                                    <GridViewColumn Header="too_short" DisplayMemberBinding ="{Binding too_shrt}" Width="60"/> 
-                                    <GridViewColumn Header="too_long" DisplayMemberBinding ="{Binding too_long}" Width="60"/> 
-                                    <GridViewColumn Header="bad_eof" DisplayMemberBinding ="{Binding bad_eof}" Width="60"/> 
-                                    <GridViewColumn Header="enc_out" DisplayMemberBinding ="{Binding enc_out}" Width="60"/> 
-                                    <GridViewColumn Header="disc_c3" DisplayMemberBinding ="{Binding disc_c3}" Width="60"/>  
-                                    <GridViewColumn Header="link_fail" DisplayMemberBinding ="{Binding link_fail}" Width="60"/> 
-                                    <GridViewColumn Header="loss_sync" DisplayMemberBinding ="{Binding loss_sync}" Width="60"/> 
-                                    <GridViewColumn Header="loss_sig" DisplayMemberBinding ="{Binding loss_sig}" Width="60"/> 
-                                    <GridViewColumn Header="f_rejected" DisplayMemberBinding ="{Binding f_rejected}" Width="60"/> 
-                                    <GridViewColumn Header="f_busied" DisplayMemberBinding ="{Binding f_busied}" Width="60"/> 
-                                    <GridViewColumn Header="c3timeout_tx" DisplayMemberBinding ="{Binding c3timeout_tx}" Width="60"/>  
-                                    <GridViewColumn Header="c3timeout_rx" DisplayMemberBinding ="{Binding c3timeout_rx}" Width="60"/> 
-                                    <GridViewColumn Header="psc_err" DisplayMemberBinding ="{Binding psc_err}" Width="60"/> 
-                                    <GridViewColumn Header="uncor_err" DisplayMemberBinding ="{Binding uncor_err}" Width="60"/> 
-                                </GridView>
-                            </ListView.View>
-                        </ListView >
+                        <DataGrid x:Name="lb_PortErrorShowOne" AutoGenerateColumns="False" Margin="5" MinWidth="800" Height="400">
+                            <DataGrid.Style>
+                                <Style TargetType="DataGrid">
+                                    <Style.Triggers>
+                                        <Trigger Property="HasItems" Value="False">
+                                          <Setter Property="Visibility" Value="Collapsed"></Setter>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGrid.Style>
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Width="auto" Header="Port" Binding ="{Binding Port}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Frames_TX" Binding ="{Binding Frames_TX}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Frames_RX" Binding ="{Binding Frames_RX}" IsReadOnly="True"/>  
+                                <DataGridTextColumn Width="auto" Header="enc_in" Binding ="{Binding enc_in}" IsReadOnly="True"/>  
+                                <DataGridTextColumn Width="auto" Header="crc_err" Binding ="{Binding crc_err}" IsReadOnly="True"/> 
+                                <DataGridTextColumn Width="auto" Header="crc_g_eof" Binding ="{Binding crc_g_eof}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="too_short" Binding ="{Binding too_short}" IsReadOnly="True"/>  
+                                <DataGridTextColumn Width="auto" Header="too_long" Binding ="{Binding too_long}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="bad_eof" Binding ="{Binding bad_eof}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="enc_out" Binding ="{Binding enc_out}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="disc_c3" Binding ="{Binding disc_c3}" IsReadOnly="True"/> 
+                                <DataGridTextColumn Width="auto" Header="link_fail" Binding ="{Binding link_fail}" IsReadOnly="True"/>  
+                                <DataGridTextColumn Width="auto" Header="loss_sync" Binding ="{Binding loss_sync}" IsReadOnly="True"/> 
+                                <DataGridTextColumn Width="auto" Header="loss_sig" Binding ="{Binding loss_sig}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="f_rejected" Binding ="{Binding f_rejected}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="f_busied" Binding ="{Binding f_busied}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="c3timeout_tx" Binding ="{Binding c3timeout_tx}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="c3timeout_rx" Binding ="{Binding c3timeout_rx}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="psc_err" Binding ="{Binding psc_err}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="uncor_err" Binding ="{Binding uncor_err}" IsReadOnly="True"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
                     </StackPanel>
                     <StackPanel Grid.Row="1" Grid.Column="2"  >
                         <Label Content="Switch 2" />
-                        <ListView x:Name="lb_PortErrorShowTwo" MinWidth="800" Height="400" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="5">
-                            <ListView.Style>
-                              <Style TargetType="ListView">
-                                <Style.Triggers>
-                                  <Trigger Property="HasItems" Value="False">
-                                    <Setter Property="Visibility" Value="Collapsed"></Setter>
-                                  </Trigger>
-                                </Style.Triggers>
-                              </Style>
-                            </ListView.Style>
-                            <ListView.View>
-                                <GridView>
-                                    <GridViewColumn Header="Port"  DisplayMemberBinding ="{Binding Port}" Width="60"/>  
-                                    <GridViewColumn Header="Frames_TX" DisplayMemberBinding ="{Binding Frames_TX}" Width="60"/>  
-                                    <GridViewColumn Header="Frames_RX" DisplayMemberBinding ="{Binding Frames_RX}" Width="60"/>
-                                    <GridViewColumn Header="enc_in"  DisplayMemberBinding ="{Binding enc_in}" Width="60"/>  
-                                    <GridViewColumn Header="crc_err" DisplayMemberBinding ="{Binding crc_err}" Width="60"/>  
-                                    <GridViewColumn Header="crc_g_eof" DisplayMemberBinding ="{Binding crc_g_eof}" Width="60"/> 
-                                    <GridViewColumn Header="too_short" DisplayMemberBinding ="{Binding too_shrt}" Width="60"/> 
-                                    <GridViewColumn Header="too_long" DisplayMemberBinding ="{Binding too_long}" Width="60"/> 
-                                    <GridViewColumn Header="bad_eof" DisplayMemberBinding ="{Binding bad_eof}" Width="60"/> 
-                                    <GridViewColumn Header="enc_out" DisplayMemberBinding ="{Binding enc_out}" Width="60"/> 
-                                    <GridViewColumn Header="disc_c3" DisplayMemberBinding ="{Binding disc_c3}" Width="60"/>  
-                                    <GridViewColumn Header="link_fail" DisplayMemberBinding ="{Binding link_fail}" Width="60"/> 
-                                    <GridViewColumn Header="loss_sync" DisplayMemberBinding ="{Binding loss_sync}" Width="60"/> 
-                                    <GridViewColumn Header="loss_sig" DisplayMemberBinding ="{Binding loss_sig}" Width="60"/> 
-                                    <GridViewColumn Header="f_rejected" DisplayMemberBinding ="{Binding f_rejected}" Width="60"/> 
-                                    <GridViewColumn Header="f_busied" DisplayMemberBinding ="{Binding f_busied}" Width="60"/> 
-                                    <GridViewColumn Header="c3timeout_tx" DisplayMemberBinding ="{Binding c3timeout_tx}" Width="60"/>  
-                                    <GridViewColumn Header="c3timeout_rx" DisplayMemberBinding ="{Binding c3timeout_rx}" Width="60"/> 
-                                    <GridViewColumn Header="psc_err" DisplayMemberBinding ="{Binding psc_err}" Width="60"/> 
-                                    <GridViewColumn Header="uncor_err" DisplayMemberBinding ="{Binding uncor_err}" Width="60"/> 
-                                </GridView>
-                            </ListView.View>
-                        </ListView >
+                        <DataGrid x:Name="lb_PortErrorShowTwo" AutoGenerateColumns="False" Margin="5" MinWidth="800" Height="400">
+                            <DataGrid.Style>
+                                <Style TargetType="DataGrid">
+                                    <Style.Triggers>
+                                        <Trigger Property="HasItems" Value="False">
+                                          <Setter Property="Visibility" Value="Collapsed"></Setter>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGrid.Style>
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Width="auto" Header="Port" Binding ="{Binding Port}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Frames_TX" Binding ="{Binding Frames_TX}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Frames_RX" Binding ="{Binding Frames_RX}" IsReadOnly="True"/>  
+                                <DataGridTextColumn Width="auto" Header="enc_in" Binding ="{Binding enc_in}" IsReadOnly="True"/>  
+                                <DataGridTextColumn Width="auto" Header="crc_err" Binding ="{Binding crc_err}" IsReadOnly="True"/> 
+                                <DataGridTextColumn Width="auto" Header="crc_g_eof" Binding ="{Binding crc_g_eof}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="too_short" Binding ="{Binding too_short}" IsReadOnly="True"/>  
+                                <DataGridTextColumn Width="auto" Header="too_long" Binding ="{Binding too_long}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="bad_eof" Binding ="{Binding bad_eof}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="enc_out" Binding ="{Binding enc_out}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="disc_c3" Binding ="{Binding disc_c3}" IsReadOnly="True"/> 
+                                <DataGridTextColumn Width="auto" Header="link_fail" Binding ="{Binding link_fail}" IsReadOnly="True"/>  
+                                <DataGridTextColumn Width="auto" Header="loss_sync" Binding ="{Binding loss_sync}" IsReadOnly="True"/> 
+                                <DataGridTextColumn Width="auto" Header="loss_sig" Binding ="{Binding loss_sig}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="f_rejected" Binding ="{Binding f_rejected}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="f_busied" Binding ="{Binding f_busied}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="c3timeout_tx" Binding ="{Binding c3timeout_tx}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="c3timeout_rx" Binding ="{Binding c3timeout_rx}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="psc_err" Binding ="{Binding psc_err}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="uncor_err" Binding ="{Binding uncor_err}" IsReadOnly="True"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
                     </StackPanel>
                     <StackPanel Grid.Row="2" Grid.Column="0"  >
                         <Label Content="Switch 3" />
-                        <ListView x:Name="lb_PortErrorShowThree" MinWidth="800" Height="400" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="5">
-                            <ListView.Style>
-                              <Style TargetType="ListView">
-                                <Style.Triggers>
-                                  <Trigger Property="HasItems" Value="False">
-                                    <Setter Property="Visibility" Value="Collapsed"></Setter>
-                                  </Trigger>
-                                </Style.Triggers>
-                              </Style>
-                            </ListView.Style>
-                            <ListView.View>
-                                <GridView>
-                                    <GridViewColumn Header="Port"  DisplayMemberBinding ="{Binding Port}" Width="60"/>  
-                                    <GridViewColumn Header="Frames_TX" DisplayMemberBinding ="{Binding Frames_TX}" Width="60"/>  
-                                    <GridViewColumn Header="Frames_RX" DisplayMemberBinding ="{Binding Frames_RX}" Width="60"/>
-                                    <GridViewColumn Header="enc_in"  DisplayMemberBinding ="{Binding enc_in}" Width="60"/>  
-                                    <GridViewColumn Header="crc_err" DisplayMemberBinding ="{Binding crc_err}" Width="60"/>  
-                                    <GridViewColumn Header="crc_g_eof" DisplayMemberBinding ="{Binding crc_g_eof}" Width="60"/> 
-                                    <GridViewColumn Header="too_short" DisplayMemberBinding ="{Binding too_shrt}" Width="60"/> 
-                                    <GridViewColumn Header="too_long" DisplayMemberBinding ="{Binding too_long}" Width="60"/> 
-                                    <GridViewColumn Header="bad_eof" DisplayMemberBinding ="{Binding bad_eof}" Width="60"/> 
-                                    <GridViewColumn Header="enc_out" DisplayMemberBinding ="{Binding enc_out}" Width="60"/> 
-                                    <GridViewColumn Header="disc_c3" DisplayMemberBinding ="{Binding disc_c3}" Width="60"/>  
-                                    <GridViewColumn Header="link_fail" DisplayMemberBinding ="{Binding link_fail}" Width="60"/> 
-                                    <GridViewColumn Header="loss_sync" DisplayMemberBinding ="{Binding loss_sync}" Width="60"/> 
-                                    <GridViewColumn Header="loss_sig" DisplayMemberBinding ="{Binding loss_sig}" Width="60"/> 
-                                    <GridViewColumn Header="f_rejected" DisplayMemberBinding ="{Binding f_rejected}" Width="60"/> 
-                                    <GridViewColumn Header="f_busied" DisplayMemberBinding ="{Binding f_busied}" Width="60"/> 
-                                    <GridViewColumn Header="c3timeout_tx" DisplayMemberBinding ="{Binding c3timeout_tx}" Width="60"/>  
-                                    <GridViewColumn Header="c3timeout_rx" DisplayMemberBinding ="{Binding c3timeout_rx}" Width="60"/> 
-                                    <GridViewColumn Header="psc_err" DisplayMemberBinding ="{Binding psc_err}" Width="60"/> 
-                                    <GridViewColumn Header="uncor_err" DisplayMemberBinding ="{Binding uncor_err}" Width="60"/> 
-                                </GridView>
-                            </ListView.View>
-                        </ListView >
+                        <DataGrid x:Name="lb_PortErrorShowThree" AutoGenerateColumns="False" Margin="5" MinWidth="800" Height="400">
+                            <DataGrid.Style>
+                                <Style TargetType="DataGrid">
+                                    <Style.Triggers>
+                                        <Trigger Property="HasItems" Value="False">
+                                          <Setter Property="Visibility" Value="Collapsed"></Setter>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGrid.Style>
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Width="auto" Header="Port" Binding ="{Binding Port}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Frames_TX" Binding ="{Binding Frames_TX}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Frames_RX" Binding ="{Binding Frames_RX}" IsReadOnly="True"/>  
+                                <DataGridTextColumn Width="auto" Header="enc_in" Binding ="{Binding enc_in}" IsReadOnly="True"/>  
+                                <DataGridTextColumn Width="auto" Header="crc_err" Binding ="{Binding crc_err}" IsReadOnly="True"/> 
+                                <DataGridTextColumn Width="auto" Header="crc_g_eof" Binding ="{Binding crc_g_eof}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="too_short" Binding ="{Binding too_short}" IsReadOnly="True"/>  
+                                <DataGridTextColumn Width="auto" Header="too_long" Binding ="{Binding too_long}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="bad_eof" Binding ="{Binding bad_eof}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="enc_out" Binding ="{Binding enc_out}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="disc_c3" Binding ="{Binding disc_c3}" IsReadOnly="True"/> 
+                                <DataGridTextColumn Width="auto" Header="link_fail" Binding ="{Binding link_fail}" IsReadOnly="True"/>  
+                                <DataGridTextColumn Width="auto" Header="loss_sync" Binding ="{Binding loss_sync}" IsReadOnly="True"/> 
+                                <DataGridTextColumn Width="auto" Header="loss_sig" Binding ="{Binding loss_sig}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="f_rejected" Binding ="{Binding f_rejected}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="f_busied" Binding ="{Binding f_busied}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="c3timeout_tx" Binding ="{Binding c3timeout_tx}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="c3timeout_rx" Binding ="{Binding c3timeout_rx}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="psc_err" Binding ="{Binding psc_err}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="uncor_err" Binding ="{Binding uncor_err}" IsReadOnly="True"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
                     </StackPanel>
                     <StackPanel Grid.Row="2" Grid.Column="1" >
                         <Label Content="Switch 4" />
-                        <ListView x:Name="lb_PortErrorShowFour" MinWidth="800" Height="400" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="5">
-                            <ListView.Style>
-                              <Style TargetType="ListView">
-                                <Style.Triggers>
-                                  <Trigger Property="HasItems" Value="False">
-                                    <Setter Property="Visibility" Value="Collapsed"></Setter>
-                                  </Trigger>
-                                </Style.Triggers>
-                              </Style>
-                            </ListView.Style>
-                            <ListView.View>
-                                <GridView>
-                                    <GridViewColumn Header="Port"  DisplayMemberBinding ="{Binding Port}" Width="60"/>  
-                                    <GridViewColumn Header="Frames_TX" DisplayMemberBinding ="{Binding Frames_TX}" Width="60"/>  
-                                    <GridViewColumn Header="Frames_RX" DisplayMemberBinding ="{Binding Frames_RX}" Width="60"/>
-                                    <GridViewColumn Header="enc_in"  DisplayMemberBinding ="{Binding enc_in}" Width="60"/>  
-                                    <GridViewColumn Header="crc_err" DisplayMemberBinding ="{Binding crc_err}" Width="60"/>  
-                                    <GridViewColumn Header="crc_g_eof" DisplayMemberBinding ="{Binding crc_g_eof}" Width="60"/> 
-                                    <GridViewColumn Header="too_short" DisplayMemberBinding ="{Binding too_shrt}" Width="60"/> 
-                                    <GridViewColumn Header="too_long" DisplayMemberBinding ="{Binding too_long}" Width="60"/> 
-                                    <GridViewColumn Header="bad_eof" DisplayMemberBinding ="{Binding bad_eof}" Width="60"/> 
-                                    <GridViewColumn Header="enc_out" DisplayMemberBinding ="{Binding enc_out}" Width="60"/> 
-                                    <GridViewColumn Header="disc_c3" DisplayMemberBinding ="{Binding disc_c3}" Width="60"/>  
-                                    <GridViewColumn Header="link_fail" DisplayMemberBinding ="{Binding link_fail}" Width="60"/> 
-                                    <GridViewColumn Header="loss_sync" DisplayMemberBinding ="{Binding loss_sync}" Width="60"/> 
-                                    <GridViewColumn Header="loss_sig" DisplayMemberBinding ="{Binding loss_sig}" Width="60"/> 
-                                    <GridViewColumn Header="f_rejected" DisplayMemberBinding ="{Binding f_rejected}" Width="60"/> 
-                                    <GridViewColumn Header="f_busied" DisplayMemberBinding ="{Binding f_busied}" Width="60"/> 
-                                    <GridViewColumn Header="c3timeout_tx" DisplayMemberBinding ="{Binding c3timeout_tx}" Width="60"/>  
-                                    <GridViewColumn Header="c3timeout_rx" DisplayMemberBinding ="{Binding c3timeout_rx}" Width="60"/> 
-                                    <GridViewColumn Header="psc_err" DisplayMemberBinding ="{Binding psc_err}" Width="60"/> 
-                                    <GridViewColumn Header="uncor_err" DisplayMemberBinding ="{Binding uncor_err}" Width="60"/> 
-                                </GridView>
-                            </ListView.View>
-                        </ListView >
+                        <DataGrid x:Name="lb_PortErrorShowFour" AutoGenerateColumns="False" Margin="5" MinWidth="800" Height="400">
+                            <DataGrid.Style>
+                                <Style TargetType="DataGrid">
+                                    <Style.Triggers>
+                                        <Trigger Property="HasItems" Value="False">
+                                          <Setter Property="Visibility" Value="Collapsed"></Setter>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGrid.Style>
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Width="auto" Header="Port" Binding ="{Binding Port}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Frames_TX" Binding ="{Binding Frames_TX}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Frames_RX" Binding ="{Binding Frames_RX}" IsReadOnly="True"/>  
+                                <DataGridTextColumn Width="auto" Header="enc_in" Binding ="{Binding enc_in}" IsReadOnly="True"/>  
+                                <DataGridTextColumn Width="auto" Header="crc_err" Binding ="{Binding crc_err}" IsReadOnly="True"/> 
+                                <DataGridTextColumn Width="auto" Header="crc_g_eof" Binding ="{Binding crc_g_eof}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="too_short" Binding ="{Binding too_short}" IsReadOnly="True"/>  
+                                <DataGridTextColumn Width="auto" Header="too_long" Binding ="{Binding too_long}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="bad_eof" Binding ="{Binding bad_eof}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="enc_out" Binding ="{Binding enc_out}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="disc_c3" Binding ="{Binding disc_c3}" IsReadOnly="True"/> 
+                                <DataGridTextColumn Width="auto" Header="link_fail" Binding ="{Binding link_fail}" IsReadOnly="True"/>  
+                                <DataGridTextColumn Width="auto" Header="loss_sync" Binding ="{Binding loss_sync}" IsReadOnly="True"/> 
+                                <DataGridTextColumn Width="auto" Header="loss_sig" Binding ="{Binding loss_sig}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="f_rejected" Binding ="{Binding f_rejected}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="f_busied" Binding ="{Binding f_busied}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="c3timeout_tx" Binding ="{Binding c3timeout_tx}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="c3timeout_rx" Binding ="{Binding c3timeout_rx}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="psc_err" Binding ="{Binding psc_err}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="uncor_err" Binding ="{Binding uncor_err}" IsReadOnly="True"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
                     </StackPanel>
                 </Grid>
             </StackPanel>
@@ -530,110 +630,120 @@
                     <Grid.RowDefinitions>
                         <RowDefinition Height="auto" />
                         <RowDefinition Height="auto" />
+                        <RowDefinition Height="auto" />
                     </Grid.RowDefinitions>
-                    <StackPanel Grid.Row="0" Grid.Column="0" >
+                        <StackPanel Grid.Row="0" Grid.ColumnSpan="2" Orientation="Horizontal" Margin="2">
+                            <ComboBox x:Name="cb_ListFilterSANSwShow" ToolTip="Selcet your Device Panel" SelectedIndex="0" SelectedValuePath="Content" Style="{StaticResource MainComboBoxStyle}">
+                                    <ComboBoxItem>1</ComboBoxItem>
+                                    <ComboBoxItem>2</ComboBoxItem>
+                                    <ComboBoxItem>3</ComboBoxItem>
+                                    <ComboBoxItem>4</ComboBoxItem>
+                                </ComboBox>
+                            <ComboBox x:Name="cb_FilterColumSANSwShow" ToolTip="Selcet your Filter" SelectedIndex="0" SelectedValuePath="Content" Style="{StaticResource MainComboBoxStyle}">
+                                <ComboBoxItem>Port</ComboBoxItem>
+                                <ComboBoxItem>Speed</ComboBoxItem>
+                                <ComboBoxItem>State</ComboBoxItem>
+                                <ComboBoxItem>PortConnect</ComboBoxItem>
+                            </ComboBox>
+                            <TextBox x:Name="tb_FilterWordSANSwShow" HorizontalAlignment="Left" MinWidth="100" MaxWidth="250" Margin="5" Text="Filter" TextWrapping="Wrap" FontSize="14" VerticalContentAlignment="Center"/>
+                            <Button x:Name="btn_FilterSANSwShow" Style="{StaticResource MainBtnStyle}" Content="Apply Filter" />
+                            <Label x:Name="lb_ErrorMsgSANSwShow" Foreground="Red" Content="" Style="{StaticResource MainLabelStyle}" Padding="2" Margin="25,5,0,5"/>
+                        </StackPanel>
+                    <StackPanel Grid.Row="1" Grid.Column="0" >
                         <Label Content="Switch 1" />
-                        <ListView x:Name="lb_SwitchShowOne" MinWidth="800" Height="400" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="5">
-                            <ListView.Style>
-                              <Style TargetType="ListView">
-                                <Style.Triggers>
-                                  <Trigger Property="HasItems" Value="False">
-                                    <Setter Property="Visibility" Value="Collapsed"></Setter>
-                                  </Trigger>
-                                </Style.Triggers>
-                              </Style>
-                            </ListView.Style>
-                            <ListView.View>
-                                <GridView> 
-                                    <GridViewColumn Header="Index"  DisplayMemberBinding ="{Binding Index}" Width="60"/>  
-                                    <GridViewColumn Header="Port" DisplayMemberBinding ="{Binding Port}" Width="60"/>  
-                                    <GridViewColumn Header="Address" DisplayMemberBinding ="{Binding Address}" Width="60"/>
-                                    <GridViewColumn Header="Media"  DisplayMemberBinding ="{Binding Media}" Width="60"/>  
-                                    <GridViewColumn Header="Speed" DisplayMemberBinding ="{Binding Speed}" Width="60"/>  
-                                    <GridViewColumn Header="State" DisplayMemberBinding ="{Binding State}" Width="60"/> 
-                                    <GridViewColumn Header="Proto" DisplayMemberBinding ="{Binding Proto}" Width="60"/> 
-                                    <GridViewColumn Header="PortConnect" DisplayMemberBinding ="{Binding PortConnect}" /> 
-                                </GridView>
-                            </ListView.View>
-                        </ListView >
+                        <DataGrid x:Name="lb_SwitchShowOne" AutoGenerateColumns="False" Margin="5" MinWidth="800" Height="400">
+                            <DataGrid.Style>
+                                <Style TargetType="DataGrid">
+                                    <Style.Triggers>
+                                        <Trigger Property="HasItems" Value="False">
+                                          <Setter Property="Visibility" Value="Collapsed"></Setter>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGrid.Style>
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Width="auto" Header="Index"  Binding ="{Binding Index}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Port" Binding ="{Binding Port}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Address"  Binding ="{Binding Address}" IsReadOnly="True"/>  
+                                <DataGridTextColumn Width="auto" Header="Media" Binding ="{Binding Media}" IsReadOnly="True"/>  
+                                <DataGridTextColumn Width="auto" Header="Speed" Binding ="{Binding Speed}" IsReadOnly="True"/> 
+                                <DataGridTextColumn Width="auto" Header="State" Binding ="{Binding State}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Proto" Binding ="{Binding Proto}" IsReadOnly="True"/>  
+                                <DataGridTextColumn Width="auto" Header="PortConnect" Binding ="{Binding PortConnect}" IsReadOnly="True"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
                     </StackPanel>
-                    <StackPanel Grid.Row="0" Grid.Column="2"  >
+                    <StackPanel Grid.Row="1" Grid.Column="1"  >
                         <Label Content="Switch 2" />
-                        <ListView x:Name="lb_SwitchShowTwo" MinWidth="800" Height="400" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="5">
-                            <ListView.Style>
-                              <Style TargetType="ListView">
-                                <Style.Triggers>
-                                  <Trigger Property="HasItems" Value="False">
-                                    <Setter Property="Visibility" Value="Collapsed"></Setter>
-                                  </Trigger>
-                                </Style.Triggers>
-                              </Style>
-                            </ListView.Style>
-                            <ListView.View>
-                                <GridView> 
-                                    <GridViewColumn Header="Index"  DisplayMemberBinding ="{Binding Index}" Width="60"/>  
-                                    <GridViewColumn Header="Port" DisplayMemberBinding ="{Binding Port}" Width="60"/>  
-                                    <GridViewColumn Header="Address" DisplayMemberBinding ="{Binding Address}" Width="60"/>
-                                    <GridViewColumn Header="Media"  DisplayMemberBinding ="{Binding Media}" Width="60"/>  
-                                    <GridViewColumn Header="Speed" DisplayMemberBinding ="{Binding Speed}" Width="60"/>  
-                                    <GridViewColumn Header="State" DisplayMemberBinding ="{Binding State}" Width="60"/> 
-                                    <GridViewColumn Header="Proto" DisplayMemberBinding ="{Binding Proto}" Width="60"/> 
-                                    <GridViewColumn Header="PortConnect" DisplayMemberBinding ="{Binding PortConnect}" /> 
-                                </GridView>
-                            </ListView.View>
-                        </ListView >
+                        <DataGrid x:Name="lb_SwitchShowTwo" AutoGenerateColumns="False" Margin="5" MinWidth="800" Height="400">
+                            <DataGrid.Style>
+                                <Style TargetType="DataGrid">
+                                    <Style.Triggers>
+                                        <Trigger Property="HasItems" Value="False">
+                                          <Setter Property="Visibility" Value="Collapsed"></Setter>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGrid.Style>
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Width="auto" Header="Index"  Binding ="{Binding Index}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Port" Binding ="{Binding Port}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Address"  Binding ="{Binding Address}" IsReadOnly="True"/>  
+                                <DataGridTextColumn Width="auto" Header="Media" Binding ="{Binding Media}" IsReadOnly="True"/>  
+                                <DataGridTextColumn Width="auto" Header="Speed" Binding ="{Binding Speed}" IsReadOnly="True"/> 
+                                <DataGridTextColumn Width="auto" Header="State" Binding ="{Binding State}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Proto" Binding ="{Binding Proto}" IsReadOnly="True"/>  
+                                <DataGridTextColumn Width="auto" Header="PortConnect" Binding ="{Binding PortConnect}" IsReadOnly="True"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
                     </StackPanel>
-                    <StackPanel Grid.Row="1" Grid.Column="0"  >
+                    <StackPanel Grid.Row="2" Grid.Column="0"  >
                         <Label Content="Switch 3" />
-                        <ListView x:Name="lb_SwitchShowThree" MinWidth="800" Height="400" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="5">
-                            <ListView.Style>
-                              <Style TargetType="ListView">
-                                <Style.Triggers>
-                                  <Trigger Property="HasItems" Value="False">
-                                    <Setter Property="Visibility" Value="Collapsed"></Setter>
-                                  </Trigger>
-                                </Style.Triggers>
-                              </Style>
-                            </ListView.Style>
-                            <ListView.View>
-                                <GridView> 
-                                    <GridViewColumn Header="Index"  DisplayMemberBinding ="{Binding Index}" Width="60"/>  
-                                    <GridViewColumn Header="Port" DisplayMemberBinding ="{Binding Port}" Width="60"/>  
-                                    <GridViewColumn Header="Address" DisplayMemberBinding ="{Binding Address}" Width="60"/>
-                                    <GridViewColumn Header="Media"  DisplayMemberBinding ="{Binding Media}" Width="60"/>  
-                                    <GridViewColumn Header="Speed" DisplayMemberBinding ="{Binding Speed}" Width="60"/>  
-                                    <GridViewColumn Header="State" DisplayMemberBinding ="{Binding State}" Width="60"/> 
-                                    <GridViewColumn Header="Proto" DisplayMemberBinding ="{Binding Proto}" Width="60"/> 
-                                    <GridViewColumn Header="PortConnect" DisplayMemberBinding ="{Binding PortConnect}" /> 
-                                </GridView>
-                            </ListView.View>
-                        </ListView >
+                        <DataGrid x:Name="lb_SwitchShowThree" AutoGenerateColumns="False" Margin="5" MinWidth="800" Height="400">
+                            <DataGrid.Style>
+                                <Style TargetType="DataGrid">
+                                    <Style.Triggers>
+                                        <Trigger Property="HasItems" Value="False">
+                                          <Setter Property="Visibility" Value="Collapsed"></Setter>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGrid.Style>
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Width="auto" Header="Index"  Binding ="{Binding Index}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Port" Binding ="{Binding Port}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Address"  Binding ="{Binding Address}" IsReadOnly="True"/>  
+                                <DataGridTextColumn Width="auto" Header="Media" Binding ="{Binding Media}" IsReadOnly="True"/>  
+                                <DataGridTextColumn Width="auto" Header="Speed" Binding ="{Binding Speed}" IsReadOnly="True"/> 
+                                <DataGridTextColumn Width="auto" Header="State" Binding ="{Binding State}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Proto" Binding ="{Binding Proto}" IsReadOnly="True"/>  
+                                <DataGridTextColumn Width="auto" Header="PortConnect" Binding ="{Binding PortConnect}" IsReadOnly="True"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
                     </StackPanel>
-                    <StackPanel Grid.Row="1" Grid.Column="1" >
+                    <StackPanel Grid.Row="2" Grid.Column="1" >
                         <Label Content="Switch 4" />
-                        <ListView x:Name="lb_SwitchShowFour" MinWidth="800" Height="400" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="5">
-                            <ListView.Style>
-                              <Style TargetType="ListView">
-                                <Style.Triggers>
-                                  <Trigger Property="HasItems" Value="False">
-                                    <Setter Property="Visibility" Value="Collapsed"></Setter>
-                                  </Trigger>
-                                </Style.Triggers>
-                              </Style>
-                            </ListView.Style>
-                            <ListView.View>
-                                <GridView> 
-                                    <GridViewColumn Header="Index"  DisplayMemberBinding ="{Binding Index}" Width="60"/>  
-                                    <GridViewColumn Header="Port" DisplayMemberBinding ="{Binding Port}" Width="60"/>  
-                                    <GridViewColumn Header="Address" DisplayMemberBinding ="{Binding Address}" Width="60"/>
-                                    <GridViewColumn Header="Media"  DisplayMemberBinding ="{Binding Media}" Width="60"/>  
-                                    <GridViewColumn Header="Speed" DisplayMemberBinding ="{Binding Speed}" Width="60"/>  
-                                    <GridViewColumn Header="State" DisplayMemberBinding ="{Binding State}" Width="60"/> 
-                                    <GridViewColumn Header="Proto" DisplayMemberBinding ="{Binding Proto}" Width="60"/> 
-                                    <GridViewColumn Header="PortConnect" DisplayMemberBinding ="{Binding PortConnect}" /> 
-                                </GridView>
-                            </ListView.View>
-                        </ListView >
+                        <DataGrid x:Name="lb_SwitchShowFour" AutoGenerateColumns="False" Margin="5" MinWidth="800" Height="400">
+                            <DataGrid.Style>
+                                <Style TargetType="DataGrid">
+                                    <Style.Triggers>
+                                        <Trigger Property="HasItems" Value="False">
+                                          <Setter Property="Visibility" Value="Collapsed"></Setter>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGrid.Style>
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Width="auto" Header="Index"  Binding ="{Binding Index}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Port" Binding ="{Binding Port}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Address"  Binding ="{Binding Address}" IsReadOnly="True"/>  
+                                <DataGridTextColumn Width="auto" Header="Media" Binding ="{Binding Media}" IsReadOnly="True"/>  
+                                <DataGridTextColumn Width="auto" Header="Speed" Binding ="{Binding Speed}" IsReadOnly="True"/> 
+                                <DataGridTextColumn Width="auto" Header="State" Binding ="{Binding State}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Proto" Binding ="{Binding Proto}" IsReadOnly="True"/>  
+                                <DataGridTextColumn Width="auto" Header="PortConnect" Binding ="{Binding PortConnect}" IsReadOnly="True"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
                     </StackPanel>
                 </Grid>
             </StackPanel>
@@ -648,7 +758,16 @@
                         <RowDefinition Height="auto" />
                     </Grid.RowDefinitions>
                     <StackPanel Grid.Row="0" Grid.Column="0" >
-                        <Label x:Name="lb_FabricOne" Content="Fabric A" Margin="0,5" FontSize="14" Height="26"/>
+                        <Label x:Name="lb_FabricOne" Content="Fabric A" Style="{StaticResource MainLabelStyle}" />
+                        <StackPanel x:Name="stp_FilterFabricOneVisibilty" Orientation="Horizontal" >
+                        <ComboBox x:Name="cb_FilterFabricOne" ToolTip="Selcet your Filter" SelectedIndex="0" SelectedValuePath="Content" Style="{StaticResource MainComboBoxStyle}">
+                                <ComboBoxItem>Zone</ComboBoxItem>
+                                <ComboBoxItem>WWPN</ComboBoxItem>
+                                <ComboBoxItem>Alias</ComboBoxItem>
+                        </ComboBox>        
+                        <TextBox x:Name="tb_FilterFabricOne" HorizontalAlignment="Left" MinWidth="150" MaxWidth="300" Margin="5" Text="Filter" TextWrapping="Wrap" FontSize="14" VerticalContentAlignment="Center" />
+                        <Button x:Name="btn_FilterFabricOne" Content="Apply Filter " Style="{StaticResource MainBtnStyle}" />
+                        </StackPanel>
                         <DataGrid x:Name="dg_ZoneDetailsOne" AutoGenerateColumns="False" Margin="5" MaxHeight="400" CanUserSortColumns="False">
                             <DataGrid.Style>
                                 <Style TargetType="DataGrid">
@@ -667,7 +786,16 @@
                         </DataGrid>
                     </StackPanel>
                     <StackPanel Grid.Row="0" Grid.Column="1"  >
-                        <Label x:Name="lb_FabricTwo" Content="Fabric B" Margin="0,5" FontSize="14" Height="26"/>
+                        <Label x:Name="lb_FabricTwo" Content="Fabric B" Style="{StaticResource MainLabelStyle}" />
+                        <StackPanel x:Name="stp_FilterFabricTwoVisibilty" Orientation="Horizontal" >
+                        <ComboBox x:Name="cb_FilterFabricTwo" ToolTip="Selcet your Filter" SelectedIndex="0" SelectedValuePath="Content" Style="{StaticResource MainComboBoxStyle}">
+                                <ComboBoxItem>Zone</ComboBoxItem>
+                                <ComboBoxItem>WWPN</ComboBoxItem>
+                                <ComboBoxItem>Alias</ComboBoxItem>
+                        </ComboBox>        
+                        <TextBox x:Name="tb_FilterFabricTwo" HorizontalAlignment="Left" MinWidth="150" MaxWidth="300" Margin="5" Text="Filter" TextWrapping="Wrap" FontSize="14" VerticalContentAlignment="Center" />
+                        <Button x:Name="btn_FilterFabricTwo" Content="Apply Filter " Style="{StaticResource MainBtnStyle}" />
+                        </StackPanel>
                         <DataGrid x:Name="dg_ZoneDetailsTwo" AutoGenerateColumns="False" Margin="5" MaxHeight="400" CanUserSortColumns="False">
                             <DataGrid.Style>
                                 <Style TargetType="DataGrid">

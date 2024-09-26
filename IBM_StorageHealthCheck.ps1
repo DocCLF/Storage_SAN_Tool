@@ -430,6 +430,17 @@ function IBM_StorageHealthCheck {
             $TD_UserControl3.Dispatcher.Invoke([System.Action]{},"Render")
         }
         
+        $TD_QuorumResult = IBM_IPQuorum -TD_Line_ID $TD_Line_ID -TD_Device_ConnectionTyp $TD_Device_ConnectionTyp -TD_Device_UserName $TD_Device_UserName -TD_Device_DeviceIP $TD_Device_DeviceIP -TD_Device_PW $TD_Device_PW -TD_Export yes -TD_Exportpath $TD_Exportpath
+        if(!([String]::IsNullOrEmpty($TD_QuorumResult))){
+            $TD_el_QuorumStatusLight.Fill ="green"
+            $TD_dg_QuorumStatusInfo.ItemsSource = $TD_QuorumResult
+            $TD_UserControl3.Dispatcher.Invoke([System.Action]{},"Render")
+        }else{
+            $TD_el_QuorumStatusLight.Fill ="red"
+            $TD_tb_QuorumErrorMsg.Visibility = "Visible"
+            $TD_tb_QuorumErrorMsg.Text = "Your current quorum configuration differs from the default and does not`n seem to have the minimum number of 3 quorum devices, please check this!"
+            $TD_UserControl3.Dispatcher.Invoke([System.Action]{},"Render")
+        }
 
         $TD_UserResault=@()
         foreach($TD_User in $TD_UserInfoTemp){
