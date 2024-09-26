@@ -2,7 +2,7 @@ Add-Type -AssemblyName PresentationCore,PresentationFramework
 Add-Type -AssemblyName System.Windows.Forms
 
 <# Create the xaml Files / Base of GUI Mainwindow #>
-#function Storage_San_Kit {
+function Storage_San_Kit {
 
 $MainxamlFile ="$PSScriptRoot\MainWindow.xaml"
 $inputXAML=Get-Content -Path $MainxamlFile -raw
@@ -1907,4 +1907,4 @@ Get-Variable TD_*
 $Mainform.showDialog()
 $Mainform.activate()
 
-#}
+}
