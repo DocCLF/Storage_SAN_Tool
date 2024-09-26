@@ -31,7 +31,9 @@ function FOS_PortLicenseShowInfo {
         $ErrorActionPreference="SilentlyContinue"
         Write-Debug -Message "FOS_PortLicenseShow Begin block |$(Get-Date)"
 
-        #[int]$nbr=0
+        <# int for the progressbar #>
+        [int]$ProgCounter=0
+        $ProgressBar = New-ProgressBar
 
         if($TD_Device_ConnectionTyp -eq "ssh"){
            Write-Debug -Message "ssh |$(Get-Date)"
@@ -51,7 +53,7 @@ function FOS_PortLicenseShowInfo {
         }
         <# next line one for testing #>
         #$FOS_PortLicenseInfo = Get-Content -Path "C:\Users\mailt\Documents\0.txt"
-        Out-File -FilePath $Env:TEMP\$($TD_Line_ID)_PortLicenseShow_Temp.txt -InputObject $FOS_MainInformation
+        #Out-File -FilePath $Env:TEMP\$($TD_Line_ID)_PortLicenseShow_Temp.txt -InputObject $FOS_MainInformation
 
     }
 
@@ -62,10 +64,14 @@ function FOS_PortLicenseShowInfo {
         0..$i |ForEach-Object {
             $TD_Resaults = $FOS_PortLicenseInfo | Select-Object #-Skip ($_ +1)
             $i = $_
+            <# Progressbar  #>
+            $ProgCounter++
+            Write-ProgressBar -ProgressBar $ProgressBar -Activity "Collect data for Device $($TD_Line_ID)" -PercentComplete (($ProgCounter/$FOS_PortLicenseInfo.Count) * 100)
         }  
     }
     end {
         <# returns the hashtable for further processing, not mandatory but the safe way #>
+        Close-ProgressBar -ProgressBar $ProgressBar
         Write-Debug -Message "FOS_PortLicenseShow End block |$(Get-Date) `n"
         <# export y or n #>
         if($TD_Export -eq "yes"){

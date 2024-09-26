@@ -686,14 +686,15 @@ $TD_btn_IBM_HostVolumeMap.add_click({
 <# to keep this file clean :D export the following lines to a func in one if the next Version #>
 $TD_btn_FilterHVM.Add_Click({
     [string]$filter= $TD_tb_filter.Text
+    [int]$TD_Filter_DG = $TD_cb_ListFilterStorageHVM.Text
     [string]$TD_Filter_DG_Colum = $TD_cb_StorageHVM.Text
     try {
-        [array]$TD_CollectVolInfo = Import-Csv -Path $Env:TEMP\$($TD_Filter_DG_Colum)_Host_Vol_Map_Temp.csv
-        switch ($TD_Filter_DG_Colum) {
-            "1" { $TD_Host_Volume_Map = $TD_dg_HostVolInfo.ItemsSource }
-            "2" { $TD_Host_Volume_Map = $TD_dg_HostVolInfoTwo.ItemsSource }
-            "3" { $TD_Host_Volume_Map = $TD_dg_HostVolInfoThree.ItemsSource }
-            "4" { $TD_Host_Volume_Map = $TD_dg_HostVolInfoFour.ItemsSource }
+        [array]$TD_CollectVolInfo = Import-Csv -Path $Env:TEMP\$($TD_Filter_DG)_Host_Vol_Map_Temp.csv
+        switch ($TD_Filter_DG) {
+            1 { $TD_Host_Volume_Map = $TD_dg_HostVolInfo.ItemsSource }
+            2 { $TD_Host_Volume_Map = $TD_dg_HostVolInfoTwo.ItemsSource }
+            3 { $TD_Host_Volume_Map = $TD_dg_HostVolInfoThree.ItemsSource }
+            4 { $TD_Host_Volume_Map = $TD_dg_HostVolInfoFour.ItemsSource }
             Default {}
         }
         if($TD_Host_Volume_Map.Count -ne $TD_CollectVolInfo.Count){
@@ -707,11 +708,11 @@ $TD_btn_FilterHVM.Add_Click({
                 "Capacity" { [array]$WPF_dataGrid = $TD_Host_Volume_Map | Where-Object { $_.Capacity -Match $filter } }
                 Default {Write-Host "Something went wrong" -ForegroundColor DarkMagenta}
             }
-            switch ($TD_Filter_DG_Colum) {
-                "1" { $TD_dg_HostVolInfo.ItemsSource = $WPF_dataGrid }
-                "2" { $TD_dg_HostVolInfoTwo.ItemsSource = $WPF_dataGrid }
-                "3" { $TD_dg_HostVolInfoThree.ItemsSource = $WPF_dataGrid }
-                "4" { $TD_dg_HostVolInfoFour.ItemsSource = $WPF_dataGrid }
+            switch ($TD_Filter_DG) {
+                1 { $TD_dg_HostVolInfo.ItemsSource = $WPF_dataGrid }
+                2 { $TD_dg_HostVolInfoTwo.ItemsSource = $WPF_dataGrid }
+                3 { $TD_dg_HostVolInfoThree.ItemsSource = $WPF_dataGrid }
+                4 { $TD_dg_HostVolInfoFour.ItemsSource = $WPF_dataGrid }
                 Default {}
             }
             

@@ -50,7 +50,7 @@ function FOS_PortbufferShowInfo {
         }
         <# next line one for testing #>
         #$FOS_MainInformation=Get-Content -Path "C:\Users\mailt\Documents\pbs_s.txt"
-        Out-File -FilePath $Env:TEMP\$($TD_Line_ID)_PortBufferShow_Temp.txt -InputObject $FOS_MainInformation
+        #Out-File -FilePath $Env:TEMP\$($TD_Line_ID)_PortBufferShow_Temp.txt -InputObject $FOS_MainInformation
 
         <# Create an array #>
         

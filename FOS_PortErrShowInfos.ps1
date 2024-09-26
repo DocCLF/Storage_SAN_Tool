@@ -55,7 +55,7 @@ function FOS_PortErrShowInfos {
         }
         <# next line one for testing #>
         #$FOS_MainInformation = Get-Content -Path "C:\Users\mailt\Documents\poerteershow2.txt"
-        Out-File -FilePath $Env:TEMP\$($TD_Line_ID)_PortErrShow_Temp.txt -InputObject $FOS_MainInformation
+        #Out-File -FilePath $Env:TEMP\$($TD_Line_ID)_PortErrShow_Temp.txt -InputObject $FOS_MainInformation
 
         $FOS_InfoCount = $FOS_MainInformation.count
         Write-Debug -Message "Number of Lines: $FOS_InfoCount "

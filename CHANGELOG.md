@@ -11,8 +11,23 @@ All notable changes to this project will be documented in this file.
 - Support for Virtual Fabrics
 - Small SAN Healthcheck
 
+# [v1.1.01] - 2024-09-26
+### Added
+- ProgressBar at tLicenseShow
 
-# [v1.1.0] - 2024-09-26
+### Fixed
+- Bug at HostVolumeMap Filter
+
+### Changed
+- Version-Nbr to 1.1.01
+
+### Removed
+- Export Option at PortLicenseShow
+- Export Option at PortErrShow
+- Export Option at PortBufferShow
+
+
+## [v1.1.0] - 2024-09-26
 ### Added
 - Filter function for Zoneshow
 - Filter for SwitchShow
@@ -32,8 +47,8 @@ All notable changes to this project will be documented in this file.
 ### Known Bug 
 - filter by ZoneShows does not show wwpn or aliases when filtering by zone
 
-## [v1.0.10] - 2024-09-17
 
+## [v1.0.10] - 2024-09-17
 ### Added
 - A small logo and the module version number at the bottom of the main window.
 - Extension of the host volume display to all 4 storage systems/clusters, previously there were only 2
