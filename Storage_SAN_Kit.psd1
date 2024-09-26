@@ -12,7 +12,7 @@
     RootModule = 'Storage_SAN_Kit.psm1'
     
     # Version number of this module.
-    ModuleVersion = '1.0.10'
+    ModuleVersion = '1.1.01'
     
     # Supported PSEditions
     CompatiblePSEditions = @('Desktop', 'Core')
