@@ -276,7 +276,7 @@
                             <Button x:Name="btn_FilterHVM" Style="{StaticResource MainBtnStyle}" Content="Apply Filter" />
                             <Label x:Name="lb_ErrorMsgHVM" Foreground="Red" Content="" Style="{StaticResource MainLabelStyle}" Padding="2" Margin="25,5,0,5"/>
                         </StackPanel>
-                        <StackPanel Grid.Row="1" Orientation="Vertical" >
+                        <StackPanel Grid.Row="1" Orientation="Horizontal" >
                         <DataGrid x:Name="dg_HostVolInfo" AutoGenerateColumns="False" Margin="5,5,5,5" MaxHeight="400">
                             <DataGrid.Columns>
                                 <DataGridTextColumn Width="auto" Header="HostID" Binding="{Binding HostID}" IsReadOnly="True"/>
@@ -712,7 +712,7 @@
                             <RowDefinition Height="*" />
                         </Grid.RowDefinitions>
                         <StackPanel Grid.Row="0" >
-                            <Button x:Name="btn_IBM_CleanUpConfigDir" Style="{StaticResource MainBtnStyle}" Content="Stats Clear" Margin="2,2,2,5" HorizontalAlignment="Left" Background="LightCoral" />
+                            <Button x:Name="btn_IBM_CleanUpConfigDir" Style="{StaticResource MainBtnStyle}" Content="CleanUp Config" Margin="2,2,2,5" HorizontalAlignment="Left" Background="LightCoral" />
                         </StackPanel>
                         <StackPanel Grid.Row="1" Grid.Column="0" >
                             <Label Content="Device 1" />

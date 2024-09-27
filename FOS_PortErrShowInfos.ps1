@@ -73,7 +73,7 @@ function FOS_PortErrShowInfos {
         $FOS_PortErrShowfiltered = foreach ($FOS_port in $FOS_perrsh_temp){
             
             # create a var and pipe some objects in
-            $FOS_PortErr = "" | Select-Object Port,frames_tx,frames_rx,enc_in,crc_err,crc_g_eof,too_shrt,too_long,bad_eof,enc_out,disc_c3,link_fail,loss_sync,loss_sig,f_rejected,f_busied,c3timeout_tx,c3timeout_rx,psc_err,uncor_err
+            $FOS_PortErr = "" | Select-Object Port,frames_tx,frames_rx,enc_in,crc_err,crc_g_eof,too_short,too_long,bad_eof,enc_out,disc_c3,link_fail,loss_sync,loss_sig,f_rejected,f_busied,c3timeout_tx,c3timeout_rx,psc_err,uncor_err
             
             # select the ports
             [Int16]$FOS_PortErr.Port = (($FOS_port |Select-String -Pattern '(\d+:)' -AllMatches).Matches.Value).Trim(':')
@@ -93,7 +93,7 @@ function FOS_PortErrShowInfos {
                     # Number of frames with CRC errors with good EOF received (Rx).
                     $FOS_PortErr.crc_g_eof = (($FOS_port |Select-String -Pattern '(\d+\.\d\w|\d+)' -AllMatches).Matches.Value[5])
                     # Number of frames shorter than minimum received (Rx).
-                    $FOS_PortErr.too_shrt = (($FOS_port |Select-String -Pattern '(\d+\.\d\w|\d+)' -AllMatches).Matches.Value[6])
+                    $FOS_PortErr.too_short = (($FOS_port |Select-String -Pattern '(\d+\.\d\w|\d+)' -AllMatches).Matches.Value[6])
                     # Number of frames longer than maximum received (Rx).
                     $FOS_PortErr.too_long = (($FOS_port |Select-String -Pattern '(\d+\.\d\w|\d+)' -AllMatches).Matches.Value[7])
                     # Number of frames with bad end-of-frame delimiters received (Rx).

@@ -1897,6 +1897,7 @@ $TD_btn_CloseAll.add_click({
     <#CleanUp before close #>
     Remove-Item -Path $Env:TEMP\* -Filter '*_Host_Vol_Map_Temp.csv' -Force
     Remove-Item -Path $Env:TEMP\* -Filter '*_ZoneShow_Temp.csv' -Force
+    Remove-Item -Path $Env:TEMP\* -Filter '*_SwitchShow_Temp.csv' -Force
 
     $Mainform.Close()
 })

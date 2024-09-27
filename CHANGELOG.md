@@ -11,15 +11,20 @@ All notable changes to this project will be documented in this file.
 - Support for Virtual Fabrics
 - Small SAN Healthcheck
 
-# [v1.1.01] - 2024-09-26
+# [v1.1.1] - 2024-09-27
 ### Added
 - ProgressBar at tLicenseShow
+- ProgrBar at BackUpFunc
+- Contact Data and Link to Repo at Github
 
 ### Fixed
 - Bug at HostVolumeMap Filter
+- Typo bug at PortErrShow 
 
 ### Changed
-- Version-Nbr to 1.1.01
+- Button Content at BackUpfunc to CleanUp the Cfg
+- the CleanUp for the Files in TempFolder
+- Orientation to Horizontal at HostVolumeMap Panels
 
 ### Removed
 - Export Option at PortLicenseShow

@@ -26,7 +26,8 @@ function IBM_BackUpConfig {
     begin{
         $ErrorActionPreference="Stop"
         Write-Debug -Message "IBM_BackUpConfig Begin block |$(Get-Date)"
-
+        <# int for the progressbar #>
+        [int]$ProgCounter=0
         if($TD_Device_ConnectionTyp -eq "ssh"){
             try {
                 ssh $TD_Device_UserName@$TD_Device_DeviceIP "svcconfig backup"
@@ -49,9 +50,8 @@ function IBM_BackUpConfig {
                 Write-Host "Somethign went wrong" -ForegroundColor DarkMagenta
                 Write-Host $_.Exception.Message
             }
-            
         }
-
+        $ProgressBar = New-ProgressBar
     }
 
     process{
@@ -65,9 +65,12 @@ function IBM_BackUpConfig {
             Write-Host "Somethign went wrong" -ForegroundColor DarkMagenta
             Write-Host $_.FullyQualifiedErrorId
         }
+            <# Progressbar  #>
+            $ProgCounter++
+            Write-ProgressBar -ProgressBar $ProgressBar -Activity "Please wait Data is being collected." -PercentComplete (($ProgCounter/$TD_ExportFiles.Count) * 100)
     }
     end {
-
+        Close-ProgressBar -ProgressBar $ProgressBar
         Write-Debug -Message "IBM_BackUpConfig End block |$(Get-Date) `n"
         return $TD_ExportFiles
         Clear-Variable TD* -Scope Global
