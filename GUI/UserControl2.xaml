@@ -768,7 +768,7 @@
                         <TextBox x:Name="tb_FilterFabricOne" HorizontalAlignment="Left" MinWidth="150" MaxWidth="300" Margin="5" Text="Filter" TextWrapping="Wrap" FontSize="14" VerticalContentAlignment="Center" />
                         <Button x:Name="btn_FilterFabricOne" Content="Apply Filter " Style="{StaticResource MainBtnStyle}" />
                         </StackPanel>
-                        <DataGrid x:Name="dg_ZoneDetailsOne" CanUserSortColumns="False" AutoGenerateColumns="False" Margin="5" MaxHeight="400" CanUserSortColumns="False">
+                        <DataGrid x:Name="dg_ZoneDetailsOne" CanUserSortColumns="False" AutoGenerateColumns="False" Margin="5" MaxHeight="400" >
                             <DataGrid.Style>
                                 <Style TargetType="DataGrid">
                                     <Style.Triggers>
@@ -796,7 +796,7 @@
                         <TextBox x:Name="tb_FilterFabricTwo" HorizontalAlignment="Left" MinWidth="150" MaxWidth="300" Margin="5" Text="Filter" TextWrapping="Wrap" FontSize="14" VerticalContentAlignment="Center" />
                         <Button x:Name="btn_FilterFabricTwo" Content="Apply Filter " Style="{StaticResource MainBtnStyle}" />
                         </StackPanel>
-                        <DataGrid x:Name="dg_ZoneDetailsTwo" CanUserSortColumns="False" AutoGenerateColumns="False" Margin="5" MaxHeight="400" CanUserSortColumns="False">
+                        <DataGrid x:Name="dg_ZoneDetailsTwo" CanUserSortColumns="False" AutoGenerateColumns="False" Margin="5" MaxHeight="400" >
                             <DataGrid.Style>
                                 <Style TargetType="DataGrid">
                                     <Style.Triggers>
