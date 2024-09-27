@@ -20,11 +20,13 @@ All notable changes to this project will be documented in this file.
 ### Fixed
 - Bug at HostVolumeMap Filter
 - Typo bug at PortErrShow 
+- Bug at svcconfig clear
 
 ### Changed
 - Button Content at BackUpfunc to CleanUp the Cfg
 - the CleanUp for the Files in TempFolder
 - Orientation to Horizontal at HostVolumeMap Panels
+- Can UserSortColumns to false at Zoneshow, Switchshow
 
 ### Removed
 - Export Option at PortLicenseShow

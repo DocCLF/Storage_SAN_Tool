@@ -1044,8 +1044,6 @@ $TD_btn_IBM_CleanUpConfigDir.add_click({
     Start-Sleep -Seconds 0.5
 
     try {
-        $TD_ExportFiles = Get-ChildItem -Path $TD_tb_Exportpath -Include ("svc.config.backup.*") -Name
-        if((!([string]::IsNullOrEmpty($TD_ExportFiles))) -and ($TD_ExportFiles -like "svc.config.backup.*")){
             foreach($TD_Credential in $TD_Credentials){
                 <# QaD needs a Codeupdate because Grouping dose not work #>
                 switch ($TD_Credential.ID) {
@@ -1159,7 +1157,6 @@ $TD_btn_IBM_CleanUpConfigDir.add_click({
                     }
                     Default {Write-Debug "Nothing" }
                 }
-            }
         }
 
     }

@@ -651,7 +651,7 @@
                         </StackPanel>
                     <StackPanel Grid.Row="1" Grid.Column="0" >
                         <Label Content="Switch 1" />
-                        <DataGrid x:Name="lb_SwitchShowOne" AutoGenerateColumns="False" Margin="5" MinWidth="800" Height="400">
+                        <DataGrid x:Name="lb_SwitchShowOne" CanUserSortColumns="False" AutoGenerateColumns="False" Margin="5" MinWidth="800" Height="400">
                             <DataGrid.Style>
                                 <Style TargetType="DataGrid">
                                     <Style.Triggers>
@@ -675,7 +675,7 @@
                     </StackPanel>
                     <StackPanel Grid.Row="1" Grid.Column="1"  >
                         <Label Content="Switch 2" />
-                        <DataGrid x:Name="lb_SwitchShowTwo" AutoGenerateColumns="False" Margin="5" MinWidth="800" Height="400">
+                        <DataGrid x:Name="lb_SwitchShowTwo" CanUserSortColumns="False" AutoGenerateColumns="False" Margin="5" MinWidth="800" Height="400">
                             <DataGrid.Style>
                                 <Style TargetType="DataGrid">
                                     <Style.Triggers>
@@ -699,7 +699,7 @@
                     </StackPanel>
                     <StackPanel Grid.Row="2" Grid.Column="0"  >
                         <Label Content="Switch 3" />
-                        <DataGrid x:Name="lb_SwitchShowThree" AutoGenerateColumns="False" Margin="5" MinWidth="800" Height="400">
+                        <DataGrid x:Name="lb_SwitchShowThree" CanUserSortColumns="False" AutoGenerateColumns="False" Margin="5" MinWidth="800" Height="400">
                             <DataGrid.Style>
                                 <Style TargetType="DataGrid">
                                     <Style.Triggers>
@@ -723,7 +723,7 @@
                     </StackPanel>
                     <StackPanel Grid.Row="2" Grid.Column="1" >
                         <Label Content="Switch 4" />
-                        <DataGrid x:Name="lb_SwitchShowFour" AutoGenerateColumns="False" Margin="5" MinWidth="800" Height="400">
+                        <DataGrid x:Name="lb_SwitchShowFour" CanUserSortColumns="False" AutoGenerateColumns="False" Margin="5" MinWidth="800" Height="400">
                             <DataGrid.Style>
                                 <Style TargetType="DataGrid">
                                     <Style.Triggers>
@@ -768,7 +768,7 @@
                         <TextBox x:Name="tb_FilterFabricOne" HorizontalAlignment="Left" MinWidth="150" MaxWidth="300" Margin="5" Text="Filter" TextWrapping="Wrap" FontSize="14" VerticalContentAlignment="Center" />
                         <Button x:Name="btn_FilterFabricOne" Content="Apply Filter " Style="{StaticResource MainBtnStyle}" />
                         </StackPanel>
-                        <DataGrid x:Name="dg_ZoneDetailsOne" AutoGenerateColumns="False" Margin="5" MaxHeight="400" CanUserSortColumns="False">
+                        <DataGrid x:Name="dg_ZoneDetailsOne" CanUserSortColumns="False" AutoGenerateColumns="False" Margin="5" MaxHeight="400" CanUserSortColumns="False">
                             <DataGrid.Style>
                                 <Style TargetType="DataGrid">
                                     <Style.Triggers>
@@ -796,7 +796,7 @@
                         <TextBox x:Name="tb_FilterFabricTwo" HorizontalAlignment="Left" MinWidth="150" MaxWidth="300" Margin="5" Text="Filter" TextWrapping="Wrap" FontSize="14" VerticalContentAlignment="Center" />
                         <Button x:Name="btn_FilterFabricTwo" Content="Apply Filter " Style="{StaticResource MainBtnStyle}" />
                         </StackPanel>
-                        <DataGrid x:Name="dg_ZoneDetailsTwo" AutoGenerateColumns="False" Margin="5" MaxHeight="400" CanUserSortColumns="False">
+                        <DataGrid x:Name="dg_ZoneDetailsTwo" CanUserSortColumns="False" AutoGenerateColumns="False" Margin="5" MaxHeight="400" CanUserSortColumns="False">
                             <DataGrid.Style>
                                 <Style TargetType="DataGrid">
                                     <Style.Triggers>
