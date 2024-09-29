@@ -56,6 +56,9 @@ function IBM_BackUpConfig {
 
     process{
         Write-Debug -Message "IBM_BackUpConfig Process block |$(Get-Date)"
+        <# Progressbar  #>
+        $ProgCounter++
+        Write-ProgressBar -ProgressBar $ProgressBar -Activity "Please wait Data is being collected." -PercentComplete (($ProgCounter/$TD_ExportFiles.Count) * 100)
         try {
             $TD_ExportFiles = Get-ChildItem -Path $TD_Exportpath -Filter "svc.config.backup.* "
             <# maybe add a filter #>
@@ -65,10 +68,8 @@ function IBM_BackUpConfig {
             Write-Host "Somethign went wrong" -ForegroundColor DarkMagenta
             Write-Host $_.FullyQualifiedErrorId
         }
-            <# Progressbar  #>
-            $ProgCounter++
-            Write-ProgressBar -ProgressBar $ProgressBar -Activity "Please wait Data is being collected." -PercentComplete (($ProgCounter/$TD_ExportFiles.Count) * 100)
     }
+
     end {
         Close-ProgressBar -ProgressBar $ProgressBar
         Write-Debug -Message "IBM_BackUpConfig End block |$(Get-Date) `n"
