@@ -28,6 +28,10 @@ function IBM_BackUpConfig {
         Write-Debug -Message "IBM_BackUpConfig Begin block |$(Get-Date)"
         <# int for the progressbar #>
         [int]$ProgCounter=0
+        $ProgressBar = New-ProgressBar
+        <# Progressbar  #>
+        $ProgCounter++
+        Write-ProgressBar -ProgressBar $ProgressBar -Activity "Please wait Data is being collected." -PercentComplete (($ProgCounter/$TD_ExportFiles.Count) * 100)
         if($TD_Device_ConnectionTyp -eq "ssh"){
             try {
                 ssh $TD_Device_UserName@$TD_Device_DeviceIP "svcconfig backup"
@@ -51,14 +55,12 @@ function IBM_BackUpConfig {
                 Write-Host $_.Exception.Message
             }
         }
-        $ProgressBar = New-ProgressBar
+        
     }
 
     process{
         Write-Debug -Message "IBM_BackUpConfig Process block |$(Get-Date)"
-        <# Progressbar  #>
-        $ProgCounter++
-        Write-ProgressBar -ProgressBar $ProgressBar -Activity "Please wait Data is being collected." -PercentComplete (($ProgCounter/$TD_ExportFiles.Count) * 100)
+
         try {
             $TD_ExportFiles = Get-ChildItem -Path $TD_Exportpath -Filter "svc.config.backup.* "
             <# maybe add a filter #>
