@@ -58,15 +58,14 @@
             <Style TargetType="{x:Type DataGridColumnHeader}">
                 <Setter Property="Background" Value="#4683DE" />
                 <Setter Property="Foreground" Value="#FFFFFF" />
-                <Setter Property="VerticalContentAlignment" Value="Center"/>
                 <Setter Property="FontWeight" Value="SemiBold" />
-                <Setter Property="Height" Value="32" />
-                <Setter Property="Padding" Value="10" />
+                <Setter Property="Height" Value="26" />
+                <Setter Property="Padding" Value="5" />
             </Style>
             <Style TargetType="{x:Type DataGridRow}">
                 <Setter Property="Background" Value="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"/>
                 <Setter Property="SnapsToDevicePixels" Value="true"/>
-                <Setter Property="MinHeight" Value="30" />
+                <Setter Property="MinHeight" Value="26" />
                 <Setter Property="Padding" Value="5" />
             </Style>
             <Style TargetType="{x:Type DataGridCell}">
@@ -132,6 +131,15 @@
                         <Ellipse x:Name="el_EventlogStatusLight" Width="25" Height="25" Fill="gray" Stroke="Black" StrokeThickness="2" />
                     </Canvas>
                     <DataGrid Grid.Column="2" x:Name="dg_EventlogStatusInfoText" AutoGenerateColumns="False" Margin="10" MaxHeight="400" >
+                            <DataGrid.Style>
+                                <Style TargetType="DataGrid">
+                                    <Style.Triggers>
+                                        <Trigger Property="HasItems" Value="False">
+                                            <Setter Property="Visibility" Value="Collapsed"></Setter>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGrid.Style>
                         <DataGrid.RowStyle>
                             <Style TargetType="DataGridRow">
                                 <Style.Triggers>
@@ -167,6 +175,15 @@
                             <Ellipse x:Name="el_HostStatusLight" Width="25" Height="25" Fill="gray" Stroke="Black" StrokeThickness="2" />
                         </Canvas>
                         <DataGrid Grid.Column="2" x:Name="dg_HostStatusInfoText" AutoGenerateColumns="False" Margin="10" MaxHeight="400">
+                            <DataGrid.Style>
+                                <Style TargetType="DataGrid">
+                                    <Style.Triggers>
+                                        <Trigger Property="HasItems" Value="False">
+                                            <Setter Property="Visibility" Value="Collapsed"></Setter>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGrid.Style>
                             <DataGrid.RowStyle>
                                 <Style TargetType="DataGridRow">
                                     <Style.Triggers>
@@ -202,6 +219,15 @@
                             <Ellipse x:Name="el_MdiskStatusLight" Width="25" Height="25" Fill="gray" Stroke="Black" StrokeThickness="2"/>
                         </Canvas>
                         <DataGrid Grid.Column="2" x:Name="dg_MdiskStatusInfoText" AutoGenerateColumns="False" Margin="10" MaxHeight="400">
+                            <DataGrid.Style>
+                                <Style TargetType="DataGrid">
+                                    <Style.Triggers>
+                                        <Trigger Property="HasItems" Value="False">
+                                            <Setter Property="Visibility" Value="Collapsed"></Setter>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGrid.Style>
                             <DataGrid.RowStyle>
                                 <Style TargetType="DataGridRow">
                                     <Style.Triggers>
@@ -234,6 +260,15 @@
                             <Ellipse x:Name="el_VDiskStatusLight" Width="25" Height="25" Fill="gray" Stroke="Black" StrokeThickness="2" />
                         </Canvas>
                         <DataGrid Grid.Column="2" x:Name="dg_VDiskStatusInfoText" AutoGenerateColumns="False" Margin="10" MaxHeight="400">
+                            <DataGrid.Style>
+                                <Style TargetType="DataGrid">
+                                    <Style.Triggers>
+                                        <Trigger Property="HasItems" Value="False">
+                                            <Setter Property="Visibility" Value="Collapsed"></Setter>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGrid.Style>
                             <DataGrid.RowStyle>
                                 <Style TargetType="DataGridRow">
                                     <Style.Triggers>
@@ -308,6 +343,15 @@
                         <Ellipse x:Name="el_UserStatusLight" Width="25" Height="25" Fill="gray" Stroke="Black" StrokeThickness="2" />
                     </Canvas>
                     <DataGrid Grid.Column="2" x:Name="dg_UserStatusInfoText" AutoGenerateColumns="False" Margin="10" MaxHeight="400">
+                            <DataGrid.Style>
+                                <Style TargetType="DataGrid">
+                                    <Style.Triggers>
+                                        <Trigger Property="HasItems" Value="False">
+                                            <Setter Property="Visibility" Value="Collapsed"></Setter>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGrid.Style>
                         <DataGrid.RowStyle>
                             <Style TargetType="DataGridRow">
                                 <Style.Triggers>
