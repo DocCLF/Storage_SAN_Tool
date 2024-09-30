@@ -17,7 +17,11 @@ Installation is complete*, now you can validate if this module is available.
 Import-Module Storage_SAN_Kit
 ```
 Depending on the settings of your system, an error message may appear stating that: The execution of scripts is disabled on this system.
-You can check the setting with “Get-ExecutionPolicy”, the response will usually be “Restricted”.
+You can check the setting with 
+```powershell
+Get-ExecutionPolicy
+```
+, the response will usually be “Restricted”.
 To be able to use this module you only have to enter the following line:
 ```powershell
 Set-ExecutionPolicy -ExecutionPolicy Bypass -Scope Process
