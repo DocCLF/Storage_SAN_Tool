@@ -105,7 +105,7 @@ function IBM_EventLog {
             return $TD_EventCollection
         }
 
-        return $TD_EventCollection |Select-Object -Last 25
+        return $TD_EventCollection |Select-Object -Last 100
         
     }
 }

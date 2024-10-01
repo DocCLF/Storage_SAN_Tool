@@ -28,6 +28,7 @@ All notable changes to this project will be documented in this file.
 - the CleanUp for the Files in TempFolder
 - Orientation to Horizontal at HostVolumeMap Panels
 - Can UserSortColumns to false at Zoneshow, Switchshow
+- event log now shows up to 100 entries, previously there were 25
 
 ### Removed
 - Export Option at PortLicenseShow

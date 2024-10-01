@@ -711,9 +711,11 @@
                             <RowDefinition Height="auto" />
                             <RowDefinition Height="*" />
                         </Grid.RowDefinitions>
+                        <!-- 
                         <StackPanel Grid.Row="0" >
                             <Button x:Name="btn_IBM_CleanUpConfigDir" Style="{StaticResource MainBtnStyle}" Content="CleanUp Config" Margin="2,2,2,5" HorizontalAlignment="Left" Background="LightCoral" />
                         </StackPanel>
+                        -->
                         <StackPanel Grid.Row="1" Grid.Column="0" >
                             <Label Content="Device 1" />
                             <TextBlock x:Name="tb_BackUpInfoDeviceOne" TextWrapping="Wrap" MaxWidth="400" Text="" />
