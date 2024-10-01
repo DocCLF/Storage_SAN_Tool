@@ -345,7 +345,7 @@
                     </Grid.RowDefinitions>
                     <StackPanel Grid.Row="0" Grid.Column="0" >
                         <Label Content="Switch 1" />
-                        <ListView x:Name="lb_PortBufferShowOne" MinWidth="650" Height="400" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="5">
+                        <ListView x:Name="lb_PortBufferShowOne" MinWidth="600" Height="400" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="5">
                             <ListView.Style>
                               <Style TargetType="ListView">
                                 <Style.Triggers>
@@ -373,7 +373,7 @@
                     </StackPanel>
                     <StackPanel Grid.Row="0" Grid.Column="1"  >
                         <Label Content="Switch 2" />
-                        <ListView x:Name="lb_PortBufferShowTwo" MinWidth="650" Height="400" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="5">
+                        <ListView x:Name="lb_PortBufferShowTwo" MinWidth="600" Height="400" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="5">
                             <ListView.Style>
                               <Style TargetType="ListView">
                                 <Style.Triggers>
@@ -401,7 +401,7 @@
                     </StackPanel>
                     <StackPanel Grid.Row="1" Grid.Column="0"  >
                         <Label Content="Switch 3" />
-                        <ListView x:Name="lb_PortBufferShowThree" MinWidth="650" Height="400" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="5">
+                        <ListView x:Name="lb_PortBufferShowThree" MinWidth="600" Height="400" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="5">
                             <ListView.Style>
                               <Style TargetType="ListView">
                                 <Style.Triggers>
@@ -429,7 +429,7 @@
                     </StackPanel>
                     <StackPanel Grid.Row="1" Grid.Column="1" >
                         <Label Content="Switch 4" />
-                        <ListView x:Name="lb_PortBufferShowFour" MinWidth="650" Height="400" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="5">
+                        <ListView x:Name="lb_PortBufferShowFour" MinWidth="600" Height="400" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="5">
                             <ListView.Style>
                               <Style TargetType="ListView">
                                 <Style.Triggers>
@@ -477,7 +477,7 @@
                     </StackPanel>
                     <StackPanel Grid.Row="1" Grid.Column="0" >
                         <Label Content="Switch 1" />
-                        <DataGrid x:Name="lb_PortErrorShowOne" AutoGenerateColumns="False" Margin="5" MinWidth="800" Height="400">
+                        <DataGrid x:Name="lb_PortErrorShowOne" AutoGenerateColumns="False" Margin="5" MinWidth="600" Height="400">
                             <DataGrid.Style>
                                 <Style TargetType="DataGrid">
                                     <Style.Triggers>
@@ -513,7 +513,7 @@
                     </StackPanel>
                     <StackPanel Grid.Row="1" Grid.Column="2"  >
                         <Label Content="Switch 2" />
-                        <DataGrid x:Name="lb_PortErrorShowTwo" AutoGenerateColumns="False" Margin="5" MinWidth="800" Height="400">
+                        <DataGrid x:Name="lb_PortErrorShowTwo" AutoGenerateColumns="False" Margin="5" MinWidth="600" Height="400">
                             <DataGrid.Style>
                                 <Style TargetType="DataGrid">
                                     <Style.Triggers>
@@ -549,7 +549,7 @@
                     </StackPanel>
                     <StackPanel Grid.Row="2" Grid.Column="0"  >
                         <Label Content="Switch 3" />
-                        <DataGrid x:Name="lb_PortErrorShowThree" AutoGenerateColumns="False" Margin="5" MinWidth="800" Height="400">
+                        <DataGrid x:Name="lb_PortErrorShowThree" AutoGenerateColumns="False" Margin="5" MinWidth="600" Height="400">
                             <DataGrid.Style>
                                 <Style TargetType="DataGrid">
                                     <Style.Triggers>
@@ -585,7 +585,7 @@
                     </StackPanel>
                     <StackPanel Grid.Row="2" Grid.Column="1" >
                         <Label Content="Switch 4" />
-                        <DataGrid x:Name="lb_PortErrorShowFour" AutoGenerateColumns="False" Margin="5" MinWidth="800" Height="400">
+                        <DataGrid x:Name="lb_PortErrorShowFour" AutoGenerateColumns="False" Margin="5" MinWidth="600" Height="400">
                             <DataGrid.Style>
                                 <Style TargetType="DataGrid">
                                     <Style.Triggers>
@@ -651,7 +651,7 @@
                         </StackPanel>
                     <StackPanel Grid.Row="1" Grid.Column="0" >
                         <Label Content="Switch 1" />
-                        <DataGrid x:Name="lb_SwitchShowOne" CanUserSortColumns="False" AutoGenerateColumns="False" Margin="5" MinWidth="650" Height="400">
+                        <DataGrid x:Name="lb_SwitchShowOne" CanUserSortColumns="False" AutoGenerateColumns="False" Margin="5" MinWidth="600" Height="400">
                             <DataGrid.Style>
                                 <Style TargetType="DataGrid">
                                     <Style.Triggers>
@@ -675,7 +675,7 @@
                     </StackPanel>
                     <StackPanel Grid.Row="1" Grid.Column="1"  >
                         <Label Content="Switch 2" />
-                        <DataGrid x:Name="lb_SwitchShowTwo" CanUserSortColumns="False" AutoGenerateColumns="False" Margin="5" MinWidth="650" Height="400">
+                        <DataGrid x:Name="lb_SwitchShowTwo" CanUserSortColumns="False" AutoGenerateColumns="False" Margin="5" MinWidth="600" Height="400">
                             <DataGrid.Style>
                                 <Style TargetType="DataGrid">
                                     <Style.Triggers>
@@ -699,7 +699,7 @@
                     </StackPanel>
                     <StackPanel Grid.Row="2" Grid.Column="0"  >
                         <Label Content="Switch 3" />
-                        <DataGrid x:Name="lb_SwitchShowThree" CanUserSortColumns="False" AutoGenerateColumns="False" Margin="5" MinWidth="650" Height="400">
+                        <DataGrid x:Name="lb_SwitchShowThree" CanUserSortColumns="False" AutoGenerateColumns="False" Margin="5" MinWidth="600" Height="400">
                             <DataGrid.Style>
                                 <Style TargetType="DataGrid">
                                     <Style.Triggers>
@@ -723,7 +723,7 @@
                     </StackPanel>
                     <StackPanel Grid.Row="2" Grid.Column="1" >
                         <Label Content="Switch 4" />
-                        <DataGrid x:Name="lb_SwitchShowFour" CanUserSortColumns="False" AutoGenerateColumns="False" Margin="5" MinWidth="650" Height="400">
+                        <DataGrid x:Name="lb_SwitchShowFour" CanUserSortColumns="False" AutoGenerateColumns="False" Margin="5" MinWidth="600" Height="400">
                             <DataGrid.Style>
                                 <Style TargetType="DataGrid">
                                     <Style.Triggers>
