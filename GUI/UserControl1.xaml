@@ -111,13 +111,13 @@
                                 </Style>
                             </DataGrid.RowStyle>
                             <DataGrid.Columns>
-                                <DataGridTextColumn Width="auto" Header="Time" Binding="{Binding LastTime}" IsReadOnly="True"/>
-                                <DataGridTextColumn Width="auto" Header="ObjectType" Binding="{Binding ObjectType}" IsReadOnly="True"/>
-                                <DataGridTextColumn Width="auto" Header="ObjectName" Binding="{Binding ObjectName}" IsReadOnly="True"/>
-                                <DataGridTextColumn Width="auto" Header="Status" Binding="{Binding Status}" IsReadOnly="True"/>
-                                <DataGridTextColumn Width="auto" Header="Fixed" Binding="{Binding Fixed}" IsReadOnly="True"/>
-                                <DataGridTextColumn Width="auto" Header="ErrorCode" Binding="{Binding ErrorCode}" IsReadOnly="True"/>
-                                <DataGridTextColumn Width="auto" Header="Description" Binding="{Binding Description}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="200" Header="Time" Binding="{Binding LastTime}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="100" Header="ObjectType" Binding="{Binding ObjectType}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="150" Header="ObjectName" Binding="{Binding ObjectName}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="100" Header="Status" Binding="{Binding Status}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="50"  Header="Fixed" Binding="{Binding Fixed}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="100" Header="ErrorCode" Binding="{Binding ErrorCode}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="300" Header="Description" Binding="{Binding Description}" IsReadOnly="True"/>
                             </DataGrid.Columns>
                         </DataGrid>
                         </StackPanel>
@@ -143,13 +143,13 @@
                                 </Style>
                             </DataGrid.RowStyle>
                             <DataGrid.Columns>
-                                <DataGridTextColumn Width="auto" Header="Time" Binding="{Binding LastTime}" IsReadOnly="True"/>
-                                <DataGridTextColumn Width="auto" Header="ObjectType" Binding="{Binding ObjectType}" IsReadOnly="True"/>
-                                <DataGridTextColumn Width="auto" Header="ObjectName" Binding="{Binding ObjectName}" IsReadOnly="True"/>
-                                <DataGridTextColumn Width="auto" Header="Status" Binding="{Binding Status}" IsReadOnly="True"/>
-                                <DataGridTextColumn Width="auto" Header="Fixed" Binding="{Binding Fixed}" IsReadOnly="True"/>
-                                <DataGridTextColumn Width="auto" Header="ErrorCode" Binding="{Binding ErrorCode}" IsReadOnly="True"/>
-                                <DataGridTextColumn Width="auto" Header="Description" Binding="{Binding Description}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="200" Header="Time" Binding="{Binding LastTime}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="100" Header="ObjectType" Binding="{Binding ObjectType}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="150" Header="ObjectName" Binding="{Binding ObjectName}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="100" Header="Status" Binding="{Binding Status}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="50"  Header="Fixed" Binding="{Binding Fixed}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="100" Header="ErrorCode" Binding="{Binding ErrorCode}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="300" Header="Description" Binding="{Binding Description}" IsReadOnly="True"/>
                             </DataGrid.Columns>
                         </DataGrid>
                         </StackPanel>
@@ -175,13 +175,13 @@
                                 </Style>
                             </DataGrid.RowStyle>
                             <DataGrid.Columns>
-                                <DataGridTextColumn Width="auto" Header="Time" Binding="{Binding LastTime}" IsReadOnly="True"/>
-                                <DataGridTextColumn Width="auto" Header="ObjectType" Binding="{Binding ObjectType}" IsReadOnly="True"/>
-                                <DataGridTextColumn Width="auto" Header="ObjectName" Binding="{Binding ObjectName}" IsReadOnly="True"/>
-                                <DataGridTextColumn Width="auto" Header="Status" Binding="{Binding Status}" IsReadOnly="True"/>
-                                <DataGridTextColumn Width="auto" Header="Fixed" Binding="{Binding Fixed}" IsReadOnly="True"/>
-                                <DataGridTextColumn Width="auto" Header="ErrorCode" Binding="{Binding ErrorCode}" IsReadOnly="True"/>
-                                <DataGridTextColumn Width="auto" Header="Description" Binding="{Binding Description}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="200" Header="Time" Binding="{Binding LastTime}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="100" Header="ObjectType" Binding="{Binding ObjectType}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="150" Header="ObjectName" Binding="{Binding ObjectName}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="100" Header="Status" Binding="{Binding Status}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="50"  Header="Fixed" Binding="{Binding Fixed}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="100" Header="ErrorCode" Binding="{Binding ErrorCode}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="300" Header="Description" Binding="{Binding Description}" IsReadOnly="True"/>
                             </DataGrid.Columns>
                         </DataGrid>
                         </StackPanel>
@@ -207,13 +207,13 @@
                                 </Style>
                             </DataGrid.RowStyle>
                             <DataGrid.Columns>
-                                <DataGridTextColumn Width="auto" Header="Time" Binding="{Binding LastTime}" IsReadOnly="True"/>
-                                <DataGridTextColumn Width="auto" Header="ObjectType" Binding="{Binding ObjectType}" IsReadOnly="True"/>
-                                <DataGridTextColumn Width="auto" Header="ObjectName" Binding="{Binding ObjectName}" IsReadOnly="True"/>
-                                <DataGridTextColumn Width="auto" Header="Status" Binding="{Binding Status}" IsReadOnly="True"/>
-                                <DataGridTextColumn Width="auto" Header="Fixed" Binding="{Binding Fixed}" IsReadOnly="True"/>
-                                <DataGridTextColumn Width="auto" Header="ErrorCode" Binding="{Binding ErrorCode}" IsReadOnly="True"/>
-                                <DataGridTextColumn Width="auto" Header="Description" Binding="{Binding Description}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="200" Header="Time" Binding="{Binding LastTime}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="100" Header="ObjectType" Binding="{Binding ObjectType}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="150" Header="ObjectName" Binding="{Binding ObjectName}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="100" Header="Status" Binding="{Binding Status}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="50"  Header="Fixed" Binding="{Binding Fixed}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="100" Header="ErrorCode" Binding="{Binding ErrorCode}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="300" Header="Description" Binding="{Binding Description}" IsReadOnly="True"/>
                             </DataGrid.Columns>
                         </DataGrid>
                         </StackPanel>

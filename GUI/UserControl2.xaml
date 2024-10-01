@@ -779,9 +779,9 @@
                                 </Style>
                             </DataGrid.Style>
                             <DataGrid.Columns>
-                                <DataGridTextColumn Width="400" Header="Zone" Binding="{Binding Zone}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="200" Header="Zone" Binding="{Binding Zone}" IsReadOnly="True"/>
                                 <DataGridTextColumn Width="150" Header="WWPN" Binding="{Binding WWPN}" IsReadOnly="True"/>
-                                <DataGridTextColumn Width="350" Header="Alias" Binding="{Binding Alias}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="300" Header="Alias" Binding="{Binding Alias}" IsReadOnly="True"/>
                             </DataGrid.Columns>
                         </DataGrid>
                     </StackPanel>
@@ -807,9 +807,9 @@
                                 </Style>
                             </DataGrid.Style>
                             <DataGrid.Columns>
-                                <DataGridTextColumn Width="400" Header="Zone" Binding="{Binding Zone}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="200" Header="Zone" Binding="{Binding Zone}" IsReadOnly="True"/>
                                 <DataGridTextColumn Width="150" Header="WWPN" Binding="{Binding WWPN}" IsReadOnly="True"/>
-                                <DataGridTextColumn Width="350" Header="Alias" Binding="{Binding Alias}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="300" Header="Alias" Binding="{Binding Alias}" IsReadOnly="True"/>
                             </DataGrid.Columns>
                         </DataGrid>
                     </StackPanel>
