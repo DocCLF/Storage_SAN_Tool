@@ -711,7 +711,7 @@
                             <RowDefinition Height="auto" />
                             <RowDefinition Height="*" />
                         </Grid.RowDefinitions>
-                        <!-- 
+                        <!-- Maybe for later use, removed at version 1.1.1
                         <StackPanel Grid.Row="0" >
                             <Button x:Name="btn_IBM_CleanUpConfigDir" Style="{StaticResource MainBtnStyle}" Content="CleanUp Config" Margin="2,2,2,5" HorizontalAlignment="Left" Background="LightCoral" />
                         </StackPanel>

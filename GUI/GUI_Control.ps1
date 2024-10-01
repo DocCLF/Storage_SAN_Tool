@@ -2,7 +2,7 @@ Add-Type -AssemblyName PresentationCore,PresentationFramework
 Add-Type -AssemblyName System.Windows.Forms
 
 <# Create the xaml Files / Base of GUI Mainwindow #>
-function Storage_San_Kit {
+#function Storage_San_Kit {
 
 $MainxamlFile ="$PSScriptRoot\MainWindow.xaml"
 $inputXAML=Get-Content -Path $MainxamlFile -raw
@@ -1024,150 +1024,7 @@ $TD_btn_IBM_BackUpConfig.add_click({
     $TD_stp_FCPortStats.Visibility="Collapsed"
     $TD_stp_BackUpConfig.Visibility="Visible"
 })
-$TD_btn_IBM_CleanUpConfigDir.add_click({
-    $ErrorActionPreference="Continue"
-    $TD_Credentials=@()
-    $TD_Credentials_Checked = Get_CredGUIInfos -STP_ID 1 -TD_ConnectionTyp $TD_cb_storageConnectionTyp.Text -TD_IPAdresse $TD_tb_storageIPAdr.Text -TD_UserName $TD_tb_storageUserName.Text -TD_Password $TD_tb_storagePassword
-    $TD_Credentials += $TD_Credentials_Checked
-    Start-Sleep -Seconds 0.5
 
-    $TD_Credentials_Checked = Get_CredGUIInfos -STP_ID 2 -TD_ConnectionTyp $TD_cb_storageConnectionTypOne.Text -TD_IPAdresse $TD_tb_storageIPAdrOne.Text -TD_UserName $TD_tb_storageUserNameOne.Text -TD_Password $TD_tb_storagePasswordOne
-    $TD_Credentials += $TD_Credentials_Checked
-    Start-Sleep -Seconds 0.5
-
-    $TD_Credentials_Checked = Get_CredGUIInfos -STP_ID 3 -TD_ConnectionTyp $TD_cb_storageConnectionTypTwo.Text -TD_IPAdresse $TD_tb_storageIPAdrTwo.Text -TD_UserName $TD_tb_storageUserNameTwo.Text -TD_Password $TD_tb_storagePasswordTwo
-    $TD_Credentials += $TD_Credentials_Checked
-    Start-Sleep -Seconds 0.5
-
-    $TD_Credentials_Checked = Get_CredGUIInfos -STP_ID 4 -TD_ConnectionTyp $TD_cb_storageConnectionTypThree.Text -TD_IPAdresse $TD_tb_storageIPAdrThree.Text -TD_UserName $TD_tb_storageUserNameThree.Text -TD_Password $TD_tb_storagePasswordThree
-    $TD_Credentials += $TD_Credentials_Checked
-    Start-Sleep -Seconds 0.5
-
-    try {
-            foreach($TD_Credential in $TD_Credentials){
-                <# QaD needs a Codeupdate because Grouping dose not work #>
-                switch ($TD_Credential.ID) {
-                    {($_ -eq 1)} 
-                    {            
-                        $StorageUserName = $TD_Credential.StorageUserName; $Device_IP = $TD_Credential.IPAddress
-                        if($TD_Credential.ConnectionTyp -eq "ssh"){
-                            try {
-                                $TD_BUInfoOne = ssh $StorageUserName@$Device_IP "svcconfig clear"
-                                $TD_tb_BackUpInfoDeviceOne.Text = $TD_BUInfoOne.TrimStart('.')
-                            }
-                            catch {
-                                <#Do this if a terminating exception happens#>
-                                Write-Host "Something went wrong" -ForegroundColor DarkMagenta
-                                Write-Host $_.Exception.Message
-                                $TD_tb_BackUpInfoDeviceOne.Text = $_.Exception.Message
-                            }
-                        }else{
-                            try {
-                                $TD_BUInfoOne = plink $StorageUserName@$Device_IP -pw $($TD_Credential.StoragePassword) -batch "svcconfig clear"
-                                $TD_tb_BackUpInfoDeviceOne.Text = $TD_BUInfoOne.TrimStart('.')
-                            }
-                            catch {
-                                <#Do this if a terminating exception happens#>
-                                Write-Host "Something went wrong" -ForegroundColor DarkMagenta
-                                Write-Host $_.Exception.Message
-                                $TD_tb_BackUpInfoDeviceOne.Text = $_.Exception.Message
-                            }
-                        }
-                    }
-                    {($_ -eq 2)} 
-                    {            
-                        $StorageUserName = $TD_Credential.StorageUserName; $Device_IP = $TD_Credential.IPAddress
-                        if($TD_Credential.ConnectionTyp -eq "ssh"){
-                            try {
-                                $TD_BUInfoOne = ssh $StorageUserName@$Device_IP "svcconfig clear"
-                                $TD_tb_BackUpInfoDeviceTwo.Text = $TD_BUInfoOne.TrimStart('.')
-                            }
-                            catch {
-                                <#Do this if a terminating exception happens#>
-                                Write-Host "Something went wrong" -ForegroundColor DarkMagenta
-                                Write-Host $_.Exception.Message
-                                $TD_tb_BackUpInfoDeviceTwo.Text = $_.Exception.Message
-                            }
-                        }else{
-                            try {
-                                $TD_BUInfoOne = plink $StorageUserName@$Device_IP -pw $($TD_Credential.StoragePassword) -batch "svcconfig clear"
-                                $TD_tb_BackUpInfoDeviceTwo.Text = $TD_BUInfoOne.TrimStart('.')
-                            }
-                            catch {
-                                <#Do this if a terminating exception happens#>
-                                Write-Host "Something went wrong" -ForegroundColor DarkMagenta
-                                Write-Host $_.Exception.Message
-                                $TD_tb_BackUpInfoDeviceTwo.Text = $_.Exception.Message
-                            }
-                        }
-                    }
-                    {($_ -eq 3)} 
-                    {            
-                        $StorageUserName = $TD_Credential.StorageUserName; $Device_IP = $TD_Credential.IPAddress
-                        if($TD_Credential.ConnectionTyp -eq "ssh"){
-                            try {
-                                $TD_BUInfoOne = ssh $StorageUserName@$Device_IP "svcconfig clear"
-                                $TD_tb_BackUpInfoDeviceThree.Text = $TD_BUInfoOne.TrimStart('.')
-                            }
-                            catch {
-                                <#Do this if a terminating exception happens#>
-                                Write-Host "Something went wrong" -ForegroundColor DarkMagenta
-                                Write-Host $_.Exception.Message
-                                $TD_tb_BackUpInfoDeviceThree.Text = $_.Exception.Message
-                            }
-                        }else{
-                            try {
-                                $TD_BUInfoOne = plink $StorageUserName@$Device_IP -pw $($TD_Credential.StoragePassword) -batch "svcconfig clear"
-                                $TD_tb_BackUpInfoDeviceThree.Text = $TD_BUInfoOne.TrimStart('.')
-                            }
-                            catch {
-                                <#Do this if a terminating exception happens#>
-                                Write-Host "Something went wrong" -ForegroundColor DarkMagenta
-                                Write-Host $_.Exception.Message
-                                $TD_tb_BackUpInfoDeviceThree.Text = $_.Exception.Message
-                            }
-                        }
-                    }
-                    {($_ -eq 4)} 
-                    {            
-                        $StorageUserName = $TD_Credential.StorageUserName; $Device_IP = $TD_Credential.IPAddress
-                        if($TD_Credential.ConnectionTyp -eq "ssh"){
-                            try {
-                                $TD_BUInfoOne = ssh $StorageUserName@$Device_IP "svcconfig clear"
-                                $TD_tb_BackUpInfoDeviceFour.Text = $TD_BUInfoOne.TrimStart('.')
-                            }
-                            catch {
-                                <#Do this if a terminating exception happens#>
-                                Write-Host "Something went wrong" -ForegroundColor DarkMagenta
-                                Write-Host $_.Exception.Message
-                                $TD_tb_BackUpInfoDeviceFour.Text = $_.Exception.Message
-                            }
-                        }else{
-                            try {
-                                $TD_BUInfoOne = plink $StorageUserName@$Device_IP -pw $($TD_Credential.StoragePassword) -batch "svcconfig clear"
-                                $TD_tb_BackUpInfoDeviceFour.Text = $TD_BUInfoOne.TrimStart('.')
-                            }
-                            catch {
-                                <#Do this if a terminating exception happens#>
-                                Write-Host "Something went wrong" -ForegroundColor DarkMagenta
-                                Write-Host $_.Exception.Message
-                                $TD_tb_BackUpInfoDeviceFour.Text = $_.Exception.Message
-                            }
-                        }
-                    }
-                    Default {Write-Debug "Nothing" }
-                }
-        }
-
-    }
-    catch {
-        <#Do this if a terminating exception happens#>
-        Write-Host "Something went wrong" -ForegroundColor DarkMagenta
-        Write-Host $_.Exception.Message
-        $TD_tb_BackUpFileErrorInfo.Text = $_.Exception.Message
-    }
-    $TD_btn_IBM_CleanUpConfigDir.Background = "green"
-})
 <#SAN Button#>
 $TD_btn_FOS_BasicSwitchInfo.add_click({
     $TD_Credentials=@()
@@ -1906,4 +1763,4 @@ Get-Variable TD_*
 $Mainform.showDialog()
 $Mainform.activate()
 
-}
+#}
