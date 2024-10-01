@@ -529,27 +529,27 @@ $TD_btn_IBM_Eventlog.add_click({
         #Write-Debug -Message $TD_Credential
         switch ($TD_Credential.ID) {
             {($_ -eq 1)} 
-            {   
-                $TD_IBM_EventLogShow += IBM_EventLog -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.StorageUserName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $TD_Credential.StoragePassword -TD_Exportpath $TD_tb_ExportPath.Text
-                Start-Sleep -Seconds 1
+            {   $TD_IBM_EventLogShow =@()
+                $TD_IBM_EventLogShow = IBM_EventLog -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.StorageUserName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $TD_Credential.StoragePassword -TD_Exportpath $TD_tb_ExportPath.Text
+                Start-Sleep -Seconds 0.2
                 $TD_lb_StorageEventLogOne.ItemsSource = $TD_IBM_EventLogShow
             }
             {($_ -eq 2) } 
-            {            
-                $TD_IBM_EventLogShow += IBM_EventLog -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.StorageUserName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $TD_Credential.StoragePassword -TD_Exportpath $TD_tb_ExportPath.Text
-                Start-Sleep -Seconds 1
+            {   $TD_IBM_EventLogShow =@()           
+                $TD_IBM_EventLogShow = IBM_EventLog -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.StorageUserName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $TD_Credential.StoragePassword -TD_Exportpath $TD_tb_ExportPath.Text
+                Start-Sleep -Seconds 0.2
                 $TD_lb_StorageEventLogTwo.ItemsSource = $TD_IBM_EventLogShow
             }
             {($_ -eq 3) } 
-            {            
-                $TD_IBM_EventLogShow += IBM_EventLog -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.StorageUserName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $TD_Credential.StoragePassword -TD_Exportpath $TD_tb_ExportPath.Text
-                Start-Sleep -Seconds 1
+            {   $TD_IBM_EventLogShow =@()         
+                $TD_IBM_EventLogShow = IBM_EventLog -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.StorageUserName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $TD_Credential.StoragePassword -TD_Exportpath $TD_tb_ExportPath.Text
+                Start-Sleep -Seconds 0.2
                 $TD_lb_StorageEventLogThree.ItemsSource = $TD_IBM_EventLogShow
             }
             {($_ -eq 4) }
-            {            
-                $TD_IBM_EventLogShow += IBM_EventLog -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.StorageUserName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $TD_Credential.StoragePassword -TD_Exportpath $TD_tb_ExportPath.Text
-                Start-Sleep -Seconds 1
+            {   $TD_IBM_EventLogShow =@()         
+                $TD_IBM_EventLogShow = IBM_EventLog -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.StorageUserName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $TD_Credential.StoragePassword -TD_Exportpath $TD_tb_ExportPath.Text
+                Start-Sleep -Seconds 0.2
                 $TD_lb_StorageEventLogFour.ItemsSource = $TD_IBM_EventLogShow
             }
             Default {Write-Debug "Nothing" }

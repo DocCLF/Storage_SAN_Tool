@@ -21,6 +21,7 @@ All notable changes to this project will be documented in this file.
 - Bug at HostVolumeMap Filter
 - Typo bug at PortErrShow 
 - Bug at svcconfig clear
+- Bug how eventlog is displayed
 
 ### Changed
 - Button Content at BackUpfunc to CleanUp the Cfg
