@@ -13,18 +13,16 @@ All notable changes to this project will be documented in this file.
 
 # [v1.1.1] - 2024-09-27
 ### Added
-- ProgressBar at tLicenseShow
+- ProgressBar at LicenseShow
 - ProgrBar at BackUpFunc
 - Contact Data and Link to Repo at Github
 
 ### Fixed
 - Bug at HostVolumeMap Filter
 - Typo bug at PortErrShow 
-- Bug at svcconfig clear
 - Bug how eventlog is displayed
 
 ### Changed
-- Button Content at BackUpfunc to CleanUp the Cfg
 - the CleanUp for the Files in TempFolder
 - Orientation to Horizontal at HostVolumeMap Panels
 - Can UserSortColumns to false at Zoneshow, Switchshow
@@ -32,9 +30,7 @@ All notable changes to this project will be documented in this file.
 - some tables adjusted in column width
 
 ### Removed
-- Export Option at PortLicenseShow
-- Export Option at PortErrShow
-- Export Option at PortBufferShow
+- Button for svc config clear
 
 
 ## [v1.1.0] - 2024-09-26
