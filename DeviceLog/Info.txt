@@ -1,1 +1,1 @@
-DeviceLog Folder here you will find all exports of the devices' Healtcheck files!
+DeviceLog Folder here you will find all exports of the devices' Healtcheck files as default!
