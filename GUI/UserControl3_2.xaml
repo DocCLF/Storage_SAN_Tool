@@ -5,15 +5,6 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
     mc:Ignorable="d" 
     >
-    <UserControl.Background>
-            <LinearGradientBrush>
-            <GradientStopCollection>
-                <GradientStop Offset="0.1" Color="White" />
-                <GradientStop Offset="0.5" Color="LightGray" />
-                <GradientStop Offset="0.8" Color="White" />
-            </GradientStopCollection>
-        </LinearGradientBrush>
-    </UserControl.Background>
     <UserControl.Resources>
         <ResourceDictionary>
             <Style x:Key="MainBtnStyle" TargetType="{x:Type Button}">
@@ -105,24 +96,46 @@
                 <RowDefinition Height="auto" />
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
-            <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="10,5">
-                <Button x:Name="btn_Storage_SysCheck" Content="Storage System Check" Style="{StaticResource MainBtnStyle}" Margin="10,20,25,5"/>
-                <ComboBox Margin="25,20,20,5" x:Name="cb_Device_HealthCheck" SelectedIndex="0" SelectedValuePath="Content" >
-                    <!--<ComboBoxItem IsSelected="True" ToolTip="Check Storages">Check all Storages</ComboBoxItem>-->
-                    <ComboBoxItem IsSelected="True" ToolTip="Check Storages">Check the First</ComboBoxItem>
-                    <ComboBoxItem ToolTip="Check Storages">Check the Second</ComboBoxItem>
-                    <ComboBoxItem ToolTip="Check Storages">Check the Third</ComboBoxItem>
-                    <ComboBoxItem ToolTip="Check Storages">Check the Fourth</ComboBoxItem>
-                </ComboBox>
-                <Button x:Name="btn_HC_OpenGUI_One" Content="Open GUI 1" Style="{StaticResource MainBtnStyle}" Margin="20,20,5,5" />
-                <Button x:Name="btn_HC_OpenGUI_Two" Content="Open GUI 2" Style="{StaticResource MainBtnStyle}" Margin="20,20,5,5" />
-                <Button x:Name="btn_HC_OpenGUI_Three" Content="Open GUI 3" Style="{StaticResource MainBtnStyle}" Margin="20,20,5,5" />
-                <Button x:Name="btn_HC_OpenGUI_Four" Content="Open GUI 4" Style="{StaticResource MainBtnStyle}" Margin="20,20,5,5" />
-            </StackPanel>
-            <StackPanel Grid.Row="1" Orientation="Horizontal" >
-                <Grid x:Name="UserControlLeftSide" />
-                <Grid x:Name="UserControlRightSide" />
-            </StackPanel>
+            <Grid Grid.Row="1" Grid.IsSharedSizeScope="True" Margin="10,25,10,5" >
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,10">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="auto" MaxWidth="150" SharedSizeGroup="Alpha"/>
+                            <ColumnDefinition MinWidth="400" MaxWidth="800" />
+                        </Grid.ColumnDefinitions>
+                        <Label Grid.Column="0" x:Name="lb_SecurityStatusLight" Content="Security Check" Margin="10,0,20,0" Style="{StaticResource MainLabelStyle}" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Height="26" Background="Green" />
+                        <TextBox Grid.Column="2" x:Name="tb_SecurityStatusErrorMsg" Text="" Visibility="Collapsed" IsReadOnly="True" Background="Transparent" Foreground="Coral" VerticalAlignment="Center" VerticalContentAlignment="Center" Height="60" FontSize="14" BorderThickness="0" TextWrapping="Wrap"/>
+                        <StackPanel Grid.Column="2" Orientation="Vertical" >
+                        <DataGrid x:Name="dg_SecurityStatusInfoText" AutoGenerateColumns="False" Margin="10,10,10,5" MaxHeight="400">
+                            <DataGrid.Style>
+                                <Style TargetType="DataGrid">
+                                    <Style.Triggers>
+                                        <Trigger Property="HasItems" Value="False">
+                                            <Setter Property="Visibility" Value="Collapsed"></Setter>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGrid.Style>
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="Attribute Name" Width="Auto" Binding="{Binding AttributeName}" IsReadOnly="True"/>
+                                <DataGridTextColumn Header="Configured Value" Width="Auto" Binding="{Binding ConfiguredValue}" IsReadOnly="True"/>
+                                <DataGridTextColumn Header="Field Experiences*" Width="Auto" Binding="{Binding RecommendedValue}" IsReadOnly="True"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                        <TextBox Grid.Column="2" x:Name="tb_SecurityInfoMsg" Text="" Margin="10,0,0,0" Visibility="Collapsed" IsReadOnly="True" Background="Transparent" VerticalAlignment="Center" VerticalContentAlignment="Center" Height="30" FontSize="10" BorderThickness="0" TextWrapping="Wrap"/>
+                        </StackPanel>
+                    </Grid>
+                </StackPanel>
+            </Grid>
         </Grid>
     </ScrollViewer>
 </UserControl>

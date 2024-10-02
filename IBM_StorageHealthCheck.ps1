@@ -33,13 +33,12 @@ function IBM_StorageHealthCheck {
     begin {
         #<# suppresses error messages #>
         $ErrorActionPreference="SilentlyContinue"
-        <# int for the progressbar #>
-        [int]$nbr=0
-        
+
+        $TD_btn_SaveHostStatus.Visibility="Collapsed"
         if($TD_Device_ConnectionTyp -eq "ssh"){
-            $TD_CollectInfo = ssh $TD_Device_UserName@$TD_Device_DeviceIP "lshost && lshostcluster && lsmdisk && lsvdisk && lsuser && lsquorum && lsfcmap && lsencryption && lsenclosurebattery && lsenclosurestats && lsenclosureslot && lsrcrelationship && lsrcconsistgrp && lspartnership && lssecurity && lseventlog | grep alert"
+            $TD_CollectInfo = ssh $TD_Device_UserName@$TD_Device_DeviceIP "lshost && lshostcluster && lsmdisk && lsvdisk && lsuser && lsfcmap && lsencryption && lsenclosurebattery && lsenclosurestats && lsenclosureslot && lsrcrelationship && lsrcconsistgrp && lspartnership && lssecurity && lseventlog | grep alert"
         }else {
-            $TD_CollectInfo = plink $TD_Device_UserName@$TD_Device_DeviceIP -pw $TD_Device_PW -batch "lshost && lshostcluster && lsmdisk && lsvdisk && lsuser && lsquorum && lsfcmap && lsencryption && lsenclosurebattery && lsenclosurestats && lsenclosureslot && lsrcrelationship && lsrcconsistgrp && lspartnership && lssecurity && lseventlog | grep alert"
+            $TD_CollectInfo = plink $TD_Device_UserName@$TD_Device_DeviceIP -pw $TD_Device_PW -batch "lshost && lshostcluster && lsmdisk && lsvdisk && lsuser && lsfcmap && lsencryption && lsenclosurebattery && lsenclosurestats && lsenclosureslot && lsrcrelationship && lsrcconsistgrp && lspartnership && lssecurity && lseventlog | grep alert"
         }
         <# next line one for testing #>
         #$TD_CollectInfo = Get-Content -Path "C:\Users\mailt\Documents\mimixexport.txt" #C:\Users\mailt\Documents\mimixexport.txt hyperswap
@@ -131,7 +130,7 @@ function IBM_StorageHealthCheck {
 
         $TD_dg_EventlogStatusInfoText.ItemsSource=$EmptyVar
         if($TD_EventCollection.Status -eq "alert"){
-            $TD_el_EventlogStatusLight.Fill = "red"
+            $TD_lb_EventlogLight.Background="red"
             if(($TD_EventCollection | Where-Object {$_.Status -eq "alert"}).Count -ge 2){
                 $TD_dg_EventlogStatusInfoText.ItemsSource=$TD_EventCollection | Where-Object {(($_.Status -eq "alert")-and(($_.Fixed -eq "no")-or($_.Fixed -eq "yes")))} |Select-Object -Last 10
 
@@ -140,14 +139,14 @@ function IBM_StorageHealthCheck {
                 
                 $TD_dg_EventlogStatusInfoText.ItemsSource=$TD_OnlyOneEvent
             }
-            $TD_UserControl3.Dispatcher.Invoke([System.Action]{},"Render")
+            $TD_UserControl3_1.Dispatcher.Invoke([System.Action]{},"Render")
         }elseif (($TD_EventCollection.Status -eq "monitoring")-or($TD_EventCollection.Status -eq "expired")) {
-            $TD_el_EventlogStatusLight.Fill = "yellow"
+            $TD_lb_EventlogLight.Background="yellow"
             $TD_dg_EventlogStatusInfoText.ItemsSource=$TD_EventCollection | Where-Object {(($_.Status -ne "monitoring")-or($_.Status -eq "expired"))}
-            $TD_UserControl3.Dispatcher.Invoke([System.Action]{},"Render")
+            $TD_UserControl3_1.Dispatcher.Invoke([System.Action]{},"Render")
         }else {
-            $TD_el_EventlogStatusLight.Fill = "green"
-            $TD_UserControl3.Dispatcher.Invoke([System.Action]{},"Render")
+            $TD_lb_EventlogLight.Background="green"
+            $TD_UserControl3_1.Dispatcher.Invoke([System.Action]{},"Render")
         }
 
 
@@ -334,18 +333,20 @@ function IBM_StorageHealthCheck {
 
         #Write-Host $TD_HostChostClusterResault
         $TD_dg_HostStatusInfoText.ItemsSource=$EmptyVar
+        
         if($TD_HostChostClusterResault.Count -gt 0){
-            $TD_el_HostStatusLight.Fill = "red"
+            $TD_lb_HostStatusLight.Background = "red"
             if($TD_HostChostClusterResault.Count -ge 2){
                 $TD_dg_HostStatusInfoText.ItemsSource=$TD_HostChostClusterResault
             }else{
                 $TD_OneHost = $TD_HostChostClusterResault
                 $TD_dg_HostStatusInfoText.ItemsSource=$TD_OneHost
             }
-            $TD_UserControl3.Dispatcher.Invoke([System.Action]{},"Render")
+            $TD_btn_SaveHostStatus.Visibility="Visible"
+            $TD_UserControl3_1.Dispatcher.Invoke([System.Action]{},"Render")
         }else{
-            $TD_el_HostStatusLight.Fill = "green"
-            $TD_UserControl3.Dispatcher.Invoke([System.Action]{},"Render")
+            $TD_lb_HostStatusLight.Background = "green"
+            $TD_UserControl3_1.Dispatcher.Invoke([System.Action]{},"Render")
             if($TD_HostLogHistoryFiles.Count -lt 1){
                 $TD_HostChostClusterResaultTemp | Export-Csv -Path $PSPath\DeviceLog\$(Get-Date -Format "yyyy-MM-dd")_$($TD_DeviceName)_HostLog.csv -Delimiter ';' 
             }
@@ -363,16 +364,16 @@ function IBM_StorageHealthCheck {
         }
         $TD_dg_MdiskStatusInfoText.ItemsSource=$EmptyVar
         if(($TD_MDiskResault.Status -eq "offline")-or($TD_MDiskResault.Status -eq "excluded")){
-            $TD_el_MdiskStatusLight.Fill ="red"
+            $TD_lb_MdiskStatusLight.Background ="red"
             $TD_dg_MdiskStatusInfoText.ItemsSource=$TD_MDiskResault
-            $TD_UserControl3.Dispatcher.Invoke([System.Action]{},"Render")
+            $TD_UserControl3_1.Dispatcher.Invoke([System.Action]{},"Render")
         }elseif ($TD_MDiskResault.Status -like "degraded*") {
-            $TD_el_MdiskStatusLight.Fill ="yellow"
+            $TD_lb_MdiskStatusLight.Background ="yellow"
             $TD_dg_MdiskStatusInfoText.ItemsSource=$TD_MDiskResault
-            $TD_UserControl3.Dispatcher.Invoke([System.Action]{},"Render")
+            $TD_UserControl3_1.Dispatcher.Invoke([System.Action]{},"Render")
         }elseif (($TD_MDiskResault.Status -eq "online").count -eq ($TD_MDiskResault.count)){
-            $TD_el_MdiskStatusLight.Fill ="green"
-            $TD_UserControl3.Dispatcher.Invoke([System.Action]{},"Render")
+            $TD_lb_MdiskStatusLight.Background ="green"
+            $TD_UserControl3_1.Dispatcher.Invoke([System.Action]{},"Render")
         }
         
 
@@ -407,39 +408,39 @@ function IBM_StorageHealthCheck {
         }
         $TD_dg_VDiskStatusInfoText.ItemsSource=$EmptyVar
         if((($TD_VdiskResault| Where-Object {$_.Status -eq "offline"}).count) -gt 0){
-            $TD_el_VDiskStatusLight.Fill ="red"
+            $TD_lb_VDiskStatusLight.Background ="red"
             if((($TD_VdiskResault| Where-Object {($_.Status -eq "offline")-or($_.Status -eq "deleting")-or($_.Status -eq "degraded")}).count) -ge 2){
             $TD_dg_VDiskStatusInfoText.ItemsSource= $TD_VdiskResault | Where-Object {(($_.Status -eq "offline")-or($_.Status -eq "deleting")-or($_.Status -eq "degraded"))}
             }else {
                 $TD_OneVdisk = $TD_VdiskResault | Where-Object {($_.Status -eq "offline")-or($_.Status -eq "deleting")}
                 $TD_dg_VDiskStatusInfoText.ItemsSource= ,$TD_OneVdisk
             }
-            $TD_UserControl3.Dispatcher.Invoke([System.Action]{},"Render")
-            $TD_UserControl3.Dispatcher.Invoke([System.Action]{},"Render")
+            $TD_UserControl3_1.Dispatcher.Invoke([System.Action]{},"Render")
+            $TD_UserControl3_1.Dispatcher.Invoke([System.Action]{},"Render")
         }elseif ((($TD_VdiskResault| Where-Object {$_.Status -eq "degraded"}).count) -gt 0) {
-            $TD_el_VDiskStatusLight.Fill ="yellow"
+            $TD_lb_VDiskStatusLight.Background ="yellow"
             if((($TD_VdiskResault| Where-Object {$_.Status -eq "degraded"}).count) -ge 2){
                 $TD_dg_VDiskStatusInfoText.ItemsSource= $TD_VdiskResault | Where-Object {($_.Status -eq "degraded")}
             }else{
                 $TD_OneVdisk = $TD_VdiskResault | Where-Object {($_.Status -eq "degraded")}
                 $TD_dg_VDiskStatusInfoText.ItemsSource= ,$TD_OneVdisk
             }
-            $TD_UserControl3.Dispatcher.Invoke([System.Action]{},"Render")
+            $TD_UserControl3_1.Dispatcher.Invoke([System.Action]{},"Render")
         }elseif ($TD_VdiskResault.Status -eq "online") {
-            $TD_el_VDiskStatusLight.Fill ="green"
-            $TD_UserControl3.Dispatcher.Invoke([System.Action]{},"Render")
+            $TD_lb_VDiskStatusLight.Background ="green"
+            $TD_UserControl3_1.Dispatcher.Invoke([System.Action]{},"Render")
         }
         
-        $TD_QuorumResult = IBM_IPQuorum -TD_Line_ID $TD_Line_ID -TD_Device_ConnectionTyp $TD_Device_ConnectionTyp -TD_Device_UserName $TD_Device_UserName -TD_Device_DeviceIP $TD_Device_DeviceIP -TD_Device_PW $TD_Device_PW -TD_Export yes -TD_Exportpath $TD_Exportpath
+        #$TD_QuorumResult = IBM_IPQuorum -TD_Line_ID $TD_Line_ID -TD_Device_ConnectionTyp $TD_Device_ConnectionTyp -TD_Device_UserName $TD_Device_UserName -TD_Device_DeviceIP $TD_Device_DeviceIP -TD_Device_PW $TD_Device_PW -TD_Export yes -TD_Exportpath $TD_Exportpath
         if(!([String]::IsNullOrEmpty($TD_QuorumResult))){
-            $TD_el_QuorumStatusLight.Fill ="green"
+            $TD_lb_QuorumStatusLight.Background ="green"
             $TD_dg_QuorumStatusInfo.ItemsSource = $TD_QuorumResult
-            $TD_UserControl3.Dispatcher.Invoke([System.Action]{},"Render")
+            $TD_UserControl3_1.Dispatcher.Invoke([System.Action]{},"Render")
         }else{
-            $TD_el_QuorumStatusLight.Fill ="red"
+            $TD_lb_QuorumStatusLight.Background ="red"
             $TD_tb_QuorumErrorMsg.Visibility = "Visible"
             $TD_tb_QuorumErrorMsg.Text = "Your current quorum configuration differs from the default and does not`n seem to have the minimum number of 3 quorum devices, please check this!"
-            $TD_UserControl3.Dispatcher.Invoke([System.Action]{},"Render")
+            $TD_UserControl3_1.Dispatcher.Invoke([System.Action]{},"Render")
         }
 
         $TD_UserResault=@()
@@ -458,21 +459,35 @@ function IBM_StorageHealthCheck {
         }
         $TD_dg_UserStatusInfoText.ItemsSource=$EmptyVar
         if(($TD_UserResault.PW_Change_required -eq "yes")){
-            $TD_el_UserStatusLight.Fill ="red"
+            $TD_lb_UserStatusLight.Background ="red"
             $TD_dg_UserStatusInfoText.ItemsSource=$TD_UserResault
-            $TD_UserControl3.Dispatcher.Invoke([System.Action]{},"Render")
+            $TD_UserControl3_1.Dispatcher.Invoke([System.Action]{},"Render")
         }elseif (($TD_UserResault.PW_Change_required -like "yes")-or($TD_UserResault.SSH_Key -eq "no")) {
-            $TD_el_UserStatusLight.Fill ="yellow"
+            $TD_lb_UserStatusLight.Background ="yellow"
             $TD_dg_UserStatusInfoText.ItemsSource=$TD_UserResault
-            $TD_UserControl3.Dispatcher.Invoke([System.Action]{},"Render")
+            $TD_UserControl3_1.Dispatcher.Invoke([System.Action]{},"Render")
         }elseif ($TD_UserResault.PW_Change_required -eq "no"){
-            $TD_el_UserStatusLight.Fill ="green"
-            $TD_UserControl3.Dispatcher.Invoke([System.Action]{},"Render")
+            $TD_lb_UserStatusLight.Background ="green"
+            $TD_UserControl3_1.Dispatcher.Invoke([System.Action]{},"Render")
         }
 
+        $TD_StorageSecurityResult = IBM_StorageSecurity -TD_Line_ID $TD_Line_ID -TD_Device_ConnectionTyp $TD_Device_ConnectionTyp -TD_Device_UserName $TD_Device_UserName -TD_Device_DeviceIP $TD_Device_DeviceIP -TD_Device_PW $TD_Device_PW -TD_Export yes -TD_Exportpath $TD_Exportpath
+        if(!([String]::IsNullOrEmpty($TD_StorageSecurityResult))){
+            $TD_lb_SecurityStatusLight.Background ="green"
+            $TD_dg_SecurityStatusInfoText.ItemsSource = $TD_StorageSecurityResult
+            $TD_tb_SecurityInfoMsg.Text ="*For further information visit the IBM Docs page of your system,`ne.g. for FS5X00 :https://www.ibm.com/docs/en/flashsystem-5x00/8.6.x?topic=csc-lssecurity-2"
+            $TD_tb_SecurityInfoMsg.Visibility = "Visible"
+            $TD_UserControl3_2.Dispatcher.Invoke([System.Action]{},"Render")
+        }else{
+            $TD_lb_SecurityStatusLight.Background ="red"
+            $TD_tb_SecurityStatusErrorMsg.Visibility = "Visible"
+            $TD_tb_SecurityStatusErrorMsg.Text = "There is a problem, please check your storage system settings!"
+            $TD_UserControl3_2.Dispatcher.Invoke([System.Action]{},"Render")
+        }
+        
     }
     
     end {
-        
+    
     }
 }

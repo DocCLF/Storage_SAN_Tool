@@ -11,6 +11,19 @@ All notable changes to this project will be documented in this file.
 - Support for Virtual Fabrics
 - Small SAN Healthcheck
 
+# [v1.2.0] - 2024-tbd
+### Added
+- IBM Storage Security check
+
+### Fixed
+
+
+### Changed
+- GUI from Storage Healthcheck compl. redesigned 
+
+### Removed
+
+
 # [v1.1.1] - 2024-09-27
 ### Added
 - ProgressBar at LicenseShow

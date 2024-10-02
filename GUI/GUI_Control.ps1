@@ -3,7 +3,7 @@ Add-Type -AssemblyName System.Windows.Forms
 
 <# Create the xaml Files / Base of GUI Mainwindow #>
 function Storage_San_Kit {
-
+$ErrorActionPreference="SilentlyContinue"
 $MainxamlFile ="$PSScriptRoot\MainWindow.xaml"
 $inputXAML=Get-Content -Path $MainxamlFile -raw
 $inputXAML=$inputXAML -replace 'mc:Ignorable="d"','' -replace "x:N","N" -replace "^<Win.*","<Window"
@@ -36,7 +36,7 @@ foreach($file in $UserCxamlFile){
     Set-Variable -Name "TD_$($fileName)"
     <# if you want more UserControls then add them here #>
     switch -wildcard ($fileName) {
-        "*1" { 
+        "*l1" { 
             $UserC1=Get-Content -Path $file -raw
             $UserC1=$UserC1 -replace 'mc:Ignorable="d"','' -replace "x:N","N" -replace "^<Win.*","<Window"
             [xml]$UserXAML1=$UserC1
@@ -44,7 +44,7 @@ foreach($file in $UserCxamlFile){
             $TD_UserControl1=[Windows.Markup.XamlReader]::Load($Userreader)
             $UserXAML1.SelectNodes("//*[@Name]") | ForEach-Object {Set-Variable -Name "TD_$($_.Name)" -Value $TD_UserControl1.FindName($_.Name) }
          }
-        "*2" { 
+        "*l2" { 
             $UserC2=Get-Content -Path $file -raw
             $UserC2=$UserC2 -replace 'mc:Ignorable="d"','' -replace "x:N","N" -replace "^<Win.*","<Window"
             [xml]$UserXAML2=$UserC2
@@ -52,7 +52,7 @@ foreach($file in $UserCxamlFile){
             $TD_UserControl2=[Windows.Markup.XamlReader]::Load($Userreader)
             $UserXAML2.SelectNodes("//*[@Name]") | ForEach-Object {Set-Variable -Name "TD_$($_.Name)" -Value $TD_UserControl2.FindName($_.Name) }
          }
-        "*3" { 
+        "*l3" { 
             $UserC3=Get-Content -Path $file -raw
             $UserC3=$UserC3 -replace 'mc:Ignorable="d"','' -replace "x:N","N" -replace "^<Win.*","<Window"
             [xml]$UserXAML3=$UserC3
@@ -60,7 +60,23 @@ foreach($file in $UserCxamlFile){
             $TD_UserControl3=[Windows.Markup.XamlReader]::Load($Userreader)
             $UserXAML3.SelectNodes("//*[@Name]") | ForEach-Object {Set-Variable -Name "TD_$($_.Name)" -Value $TD_UserControl3.FindName($_.Name) }
          }
-        "*4" { 
+        "*l3_1" { 
+            $UserC3_1=Get-Content -Path $file -raw
+            $UserC3_1=$UserC3_1 -replace 'mc:Ignorable="d"','' -replace "x:N","N" -replace "^<Win.*","<Window"
+            [xml]$UserXAML3_1=$UserC3_1
+            $Userreader = New-Object System.Xml.XmlNodeReader $UserXAML3_1
+            $TD_UserControl3_1=[Windows.Markup.XamlReader]::Load($Userreader)
+            $UserXAML3_1.SelectNodes("//*[@Name]") | ForEach-Object {Set-Variable -Name "TD_$($_.Name)" -Value $TD_UserControl3_1.FindName($_.Name) }
+         }
+        "*l3_2" { 
+            $UserC3_2=Get-Content -Path $file -raw
+            $UserC3_2=$UserC3_2 -replace 'mc:Ignorable="d"','' -replace "x:N","N" -replace "^<Win.*","<Window"
+            [xml]$UserXAML3_2=$UserC3_2
+            $Userreader = New-Object System.Xml.XmlNodeReader $UserXAML3_2
+            $TD_UserControl3_2=[Windows.Markup.XamlReader]::Load($Userreader)
+            $UserXAML3_2.SelectNodes("//*[@Name]") | ForEach-Object {Set-Variable -Name "TD_$($_.Name)" -Value $TD_UserControl3_2.FindName($_.Name) }
+         }
+        "*l4" { 
             $UserC4=Get-Content -Path $file -raw
             $UserC4=$UserC4 -replace 'mc:Ignorable="d"','' -replace "x:N","N" -replace "^<Win.*","<Window"
             [xml]$UserXAML4=$UserC4
@@ -297,6 +313,8 @@ $TD_btn_IBM_SV.add_click({
     $TD_label_ExpPath.Content ="Export Path: $($TD_tb_ExportPath.Text)"
     if(!($TD_UserControl1.IsLoaded)){$TD_UserContrArea.Children.Add($TD_UserControl1)}
     $TD_UserContrArea.Children.Remove($TD_UserControl2)
+    $TD_UserControlRightSide.Children.Remove($TD_UserControl3_2)
+    $TD_UserControlLeftSide.Children.Remove($TD_UserControl3_1)
     $TD_UserContrArea.Children.Remove($TD_UserControl3)
     $TD_UserContrArea.Children.Remove($TD_UserControl4)
     if($TD_LogoImageSmall.Visibility -eq "hidden"){$TD_LogoImageSmall.Visibility = "visible"}
@@ -306,13 +324,15 @@ $TD_btn_Broc_SAN.add_click({
     $TD_label_ExpPath.Content ="Export Path: $($TD_tb_ExportPath.Text)"
     if(!($TD_UserControl2.IsLoaded)){$TD_UserContrArea.Children.Add($TD_UserControl2)}
     $TD_UserContrArea.Children.Remove($TD_UserControl1)
+    $TD_UserControlRightSide.Children.Remove($TD_UserControl3_2)
+    $TD_UserControlLeftSide.Children.Remove($TD_UserControl3_1)
     $TD_UserContrArea.Children.Remove($TD_UserControl3)
     $TD_UserContrArea.Children.Remove($TD_UserControl4)
     if($TD_LogoImageSmall.Visibility -eq "hidden"){$TD_LogoImageSmall.Visibility = "visible"}
 })
 $TD_btn_Stor_San.add_click({
     $TD_label_ExpPath.Content ="Export Path: $($TD_tb_ExportPath.Text)"
-    if(!($TD_UserControl3.IsLoaded)){$TD_UserContrArea.Children.Add($TD_UserControl3)}
+    if(!($TD_UserControl3.IsLoaded)){$TD_UserContrArea.Children.Add($TD_UserControl3); $TD_UserControlLeftSide.Children.add($TD_UserControl3_1);$TD_UserControlRightSide.Children.add($TD_UserControl3_2)}
     $TD_UserContrArea.Children.Remove($TD_UserControl1)
     $TD_UserContrArea.Children.Remove($TD_UserControl2)
     $TD_UserContrArea.Children.Remove($TD_UserControl4)
@@ -322,6 +342,8 @@ $TD_btn_Settings.add_click({
     if(!($TD_UserControl4.IsLoaded)){$TD_UserContrArea.Children.Add($TD_UserControl4)}
     $TD_UserContrArea.Children.Remove($TD_UserControl1)
     $TD_UserContrArea.Children.Remove($TD_UserControl2)
+    $TD_UserControlRightSide.Children.Remove($TD_UserControl3_2)
+    $TD_UserControlLeftSide.Children.Remove($TD_UserControl3_1)
     $TD_UserContrArea.Children.Remove($TD_UserControl3)
     if($TD_LogoImageSmall.Visibility -eq "hidden"){$TD_LogoImageSmall.Visibility = "visible"}
 })
