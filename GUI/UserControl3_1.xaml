@@ -318,8 +318,11 @@
                             <DataGrid.RowStyle>
                                 <Style TargetType="DataGridRow">
                                     <Style.Triggers>
-                                        <DataTrigger Binding="{Binding PW_Change_required}" Value="yes">
+                                        <DataTrigger Binding="{Binding Locked}" Value="auto">
                                             <Setter Property="Background" Value="Red" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding Locked}" Value="manual">
+                                            <Setter Property="Background" Value="yellow" />
                                         </DataTrigger>
                                         <DataTrigger Binding="{Binding Remote}" Value="yes">
                                             <Setter Property="Background" Value="Red" />
@@ -336,7 +339,7 @@
                             <DataGrid.Columns>
                                 <DataGridTextColumn Header="User Name" Width="Auto" Binding="{Binding User_Name}" IsReadOnly="True"/>
                                 <DataGridTextColumn Header="Password" Width="Auto" Binding="{Binding Password}" IsReadOnly="True"/>
-                                <DataGridTextColumn Header="SSH_Key" Width="Auto"  Binding="{Binding SSH_Key}" IsReadOnly="True"/>
+                                <DataGridTextColumn Header="SSH Key" Width="Auto"  Binding="{Binding SSH_Key}" IsReadOnly="True"/>
                                 <DataGridTextColumn Header="Remote" Width="Auto" Binding="{Binding Remote}" IsReadOnly="True"/>
                                 <DataGridTextColumn Header="Locked" Width="Auto"  Binding="{Binding Locked}" IsReadOnly="True"/>
                                 <DataGridTextColumn Header="PW Change required" Width="Auto" Binding="{Binding PW_Change_required}" IsReadOnly="True"/>

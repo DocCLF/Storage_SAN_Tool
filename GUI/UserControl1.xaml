@@ -51,13 +51,21 @@
             <RowDefinition Height="auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        <GroupBox Grid.Column="0" Grid.RowSpan="2" Header="Actions"  HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,10,0,0">
+        <StackPanel Grid.Column="0" Grid.RowSpan="2" >
+        <GroupBox Header="For all Versions"  HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,10,0,0">
             <StackPanel>
+                <!--IBM_EventLog-->
+                <Button
+                x:Name="btn_IBM_BaseStorageInfo"
+                Style="{StaticResource MainBtnStyle}"
+                Content="Storage Info" 
+                ToolTip="Get basic Storage information"/>
                 <!--IBM_EventLog-->
                 <Button
                 x:Name="btn_IBM_Eventlog"
                 Style="{StaticResource MainBtnStyle}"
-                Content="Eventlog" />
+                Content="Eventlog" 
+                ToolTip="Get the last 100 Events"/>
                 <!--IBM_CatAuditLog
                 <Button
                 x:Name="btn_IBM_CatAuditLog"
@@ -67,28 +75,47 @@
                 <Button
                 x:Name="btn_IBM_HostVolumeMap"
                 Style="{StaticResource MainBtnStyle}"
-                Content="Host Volume Info" />
+                Content="Host Volume Info" 
+                ToolTip="Get Infos to Host, HostCluster and their Volumes" />
                 <!--IBM_DriveInfo-->
                 <Button
                 x:Name="btn_IBM_DriveInfo"
                 Style="{StaticResource MainBtnStyle}"
-                Content="Drive Info" />
-                <!--IBM_FCPortStats-->
-                <Button
-                x:Name="btn_IBM_FCPortStats"
-                Style="{StaticResource MainBtnStyle}"
-                Content="FC-Port Info" />
+                Content="Drive Info"
+                ToolTip="Get the most important information about your Drives" />
                 <!--IBM_BackUpConfig-->
                 <Button
                 x:Name="btn_IBM_BackUpConfig"
                 Style="{StaticResource MainBtnStyle}"
-                Content="BackUp CFG" />
+                Content="BackUp CFG" 
+                ToolTip="Create a config backup and download it with the help of pscp."/>
             </StackPanel>
-        </GroupBox>       
+        </GroupBox>
+        <GroupBox Header="From v8.4.x and later"  HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,10,0,0">
+            <StackPanel>
+                <!--IBM_FCPortStats-->
+                <Button
+                x:Name="btn_IBM_FCPortStats"
+                Style="{StaticResource MainBtnStyle}"
+                Content="FC-Port Info" 
+                ToolTip="Get an overview of the stats of your FC ports. Requirement v8.4.x and higher!" />
+            </StackPanel>
+        </GroupBox>  
+        <GroupBox Header="From v8.6.x and later"  HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,10,0,0">
+            <StackPanel>
+                <!--IBM_PolicyBased-->
+                <Button
+                x:Name="btn_IBM_PolicyBased_Rep"
+                Style="{StaticResource MainBtnStyle}"
+                Content="Policy Based Repl." 
+                ToolTip="Get some information about the replication policy and VolGrp replication." />
+            </StackPanel>
+        </GroupBox>   
+        </StackPanel> 
         <GroupBox Grid.Column="1" Grid.Row="1" Header="Results" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,10,0,0" >
             <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" >
                 <Grid>
-<StackPanel x:Name="stp_StorageEventLog" Orientation="Vertical" Margin="2" Visibility="{Binding ElementName=btn_IBM_Eventlog, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
+                <StackPanel x:Name="stp_StorageEventLog" Orientation="Vertical" Margin="2" Visibility="{Binding ElementName=btn_IBM_Eventlog, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto" />
@@ -400,8 +427,20 @@
                                 <DataGridTextColumn Width="auto" Header="DriveStatus" Binding="{Binding DriveStatus}" IsReadOnly="True"/>
                                 <DataGridTextColumn Width="auto" Header="DriveCap" Binding="{Binding DriveCap}" IsReadOnly="True"/>
                                 <DataGridTextColumn Width="auto" Header="ProductID" Binding="{Binding ProductID}" IsReadOnly="True"/>
-                                <DataGridTextColumn Width="auto" Header="FWlev" Binding="{Binding FWlev}" IsReadOnly="True"/>
-                                <DataGridTextColumn Width="auto" Header="Slot" Binding="{Binding Slot}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="FWlev" Binding="{Binding FWlev}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Indicates the firmware level of the disk; blank if unknown." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="auto" Header="Slot" Binding="{Binding Slot}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Indicates the Slot ID of the drive in the enclosure or node." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
                             </DataGrid.Columns>
                         </DataGrid>
                         </StackPanel>
@@ -438,8 +477,20 @@
                                 <DataGridTextColumn Width="auto" Header="DriveStatus" Binding="{Binding DriveStatus}" IsReadOnly="True"/>
                                 <DataGridTextColumn Width="auto" Header="DriveCap" Binding="{Binding DriveCap}" IsReadOnly="True"/>
                                 <DataGridTextColumn Width="auto" Header="ProductID" Binding="{Binding ProductID}" IsReadOnly="True"/>
-                                <DataGridTextColumn Width="auto" Header="FWlev" Binding="{Binding FWlev}" IsReadOnly="True"/>
-                                <DataGridTextColumn Width="auto" Header="Slot" Binding="{Binding Slot}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="FWlev" Binding="{Binding FWlev}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Indicates the firmware level of the disk; blank if unknown." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="auto" Header="Slot" Binding="{Binding Slot}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Indicates the Slot ID of the drive in the enclosure or node." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
                             </DataGrid.Columns>
                         </DataGrid>
                         </StackPanel>
@@ -476,8 +527,20 @@
                                 <DataGridTextColumn Width="auto" Header="DriveStatus" Binding="{Binding DriveStatus}" IsReadOnly="True"/>
                                 <DataGridTextColumn Width="auto" Header="DriveCap" Binding="{Binding DriveCap}" IsReadOnly="True"/>
                                 <DataGridTextColumn Width="auto" Header="ProductID" Binding="{Binding ProductID}" IsReadOnly="True"/>
-                                <DataGridTextColumn Width="auto" Header="FWlev" Binding="{Binding FWlev}" IsReadOnly="True"/>
-                                <DataGridTextColumn Width="auto" Header="Slot" Binding="{Binding Slot}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="FWlev" Binding="{Binding FWlev}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Indicates the firmware level of the disk; blank if unknown." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="auto" Header="Slot" Binding="{Binding Slot}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Indicates the Slot ID of the drive in the enclosure or node." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
                             </DataGrid.Columns>
                         </DataGrid>
                         </StackPanel>
@@ -514,8 +577,20 @@
                                 <DataGridTextColumn Width="auto" Header="DriveStatus" Binding="{Binding DriveStatus}" IsReadOnly="True"/>
                                 <DataGridTextColumn Width="auto" Header="DriveCap" Binding="{Binding DriveCap}" IsReadOnly="True"/>
                                 <DataGridTextColumn Width="auto" Header="ProductID" Binding="{Binding ProductID}" IsReadOnly="True"/>
-                                <DataGridTextColumn Width="auto" Header="FWlev" Binding="{Binding FWlev}" IsReadOnly="True"/>
-                                <DataGridTextColumn Width="auto" Header="Slot" Binding="{Binding Slot}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="FWlev" Binding="{Binding FWlev}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Indicates the firmware level of the disk; blank if unknown." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="auto" Header="Slot" Binding="{Binding Slot}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Indicates the Slot ID of the drive in the enclosure or node." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
                             </DataGrid.Columns>
                         </DataGrid>
                         </StackPanel>
@@ -571,9 +646,27 @@
                                 <DataGridTextColumn Width="auto" Header="InvTransErr" Binding ="{Binding InvTransErr}" IsReadOnly="True"/>  
                                 <DataGridTextColumn Width="auto" Header="CRCErr" Binding ="{Binding CRCErr}" IsReadOnly="True"/> 
                                 <DataGridTextColumn Width="auto" Header="ZeroBtB" Binding ="{Binding ZeroBtB}" IsReadOnly="True"/>
-                                <DataGridTextColumn Width="auto" Header="SFPTemp" Binding ="{Binding SFPTemp}" IsReadOnly="True"/>
-                                <DataGridTextColumn Width="auto" Header="TXPwr" Binding ="{Binding TXPwr}" IsReadOnly="True"/>
-                                <DataGridTextColumn Width="auto" Header="RXPwr" Binding ="{Binding RXPwr}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="SFPTemp" Binding ="{Binding SFPTemp}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="SFP temperature high alarm threshold = 85" />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="auto" Header="TXPwr" Binding ="{Binding TXPwr}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="TX power low alarm threshold = 126" />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="auto" Header="RXPwr" Binding ="{Binding RXPwr}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="RX power low alarm threshold = 31" />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
                             </DataGrid.Columns>
                         </DataGrid>
                         <DataGrid Grid.Row="1" Grid.Column="1" x:Name="dg_FCPortStatsTwo" AutoGenerateColumns="False" Margin="5,20,5,5" MaxHeight="400">
@@ -611,9 +704,27 @@
                                 <DataGridTextColumn Width="auto" Header="InvTransErr" Binding ="{Binding InvTransErr}" IsReadOnly="True"/>  
                                 <DataGridTextColumn Width="auto" Header="CRCErr" Binding ="{Binding CRCErr}" IsReadOnly="True"/> 
                                 <DataGridTextColumn Width="auto" Header="ZeroBtB" Binding ="{Binding ZeroBtB}" IsReadOnly="True"/>
-                                <DataGridTextColumn Width="auto" Header="SFPTemp" Binding ="{Binding SFPTemp}" IsReadOnly="True"/>
-                                <DataGridTextColumn Width="auto" Header="TXPwr" Binding ="{Binding TXPwr}" IsReadOnly="True"/>
-                                <DataGridTextColumn Width="auto" Header="RXPwr" Binding ="{Binding RXPwr}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="SFPTemp" Binding ="{Binding SFPTemp}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="SFP temperature high alarm threshold = 85" />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="auto" Header="TXPwr" Binding ="{Binding TXPwr}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="TX power low alarm threshold = 126" />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="auto" Header="RXPwr" Binding ="{Binding RXPwr}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="RX power low alarm threshold = 31" />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
                             </DataGrid.Columns>
                         </DataGrid>
                         <DataGrid Grid.Row="1" Grid.Column="1" x:Name="dg_FCPortStatsThree" AutoGenerateColumns="False" Margin="5,20,5,5" MaxHeight="400">
@@ -651,9 +762,27 @@
                                 <DataGridTextColumn Width="auto" Header="InvTransErr" Binding ="{Binding InvTransErr}" IsReadOnly="True"/>  
                                 <DataGridTextColumn Width="auto" Header="CRCErr" Binding ="{Binding CRCErr}" IsReadOnly="True"/> 
                                 <DataGridTextColumn Width="auto" Header="ZeroBtB" Binding ="{Binding ZeroBtB}" IsReadOnly="True"/>
-                                <DataGridTextColumn Width="auto" Header="SFPTemp" Binding ="{Binding SFPTemp}" IsReadOnly="True"/>
-                                <DataGridTextColumn Width="auto" Header="TXPwr" Binding ="{Binding TXPwr}" IsReadOnly="True"/>
-                                <DataGridTextColumn Width="auto" Header="RXPwr" Binding ="{Binding RXPwr}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="SFPTemp" Binding ="{Binding SFPTemp}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="SFP temperature high alarm threshold = 85" />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="auto" Header="TXPwr" Binding ="{Binding TXPwr}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="TX power low alarm threshold = 126" />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="auto" Header="RXPwr" Binding ="{Binding RXPwr}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="RX power low alarm threshold = 31" />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
                             </DataGrid.Columns>
                         </DataGrid>
                         <DataGrid Grid.Row="1" Grid.Column="1" x:Name="dg_FCPortStatsFour" AutoGenerateColumns="False" Margin="5,20,5,5" MaxHeight="400">
@@ -691,9 +820,27 @@
                                 <DataGridTextColumn Width="auto" Header="InvTransErr" Binding ="{Binding InvTransErr}" IsReadOnly="True"/>  
                                 <DataGridTextColumn Width="auto" Header="CRCErr" Binding ="{Binding CRCErr}" IsReadOnly="True"/> 
                                 <DataGridTextColumn Width="auto" Header="ZeroBtB" Binding ="{Binding ZeroBtB}" IsReadOnly="True"/>
-                                <DataGridTextColumn Width="auto" Header="SFPTemp" Binding ="{Binding SFPTemp}" IsReadOnly="True"/>
-                                <DataGridTextColumn Width="auto" Header="TXPwr" Binding ="{Binding TXPwr}" IsReadOnly="True"/>
-                                <DataGridTextColumn Width="auto" Header="RXPwr" Binding ="{Binding RXPwr}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="SFPTemp" Binding ="{Binding SFPTemp}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="SFP temperature high alarm threshold = 85" />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="auto" Header="TXPwr" Binding ="{Binding TXPwr}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="TX power low alarm threshold = 126" />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="auto" Header="RXPwr" Binding ="{Binding RXPwr}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="RX power low alarm threshold = 31" />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
                             </DataGrid.Columns>
                         </DataGrid>
                         </StackPanel>  
@@ -743,6 +890,315 @@
                         </StackPanel>
                     </Grid>
                 </StackPanel>  
+                <StackPanel  x:Name="stp_PolicyBased_Rep" Orientation="Horizontal" Margin="2" Visibility="{Binding ElementName=btn_IBM_PolicyBased_Rep, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+                        <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="2">
+                            <ComboBox x:Name="cb_ListFilterStoragePBR" ToolTip="Selcet your Filter" SelectedIndex="0" Width="200" SelectedValuePath="Content" Style="{StaticResource MainComboBoxStyle}">
+                                    <ComboBoxItem>ReplicationPolicy</ComboBoxItem>
+                                    <ComboBoxItem>VolumeGroupReplication</ComboBoxItem>
+                                </ComboBox>
+                            <Button x:Name="btn_FilterPBR" Style="{StaticResource MainBtnStyle}" Content="Apply Filter" />
+                            <Label x:Name="lb_ErrorMsgPBR" Foreground="Red" Content="" Style="{StaticResource MainLabelStyle}" Padding="2" Margin="25,5,0,5"/>
+                        </StackPanel>
+                        <StackPanel Grid.Row="1" Orientation="Horizontal" >
+                        <DataGrid x:Name="dg_ReplicationPolicyOne" CanUserSortColumns="False" AutoGenerateColumns="False" Margin="5,5,5,5" MaxHeight="400">
+                            <DataGrid.Style>
+                                <Style TargetType="DataGrid">
+                                    <Style.Triggers>
+                                        <Trigger Property="HasItems" Value="False">
+                                          <Setter Property="Visibility" Value="Collapsed"></Setter>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGrid.Style>
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Width="auto" Header="ID" Binding="{Binding ID}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Name" Binding="{Binding Name}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Topology" Binding="{Binding Topology}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="RPOAlert" Binding="{Binding RPOAlert}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="VolumeGroupCount" Binding="{Binding VolumeGroupCount}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Location1SystemName" Binding="{Binding Location1SystemName}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Location1IOGrpID" Binding="{Binding Location1IOGrpID}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Location2SystemName" Binding="{Binding Location2SystemName}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Location2IOGrpID" Binding="{Binding Location2IOGrpID}" IsReadOnly="True"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                        <DataGrid x:Name="dg_ReplicationPolicyTwo" CanUserSortColumns="False" AutoGenerateColumns="False" Margin="5,25,5,5" MaxHeight="400">
+                            <DataGrid.Style>
+                                <Style TargetType="DataGrid">
+                                    <Style.Triggers>
+                                        <Trigger Property="HasItems" Value="False">
+                                          <Setter Property="Visibility" Value="Collapsed"></Setter>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGrid.Style>
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Width="auto" Header="ID" Binding="{Binding ID}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Name" Binding="{Binding Name}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Topology" Binding="{Binding Topology}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="RPOAlert" Binding="{Binding RPOAlert}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="VolumeGroupCount" Binding="{Binding VolumeGroupCount}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Location1SystemName" Binding="{Binding Location1SystemName}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Location1IOGrpID" Binding="{Binding Location1IOGrpID}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Location2SystemName" Binding="{Binding Location2SystemName}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Location2IOGrpID" Binding="{Binding Location2IOGrpID}" IsReadOnly="True"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                        <DataGrid x:Name="dg_ReplicationPolicyThree" CanUserSortColumns="False" AutoGenerateColumns="False" Margin="5,25,5,5" MaxHeight="400">
+                            <DataGrid.Style>
+                                <Style TargetType="DataGrid">
+                                    <Style.Triggers>
+                                        <Trigger Property="HasItems" Value="False">
+                                          <Setter Property="Visibility" Value="Collapsed"></Setter>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGrid.Style>
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Width="auto" Header="ID" Binding="{Binding ID}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Name" Binding="{Binding Name}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Topology" Binding="{Binding Topology}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="RPOAlert" Binding="{Binding RPOAlert}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="VolumeGroupCount" Binding="{Binding VolumeGroupCount}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Location1SystemName" Binding="{Binding Location1SystemName}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Location1IOGrpID" Binding="{Binding Location1IOGrpID}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Location2SystemName" Binding="{Binding Location2SystemName}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Location2IOGrpID" Binding="{Binding Location2IOGrpID}" IsReadOnly="True"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                        <DataGrid x:Name="dg_ReplicationPolicyFour" CanUserSortColumns="False" AutoGenerateColumns="False" Margin="5,25,5,5" MaxHeight="400">
+                            <DataGrid.Style>
+                                <Style TargetType="DataGrid">
+                                    <Style.Triggers>
+                                        <Trigger Property="HasItems" Value="False">
+                                          <Setter Property="Visibility" Value="Collapsed"></Setter>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGrid.Style>
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Width="auto" Header="ID" Binding="{Binding ID}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Name" Binding="{Binding Name}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Topology" Binding="{Binding Topology}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="RPOAlert" Binding="{Binding RPOAlert}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="VolumeGroupCount" Binding="{Binding VolumeGroupCount}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Location1SystemName" Binding="{Binding Location1SystemName}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Location1IOGrpID" Binding="{Binding Location1IOGrpID}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Location2SystemName" Binding="{Binding Location2SystemName}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Location2IOGrpID" Binding="{Binding Location2IOGrpID}" IsReadOnly="True"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                        </StackPanel>
+                        <StackPanel Grid.Row="1" Orientation="Horizontal" >
+                        <DataGrid x:Name="dg_VolumeGrpReplicationOne" CanUserSortColumns="False" AutoGenerateColumns="False" Margin="5,5,5,5" MaxHeight="400">
+                            <DataGrid.Style>
+                                <Style TargetType="DataGrid">
+                                    <Style.Triggers>
+                                        <Trigger Property="HasItems" Value="False">
+                                          <Setter Property="Visibility" Value="Collapsed"></Setter>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGrid.Style>
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Width="auto" Header="ID" Binding="{Binding ID}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Name" Binding="{Binding Name}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="ReplPolicyID" Binding="{Binding ReplPolicyID}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="ReplPolicyName" Binding="{Binding ReplPolicyName}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Location1SysName" Binding="{Binding Location1SysName}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Location1RepMode" Binding="{Binding Location1RepMode}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Location1withinRPO" Binding="{Binding Location1withinRPO}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Location2SystemName" Binding="{Binding Location2SystemName}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Location2RepMode" Binding="{Binding Location2RepMode}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Location2withinRPO" Binding="{Binding Location2withinRPO}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Link1Status" Binding="{Binding Link1Status}" IsReadOnly="True"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                        <DataGrid x:Name="dg_VolumeGrpReplicationTwo" CanUserSortColumns="False" AutoGenerateColumns="False" Margin="5,25,5,5" MaxHeight="400">
+                            <DataGrid.Style>
+                                <Style TargetType="DataGrid">
+                                    <Style.Triggers>
+                                        <Trigger Property="HasItems" Value="False">
+                                          <Setter Property="Visibility" Value="Collapsed"></Setter>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGrid.Style>
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Width="auto" Header="ID" Binding="{Binding ID}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Name" Binding="{Binding Name}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="ReplPolicyID" Binding="{Binding ReplPolicyID}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="ReplPolicyName" Binding="{Binding ReplPolicyName}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Location1SysName" Binding="{Binding Location1SysName}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Location1RepMode" Binding="{Binding Location1RepMode}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Location1withinRPO" Binding="{Binding Location1withinRPO}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Location2SystemName" Binding="{Binding Location2SystemName}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Location2RepMode" Binding="{Binding Location2RepMode}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Location2withinRPO" Binding="{Binding Location2withinRPO}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Link1Status" Binding="{Binding Link1Status}" IsReadOnly="True"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                        <DataGrid x:Name="dg_VolumeGrpReplicationThree" CanUserSortColumns="False" AutoGenerateColumns="False" Margin="5,25,5,5" MaxHeight="400">
+                            <DataGrid.Style>
+                                <Style TargetType="DataGrid">
+                                    <Style.Triggers>
+                                        <Trigger Property="HasItems" Value="False">
+                                          <Setter Property="Visibility" Value="Collapsed"></Setter>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGrid.Style>
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Width="auto" Header="ID" Binding="{Binding ID}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Name" Binding="{Binding Name}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="ReplPolicyID" Binding="{Binding ReplPolicyID}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="ReplPolicyName" Binding="{Binding ReplPolicyName}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Location1SysName" Binding="{Binding Location1SysName}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Location1RepMode" Binding="{Binding Location1RepMode}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Location1withinRPO" Binding="{Binding Location1withinRPO}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Location2SystemName" Binding="{Binding Location2SystemName}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Location2RepMode" Binding="{Binding Location2RepMode}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Location2withinRPO" Binding="{Binding Location2withinRPO}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Link1Status" Binding="{Binding Link1Status}" IsReadOnly="True"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                        <DataGrid x:Name="dg_VolumeGrpReplicationFour" CanUserSortColumns="False" AutoGenerateColumns="False" Margin="5,25,5,5" MaxHeight="400">
+                            <DataGrid.Style>
+                                <Style TargetType="DataGrid">
+                                    <Style.Triggers>
+                                        <Trigger Property="HasItems" Value="False">
+                                          <Setter Property="Visibility" Value="Collapsed"></Setter>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGrid.Style>
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Width="auto" Header="ID" Binding="{Binding ID}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Name" Binding="{Binding Name}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="ReplPolicyID" Binding="{Binding ReplPolicyID}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="ReplPolicyName" Binding="{Binding ReplPolicyName}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Location1SysName" Binding="{Binding Location1SysName}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Location1RepMode" Binding="{Binding Location1RepMode}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Location1withinRPO" Binding="{Binding Location1withinRPO}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Location2SystemName" Binding="{Binding Location2SystemName}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Location2RepMode" Binding="{Binding Location2RepMode}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Location2withinRPO" Binding="{Binding Location2withinRPO}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Link1Status" Binding="{Binding Link1Status}" IsReadOnly="True"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                        </StackPanel>
+                    </Grid>
+                </StackPanel>
+                <StackPanel  x:Name="stp_BaseStorageInfo" Orientation="Horizontal" Margin="2" Visibility="{Binding ElementName=btn_IBM_FCPortStats, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+                        <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="2">
+                        </StackPanel>
+                        <StackPanel Orientation="Vertical" Grid.Row="1">
+                        <DataGrid Grid.Row="1" Grid.Column="1" x:Name="dg_BaseStorageInfoOne" AutoGenerateColumns="False" Margin="5" MaxHeight="400">
+                            <DataGrid.Style>
+                                <Style TargetType="DataGrid">
+                                    <Style.Triggers>
+                                        <Trigger Property="HasItems" Value="False">
+                                          <Setter Property="Visibility" Value="Collapsed"></Setter>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGrid.Style>
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Width="auto" Header="NodeID"  Binding ="{Binding ID}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="NodeName" Binding ="{Binding Name}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="NodeWWNN"  Binding ="{Binding WWNN}" IsReadOnly="True"/>  
+                                <DataGridTextColumn Width="auto" Header="Status" Binding ="{Binding Status}" IsReadOnly="True"/>  
+                                <DataGridTextColumn Width="auto" Header="IO_Group_ID" Binding ="{Binding IO_group_id}" IsReadOnly="True"/> 
+                                <DataGridTextColumn Width="auto" Header="IO_Group_Name" Binding ="{Binding IO_group_Name}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Serial_Number" Binding ="{Binding Serial_Number}" IsReadOnly="True"/>  
+                                <DataGridTextColumn Width="auto" Header="Product_MTM" Binding ="{Binding Product_MTM}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Code_Level" Binding ="{Binding Code_Level}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Config_Node" Binding ="{Binding Config_Node}" IsReadOnly="True"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                        <DataGrid Grid.Row="1" Grid.Column="1" x:Name="dg_BaseStorageInfoTwo" AutoGenerateColumns="False" Margin="5,20,5,5" MaxHeight="400">
+                            <DataGrid.Style>
+                                <Style TargetType="DataGrid">
+                                    <Style.Triggers>
+                                        <Trigger Property="HasItems" Value="False">
+                                          <Setter Property="Visibility" Value="Collapsed"></Setter>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGrid.Style>
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Width="auto" Header="NodeID"  Binding ="{Binding ID}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="NodeName" Binding ="{Binding Name}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="NodeWWNN"  Binding ="{Binding WWNN}" IsReadOnly="True"/>  
+                                <DataGridTextColumn Width="auto" Header="Status" Binding ="{Binding Status}" IsReadOnly="True"/>  
+                                <DataGridTextColumn Width="auto" Header="IO_Group_ID" Binding ="{Binding IO_group_id}" IsReadOnly="True"/> 
+                                <DataGridTextColumn Width="auto" Header="IO_Group_Name" Binding ="{Binding IO_group_Name}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Serial_Number" Binding ="{Binding Serial_Number}" IsReadOnly="True"/>  
+                                <DataGridTextColumn Width="auto" Header="Product_MTM" Binding ="{Binding Product_MTM}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Code_Level" Binding ="{Binding Code_Level}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Config_Node" Binding ="{Binding Config_Node}" IsReadOnly="True"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                        <DataGrid Grid.Row="1" Grid.Column="1" x:Name="dg_BaseStorageInfoThree" AutoGenerateColumns="False" Margin="5,20,5,5" MaxHeight="400">
+                            <DataGrid.Style>
+                                <Style TargetType="DataGrid">
+                                    <Style.Triggers>
+                                        <Trigger Property="HasItems" Value="False">
+                                          <Setter Property="Visibility" Value="Collapsed"></Setter>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGrid.Style>
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Width="auto" Header="NodeID"  Binding ="{Binding ID}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="NodeName" Binding ="{Binding Name}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="NodeWWNN"  Binding ="{Binding WWNN}" IsReadOnly="True"/>  
+                                <DataGridTextColumn Width="auto" Header="Status" Binding ="{Binding Status}" IsReadOnly="True"/>  
+                                <DataGridTextColumn Width="auto" Header="IO_Group_ID" Binding ="{Binding IO_group_id}" IsReadOnly="True"/> 
+                                <DataGridTextColumn Width="auto" Header="IO_Group_Name" Binding ="{Binding IO_group_Name}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Serial_Number" Binding ="{Binding Serial_Number}" IsReadOnly="True"/>  
+                                <DataGridTextColumn Width="auto" Header="Product_MTM" Binding ="{Binding Product_MTM}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Code_Level" Binding ="{Binding Code_Level}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Config_Node" Binding ="{Binding Config_Node}" IsReadOnly="True"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                        <DataGrid Grid.Row="1" Grid.Column="1" x:Name="dg_BaseStorageInfoFour" AutoGenerateColumns="False" Margin="5,20,5,5" MaxHeight="400">
+                            <DataGrid.Style>
+                                <Style TargetType="DataGrid">
+                                    <Style.Triggers>
+                                        <Trigger Property="HasItems" Value="False">
+                                          <Setter Property="Visibility" Value="Collapsed"></Setter>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGrid.Style>
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Width="auto" Header="NodeID"  Binding ="{Binding ID}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="NodeName" Binding ="{Binding Name}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="NodeWWNN"  Binding ="{Binding WWNN}" IsReadOnly="True"/>  
+                                <DataGridTextColumn Width="auto" Header="Status" Binding ="{Binding Status}" IsReadOnly="True"/>  
+                                <DataGridTextColumn Width="auto" Header="IO_Group_ID" Binding ="{Binding IO_group_id}" IsReadOnly="True"/> 
+                                <DataGridTextColumn Width="auto" Header="IO_Group_Name" Binding ="{Binding IO_group_Name}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Serial_Number" Binding ="{Binding Serial_Number}" IsReadOnly="True"/>  
+                                <DataGridTextColumn Width="auto" Header="Product_MTM" Binding ="{Binding Product_MTM}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Code_Level" Binding ="{Binding Code_Level}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Config_Node" Binding ="{Binding Config_Node}" IsReadOnly="True"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                        </StackPanel>  
+                    </Grid>
+                </StackPanel> 
                 </Grid> 
             </ScrollViewer>
         </GroupBox>

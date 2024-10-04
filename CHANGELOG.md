@@ -6,23 +6,33 @@ All notable changes to this project will be documented in this file.
 - Storage Host WWPN overview
 - Storage RC and FC 
 - Stoarge Auditlog
-- Storage Stats
-- Storage Revision of the Storagehealthcheck
 - Support for Virtual Fabrics
 - Small SAN Healthcheck
 
 # [v1.2.0] - 2024-tbd
 ### Added
 - IBM Storage Security check
+- IBM Storage Base information (this function must be confirmed for a svc-cluster by the check in the first line of the settings panel, the default setting is FlashSystems)
+- IBM Storage replication policies information on the system (Important this is only possible with IBM Spectrum Virtualize software 8.6.x)
+- IBM Storage Volume replication information for a volume group (Important this is only possible with IBM Spectrum Virtualize software 8.5.x)
+- IBM MDiskInfo as an stand-alone function to remain flexible for further developments
+- IBM UserInfo as an stand-alone function to remain flexible for further developments
+- IBM VolumeInfo as an stand-alone function to remain flexible for further developments
+- Tooltips for the tables and columns where it makes sense.
+- Reginon for better readability
 
 ### Fixed
 
 
 ### Changed
 - GUI from Storage Healthcheck compl. redesigned 
+- GUI from IBM Spectrum Virtualize Panel, due to the new possibilities, a breakdown by software version has now been made.
+- PortBufferShow from Listview to Datagrid
+- the control function of the storage health checks has been completely revised to be more flexible for later developments.
+- Tooltips adjusted for most buttons.
 
 ### Removed
-
+- some unnecessary array creations
 
 # [v1.1.1] - 2024-09-27
 ### Added
