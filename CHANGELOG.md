@@ -11,6 +11,8 @@ All notable changes to this project will be documented in this file.
 
 # [v1.2.0] - 2024-tbd
 ### Added
+- FOS Sensor BasicInfo
+- FOS SFP BasicDetails
 - IBM Storage Security check
 - IBM Storage Base information (this function must be confirmed for a svc-cluster by the check in the first line of the settings panel, the default setting is FlashSystems)
 - IBM Storage replication policies information on the system (Important this is only possible with IBM Spectrum Virtualize software 8.6.x)

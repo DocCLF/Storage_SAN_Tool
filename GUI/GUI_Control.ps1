@@ -112,18 +112,7 @@ catch {
 $TD_LogoImage.Source = "$PSRootPath\Resources\PROFI_Logo_2022_dark.png"
 $TD_LogoImageSmall.Source = "$PSRootPath\Resources\PROFI_Logo_2022_dark.png"
 $TD_LogoImageSmall.Visibility = "hidden"
-#$TD_tb_sanIPAdr             
-#$TD_tb_sanIPAdrOne          
-#$TD_tb_sanIPAdrThree        
-#$TD_tb_sanIPAdrTwo          
-#$TD_tb_sanPassword          
-#$TD_tb_sanPasswordOne       
-#$TD_tb_sanPasswordThree     
-#$TD_tb_sanPasswordTwo       
-#$TD_tb_sanUserName          
-#$TD_tb_sanUserNameOne       
-#$TD_tb_sanUserNameThree     
-#$TD_tb_sanUserNameTwo       
+   
 
 <# start with functions #>
 function Get_CredGUIInfos {
@@ -1289,6 +1278,8 @@ $TD_btn_FOS_BasicSwitchInfo.add_click({
     $TD_stp_sanPortErrorShow.Visibility="Collapsed"
     $TD_stp_sanSwitchShow.Visibility="Collapsed"
     $TD_stp_sanZoneDetailsShow.Visibility="Collapsed"
+    $TD_stp_sanSensorShow.Visibility="Collapsed"
+    $TD_stp_sanSFPShow.Visibility="Collapsed"
     $TD_stp_sanBasicSwitchInfo.Visibility="Visible"
 })
 
@@ -1355,6 +1346,8 @@ $TD_btn_FOS_SwitchShow.add_click({
     $TD_stp_sanPortBufferShow.Visibility="Collapsed"
     $TD_stp_sanPortErrorShow.Visibility="Collapsed"
     $TD_stp_sanZoneDetailsShow.Visibility="Collapsed"
+    $TD_stp_sanSensorShow.Visibility="Collapsed"
+    $TD_stp_sanSFPShow.Visibility="Collapsed"
     $TD_stp_sanSwitchShow.Visibility="Visible"
 })
 <# filter View for Host Volume Map #>
@@ -1479,6 +1472,8 @@ $TD_btn_FOS_ZoneDetailsShow.add_click({
     $TD_stp_sanPortErrorShow.Visibility="Collapsed"
     $TD_stp_sanSwitchShow.Visibility="Collapsed"
     $TD_stp_sanPortBufferShow.Visibility="Collapsed"
+    $TD_stp_sanSensorShow.Visibility="Collapsed"
+    $TD_stp_sanSFPShow.Visibility="Collapsed"
     $TD_stp_sanZoneDetailsShow.Visibility="Visible"
 })
 <# filter View for Host Volume Map #>
@@ -1591,7 +1586,71 @@ $TD_btn_FOS_PortLicenseShow.add_click({
     $TD_stp_sanPortBufferShow.Visibility="Collapsed"
     $TD_stp_sanSwitchShow.Visibility="Collapsed"
     $TD_stp_sanZoneDetailsShow.Visibility="Collapsed"
+    $TD_stp_sanSensorShow.Visibility="Collapsed"
+    $TD_stp_sanSFPShow.Visibility="Collapsed"
     $TD_stp_sanLicenseShow.Visibility="Visible"
+
+})
+
+$TD_btn_FOS_SensorShow.add_click({
+
+    $TD_Credentials=@()
+    $TD_Credentials_Checked = Get_CredGUIInfos -STP_ID 1 -TD_ConnectionTyp $TD_cb_sanConnectionTyp.Text -TD_IPAdresse $TD_tb_sanIPAdr.Text -TD_UserName $TD_tb_sanUserName.Text -TD_Password $TD_tb_sanPassword
+    $TD_Credentials += $TD_Credentials_Checked
+    Start-Sleep -Seconds 0.5
+
+    $TD_Credentials_Checked = Get_CredGUIInfos -STP_ID 2 -TD_ConnectionTyp $TD_cb_sanConnectionTypOne.Text -TD_IPAdresse $TD_tb_sanIPAdrOne.Text -TD_UserName $TD_tb_sanUserNameOne.Text -TD_Password $TD_tb_sanPasswordOne
+    $TD_Credentials += $TD_Credentials_Checked
+    Start-Sleep -Seconds 0.5
+
+    $TD_Credentials_Checked = Get_CredGUIInfos -STP_ID 3 -TD_ConnectionTyp $TD_cb_sanConnectionTypTwo.Text -TD_IPAdresse $TD_tb_sanIPAdrTwo.Text -TD_UserName $TD_tb_sanUserNameTwo.Text -TD_Password $TD_tb_sanPasswordTwo
+    $TD_Credentials += $TD_Credentials_Checked
+    Start-Sleep -Seconds 0.5
+
+    $TD_Credentials_Checked = Get_CredGUIInfos -STP_ID 4 -TD_ConnectionTyp $TD_cb_sanConnectionTypThree.Text -TD_IPAdresse $TD_tb_sanIPAdrThree.Text -TD_UserName $TD_tb_sanUserNameThree.Text -TD_Password $TD_tb_sanPasswordThree
+    $TD_Credentials += $TD_Credentials_Checked
+    Start-Sleep -Seconds 0.5
+
+    foreach($TD_Credential in $TD_Credentials){
+        <# QaD needs a Codeupdate #>
+        $TD_FOS_SensorShow =@()
+        switch ($TD_Credential.ID) {
+            {($_ -eq 1)} 
+            {   
+                $TD_FOS_SensorShow += FOS_SensorShow -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.SANUserName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $TD_Credential.SANPassword -TD_Exportpath $TD_tb_ExportPath.Text -TD_FOSVersion $TD_cb_FOS_Version.Text
+                Start-Sleep -Seconds 0.2
+                $TD_tb_SensorInfoOne.Text = (Out-String -InputObject $TD_FOS_SensorShow)
+            }
+            {($_ -eq 2) }
+            {            
+                $TD_FOS_SensorShow += FOS_SensorShow -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.SANUserName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $TD_Credential.SANPassword -TD_Exportpath $TD_tb_ExportPath.Text -TD_FOSVersion $TD_cb_FOS_Version.Text
+                Start-Sleep -Seconds 0.2
+                $TD_tb_SensorInfoTwo.Text = (Out-String -InputObject $TD_FOS_SensorShow)
+            }
+            {($_ -eq 3) }
+            {            
+                $TD_FOS_SensorShow += FOS_SensorShow -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.SANUserName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $TD_Credential.SANPassword -TD_Exportpath $TD_tb_ExportPath.Text -TD_FOSVersion $TD_cb_FOS_Version.Text
+                Start-Sleep -Seconds 0.2
+                $TD_tb_SensorInfoThree.Text = (Out-String -InputObject $TD_FOS_SensorShow)
+            }
+            {($_ -eq 4) }
+            {            
+                $TD_FOS_SensorShow += FOS_SensorShow -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.SANUserName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $TD_Credential.SANPassword -TD_Exportpath $TD_tb_ExportPath.Text -TD_FOSVersion $TD_cb_FOS_Version.Text
+                Start-Sleep -Seconds 0.2
+                $TD_tb_SensorInfoFour.Text = (Out-String -InputObject $TD_FOS_SensorShow)
+            }
+            Default {Write-Debug "Nothing" }
+        }
+    }
+
+    $TD_stp_sanBasicSwitchInfo.Visibility="Collapsed"
+    $TD_stp_sanPortErrorShow.Visibility="Collapsed"
+    $TD_stp_sanPortBufferShow.Visibility="Collapsed"
+    $TD_stp_sanSwitchShow.Visibility="Collapsed"
+    $TD_stp_sanZoneDetailsShow.Visibility="Collapsed"
+    $TD_stp_sanLicenseShow.Visibility="Collapsed"
+    $TD_stp_sanSFPShow.Visibility="Collapsed"
+    $TD_stp_sanSensorShow.Visibility="Visible"
 
 })
 
@@ -1655,8 +1714,75 @@ $TD_btn_FOS_PortErrorShow.add_click({
     $TD_stp_sanPortBufferShow.Visibility="Collapsed"
     $TD_stp_sanSwitchShow.Visibility="Collapsed"
     $TD_stp_sanZoneDetailsShow.Visibility="Collapsed"
+    $TD_stp_sanSensorShow.Visibility="Collapsed"
+    $TD_stp_sanSFPShow.Visibility="Collapsed"
     $TD_stp_sanPortErrorShow.Visibility="Visible"
 })
+
+$TD_btn_FOS_SFPHealthShow.add_click({
+    $TD_Credentials=@()
+    $TD_Credentials_Checked = Get_CredGUIInfos -STP_ID 1 -TD_ConnectionTyp $TD_cb_sanConnectionTyp.Text -TD_IPAdresse $TD_tb_sanIPAdr.Text -TD_UserName $TD_tb_sanUserName.Text -TD_Password $TD_tb_sanPassword
+    $TD_Credentials += $TD_Credentials_Checked
+    Start-Sleep -Seconds 0.5
+
+    $TD_Credentials_Checked = Get_CredGUIInfos -STP_ID 2 -TD_ConnectionTyp $TD_cb_sanConnectionTypOne.Text -TD_IPAdresse $TD_tb_sanIPAdrOne.Text -TD_UserName $TD_tb_sanUserNameOne.Text -TD_Password $TD_tb_sanPasswordOne
+    $TD_Credentials += $TD_Credentials_Checked
+    Start-Sleep -Seconds 0.5
+
+    $TD_Credentials_Checked = Get_CredGUIInfos -STP_ID 3 -TD_ConnectionTyp $TD_cb_sanConnectionTypTwo.Text -TD_IPAdresse $TD_tb_sanIPAdrTwo.Text -TD_UserName $TD_tb_sanUserNameTwo.Text -TD_Password $TD_tb_sanPasswordTwo
+    $TD_Credentials += $TD_Credentials_Checked
+    Start-Sleep -Seconds 0.5
+
+    $TD_Credentials_Checked = Get_CredGUIInfos -STP_ID 4 -TD_ConnectionTyp $TD_cb_sanConnectionTypThree.Text -TD_IPAdresse $TD_tb_sanIPAdrThree.Text -TD_UserName $TD_tb_sanUserNameThree.Text -TD_Password $TD_tb_sanPasswordThree
+    $TD_Credentials += $TD_Credentials_Checked
+    Start-Sleep -Seconds 0.5
+
+    foreach($TD_Credential in $TD_Credentials){
+        <# QaD needs a Codeupdate #>
+        $TD_FOS_SFPDetailsShow =@()
+        #Write-Debug -Message $TD_Credential
+        switch ($TD_Credential.ID) {
+            {($_ -eq 1)} 
+            {   
+                $TD_FOS_SFPDetailsShow += FOS_SFPDetails -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.SANUserName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $TD_Credential.SANPassword -TD_Exportpath $TD_tb_ExportPath.Text
+                Start-Sleep -Seconds 0.5
+                $TD_dg_SFPShowOne.ItemsSource =$TD_FOS_SFPDetailsShow
+            }
+            {($_ -eq 2) } 
+            {            
+                $TD_FOS_SFPDetailsShow += FOS_SFPDetails -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.SANUserName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $TD_Credential.SANPassword -TD_Exportpath $TD_tb_ExportPath.Text
+                Start-Sleep -Seconds 0.5
+                $TD_dg_SFPShowTwo.ItemsSource =$TD_FOS_SFPDetailsShow
+            }
+            {($_ -eq 3) } 
+            {            
+                $TD_FOS_SFPDetailsShow += FOS_SFPDetails -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.SANUserName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $TD_Credential.SANPassword -TD_Exportpath $TD_tb_ExportPath.Text
+                Start-Sleep -Seconds 0.5
+                $TD_dg_SFPShowThree.ItemsSource =$TD_FOS_SFPDetailsShow
+            }
+            {($_ -eq 4) }
+            {            
+                $TD_FOS_SFPDetailsShow += FOS_SFPDetails -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.SANUserName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $TD_Credential.SANPassword -TD_Exportpath $TD_tb_ExportPath.Text
+                Start-Sleep -Seconds 0.5
+                $TD_dg_SFPShowFour.ItemsSource =$TD_FOS_SFPDetailsShow
+            }
+            Default {Write-Debug "Nothing" }
+        }
+    }
+
+    <#Chang to correct Content etc.#>
+    <#$TD_label_ExpPHVM.Content ="Export Path: $($TD_tb_ExportPath.Text)"#>
+    Start-Sleep -Seconds 0.5
+    $TD_stp_sanBasicSwitchInfo.Visibility="Collapsed"
+    $TD_stp_sanLicenseShow.Visibility="Collapsed"
+    $TD_stp_sanPortBufferShow.Visibility="Collapsed"
+    $TD_stp_sanSwitchShow.Visibility="Collapsed"
+    $TD_stp_sanZoneDetailsShow.Visibility="Collapsed"
+    $TD_stp_sanSensorShow.Visibility="Collapsed"
+    $TD_stp_sanPortErrorShow.Visibility="Collapsed"
+    $TD_stp_sanSFPShow.Visibility="Visible"
+})
+
 <# Unnecessary duplicated code with TD_btn_FOS_PortErrorShow, needs a better implementation but for the first step it's okay. #>
 $TD_btn_StatsClear.add_click({
     $TD_Credentials=@()
@@ -1891,6 +2017,8 @@ $TD_btn_FOS_PortBufferShow.add_click({
     $TD_stp_sanPortErrorShow.Visibility="Collapsed"
     $TD_stp_sanSwitchShow.Visibility="Collapsed"
     $TD_stp_sanZoneDetailsShow.Visibility="Collapsed"
+    $TD_stp_sanSensorShow.Visibility="Collapsed"
+    $TD_stp_sanSFPShow.Visibility="Collapsed"
     $TD_stp_sanPortBufferShow.Visibility="Visible"
 })
 #endregion
