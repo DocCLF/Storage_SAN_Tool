@@ -28,13 +28,13 @@ function FOS_SFPDetails {
     
     process {
         $TD_SFPDetailsResault = foreach ($TD_SFP in $FOS_SFPInformations){
-            $TD_SFPInfo = "" | Select-Object Port,SFPTyp,Vendor,SerialNo,SpeedRange,Health,MediaInfo
+            $TD_SFPInfo = "" | Select-Object Port,SFPTyp,Vendor,SerialNo,SpeedRange,HealthStatus,MediaInfo
             $TD_SFPInfo.Port = ($TD_SFP|Select-String -Pattern '^Port\s+(\d+)' -AllMatches).Matches.Groups[1].Value
             $TD_SFPInfo.SFPTyp = ($TD_SFP|Select-String -Pattern '\s+id\s+(\([a-z]+\))\s+' -AllMatches).Matches.Groups[1].Value
             $TD_SFPInfo.Vendor = ($TD_SFP|Select-String -Pattern '\s+Vendor:\s+([a-zA-Z]+)\s+' -AllMatches).Matches.Groups[1].Value
             $TD_SFPInfo.SerialNo = ($TD_SFP|Select-String -Pattern '\s+Serial\s+No:\s+([a-zA-Z0-9]+)\s+' -AllMatches).Matches.Groups[1].Value
             $TD_SFPInfo.SpeedRange = ($TD_SFP|Select-String -Pattern '\s+Speed:\s+(\d+,\d+,\d+[a-zA-Z_]+)\s+' -AllMatches).Matches.Groups[1].Value
-            $TD_SFPInfo.Health = ($TD_SFP|Select-String -Pattern '\s+Health:\s+(Green|Yellow|Unknown|Paused)\s+' -AllMatches).Matches.Groups[1].Value
+            $TD_SFPInfo.HealthStatus = ($TD_SFP|Select-String -Pattern '\s+Health:\s+(Green|Yellow|Unknown|Paused)\s+' -AllMatches).Matches.Groups[1].Value
             $TD_SFPInfo.MediaInfo = ($TD_SFP|Select-String -Pattern '\s+([a-zA-Z]+\s+[a-zA-Z]+\s+[a-zA-Z]+)$' -AllMatches).Matches.Groups[1].Value
             $TD_SFPInfo
 

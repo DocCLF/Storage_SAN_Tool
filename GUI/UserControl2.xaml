@@ -323,19 +323,19 @@
                     </Grid.RowDefinitions>
                     <StackPanel Grid.Row="0" Grid.Column="0" >
                         <Label Content="Switch 1" />
-                        <TextBox HorizontalAlignment="Left" TextWrapping="WrapWithOverflow" x:Name="lb_SANInfoOne" Margin="5,0,5,5" IsReadOnly="True"/>
+                        <TextBox HorizontalAlignment="Left" TextWrapping="WrapWithOverflow" x:Name="lb_SANInfoOne" Margin="5,0,5,5" IsReadOnly="True" Visibility="Collapsed"/>
                     </StackPanel>
                     <StackPanel Grid.Row="0" Grid.Column="1"  >
                         <Label Content="Switch 2" />
-                        <TextBox HorizontalAlignment="Left" TextWrapping="WrapWithOverflow" x:Name="lb_SANInfoTwo" Margin="5,0,5,5" IsReadOnly="True"/>
+                        <TextBox HorizontalAlignment="Left" TextWrapping="WrapWithOverflow" x:Name="lb_SANInfoTwo" Margin="5,0,5,5" IsReadOnly="True" Visibility="Collapsed"/>
                     </StackPanel>
                     <StackPanel Grid.Row="1" Grid.Column="0"  >
                         <Label Content="Switch 3" />
-                        <TextBox HorizontalAlignment="Left" TextWrapping="WrapWithOverflow" x:Name="lb_SANInfoThree" Margin="5,0,5,5" IsReadOnly="True"/>
+                        <TextBox HorizontalAlignment="Left" TextWrapping="WrapWithOverflow" x:Name="lb_SANInfoThree" Margin="5,0,5,5" IsReadOnly="True" Visibility="Collapsed"/>
                     </StackPanel>
                     <StackPanel Grid.Row="1" Grid.Column="1" >
                         <Label Content="Switch 4" />
-                        <TextBox HorizontalAlignment="Left" TextWrapping="WrapWithOverflow" x:Name="lb_SANInfoFour" Margin="5,0,5,5" IsReadOnly="True">
+                        <TextBox HorizontalAlignment="Left" TextWrapping="WrapWithOverflow" x:Name="lb_SANInfoFour" Margin="5,0,5,5" IsReadOnly="True" Visibility="Collapsed">
                             <TextBox.ToolTip>
                                 <StackPanel>
                                     <Image Source="data\flower.jpg"/>
@@ -358,19 +358,19 @@
                     </Grid.RowDefinitions>
                     <StackPanel Grid.Row="0" Grid.Column="0" >
                         <Label Content="Switch 1" />
-                        <TextBox HorizontalAlignment="Left" TextWrapping="WrapWithOverflow" x:Name="tb_SensorInfoOne" Margin="5,0,5,5" IsReadOnly="True"/>
+                        <TextBox HorizontalAlignment="Left" TextWrapping="WrapWithOverflow" x:Name="tb_SensorInfoOne" Margin="5,0,5,5" IsReadOnly="True" Visibility="Collapsed"/>
                     </StackPanel>
                     <StackPanel Grid.Row="0" Grid.Column="1"  >
                         <Label Content="Switch 2" />
-                        <TextBox HorizontalAlignment="Left" TextWrapping="WrapWithOverflow" x:Name="tb_SensorInfoTwo" Margin="5,0,5,5" IsReadOnly="True"/>
+                        <TextBox HorizontalAlignment="Left" TextWrapping="WrapWithOverflow" x:Name="tb_SensorInfoTwo" Margin="5,0,5,5" IsReadOnly="True" Visibility="Collapsed"/>
                     </StackPanel>
                     <StackPanel Grid.Row="1" Grid.Column="0"  >
                         <Label Content="Switch 3" />
-                        <TextBox HorizontalAlignment="Left" TextWrapping="WrapWithOverflow" x:Name="tb_SensorInfoThree" Margin="5,0,5,5" IsReadOnly="True"/>
+                        <TextBox HorizontalAlignment="Left" TextWrapping="WrapWithOverflow" x:Name="tb_SensorInfoThree" Margin="5,0,5,5" IsReadOnly="True" Visibility="Collapsed"/>
                     </StackPanel>
                     <StackPanel Grid.Row="1" Grid.Column="1" >
                         <Label Content="Switch 4" />
-                        <TextBox HorizontalAlignment="Left" TextWrapping="WrapWithOverflow" x:Name="tb_SensorInfoFour" Margin="5,0,5,5" IsReadOnly="True" />
+                        <TextBox HorizontalAlignment="Left" TextWrapping="WrapWithOverflow" x:Name="tb_SensorInfoFour" Margin="5,0,5,5" IsReadOnly="True" Visibility="Collapsed" />
                     </StackPanel>
                 </Grid>
             </StackPanel>
@@ -1370,7 +1370,7 @@
                                 <DataGridTextColumn Width="auto" Header="Vendor"  Binding ="{Binding Vendor}" IsReadOnly="True"/>  
                                 <DataGridTextColumn Width="auto" Header="Serial No" Binding ="{Binding SerialNo}" IsReadOnly="True"/>  
                                 <DataGridTextColumn Width="auto" Header="Speed Range" Binding ="{Binding SpeedRange}" IsReadOnly="True"/> 
-                                <DataGridTextColumn Width="auto" Header="Health" Binding ="{Binding Health}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Health" Binding ="{Binding HealthStatus}" IsReadOnly="True"/>
                             </DataGrid.Columns>
                         </DataGrid>
                     </StackPanel>

@@ -30,9 +30,8 @@ function FOS_SensorShow {
     
     process {
         <# int for the progressbar #>
-        $ProgressBar = New-ProgressBar
         Write-ProgressBar -ProgressBar $ProgressBar -Activity "Collect data for Device $($TD_Line_ID)" -PercentComplete ((10/50) * 100)
-        Start-Sleep -Seconds 1;
+        Start-Sleep -Seconds 0.5;
     }
     
     end {

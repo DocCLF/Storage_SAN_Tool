@@ -32,6 +32,7 @@ All notable changes to this project will be documented in this file.
 - PortBufferShow from Listview to Datagrid
 - the control function of the storage health checks has been completely revised to be more flexible for later developments.
 - Tooltips adjusted for most buttons.
+- some other annoying GUI Bugs
 
 ### Removed
 - some unnecessary array creations

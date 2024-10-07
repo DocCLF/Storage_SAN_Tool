@@ -1557,24 +1557,28 @@ $TD_btn_FOS_PortLicenseShow.add_click({
             {   
                 $TD_FOS_PortLicenseShow += FOS_PortLicenseShowInfo -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.SANUserName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $TD_Credential.SANPassword -TD_Exportpath $TD_tb_ExportPath.Text -TD_FOSVersion $TD_cb_FOS_Version.Text
                 Start-Sleep -Seconds 1
+                $TD_lb_SANInfoOne.Visibility="Visible"
                 $TD_lb_SANInfoOne.Text = (Out-String -InputObject $TD_FOS_PortLicenseShow)
             }
             {($_ -eq 2) } <# -or ($_ -eq 3) -or ($_ -eq 4)}  for later use maybe #>
             {            
                 $TD_FOS_PortLicenseShow += FOS_PortLicenseShowInfo -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.SANUserName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $TD_Credential.SANPassword -TD_Exportpath $TD_tb_ExportPath.Text -TD_FOSVersion $TD_cb_FOS_Version.Text
                 Start-Sleep -Seconds 1
+                $TD_lb_SANInfoTwo.Visibility="Visible"
                 $TD_lb_SANInfoTwo.Text = (Out-String -InputObject $TD_FOS_PortLicenseShow)
             }
             {($_ -eq 3) } <# -or ($_ -eq 3) -or ($_ -eq 4)}  for later use maybe #>
             {            
                 $TD_FOS_PortLicenseShow += FOS_PortLicenseShowInfo -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.SANUserName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $TD_Credential.SANPassword -TD_Exportpath $TD_tb_ExportPath.Text -TD_FOSVersion $TD_cb_FOS_Version.Text
                 Start-Sleep -Seconds 1
+                $TD_lb_SANInfoThree.Visibility="Visible"
                 $TD_lb_SANInfoThree.Text = (Out-String -InputObject $TD_FOS_PortLicenseShow)
             }
             {($_ -eq 4) }
             {            
                 $TD_FOS_PortLicenseShow += FOS_PortLicenseShowInfo -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.SANUserName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $TD_Credential.SANPassword -TD_Exportpath $TD_tb_ExportPath.Text -TD_FOSVersion $TD_cb_FOS_Version.Text
                 Start-Sleep -Seconds 1
+                $TD_lb_SANInfoFour.Visibility="Visible"
                 $TD_lb_SANInfoFour.Text = (Out-String -InputObject $TD_FOS_PortLicenseShow)
             }
             Default {Write-Debug "Nothing" }
@@ -1619,24 +1623,28 @@ $TD_btn_FOS_SensorShow.add_click({
             {   
                 $TD_FOS_SensorShow += FOS_SensorShow -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.SANUserName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $TD_Credential.SANPassword -TD_Exportpath $TD_tb_ExportPath.Text -TD_FOSVersion $TD_cb_FOS_Version.Text
                 Start-Sleep -Seconds 0.2
+                $TD_tb_SensorInfoOne.Visibility="Visible"
                 $TD_tb_SensorInfoOne.Text = (Out-String -InputObject $TD_FOS_SensorShow)
             }
             {($_ -eq 2) }
             {            
                 $TD_FOS_SensorShow += FOS_SensorShow -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.SANUserName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $TD_Credential.SANPassword -TD_Exportpath $TD_tb_ExportPath.Text -TD_FOSVersion $TD_cb_FOS_Version.Text
                 Start-Sleep -Seconds 0.2
+                $TD_tb_SensorInfoTwo.Visibility="Visible"
                 $TD_tb_SensorInfoTwo.Text = (Out-String -InputObject $TD_FOS_SensorShow)
             }
             {($_ -eq 3) }
             {            
                 $TD_FOS_SensorShow += FOS_SensorShow -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.SANUserName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $TD_Credential.SANPassword -TD_Exportpath $TD_tb_ExportPath.Text -TD_FOSVersion $TD_cb_FOS_Version.Text
                 Start-Sleep -Seconds 0.2
+                $TD_tb_SensorInfoThree.Visibility="Visible"
                 $TD_tb_SensorInfoThree.Text = (Out-String -InputObject $TD_FOS_SensorShow)
             }
             {($_ -eq 4) }
             {            
                 $TD_FOS_SensorShow += FOS_SensorShow -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.SANUserName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $TD_Credential.SANPassword -TD_Exportpath $TD_tb_ExportPath.Text -TD_FOSVersion $TD_cb_FOS_Version.Text
                 Start-Sleep -Seconds 0.2
+                $TD_tb_SensorInfoFour.Visibility="Visible"
                 $TD_tb_SensorInfoFour.Text = (Out-String -InputObject $TD_FOS_SensorShow)
             }
             Default {Write-Debug "Nothing" }

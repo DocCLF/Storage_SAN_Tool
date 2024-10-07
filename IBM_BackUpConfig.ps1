@@ -28,7 +28,7 @@ function IBM_BackUpConfig {
         Write-Debug -Message "IBM_BackUpConfig Begin block |$(Get-Date)"
         <# int for the progressbar #>
         $ProgressBar = New-ProgressBar
-        Write-ProgressBar -ProgressBar $ProgressBar -Activity "Collect data for Device $($TD_Line_ID)" -PercentComplete ((10/50) * 100)
+        
         
         if($TD_Device_ConnectionTyp -eq "ssh"){
             try {
@@ -58,7 +58,7 @@ function IBM_BackUpConfig {
 
     process{
         Write-Debug -Message "IBM_BackUpConfig Process block |$(Get-Date)"
-
+        Write-ProgressBar -ProgressBar $ProgressBar -Activity "Collect data for Device $($TD_Line_ID)" -PercentComplete ((25/50) * 100)
         try {
             $TD_ExportFiles = Get-ChildItem -Path $TD_Exportpath -Filter "svc.config.backup.* "
             <# maybe add a filter #>
