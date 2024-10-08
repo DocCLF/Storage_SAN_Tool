@@ -23,21 +23,22 @@ function IBM_BaseStorageInfos {
         switch ($TD_Storage) {
             "FSystem" { 
                 if($TD_Device_ConnectionTyp -eq "ssh"){
-                    $TD_BaseInformations = ssh $TD_Device_UserName@$TD_Device_DeviceIP 'lsnodecanister && lsnodecanister -nohdr |while read id name IO_group_id;do lsnodecanister -delim : $id ;echo;done'
+                    $TD_BaseInformations = ssh $TD_Device_UserName@$TD_Device_DeviceIP 'lsnodecanister -delim : && lsnodecanister -nohdr |while read id name IO_group_id;do lsnodecanister -delim : $id ;echo;done'
                 }else {
-                    $TD_BaseInformations = plink $TD_Device_UserName@$TD_Device_DeviceIP -pw $TD_Device_PW -batch 'lsnodecanister && lsnodecanister -nohdr |while read id name IO_group_id;do lsnodecanister -delim : $id ;echo;done'
+                    $TD_BaseInformations = plink $TD_Device_UserName@$TD_Device_DeviceIP -pw $TD_Device_PW -batch 'lsnodecanister -delim : && lsnodecanister -nohdr |while read id name IO_group_id;do lsnodecanister -delim : $id ;echo;done'
                 }
               }
             "SVC" { 
                 if($TD_Device_ConnectionTyp -eq "ssh"){
-                    $TD_BaseInformations = ssh $TD_Device_UserName@$TD_Device_DeviceIP 'lsnode -nohdr |while read id name IO_group_id;do lsnode -delim : $id;echo;done'
+                    $TD_BaseInformations = ssh $TD_Device_UserName@$TD_Device_DeviceIP 'lsnode -delim : |while read id name IO_group_id;do lsnode -delim : $id;echo;done'
                 }else {
-                    $TD_BaseInformations = plink $TD_Device_UserName@$TD_Device_DeviceIP -pw $TD_Device_PW -batch 'lsnode -nohdr |while read id name IO_group_id;do lsnode -delim : $id;echo;done'
+                    $TD_BaseInformations = plink $TD_Device_UserName@$TD_Device_DeviceIP -pw $TD_Device_PW -batch 'lsnode -delim : |while read id name IO_group_id;do lsnode -delim : $id;echo;done'
                 }
              }
             Default {}
         }
-        &TD_BaseInformations = $TD_BaseInformations |Select-Object -Skip 1
+        $TD_BaseInformations = $TD_BaseInformations |Select-Object -Skip 1
+        #$TD_BaseInformations = Get-Content -Path "C:\Users\mailt\Documents\testnodeinfo.txt"
     }
     
     process {
