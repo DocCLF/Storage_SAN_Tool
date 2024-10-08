@@ -77,11 +77,11 @@ function IBM_StorageSecurity {
             Write-ProgressBar -ProgressBar $ProgressBar -Activity "Collect data for Device $($TD_Line_ID)" -PercentComplete (($ProgCounter/$TD_DeviceInformation.Count) * 100)
         }
         Start-Sleep -Seconds 0.5
-        Close-ProgressBar -ProgressBar $ProgressBar
+        
     }
     
     end {
-        
+        Close-ProgressBar -ProgressBar $ProgressBar
         if($TD_Export -eq "yes"){
             <# exported as .\<nbr>_Host_Volume_Map_Result_<date>.csv #>
             if([string]$TD_Exportpath -ne "$PSCommandPath\Export\"){

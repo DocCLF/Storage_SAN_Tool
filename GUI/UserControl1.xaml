@@ -1095,7 +1095,7 @@
                         </StackPanel>
                     </Grid>
                 </StackPanel>
-                <StackPanel  x:Name="stp_BaseStorageInfo" Orientation="Horizontal" Margin="2" Visibility="{Binding ElementName=btn_IBM_FCPortStats, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
+                <StackPanel  x:Name="stp_BaseStorageInfo" Orientation="Horizontal" Margin="2" Visibility="{Binding ElementName=btn_IBM_BaseStorageInfo, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="auto" />
@@ -1121,10 +1121,11 @@
                                 <DataGridTextColumn Width="auto" Header="Status" Binding ="{Binding Status}" IsReadOnly="True"/>  
                                 <DataGridTextColumn Width="auto" Header="IO_Group_ID" Binding ="{Binding IO_group_id}" IsReadOnly="True"/> 
                                 <DataGridTextColumn Width="auto" Header="IO_Group_Name" Binding ="{Binding IO_group_Name}" IsReadOnly="True"/>
-                                <DataGridTextColumn Width="auto" Header="Serial_Number" Binding ="{Binding Serial_Number}" IsReadOnly="True"/>  
-                                <DataGridTextColumn Width="auto" Header="Product_MTM" Binding ="{Binding Product_MTM}" IsReadOnly="True"/>
-                                <DataGridTextColumn Width="auto" Header="Code_Level" Binding ="{Binding Code_Level}" IsReadOnly="True"/>
-                                <DataGridTextColumn Width="auto" Header="Config_Node" Binding ="{Binding Config_Node}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Serial Number" Binding ="{Binding Serial_Number}" IsReadOnly="True"/>  
+                                <DataGridTextColumn Width="auto" Header="Code Level" Binding ="{Binding Code_Level}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Config Node" Binding ="{Binding Config_Node}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="SideID" Binding ="{Binding SideID}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Side Name" Binding ="{Binding SideName}" IsReadOnly="True"/>
                             </DataGrid.Columns>
                         </DataGrid>
                         <DataGrid Grid.Row="1" Grid.Column="1" x:Name="dg_BaseStorageInfoTwo" AutoGenerateColumns="False" Margin="5,20,5,5" MaxHeight="400">
@@ -1144,10 +1145,11 @@
                                 <DataGridTextColumn Width="auto" Header="Status" Binding ="{Binding Status}" IsReadOnly="True"/>  
                                 <DataGridTextColumn Width="auto" Header="IO_Group_ID" Binding ="{Binding IO_group_id}" IsReadOnly="True"/> 
                                 <DataGridTextColumn Width="auto" Header="IO_Group_Name" Binding ="{Binding IO_group_Name}" IsReadOnly="True"/>
-                                <DataGridTextColumn Width="auto" Header="Serial_Number" Binding ="{Binding Serial_Number}" IsReadOnly="True"/>  
-                                <DataGridTextColumn Width="auto" Header="Product_MTM" Binding ="{Binding Product_MTM}" IsReadOnly="True"/>
-                                <DataGridTextColumn Width="auto" Header="Code_Level" Binding ="{Binding Code_Level}" IsReadOnly="True"/>
-                                <DataGridTextColumn Width="auto" Header="Config_Node" Binding ="{Binding Config_Node}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Serial Number" Binding ="{Binding Serial_Number}" IsReadOnly="True"/>  
+                                <DataGridTextColumn Width="auto" Header="Code Level" Binding ="{Binding Code_Level}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Config Node" Binding ="{Binding Config_Node}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="SideID" Binding ="{Binding SideID}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Side Name" Binding ="{Binding SideName}" IsReadOnly="True"/>
                             </DataGrid.Columns>
                         </DataGrid>
                         <DataGrid Grid.Row="1" Grid.Column="1" x:Name="dg_BaseStorageInfoThree" AutoGenerateColumns="False" Margin="5,20,5,5" MaxHeight="400">
@@ -1167,10 +1169,11 @@
                                 <DataGridTextColumn Width="auto" Header="Status" Binding ="{Binding Status}" IsReadOnly="True"/>  
                                 <DataGridTextColumn Width="auto" Header="IO_Group_ID" Binding ="{Binding IO_group_id}" IsReadOnly="True"/> 
                                 <DataGridTextColumn Width="auto" Header="IO_Group_Name" Binding ="{Binding IO_group_Name}" IsReadOnly="True"/>
-                                <DataGridTextColumn Width="auto" Header="Serial_Number" Binding ="{Binding Serial_Number}" IsReadOnly="True"/>  
-                                <DataGridTextColumn Width="auto" Header="Product_MTM" Binding ="{Binding Product_MTM}" IsReadOnly="True"/>
-                                <DataGridTextColumn Width="auto" Header="Code_Level" Binding ="{Binding Code_Level}" IsReadOnly="True"/>
-                                <DataGridTextColumn Width="auto" Header="Config_Node" Binding ="{Binding Config_Node}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Serial Number" Binding ="{Binding Serial_Number}" IsReadOnly="True"/>  
+                                <DataGridTextColumn Width="auto" Header="Code Level" Binding ="{Binding Code_Level}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Config Node" Binding ="{Binding Config_Node}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="SideID" Binding ="{Binding SideID}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Side Name" Binding ="{Binding SideName}" IsReadOnly="True"/>
                             </DataGrid.Columns>
                         </DataGrid>
                         <DataGrid Grid.Row="1" Grid.Column="1" x:Name="dg_BaseStorageInfoFour" AutoGenerateColumns="False" Margin="5,20,5,5" MaxHeight="400">
@@ -1190,10 +1193,11 @@
                                 <DataGridTextColumn Width="auto" Header="Status" Binding ="{Binding Status}" IsReadOnly="True"/>  
                                 <DataGridTextColumn Width="auto" Header="IO_Group_ID" Binding ="{Binding IO_group_id}" IsReadOnly="True"/> 
                                 <DataGridTextColumn Width="auto" Header="IO_Group_Name" Binding ="{Binding IO_group_Name}" IsReadOnly="True"/>
-                                <DataGridTextColumn Width="auto" Header="Serial_Number" Binding ="{Binding Serial_Number}" IsReadOnly="True"/>  
-                                <DataGridTextColumn Width="auto" Header="Product_MTM" Binding ="{Binding Product_MTM}" IsReadOnly="True"/>
-                                <DataGridTextColumn Width="auto" Header="Code_Level" Binding ="{Binding Code_Level}" IsReadOnly="True"/>
-                                <DataGridTextColumn Width="auto" Header="Config_Node" Binding ="{Binding Config_Node}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Serial Number" Binding ="{Binding Serial_Number}" IsReadOnly="True"/>  
+                                <DataGridTextColumn Width="auto" Header="Code Level" Binding ="{Binding Code_Level}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Config Node" Binding ="{Binding Config_Node}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="SideID" Binding ="{Binding SideID}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Side Name" Binding ="{Binding SideName}" IsReadOnly="True"/>
                             </DataGrid.Columns>
                         </DataGrid>
                         </StackPanel>  
