@@ -35,12 +35,12 @@ function IBM_FCPortStats {
         [Parameter(ValueFromPipeline)]
         [ValidateSet("yes","no")]
         [string]$TD_export = "yes",
-        [string]$TD_Exportpath,
-        [string]$TD_RefreshView
+        [string]$TD_Exportpath
     )
     begin {
         <# suppresses error messages #>
         $ErrorActionPreference="SilentlyContinue"
+        $TD_lb_PortStatsErrorInfo.Visibility="Collapsed"
         $TD_PortStats_Overview = @()
         $NodeList =@()
         [int]$ProgCounter=0
@@ -50,31 +50,41 @@ function IBM_FCPortStats {
         $ProgressBar = New-ProgressBar
         <# Connect to Device and get all needed Data #>
         if($TD_Storage -eq "FSystem"){
-            if($TD_RefreshView -eq "Update"){
-                <# tbt #>
-            }else{
-                if($TD_Device_ConnectionTyp -eq "ssh"){
+            if($TD_Device_ConnectionTyp -eq "ssh"){
+                try {
                     $TD_CollectInfos = ssh $TD_Device_UserName@$TD_Device_DeviceIP 'lsnodecanister -nohdr |while read id name IO_group_id;do lsnodecanister $id;echo;done && lsnodecanister -nohdr |while read id name IO_group_id;do lsportstats -node $id ;echo;done'
-                }else{
+                }
+                catch {
+                    <#Do this if a terminating exception happens#>
+                    Write-Host "Something went wrong, pls check if it is a SVC Connection" -ForegroundColor DarkMagenta
+                    Write-Host $_.Exception.Message
+                    $TD_lb_PortStatsErrorInfo.Visibility="Visible"
+                    $TD_lb_PortStatsErrorInfo.Content = "At Panel $TD_Line_ID is following Problem,`n $($_.Exception.Message)"
+                }
+            }else{
+                try {
                     $TD_CollectInfos = plink $TD_Device_UserName@$TD_Device_DeviceIP -pw $TD_Device_PW -batch 'lsnodecanister -nohdr |while read id name IO_group_id;do lsnodecanister $id;echo;done && lsnodecanister -nohdr |while read id name IO_group_id;do lsportstats -node $id ;echo;done'
+                }
+                catch {
+                    <#Do this if a terminating exception happens#>
+                    Write-Host "Something went wrong, pls check if it is a SVC Connection" -ForegroundColor DarkMagenta
+                    Write-Host $_.Exception.Message
+                    $TD_lb_PortStatsErrorInfo.Visibility="Visible"
+                    $TD_lb_PortStatsErrorInfo.Content = "At Panel $TD_Line_ID is following Problem,`n $($_.Exception.Message)"
                 }
             }
         }else {
-            if($TD_RefreshView -eq "Update"){
-                <# tbt #>
+            if($TD_Device_ConnectionTyp -eq "ssh"){
+                $TD_CollectInfos = ssh $TD_Device_UserName@$TD_Device_DeviceIP 'lsnode -nohdr |while read id name IO_group_id;do lsnode $id;echo;done && lsnode -nohdr |while read id name IO_group_id;do lsportstats -node $id ;echo;done'
             }else{
-                if($TD_Device_ConnectionTyp -eq "ssh"){
-                    $TD_CollectInfos = ssh $TD_Device_UserName@$TD_Device_DeviceIP 'lsnode -nohdr |while read id name IO_group_id;do lsnode $id;echo;done && lsnode -nohdr |while read id name IO_group_id;do lsportstats -node $id ;echo;done'
-                }else{
-                    $TD_CollectInfos = plink $TD_Device_UserName@$TD_Device_DeviceIP -pw $TD_Device_PW -batch 'lsnode -nohdr |while read id name IO_group_id;do lsnode $id;echo;done && lsnode -nohdr |while read id name IO_group_id;do lsportstats -node $id ;echo;done'
-                }
+                $TD_CollectInfos = plink $TD_Device_UserName@$TD_Device_DeviceIP -pw $TD_Device_PW -batch 'lsnode -nohdr |while read id name IO_group_id;do lsnode $id;echo;done && lsnode -nohdr |while read id name IO_group_id;do lsportstats -node $id ;echo;done'
             }
         }
         #Start-Sleep -Seconds 0.5
         #$TD_CollectInfos = Get-Content -Path C:\Users\mailt\Documents\lsportstats.txt
     }
+
     process {
-        
         foreach($TD_CollectInfo in $TD_CollectInfos){
             if(Select-String -InputObject $TD_CollectInfo -Pattern $test){ 
                 <# Node Info#>
@@ -137,6 +147,7 @@ function IBM_FCPortStats {
             Write-ProgressBar -ProgressBar $ProgressBar -Activity "Collect data for Device $($TD_Line_ID)" -PercentComplete (($ProgCounter/$TD_CollectInfos.Count) * 100)
         }
     }
+
     end {
         Close-ProgressBar -ProgressBar $ProgressBar
         <# export y or n #>
@@ -147,19 +158,10 @@ function IBM_FCPortStats {
             }else {
                 $TD_PortStats_Overview | Export-Csv -Path $PSScriptRoot\Export\$($TD_Line_ID)_FCPortStatsOverview_$(Get-Date -Format "yyyy-MM-dd").csv -NoTypeInformation
             }
-            #Write-Host "The Export can be found at $TD_Exportpath " -ForegroundColor Green
-            #Invoke-Item "$TD_Exportpath\FCPortStatsOverview_$(Get-Date -Format "yyyy-MM-dd").csv"
         }else {
             <# output on the promt #>
-            #Write-Host "Result:`n" -ForegroundColor Yellow
-            Start-Sleep -Seconds 0.5
             return $TD_PortStats_Overview
         }
-	    #Write-Host $TD_PortStats_Overview -ForegroundColor Yellow
         return $TD_PortStats_Overview
-        <# wait a moment #>
-        #Start-Sleep -Seconds 1
-        <# Cleanup all TD* Vars #>
-        #Clear-Variable TD* -Scope Global
     }
 }

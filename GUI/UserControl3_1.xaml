@@ -193,6 +193,7 @@
                             <ColumnDefinition MinWidth="400" MaxWidth="800" />
                         </Grid.ColumnDefinitions>
                         <Label Grid.Column="0" x:Name="lb_MdiskStatusLight" Content="Pool Check" Margin="10,0,20,0" Style="{StaticResource MainLabelStyle}" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Height="26" Background="Green" />
+                        <Label Grid.Column="2" x:Name="lb_MDiskErrorInfo" Content="" Visibility="Collapsed" Style="{StaticResource MainLabelStyle}" Margin="2,5,0,5"/> 
                         <DataGrid Grid.Column="2" x:Name="dg_MdiskStatusInfoText" AutoGenerateColumns="False" Margin="10" MaxHeight="400">
                             <DataGrid.Style>
                                 <Style TargetType="DataGrid">

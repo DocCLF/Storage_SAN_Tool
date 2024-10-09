@@ -84,28 +84,22 @@ function IBM_EventLog {
             Write-ProgressBar -ProgressBar $ProgressBar -Activity "Collect data for Device $($TD_Line_ID)" -PercentComplete (($ProgCounter/$TD_CollectEventInfo.Count) * 100)
         }
     }
+    
     end {
         Close-ProgressBar -ProgressBar $ProgressBar
         <# returns the hashtable for further processing, not mandatory but the safe way #>
         Write-Debug -Message "IBM_EventLog End block |$(Get-Date) `n"
         <# export y or n #>
         if($TD_Export -eq "yes"){
-            <# exported to .\Host_Volume_Map_Result.csv #>
             if([string]$TD_Exportpath -ne "$PSRootPath\Export\"){
                 $TD_EventCollection | Export-Csv -Path $TD_Exportpath\$($TD_Line_ID)_EventLog_Result_$(Get-Date -Format "yyyy-MM-dd").csv -NoTypeInformation
-                #Write-Host "The Export can be found at $TD_Exportpath " -ForegroundColor Green
             }else {
                 $TD_EventCollection | Export-Csv -Path $PSScriptRoot\Export\$($TD_Line_ID)_EventLog_Result_$(Get-Date -Format "yyyy-MM-dd").csv -NoTypeInformation
-                #Write-Host "The Export can be found at $PSScriptRoot\Export\ " -ForegroundColor Green
             }
-            
-            #Invoke-Item "$TD_Exportpath\Host_Volume_Map_Result_$(Get-Date -Format "yyyy-MM-dd").csv"
         }else {
             <# output on the promt #>
             return $TD_EventCollection
         }
-
         return $TD_EventCollection |Select-Object -Last 100
-        
     }
 }

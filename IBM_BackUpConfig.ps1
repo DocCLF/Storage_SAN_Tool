@@ -75,6 +75,5 @@ function IBM_BackUpConfig {
         Write-Debug -Message "IBM_BackUpConfig End block |$(Get-Date) `n"
         return $TD_ExportFiles
         Clear-Variable TD* -Scope Global
-
     }
 }

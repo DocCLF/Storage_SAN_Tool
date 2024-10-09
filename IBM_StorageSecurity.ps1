@@ -91,7 +91,6 @@ function IBM_StorageSecurity {
                 $TD_lsSecSettings | Export-Csv -Path $PSCommandPath\Export\$($TD_Line_ID)lssecurity_Result_$(Get-Date -Format "yyyy-MM-dd").csv -NoTypeInformation
                 Write-Host "The Export can be found at $PSCommandPath\Export\ " -ForegroundColor Green
             }
-            #Invoke-Item "$TD_Exportpath\Host_Volume_Map_Result_$(Get-Date -Format "yyyy-MM-dd").csv"
         }else {
             <# output on the promt #>
             return $TD_lsSecSettings

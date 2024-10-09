@@ -52,7 +52,6 @@ function IBM_IPQuorum {
     end {
         Close-ProgressBar -ProgressBar $ProgressBar
         if($TD_Export -eq "yes"){
-            <# exported as .\<nbr>_Host_Volume_Map_Result_<date>.csv #>
             if([string]$TD_Exportpath -ne "$PSCommandPath\Export\"){
                 $TD_Quorum | Export-Csv -Path $TD_Exportpath\$($TD_Line_ID)_Quorum_Result_$(Get-Date -Format "yyyy-MM-dd").csv -NoTypeInformation
                 Write-Host "The Export can be found at $TD_Exportpath " -ForegroundColor Green
@@ -60,7 +59,6 @@ function IBM_IPQuorum {
                 $TD_Quorum | Export-Csv -Path $PSCommandPath\Export\$($TD_Line_ID)_Quorum_Result_$(Get-Date -Format "yyyy-MM-dd").csv -NoTypeInformation
                 Write-Host "The Export can be found at $PSCommandPath\Export\ " -ForegroundColor Green
             }
-            #Invoke-Item "$TD_Exportpath\Host_Volume_Map_Result_$(Get-Date -Format "yyyy-MM-dd").csv"
         }else {
             <# output on the promt #>
             return $TD_Quorum

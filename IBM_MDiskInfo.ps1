@@ -14,13 +14,32 @@ function IBM_MDiskInfo {
     
     begin {
         $ErrorActionPreference="SilentlyContinue"
+        $TD_lb_MDiskErrorInfo.Visibility="Collapsed"
         [int]$ProgCounter=0
         $ProgressBar = New-ProgressBar
         <# Connect to Device and get all needed Data #>
         if($TD_Device_ConnectionTyp -eq "ssh"){
-            $TD_MDiskInformation = ssh $TD_Device_UserName@$TD_Device_DeviceIP 'lsmdisk -delim :'
+            try {
+                $TD_MDiskInformation = ssh $TD_Device_UserName@$TD_Device_DeviceIP 'lsmdisk -delim :'
+            }
+            catch {
+                <#Do this if a terminating exception happens#>
+                Write-Host "Something went wrong, pls check if it is a SVC Connection" -ForegroundColor DarkMagenta
+                Write-Host $_.Exception.Message
+                $TD_lb_MDiskErrorInfo.Visibility="Visible"
+                $TD_lb_MDiskErrorInfo.Content = "At Panel $TD_Line_ID is following Problem,`n $($_.Exception.Message)"
+            }
         }else {
-            $TD_MDiskInformation = plink $TD_Device_UserName@$TD_Device_DeviceIP -pw $TD_Device_PW -batch 'lsmdisk -delim :'
+            try {
+                $TD_MDiskInformation = plink $TD_Device_UserName@$TD_Device_DeviceIP -pw $TD_Device_PW -batch 'lsmdisk -delim :'
+            }
+            catch {
+                <#Do this if a terminating exception happens#>
+                Write-Host "Something went wrong, pls check if it is a SVC Connection" -ForegroundColor DarkMagenta
+                Write-Host $_.Exception.Message
+                $TD_lb_MDiskErrorInfo.Visibility="Visible"
+                $TD_lb_MDiskErrorInfo.Content = "At Panel $TD_Line_ID is following Problem,`n $($_.Exception.Message)"
+            }
         }
         $TD_MDiskInformation = $TD_MDiskInformation |Select-Object -Skip 1
     }

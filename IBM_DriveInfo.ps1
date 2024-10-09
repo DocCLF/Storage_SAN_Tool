@@ -51,17 +51,36 @@ function IBM_DriveInfo {
         [string]$TD_Exportpath
     )
     begin {
-
         <# suppresses error messages #>
         $ErrorActionPreference="SilentlyContinue"
+        $TD_lb_DriveErrorInfo.Visibility="Visible"
+
         $ProgressBar = New-ProgressBar
         $TD_DriveOverview = @()
         [int]$ProgCounter=0
         <# Connect to Device and get all needed Data #>
         if($TD_Device_ConnectionTyp -eq "ssh"){
-            $TD_CollectInfos = ssh $TD_Device_UserName@$TD_Device_DeviceIP 'lsnodecanister -nohdr |while read id name IO_group_id;do lsnodecanister $id;echo;done && lsdrive -nohdr |while read id name IO_group_id;do lsdrive $id ;echo;done'
+            try {
+                $TD_CollectInfos = ssh $TD_Device_UserName@$TD_Device_DeviceIP 'lsnodecanister -nohdr |while read id name IO_group_id;do lsnodecanister $id;echo;done && lsdrive -nohdr |while read id name IO_group_id;do lsdrive $id ;echo;done'
+            }
+            catch {
+                <#Do this if a terminating exception happens#>
+                Write-Host "Something went wrong, pls check if it is a SVC Connection" -ForegroundColor DarkMagenta
+                Write-Host $_.Exception.Message
+                $TD_lb_DriveErrorInfo.Visibility="Visible"
+                $TD_lb_DriveErrorInfo.Content = "At Panel $TD_Line_ID is following Problem,`n $($_.Exception.Message)"
+            }
         }else {
-            $TD_CollectInfos = plink $TD_Device_UserName@$TD_Device_DeviceIP -pw $TD_Device_PW -batch 'lsnodecanister -nohdr |while read id name IO_group_id;do lsnodecanister $id;echo;done && lsdrive -nohdr |while read id name IO_group_id;do lsdrive $id ;echo;done'
+            try {
+                $TD_CollectInfos = plink $TD_Device_UserName@$TD_Device_DeviceIP -pw $TD_Device_PW -batch 'lsnodecanister -nohdr |while read id name IO_group_id;do lsnodecanister $id;echo;done && lsdrive -nohdr |while read id name IO_group_id;do lsdrive $id ;echo;done'
+            }
+            catch {
+                <#Do this if a terminating exception happens#>
+                Write-Host "Something went wrong, pls check if it is a SVC Connection" -ForegroundColor DarkMagenta
+                Write-Host $_.Exception.Message
+                $TD_lb_DriveErrorInfo.Visibility="Visible"
+                $TD_lb_DriveErrorInfo.Content = "At Panel $TD_Line_ID is following Problem,`n $($_.Exception.Message)"
+            }
         }
         #$TD_CollectInfos = Get-Content -Path "C:\Users\mailt\Documents\lsdrive.txt"
         Write-Debug -Message "Number of Lines: $($TD_CollectInfos.count) "
@@ -72,7 +91,6 @@ function IBM_DriveInfo {
                 $TD_CollectInfosTemp = $TD_CollectInfos |Select-Object -Skip $_
                 if([string]::IsNullOrEmpty($TD_TransProt)){
                     $TD_TransProt = (($TD_CollectInfos|Select-String -Pattern '^transport_protocol\s+(\w+)' -AllMatches).Matches.Groups[1].Value)
-                    #Write-Host $TD_TransProt -ForegroundColor Red
                 }
             }
         }
@@ -134,18 +152,13 @@ function IBM_DriveInfo {
         
         <# export y or n #>
         if($TD_export -eq "yes"){
-            <# exported to .\Drive_Overview_(Date).csv #>
             if([string]$TD_Exportpath -ne "$PSRootPath\Export\"){
-                #Write-Host $TD_DriveOverview -ForegroundColor Green
                 $TD_DriveOverview | Export-Csv -Path $TD_Exportpath\$($TD_Line_ID)_$($TD_NodeSplitInfo.NodeName)_Drive_Overview_$(Get-Date -Format "yyyy-MM-dd").csv -NoTypeInformation
             }else {
-                #Write-Host $TD_DriveOverview -ForegroundColor Yellow
                 $TD_DriveOverview | Export-Csv -Path $PSScriptRoot\Export\$($TD_Line_ID)_$($TD_NodeSplitInfo.NodeName)_Drive_Overview_$(Get-Date -Format "yyyy-MM-dd").csv -NoTypeInformation
             }
-            #$TD_FileInfo=Get-ChildItem Host_Volume_Map_Result_$(Get-Date -Format "yyyy-MM-dd").csv -Recurse -ErrorAction SilentlyContinue
             Write-Host "The Export can be found at $TD_Exportpath " -ForegroundColor Green
             Start-Sleep -Seconds 0.5
-            #Invoke-Item "$TD_Exportpath\$($TD_NodeSplitInfo.NodeName)_Drive_Overview_$(Get-Date -Format "yyyy-MM-dd").csv"
         }else {
             <# output on the promt #>
             Write-Host "Result for:`nName: $($TD_NodeSplitInfo.NodeName) `nProduct: $($TD_NodeSplitInfo.ProdName) `nFirmware: $($TD_NodeSplitInfo.NodeFW)`n`n" -ForegroundColor Yellow
@@ -153,10 +166,6 @@ function IBM_DriveInfo {
             return $TD_DriveOverview
         }
         return $TD_DriveOverview
-        #Write-Host $TD_DriveOverview -ForegroundColor Green
-        <# wait a moment #>
-        #Start-Sleep -Seconds 1
-        <# Cleanup all TD* Vars #>
-        Clear-Variable TD* -Scope Global
+
     }
 }

@@ -17,28 +17,46 @@ function IBM_BaseStorageInfos {
     
     begin {
         $ErrorActionPreference="SilentlyContinue"
+        $TD_lb_BaseStorageErrorInfo.Visibility="Collapsed"
         [int]$ProgCounter=0
         $ProgressBar = New-ProgressBar
         <# Connect to Device and get all needed Data #>
         switch ($TD_Storage) {
             "FSystem" { 
                 if($TD_Device_ConnectionTyp -eq "ssh"){
-                    $TD_BaseInformations = ssh $TD_Device_UserName@$TD_Device_DeviceIP 'lsnodecanister -delim : && lsnodecanister -nohdr |while read id name IO_group_id;do lsnodecanister -delim : $id ;echo;done'
+                    try {
+                        $TD_BaseInformations = ssh $TD_Device_UserName@$TD_Device_DeviceIP 'lsnodecanister -delim : && lsnodecanister -nohdr |while read id name IO_group_id;do lsnodecanister -delim : $id ;echo;done'
+                    }
+                    catch {
+                        <#Do this if a terminating exception happens#>
+                        Write-Host "Something went wrong, pls check if it is a SVC Connection" -ForegroundColor DarkMagenta
+                        Write-Host $_.Exception.Message
+                        $TD_lb_BaseStorageErrorInfo.Visibility="Visible"
+                        $TD_lb_BaseStorageErrorInfo.Content = "At Panel $TD_Line_ID is following Problem,`n $($_.Exception.Message)"
+                    }
                 }else {
-                    $TD_BaseInformations = plink $TD_Device_UserName@$TD_Device_DeviceIP -pw $TD_Device_PW -batch 'lsnodecanister -delim : && lsnodecanister -nohdr |while read id name IO_group_id;do lsnodecanister -delim : $id ;echo;done'
+                    try {
+                        $TD_BaseInformations = plink $TD_Device_UserName@$TD_Device_DeviceIP -pw $TD_Device_PW -batch 'lsnodecanister -delim : && lsnodecanister -nohdr |while read id name IO_group_id;do lsnodecanister -delim : $id ;echo;done'
+                    }
+                    catch {
+                        <#Do this if a terminating exception happens#>
+                        Write-Host "Something went wrong, pls check if it is a SVC Connection" -ForegroundColor DarkMagenta
+                        Write-Host $_.Exception.Message
+                        $TD_lb_BaseStorageErrorInfo.Visibility="Visible"
+                        $TD_lb_BaseStorageErrorInfo.Content = "At Panel $TD_Line_ID is following Problem,`n $($_.Exception.Message)"
+                    }
                 }
               }
             "SVC" { 
                 if($TD_Device_ConnectionTyp -eq "ssh"){
-                    $TD_BaseInformations = ssh $TD_Device_UserName@$TD_Device_DeviceIP 'lsnode -delim : |while read id name IO_group_id;do lsnode -delim : $id;echo;done'
+                    $TD_BaseInformations = ssh $TD_Device_UserName@$TD_Device_DeviceIP 'lsnode -delim : && lsnode -nohdr |while read id name IO_group_id;do lsnode -delim : $id;echo;done'
                 }else {
-                    $TD_BaseInformations = plink $TD_Device_UserName@$TD_Device_DeviceIP -pw $TD_Device_PW -batch 'lsnode -delim : |while read id name IO_group_id;do lsnode -delim : $id;echo;done'
+                    $TD_BaseInformations = plink $TD_Device_UserName@$TD_Device_DeviceIP -pw $TD_Device_PW -batch 'lsnode -delim : && lsnode -nohdr |while read id name IO_group_id;do lsnode -delim : $id;echo;done'
                 }
              }
             Default {}
         }
         $TD_BaseInformations = $TD_BaseInformations |Select-Object -Skip 1
-        #$TD_BaseInformations = Get-Content -Path "C:\Users\mailt\Documents\testnodeinfo.txt"
     }
     
     process {
@@ -89,7 +107,6 @@ function IBM_BaseStorageInfos {
             Start-Sleep -Seconds 0.5
             return $TD_StorageInfo
         }
-
         return $TD_StorageInfo 
     }
 }

@@ -386,16 +386,16 @@
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="auto" />
+                            <RowDefinition Height="auto" />
                             <RowDefinition Height="*" />
                         </Grid.RowDefinitions>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="auto" />
                             <ColumnDefinition Width="auto" />
                         </Grid.ColumnDefinitions>
-                      <!--Label need a better place to avoid repetition of code 
-                        <Label Grid.Row="0" x:Name="label_ExpPDI" Content="Export Path :" Style="{StaticResource MainLabelStyle}" Margin="2,5,0,5"/> -->
-                        <StackPanel Grid.Row="0" Grid.Column="0" Orientation="Vertical">
-                        <Label x:Name="lb_DriveInfoOne" Content="No Device Info" Margin="0,5" FontSize="14" Height="26"/>
+                        <Label Grid.Row="0" Grid.ColumnSpan="2" x:Name="lb_DriveErrorInfo" Content="" Visibility="Collapsed" Style="{StaticResource MainLabelStyle}" Margin="2,5,0,5"/> 
+                        <StackPanel Grid.Row="1" Grid.Column="0" Orientation="Vertical">
+                        <Label x:Name="lb_DriveInfoOne" Content="No Device Info" Style="{StaticResource MainLabelStyle}" Padding="2" Margin="25,5,0,5"/>
                         <DataGrid x:Name="dg_DriveInfo" AutoGenerateColumns="False" Margin="5" MaxHeight="400">
                             <DataGrid.Style>
                                 <Style TargetType="DataGrid">
@@ -444,7 +444,7 @@
                             </DataGrid.Columns>
                         </DataGrid>
                         </StackPanel>
-                        <StackPanel Grid.Row="0" Grid.Column="1" Orientation="Vertical">
+                        <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Vertical">
                         <Label x:Name="lb_DriveInfoTwo" Content="No Device Info" Margin="0,5" FontSize="14" Height="26"/>
                         <DataGrid x:Name="dg_DriveInfoTwo" AutoGenerateColumns="False" Margin="5" MaxHeight="400">
                             <DataGrid.Style>
@@ -494,7 +494,7 @@
                             </DataGrid.Columns>
                         </DataGrid>
                         </StackPanel>
-                        <StackPanel Grid.Row="1" Grid.Column="0" Orientation="Vertical">
+                        <StackPanel Grid.Row="2" Grid.Column="0" Orientation="Vertical">
                         <Label x:Name="lb_DriveInfoThree" Content="No Device Info" Margin="0,5" FontSize="14" Height="26"/>
                         <DataGrid x:Name="dg_DriveInfoThree" AutoGenerateColumns="False" Margin="5" MaxHeight="400">
                             <DataGrid.Style>
@@ -544,7 +544,7 @@
                             </DataGrid.Columns>
                         </DataGrid>
                         </StackPanel>
-                        <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Vertical">
+                        <StackPanel Grid.Row="2" Grid.Column="1" Orientation="Vertical">
                         <Label x:Name="lb_DriveInfoFour" Content="No Device Info" Margin="0,5" FontSize="14" Height="26"/>
                         <DataGrid x:Name="dg_DriveInfoFour" AutoGenerateColumns="False" Margin="5" MaxHeight="400">
                             <DataGrid.Style>
@@ -600,13 +600,14 @@
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="auto" />
+                            <RowDefinition Height="auto" />
                             <RowDefinition Height="*" />
                         </Grid.RowDefinitions>
                         <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="2">
                         <!--Button need a implem. for more as one Storage  -->
                         <!-- <Button x:Name="btn_UpFilFCPS" Style="{StaticResource MainBtnStyle}" Content="Update Filter" /> -->
-                        <!--Label need a better place to avoid repetition of code
-                        <Label x:Name="label_ExpPFCPS" Content="Export Path :" Style="{StaticResource MainLabelStyle}" Margin="25,5,0,5"/> -->
+                        <!--Label need a better place to avoid repetition of code -->
+                        <Label x:Name="lb_PortStatsErrorInfo" Content="" Visibility="Collapsed" Style="{StaticResource MainLabelStyle}" Margin="25,5,0,5"/> 
                         <!--Label with info to command need to checked -->
                         <!-- <Label Content="You need admin rights to use this command." Style="{StaticResource MainLabelStyle}" Margin="10,5,0,5"/> -->
                         </StackPanel>
@@ -1102,6 +1103,7 @@
                             <RowDefinition Height="*" />
                         </Grid.RowDefinitions>
                         <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="2">
+                        <Label Grid.Row="0" Grid.ColumnSpan="2" x:Name="lb_BaseStorageErrorInfo" Content="" Visibility="Collapsed" Style="{StaticResource MainLabelStyle}" Margin="2,5,0,5"/>
                         </StackPanel>
                         <StackPanel Orientation="Vertical" Grid.Row="1">
                         <DataGrid Grid.Row="1" Grid.Column="1" x:Name="dg_BaseStorageInfoOne" AutoGenerateColumns="False" Margin="5" MaxHeight="400">

@@ -36,6 +36,7 @@ All notable changes to this project will be documented in this file.
 
 ### Removed
 - some unnecessary array creations
+- Code clean up
 
 # [v1.1.1] - 2024-09-27
 ### Added
