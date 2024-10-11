@@ -14,6 +14,7 @@ All notable changes to this project will be documented in this file.
 - FOS Sensor BasicInfo
 - FOS SFP BasicDetails
 - IBM Storage Security check
+- SSH-Agent and Key Support at Settings Panel
 - IBM Storage Base information (this function must be confirmed for a svc-cluster by the check in the first line of the settings panel, the default setting is FlashSystems)
 - IBM Storage replication policies information on the system (Important this is only possible with IBM Spectrum Virtualize software 8.6.x)
 - IBM Storage Volume replication information for a volume group (Important this is only possible with IBM Spectrum Virtualize software 8.5.x)
@@ -37,6 +38,10 @@ All notable changes to this project will be documented in this file.
 ### Removed
 - some unnecessary array creations
 - Code clean up
+
+### Known Bugs
+- Try-Catch does not give any feedback regarding the successful or unsuccessful execution of the ssh-agent commands
+
 
 # [v1.1.1] - 2024-09-27
 ### Added

@@ -59,13 +59,15 @@
             <RowDefinition Height="auto" />
             <RowDefinition Height="auto" />
             <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="auto" />
             <ColumnDefinition Width="auto" />
             <ColumnDefinition Width="auto" />
         </Grid.ColumnDefinitions>
-        <GroupBox Grid.Row="0" Grid.Column="0" Header="Storage Credentials"  HorizontalAlignment="Left" Margin="10,10,0,0"  VerticalAlignment="Top">
+        <GroupBox Grid.Row="1" Grid.Column="0" Header="Storage Credentials" MinWidth="820" HorizontalAlignment="Left" Margin="10,10,0,0"  VerticalAlignment="Top">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="auto" />
@@ -276,7 +278,7 @@
                 </StackPanel>
             </Grid>
         </GroupBox>
-        <GroupBox Grid.Row="1" Grid.Column="0" Header="SAN Credentials"  HorizontalAlignment="Left" Margin="10,10,0,0"  VerticalAlignment="Top">
+        <GroupBox Grid.Row="2" Grid.Column="0" Header="SAN Credentials" MinWidth="820" HorizontalAlignment="Left" Margin="10,10,0,0"  VerticalAlignment="Top">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="auto" />
@@ -485,7 +487,25 @@
                 </StackPanel>
             </Grid>
         </GroupBox>
-        <GroupBox Grid.Row="2" Grid.Column="0" Header="Export Settings"  HorizontalAlignment="Left" Margin="10,10,0,0"  VerticalAlignment="Top">
+        <GroupBox Grid.Row="3" Grid.Column="0" Header="SSH Settings" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                </Grid.RowDefinitions>
+                <StackPanel Grid.Row="0" >
+                    <Label x:Name="lb_SSHStatusMsg" Content="SSH Status is:" Foreground="Coral" FontSize="14" FontWeight="Bold" Padding="0" Margin="5" HorizontalAlignment="Left" Style="{StaticResource MainLabelStyle}" />    
+                    <Button x:Name="btn_Start_sshAgent" Content="Start ssh-agent" HorizontalAlignment="Left" Style="{StaticResource MainBtnStyle}" />
+                    <Label Content="If you want to change the status, start a pwsh session with admin rights or open this tool with admin rights." Foreground="Coral" FontSize="12" FontWeight="Bold" Margin="5,0,0,0" HorizontalAlignment="Left" Style="{StaticResource MainLabelStyle}" />
+                </StackPanel>
+                <StackPanel Grid.Row="1" Orientation="Horizontal">
+                    <TextBox x:Name="tb_pathtokey" Text="" ToolTip="path to private key" MinWidth="300" Margin="5" Style="{StaticResource MainTextBoxStyle}" />
+                    <Button x:Name="btn_addsshkey" Content="Add priv. Key" HorizontalAlignment="Left" Style="{StaticResource MainBtnStyle}" />
+                </StackPanel>
+            </Grid>
+        </GroupBox>
+        <GroupBox Grid.Row="4" Grid.Column="0" Header="Export Settings"  HorizontalAlignment="Left" Margin="10,10,0,0"  VerticalAlignment="Top">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="auto" />
@@ -493,12 +513,12 @@
                     <ColumnDefinition Width="auto" />
                 </Grid.ColumnDefinitions>
                 <Label Grid.Column="0" Content="Export Path :" Style="{StaticResource MainLabelStyle}"/>
-                <TextBox Grid.Column="1" x:Name="tb_ExportPath" MinWidth="300" MaxWidth="450" HorizontalAlignment="Left" HorizontalContentAlignment="Left" Style="{StaticResource MainTextBoxStyle}"/>
+                <TextBox Grid.Column="1" x:Name="tb_ExportPath" Text="" MinWidth="300" MaxWidth="450" HorizontalAlignment="Left" HorizontalContentAlignment="Left" Style="{StaticResource MainTextBoxStyle}"/>
                 <Button Grid.Column="2" x:Name="btn_ChangeExportPath" Content="Change Export Path" HorizontalAlignment="Left" Style="{StaticResource MainBtnStyle}"/>
             </Grid>
         </GroupBox>
-        <StackPanel Grid.Column="1" Orientation="Vertical">
-        <GroupBox Grid.Row="0" Header="Saved Credentials" HorizontalAlignment="Left" Margin="10,10,10,0" VerticalAlignment="Top">
+        <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Vertical">
+        <GroupBox Grid.Row="0" Header="Saved Credentials" MinHeight="122" HorizontalAlignment="Left" Margin="10,10,10,0" VerticalAlignment="Top">
         <Grid>
             <Grid.RowDefinitions>
                     <RowDefinition Height="auto" />

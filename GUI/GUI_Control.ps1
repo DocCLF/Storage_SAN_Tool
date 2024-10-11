@@ -96,17 +96,17 @@ try {
     $ExportFolderPath="$TD_ExporttoOD\StorageSANKit"
     If(!(Test-Path -Path $ExportFolderPath)){
         $TD_ExportFolderCreated = New-Item $ExportFolderPath -ItemType Directory
-        $TD_tb_Exportpath.Text = $TD_ExportFolderCreated.Name
+        $TD_tb_ExportPath.Text = $TD_ExportFolderCreated.Name
     }else{
-        $TD_tb_Exportpath.Text = $ExportFolderPath
+        $TD_tb_ExportPath.Text = $ExportFolderPath
         #PowerShell Create directory if not exists
     }
 }
 catch {
     <#Do this if a terminating exception happens#>
-    Write-Host "Something went wrong" -ForegroundColor DarkMagenta
+    Write-Host "Something went wrong" -ForegroundColor Blue
     Write-Host $_.Exception.Message
-    $label_ExpPath.Content = $_.Exception.Message
+    $TD_tb_Exportpath.Text = $_.Exception.Message
 }
 <# MainWindow Background IMG #>
 $TD_LogoImage.Source = "$PSRootPath\Resources\PROFI_Logo_2022_dark.png"
@@ -336,6 +336,78 @@ $TD_btn_Settings.add_click({
     $TD_UserContrArea.Children.Remove($TD_UserControl3)
     if($TD_LogoImageSmall.Visibility -eq "hidden"){$TD_LogoImageSmall.Visibility = "visible"}
 })
+
+#region SSH Setings
+<# ssh-agent check #>
+try {
+    $TD_lb_SSHStatusMsg.Visibility ="Visible"
+    $TD_lb_SSHStatusMsg.Content ="SSH-Agent Status is: $((Get-Service ssh-agent).Status)"
+    if(((Get-Service ssh-agent).Status)-eq "Running"){
+        $TD_btn_Start_sshAgent.Content="Stop ssh-agent"
+        $TD_btn_Start_sshAgent.Background="coral"
+    }
+}
+catch {
+    <#Do this if a terminating exception happens#>
+    Write-Host "Something went wrong" -ForegroundColor Yellow
+    Write-Host $_.Exception.Message
+    $TD_lb_SSHStatusMsg.Visibility ="Visible"
+    $TD_lb_SSHStatusMsg.Content ="$($_.Exception.Message)"
+}
+$TD_btn_Start_sshAgent.add_click({
+    $TD_btn_Text=$TD_btn_Start_sshAgent.Content
+    switch ($TD_btn_Text) {
+        {($_ -like "Start*")} { 
+                                $TD_btn_Start_sshAgent.Content="Stop ssh-agent"
+                                $TD_btn_Start_sshAgent.Background="coral"
+                                Start-Service ssh-agent
+                                $TD_lb_SSHStatusMsg.Content ="SSH-Agent Status is: $((Get-Service ssh-agent).Status)"
+                            }
+        {($_ -like "Stop*")} {    
+                                $TD_btn_Start_sshAgent.Content="Start ssh-agent"  
+                                $TD_btn_Start_sshAgent.Background="#FFDDDDDD"
+                                Stop-Service ssh-agent
+                                $TD_lb_SSHStatusMsg.Content ="SSH-Agent Status is: $((Get-Service ssh-agent).Status)"
+                            }
+        Default {Write-Output "Something went wrong" -ForegroundColor DarkMagenta}
+    }
+})
+
+$TD_btn_addsshkey.add_click({
+    $TD_btn_Text=$TD_btn_addsshkey.Content
+    switch ($TD_btn_Text) {
+        {($_ -like "Add*")} { 
+                                $TD_ImportaddsshkeyObj = OpenFile_from_Directory
+                                if($TD_ImportaddsshkeyObj.FileName -ne ""){
+                                    try {
+                                        ssh-add $TD_ImportaddsshkeyObj.FileName
+                                    }
+                                    catch {
+                                        <#Do this if a terminating exception happens#>
+                                        Write-Host "Something went wrong" -ForegroundColor Yellow
+                                        Write-Host $_.Exception.Message
+                                    }
+                                }
+                                $TD_tb_pathtokey.IsReadOnly="True"
+                                $TD_tb_pathtokey.Text= "$($TD_ImportaddsshkeyObj.FileName)"
+                                $TD_btn_addsshkey.Content="Remove priv. Key"
+                                $TD_btn_addsshkey.Background="coral"
+
+                            }
+        {($_ -like "Remove*")} {    
+                                $TD_btn_addsshkey.Content="Add priv. Key"  
+                                $TD_btn_addsshkey.Background="#FFDDDDDD"
+                                $SSHKeyNamePath=$TD_tb_pathtokey.Text
+                                $SSHKeyName = Split-Path -Path $SSHKeyNamePath -Leaf
+                                Write-Host $SSHKeyName
+                                ssh-add -d $SSHKeyName
+                                $TD_tb_pathtokey.Text= ""
+                            }
+        Default {Write-Output "Something went wrong" -ForegroundColor DarkMagenta}
+    }
+})
+#endregion
+
 <# Button SettingsArea Storage #>
 $TD_tbn_storageaddrmLine.add_click({
     <#log the txtbox (optional for later use)#>
