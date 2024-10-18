@@ -297,6 +297,7 @@ function OpenFile_from_Directory {
     return $openFileDialog
 }
 
+#region Menu Button
 <# Button Area Menu #>
 $TD_btn_IBM_SV.add_click({
     $TD_label_ExpPath.Content ="Export Path: $($TD_tb_ExportPath.Text)"
@@ -336,38 +337,55 @@ $TD_btn_Settings.add_click({
     $TD_UserContrArea.Children.Remove($TD_UserControl3)
     if($TD_LogoImageSmall.Visibility -eq "hidden"){$TD_LogoImageSmall.Visibility = "visible"}
 })
+#endregion
 
 #region SSH Setings
-<# ssh-agent check #>
-try {
-    $TD_lb_SSHStatusMsg.Visibility ="Visible"
-    $TD_lb_SSHStatusMsg.Content ="SSH-Agent Status is: $((Get-Service ssh-agent).Status)"
-    if(((Get-Service ssh-agent).Status)-eq "Running"){
-        $TD_btn_Start_sshAgent.Content="Stop ssh-agent"
-        $TD_btn_Start_sshAgent.Background="coral"
-    }
+<# ssh-agent Status check #>
+$TD_lb_SSHStatusMsg.Visibility ="Visible"
+$TD_lb_SSHStatusMsg.Content ="SSH-Agent Status is: $((Get-Service ssh-agent).Status)"
+if(((Get-Service ssh-agent).Status)-eq "Running"){
+    $TD_btn_Start_sshAgent.Content="Stop ssh-agent"
+    $TD_btn_Start_sshAgent.Background="coral"
+}else {
+    <# Action when all if and elseif conditions are false #>
+    $TD_btn_Start_sshAgent.Content="Start ssh-agent"
+    $TD_btn_Start_sshAgent.Background="#FFDDDDDD"
 }
-catch {
-    <#Do this if a terminating exception happens#>
-    Write-Host "Something went wrong" -ForegroundColor Yellow
-    Write-Host $_.Exception.Message
-    $TD_lb_SSHStatusMsg.Visibility ="Visible"
-    $TD_lb_SSHStatusMsg.Content ="$($_.Exception.Message)"
-}
+<# Try to start/stop the ssh-agent #>
 $TD_btn_Start_sshAgent.add_click({
     $TD_btn_Text=$TD_btn_Start_sshAgent.Content
     switch ($TD_btn_Text) {
         {($_ -like "Start*")} { 
-                                $TD_btn_Start_sshAgent.Content="Stop ssh-agent"
-                                $TD_btn_Start_sshAgent.Background="coral"
-                                Start-Service ssh-agent
-                                $TD_lb_SSHStatusMsg.Content ="SSH-Agent Status is: $((Get-Service ssh-agent).Status)"
+                                try {
+                                    $TD_btn_Start_sshAgent.Content="Stop ssh-agent"
+                                    $TD_btn_Start_sshAgent.Background="coral"
+                                    Start-Service ssh-agent -ErrorAction Stop
+                                }
+                                catch {
+                                    <#Do this if a terminating exception happens#>
+                                    $TD_btn_Start_sshAgent.Content="Start ssh-agent"
+                                    $TD_btn_Start_sshAgent.Background="#FFDDDDDD"
+                                    [string]$TD_SSHErrorMsg=$_.Exception.Message
+                                }
+                                
+                                $TD_lb_SSHStatusMsg.Content ="SSH-Agent Status is: $((Get-Service ssh-agent).Status) $($TD_SSHErrorMsg)"
+                                Clear-Variable -Name TD_SSHErrorMsg
                             }
-        {($_ -like "Stop*")} {    
-                                $TD_btn_Start_sshAgent.Content="Start ssh-agent"  
-                                $TD_btn_Start_sshAgent.Background="#FFDDDDDD"
-                                Stop-Service ssh-agent
-                                $TD_lb_SSHStatusMsg.Content ="SSH-Agent Status is: $((Get-Service ssh-agent).Status)"
+        {($_ -like "Stop*")} {
+                                try {
+                                    $TD_btn_Start_sshAgent.Content="Start ssh-agent"
+                                    $TD_btn_Start_sshAgent.Background="#FFDDDDDD"
+                                    Stop-Service ssh-agent -ErrorAction Stop
+                                }
+                                catch {
+                                    <#Do this if a terminating exception happens#>
+                                    $TD_btn_Start_sshAgent.Content="Stop ssh-agent"
+                                    $TD_btn_Start_sshAgent.Background="coral"
+                                    [string]$TD_SSHErrorMsg=$_.Exception.Message
+                                }
+
+                                $TD_lb_SSHStatusMsg.Content ="SSH-Agent Status is: $((Get-Service ssh-agent).Status) $($TD_SSHErrorMsg)"
+                                Clear-Variable -Name TD_SSHErrorMsg
                             }
         Default {Write-Output "Something went wrong" -ForegroundColor DarkMagenta}
     }
