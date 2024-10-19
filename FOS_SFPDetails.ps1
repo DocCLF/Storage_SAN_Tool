@@ -34,7 +34,7 @@ function FOS_SFPDetails {
             $TD_SFPInfo.Vendor = ($TD_SFP|Select-String -Pattern '\s+Vendor:\s+([a-zA-Z]+)\s+' -AllMatches).Matches.Groups[1].Value
             $TD_SFPInfo.SerialNo = ($TD_SFP|Select-String -Pattern '\s+Serial\s+No:\s+([a-zA-Z0-9]+)\s+' -AllMatches).Matches.Groups[1].Value
             $TD_SFPInfo.SpeedRange = ($TD_SFP|Select-String -Pattern '\s+Speed:\s+(\d+,\d+,\d+[a-zA-Z_]+)\s+' -AllMatches).Matches.Groups[1].Value
-            $TD_SFPInfo.HealthStatus = ($TD_SFP|Select-String -Pattern '\s+Health:\s+(Green|Yellow|Unknown|Paused)\s+' -AllMatches).Matches.Groups[1].Value
+            $TD_SFPInfo.HealthStatus = ($TD_SFP|Select-String -Pattern '\s+Health:\s+(Green|Yellow|Unknown|Paused)' -AllMatches).Matches.Groups[1].Value
             $TD_SFPInfo.MediaInfo = ($TD_SFP|Select-String -Pattern '\s+([a-zA-Z]+\s+[a-zA-Z]+\s+[a-zA-Z]+)$' -AllMatches).Matches.Groups[1].Value
             $TD_SFPInfo
 
