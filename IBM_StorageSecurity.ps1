@@ -85,10 +85,10 @@ function IBM_StorageSecurity {
         if($TD_Export -eq "yes"){
             <# exported as .\<nbr>_Host_Volume_Map_Result_<date>.csv #>
             if([string]$TD_Exportpath -ne "$PSCommandPath\Export\"){
-                $TD_lsSecSettings | Export-Csv -Path $TD_Exportpath\$($TD_Line_ID)lssecurity_Result_$(Get-Date -Format "yyyy-MM-dd").csv -NoTypeInformation
+                $TD_lsSecSettings | Export-Csv -Path $TD_Exportpath\$($TD_Line_ID)_lssecurity_Result_$(Get-Date -Format "yyyy-MM-dd").csv -NoTypeInformation
                 Write-Host "The Export can be found at $TD_Exportpath " -ForegroundColor Green
             }else {
-                $TD_lsSecSettings | Export-Csv -Path $PSCommandPath\Export\$($TD_Line_ID)lssecurity_Result_$(Get-Date -Format "yyyy-MM-dd").csv -NoTypeInformation
+                $TD_lsSecSettings | Export-Csv -Path $PSCommandPath\Export\$($TD_Line_ID)_lssecurity_Result_$(Get-Date -Format "yyyy-MM-dd").csv -NoTypeInformation
                 Write-Host "The Export can be found at $PSCommandPath\Export\ " -ForegroundColor Green
             }
         }else {
