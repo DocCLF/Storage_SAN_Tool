@@ -28,8 +28,9 @@ function FOS_SFPDetails {
     
     process {
         $TD_SFPDetailsResault = foreach ($TD_SFP in $FOS_SFPInformations){
-            $TD_SFPInfo = "" | Select-Object Port,SFPTyp,Vendor,SerialNo,SpeedRange,HealthStatus,MediaInfo
+            $TD_SFPInfo = "" | Select-Object Port,SFPUsed,SFPTyp,Vendor,SerialNo,SpeedRange,HealthStatus,MediaInfo
             $TD_SFPInfo.Port = ($TD_SFP|Select-String -Pattern '^Port\s+(\d+)' -AllMatches).Matches.Groups[1].Value
+            $TD_SFPInfo.SFPUsed = ($TD_SFP|Select-String -Pattern '^Port\s+\d+:\s+(Media\snot\sinstalled)' -AllMatches).Matches.Groups[1].Value <# for later use #>
             $TD_SFPInfo.SFPTyp = ($TD_SFP|Select-String -Pattern '\s+id\s+(\([a-z]+\))\s+' -AllMatches).Matches.Groups[1].Value
             $TD_SFPInfo.Vendor = ($TD_SFP|Select-String -Pattern '\s+Vendor:\s+([a-zA-Z]+)\s+' -AllMatches).Matches.Groups[1].Value
             $TD_SFPInfo.SerialNo = ($TD_SFP|Select-String -Pattern '\s+Serial\s+No:\s+([a-zA-Z0-9]+)\s+' -AllMatches).Matches.Groups[1].Value
