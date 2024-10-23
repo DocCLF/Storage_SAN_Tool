@@ -25,17 +25,20 @@ All notable changes to this project will be documented in this file.
 - Reginon for better readability
 
 ### Fixed
-
+- Regex error that was sometimes triggered when no host cluster is configured. 
 
 ### Changed
 - GUI from Storage Healthcheck compl. redesigned 
 - GUI from IBM Spectrum Virtualize Panel, due to the new possibilities, a breakdown by software version has now been made.
 - PortBufferShow from Listview to Datagrid
-- the control function of the storage health checks has been completely revised to be more flexible for later developments.
+- The control function of the storage health checks has been completely revised to be more flexible for later developments.
 - Tooltips adjusted for most buttons.
-- some other annoying GUI Bugs
+- DriveInfo shows a Information if the SVC Checkbox is checked
+- View of Host Volume Map Info
+- Some other annoying GUI Bugs
 
 ### Removed
+- try catch form DriveInfo Func
 - some unnecessary array creations
 - Code clean up
 

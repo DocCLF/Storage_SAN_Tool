@@ -303,8 +303,17 @@
                             <Button x:Name="btn_FilterHVM" Style="{StaticResource MainBtnStyle}" Content="Apply Filter" />
                             <Label x:Name="lb_ErrorMsgHVM" Foreground="Red" Content="" Style="{StaticResource MainLabelStyle}" Padding="2" Margin="25,5,0,5"/>
                         </StackPanel>
-                        <StackPanel Grid.Row="1" Orientation="Horizontal" >
+                        <StackPanel Grid.Row="1" Orientation="Vertical" >
                         <DataGrid x:Name="dg_HostVolInfo" AutoGenerateColumns="False" Margin="5,5,5,5" MaxHeight="400">
+                            <DataGrid.Style>
+                                <Style TargetType="DataGrid">
+                                    <Style.Triggers>
+                                        <Trigger Property="HasItems" Value="False">
+                                          <Setter Property="Visibility" Value="Collapsed"></Setter>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGrid.Style>
                             <DataGrid.Columns>
                                 <DataGridTextColumn Width="auto" Header="HostID" Binding="{Binding HostID}" IsReadOnly="True"/>
                                 <DataGridTextColumn Width="auto" Header="HostName" Binding="{Binding HostName}" IsReadOnly="True"/>

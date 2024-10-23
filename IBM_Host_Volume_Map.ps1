@@ -53,7 +53,7 @@ function IBM_Host_Volume_Map {
             $TD_CollectVolInfo = plink $TD_Device_UserName@$TD_Device_DeviceIP -pw $TD_Device_PW -batch "lshostvdiskmap -delim : && lsvdisk -delim :"
         }
         <# next line one for testing #>
-        #$TD_CollectVolInfo = Get-Content -Path "C:\Users\mailt\Documents\lsvdho.txt"
+        
         $TD_CollectVolInfo = $TD_CollectVolInfo |Select-Object -Skip 1
         $i = $TD_CollectVolInfo.Count
 
@@ -71,15 +71,13 @@ function IBM_Host_Volume_Map {
             <# creates the objects for the array #>
             $TD_SplitInfos = "" | Select-Object HostID,HostName,HostClusterID,HostCluster,VolumeID,VolumeName,UID,Capacity
             if($i -ge 1){
-                $TD_SplitInfos.HostID = ($line | Select-String -Pattern '([a-zA-Z0-9_-]+)' -AllMatches).Matches.Value[0]
-                $TD_SplitInfos.HostName = ($line | Select-String -Pattern '([a-zA-Z0-9_-]+)' -AllMatches).Matches.Value[1]
-                if((($line | Select-String -Pattern '([a-zA-Z0-9_-]+)' -AllMatches).Matches.Value[9])-ne "scsi"){
-                    $TD_SplitInfos.HostClusterID = ($line | Select-String -Pattern '([a-zA-Z0-9_-]+)' -AllMatches).Matches.Value[9]
-                    $TD_SplitInfos.HostCluster = ($line | Select-String -Pattern '([a-zA-Z0-9_-]+)' -AllMatches).Matches.Value[10]    
-                }
-                $TD_SplitInfos.VolumeID = ($line | Select-String -Pattern '([a-zA-Z0-9_-]+)' -AllMatches).Matches.Value[3]
-                $TD_SplitInfos.VolumeName = ($line | Select-String -Pattern '([a-zA-Z0-9_-]+)' -AllMatches).Matches.Value[4]
-                $TD_SplitInfos.UID = ($line | Select-String -Pattern '([a-zA-Z0-9_-]+)' -AllMatches).Matches.Value[5]
+                $TD_SplitInfos.HostID = ($line | Select-String -Pattern '^(\d+):([a-zA-Z0-9_-]+)' -AllMatches).Matches.Groups[1].Value
+                $TD_SplitInfos.HostName = ($line | Select-String -Pattern '^(\d+):([a-zA-Z0-9_-]+)' -AllMatches).Matches.Groups[2].Value
+                $TD_SplitInfos.VolumeID = ($line | Select-String -Pattern '(\d+):([a-zA-Z0-9_-]+):([0-9A-F]{32}):' -AllMatches).Matches.Groups[1].Value
+                $TD_SplitInfos.VolumeName = ($line | Select-String -Pattern '(\d+):([a-zA-Z0-9_-]+):([0-9A-F]{32}):' -AllMatches).Matches.Groups[2].Value
+                $TD_SplitInfos.UID = ($line | Select-String -Pattern ':([0-9A-F]{32}):' -AllMatches).Matches.Groups[1].Value
+                $TD_SplitInfos.HostClusterID = ($line | Select-String -Pattern ':(\d+|):([a-zA-Z0-9_-]+|):(scsi|fcnvme|tcpnvme|rdmanvme|)$' -AllMatches).Matches.Groups[1].Value
+                $TD_SplitInfos.HostCluster = ($line | Select-String -Pattern ':(\d+|):([a-zA-Z0-9_-]+|):(scsi|fcnvme|tcpnvme|rdmanvme|)$' -AllMatches).Matches.Groups[2].Value
                 
                 $TD_Resaults | ForEach-Object {
                     if(($TD_SplitInfos.UID) -eq (($_ | Select-String -Pattern '([0-9A-F]{32})' -AllMatches).Matches.Groups[1].Value)){

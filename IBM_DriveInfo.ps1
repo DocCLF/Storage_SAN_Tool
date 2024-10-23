@@ -60,27 +60,9 @@ function IBM_DriveInfo {
         [int]$ProgCounter=0
         <# Connect to Device and get all needed Data #>
         if($TD_Device_ConnectionTyp -eq "ssh"){
-            try {
-                $TD_CollectInfos = ssh $TD_Device_UserName@$TD_Device_DeviceIP 'lsnodecanister -nohdr |while read id name IO_group_id;do lsnodecanister $id;echo;done && lsdrive -nohdr |while read id name IO_group_id;do lsdrive $id ;echo;done'
-            }
-            catch {
-                <#Do this if a terminating exception happens#>
-                Write-Host "Something went wrong, pls check if it is a SVC Connection" -ForegroundColor DarkMagenta
-                Write-Host $_.Exception.Message
-                $TD_lb_DriveErrorInfo.Visibility="Visible"
-                $TD_lb_DriveErrorInfo.Content = "At Panel $TD_Line_ID is following Problem,`n $($_.Exception.Message)"
-            }
+            $TD_CollectInfos = ssh $TD_Device_UserName@$TD_Device_DeviceIP 'lsnodecanister -nohdr |while read id name IO_group_id;do lsnodecanister $id;echo;done && lsdrive -nohdr |while read id name IO_group_id;do lsdrive $id ;echo;done'
         }else {
-            try {
-                $TD_CollectInfos = plink $TD_Device_UserName@$TD_Device_DeviceIP -pw $TD_Device_PW -batch 'lsnodecanister -nohdr |while read id name IO_group_id;do lsnodecanister $id;echo;done && lsdrive -nohdr |while read id name IO_group_id;do lsdrive $id ;echo;done'
-            }
-            catch {
-                <#Do this if a terminating exception happens#>
-                Write-Host "Something went wrong, pls check if it is a SVC Connection" -ForegroundColor DarkMagenta
-                Write-Host $_.Exception.Message
-                $TD_lb_DriveErrorInfo.Visibility="Visible"
-                $TD_lb_DriveErrorInfo.Content = "At Panel $TD_Line_ID is following Problem,`n $($_.Exception.Message)"
-            }
+            $TD_CollectInfos = plink $TD_Device_UserName@$TD_Device_DeviceIP -pw $TD_Device_PW -batch 'lsnodecanister -nohdr |while read id name IO_group_id;do lsnodecanister $id;echo;done && lsdrive -nohdr |while read id name IO_group_id;do lsdrive $id ;echo;done'
         }
         #$TD_CollectInfos = Get-Content -Path "C:\Users\mailt\Documents\lsdrive.txt"
         Write-Debug -Message "Number of Lines: $($TD_CollectInfos.count) "

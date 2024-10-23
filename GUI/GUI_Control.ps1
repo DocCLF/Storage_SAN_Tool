@@ -840,19 +840,19 @@ $TD_btn_IBM_DriveInfo.add_click({
     $TD_Credentials=@()
     $TD_Credentials_Checked = Get_CredGUIInfos -STP_ID 1 -TD_ConnectionTyp $TD_cb_storageConnectionTyp.Text -TD_IPAdresse $TD_tb_storageIPAdr.Text -TD_UserName $TD_tb_storageUserName.Text -TD_Password $TD_tb_storagePassword
     $TD_Credentials += $TD_Credentials_Checked
-    Start-Sleep -Seconds 0.5
+    Start-Sleep -Seconds 0.2
 
     $TD_Credentials_Checked = Get_CredGUIInfos -STP_ID 2 -TD_ConnectionTyp $TD_cb_storageConnectionTypOne.Text -TD_IPAdresse $TD_tb_storageIPAdrOne.Text -TD_UserName $TD_tb_storageUserNameOne.Text -TD_Password $TD_tb_storagePasswordOne
     $TD_Credentials += $TD_Credentials_Checked
-    Start-Sleep -Seconds 0.5
+    Start-Sleep -Seconds 0.2
 
     $TD_Credentials_Checked = Get_CredGUIInfos -STP_ID 3 -TD_ConnectionTyp $TD_cb_storageConnectionTypTwo.Text -TD_IPAdresse $TD_tb_storageIPAdrTwo.Text -TD_UserName $TD_tb_storageUserNameTwo.Text -TD_Password $TD_tb_storagePasswordTwo 
     $TD_Credentials += $TD_Credentials_Checked
-    Start-Sleep -Seconds 0.5
+    Start-Sleep -Seconds 0.2
 
     $TD_Credentials_Checked = Get_CredGUIInfos -STP_ID 4 -TD_ConnectionTyp $TD_cb_storageConnectionTypThree.Text -TD_IPAdresse $TD_tb_storageIPAdrThree.Text -TD_UserName $TD_tb_storageUserNameThree.Text -TD_Password $TD_tb_storagePasswordThree
     $TD_Credentials += $TD_Credentials_Checked
-    Start-Sleep -Seconds 0.5
+    Start-Sleep -Seconds 0.2
 
     foreach($TD_Credential in $TD_Credentials){
         <# QaD needs a Codeupdate #>
@@ -860,27 +860,32 @@ $TD_btn_IBM_DriveInfo.add_click({
         #Write-Host  $TD_Credential.ID -ForegroundColor Green
         switch ($TD_Credential.ID) {
             {($_ -eq 1)} 
-            {            
-                $TD_DriveInfo = IBM_DriveInfo -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.StorageUserName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $TD_Credential.StoragePassword -TD_Exportpath $TD_tb_ExportPath.Text
-                Start-Sleep -Seconds 0.5
+            {   <# if checkbox is checked the first row will used for svc-cluster #>
+                if(!($TD_cb_StorageSVCone.IsChecked)){
+                $TD_DriveInfo = IBM_DriveInfo -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.StorageUserName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $TD_Credential.StoragePassword -TD_Storage $TD_cb_FCPortStatsDevice -TD_Exportpath $TD_tb_ExportPath.Text
+                Start-Sleep -Seconds 0.2
                 $TD_dg_DriveInfo.ItemsSource = $TD_DriveInfo
+                }else {
+                    <# Action when all if and elseif conditions are false #>
+                    $TD_lb_DriveInfoOne.Visibility = "Visible"; $TD_lb_DriveInfoOne.Content = "An SVC has no any hard drives or FlashCore Modules."
+                }
             }
             {($_ -eq 2)} 
             {            
                 $TD_DriveInfo = IBM_DriveInfo -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.StorageUserName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $TD_Credential.StoragePassword -TD_Exportpath $TD_tb_ExportPath.Text
-                Start-Sleep -Seconds 0.5
+                Start-Sleep -Seconds 0.2
                 $TD_dg_DriveInfoTwo.ItemsSource = $TD_DriveInfo
             }
             {($_ -eq 3)} 
             {            
                 $TD_DriveInfo = IBM_DriveInfo -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.StorageUserName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $TD_Credential.StoragePassword -TD_Exportpath $TD_tb_ExportPath.Text
-                Start-Sleep -Seconds 0.5
+                Start-Sleep -Seconds 0.2
                 $TD_dg_DriveInfoThree.ItemsSource = $TD_DriveInfo
             }
             {($_ -eq 4)} 
             {            
                 $TD_DriveInfo = IBM_DriveInfo -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.StorageUserName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $TD_Credential.StoragePassword -TD_Exportpath $TD_tb_ExportPath.Text
-                Start-Sleep -Seconds 0.5
+                Start-Sleep -Seconds 0.2
                 $TD_dg_DriveInfoFour.ItemsSource = $TD_DriveInfo
             }
         Default {Write-Debug "Nothing" }
