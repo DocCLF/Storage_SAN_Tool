@@ -146,16 +146,12 @@ function FOS_PortErrShowInfos {
             }else {
                 $FOS_PortErrShowfiltered | Export-Csv -Path $PSScriptRoot\Export\$($TD_Line_ID)_PortErrShow_Result_$(Get-Date -Format "yyyy-MM-dd").csv -NoTypeInformation
             }
-            Write-Host "The Export can be found at $TD_Exportpath " -ForegroundColor Green
-            #Invoke-Item "$TD_Exportpath\Host_Volume_Map_Result_$(Get-Date -Format "yyyy-MM-dd").csv"
         }else {
             <# output on the promt #>
             return $FOS_PortErrShowfiltered
         }
 
         return $FOS_PortErrShowfiltered
-
-        <# Cleanup all TD* Vars #>
-        #Clear-Variable FOS* -Scope Global
+        
     }
 }

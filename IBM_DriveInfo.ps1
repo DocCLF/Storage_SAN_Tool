@@ -46,6 +46,9 @@ function IBM_DriveInfo {
         [string]$TD_Device_DeviceIP,
         [string]$TD_Device_PW,
         [Parameter(ValueFromPipeline)]
+        [ValidateSet("FSystem","SVC")]
+        [string]$TD_Storage = "FSystem",
+        [Parameter(ValueFromPipeline)]
         [ValidateSet("yes","no")]
         [string]$TD_Export = "yes",
         [string]$TD_Exportpath
@@ -53,16 +56,19 @@ function IBM_DriveInfo {
     begin {
         <# suppresses error messages #>
         $ErrorActionPreference="SilentlyContinue"
-        $TD_lb_DriveErrorInfo.Visibility="Visible"
-
         $ProgressBar = New-ProgressBar
         $TD_DriveOverview = @()
         [int]$ProgCounter=0
         <# Connect to Device and get all needed Data #>
-        if($TD_Device_ConnectionTyp -eq "ssh"){
-            $TD_CollectInfos = ssh $TD_Device_UserName@$TD_Device_DeviceIP 'lsnodecanister -nohdr |while read id name IO_group_id;do lsnodecanister $id;echo;done && lsdrive -nohdr |while read id name IO_group_id;do lsdrive $id ;echo;done'
+        if($TD_Storage -eq "FSystem"){
+            if($TD_Device_ConnectionTyp -eq "ssh"){
+                $TD_CollectInfos = ssh $TD_Device_UserName@$TD_Device_DeviceIP 'lsnodecanister -nohdr |while read id name IO_group_id;do lsnodecanister $id;echo;done && lsdrive -nohdr |while read id name IO_group_id;do lsdrive $id ;echo;done'
+            }else {
+                $TD_CollectInfos = plink $TD_Device_UserName@$TD_Device_DeviceIP -pw $TD_Device_PW -batch 'lsnodecanister -nohdr |while read id name IO_group_id;do lsnodecanister $id;echo;done && lsdrive -nohdr |while read id name IO_group_id;do lsdrive $id ;echo;done'
+            }
         }else {
-            $TD_CollectInfos = plink $TD_Device_UserName@$TD_Device_DeviceIP -pw $TD_Device_PW -batch 'lsnodecanister -nohdr |while read id name IO_group_id;do lsnodecanister $id;echo;done && lsdrive -nohdr |while read id name IO_group_id;do lsdrive $id ;echo;done'
+            <# Action when all if and elseif conditions are false #>
+            $TD_lb_DriveErrorInfo.Visibility = "Visible"; $TD_lb_DriveErrorInfo.Content = "An SVC has no any hard drives or FlashCore Modules."
         }
         #$TD_CollectInfos = Get-Content -Path "C:\Users\mailt\Documents\lsdrive.txt"
         Write-Debug -Message "Number of Lines: $($TD_CollectInfos.count) "
@@ -76,7 +82,7 @@ function IBM_DriveInfo {
                 }
             }
         }
-        Start-Sleep -Seconds 0.5
+        Start-Sleep -Seconds 0.2
     }
     
     process {
@@ -139,12 +145,11 @@ function IBM_DriveInfo {
             }else {
                 $TD_DriveOverview | Export-Csv -Path $PSScriptRoot\Export\$($TD_Line_ID)_$($TD_NodeSplitInfo.NodeName)_Drive_Overview_$(Get-Date -Format "yyyy-MM-dd").csv -NoTypeInformation
             }
-            Write-Host "The Export can be found at $TD_Exportpath " -ForegroundColor Green
-            Start-Sleep -Seconds 0.5
+            Start-Sleep -Seconds 0.2
         }else {
             <# output on the promt #>
             Write-Host "Result for:`nName: $($TD_NodeSplitInfo.NodeName) `nProduct: $($TD_NodeSplitInfo.ProdName) `nFirmware: $($TD_NodeSplitInfo.NodeFW)`n`n" -ForegroundColor Yellow
-            Start-Sleep -Seconds 0.5
+            Start-Sleep -Seconds 0.2
             return $TD_DriveOverview
         }
         return $TD_DriveOverview

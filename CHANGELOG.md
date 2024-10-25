@@ -13,6 +13,7 @@ All notable changes to this project will be documented in this file.
 ### Added
 - FOS Sensor BasicInfo
 - FOS SFP BasicDetails
+- FOS an info that admin rights are required for Statsclear
 - IBM Storage Security check
 - SSH-Agent and Key Support at Settings Panel
 - IBM Storage Base information (this function must be confirmed for a svc-cluster by the check in the first line of the settings panel, the default setting is FlashSystems)
@@ -26,6 +27,7 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
 - Regex error that was sometimes triggered when no host cluster is configured. 
+- DriveInfo the message that the SVC has no drives was not displayed
 
 ### Changed
 - GUI from Storage Healthcheck compl. redesigned 

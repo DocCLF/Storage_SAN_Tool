@@ -854,6 +854,13 @@ $TD_btn_IBM_DriveInfo.add_click({
     $TD_Credentials += $TD_Credentials_Checked
     Start-Sleep -Seconds 0.2
 
+    <# if checkbox is checked the first row will used for svc-cluster #>
+    if($TD_cb_StorageSVCone.IsChecked){
+        [string]$TD_cb_FCPortStatsDevice = "SVC"
+    }else {
+        [string]$TD_cb_FCPortStatsDevice = "FSystem"
+    }
+
     foreach($TD_Credential in $TD_Credentials){
         <# QaD needs a Codeupdate #>
         $TD_DriveInfo =@()
@@ -861,14 +868,9 @@ $TD_btn_IBM_DriveInfo.add_click({
         switch ($TD_Credential.ID) {
             {($_ -eq 1)} 
             {   <# if checkbox is checked the first row will used for svc-cluster #>
-                if(!($TD_cb_StorageSVCone.IsChecked)){
                 $TD_DriveInfo = IBM_DriveInfo -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.StorageUserName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $TD_Credential.StoragePassword -TD_Storage $TD_cb_FCPortStatsDevice -TD_Exportpath $TD_tb_ExportPath.Text
                 Start-Sleep -Seconds 0.2
                 $TD_dg_DriveInfo.ItemsSource = $TD_DriveInfo
-                }else {
-                    <# Action when all if and elseif conditions are false #>
-                    $TD_lb_DriveInfoOne.Visibility = "Visible"; $TD_lb_DriveInfoOne.Content = "An SVC has no any hard drives or FlashCore Modules."
-                }
             }
             {($_ -eq 2)} 
             {            
@@ -1907,6 +1909,7 @@ $TD_btn_StatsClear.add_click({
 
     foreach($TD_Credential in $TD_Credentials){
         <# QaD needs a Codeupdate because Grouping dose not work #>
+        $TD_FOS_PortErrShow =@()
         switch ($TD_Credential.ID) {
             {($_ -eq 1)} 
             {            
@@ -1914,7 +1917,6 @@ $TD_btn_StatsClear.add_click({
                 if($TD_Credential.ConnectionTyp -eq "ssh"){
                     try {
                         $TD_FOS_StatsClear = ssh $SANUserName@$Device_IP "statsClear"
-                        #Write-Host $TD_FOS_StatsClear
                         $TD_FOS_StatsClearDone = $true
                     }
                     catch {

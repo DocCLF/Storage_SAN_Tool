@@ -402,9 +402,9 @@
                             <ColumnDefinition Width="auto" />
                             <ColumnDefinition Width="auto" />
                         </Grid.ColumnDefinitions>
-                        <Label Grid.Row="0" Grid.ColumnSpan="2" x:Name="lb_DriveErrorInfo" Content="" Visibility="Collapsed" Style="{StaticResource MainLabelStyle}" Margin="2,5,0,5"/> 
                         <StackPanel Grid.Row="1" Grid.Column="0" Orientation="Vertical">
-                        <Label x:Name="lb_DriveInfoOne" Content="No Device Info" Style="{StaticResource MainLabelStyle}" Padding="2" Margin="25,5,0,5"/>
+                        <Label x:Name="lb_DriveErrorInfo" Content="" Visibility="Collapsed" Style="{StaticResource MainLabelStyle}" Margin="0,5"/> 
+                        <Label x:Name="lb_DriveInfoOne" Content="No Device Info" Padding="2" Margin="0,5"/>
                         <DataGrid x:Name="dg_DriveInfo" AutoGenerateColumns="False" Margin="5" MaxHeight="400">
                             <DataGrid.Style>
                                 <Style TargetType="DataGrid">
