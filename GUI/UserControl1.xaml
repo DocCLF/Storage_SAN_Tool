@@ -138,13 +138,55 @@
                                 </Style>
                             </DataGrid.RowStyle>
                             <DataGrid.Columns>
-                                <DataGridTextColumn Width="200" Header="Time" Binding="{Binding LastTime}" IsReadOnly="True"/>
-                                <DataGridTextColumn Width="100" Header="ObjectType" Binding="{Binding ObjectType}" IsReadOnly="True"/>
-                                <DataGridTextColumn Width="150" Header="ObjectName" Binding="{Binding ObjectName}" IsReadOnly="True"/>
-                                <DataGridTextColumn Width="100" Header="Status" Binding="{Binding Status}" IsReadOnly="True"/>
-                                <DataGridTextColumn Width="50"  Header="Fixed" Binding="{Binding Fixed}" IsReadOnly="True"/>
-                                <DataGridTextColumn Width="100" Header="ErrorCode" Binding="{Binding ErrorCode}" IsReadOnly="True"/>
-                                <DataGridTextColumn Width="300" Header="Description" Binding="{Binding Description}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="200" Header="Time" Binding="{Binding LastTime}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Indicates when the event was most recently updated." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="100" Header="ObjectType" Binding="{Binding ObjectType}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Indicates the type of the object the event is logged against." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="150" Header="ObjectName" Binding="{Binding ObjectName}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Indicates the name of the object the event is logged against." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="100" Header="Status" Binding="{Binding Status}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Indicates the event category." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="50"  Header="Fixed" Binding="{Binding Fixed}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Indicates whether the event was marked fixed (for an alert) or read (for a message)." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="100" Header="ErrorCode" Binding="{Binding ErrorCode}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Indicates the error code that is associated with this event, google for it!" />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="300" Header="Description" Binding="{Binding Description}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Indicates the description that is associated with the event." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
                             </DataGrid.Columns>
                         </DataGrid>
                         </StackPanel>
@@ -170,13 +212,55 @@
                                 </Style>
                             </DataGrid.RowStyle>
                             <DataGrid.Columns>
-                                <DataGridTextColumn Width="200" Header="Time" Binding="{Binding LastTime}" IsReadOnly="True"/>
-                                <DataGridTextColumn Width="100" Header="ObjectType" Binding="{Binding ObjectType}" IsReadOnly="True"/>
-                                <DataGridTextColumn Width="150" Header="ObjectName" Binding="{Binding ObjectName}" IsReadOnly="True"/>
-                                <DataGridTextColumn Width="100" Header="Status" Binding="{Binding Status}" IsReadOnly="True"/>
-                                <DataGridTextColumn Width="50"  Header="Fixed" Binding="{Binding Fixed}" IsReadOnly="True"/>
-                                <DataGridTextColumn Width="100" Header="ErrorCode" Binding="{Binding ErrorCode}" IsReadOnly="True"/>
-                                <DataGridTextColumn Width="300" Header="Description" Binding="{Binding Description}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="200" Header="Time" Binding="{Binding LastTime}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Indicates when the event was most recently updated." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="100" Header="ObjectType" Binding="{Binding ObjectType}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Indicates the type of the object the event is logged against." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="150" Header="ObjectName" Binding="{Binding ObjectName}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Indicates the name of the object the event is logged against." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="100" Header="Status" Binding="{Binding Status}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Indicates the event category." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="50"  Header="Fixed" Binding="{Binding Fixed}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Indicates whether the event was marked fixed (for an alert) or read (for a message)." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="100" Header="ErrorCode" Binding="{Binding ErrorCode}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Indicates the error code that is associated with this event, google for it!" />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="300" Header="Description" Binding="{Binding Description}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Indicates the description that is associated with the event." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
                             </DataGrid.Columns>
                         </DataGrid>
                         </StackPanel>
@@ -202,13 +286,55 @@
                                 </Style>
                             </DataGrid.RowStyle>
                             <DataGrid.Columns>
-                                <DataGridTextColumn Width="200" Header="Time" Binding="{Binding LastTime}" IsReadOnly="True"/>
-                                <DataGridTextColumn Width="100" Header="ObjectType" Binding="{Binding ObjectType}" IsReadOnly="True"/>
-                                <DataGridTextColumn Width="150" Header="ObjectName" Binding="{Binding ObjectName}" IsReadOnly="True"/>
-                                <DataGridTextColumn Width="100" Header="Status" Binding="{Binding Status}" IsReadOnly="True"/>
-                                <DataGridTextColumn Width="50"  Header="Fixed" Binding="{Binding Fixed}" IsReadOnly="True"/>
-                                <DataGridTextColumn Width="100" Header="ErrorCode" Binding="{Binding ErrorCode}" IsReadOnly="True"/>
-                                <DataGridTextColumn Width="300" Header="Description" Binding="{Binding Description}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="200" Header="Time" Binding="{Binding LastTime}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Indicates when the event was most recently updated." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="100" Header="ObjectType" Binding="{Binding ObjectType}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Indicates the type of the object the event is logged against." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="150" Header="ObjectName" Binding="{Binding ObjectName}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Indicates the name of the object the event is logged against." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="100" Header="Status" Binding="{Binding Status}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Indicates the event category." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="50"  Header="Fixed" Binding="{Binding Fixed}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Indicates whether the event was marked fixed (for an alert) or read (for a message)." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="100" Header="ErrorCode" Binding="{Binding ErrorCode}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Indicates the error code that is associated with this event, google for it!" />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="300" Header="Description" Binding="{Binding Description}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Indicates the description that is associated with the event." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
                             </DataGrid.Columns>
                         </DataGrid>
                         </StackPanel>
@@ -234,13 +360,55 @@
                                 </Style>
                             </DataGrid.RowStyle>
                             <DataGrid.Columns>
-                                <DataGridTextColumn Width="200" Header="Time" Binding="{Binding LastTime}" IsReadOnly="True"/>
-                                <DataGridTextColumn Width="100" Header="ObjectType" Binding="{Binding ObjectType}" IsReadOnly="True"/>
-                                <DataGridTextColumn Width="150" Header="ObjectName" Binding="{Binding ObjectName}" IsReadOnly="True"/>
-                                <DataGridTextColumn Width="100" Header="Status" Binding="{Binding Status}" IsReadOnly="True"/>
-                                <DataGridTextColumn Width="50"  Header="Fixed" Binding="{Binding Fixed}" IsReadOnly="True"/>
-                                <DataGridTextColumn Width="100" Header="ErrorCode" Binding="{Binding ErrorCode}" IsReadOnly="True"/>
-                                <DataGridTextColumn Width="300" Header="Description" Binding="{Binding Description}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="200" Header="Time" Binding="{Binding LastTime}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Indicates when the event was most recently updated." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="100" Header="ObjectType" Binding="{Binding ObjectType}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Indicates the type of the object the event is logged against." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="150" Header="ObjectName" Binding="{Binding ObjectName}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Indicates the name of the object the event is logged against." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="100" Header="Status" Binding="{Binding Status}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Indicates the event category." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="50"  Header="Fixed" Binding="{Binding Fixed}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Indicates whether the event was marked fixed (for an alert) or read (for a message)." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="100" Header="ErrorCode" Binding="{Binding ErrorCode}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Indicates the error code that is associated with this event, google for it!" />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="300" Header="Description" Binding="{Binding Description}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Indicates the description that is associated with the event." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
                             </DataGrid.Columns>
                         </DataGrid>
                         </StackPanel>
@@ -649,13 +817,43 @@
                                 <DataGridTextColumn Width="auto" Header="CardID" Binding ="{Binding CardID}" IsReadOnly="True"/> 
                                 <DataGridTextColumn Width="auto" Header="PortID" Binding ="{Binding PortID}" IsReadOnly="True"/>
                                 <DataGridTextColumn Width="auto" Header="WWPN" Binding ="{Binding WWPN}" IsReadOnly="True"/>  
-                                <DataGridTextColumn Width="auto" Header="LinkFailure" Binding ="{Binding LinkFailure}" IsReadOnly="True"/>
-                                <DataGridTextColumn Width="auto" Header="LoseSync" Binding ="{Binding LoseSync}" IsReadOnly="True"/>
-                                <DataGridTextColumn Width="auto" Header="LoseSig" Binding ="{Binding LoseSig}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="LinkFailure" Binding ="{Binding LinkFailure}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Indicates the link failure error count." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="auto" Header="LoseSync" Binding ="{Binding LoseSync}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Indicates the loss of sync error count." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="auto" Header="LoseSig" Binding ="{Binding LoseSig}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Indicates the loss of signal error count." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
                                 <DataGridTextColumn Width="auto" Header="PSErrCount" Binding ="{Binding PSErrCount}" IsReadOnly="True"/> 
                                 <DataGridTextColumn Width="auto" Header="InvTransErr" Binding ="{Binding InvTransErr}" IsReadOnly="True"/>  
-                                <DataGridTextColumn Width="auto" Header="CRCErr" Binding ="{Binding CRCErr}" IsReadOnly="True"/> 
-                                <DataGridTextColumn Width="auto" Header="ZeroBtB" Binding ="{Binding ZeroBtB}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="CRCErr" Binding ="{Binding CRCErr}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Indicates the invalid CRC error count." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="auto" Header="ZeroBtB" Binding ="{Binding ZeroBtB}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Indicates the zero buffer-buffer credit timer in microseconds (µs)." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
                                 <DataGridTextColumn Width="auto" Header="SFPTemp" Binding ="{Binding SFPTemp}" IsReadOnly="True">
                                     <DataGridTextColumn.CellStyle>
                                         <Style TargetType="DataGridCell">
@@ -707,13 +905,43 @@
                                 <DataGridTextColumn Width="auto" Header="CardID" Binding ="{Binding CardID}" IsReadOnly="True"/> 
                                 <DataGridTextColumn Width="auto" Header="PortID" Binding ="{Binding PortID}" IsReadOnly="True"/>
                                 <DataGridTextColumn Width="auto" Header="WWPN" Binding ="{Binding WWPN}" IsReadOnly="True"/>  
-                                <DataGridTextColumn Width="auto" Header="LinkFailure" Binding ="{Binding LinkFailure}" IsReadOnly="True"/>
-                                <DataGridTextColumn Width="auto" Header="LoseSync" Binding ="{Binding LoseSync}" IsReadOnly="True"/>
-                                <DataGridTextColumn Width="auto" Header="LoseSig" Binding ="{Binding LoseSig}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="LinkFailure" Binding ="{Binding LinkFailure}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Indicates the link failure error count." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="auto" Header="LoseSync" Binding ="{Binding LoseSync}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Indicates the loss of sync error count." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="auto" Header="LoseSig" Binding ="{Binding LoseSig}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Indicates the loss of signal error count." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
                                 <DataGridTextColumn Width="auto" Header="PSErrCount" Binding ="{Binding PSErrCount}" IsReadOnly="True"/> 
                                 <DataGridTextColumn Width="auto" Header="InvTransErr" Binding ="{Binding InvTransErr}" IsReadOnly="True"/>  
-                                <DataGridTextColumn Width="auto" Header="CRCErr" Binding ="{Binding CRCErr}" IsReadOnly="True"/> 
-                                <DataGridTextColumn Width="auto" Header="ZeroBtB" Binding ="{Binding ZeroBtB}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="CRCErr" Binding ="{Binding CRCErr}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Indicates the invalid CRC error count." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="auto" Header="ZeroBtB" Binding ="{Binding ZeroBtB}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Indicates the zero buffer-buffer credit timer in microseconds (µs)." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
                                 <DataGridTextColumn Width="auto" Header="SFPTemp" Binding ="{Binding SFPTemp}" IsReadOnly="True">
                                     <DataGridTextColumn.CellStyle>
                                         <Style TargetType="DataGridCell">
@@ -765,13 +993,43 @@
                                 <DataGridTextColumn Width="auto" Header="CardID" Binding ="{Binding CardID}" IsReadOnly="True"/> 
                                 <DataGridTextColumn Width="auto" Header="PortID" Binding ="{Binding PortID}" IsReadOnly="True"/>
                                 <DataGridTextColumn Width="auto" Header="WWPN" Binding ="{Binding WWPN}" IsReadOnly="True"/>  
-                                <DataGridTextColumn Width="auto" Header="LinkFailure" Binding ="{Binding LinkFailure}" IsReadOnly="True"/>
-                                <DataGridTextColumn Width="auto" Header="LoseSync" Binding ="{Binding LoseSync}" IsReadOnly="True"/>
-                                <DataGridTextColumn Width="auto" Header="LoseSig" Binding ="{Binding LoseSig}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="LinkFailure" Binding ="{Binding LinkFailure}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Indicates the link failure error count." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="auto" Header="LoseSync" Binding ="{Binding LoseSync}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Indicates the loss of sync error count." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="auto" Header="LoseSig" Binding ="{Binding LoseSig}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Indicates the loss of signal error count." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
                                 <DataGridTextColumn Width="auto" Header="PSErrCount" Binding ="{Binding PSErrCount}" IsReadOnly="True"/> 
                                 <DataGridTextColumn Width="auto" Header="InvTransErr" Binding ="{Binding InvTransErr}" IsReadOnly="True"/>  
-                                <DataGridTextColumn Width="auto" Header="CRCErr" Binding ="{Binding CRCErr}" IsReadOnly="True"/> 
-                                <DataGridTextColumn Width="auto" Header="ZeroBtB" Binding ="{Binding ZeroBtB}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="CRCErr" Binding ="{Binding CRCErr}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Indicates the invalid CRC error count." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="auto" Header="ZeroBtB" Binding ="{Binding ZeroBtB}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Indicates the zero buffer-buffer credit timer in microseconds (µs)." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
                                 <DataGridTextColumn Width="auto" Header="SFPTemp" Binding ="{Binding SFPTemp}" IsReadOnly="True">
                                     <DataGridTextColumn.CellStyle>
                                         <Style TargetType="DataGridCell">
@@ -823,13 +1081,43 @@
                                 <DataGridTextColumn Width="auto" Header="CardID" Binding ="{Binding CardID}" IsReadOnly="True"/> 
                                 <DataGridTextColumn Width="auto" Header="PortID" Binding ="{Binding PortID}" IsReadOnly="True"/>
                                 <DataGridTextColumn Width="auto" Header="WWPN" Binding ="{Binding WWPN}" IsReadOnly="True"/>  
-                                <DataGridTextColumn Width="auto" Header="LinkFailure" Binding ="{Binding LinkFailure}" IsReadOnly="True"/>
-                                <DataGridTextColumn Width="auto" Header="LoseSync" Binding ="{Binding LoseSync}" IsReadOnly="True"/>
-                                <DataGridTextColumn Width="auto" Header="LoseSig" Binding ="{Binding LoseSig}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="LinkFailure" Binding ="{Binding LinkFailure}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Indicates the link failure error count." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="auto" Header="LoseSync" Binding ="{Binding LoseSync}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Indicates the loss of sync error count." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="auto" Header="LoseSig" Binding ="{Binding LoseSig}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Indicates the loss of signal error count." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
                                 <DataGridTextColumn Width="auto" Header="PSErrCount" Binding ="{Binding PSErrCount}" IsReadOnly="True"/> 
                                 <DataGridTextColumn Width="auto" Header="InvTransErr" Binding ="{Binding InvTransErr}" IsReadOnly="True"/>  
-                                <DataGridTextColumn Width="auto" Header="CRCErr" Binding ="{Binding CRCErr}" IsReadOnly="True"/> 
-                                <DataGridTextColumn Width="auto" Header="ZeroBtB" Binding ="{Binding ZeroBtB}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="CRCErr" Binding ="{Binding CRCErr}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Indicates the invalid CRC error count." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="auto" Header="ZeroBtB" Binding ="{Binding ZeroBtB}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Indicates the zero buffer-buffer credit timer in microseconds (µs)." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
                                 <DataGridTextColumn Width="auto" Header="SFPTemp" Binding ="{Binding SFPTemp}" IsReadOnly="True">
                                     <DataGridTextColumn.CellStyle>
                                         <Style TargetType="DataGridCell">

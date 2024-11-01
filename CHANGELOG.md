@@ -31,8 +31,9 @@ All notable changes to this project will be documented in this file.
 
 ### Changed
 - GUI from Storage Healthcheck compl. redesigned 
-- GUI from IBM Spectrum Virtualize Panel, due to the new possibilities, a breakdown by software version has now been made.
-- PortBufferShow from Listview to Datagrid
+- IBM GUI from IBM Spectrum Virtualize Panel, due to the new possibilities, a breakdown by software version has now been made.
+- FOS PortBufferShow from Listview to Datagrid
+- FOS Add a Information that shows a Info for StatsClear Func
 - The control function of the storage health checks has been completely revised to be more flexible for later developments.
 - Tooltips adjusted for most buttons.
 - DriveInfo shows a Information if the SVC Checkbox is checked
