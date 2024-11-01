@@ -42,7 +42,6 @@ function FOS_SensorShow {
             }else {
                 Out-File -FilePath $PSScriptRoot\Export\$($TD_Line_ID)_Switch_SensorShow_$(Get-Date -Format "yyyy-MM-dd").csv -InputObject $FOS_SensorInformations
             }
-            Write-Host "The Export can be found at $TD_Exportpath " -ForegroundColor Green
         }else {
             <# output on the promt #>
             return $FOS_SensorInformations

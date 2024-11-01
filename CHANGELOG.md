@@ -43,6 +43,7 @@ All notable changes to this project will be documented in this file.
 ### Removed
 - try catch form DriveInfo Func
 - some unnecessary array creations
+- some unnecessary Write-Host creations
 - Code clean up
 
 ### Known Bugs

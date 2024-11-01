@@ -134,10 +134,8 @@ function FOS_PortErrShowInfos {
     end {
 
         Close-ProgressBar -ProgressBar $ProgressBar
-
         <# returns the hashtable for further processing, not mandatory but the safe way #>
         Write-Debug -Message "Start End-Block GET_PortErrShowInfos |$(Get-Date) ` "
-
         <# export y or n #>
         if($TD_Export -eq "yes"){
             <# exported to .\Host_Volume_Map_Result.csv #>
