@@ -127,8 +127,20 @@
                             </DataGrid.Style>
                             <DataGrid.Columns>
                                 <DataGridTextColumn Header="Attribute Name" Width="Auto" Binding="{Binding AttributeName}" IsReadOnly="True"/>
-                                <DataGridTextColumn Header="Configured Value" Width="Auto" Binding="{Binding ConfiguredValue}" IsReadOnly="True"/>
-                                <DataGridTextColumn Header="Field Experiences*" Width="Auto" Binding="{Binding RecommendedValue}" IsReadOnly="True"/>
+                                <DataGridTextColumn Header="Configured Value" Width="Auto" Binding="{Binding ConfiguredValue}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Your current security settings."/>
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Header="Field Experiences*" Width="Auto" Binding="{Binding RecommendedValue}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Shows the most common settings from the field, which do not claim to be the ideal solution for every environment."/>
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
                             </DataGrid.Columns>
                         </DataGrid>
                         <TextBox Grid.Column="2" x:Name="tb_SecurityInfoMsg" Text="" Margin="10,0,0,0" Visibility="Collapsed" IsReadOnly="True" Background="Transparent" VerticalAlignment="Center" VerticalContentAlignment="Center" Height="30" FontSize="10" BorderThickness="0" TextWrapping="Wrap"/>

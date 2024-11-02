@@ -341,9 +341,27 @@
                                 <DataGridTextColumn Header="User Name" Width="Auto" Binding="{Binding User_Name}" IsReadOnly="True"/>
                                 <DataGridTextColumn Header="Password" Width="Auto" Binding="{Binding Password}" IsReadOnly="True"/>
                                 <DataGridTextColumn Header="SSH Key" Width="Auto"  Binding="{Binding SSH_Key}" IsReadOnly="True"/>
-                                <DataGridTextColumn Header="Remote" Width="Auto" Binding="{Binding Remote}" IsReadOnly="True"/>
-                                <DataGridTextColumn Header="Locked" Width="Auto"  Binding="{Binding Locked}" IsReadOnly="True"/>
-                                <DataGridTextColumn Header="PW Change required" Width="Auto" Binding="{Binding PW_Change_required}" IsReadOnly="True"/>
+                                <DataGridTextColumn Header="Remote" Width="Auto" Binding="{Binding Remote}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Specifies if the user is remote."/>
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Header="Locked" Width="Auto"  Binding="{Binding Locked}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="manual -> means: The user is permanently locked due to the security administrator"/>
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Header="PW Change required" Width="Auto" Binding="{Binding PW_Change_required}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Your password has expired, you will need to change it the next time you log in." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
                             </DataGrid.Columns>
                         </DataGrid>
                     </Grid>
