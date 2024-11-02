@@ -28,6 +28,7 @@ All notable changes to this project will be documented in this file.
 ### Fixed
 - Regex error that was sometimes triggered when no host cluster is configured. 
 - DriveInfo the message that the SVC has no drives was not displayed
+- FOS SFP BasicDetails Status View
 
 ### Changed
 - GUI from Storage Healthcheck compl. redesigned 
@@ -38,6 +39,7 @@ All notable changes to this project will be documented in this file.
 - Tooltips adjusted for most buttons.
 - DriveInfo shows a Information if the SVC Checkbox is checked
 - View of Host Volume Map Info
+- The Filter placement of Host Volume Map Info
 - Some other annoying GUI Bugs
 
 ### Removed

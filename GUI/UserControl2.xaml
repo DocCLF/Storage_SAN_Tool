@@ -1451,7 +1451,7 @@
                                 <DataGridTextColumn Width="auto" Header="Vendor"  Binding ="{Binding Vendor}" IsReadOnly="True"/>  
                                 <DataGridTextColumn Width="auto" Header="Serial No" Binding ="{Binding SerialNo}" IsReadOnly="True"/>  
                                 <DataGridTextColumn Width="auto" Header="Speed Range" Binding ="{Binding SpeedRange}" IsReadOnly="True"/> 
-                                <DataGridTextColumn Width="auto" Header="Health" Binding ="{Binding Health}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Health" Binding ="{Binding HealthStatus}" IsReadOnly="True"/>
                             </DataGrid.Columns>
                         </DataGrid>
                     </StackPanel>
@@ -1482,7 +1482,7 @@
                                 <DataGridTextColumn Width="auto" Header="Vendor"  Binding ="{Binding Vendor}" IsReadOnly="True"/>  
                                 <DataGridTextColumn Width="auto" Header="Serial No" Binding ="{Binding SerialNo}" IsReadOnly="True"/>  
                                 <DataGridTextColumn Width="auto" Header="Speed Range" Binding ="{Binding SpeedRange}" IsReadOnly="True"/> 
-                                <DataGridTextColumn Width="auto" Header="Health" Binding ="{Binding Health}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Health" Binding ="{Binding HealthStatus}" IsReadOnly="True"/>
                             </DataGrid.Columns>
                         </DataGrid>
                     </StackPanel>
@@ -1513,7 +1513,7 @@
                                 <DataGridTextColumn Width="auto" Header="Vendor"  Binding ="{Binding Vendor}" IsReadOnly="True"/>  
                                 <DataGridTextColumn Width="auto" Header="Serial No" Binding ="{Binding SerialNo}" IsReadOnly="True"/>  
                                 <DataGridTextColumn Width="auto" Header="Speed Range" Binding ="{Binding SpeedRange}" IsReadOnly="True"/> 
-                                <DataGridTextColumn Width="auto" Header="Health" Binding ="{Binding Health}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Health" Binding ="{Binding HealthStatus}" IsReadOnly="True"/>
                             </DataGrid.Columns>
                         </DataGrid>
                     </StackPanel>
