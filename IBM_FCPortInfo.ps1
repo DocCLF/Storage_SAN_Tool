@@ -9,7 +9,8 @@ function IBM_FCPortInfo {
         [Parameter(ValueFromPipeline)]
         [ValidateSet("yes","no")]
         [string]$TD_Export = "yes",
-        [string]$TD_Exportpath
+        [string]$TD_Exportpath,
+        [int]$TD_i=0
     )
     
     begin{
@@ -24,8 +25,7 @@ function IBM_FCPortInfo {
         }else {
             $TD_CollectFCPortInfos = plink $TD_Device_UserName@$TD_Device_DeviceIP -pw $TD_Device_PW -batch "lstargetportfc -nohdr -delim : && lsportfc -delim :"
         }
-        [int]$TD_i=0
-        $TD_CollectFCPortInfos = Get-Content -Path D:\GitRepo\Storage_SAN_Kit\fcinfo.txt
+
         $TD_TargetPortInfos = foreach ($TD_PortTemp in $TD_CollectFCPortInfos){
             if($TD_PortTemp -like "*id:fc_io_port_id:port_id:*"){
                 $TD_PortFCInfos = $TD_CollectFCPortInfos |Select-Object -Skip ($TD_i +1) #-SkipLast 1
@@ -48,31 +48,51 @@ function IBM_FCPortInfo {
             $TD_FCPortInfo.Protocol = ($TD_FCPortMore|Select-String -Pattern ':(yes|no):(yes|no):(scsi|nvme):' -AllMatches).Matches.Groups[3].Value
             $TD_FCPortInfo.HostCount = ($TD_FCPortMore|Select-String -Pattern ':(\d+):\d+$' -AllMatches).Matches.Groups[1].Value
             $TD_FCPortInfo.ActiveLoginCount = ($TD_FCPortMore|Select-String -Pattern ':\d+:(\d+)$' -AllMatches).Matches.Groups[1].Value
-            
-            Write-Host $TD_FCPortInfo.WWPN
+
+            $TD_TargetPortFCPortID = ($TD_FCPortMore|Select-String -Pattern '^\d+:([0-9A-z]+):([0-9A-z]+):(\d+):' -AllMatches).Matches.Groups[3].Value
+            $TD_FCPortInfoWWNN = $($TD_FCPortInfo.WWNN).Substring($TD_FCPortInfo.WWNN.Length -4)
+
             foreach ($TD_FCPort in $TD_PortFCInfos){
                 #Infos from lsportfc
                 $TD_LSPortFCWWPN = ($TD_FCPort|Select-String -Pattern ':([a-zA-Z0-9-_]+):([a-zA-Z0-9-_]+):(active|inactive_configured|inactive_unconfigured|disabled):' -AllMatches).Matches.Groups[1].Value
-                if($TD_FCPortInfo.WWPN -eq $TD_LSPortFCWWPN){
+                $TD_LSPortFCWWPNEnd = $TD_LSPortFCWWPN.Substring($TD_LSPortFCWWPN.Length -4)
+                if($TD_FCPortInfoWWNN -ne $TD_LSPortFCWWPNEnd){continue}
+
+                $TD_LSPortFCPortID = ($TD_FCPort|Select-String -Pattern ':(\d+):fc:' -AllMatches).Matches.Groups[1].Value
+                
+                if($TD_FCPortInfo.WWPN -eq $TD_LSPortFCWWPN){[bool]$TD_WWPNaEqual = $true}
+                if(($TD_WWPNaEqual)-and ($TD_TargetPortFCPortID -eq $TD_LSPortFCPortID)){
+                    Write-Host $TD_FCPortInfoWWNN -ne $TD_LSPortFCWWPNEnd -ForegroundColor Green
                     $TD_FCPortInfo.CardID = ($TD_FCPort|Select-String -Pattern ':(\d+):\d+$' -AllMatches).Matches.Groups[1].Value
                     $TD_FCPortInfo.CardPortID = ($TD_FCPort|Select-String -Pattern ':(\d+)$' -AllMatches).Matches.Groups[1].Value
                     $TD_FCPortInfo.Speed = ($TD_FCPort|Select-String -Pattern ':(N/A|\d+Gb):' -AllMatches).Matches.Groups[1].Value
                     $TD_FCPortInfo.Status = ($TD_FCPort|Select-String -Pattern ':(active|inactive_configured|inactive_unconfigured|disabled):' -AllMatches).Matches.Groups[1].Value
                     $TD_FCPortInfo.NodeName = ($TD_FCPort|Select-String -Pattern ':(N/A|\d+Gb):\d+:([a-zA-Z0-9-_]+):' -AllMatches).Matches.Groups[2].Value
                     $TD_FCPortInfo.Attachment = ($TD_FCPort|Select-String -Pattern ':(active|inactive_configured|inactive_unconfigured|disabled):(switch|none|[a-zA-Z]+):' -AllMatches).Matches.Groups[2].Value
-                    break
                 }
             }
             $TD_FCPortInfo
 
             <# Progressbar  #>
-            #$ProgCounter++
-            #Write-ProgressBar -ProgressBar $ProgressBar -Activity "Collect data for Device $($TD_Line_ID)" -PercentComplete (($ProgCounter/$TD_CollectFCPortInfos.Count) * 100)
-            #Start-Sleep -Seconds 0.5
+            $ProgCounter++
+            Write-ProgressBar -ProgressBar $ProgressBar -Activity "Collect data for Device $($TD_Line_ID)" -PercentComplete (($ProgCounter/$TD_TargetPortInfos.Count) * 100)
+            Start-Sleep -Seconds 0.2
         }
     }
     
     end {
-        
+        Close-ProgressBar -ProgressBar $ProgressBar
+        <# export y or n #>
+        if($TD_export -eq "yes"){
+            if([string]$TD_Exportpath -ne "$PSRootPath\Export\"){
+                $TD_FCPortInfoResault | Export-Csv -Path $TD_Exportpath\$($TD_Line_ID)_FCPortInfoOverview_$(Get-Date -Format "yyyy-MM-dd").csv -NoTypeInformation
+            }else {
+                $TD_FCPortInfoResault | Export-Csv -Path $PSScriptRoot\Export\$($TD_Line_ID)_FCPortInfoOverview_$(Get-Date -Format "yyyy-MM-dd").csv -NoTypeInformation
+            }
+        }else {
+            <# output on the promt #>
+            return $TD_FCPortInfoResault
+        }
+        return $TD_FCPortInfoResault
     }
 }
