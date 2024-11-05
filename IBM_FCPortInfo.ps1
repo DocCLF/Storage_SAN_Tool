@@ -62,7 +62,6 @@ function IBM_FCPortInfo {
                 
                 if($TD_FCPortInfo.WWPN -eq $TD_LSPortFCWWPN){[bool]$TD_WWPNaEqual = $true}
                 if(($TD_WWPNaEqual)-and ($TD_TargetPortFCPortID -eq $TD_LSPortFCPortID)){
-                    Write-Host $TD_FCPortInfoWWNN -ne $TD_LSPortFCWWPNEnd -ForegroundColor Green
                     $TD_FCPortInfo.CardID = ($TD_FCPort|Select-String -Pattern ':(\d+):\d+$' -AllMatches).Matches.Groups[1].Value
                     $TD_FCPortInfo.CardPortID = ($TD_FCPort|Select-String -Pattern ':(\d+)$' -AllMatches).Matches.Groups[1].Value
                     $TD_FCPortInfo.Speed = ($TD_FCPort|Select-String -Pattern ':(N/A|\d+Gb):' -AllMatches).Matches.Groups[1].Value
@@ -75,7 +74,7 @@ function IBM_FCPortInfo {
 
             <# Progressbar  #>
             $ProgCounter++
-            Write-ProgressBar -ProgressBar $ProgressBar -Activity "Collect data for Device $($TD_Line_ID)" -PercentComplete (($ProgCounter/$TD_TargetPortInfos.Count) * 100)
+            Write-ProgressBar -ProgressBar $ProgressBar -Activity "Collect data for Device $($TD_FCPortInfo.NodeName)" -PercentComplete (($ProgCounter/$TD_TargetPortInfos.Count) * 100)
             Start-Sleep -Seconds 0.2
         }
     }

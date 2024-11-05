@@ -236,15 +236,18 @@ function ExportCred {
         [Parameter(Mandatory)]
         [string]$TD_IPAdresse,
         [Parameter(Mandatory)]
-        [string]$TD_UserName
+        [string]$TD_UserName,
+        [bool]$TD_IsSVCIP
     )
     <# collect the access data for subsequent processing #>
+    Write-Host $TD_IsSVCIP
     $TD_CredCollection=[ordered]@{
         'DeviceType' = $TD_DeviceType;
         'ID'= $STP_ID;
         'ConnectionTyp'= $TD_ConnectionTyp;
         'IPAddress'= $TD_IPAdresse;
         'UserName'= $TD_UserName;
+        'IsSVCIP'= $TD_IsSVCIP;
     }
     $TD_CredObject=New-Object -TypeName psobject -Property $TD_CredCollection
  
@@ -517,7 +520,7 @@ $TD_btn_ExportCred.add_click({
     $TD_ExportCred = @()
     <#Storage#>
     if($TD_tb_storageIPAdr.Text -ne ""){
-        $TD_ExportCred += ExportCred -TD_DeviceType "Storage" -STP_ID 1 -TD_ConnectionTyp $TD_cb_storageConnectionTyp.Text -TD_IPAdresse $TD_tb_storageIPAdr.Text -TD_UserName $TD_tb_storageUserName.Text
+        $TD_ExportCred += ExportCred -TD_DeviceType "Storage" -STP_ID 1 -TD_ConnectionTyp $TD_cb_storageConnectionTyp.Text -TD_IPAdresse $TD_tb_storageIPAdr.Text -TD_UserName $TD_tb_storageUserName.Text -TD_IsSVCIP $TD_cb_StorageSVCone.IsChecked
     }
     if ($TD_tb_storageIPAdrOne.Text -ne "") {
         $TD_ExportCred += ExportCred -TD_DeviceType "Storage" -STP_ID 2 -TD_ConnectionTyp $TD_cb_storageConnectionTypOne.Text -TD_IPAdresse $TD_tb_storageIPAdrOne.Text -TD_UserName $TD_tb_storageUserNameOne.Text
@@ -558,7 +561,7 @@ $TD_btn_ImportCred.add_click({
         if($TD_Cred.DeviceType -eq "Storage"){
             switch ($TD_Cred.ID) {
                 {($_ -eq 1)} { 
-                    $TD_cb_storageConnectionTyp.Text = $TD_Cred.ConnectionTyp;  $TD_tb_storageIPAdr.Text = $TD_Cred.IPAddress;  $TD_tb_storageUserName.Text= $TD_Cred.UserName; 
+                    $TD_cb_storageConnectionTyp.Text = $TD_Cred.ConnectionTyp;  $TD_tb_storageIPAdr.Text = $TD_Cred.IPAddress;  $TD_tb_storageUserName.Text= $TD_Cred.UserName; $TD_cb_StorageSVCone.IsChecked=$TD_Cred.IsSVCIP
                 }
                 {($_ -eq 2)} { 
                     $TD_tbn_storageaddrmLine.Content="REMOVE"
@@ -662,6 +665,7 @@ $TD_btn_IBM_Eventlog.add_click({
     $TD_stp_BackUpConfig.Visibility="Collapsed"
     $TD_stp_PolicyBased_Rep.Visibility="Collapsed"
     $TD_stp_BaseStorageInfo.Visibility="Collapsed"
+    $TD_stp_IBM_FCPortInfo.Visibility="Collapsed"
     $TD_stp_StorageEventLog.Visibility="Visible"
 })
 <#
@@ -786,6 +790,7 @@ $TD_btn_IBM_HostVolumeMap.add_click({
     $TD_stp_BackUpConfig.Visibility="Collapsed"
     $TD_stp_PolicyBased_Rep.Visibility="Collapsed"
     $TD_stp_BaseStorageInfo.Visibility="Collapsed"
+    $TD_stp_IBM_FCPortInfo.Visibility="Collapsed"
     $TD_stp_HostVolInfo.Visibility="Visible"
 })
 <# filter View for Host Volume Map #>
@@ -899,6 +904,7 @@ $TD_btn_IBM_DriveInfo.add_click({
     $TD_stp_BackUpConfig.Visibility="Collapsed"
     $TD_stp_PolicyBased_Rep.Visibility="Collapsed"
     $TD_stp_BaseStorageInfo.Visibility="Collapsed"
+    $TD_stp_IBM_FCPortInfo.Visibility="Collapsed"
     $TD_stp_DriveInfo.Visibility="Visible"
 })
 
@@ -966,7 +972,70 @@ $TD_btn_IBM_FCPortStats.add_click({
     $TD_stp_BackUpConfig.Visibility="Collapsed"
     $TD_stp_PolicyBased_Rep.Visibility="Collapsed"
     $TD_stp_BaseStorageInfo.Visibility="Collapsed"
+    $TD_stp_IBM_FCPortInfo.Visibility="Collapsed"
     $TD_stp_FCPortStats.Visibility="Visible"
+    
+})
+
+$TD_btn_IBM_FCPortInfo.add_click({
+    $TD_Credentials=@()
+    $TD_Credentials_Checked = Get_CredGUIInfos -STP_ID 1 -TD_ConnectionTyp $TD_cb_storageConnectionTyp.Text -TD_IPAdresse $TD_tb_storageIPAdr.Text -TD_UserName $TD_tb_storageUserName.Text -TD_Password $TD_tb_storagePassword
+    $TD_Credentials += $TD_Credentials_Checked
+    Start-Sleep -Seconds 0.5
+
+    $TD_Credentials_Checked = Get_CredGUIInfos -STP_ID 2 -TD_ConnectionTyp $TD_cb_storageConnectionTypOne.Text -TD_IPAdresse $TD_tb_storageIPAdrOne.Text -TD_UserName $TD_tb_storageUserNameOne.Text -TD_Password $TD_tb_storagePasswordOne
+    $TD_Credentials += $TD_Credentials_Checked
+    Start-Sleep -Seconds 0.5
+
+    $TD_Credentials_Checked = Get_CredGUIInfos -STP_ID 3 -TD_ConnectionTyp $TD_cb_storageConnectionTypTwo.Text -TD_IPAdresse $TD_tb_storageIPAdrTwo.Text -TD_UserName $TD_tb_storageUserNameTwo.Text -TD_Password $TD_tb_storagePasswordTwo
+    $TD_Credentials += $TD_Credentials_Checked
+    Start-Sleep -Seconds 0.5
+
+    $TD_Credentials_Checked = Get_CredGUIInfos -STP_ID 4 -TD_ConnectionTyp $TD_cb_storageConnectionTypThree.Text -TD_IPAdresse $TD_tb_storageIPAdrThree.Text -TD_UserName $TD_tb_storageUserNameThree.Text -TD_Password $TD_tb_storagePasswordThree
+    $TD_Credentials += $TD_Credentials_Checked
+    Start-Sleep -Seconds 0.5
+
+    foreach($TD_Credential in $TD_Credentials){
+        <# QaD needs a Codeupdate because Grouping dose not work #>
+        $TD_FCPortInfo =@()
+        switch ($TD_Credential.ID) {
+            {($_ -eq 1)} 
+            {            
+                $TD_FCPortInfo = IBM_FCPortInfo -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.StorageUserName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $TD_Credential.StoragePassword -TD_Exportpath $TD_tb_ExportPath.Text
+                Start-Sleep -Seconds 0.5
+                $TD_dg_FCPortInfoOne.ItemsSource = $TD_FCPortInfo
+            }
+            {($_ -eq 2)} 
+            {            
+                $TD_FCPortInfo = IBM_FCPortInfo -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.StorageUserName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $TD_Credential.StoragePassword -TD_Exportpath $TD_tb_ExportPath.Text
+                Start-Sleep -Seconds 0.5
+                $TD_dg_FCPortInfoTwo.ItemsSource = $TD_FCPortInfo
+            }
+            {($_ -eq 3)} 
+            {            
+                $TD_FCPortInfo = IBM_FCPortInfo -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.StorageUserName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $TD_Credential.StoragePassword -TD_Exportpath $TD_tb_ExportPath.Text
+                Start-Sleep -Seconds 0.5
+                $TD_dg_FCPortInfoThree.ItemsSource = $TD_FCPortInfo
+            }
+            {($_ -eq 4)} 
+            {            
+                $TD_FCPortInfo = IBM_FCPortInfo -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.StorageUserName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $TD_Credential.StoragePassword -TD_Exportpath $TD_tb_ExportPath.Text
+                Start-Sleep -Seconds 0.5
+                $TD_dg_FCPortInfoFour.ItemsSource = $TD_FCPortInfo
+            }
+            Default {Write-Debug "Nothing" }
+        }
+
+    }
+
+    $TD_stp_DriveInfo.Visibility="Collapsed"
+    $TD_stp_HostVolInfo.Visibility="Collapsed"
+    $TD_stp_StorageEventLog.Visibility="Collapsed"
+    $TD_stp_BackUpConfig.Visibility="Collapsed"
+    $TD_stp_PolicyBased_Rep.Visibility="Collapsed"
+    $TD_stp_BaseStorageInfo.Visibility="Collapsed"
+    $TD_stp_FCPortStats.Visibility="Collapsed"
+    $TD_stp_IBM_FCPortInfo.Visibility="Visible"
     
 })
 
@@ -1137,6 +1206,7 @@ $TD_btn_IBM_BackUpConfig.add_click({
     $TD_stp_StorageEventLog.Visibility="Collapsed"
     $TD_stp_FCPortStats.Visibility="Collapsed"
     $TD_stp_BaseStorageInfo.Visibility="Collapsed"
+    $TD_stp_IBM_FCPortInfo.Visibility="Collapsed"
     $TD_stp_BackUpConfig.Visibility="Visible"
 })
 
@@ -1147,6 +1217,7 @@ $TD_btn_IBM_PolicyBased_Rep.add_click({
     $TD_stp_BackUpConfig.Visibility="Collapsed"
     $TD_stp_FCPortStats.Visibility="Collapsed"
     $TD_stp_BaseStorageInfo.Visibility="Collapsed"
+    $TD_stp_IBM_FCPortInfo.Visibility="Collapsed"
     $TD_stp_PolicyBased_Rep.Visibility="Visible"
 })
 
@@ -1312,6 +1383,7 @@ $TD_btn_IBM_BaseStorageInfo.add_click({
     $TD_stp_BackUpConfig.Visibility="Collapsed"
     $TD_stp_PolicyBased_Rep.Visibility="Collapsed"
     $TD_stp_FCPortStats.Visibility="Collapsed"
+    $TD_stp_IBM_FCPortInfo.Visibility="Collapsed"
     $TD_stp_BaseStorageInfo.Visibility="Visible"
 })
 #endregion

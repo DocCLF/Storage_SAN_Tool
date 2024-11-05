@@ -30,6 +30,7 @@ All notable changes to this project will be documented in this file.
 ### Fixed
 - Regex error that was sometimes triggered when no host cluster is configured. 
 - DriveInfo the message that the SVC has no drives was not displayed
+- SVC IP CheckBox setting was not exported
 - FOS SFP BasicDetails Status View
 
 ### Changed

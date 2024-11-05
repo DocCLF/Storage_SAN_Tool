@@ -83,6 +83,12 @@
                 Style="{StaticResource MainBtnStyle}"
                 Content="Drive Info"
                 ToolTip="Get the most important information about your Drives" />
+                <!--IBM_FCPortInfo-->
+                <Button
+                x:Name="btn_IBM_FCPortInfo"
+                Style="{StaticResource MainBtnStyle}"
+                Content="FC Port Info"
+                ToolTip="Generate a list of host count and login count for each worldwide port names (WWPNs) required to set up Fibre Channel (FC) zoning and to display the current failover status of host IO ports." />
                 <!--IBM_BackUpConfig-->
                 <Button
                 x:Name="btn_IBM_BackUpConfig"
@@ -1501,6 +1507,399 @@
                                 <DataGridTextColumn Width="auto" Header="Config Node" Binding ="{Binding Config_Node}" IsReadOnly="True"/>
                                 <DataGridTextColumn Width="auto" Header="SideID" Binding ="{Binding SideID}" IsReadOnly="True"/>
                                 <DataGridTextColumn Width="auto" Header="Side Name" Binding ="{Binding SideName}" IsReadOnly="True"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                        </StackPanel>  
+                    </Grid>
+                </StackPanel> 
+                <StackPanel  x:Name="stp_IBM_FCPortInfo" Orientation="Horizontal" Margin="2" Visibility="{Binding ElementName=btn_IBM_FCPortInfo, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+                        <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="2">
+                        <Label Grid.Row="0" Grid.ColumnSpan="2" x:Name="lb_FCPortErrorInfo" Content="" Visibility="Collapsed" Style="{StaticResource MainLabelStyle}" Margin="2,5,0,5"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Vertical" Grid.Row="1">
+                        <DataGrid Grid.Row="1" Grid.Column="1" x:Name="dg_FCPortInfoOne" AutoGenerateColumns="False" Margin="5" MaxHeight="400">
+                            <DataGrid.Style>
+                                <Style TargetType="DataGrid">
+                                    <Style.Triggers>
+                                        <Trigger Property="HasItems" Value="False">
+                                          <Setter Property="Visibility" Value="Collapsed"></Setter>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGrid.Style>
+                            <DataGrid.RowStyle>
+                                <Style TargetType="DataGridRow">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding Status}" Value="active">
+                                            <Setter Property="Background" Value="LightGreen" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGrid.RowStyle>
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Width="auto" Header="Card ID"  Binding ="{Binding CardID}" IsReadOnly="True">
+                                <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Indicates the location of the adapter containing the FC ports." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="auto" Header="Card Port ID" Binding ="{Binding CardPortID}" IsReadOnly="True">
+                                <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Indicates the location ID of the Port containing in the FC Cards." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="auto" Header="Speed"  Binding ="{Binding Speed}" IsReadOnly="True"/>  
+                                <DataGridTextColumn Width="auto" Header="Status" Binding ="{Binding Status}" IsReadOnly="True">
+                                <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Indicates whether the port is configured to a device of Fibre Channel (FC) port." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="auto" Header="WWPN" Binding ="{Binding WWPN}" IsReadOnly="True"/> 
+                                <DataGridTextColumn Width="auto" Header="WWNN" Binding ="{Binding WWNN}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Node Name" Binding ="{Binding NodeName}" IsReadOnly="True">
+                                <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Indicates the name of the node containing the port." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="auto" Header="Host IO Permitted" Binding ="{Binding HostIOPermitted}" IsReadOnly="True">
+                                <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Indicates whether host I/O operations can run on the port. " />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="auto" Header="Virtualized" Binding ="{Binding Virtualized}" IsReadOnly="True">
+                                <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Indicates whether it is a virtualized port." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="auto" Header="Protocol" Binding ="{Binding Protocol}" IsReadOnly="True">
+                                <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Indicates the protocol supported by the port." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="auto" Header="Host Count" Binding ="{Binding HostCount}" IsReadOnly="True">
+                                <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Indicates the number of hosts configured through WWPN through the same portset." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="auto" Header="Active Login Count" Binding ="{Binding ActiveLoginCount}" IsReadOnly="True">
+                                <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Indicates the number of active login counts through WWPN. For a configured host, blocked login will not be included." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="auto" Header="Attachment" Binding ="{Binding Attachment}" IsReadOnly="True">
+                                <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Indicates if the port is attached to an FC switch or directly to an FC host." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                        <DataGrid Grid.Row="1" Grid.Column="1" x:Name="dg_FCPortInfoTwo" AutoGenerateColumns="False" Margin="5,20,5,5" MaxHeight="400">
+                            <DataGrid.Style>
+                                <Style TargetType="DataGrid">
+                                    <Style.Triggers>
+                                        <Trigger Property="HasItems" Value="False">
+                                          <Setter Property="Visibility" Value="Collapsed"></Setter>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGrid.Style>
+                            <DataGrid.RowStyle>
+                                <Style TargetType="DataGridRow">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding Status}" Value="active">
+                                            <Setter Property="Background" Value="LightGreen" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGrid.RowStyle>
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Width="auto" Header="Card ID"  Binding ="{Binding CardID}" IsReadOnly="True">
+                                <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Indicates the location of the adapter containing the FC ports." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="auto" Header="Card Port ID" Binding ="{Binding CardPortID}" IsReadOnly="True">
+                                <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Indicates the location ID of the Port containing in the FC Cards." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="auto" Header="Speed"  Binding ="{Binding Speed}" IsReadOnly="True"/>  
+                                <DataGridTextColumn Width="auto" Header="Status" Binding ="{Binding Status}" IsReadOnly="True">
+                                <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Indicates whether the port is configured to a device of Fibre Channel (FC) port." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="auto" Header="WWPN" Binding ="{Binding WWPN}" IsReadOnly="True"/> 
+                                <DataGridTextColumn Width="auto" Header="WWNN" Binding ="{Binding WWNN}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Node Name" Binding ="{Binding NodeName}" IsReadOnly="True">
+                                <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Indicates the name of the node containing the port." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="auto" Header="Host IO Permitted" Binding ="{Binding HostIOPermitted}" IsReadOnly="True">
+                                <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Indicates whether host I/O operations can run on the port. " />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="auto" Header="Virtualized" Binding ="{Binding Virtualized}" IsReadOnly="True">
+                                <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Indicates whether it is a virtualized port." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="auto" Header="Protocol" Binding ="{Binding Protocol}" IsReadOnly="True">
+                                <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Indicates the protocol supported by the port." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="auto" Header="Host Count" Binding ="{Binding HostCount}" IsReadOnly="True">
+                                <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Indicates the number of hosts configured through WWPN through the same portset." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="auto" Header="Active Login Count" Binding ="{Binding ActiveLoginCount}" IsReadOnly="True">
+                                <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Indicates the number of active login counts through WWPN. For a configured host, blocked login will not be included." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="auto" Header="Attachment" Binding ="{Binding Attachment}" IsReadOnly="True">
+                                <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Indicates if the port is attached to an FC switch or directly to an FC host." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                        <DataGrid Grid.Row="1" Grid.Column="1" x:Name="dg_FCPortInfoThree" AutoGenerateColumns="False" Margin="5,20,5,5" MaxHeight="400">
+                            <DataGrid.Style>
+                                <Style TargetType="DataGrid">
+                                    <Style.Triggers>
+                                        <Trigger Property="HasItems" Value="False">
+                                          <Setter Property="Visibility" Value="Collapsed"></Setter>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGrid.Style>
+                            <DataGrid.RowStyle>
+                                <Style TargetType="DataGridRow">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding Status}" Value="active">
+                                            <Setter Property="Background" Value="LightGreen" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGrid.RowStyle>
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Width="auto" Header="Card ID"  Binding ="{Binding CardID}" IsReadOnly="True">
+                                <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Indicates the location of the adapter containing the FC ports." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="auto" Header="Card Port ID" Binding ="{Binding CardPortID}" IsReadOnly="True">
+                                <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Indicates the location ID of the Port containing in the FC Cards." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="auto" Header="Speed"  Binding ="{Binding Speed}" IsReadOnly="True"/>  
+                                <DataGridTextColumn Width="auto" Header="Status" Binding ="{Binding Status}" IsReadOnly="True">
+                                <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Indicates whether the port is configured to a device of Fibre Channel (FC) port." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="auto" Header="WWPN" Binding ="{Binding WWPN}" IsReadOnly="True"/> 
+                                <DataGridTextColumn Width="auto" Header="WWNN" Binding ="{Binding WWNN}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Node Name" Binding ="{Binding NodeName}" IsReadOnly="True">
+                                <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Indicates the name of the node containing the port." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="auto" Header="Host IO Permitted" Binding ="{Binding HostIOPermitted}" IsReadOnly="True">
+                                <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Indicates whether host I/O operations can run on the port. " />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="auto" Header="Virtualized" Binding ="{Binding Virtualized}" IsReadOnly="True">
+                                <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Indicates whether it is a virtualized port." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="auto" Header="Protocol" Binding ="{Binding Protocol}" IsReadOnly="True">
+                                <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Indicates the protocol supported by the port." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="auto" Header="Host Count" Binding ="{Binding HostCount}" IsReadOnly="True">
+                                <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Indicates the number of hosts configured through WWPN through the same portset." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="auto" Header="Active Login Count" Binding ="{Binding ActiveLoginCount}" IsReadOnly="True">
+                                <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Indicates the number of active login counts through WWPN. For a configured host, blocked login will not be included." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="auto" Header="Attachment" Binding ="{Binding Attachment}" IsReadOnly="True">
+                                <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Indicates if the port is attached to an FC switch or directly to an FC host." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                        <DataGrid Grid.Row="1" Grid.Column="1" x:Name="dg_FCPortInfoFour" AutoGenerateColumns="False" Margin="5,20,5,5" MaxHeight="400">
+                            <DataGrid.Style>
+                                <Style TargetType="DataGrid">
+                                    <Style.Triggers>
+                                        <Trigger Property="HasItems" Value="False">
+                                          <Setter Property="Visibility" Value="Collapsed"></Setter>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGrid.Style>
+                            <DataGrid.RowStyle>
+                                <Style TargetType="DataGridRow">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding Status}" Value="active">
+                                            <Setter Property="Background" Value="LightGreen" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGrid.RowStyle>
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Width="auto" Header="Card ID"  Binding ="{Binding CardID}" IsReadOnly="True">
+                                <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Indicates the location of the adapter containing the FC ports." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="auto" Header="Card Port ID" Binding ="{Binding CardPortID}" IsReadOnly="True">
+                                <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Indicates the location ID of the Port containing in the FC Cards." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="auto" Header="Speed"  Binding ="{Binding Speed}" IsReadOnly="True"/>  
+                                <DataGridTextColumn Width="auto" Header="Status" Binding ="{Binding Status}" IsReadOnly="True">
+                                <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Indicates whether the port is configured to a device of Fibre Channel (FC) port." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="auto" Header="WWPN" Binding ="{Binding WWPN}" IsReadOnly="True"/> 
+                                <DataGridTextColumn Width="auto" Header="WWNN" Binding ="{Binding WWNN}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Node Name" Binding ="{Binding NodeName}" IsReadOnly="True">
+                                <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Indicates the name of the node containing the port." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="auto" Header="Host IO Permitted" Binding ="{Binding HostIOPermitted}" IsReadOnly="True">
+                                <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Indicates whether host I/O operations can run on the port. " />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="auto" Header="Virtualized" Binding ="{Binding Virtualized}" IsReadOnly="True">
+                                <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Indicates whether it is a virtualized port." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="auto" Header="Protocol" Binding ="{Binding Protocol}" IsReadOnly="True">
+                                <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Indicates the protocol supported by the port." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="auto" Header="Host Count" Binding ="{Binding HostCount}" IsReadOnly="True">
+                                <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Indicates the number of hosts configured through WWPN through the same portset." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="auto" Header="Active Login Count" Binding ="{Binding ActiveLoginCount}" IsReadOnly="True">
+                                <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Indicates the number of active login counts through WWPN. For a configured host, blocked login will not be included." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="auto" Header="Attachment" Binding ="{Binding Attachment}" IsReadOnly="True">
+                                <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Indicates if the port is attached to an FC switch or directly to an FC host." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
                             </DataGrid.Columns>
                         </DataGrid>
                         </StackPanel>  
