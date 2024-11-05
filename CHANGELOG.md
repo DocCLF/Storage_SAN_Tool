@@ -25,6 +25,7 @@ All notable changes to this project will be documented in this file.
 - IBM UserInfo as an stand-alone function to remain flexible for further developments
 - IBM VolumeInfo as an stand-alone function to remain flexible for further developments
 - Tooltips for the tables and columns where it makes sense.
+- give some tables a color
 - Reginon for better readability
 
 ### Fixed
