@@ -1411,21 +1411,9 @@
                                         <DataTrigger Binding="{Binding Health}" Value="Yellow">
                                             <Setter Property="Background" Value="Yellow" />
                                         </DataTrigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </DataGrid.RowStyle>
-                            <DataGrid.RowStyle>
-                                <Style TargetType="DataGridRow">
-                                    <Style.Triggers>
                                         <DataTrigger Binding="{Binding Health}" Value="Unknown">
                                             <Setter Property="Background" Value="LightGray" />
                                         </DataTrigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </DataGrid.RowStyle>
-                            <DataGrid.RowStyle>
-                                <Style TargetType="DataGridRow">
-                                    <Style.Triggers>
                                         <DataTrigger Binding="{Binding Health}" Value="Green">
                                             <Setter Property="Background" Value="LightGreen" />
                                         </DataTrigger>
@@ -1460,21 +1448,9 @@
                                         <DataTrigger Binding="{Binding Health}" Value="Yellow">
                                             <Setter Property="Background" Value="Yellow" />
                                         </DataTrigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </DataGrid.RowStyle>
-                            <DataGrid.RowStyle>
-                                <Style TargetType="DataGridRow">
-                                    <Style.Triggers>
                                         <DataTrigger Binding="{Binding Health}" Value="Unknown">
                                             <Setter Property="Background" Value="LightGray" />
                                         </DataTrigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </DataGrid.RowStyle>
-                            <DataGrid.RowStyle>
-                                <Style TargetType="DataGridRow">
-                                    <Style.Triggers>
                                         <DataTrigger Binding="{Binding Health}" Value="Green">
                                             <Setter Property="Background" Value="LightGreen" />
                                         </DataTrigger>
@@ -1509,21 +1485,9 @@
                                         <DataTrigger Binding="{Binding Health}" Value="Yellow">
                                             <Setter Property="Background" Value="Yellow" />
                                         </DataTrigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </DataGrid.RowStyle>
-                            <DataGrid.RowStyle>
-                                <Style TargetType="DataGridRow">
-                                    <Style.Triggers>
                                         <DataTrigger Binding="{Binding Health}" Value="Unknown">
                                             <Setter Property="Background" Value="LightGray" />
                                         </DataTrigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </DataGrid.RowStyle>
-                            <DataGrid.RowStyle>
-                                <Style TargetType="DataGridRow">
-                                    <Style.Triggers>
                                         <DataTrigger Binding="{Binding Health}" Value="Green">
                                             <Setter Property="Background" Value="LightGreen" />
                                         </DataTrigger>
@@ -1558,21 +1522,9 @@
                                         <DataTrigger Binding="{Binding Health}" Value="Yellow">
                                             <Setter Property="Background" Value="Yellow" />
                                         </DataTrigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </DataGrid.RowStyle>
-                            <DataGrid.RowStyle>
-                                <Style TargetType="DataGridRow">
-                                    <Style.Triggers>
                                         <DataTrigger Binding="{Binding Health}" Value="Unknown">
                                             <Setter Property="Background" Value="LightGray" />
                                         </DataTrigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </DataGrid.RowStyle>
-                            <DataGrid.RowStyle>
-                                <Style TargetType="DataGridRow">
-                                    <Style.Triggers>
                                         <DataTrigger Binding="{Binding Health}" Value="Green">
                                             <Setter Property="Background" Value="LightGreen" />
                                         </DataTrigger>
