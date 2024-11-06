@@ -552,7 +552,7 @@ $TD_btn_ExportCred.add_click({
 $TD_btn_ImportCred.add_click({
 
     <#there must be a better option for this line#>
-    $TD_tb_storageIPAdr.CLear(); $TD_tb_storageIPAdrOne.CLear(); $TD_tb_storageIPAdrThree.CLear(); $TD_tb_storageIPAdrTwo.CLear();$TD_tb_storagePassword.CLear(); $TD_tb_storagePasswordOne.CLear(); $TD_tb_storagePasswordThree.CLear(); $TD_tb_storagePasswordTwo.CLear(); $TD_tb_storageUserName.CLear(); $TD_tb_storageUserNameOne.CLear(); $TD_tb_storageUserNameThree.CLear(); $TD_tb_storageUserNameTwo.CLear();
+    $TD_cb_StorageSVCone.IsChecked=$false; $TD_tb_storageIPAdr.CLear(); $TD_tb_storageIPAdrOne.CLear(); $TD_tb_storageIPAdrThree.CLear(); $TD_tb_storageIPAdrTwo.CLear();$TD_tb_storagePassword.CLear(); $TD_tb_storagePasswordOne.CLear(); $TD_tb_storagePasswordThree.CLear(); $TD_tb_storagePasswordTwo.CLear(); $TD_tb_storageUserName.CLear(); $TD_tb_storageUserNameOne.CLear(); $TD_tb_storageUserNameThree.CLear(); $TD_tb_storageUserNameTwo.CLear();
     $TD_tb_sanIPAdr.CLear(); $TD_tb_sanIPAdrOne.CLear(); $TD_tb_sanIPAdrTwo.CLear(); $TD_tb_sanIPAdrThree.CLear();$TD_tb_sanPassword.CLear(); $TD_tb_sanPasswordOne.CLear(); $TD_tb_sanPasswordTwo.CLear(); $TD_tb_sanPasswordThree.CLear(); $TD_tb_sanUserName.CLear(); $TD_tb_sanUserNameOne.CLear(); $TD_tb_sanUserNameTwo.CLear(); $TD_tb_sanUserNameThree.CLear();    
     $TD_ImportedCredentials = ImportCred
     $TD_ImportedCredentials | Format-Table
@@ -561,7 +561,13 @@ $TD_btn_ImportCred.add_click({
         if($TD_Cred.DeviceType -eq "Storage"){
             switch ($TD_Cred.ID) {
                 {($_ -eq 1)} { 
-                    $TD_cb_storageConnectionTyp.Text = $TD_Cred.ConnectionTyp;  $TD_tb_storageIPAdr.Text = $TD_Cred.IPAddress;  $TD_tb_storageUserName.Text= $TD_Cred.UserName; $TD_cb_StorageSVCone.IsChecked=$TD_Cred.IsSVCIP
+                    $TD_cb_storageConnectionTyp.Text = $TD_Cred.ConnectionTyp;  $TD_tb_storageIPAdr.Text = $TD_Cred.IPAddress;  $TD_tb_storageUserName.Text= $TD_Cred.UserName; 
+                    if($TD_Cred.IsSVCIP -eq "False"){
+                        $TD_cb_StorageSVCone.IsChecked=$false
+                    }else {
+                        <# Action when all if and elseif conditions are false #>
+                        $TD_cb_StorageSVCone.IsChecked=$true
+                    }
                 }
                 {($_ -eq 2)} { 
                     $TD_tbn_storageaddrmLine.Content="REMOVE"

@@ -103,7 +103,7 @@
                 <Button
                 x:Name="btn_IBM_FCPortStats"
                 Style="{StaticResource MainBtnStyle}"
-                Content="FC-Port Info" 
+                Content="FC Port Stats" 
                 ToolTip="Get an overview of the stats of your FC ports. Requirement v8.4.x and higher!" />
             </StackPanel>
         </GroupBox>  
