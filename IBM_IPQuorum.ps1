@@ -22,7 +22,7 @@ function IBM_IPQuorum {
         }else {
             $TD_DeviceInformation = plink $TD_Device_UserName@$TD_Device_DeviceIP -pw $TD_Device_PW -batch 'lsquorum -delim :'
         }
-        #$TD_DeviceInformation = Get-Content -Path C:\Users\mailt\Documents\lsqouorum_ip.txt |Select-Object -Skip 1
+        
         $TD_DeviceInformation = $TD_DeviceInformation |Select-Object -Skip 1
     }
     

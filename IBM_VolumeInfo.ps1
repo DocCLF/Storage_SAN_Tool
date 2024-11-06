@@ -48,7 +48,7 @@ function IBM_VolumeInfo {
     end {
         Close-ProgressBar -ProgressBar $ProgressBar
         if($TD_Export -eq "yes"){
-            <# exported as .\<nbr>_User_Result_<date>.csv #>
+
             if([string]$TD_Exportpath -ne "$PSCommandPath\Export\"){
                 $TD_VDiskFuncResault | Export-Csv -Path $TD_Exportpath\$($TD_Line_ID)_Volume_Result_$(Get-Date -Format "yyyy-MM-dd").csv -NoTypeInformation
                 Write-Host "The Export can be found at $TD_Exportpath " -ForegroundColor Green

@@ -51,27 +51,9 @@ function IBM_FCPortStats {
         <# Connect to Device and get all needed Data #>
         if($TD_Storage -eq "FSystem"){
             if($TD_Device_ConnectionTyp -eq "ssh"){
-                try {
-                    $TD_CollectInfos = ssh $TD_Device_UserName@$TD_Device_DeviceIP 'lsnodecanister -nohdr |while read id name IO_group_id;do lsnodecanister $id;echo;done && lsnodecanister -nohdr |while read id name IO_group_id;do lsportstats -node $id ;echo;done'
-                }
-                catch {
-                    <#Do this if a terminating exception happens#>
-                    Write-Host "Something went wrong, pls check if it is a SVC Connection" -ForegroundColor DarkMagenta
-                    Write-Host $_.Exception.Message
-                    $TD_lb_PortStatsErrorInfo.Visibility="Visible"
-                    $TD_lb_PortStatsErrorInfo.Content = "At Panel $TD_Line_ID is following Problem,`n $($_.Exception.Message)"
-                }
+                $TD_CollectInfos = ssh $TD_Device_UserName@$TD_Device_DeviceIP 'lsnodecanister -nohdr |while read id name IO_group_id;do lsnodecanister $id;echo;done && lsnodecanister -nohdr |while read id name IO_group_id;do lsportstats -node $id ;echo;done'
             }else{
-                try {
-                    $TD_CollectInfos = plink $TD_Device_UserName@$TD_Device_DeviceIP -pw $TD_Device_PW -batch 'lsnodecanister -nohdr |while read id name IO_group_id;do lsnodecanister $id;echo;done && lsnodecanister -nohdr |while read id name IO_group_id;do lsportstats -node $id ;echo;done'
-                }
-                catch {
-                    <#Do this if a terminating exception happens#>
-                    Write-Host "Something went wrong, pls check if it is a SVC Connection" -ForegroundColor DarkMagenta
-                    Write-Host $_.Exception.Message
-                    $TD_lb_PortStatsErrorInfo.Visibility="Visible"
-                    $TD_lb_PortStatsErrorInfo.Content = "At Panel $TD_Line_ID is following Problem,`n $($_.Exception.Message)"
-                }
+                $TD_CollectInfos = plink $TD_Device_UserName@$TD_Device_DeviceIP -pw $TD_Device_PW -batch 'lsnodecanister -nohdr |while read id name IO_group_id;do lsnodecanister $id;echo;done && lsnodecanister -nohdr |while read id name IO_group_id;do lsportstats -node $id ;echo;done'
             }
         }else {
             if($TD_Device_ConnectionTyp -eq "ssh"){
@@ -80,8 +62,6 @@ function IBM_FCPortStats {
                 $TD_CollectInfos = plink $TD_Device_UserName@$TD_Device_DeviceIP -pw $TD_Device_PW -batch 'lsnode -nohdr |while read id name IO_group_id;do lsnode $id;echo;done && lsnode -nohdr |while read id name IO_group_id;do lsportstats -node $id ;echo;done'
             }
         }
-        #Start-Sleep -Seconds 0.5
-        #$TD_CollectInfos = Get-Content -Path C:\Users\mailt\Documents\lsportstats.txt
     }
 
     process {
@@ -152,7 +132,7 @@ function IBM_FCPortStats {
         Close-ProgressBar -ProgressBar $ProgressBar
         <# export y or n #>
         if($TD_export -eq "yes"){
-            <# exported to .\Host_Volume_Map_Result.csv #>
+
             if([string]$TD_Exportpath -ne "$PSRootPath\Export\"){
                 $TD_PortStats_Overview | Export-Csv -Path $TD_Exportpath\$($TD_Line_ID)_FCPortStatsOverview_$(Get-Date -Format "yyyy-MM-dd").csv -NoTypeInformation
             }else {

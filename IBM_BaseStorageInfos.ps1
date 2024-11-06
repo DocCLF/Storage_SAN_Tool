@@ -24,29 +24,11 @@ function IBM_BaseStorageInfos {
         switch ($TD_Storage) {
             "FSystem" { 
                 if($TD_Device_ConnectionTyp -eq "ssh"){
-                    try {
-                        $TD_BaseInformations = ssh $TD_Device_UserName@$TD_Device_DeviceIP 'lsnodecanister -delim : && lsnodecanister -nohdr |while read id name IO_group_id;do lsnodecanister -delim : $id ;echo;done'
-                    }
-                    catch {
-                        <#Do this if a terminating exception happens#>
-                        Write-Host "Something went wrong, pls check if it is a SVC Connection" -ForegroundColor DarkMagenta
-                        Write-Host $_.Exception.Message
-                        $TD_lb_BaseStorageErrorInfo.Visibility="Visible"
-                        $TD_lb_BaseStorageErrorInfo.Content = "At Panel $TD_Line_ID is following Problem,`n $($_.Exception.Message)"
-                    }
+                    $TD_BaseInformations = ssh $TD_Device_UserName@$TD_Device_DeviceIP 'lsnodecanister -delim : && lsnodecanister -nohdr |while read id name IO_group_id;do lsnodecanister -delim : $id ;echo;done'
                 }else {
-                    try {
-                        $TD_BaseInformations = plink $TD_Device_UserName@$TD_Device_DeviceIP -pw $TD_Device_PW -batch 'lsnodecanister -delim : && lsnodecanister -nohdr |while read id name IO_group_id;do lsnodecanister -delim : $id ;echo;done'
-                    }
-                    catch {
-                        <#Do this if a terminating exception happens#>
-                        Write-Host "Something went wrong, pls check if it is a SVC Connection" -ForegroundColor DarkMagenta
-                        Write-Host $_.Exception.Message
-                        $TD_lb_BaseStorageErrorInfo.Visibility="Visible"
-                        $TD_lb_BaseStorageErrorInfo.Content = "At Panel $TD_Line_ID is following Problem,`n $($_.Exception.Message)"
-                    }
-                }
+                    $TD_BaseInformations = plink $TD_Device_UserName@$TD_Device_DeviceIP -pw $TD_Device_PW -batch 'lsnodecanister -delim : && lsnodecanister -nohdr |while read id name IO_group_id;do lsnodecanister -delim : $id ;echo;done'
               }
+            }
             "SVC" { 
                 if($TD_Device_ConnectionTyp -eq "ssh"){
                     $TD_BaseInformations = ssh $TD_Device_UserName@$TD_Device_DeviceIP 'lsnode -delim : && lsnode -nohdr |while read id name IO_group_id;do lsnode -delim : $id;echo;done'
@@ -97,7 +79,7 @@ function IBM_BaseStorageInfos {
         Close-ProgressBar -ProgressBar $ProgressBar
         <# export y or n #>
         if($TD_export -eq "yes"){
-            <# exported to .\Host_Volume_Map_Result.csv #>
+
             if([string]$TD_Exportpath -ne "$PSRootPath\Export\"){
                 $TD_StorageInfo | Export-Csv -Path $TD_Exportpath\$($TD_Line_ID)_StorageBaseInfo_$(Get-Date -Format "yyyy-MM-dd").csv -NoTypeInformation
             }else {

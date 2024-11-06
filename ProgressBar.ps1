@@ -96,9 +96,7 @@ function Write-ProgressBar
 
    if($PercentComplete)
    {
-
-       $ProgressBar.PercentComplete = $PercentComplete
-
+    $ProgressBar.PercentComplete = $PercentComplete
    }
 
 }

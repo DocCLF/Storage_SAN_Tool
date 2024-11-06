@@ -39,8 +39,7 @@ function IBM_EventLog {
         }else {
             $TD_CollectEventInfo = plink $TD_Device_UserName@$TD_Device_DeviceIP -pw $TD_Device_PW -batch "lseventlog -delim :"
         }
-        <# next line one for testing #>
-        #$TD_CollectEventInfo = Get-Content -Path "C:\Users\mailt\Documents\FS5200_RZ1.txt"
+        
         $TD_CollectEventInfo = $TD_CollectEventInfo | Select-Object -Skip 1
         
     }

@@ -31,27 +31,29 @@ function IBM_BackUpConfig {
         
         
         if($TD_Device_ConnectionTyp -eq "ssh"){
-            try {
+            <# try-catch is placed for later use #>
+            #try {
                 ssh $TD_Device_UserName@$TD_Device_DeviceIP "svcconfig backup"
-                Start-Sleep -Seconds 2
+                Start-Sleep -Seconds 1
                 pscp -unsafe -pw $TD_Device_PW $TD_Device_UserName@$($TD_Device_DeviceIP):/dumps/svc.config.backup.* $TD_Exportpath
-            }
-            catch {
-                <#Do this if a terminating exception happens#>
-                Write-Host "Somethign went wrong" -ForegroundColor DarkMagenta
-                Write-Host $_.Exception.Message
-            }
+            #}
+            #catch {
+            #    <#Do this if a terminating exception happens#>
+            #    Write-Host "Somethign went wrong" -ForegroundColor DarkMagenta
+            #    Write-Host $_.Exception.Message
+            #}
         }else {
-            try {
+            <# try-catch is placed for later use #>
+            #try {
                 plink $TD_Device_UserName@$TD_Device_DeviceIP -pw $TD_Device_PW -batch "svcconfig backup"
-                Start-Sleep -Seconds 2
+                Start-Sleep -Seconds 1
                 pscp -unsafe -pw $TD_Device_PW $TD_Device_UserName@$($TD_Device_DeviceIP):/dumps/svc.config.backup.* $TD_Exportpath
-            }
-            catch {
-                <#Do this if a terminating exception happens#>
-                Write-Host "Somethign went wrong" -ForegroundColor DarkMagenta
-                Write-Host $_.Exception.Message
-            }
+            #}
+            #catch {
+            #    <#Do this if a terminating exception happens#>
+            #    Write-Host "Somethign went wrong" -ForegroundColor DarkMagenta
+            #    Write-Host $_.Exception.Message
+            #}
         }
         
     }
@@ -59,15 +61,16 @@ function IBM_BackUpConfig {
     process{
         Write-Debug -Message "IBM_BackUpConfig Process block |$(Get-Date)"
         Write-ProgressBar -ProgressBar $ProgressBar -Activity "Collect data for Device $($TD_Line_ID)" -PercentComplete ((25/50) * 100)
-        try {
+        <# try-catch is placed for later use #>
+        #try {
             $TD_ExportFiles = Get-ChildItem -Path $TD_Exportpath -Filter "svc.config.backup.* "
             <# maybe add a filter #>
-        }
-        catch {
-            <#Do this if a terminating exception happens#>
-            Write-Host "Somethign went wrong" -ForegroundColor DarkMagenta
-            Write-Host $_.FullyQualifiedErrorId
-        }
+        #}
+        #catch {
+        #    <#Do this if a terminating exception happens#>
+        #    Write-Host "Somethign went wrong" -ForegroundColor DarkMagenta
+        #    Write-Host $_.FullyQualifiedErrorId
+        #}
     }
 
     end {

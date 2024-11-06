@@ -87,7 +87,7 @@ function IBM_PolicyBased_Rep {
         Close-ProgressBar -ProgressBar $ProgressBar
         <# export y or n #>
         if($TD_export -eq "yes"){
-            <# exported to .\Host_Volume_Map_Result.csv #>
+
             if([string]$TD_Exportpath -ne "$PSRootPath\Export\"){
                 switch ($TD_RepInfoChose) {
                     "lsreplicationpolicy" { $TD_ReplicationPolicy | Export-Csv -Path $TD_Exportpath\$($TD_Line_ID)_ReplicationPolicy_$(Get-Date -Format "yyyy-MM-dd").csv -NoTypeInformation }
