@@ -619,19 +619,23 @@ $TD_btn_IBM_Eventlog.add_click({
     $TD_Credentials=@()
     $TD_Credentials_Checked = Get_CredGUIInfos -STP_ID 1 -TD_ConnectionTyp $TD_cb_storageConnectionTyp.Text -TD_IPAdresse $TD_tb_storageIPAdr.Text -TD_UserName $TD_tb_storageUserName.Text -TD_Password $TD_tb_storagePassword
     $TD_Credentials += $TD_Credentials_Checked
-    Start-Sleep -Seconds 0.5
+    Start-Sleep -Seconds 0.2
 
     $TD_Credentials_Checked = Get_CredGUIInfos -STP_ID 2 -TD_ConnectionTyp $TD_cb_storageConnectionTypOne.Text -TD_IPAdresse $TD_tb_storageIPAdrOne.Text -TD_UserName $TD_tb_storageUserNameOne.Text -TD_Password $TD_tb_storagePasswordOne
     $TD_Credentials += $TD_Credentials_Checked
-    Start-Sleep -Seconds 0.5
+    Start-Sleep -Seconds 0.2
 
     $TD_Credentials_Checked = Get_CredGUIInfos -STP_ID 3 -TD_ConnectionTyp $TD_cb_storageConnectionTypTwo.Text -TD_IPAdresse $TD_tb_storageIPAdrTwo.Text -TD_UserName $TD_tb_storageUserNameTwo.Text -TD_Password $TD_tb_storagePasswordTwo
     $TD_Credentials += $TD_Credentials_Checked
-    Start-Sleep -Seconds 0.5
+    Start-Sleep -Seconds 0.2
 
     $TD_Credentials_Checked = Get_CredGUIInfos -STP_ID 4 -TD_ConnectionTyp $TD_cb_storageConnectionTypThree.Text -TD_IPAdresse $TD_tb_storageIPAdrThree.Text -TD_UserName $TD_tb_storageUserNameThree.Text -TD_Password $TD_tb_storagePasswordThree
     $TD_Credentials += $TD_Credentials_Checked
-    Start-Sleep -Seconds 0.5
+    Start-Sleep -Seconds 0.2
+
+    $TD_lb_StorageEventLogOne,$TD_lb_StorageEventLogTwo,$TD_lb_StorageEventLogThree,$TD_lb_StorageEventLogFour |ForEach-Object {
+        if($_.items.count -gt 0){$TD_UCRefresh = $true}; $_.ItemsSource = $EmptyVar
+    }
 
     foreach($TD_Credential in $TD_Credentials){
         <# QaD needs a Codeupdate #>
@@ -640,6 +644,7 @@ $TD_btn_IBM_Eventlog.add_click({
         switch ($TD_Credential.ID) {
             {($_ -eq 1)} 
             {   
+                Write-Host $TD_lb_StorageEventLogOne.ItemsSource
                 $TD_IBM_EventLogShow = IBM_EventLog -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.StorageUserName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $TD_Credential.StoragePassword -TD_Exportpath $TD_tb_ExportPath.Text
                 Start-Sleep -Seconds 0.2
                 $TD_lb_StorageEventLogOne.ItemsSource = $TD_IBM_EventLogShow
@@ -665,14 +670,12 @@ $TD_btn_IBM_Eventlog.add_click({
             Default {Write-Debug "Nothing" }
         }
     }
-    $TD_stp_DriveInfo.Visibility="Collapsed"
-    $TD_stp_FCPortStats.Visibility="Collapsed"
-    $TD_stp_HostVolInfo.Visibility="Collapsed"
-    $TD_stp_BackUpConfig.Visibility="Collapsed"
-    $TD_stp_PolicyBased_Rep.Visibility="Collapsed"
-    $TD_stp_BaseStorageInfo.Visibility="Collapsed"
-    $TD_stp_IBM_FCPortInfo.Visibility="Collapsed"
-    $TD_stp_StorageEventLog.Visibility="Visible"
+    if($TD_UCRefresh){$TD_UserControl1.Dispatcher.Invoke([System.Action]{},"Render");$TD_UCRefresh=$false}
+
+    $TD_stp_FCPortStats,$TD_stp_DriveInfo,$TD_stp_HostVolInfo,$TD_stp_BackUpConfig,$TD_stp_BaseStorageInfo,$TD_stp_IBM_FCPortInfo,$TD_stp_PolicyBased_Rep | ForEach-Object {$_.Visibility="Collapsed"}
+
+    $TD_stp_StorageEventLog.Visibility="Visible" 
+
 })
 <#
 $TD_btn_IBM_CatAuditLog.add_click({
@@ -752,6 +755,10 @@ $TD_btn_IBM_HostVolumeMap.add_click({
     $TD_Credentials += $TD_Credentials_Checked
     Start-Sleep -Seconds 0.2
 
+    $TD_dg_HostVolInfo,$TD_dg_HostVolInfoTwo,$TD_dg_HostVolInfoThree,$TD_dg_HostVolInfoFour |ForEach-Object {
+        if($_.items.count -gt 0){$TD_UCRefresh = $true}; $_.ItemsSource = $EmptyVar
+    }
+
     foreach($TD_Credential in $TD_Credentials){
         <# QaD needs a Codeupdate #>
         #$TD_Host_Volume_Map =@()
@@ -789,15 +796,13 @@ $TD_btn_IBM_HostVolumeMap.add_click({
         }
         #Write-Host $TD_Host_Volume_Map
     }
-    #$TD_label_ExpPath.Content ="Export Path: $($TD_tb_ExportPath.Text)"
-    $TD_stp_DriveInfo.Visibility="Collapsed"
-    $TD_stp_FCPortStats.Visibility="Collapsed"
-    $TD_stp_StorageEventLog.Visibility="Collapsed"
-    $TD_stp_BackUpConfig.Visibility="Collapsed"
-    $TD_stp_PolicyBased_Rep.Visibility="Collapsed"
-    $TD_stp_BaseStorageInfo.Visibility="Collapsed"
-    $TD_stp_IBM_FCPortInfo.Visibility="Collapsed"
-    $TD_stp_HostVolInfo.Visibility="Visible"
+
+    if($TD_UCRefresh){$TD_UserControl1.Dispatcher.Invoke([System.Action]{},"Render");$TD_UCRefresh=$false}
+
+    $TD_stp_FCPortStats,$TD_stp_DriveInfo,$TD_stp_StorageEventLog,$TD_stp_BackUpConfig,$TD_stp_BaseStorageInfo,$TD_stp_IBM_FCPortInfo,$TD_stp_PolicyBased_Rep | ForEach-Object {$_.Visibility="Collapsed"}
+
+    $TD_stp_HostVolInfo.Visibility="Visible" 
+
 })
 <# filter View for Host Volume Map #>
 <# to keep this file clean :D export the following lines to a func in one if the next Version #>
@@ -872,6 +877,10 @@ $TD_btn_IBM_DriveInfo.add_click({
         [string]$TD_cb_FCPortStatsDevice = "FSystem"
     }
 
+    $TD_dg_DriveInfo,$TD_dg_DriveInfoTwo,$TD_dg_DriveInfoThree,$TD_dg_DriveInfoFour |ForEach-Object {
+        if($_.items.count -gt 0){$TD_UCRefresh = $true}; $_.ItemsSource = $EmptyVar
+    }
+    
     foreach($TD_Credential in $TD_Credentials){
         <# QaD needs a Codeupdate #>
         $TD_DriveInfo =@()
@@ -901,17 +910,16 @@ $TD_btn_IBM_DriveInfo.add_click({
                 Start-Sleep -Seconds 0.2
                 $TD_dg_DriveInfoFour.ItemsSource = $TD_DriveInfo
             }
-        Default {Write-Debug "Nothing" }
+            Default {Write-Debug "Nothing" }
+        }
     }
-}
-    $TD_stp_HostVolInfo.Visibility="Collapsed"
-    $TD_stp_FCPortStats.Visibility="Collapsed"
-    $TD_stp_StorageEventLog.Visibility="Collapsed"
-    $TD_stp_BackUpConfig.Visibility="Collapsed"
-    $TD_stp_PolicyBased_Rep.Visibility="Collapsed"
-    $TD_stp_BaseStorageInfo.Visibility="Collapsed"
-    $TD_stp_IBM_FCPortInfo.Visibility="Collapsed"
-    $TD_stp_DriveInfo.Visibility="Visible"
+
+    if($TD_UCRefresh){$TD_UserControl1.Dispatcher.Invoke([System.Action]{},"Render");$TD_UCRefresh=$false}
+
+    $TD_stp_FCPortStats,$TD_stp_HostVolInfo,$TD_stp_StorageEventLog,$TD_stp_BackUpConfig,$TD_stp_BaseStorageInfo,$TD_stp_IBM_FCPortInfo,$TD_stp_PolicyBased_Rep | ForEach-Object {$_.Visibility="Collapsed"}
+
+    $TD_stp_DriveInfo.Visibility="Visible" 
+
 })
 
 $TD_btn_IBM_FCPortStats.add_click({
@@ -937,6 +945,10 @@ $TD_btn_IBM_FCPortStats.add_click({
         [string]$TD_cb_FCPortStatsDevice = "SVC"
     }else {
         [string]$TD_cb_FCPortStatsDevice = "FSystem"
+    }
+
+    $TD_dg_FCPortStatsOne,$TD_dg_FCPortStatsTwo,$TD_dg_FCPortStatsThree,$TD_dg_FCPortStatsFour |ForEach-Object {
+        if($_.items.count -gt 0){$TD_UCRefresh = $true}; $_.ItemsSource = $EmptyVar
     }
 
     foreach($TD_Credential in $TD_Credentials){
@@ -971,16 +983,12 @@ $TD_btn_IBM_FCPortStats.add_click({
         }
 
     }
+    if($TD_UCRefresh){$TD_UserControl1.Dispatcher.Invoke([System.Action]{},"Render");$TD_UCRefresh=$false}
 
-    $TD_stp_DriveInfo.Visibility="Collapsed"
-    $TD_stp_HostVolInfo.Visibility="Collapsed"
-    $TD_stp_StorageEventLog.Visibility="Collapsed"
-    $TD_stp_BackUpConfig.Visibility="Collapsed"
-    $TD_stp_PolicyBased_Rep.Visibility="Collapsed"
-    $TD_stp_BaseStorageInfo.Visibility="Collapsed"
-    $TD_stp_IBM_FCPortInfo.Visibility="Collapsed"
-    $TD_stp_FCPortStats.Visibility="Visible"
-    
+    $TD_stp_DriveInfo,$TD_stp_HostVolInfo,$TD_stp_StorageEventLog,$TD_stp_BackUpConfig,$TD_stp_BaseStorageInfo,$TD_stp_IBM_FCPortInfo,$TD_stp_PolicyBased_Rep | ForEach-Object {$_.Visibility="Collapsed"}
+
+    $TD_stp_FCPortStats.Visibility="Visible" 
+
 })
 
 $TD_btn_IBM_FCPortInfo.add_click({
@@ -1000,6 +1008,10 @@ $TD_btn_IBM_FCPortInfo.add_click({
     $TD_Credentials_Checked = Get_CredGUIInfos -STP_ID 4 -TD_ConnectionTyp $TD_cb_storageConnectionTypThree.Text -TD_IPAdresse $TD_tb_storageIPAdrThree.Text -TD_UserName $TD_tb_storageUserNameThree.Text -TD_Password $TD_tb_storagePasswordThree
     $TD_Credentials += $TD_Credentials_Checked
     Start-Sleep -Seconds 0.5
+
+    $TD_dg_FCPortInfoOne,$TD_dg_FCPortInfoTwo,$TD_dg_FCPortInfoThree,$TD_dg_FCPortInfoFour |ForEach-Object {
+        if($_.items.count -gt 0){$TD_UCRefresh = $true}; $_.ItemsSource = $EmptyVar
+    }
 
     foreach($TD_Credential in $TD_Credentials){
         <# QaD needs a Codeupdate because Grouping dose not work #>
@@ -1033,14 +1045,10 @@ $TD_btn_IBM_FCPortInfo.add_click({
         }
 
     }
+    if($TD_UCRefresh){$TD_UserControl1.Dispatcher.Invoke([System.Action]{},"Render");$TD_UCRefresh=$false}
 
-    $TD_stp_DriveInfo.Visibility="Collapsed"
-    $TD_stp_HostVolInfo.Visibility="Collapsed"
-    $TD_stp_StorageEventLog.Visibility="Collapsed"
-    $TD_stp_BackUpConfig.Visibility="Collapsed"
-    $TD_stp_PolicyBased_Rep.Visibility="Collapsed"
-    $TD_stp_BaseStorageInfo.Visibility="Collapsed"
-    $TD_stp_FCPortStats.Visibility="Collapsed"
+    $TD_stp_DriveInfo,$TD_stp_HostVolInfo,$TD_stp_StorageEventLog,$TD_stp_BackUpConfig,$TD_stp_BaseStorageInfo,$TD_stp_FCPortStats,$TD_stp_PolicyBased_Rep | ForEach-Object {$_.Visibility="Collapsed"}
+
     $TD_stp_IBM_FCPortInfo.Visibility="Visible"
     
 })
@@ -1217,13 +1225,8 @@ $TD_btn_IBM_BackUpConfig.add_click({
 })
 
 $TD_btn_IBM_PolicyBased_Rep.add_click({
-    $TD_stp_DriveInfo.Visibility="Collapsed"
-    $TD_stp_HostVolInfo.Visibility="Collapsed"
-    $TD_stp_StorageEventLog.Visibility="Collapsed"
-    $TD_stp_BackUpConfig.Visibility="Collapsed"
-    $TD_stp_FCPortStats.Visibility="Collapsed"
-    $TD_stp_BaseStorageInfo.Visibility="Collapsed"
-    $TD_stp_IBM_FCPortInfo.Visibility="Collapsed"
+    $TD_stp_DriveInfo,$TD_stp_HostVolInfo,$TD_stp_StorageEventLog,$TD_stp_BackUpConfig,$TD_stp_BaseStorageInfo,$TD_stp_FCPortStats,$TD_stp_IBM_FCPortInfo | ForEach-Object {$_.Visibility="Collapsed"}
+
     $TD_stp_PolicyBased_Rep.Visibility="Visible"
 })
 
@@ -1248,11 +1251,12 @@ $TD_btn_FilterPBR.add_click({
     [string]$TD_RepInfoChose = $TD_cb_ListFilterStoragePBR.Text
 
     switch ($TD_RepInfoChose) {
-        "ReplicationPolicy" { 
-            $TD_dg_VolumeGrpReplicationOne.ItemsSource = $EmptyVar
-            $TD_dg_VolumeGrpReplicationTwo.ItemsSource = $EmptyVar
-            $TD_dg_VolumeGrpReplicationThree.ItemsSource = $EmptyVar
-            $TD_dg_VolumeGrpReplicationFour.ItemsSource = $EmptyVar
+        "ReplicationPolicy" {
+
+            $TD_dg_VolumeGrpReplicationOne,$TD_dg_VolumeGrpReplicationTwo,$TD_dg_VolumeGrpReplicationThree,$TD_dg_VolumeGrpReplicationFour |ForEach-Object {
+                if($_.items.count -gt 0){$TD_UCRefresh = $true}; $_.ItemsSource = $EmptyVar
+            }
+
             Start-Sleep -Seconds 0.2
             foreach($TD_Credential in $TD_Credentials){
                 [array]$TD_PolicyBased_Rep
@@ -1286,10 +1290,11 @@ $TD_btn_FilterPBR.add_click({
             }
         }
         "VolumeGroupReplication" { 
-            $TD_dg_ReplicationPolicyOne.ItemsSource = $EmptyVar
-            $TD_dg_ReplicationPolicyTwo.ItemsSource = $EmptyVar
-            $TD_dg_ReplicationPolicyThree.ItemsSource = $EmptyVar
-            $TD_dg_ReplicationPolicyFour.ItemsSource = $EmptyVar
+
+            $TD_dg_ReplicationPolicyOne,$TD_dg_ReplicationPolicyTwo,$TD_dg_ReplicationPolicyThree,$TD_dg_ReplicationPolicyFour |ForEach-Object {
+                if($_.items.count -gt 0){$TD_UCRefresh = $true}; $_.ItemsSource = $EmptyVar
+            }
+
             foreach($TD_Credential in $TD_Credentials){
                 <# QaD needs a Codeupdate because Grouping dose not work #>
                 [array]$TD_VolumeGroupRep
@@ -1324,6 +1329,7 @@ $TD_btn_FilterPBR.add_click({
          }
         Default {}
     }
+    if($TD_UCRefresh){$TD_UserControl1.Dispatcher.Invoke([System.Action]{},"Render");$TD_UCRefresh=$false}
 })
 
 $TD_btn_IBM_BaseStorageInfo.add_click({
@@ -1349,6 +1355,10 @@ $TD_btn_IBM_BaseStorageInfo.add_click({
         [string]$TD_cb_FCPortStatsDevice = "SVC"
     }else {
         [string]$TD_cb_FCPortStatsDevice = "FSystem"
+    }
+
+    $TD_dg_BaseStorageInfoOne,$TD_dg_BaseStorageInfoTwo,$TD_dg_BaseStorageInfoThree,$TD_dg_BaseStorageInfoFour |ForEach-Object {
+        if($_.items.count -gt 0){$TD_UCRefresh = $true}; $_.ItemsSource = $EmptyVar
     }
 
     foreach($TD_Credential in $TD_Credentials){
@@ -1382,14 +1392,10 @@ $TD_btn_IBM_BaseStorageInfo.add_click({
             Default {Write-Debug "Nothing" }
         }
     }
-    #$TD_label_ExpPath.Content ="Export Path: $($TD_tb_ExportPath.Text)"
-    $TD_stp_DriveInfo.Visibility="Collapsed"
-    $TD_stp_HostVolInfo.Visibility="Collapsed"
-    $TD_stp_StorageEventLog.Visibility="Collapsed"
-    $TD_stp_BackUpConfig.Visibility="Collapsed"
-    $TD_stp_PolicyBased_Rep.Visibility="Collapsed"
-    $TD_stp_FCPortStats.Visibility="Collapsed"
-    $TD_stp_IBM_FCPortInfo.Visibility="Collapsed"
+    if($TD_UCRefresh){$TD_UserControl1.Dispatcher.Invoke([System.Action]{},"Render");$TD_UCRefresh=$false}
+
+    $TD_stp_DriveInfo,$TD_stp_HostVolInfo,$TD_stp_StorageEventLog,$TD_stp_BackUpConfig,$TD_stp_PolicyBased_Rep,$TD_stp_FCPortStats,$TD_stp_IBM_FCPortInfo | ForEach-Object {$_.Visibility="Collapsed"}
+
     $TD_stp_BaseStorageInfo.Visibility="Visible"
 })
 #endregion
@@ -1412,6 +1418,10 @@ $TD_btn_FOS_BasicSwitchInfo.add_click({
     $TD_Credentials_Checked = Get_CredGUIInfos -STP_ID 4 -TD_ConnectionTyp $TD_cb_sanConnectionTypThree.Text -TD_IPAdresse $TD_tb_sanIPAdrThree.Text -TD_UserName $TD_tb_sanUserNameThree.Text -TD_Password $TD_tb_sanPasswordThree
     $TD_Credentials += $TD_Credentials_Checked
     Start-Sleep -Seconds 0.5
+
+    $TD_dg_sanBasicSwitchInfoOne,$TD_dg_sanBasicSwitchInfoTwo,$TD_dg_sanBasicSwitchInfoThree,$TD_dg_sanBasicSwitchInfoFour |ForEach-Object {
+        if($_.items.count -gt 0){$TD_UCRefresh = $true}; $_.ItemsSource = $EmptyVar
+    }
 
     foreach($TD_Credential in $TD_Credentials){
         <# QaD needs a Codeupdate #>
@@ -1445,17 +1455,12 @@ $TD_btn_FOS_BasicSwitchInfo.add_click({
         }
     }
 
-    <#Chang to correct Content etc.#>
-    <#$TD_label_ExpPHVM.Content ="Export Path: $($TD_tb_ExportPath.Text)"#>
-    Start-Sleep -Seconds 0.5
-    $TD_stp_sanLicenseShow.Visibility="Collapsed"
-    $TD_stp_sanPortBufferShow.Visibility="Collapsed"
-    $TD_stp_sanPortErrorShow.Visibility="Collapsed"
-    $TD_stp_sanSwitchShow.Visibility="Collapsed"
-    $TD_stp_sanZoneDetailsShow.Visibility="Collapsed"
-    $TD_stp_sanSensorShow.Visibility="Collapsed"
-    $TD_stp_sanSFPShow.Visibility="Collapsed"
+    if($TD_UCRefresh){$TD_UserControl1.Dispatcher.Invoke([System.Action]{},"Render");$TD_UCRefresh=$false}
+
+    $TD_stp_sanLicenseShow,$TD_stp_sanPortBufferShow,$TD_stp_sanPortErrorShow,$TD_stp_sanSwitchShow,$TD_stp_sanZoneDetailsShow,$TD_stp_sanSensorShow,$TD_stp_sanSFPShow | ForEach-Object {$_.Visibility="Collapsed"}
+
     $TD_stp_sanBasicSwitchInfo.Visibility="Visible"
+
 })
 
 $TD_btn_FOS_SwitchShow.add_click({
@@ -1475,6 +1480,10 @@ $TD_btn_FOS_SwitchShow.add_click({
     $TD_Credentials_Checked = Get_CredGUIInfos -STP_ID 4 -TD_ConnectionTyp $TD_cb_sanConnectionTypThree.Text -TD_IPAdresse $TD_tb_sanIPAdrThree.Text -TD_UserName $TD_tb_sanUserNameThree.Text -TD_Password $TD_tb_sanPasswordThree
     $TD_Credentials += $TD_Credentials_Checked
     Start-Sleep -Seconds 0.5
+
+    $TD_lb_SwitchShowOne,$TD_lb_SwitchShowTwo,$TD_lb_SwitchShowThree,$TD_lb_SwitchShowFour |ForEach-Object {
+        if($_.items.count -gt 0){$TD_UCRefresh = $true}; $_.ItemsSource = $EmptyVar
+    }
 
     foreach($TD_Credential in $TD_Credentials){
         <# QaD needs a Codeupdate #>
@@ -1512,18 +1521,12 @@ $TD_btn_FOS_SwitchShow.add_click({
             Default {Write-Debug "Nothing" }
         }
     }
+    if($TD_UCRefresh){$TD_UserControl1.Dispatcher.Invoke([System.Action]{},"Render");$TD_UCRefresh=$false}
 
-    <#Chang to correct Content etc.#>
-    <#$TD_label_ExpPHVM.Content ="Export Path: $($TD_tb_ExportPath.Text)"#>
-    Start-Sleep -Seconds 0.5
-    $TD_stp_sanBasicSwitchInfo.Visibility="Collapsed"
-    $TD_stp_sanLicenseShow.Visibility="Collapsed"
-    $TD_stp_sanPortBufferShow.Visibility="Collapsed"
-    $TD_stp_sanPortErrorShow.Visibility="Collapsed"
-    $TD_stp_sanZoneDetailsShow.Visibility="Collapsed"
-    $TD_stp_sanSensorShow.Visibility="Collapsed"
-    $TD_stp_sanSFPShow.Visibility="Collapsed"
+    $TD_stp_sanLicenseShow,$TD_stp_sanPortBufferShow,$TD_stp_sanPortErrorShow,$TD_stp_sanBasicSwitchInfo,$TD_stp_sanZoneDetailsShow,$TD_stp_sanSensorShow,$TD_stp_sanSFPShow | ForEach-Object {$_.Visibility="Collapsed"}
+
     $TD_stp_sanSwitchShow.Visibility="Visible"
+
 })
 <# filter View for Host Volume Map #>
 <# to keep this file clean :D export the following lines to a func in one if the next Version #>
@@ -1591,6 +1594,10 @@ $TD_btn_FOS_ZoneDetailsShow.add_click({
     $TD_Credentials += $TD_Credentials_Checked
     Start-Sleep -Seconds 0.5
 
+    $TD_dg_ZoneDetailsOne,$TD_dg_ZoneDetailsTwo,$FOS_EffeZoneNameThree |ForEach-Object {
+        if($_.items.count -gt 0){$TD_UCRefresh = $true}; $_.ItemsSource = $EmptyVar
+    }
+
     foreach($TD_Credential in $TD_Credentials){
         <# QaD needs a Codeupdate #>
         #Write-Debug -Message $TD_Credential
@@ -1624,7 +1631,7 @@ $TD_btn_FOS_ZoneDetailsShow.add_click({
                 if($FOS_EffeZoneNameOne -ne $FOS_EffeZoneNameThree){
                     if($FOS_EffeZoneNameThree -ne $FOS_EffeZoneNameTwo){
                         Start-Sleep -Seconds 0.5
-                        $TD_dg_ZoneDetailsTwo.ItemsSource =$TD_FOS_ZoneShow}
+                        $FOS_EffeZoneNameThree.ItemsSource =$TD_FOS_ZoneShow}
                         $TD_FOS_ZoneShow | Export-Csv -Path $Env:TEMP\$($FOS_EffeZoneNameThree)_ZoneShow_Temp.csv
                     }
             }
@@ -1638,18 +1645,12 @@ $TD_btn_FOS_ZoneDetailsShow.add_click({
             Default {Write-Debug "Nothing" }
         }
     }
-    
-    <#Chang to correct Content etc.#>
-    <#$TD_label_ExpPHVM.Content ="Export Path: $($TD_tb_ExportPath.Text)"#>
-    Start-Sleep -Seconds 0.5
-    $TD_stp_sanBasicSwitchInfo.Visibility="Collapsed"
-    $TD_stp_sanLicenseShow.Visibility="Collapsed"
-    $TD_stp_sanPortErrorShow.Visibility="Collapsed"
-    $TD_stp_sanSwitchShow.Visibility="Collapsed"
-    $TD_stp_sanPortBufferShow.Visibility="Collapsed"
-    $TD_stp_sanSensorShow.Visibility="Collapsed"
-    $TD_stp_sanSFPShow.Visibility="Collapsed"
+    if($TD_UCRefresh){$TD_UserControl1.Dispatcher.Invoke([System.Action]{},"Render");$TD_UCRefresh=$false}
+
+    $TD_stp_sanLicenseShow,$TD_stp_sanPortBufferShow,$TD_stp_sanPortErrorShow,$TD_stp_sanBasicSwitchInfo,$TD_stp_sanSwitchShow,$TD_stp_sanSensorShow,$TD_stp_sanSFPShow | ForEach-Object {$_.Visibility="Collapsed"}
+
     $TD_stp_sanZoneDetailsShow.Visibility="Visible"
+
 })
 <# filter View for Host Volume Map #>
 <# to keep this file clean :D export the following lines to a func in one if the next Version #>
@@ -1723,6 +1724,10 @@ $TD_btn_FOS_PortLicenseShow.add_click({
     $TD_Credentials += $TD_Credentials_Checked
     Start-Sleep -Seconds 0.5
 
+    $TD_lb_SANInfoOne,$TD_lb_SANInfoTwo,$TD_lb_SANInfoThree,$TD_lb_SANInfoFour |ForEach-Object {
+        if($TD_Credentials -gt 0){$TD_UCRefresh = $true}; $_.Text = ""
+    }
+
     foreach($TD_Credential in $TD_Credentials){
         <# QaD needs a Codeupdate #>
         $TD_FOS_PortLicenseShow =@()
@@ -1759,14 +1764,10 @@ $TD_btn_FOS_PortLicenseShow.add_click({
             Default {Write-Debug "Nothing" }
         }
     }
+    if($TD_UCRefresh){$TD_UserControl1.Dispatcher.Invoke([System.Action]{},"Render");$TD_UCRefresh=$false}
 
-    $TD_stp_sanBasicSwitchInfo.Visibility="Collapsed"
-    $TD_stp_sanPortErrorShow.Visibility="Collapsed"
-    $TD_stp_sanPortBufferShow.Visibility="Collapsed"
-    $TD_stp_sanSwitchShow.Visibility="Collapsed"
-    $TD_stp_sanZoneDetailsShow.Visibility="Collapsed"
-    $TD_stp_sanSensorShow.Visibility="Collapsed"
-    $TD_stp_sanSFPShow.Visibility="Collapsed"
+    $TD_stp_sanSwitchShow,$TD_stp_sanPortBufferShow,$TD_stp_sanPortErrorShow,$TD_stp_sanBasicSwitchInfo,$TD_stp_sanZoneDetailsShow,$TD_stp_sanSensorShow,$TD_stp_sanSFPShow | ForEach-Object {$_.Visibility="Collapsed"}
+
     $TD_stp_sanLicenseShow.Visibility="Visible"
 
 })
@@ -1789,6 +1790,10 @@ $TD_btn_FOS_SensorShow.add_click({
     $TD_Credentials_Checked = Get_CredGUIInfos -STP_ID 4 -TD_ConnectionTyp $TD_cb_sanConnectionTypThree.Text -TD_IPAdresse $TD_tb_sanIPAdrThree.Text -TD_UserName $TD_tb_sanUserNameThree.Text -TD_Password $TD_tb_sanPasswordThree
     $TD_Credentials += $TD_Credentials_Checked
     Start-Sleep -Seconds 0.5
+
+    $TD_tb_SensorInfoOne,$TD_tb_SensorInfoTwo,$TD_tb_SensorInfoThree,$TD_tb_SensorInfoFour |ForEach-Object {
+        if($TD_Credentials -gt 0){$TD_UCRefresh = $true}; $_.Text = ""
+    }
 
     foreach($TD_Credential in $TD_Credentials){
         <# QaD needs a Codeupdate #>
@@ -1826,13 +1831,10 @@ $TD_btn_FOS_SensorShow.add_click({
         }
     }
 
-    $TD_stp_sanBasicSwitchInfo.Visibility="Collapsed"
-    $TD_stp_sanPortErrorShow.Visibility="Collapsed"
-    $TD_stp_sanPortBufferShow.Visibility="Collapsed"
-    $TD_stp_sanSwitchShow.Visibility="Collapsed"
-    $TD_stp_sanZoneDetailsShow.Visibility="Collapsed"
-    $TD_stp_sanLicenseShow.Visibility="Collapsed"
-    $TD_stp_sanSFPShow.Visibility="Collapsed"
+    if($TD_UCRefresh){$TD_UserControl1.Dispatcher.Invoke([System.Action]{},"Render");$TD_UCRefresh=$false}
+
+    $TD_stp_sanSwitchShow,$TD_stp_sanPortBufferShow,$TD_stp_sanPortErrorShow,$TD_stp_sanBasicSwitchInfo,$TD_stp_sanZoneDetailsShow,$TD_stp_sanLicenseShow,$TD_stp_sanSFPShow | ForEach-Object {$_.Visibility="Collapsed"}
+
     $TD_stp_sanSensorShow.Visibility="Visible"
 
 })
@@ -1855,6 +1857,10 @@ $TD_btn_FOS_PortErrorShow.add_click({
     $TD_Credentials_Checked = Get_CredGUIInfos -STP_ID 4 -TD_ConnectionTyp $TD_cb_sanConnectionTypThree.Text -TD_IPAdresse $TD_tb_sanIPAdrThree.Text -TD_UserName $TD_tb_sanUserNameThree.Text -TD_Password $TD_tb_sanPasswordThree
     $TD_Credentials += $TD_Credentials_Checked
     Start-Sleep -Seconds 0.5
+
+    $TD_lb_PortErrorShowOne,$TD_lb_PortErrorShowTwo,$TD_lb_PortErrorShowThree,$TD_lb_PortErrorShowFour |ForEach-Object {
+        if($_.items.count -gt 0){$TD_UCRefresh = $true}; $_.ItemsSource = $EmptyVar
+    }
 
     foreach($TD_Credential in $TD_Credentials){
         <# QaD needs a Codeupdate #>
@@ -1889,17 +1895,12 @@ $TD_btn_FOS_PortErrorShow.add_click({
         }
     }
 
-    <#Chang to correct Content etc.#>
-    <#$TD_label_ExpPHVM.Content ="Export Path: $($TD_tb_ExportPath.Text)"#>
-    Start-Sleep -Seconds 0.5
-    $TD_stp_sanBasicSwitchInfo.Visibility="Collapsed"
-    $TD_stp_sanLicenseShow.Visibility="Collapsed"
-    $TD_stp_sanPortBufferShow.Visibility="Collapsed"
-    $TD_stp_sanSwitchShow.Visibility="Collapsed"
-    $TD_stp_sanZoneDetailsShow.Visibility="Collapsed"
-    $TD_stp_sanSensorShow.Visibility="Collapsed"
-    $TD_stp_sanSFPShow.Visibility="Collapsed"
+    if($TD_UCRefresh){$TD_UserControl1.Dispatcher.Invoke([System.Action]{},"Render");$TD_UCRefresh=$false}
+
+    $TD_stp_sanLicenseShow,$TD_stp_sanPortBufferShow,$TD_stp_sanSwitchShow,$TD_stp_sanBasicSwitchInfo,$TD_stp_sanZoneDetailsShow,$TD_stp_sanSensorShow,$TD_stp_sanSFPShow | ForEach-Object {$_.Visibility="Collapsed"}
+
     $TD_stp_sanPortErrorShow.Visibility="Visible"
+
 })
 
 $TD_btn_FOS_SFPHealthShow.add_click({
@@ -1919,6 +1920,10 @@ $TD_btn_FOS_SFPHealthShow.add_click({
     $TD_Credentials_Checked = Get_CredGUIInfos -STP_ID 4 -TD_ConnectionTyp $TD_cb_sanConnectionTypThree.Text -TD_IPAdresse $TD_tb_sanIPAdrThree.Text -TD_UserName $TD_tb_sanUserNameThree.Text -TD_Password $TD_tb_sanPasswordThree
     $TD_Credentials += $TD_Credentials_Checked
     Start-Sleep -Seconds 0.5
+
+    $TD_dg_SFPShowOne,$TD_dg_SFPShowTwo,$TD_dg_SFPShowThree,$TD_dg_SFPShowFour |ForEach-Object {
+        if($_.items.count -gt 0){$TD_UCRefresh = $true}; $_.ItemsSource = $EmptyVar
+    }
 
     foreach($TD_Credential in $TD_Credentials){
         <# QaD needs a Codeupdate #>
@@ -1953,17 +1958,12 @@ $TD_btn_FOS_SFPHealthShow.add_click({
         }
     }
 
-    <#Chang to correct Content etc.#>
-    <#$TD_label_ExpPHVM.Content ="Export Path: $($TD_tb_ExportPath.Text)"#>
-    Start-Sleep -Seconds 0.5
-    $TD_stp_sanBasicSwitchInfo.Visibility="Collapsed"
-    $TD_stp_sanLicenseShow.Visibility="Collapsed"
-    $TD_stp_sanPortBufferShow.Visibility="Collapsed"
-    $TD_stp_sanSwitchShow.Visibility="Collapsed"
-    $TD_stp_sanZoneDetailsShow.Visibility="Collapsed"
-    $TD_stp_sanSensorShow.Visibility="Collapsed"
-    $TD_stp_sanPortErrorShow.Visibility="Collapsed"
+    if($TD_UCRefresh){$TD_UserControl1.Dispatcher.Invoke([System.Action]{},"Render");$TD_UCRefresh=$false}
+
+    $TD_stp_sanLicenseShow,$TD_stp_sanPortErrorShow,$TD_stp_sanSwitchShow,$TD_stp_sanBasicSwitchInfo,$TD_stp_sanZoneDetailsShow,$TD_stp_sanSensorShow,$TD_stp_sanPortBufferShow | ForEach-Object {$_.Visibility="Collapsed"}
+
     $TD_stp_sanSFPShow.Visibility="Visible"
+
 })
 
 <# Unnecessary duplicated code with TD_btn_FOS_PortErrorShow, needs a better implementation but for the first step it's okay. #>
@@ -2146,19 +2146,23 @@ $TD_btn_FOS_PortBufferShow.add_click({
     $TD_Credentials=@()
     $TD_Credentials_Checked = Get_CredGUIInfos -STP_ID 1 -TD_ConnectionTyp $TD_cb_sanConnectionTyp.Text -TD_IPAdresse $TD_tb_sanIPAdr.Text -TD_UserName $TD_tb_sanUserName.Text -TD_Password $TD_tb_sanPassword
     $TD_Credentials += $TD_Credentials_Checked
-    Start-Sleep -Seconds 0.5
+    Start-Sleep -Seconds 0.2
 
     $TD_Credentials_Checked = Get_CredGUIInfos -STP_ID 2 -TD_ConnectionTyp $TD_cb_sanConnectionTypOne.Text -TD_IPAdresse $TD_tb_sanIPAdrOne.Text -TD_UserName $TD_tb_sanUserNameOne.Text -TD_Password $TD_tb_sanPasswordOne
     $TD_Credentials += $TD_Credentials_Checked
-    Start-Sleep -Seconds 0.5
+    Start-Sleep -Seconds 0.2
 
     $TD_Credentials_Checked = Get_CredGUIInfos -STP_ID 3 -TD_ConnectionTyp $TD_cb_sanConnectionTypTwo.Text -TD_IPAdresse $TD_tb_sanIPAdrTwo.Text -TD_UserName $TD_tb_sanUserNameTwo.Text -TD_Password $TD_tb_sanPasswordTwo
     $TD_Credentials += $TD_Credentials_Checked
-    Start-Sleep -Seconds 0.5
+    Start-Sleep -Seconds 0.2
 
     $TD_Credentials_Checked = Get_CredGUIInfos -STP_ID 4 -TD_ConnectionTyp $TD_cb_sanConnectionTypThree.Text -TD_IPAdresse $TD_tb_sanIPAdrThree.Text -TD_UserName $TD_tb_sanUserNameThree.Text -TD_Password $TD_tb_sanPasswordThree
     $TD_Credentials += $TD_Credentials_Checked
-    Start-Sleep -Seconds 0.5
+    Start-Sleep -Seconds 0.2
+
+    $TD_lb_PortBufferShowOne,$TD_lb_PortBufferShowTwo,$TD_lb_PortBufferShowThree,$TD_lb_PortBufferShowFour |ForEach-Object {
+        if($_.items.count -gt 0){$TD_UCRefresh = $true}; $_.ItemsSource = $EmptyVar
+    }
 
     foreach($TD_Credential in $TD_Credentials){
         <# QaD needs a Codeupdate #>
@@ -2192,17 +2196,12 @@ $TD_btn_FOS_PortBufferShow.add_click({
             Default {Write-Debug "Nothing" }
         }
     }
+    if($TD_UCRefresh){$TD_UserControl1.Dispatcher.Invoke([System.Action]{},"Render");$TD_UCRefresh=$false}
 
-    <#Chang to correct Content etc.#>
-    Start-Sleep -Seconds 0.5
-    $TD_stp_sanBasicSwitchInfo.Visibility="Collapsed"
-    $TD_stp_sanLicenseShow.Visibility="Collapsed"
-    $TD_stp_sanPortErrorShow.Visibility="Collapsed"
-    $TD_stp_sanSwitchShow.Visibility="Collapsed"
-    $TD_stp_sanZoneDetailsShow.Visibility="Collapsed"
-    $TD_stp_sanSensorShow.Visibility="Collapsed"
-    $TD_stp_sanSFPShow.Visibility="Collapsed"
+    $TD_stp_sanLicenseShow,$TD_stp_sanPortErrorShow,$TD_stp_sanSwitchShow,$TD_stp_sanBasicSwitchInfo,$TD_stp_sanZoneDetailsShow,$TD_stp_sanSensorShow,$TD_stp_sanSFPShow | ForEach-Object {$_.Visibility="Collapsed"}
+
     $TD_stp_sanPortBufferShow.Visibility="Visible"
+
 })
 #endregion
 
