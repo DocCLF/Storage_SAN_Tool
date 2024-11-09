@@ -2,8 +2,8 @@ function IBM_DriveFirmwareCheck {
     #https://www.ibm.com/support/pages/node/6508601
     [CmdletBinding()]
     param (
-        $IBM_DriveProdID = "101406E2",
-        $IBM_DriveCurrentFW  = "4_1_8",
+        $IBM_DriveProdID,
+        $IBM_DriveCurrentFW,
         <# The following arrays may be used later as "real params" #>
         [array]$IBM_FCMDriveFaultyFW,
         [array]$IBM_FCMDriveFixFW,
@@ -22,8 +22,8 @@ function IBM_DriveFirmwareCheck {
         $IBM_NVMeDriveFaultyFW = "C6S5"
         $IBM_NVMeDriveFixFW = (("C6S6",("10140689","1014068A","1014068B","1014068C","1014068D")))
 
-        $IBM_SASDriveFaultyFW = "MS63","MS64","MS68","MS69","MS66","MS66","MS33","MS34","MS35","MS36","MS38","MS39","MS3B"
-        $IBM_SASDriveFixFW =(("MS6C",("MZILT200HAHQ","MZILT400HAHQ","MZILT800HAHQ")),("MS3E",("MZILT800HAJQ","MZILT1T6HALS","MZILT1T9HAJQ","MZILT3T2HMLA","MZILT3T8HALS")))
+        $IBM_SASDriveFaultyFW = "MS63","MS64","MS68","MS69","MS66","MS66","MS33","MS34","MS35","MS36","MS38","MS39","MS3B","6402","B5C1"
+        $IBM_SASDriveFixFW =(("MS6C",("MZILT200HAHQ","MZILT400HAHQ","MZILT800HAHQ")),("MS3E",("MZILT800HAJQ","MZILT1T6HALS","MZILT1T9HAJQ","MZILT3T2HMLA","MZILT3T8HALS")),("6406",("PX05SRB192")),("B5CD",("ST2400MM0129")))
     }
     
     process {
@@ -40,7 +40,6 @@ function IBM_DriveFirmwareCheck {
                                                             break }
                                                         Default {}
                                                     }
-                                                
                                             }
                                     }
                                     {$_ -in $IBM_NVMeDriveFaultyFW} { 
@@ -55,7 +54,6 @@ function IBM_DriveFirmwareCheck {
                                                             break }
                                                         Default {}
                                                     }
-                                                
                                             }
                                     }
                                     {$_ -in $IBM_FCMDriveFaultyFW} { 
@@ -70,12 +68,16 @@ function IBM_DriveFirmwareCheck {
                                                             break }
                                                         Default {}
                                                     }
-                                                
                                             }
+                                    }
+                                    {$_ -notin $IBM_SASDriveFaultyFW,$IBM_NVMeDriveFaultyFW,$IBM_FCMDriveFaultyFW} {
+                                        $_
+                                        break
                                     }
                                     Default {
                                         Write-Host "all fine" -ForegroundColor Green
-                                        $IBM_AllotherDrives = Get-Content -Path D:\GitRepo\Storage_SAN_Kit\Resources\IBM_FW_DRIVES241024.txt }
+                                        #$IBM_AllotherDrives = Get-Content -Path D:\GitRepo\Storage_SAN_Kit\Resources\IBM_FW_DRIVES241024.txt
+                                    }
                                 }
     }
     
