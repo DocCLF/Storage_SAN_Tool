@@ -605,6 +605,12 @@
                             <DataGrid.RowStyle>
                                 <Style TargetType="DataGridRow">
                                     <Style.Triggers>
+                                        <DataTrigger Binding="{Binding FWlevStatus}" Value="Yelllow">
+                                            <Setter Property="Background" Value="yellow" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding FWlevStatus}" Value="Green">
+                                            <Setter Property="Background" Value="LightGreen" />
+                                        </DataTrigger>
                                         <DataTrigger Binding="{Binding DriveStatus}" Value="offline">
                                             <Setter Property="Background" Value="Red" />
                                         </DataTrigger>
@@ -627,6 +633,13 @@
                                     <DataGridTextColumn.CellStyle>
                                         <Style TargetType="DataGridCell">
                                             <Setter Property="ToolTip" Value="Indicates the firmware level of the disk; blank if unknown." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="auto" Header="LatestFW" Binding="{Binding TD_LatestDriveFW}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Indicates the latest firmware level of the disk." />
                                         </Style>
                                     </DataGridTextColumn.CellStyle>
                                 </DataGridTextColumn>
@@ -655,6 +668,12 @@
                             <DataGrid.RowStyle>
                                 <Style TargetType="DataGridRow">
                                     <Style.Triggers>
+                                        <DataTrigger Binding="{Binding FWlevStatus}" Value="Yelllow">
+                                            <Setter Property="Background" Value="yellow" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding FWlevStatus}" Value="Green">
+                                            <Setter Property="Background" Value="LightGreen" />
+                                        </DataTrigger>
                                         <DataTrigger Binding="{Binding DriveStatus}" Value="offline">
                                             <Setter Property="Background" Value="Red" />
                                         </DataTrigger>
@@ -677,6 +696,13 @@
                                     <DataGridTextColumn.CellStyle>
                                         <Style TargetType="DataGridCell">
                                             <Setter Property="ToolTip" Value="Indicates the firmware level of the disk; blank if unknown." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="auto" Header="LatestFW" Binding="{Binding TD_LatestDriveFW}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Indicates the latest firmware level of the disk." />
                                         </Style>
                                     </DataGridTextColumn.CellStyle>
                                 </DataGridTextColumn>
@@ -705,6 +731,12 @@
                             <DataGrid.RowStyle>
                                 <Style TargetType="DataGridRow">
                                     <Style.Triggers>
+                                        <DataTrigger Binding="{Binding FWlevStatus}" Value="Yelllow">
+                                            <Setter Property="Background" Value="yellow" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding FWlevStatus}" Value="Green">
+                                            <Setter Property="Background" Value="LightGreen" />
+                                        </DataTrigger>
                                         <DataTrigger Binding="{Binding DriveStatus}" Value="offline">
                                             <Setter Property="Background" Value="Red" />
                                         </DataTrigger>
@@ -727,6 +759,13 @@
                                     <DataGridTextColumn.CellStyle>
                                         <Style TargetType="DataGridCell">
                                             <Setter Property="ToolTip" Value="Indicates the firmware level of the disk; blank if unknown." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="auto" Header="LatestFW" Binding="{Binding TD_LatestDriveFW}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Indicates the latest firmware level of the disk." />
                                         </Style>
                                     </DataGridTextColumn.CellStyle>
                                 </DataGridTextColumn>
@@ -755,6 +794,12 @@
                             <DataGrid.RowStyle>
                                 <Style TargetType="DataGridRow">
                                     <Style.Triggers>
+                                        <DataTrigger Binding="{Binding FWlevStatus}" Value="Yelllow">
+                                            <Setter Property="Background" Value="yellow" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding FWlevStatus}" Value="Green">
+                                            <Setter Property="Background" Value="LightGreen" />
+                                        </DataTrigger>
                                         <DataTrigger Binding="{Binding DriveStatus}" Value="offline">
                                             <Setter Property="Background" Value="Red" />
                                         </DataTrigger>
@@ -766,7 +811,7 @@
                             </DataGrid.RowStyle>
                             <DataGrid.Columns>
                                 <DataGridTextColumn Width="auto" Header="DriveID" Binding="{Binding DriveID}" IsReadOnly="True"/>
-                                <DataGridTextColumn Width="auto" Header="DriveCap" Binding="{Binding DriveCap}" IsReadOnly="True" />
+                                <DataGridTextColumn Width="auto" Header="DriveCap" Binding="{Binding DriveCap}" IsReadOnly="True"/>
                                 <DataGridTextColumn Width="auto" Header="PhyDriveCap" Binding="{Binding PhyDriveCap}" IsReadOnly="True"/>
                                 <DataGridTextColumn Width="auto" Header="PhyUsedDriveCap" Binding="{Binding PhyUsedDriveCap}" IsReadOnly="True"/>
                                 <DataGridTextColumn Width="auto" Header="EffeUsedDriveCap" Binding="{Binding EffeUsedDriveCap}" IsReadOnly="True"/>
@@ -777,6 +822,13 @@
                                     <DataGridTextColumn.CellStyle>
                                         <Style TargetType="DataGridCell">
                                             <Setter Property="ToolTip" Value="Indicates the firmware level of the disk; blank if unknown." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="auto" Header="LatestFW" Binding="{Binding TD_LatestDriveFW}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Indicates the latest firmware level of the disk." />
                                         </Style>
                                     </DataGridTextColumn.CellStyle>
                                 </DataGridTextColumn>

@@ -1,0 +1,307 @@
+IBM FlashSystem 9x00 drive software package
++++++++++++++++++++++++++++++++++++++++++++
+
+-------------------------------------------------------------------------------
+
+CONTENTS
+
+	1.	Introduction
+
+	2.	Drive Code Levels
+
+		2.1 IBM FlashSystem 9x00 SAS Levels
+
+		2.2 IBM FlashSystem 9x00 NVMe Levels
+	
+	3.	Problems Resolved and New Features
+
+	4.	Further Documentation
+
+	5.	Known Issues and Restrictions in this Level
+
+-------------------------------------------------------------------------------
+
+1. Introduction
+
+	This document describes the contents of the following package files
+	for IBM FlashSystem 9x00 systems:
+	IBM_FlashSystem9x00_8.4.2_AND_EARLIER_SAS_HDD_DRIVES_241024
+	IBM_FlashSystem9x00_8.4.2_AND_EARLIER_SAS_SSD_DRIVES_241024
+	IBM_FlashSystem9x00_8.4.2_AND_EARLIER_NVME_ALL_DRIVES_241024
+	IBM_FlashSystem9x00_8.5.0.0_AND_LATER_ALL_DRIVES_241024
+
+    Please see the accompanying file 'Which_Drive_File_should_I_use.txt' for
+    guidance on which Drive package file is appropriate for your system.
+
+-------------------------------------------------------------------------------
+
+2. Drive Code Levels
+
+  2.1 IBM FlashSystem 9x00 SAS Levels
+
+HUH721212AL420 SAS HDD 12TB 7.2 4kn Firmware Level: J6T9
+
+HUH721212AL4200 SAS HDD 12TB 7.2 4kn Firmware Level: J6T9
+
+HUS728T8TAL420 SAS HDD NonSED 3.5 7.2k 4kn 8TB Firmware Level: J6V9
+
+HUS728T8TAL4200 SAS HDD NonSED 3.5 7.2k 4kn 8TB Firmware Level: J6V9
+
+ST10000NM014G SAS HDD 10TB 7.2k 4kn SED Firmware Level: ECP7
+
+ST12000NM005J SAS HDD 12TB 7.2k 4kn SED Firmware Level: ECP7
+
+ST16000NM005J SAS HDD 16TB 7.2k 4kn SED Firmware Level: ECP7
+
+ST8000NM014G SAS HDD 8TB (SS) Firmware Level: ECP7
+
+WUH721816AL420 SAS HDD NonSED 3.5 7.2k 4kn 16TB Firmware Level: J6Y5
+
+WUH721816AL4200 SAS HDD NonSED 3.5 7.2k 4kn 16TB Firmware Level: J6Y5
+
+WUH721818AL420 SAS HDD NonSED 3.5 7.2k 4kn 18TB Firmware Level: J6Y5
+
+WUH721818AL4200 SAS HDD NonSED 3.5 7.2k 4kn 18TB Firmware Level: J6Y5
+
+WUH722018BL420 SAS HDD 18TB SS Firmware Level: N6Z1
+
+WUH722018BL4201 SAS HDD 18TB SS Firmware Level: N6Z1
+
+WUH722020BL420 SAS HDD 20TB Firmware Level: N6Z1
+
+WUH722020BL4201 SAS HDD 20TB Firmware Level: N6Z1
+
+HUSTR7619ASS200 RI 2TB Firmware Level: J4U3
+
+HUSTR7638ASS200 RI 4TB Firmware Level: J4U3
+
+HUSTR7676ASS200 RI 7TB Firmware Level: J4U3
+
+KPM51RUG15T3 SAS SSD 512n 1xDWPD NonSED 15.36TB Firmware Level: S50A
+
+KPM51RUG1T92 SAS SSD 512n 1xDWPD NonSED 1.92TB Firmware Level: S50A
+
+KPM51RUG3T84 SAS SSD 512n 1xDWPD NonSED 3.84TB Firmware Level: S50A
+
+KPM51RUG7T68 SAS SSD 512n 1xDWPD NonSED 7.68TB Firmware Level: S50A
+
+KPM6XRUG15T3 SAS SSD 15.3TB Firmware Level: S6E8
+
+KPM6XRUG1T92 SAS SSD 1.92TB Firmware Level: S6E8
+
+KPM6XRUG30T7 SAS SSD 30.7TB Firmware Level: S6E8
+
+KPM6XRUG3T84 SAS SSD 3.84TB Firmware Level: S6E8
+
+KPM6XRUG7T68 SAS SSD 7.68TB Firmware Level: S6E8
+
+KPM6XVUG800G SAS SSD 800GB Firmware Level: S6E8
+
+KPM7VRUG15T3 SAS SSD 15.3T Firmware Level: S7S3
+
+KPM7VRUG1T92 SAS SSD 1.92T Firmware Level: S7S3
+
+KPM7VRUG30T7 SAS SSD 30.7T Firmware Level: S7S3
+
+KPM7VRUG3T84 SAS SSD 3.84T Firmware Level: S7S3
+
+KPM7VRUG7T68 SAS SSD 7.68T Firmware Level: S7S3
+
+MZILG15THBLA SAS SSD 1DWPD 15.3TB Firmware Level: SS82
+
+MZILG1T9HCJR SAS SSD 1DWPD 1.9TB Firmware Level: SS82
+
+MZILG30THBLA SAS SSD 1DWPD 30.7TB Firmware Level: SS82
+
+MZILG3T8HCLS SAS SSD 1DWPD 3.8TB Firmware Level: SS82
+
+MZILG7T6HBLA SAS SSD 1DWPD 7.6TB Firmware Level: SS82
+
+MZILG800HCHQ SAS SSD 3DWPD 800GB Firmware Level: SS82
+
+MZILS15THMLS SAS SSD 1DWPD 15.36TB Firmware Level: MS1B
+
+MZILS1T9HEJH SAS SSD 2TB Firmware Level: MS2A
+
+MZILS3T8HMLH SAS SSD 1DWPD 4TB Firmware Level: MS2A
+
+MZILS7T6HMLS SAS SSD 1DWPD 7.68TB Firmware Level: MS1B
+
+MZILT15THALA SAS SSD 1 DWPD 15.3TB Firmware Level: MS74
+
+MZILT15THMLA SAS SSD 1DWPD 15TB Firmware Level: MS3E
+
+MZILT1T9HAJQ SAS SSD 1DWPD 2TB Firmware Level: MS3E
+
+MZILT1T9HBJR SAS SSD 1DWPD 1.9TB Firmware Level: MS74
+
+MZILT30THALA SAS SSD 1DWPD 30.7TB Firmware Level: MS74
+
+MZILT30THMLA SAS SSD 30TB Firmware Level: MS3E
+
+MZILT3T8HALS SAS SSD 4TB Firmware Level: MS3E
+
+MZILT3T8HBLS SAS SSD 1DWPD 3.8TB Firmware Level: MS74
+
+MZILT7T6HALA SAS SSD 1DWPD 7.6TB Firmware Level: MS74
+
+MZILT7T6HMLA SAS SSD 1DWPD 7TB Firmware Level: MS3E
+
+MZILT800HBHQ SAS SSD 3DWPD 800GB Firmware Level: MS74
+
+XS1600ME70004 SAS 10DWPD 1600GB Firmware Level: E29C
+
+XS1920SE10103 SAS 1DWPD 2TB Firmware Level: 939A
+
+XS1920SE70004 SAS 1DWPD 2TB Firmware Level: E29C
+
+XS1920SE70055 SAS SSD 1.92TB Firmware Level: 8388
+
+XS1920SE70114 SAS SSD 1.92TB 1DWPD Firmware Level: 4391
+
+XS3200ME70004 SAS 10DWPD 3200GB Firmware Level: E29C
+
+XS3840SE10103 SAS 1DWPD 4TB Firmware Level: 939A
+
+XS3840SE70004 SAS SSD 1DWPD 4TB Firmware Level: E29C
+
+XS3840SE70055 SAS SSD 3.84TB Firmware Level: 8388
+
+XS3840SE70114 SAS SSD 3.84TB 1DWPD Firmware Level: 4391
+
+XS400ME70004 SAS 10DWPD 400GB Firmware Level: E29C
+
+XS7680SE70004 SAS 1DWPD 7TB Firmware Level: E29C
+
+XS7680SE70055 SAS SSD 7.68TB Firmware Level: 8388
+
+XS7680SE70103 SAS 1DWPD 7TB Firmware Level: 939A
+
+XS7680SE70114 SAS SSD 7.68TB 1DWPD Firmware Level: 4391
+
+XS800LE70004 SAS SSD 1DWPD 800GB Firmware Level: E29C
+
+XS800LE70114 SAS SSD 800GB 3DWPD Firmware Level: 4391
+
+XS800ME70004 SAS 10DWPD 800GB Firmware Level: E29C
+
+  2.2 IBM FlashSystem 9x00 NVMe Levels
+
+1014063A NVMe 2TB Firmware Level: SN1OSN1O
+
+1014063B NVMe 4TB Firmware Level: SN1OSN1O
+
+1014063C NVMe 7TB Firmware Level: SN1OSN1O
+
+1014063D NVMe 15TB Firmware Level: SN1OSN1O
+
+1014063E NVMe 800GB Firmware Level: C5SG
+
+1014063F NVMe 2TB Firmware Level: C5SG
+
+10140640 NVMe 4TB Firmware Level: C5SG
+
+10140641 NVMe 7TB Firmware Level: C5SG
+
+10140642 NVMe 15TB Firmware Level: C5SG
+
+10140647 NVMe 5TB Firmware Level: 1_2_12
+
+10140648 NVMe 10TB Firmware Level: 1_2_12
+
+10140649 NVMe 20TB Firmware Level: 1_2_12
+
+1014064D NVMe 375GB Firmware Level: E211IN21
+
+1014064E NVMe 750GB Firmware Level: E211IN21
+
+10140653 NVMe 4.8TB Firmware Level: 2_1_12
+
+10140654 NVMe 9.6TB Firmware Level: 2_1_12
+
+10140655 NVMe 19.2TB Firmware Level: 2_1_12
+
+10140656 NVMe 38.4TB Firmware Level: 2_1_12
+
+10140659 NVMe 800GB Firmware Level: SN4GSN4G
+
+1014065A NVMe 1.5TB Firmware Level: SN4GSN4G
+
+1014065B NVMe 1.92TB 4Kn (4TB SS) Firmware Level: SN5ASN5A
+
+1014065C NVMe 3.84TB 4Kn (8TB SS) Firmware Level: SN5ASN5A
+
+1014065D NVMe 7.68TB 4Kn (15TB SS) Firmware Level: SN5ASN5A
+
+1014065E NVMe 15.3TB 4Kn Firmware Level: SN5ASN5A
+
+10140685 NVMe 800GB 3DWPD 4Kn Firmware Level: SN6ASN6A
+
+10140689 NVMe 800GB Firmware Level: C6S6
+
+1014068A NVMe 2TB Firmware Level: C6S6
+
+1014068B NVMe 4TB Firmware Level: C6S6
+
+1014068C NVMe 7TB Firmware Level: C6S6
+
+1014068D NVMe 14TB Firmware Level: C6S6
+
+101406B6 NVMe 1.92TB Firmware Level: SN89
+
+101406B7 NVMe 3.84TB Firmware Level: SN89
+
+101406B8 NVMe 7.68TB Firmware Level: SN89
+
+101406B9 NVMe 15.36TB Firmware Level: SN89
+
+101406BA NVMe 30.72TB Firmware Level: SN89
+
+101406D4 NVMe 1.92TB Firmware Level: C8S4
+
+101406D5 NVMe 3.84TB Firmware Level: C8S4
+
+101406D6 NVMe 7.68TB Firmware Level: C8S4
+
+101406D7 NVMe 15.36TB Firmware Level: C8S4
+
+101406D8 NVMe 30.72TB Firmware Level: C8S4
+
+101406EF NVMe 1.92TB Firmware Level: SNAA
+
+10140700 NVMe 3.84TB Firmware Level: SNAA
+
+10140701 NVMe 7.68TB Firmware Level: SNAA
+
+10140702 NVMe 15.36TB Firmware Level: SNAA
+
+* IMPORTANT NOTE:
+  DRIVES ONLY AVAILABLE IN FW PACKAGE FOR SVC 8.5.x AND LATER
+
+NVMe - ONLY FOR SVC 8.5.x and LATER
+101406B0 3_1_15
+101406B1 3_1_15
+101406B2 3_1_15
+101406B3 3_1_15
+101406E2 4_1_9
+101406E3 4_1_9
+101406E4 4_1_9
+101406E5 4_1_9
+
+-------------------------------------------------------------------------------
+
+3. New Drives and/or FW Updates
+
+NVMe UPDATES
+101406E2 4_1_9
+101406E3 4_1_9
+101406E4 4_1_9
+101406E5 4_1_9
+
+-------------------------------------------------------------------------------
+
+4. Known Issues and Restrictions in this Level
+
+	None
+
+-------------------------------------------------------------------------------

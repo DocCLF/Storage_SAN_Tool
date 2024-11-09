@@ -97,7 +97,7 @@ function IBM_DriveInfo {
         }
 
         <# Drive Info #>
-        $TD_DriveSplitInfos = "" | Select-Object DriveID,DriveStatus,DriveCap,ProductID,FWlev,Slot,PhyDriveCap,PhyUsedDriveCap,EffeUsedDriveCap
+        $TD_DriveSplitInfos = "" | Select-Object DriveID,DriveStatus,DriveCap,ProductID,FWlev,LatestDriveFW,Slot,PhyDriveCap,PhyUsedDriveCap,EffeUsedDriveCap,FWlevStatus
         foreach($TD_CollectInfo in $TD_CollectInfosTemp){
             [int]$TD_DriveSplitInfos.DriveID = ($TD_CollectInfo|Select-String -Pattern '^id\s+(\d+)' -AllMatches).Matches.Groups[1].Value
             [string]$TD_DriveSplitInfos.DriveStatus = ($TD_CollectInfo|Select-String -Pattern '^status\s+(online|offline|degraded)' -AllMatches).Matches.Groups[1].Value
@@ -110,19 +110,26 @@ function IBM_DriveInfo {
             [string]$TD_DriveSplitInfos.EffeUsedDriveCap = ($TD_CollectInfo|Select-String -Pattern '^effective_used_capacity\s+(\d+\.\d+\w+)' -AllMatches).Matches.Groups[1].Value
 
             <# Not the best option but for the first stepp ok #>
-            If($TD_TransProt -eq "nvme"){
-                    if (![string]::IsNullOrEmpty($TD_DriveSplitInfos.EffeUsedDriveCap)){
-                        $TD_DriveOverview += $TD_DriveSplitInfos
-                        Write-Debug -Message  $TD_DriveOverview
-                        $TD_DriveSplitInfos = "" | Select-Object DriveID,DriveStatus,DriveCap,ProductID,FWlev,Slot,PhyDriveCap,PhyUsedDriveCap,EffeUsedDriveCap
-                    }
-                }else{
-                    if (![string]::IsNullOrEmpty($TD_DriveSplitInfos.PhyDriveCap)){
-                        $TD_DriveOverview += $TD_DriveSplitInfos
-                        Write-Debug -Message  $TD_DriveOverview
-                        $TD_DriveSplitInfos = "" | Select-Object DriveID,DriveStatus,DriveCap,ProductID,FWlev,Slot,PhyDriveCap,PhyUsedDriveCap,EffeUsedDriveCap
-                    }
+            if($TD_TransProt -eq "nvme"){
+                if (![string]::IsNullOrEmpty($TD_DriveSplitInfos.EffeUsedDriveCap)){
+                    $TD_DriveOverview += $TD_DriveSplitInfos
+                    Write-Debug -Message  $TD_DriveOverview
+                    $TD_DriveSplitInfos = "" | Select-Object DriveID,DriveStatus,DriveCap,ProductID,FWlev,Slot,PhyDriveCap,PhyUsedDriveCap,EffeUsedDriveCap,FWlevStatus
                 }
+            }else{
+                if (![string]::IsNullOrEmpty($TD_DriveSplitInfos.PhyDriveCap)){
+                    $TD_DriveOverview += $TD_DriveSplitInfos
+                    Write-Debug -Message  $TD_DriveOverview
+                    $TD_DriveSplitInfos = "" | Select-Object DriveID,DriveStatus,DriveCap,ProductID,FWlev,Slot,PhyDriveCap,PhyUsedDriveCap,EffeUsedDriveCap,FWlevStatus
+                }
+            }
+            [string]$TD_LatestDriveFW = IBM_DriveFirmwareCheck -IBM_DriveProdID $TD_DriveSplitInfos.ProductID -IBM_DriveCurrentFW $TD_DriveSplitInfos.FWlev
+            if($TD_DriveSplitInfos.FWlev -eq $TD_LatestDriveFW){
+                [string]$TD_DriveSplitInfos.FWlevStatus = "Green"
+            }else {
+                [string]$TD_DriveSplitInfos.FWlevStatus = "Yelllow"
+                [string]$TD_DriveSplitInfos.TD_LatestDriveFW = $TD_LatestDriveFW
+            }
 
             <# Progressbar  #>
             $ProgCounter++
