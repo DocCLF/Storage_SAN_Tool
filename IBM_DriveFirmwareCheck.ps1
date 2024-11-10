@@ -71,12 +71,20 @@ function IBM_DriveFirmwareCheck {
                                             }
                                     }
                                     {$_ -notin $IBM_SASDriveFaultyFW,$IBM_NVMeDriveFaultyFW,$IBM_FCMDriveFaultyFW} {
-                                        $_
-                                        break
+                                        <#needs a option for new FCM3 or 4 Module #>
+                                        $IBM_AllotherDrives = Get-Content -Path $PSScriptRoot\Resources\IBM_FW_DRIVES241024.txt
+                                        $IBM_LatestDriveFW =foreach($IBM_UnkownDriveID in $IBM_AllotherDrives){
+                                            [string]$IBM_DriveIDFile = ($IBM_UnkownDriveID|Select-String -Pattern '^(([a-zA-Z0-9]+){5,})\s+.*\s+Firmware\sLevel:\s+([a-zA-Z0-9_]+)' -AllMatches).Matches.Groups[1].Value
+                                            if($IBM_DriveIDFile -eq $IBM_DriveProdID){
+                                                [string]$IBM_DriveFWFile = ($IBM_UnkownDriveID|Select-String -Pattern '^(([a-zA-Z0-9]+){5,})\s+.*\s+Firmware\sLevel:\s+([a-zA-Z0-9_]+)' -AllMatches).Matches.Groups[3].Value
+                                                $IBM_DriveFWFile
+                                                break
+                                            }
+                                        }
                                     }
                                     Default {
                                         Write-Host "all fine" -ForegroundColor Green
-                                        #$IBM_AllotherDrives = Get-Content -Path D:\GitRepo\Storage_SAN_Kit\Resources\IBM_FW_DRIVES241024.txt
+
                                     }
                                 }
     }
