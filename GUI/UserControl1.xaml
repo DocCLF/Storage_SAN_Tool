@@ -488,6 +488,7 @@
                             </ComboBox>
                             <TextBox x:Name="tb_filter" HorizontalAlignment="Left" MinWidth="100" MaxWidth="250" Margin="5" Text="Filter" TextWrapping="Wrap" FontSize="14" VerticalContentAlignment="Center"/>
                             <Button x:Name="btn_FilterHVM" Style="{StaticResource MainBtnStyle}" Content="Apply Filter" />
+                            <Button x:Name="btn_ClearFilterHVM" Style="{StaticResource MainBtnStyle}" Content="Clear Filter" Visibility="Collapsed" Background="LightPink"/>
                             <Label x:Name="lb_ErrorMsgHVM" Foreground="Red" Content="" Style="{StaticResource MainLabelStyle}" Padding="2" Margin="25,5,0,5"/>
                         </StackPanel>
                         <StackPanel Grid.Row="1" Orientation="Vertical" >
@@ -605,8 +606,11 @@
                             <DataGrid.RowStyle>
                                 <Style TargetType="DataGridRow">
                                     <Style.Triggers>
+                                        <DataTrigger Binding="{Binding FWlevStatus}" Value="unknown">
+                                            <Setter Property="Background" Value="LightGray" />
+                                        </DataTrigger>
                                         <DataTrigger Binding="{Binding FWlevStatus}" Value="Yelllow">
-                                            <Setter Property="Background" Value="yellow" />
+                                            <Setter Property="Background" Value="Lightyellow" />
                                         </DataTrigger>
                                         <DataTrigger Binding="{Binding FWlevStatus}" Value="Green">
                                             <Setter Property="Background" Value="LightGreen" />
@@ -668,8 +672,11 @@
                             <DataGrid.RowStyle>
                                 <Style TargetType="DataGridRow">
                                     <Style.Triggers>
+                                        <DataTrigger Binding="{Binding FWlevStatus}" Value="unknown">
+                                            <Setter Property="Background" Value="LightGray" />
+                                        </DataTrigger>
                                         <DataTrigger Binding="{Binding FWlevStatus}" Value="Yelllow">
-                                            <Setter Property="Background" Value="yellow" />
+                                            <Setter Property="Background" Value="Lightyellow" />
                                         </DataTrigger>
                                         <DataTrigger Binding="{Binding FWlevStatus}" Value="Green">
                                             <Setter Property="Background" Value="LightGreen" />
@@ -731,8 +738,11 @@
                             <DataGrid.RowStyle>
                                 <Style TargetType="DataGridRow">
                                     <Style.Triggers>
+                                        <DataTrigger Binding="{Binding FWlevStatus}" Value="unknown">
+                                            <Setter Property="Background" Value="LightGray" />
+                                        </DataTrigger>
                                         <DataTrigger Binding="{Binding FWlevStatus}" Value="Yelllow">
-                                            <Setter Property="Background" Value="yellow" />
+                                            <Setter Property="Background" Value="Lightyellow" />
                                         </DataTrigger>
                                         <DataTrigger Binding="{Binding FWlevStatus}" Value="Green">
                                             <Setter Property="Background" Value="LightGreen" />
@@ -794,6 +804,15 @@
                             <DataGrid.RowStyle>
                                 <Style TargetType="DataGridRow">
                                     <Style.Triggers>
+                                        <DataTrigger Binding="{Binding FWlevStatus}" Value="unknown">
+                                            <Setter Property="Background" Value="LightGray" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding FWlevStatus}" Value="Yelllow">
+                                            <Setter Property="Background" Value="Lightyellow" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding FWlevStatus}" Value="Green">
+                                            <Setter Property="Background" Value="LightGreen" />
+                                        </DataTrigger>
                                         <DataTrigger Binding="{Binding DriveStatus}" Value="offline">
                                             <Setter Property="Background" Value="Red" />
                                         </DataTrigger>

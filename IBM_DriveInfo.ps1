@@ -112,10 +112,13 @@ function IBM_DriveInfo {
             [string]$TD_LatestDriveFW = IBM_DriveFirmwareCheck -IBM_DriveProdID $TD_DriveSplitInfos.ProductID -IBM_DriveCurrentFW $TD_DriveSplitInfos.FWlev
             Write-Debug -Message $TD_DriveSplitInfos.FWlev $TD_LatestDriveFW
             if($TD_DriveSplitInfos.FWlev -eq $TD_LatestDriveFW){
-                [string]$TD_DriveSplitInfos.FWlevStatus = "Green"
+                [string]$TD_DriveSplitInfos.FWlevStatus = "LightGreen"
                 [string]$TD_DriveSplitInfos.LatestDriveFW = $TD_LatestDriveFW
-            }else {
-                [string]$TD_DriveSplitInfos.FWlevStatus = "Yelllow"
+            }elseif ($TD_LatestDriveFW -eq "unknown") {
+                [string]$TD_DriveSplitInfos.FWlevStatus = "LightGray"
+                [string]$TD_DriveSplitInfos.LatestDriveFW = $TD_LatestDriveFW
+            }else {    
+                [string]$TD_DriveSplitInfos.FWlevStatus = "Lightyellow"
                 [string]$TD_DriveSplitInfos.LatestDriveFW = $TD_LatestDriveFW
             }
 

@@ -24,6 +24,8 @@ All notable changes to this project will be documented in this file.
 - IBM MDiskInfo as an stand-alone function to remain flexible for further developments
 - IBM UserInfo as an stand-alone function to remain flexible for further developments
 - IBM VolumeInfo as an stand-alone function to remain flexible for further developments
+- IBM DriveFirmware Check (Phase One)
+- Clear Filter at IBM HostVolumeMap 
 - Tooltips for the tables and columns where it makes sense.
 - give some tables a color
 - Reginon for better readability
@@ -44,6 +46,7 @@ All notable changes to this project will be documented in this file.
 - DriveInfo shows a Information if the SVC Checkbox is checked
 - View of Host Volume Map Info
 - The Filter placement of Host Volume Map Info
+- Some Colors
 - Some other annoying GUI Bugs
 
 ### Removed

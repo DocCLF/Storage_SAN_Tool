@@ -15,7 +15,6 @@ function IBM_DriveFirmwareCheck {
     
     begin {
         <# nothing to do here #>
-
         $IBM_FCMDriveFaultyFW = "2_1_2","2_1_3","2_1_4","2_1_5","2_1_6","2_1_10","2_1_11","3_0_1","3_1_2","3_1_4","3_1_7","3_1_8","3_1_11","4_1_4","4_1_8"
         $IBM_FCMDriveFixFW = (("3_1_15",("101406B0","101406B1","101406B2","101406B3")),("2_1_12",("10140653","10140654","10140655","10140656")),("4_1_9",("101406E2","101406E3","101406E4","101406E5")))
 
@@ -71,26 +70,31 @@ function IBM_DriveFirmwareCheck {
                                             }
                                     }
                                     {$_ -notin $IBM_SASDriveFaultyFW,$IBM_NVMeDriveFaultyFW,$IBM_FCMDriveFaultyFW} {
+                                        #Write-Host "yes" -ForegroundColor Red
                                         <#needs a option for new FCM3 or 4 Module #>
+                                        if([string]::IsNullOrEmpty($_)){continue}
                                         $IBM_AllotherDrives = Get-Content -Path $PSScriptRoot\Resources\IBM_FW_DRIVES241024.txt
-                                        $IBM_LatestDriveFW =foreach($IBM_UnkownDriveID in $IBM_AllotherDrives){
-                                            [string]$IBM_DriveIDFile = ($IBM_UnkownDriveID|Select-String -Pattern '^(([a-zA-Z0-9]+){5,})\s+.*\s+Firmware\sLevel:\s+([a-zA-Z0-9_]+)' -AllMatches).Matches.Groups[1].Value
-                                            if($IBM_DriveIDFile -eq $IBM_DriveProdID){
-                                                [string]$IBM_DriveFWFile = ($IBM_UnkownDriveID|Select-String -Pattern '^(([a-zA-Z0-9]+){5,})\s+.*\s+Firmware\sLevel:\s+([a-zA-Z0-9_]+)' -AllMatches).Matches.Groups[3].Value
+                                        $IBM_LatestDriveFW = $null
+                                        $IBM_LatestDriveFW = $IBM_AllotherDrives |ForEach-Object {
+                                            if(($IBM_DriveProdID) -eq (($_ | Select-String -Pattern '^(([a-zA-Z0-9]+){5,})\s+.*\s+Firmware\sLevel:\s+([a-zA-Z0-9_]+)' -AllMatches).Matches.Groups[1].Value)){
+                                                $IBM_DriveFWFile = ($IBM_UnkownDriveID|Select-String -Pattern '^(([a-zA-Z0-9]+){5,})\s+.*\s+Firmware\sLevel:\s+([a-zA-Z0-9_]+)' -AllMatches).Matches.Groups[3].Value
+                                                
                                                 $IBM_DriveFWFile
-                                                break
                                             }
                                         }
+                                        if([string]::IsNullOrEmpty($IBM_LatestDriveFW)){
+                                            $IBM_LatestDriveFW = "unknown"
+                                        }
+                                        $IBM_LatestDriveFW
                                     }
                                     Default {
                                         Write-Host "all fine" -ForegroundColor Green
-
                                     }
                                 }
     }
     
     end {
         <# nothing to do here #>
-        return $IBM_DriveFirmwareResult
+       return $IBM_DriveFirmwareResult
     }
 }

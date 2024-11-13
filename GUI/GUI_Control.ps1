@@ -802,7 +802,7 @@ $TD_btn_IBM_HostVolumeMap.add_click({
     $TD_stp_FCPortStats,$TD_stp_DriveInfo,$TD_stp_StorageEventLog,$TD_stp_BackUpConfig,$TD_stp_BaseStorageInfo,$TD_stp_IBM_FCPortInfo,$TD_stp_PolicyBased_Rep | ForEach-Object {$_.Visibility="Collapsed"}
 
     $TD_stp_HostVolInfo.Visibility="Visible" 
-
+    $TD_btn_ClearFilterHVM.Visibility="Visible"
 })
 <# filter View for Host Volume Map #>
 <# to keep this file clean :D export the following lines to a func in one if the next Version #>
@@ -837,6 +837,29 @@ $TD_btn_FilterHVM.Add_Click({
                 4 { $TD_dg_HostVolInfoFour.ItemsSource = $WPF_dataGrid }
                 Default {}
             }
+            
+        }
+    catch {
+        <#Do this if a terminating exception happens#>
+        Write-Host "Something went wrong" -ForegroundColor DarkMagenta
+        Write-Host $_.Exception.Message
+        $TD_lb_ErrorMsgHVM.Content = $_.Exception.Message
+    }
+})
+
+$TD_btn_ClearFilterHVM.Add_Click({
+
+    [int]$TD_Filter_DG = $TD_cb_ListFilterStorageHVM.Text
+    try {
+        [array]$TD_CollectVolInfo = Import-Csv -Path $Env:TEMP\$($TD_Filter_DG)_Host_Vol_Map_Temp.csv -ErrorAction Stop
+
+        switch ($TD_Filter_DG) {
+            1 { $TD_dg_HostVolInfo.ItemsSource = $TD_CollectVolInfo }
+            2 { $TD_dg_HostVolInfoTwo.ItemsSource = $TD_CollectVolInfo }
+            3 { $TD_dg_HostVolInfoThree.ItemsSource = $TD_CollectVolInfo }
+            4 { $TD_dg_HostVolInfoFour.ItemsSource = $TD_CollectVolInfo }
+            Default {}
+        }
             
         }
     catch {
