@@ -39,6 +39,7 @@ function IBM_DriveFirmwareCheck {
     }
     
     process {
+        Write-Debug -Message " $IBM_DriveProdID ------------------------- $IBM_DriveCurrentFW ------------------------ $IBM_ProdMTM "
         switch ($IBM_ProdMTM) {
             <# FlashSystem 5x00 Software Levels #>
             {$_ -like "2077*" -or $_ -like "2078*" -or $_ -like "2072*" -or $_ -like "4680*" -or $_ -like "4662*"} { 
@@ -117,28 +118,31 @@ function IBM_DriveFirmwareCheck {
         }
         
         $IBM_LatestDriveFW = $null
-        $IBM_LatestDriveFW = $IBM_AllotherDrives |ForEach-Object {
-            if(($IBM_DriveProdID) -eq (($_ | Select-String -Pattern '^(([a-zA-Z0-9]+){5,})\s+.*\s+Firmware\sLevel:\s+([a-zA-Z0-9_]+)' -AllMatches).Matches.Groups[1].Value)){
+        $IBM_LatestDriveFW = foreach($IBM_AllotherDrive in $IBM_AllotherDrives) {
+            if(($IBM_DriveProdID) -eq (($IBM_AllotherDrive | Select-String -Pattern '^(([a-zA-Z0-9]+){5,})\s+.*\s+Firmware\sLevel:\s+([a-zA-Z0-9_]+)' -AllMatches).Matches.Groups[1].Value)){
                 
-                $IBM_DriveFWFile = ($_|Select-String -Pattern '^(([a-zA-Z0-9]+){5,})\s+.*\s+Firmware\sLevel:\s+([a-zA-Z0-9_]+)' -AllMatches).Matches.Groups[3].Value
-                
-                $IBM_DriveFWFile
-                break
-            }elseif (($IBM_DriveProdID) -eq (($_ | Select-String -Pattern '^([0-9A-Z]+)\s+(\d+_\d+_\d+)' -AllMatches).Matches.Groups[1].Value)){
-
-                $IBM_DriveFWFile = ($_|Select-String -Pattern '^([0-9A-Z]+)\s+(\d+_\d+_\d+)' -AllMatches).Matches.Groups[2].Value
+                $IBM_DriveFWFile = ($IBM_AllotherDrive|Select-String -Pattern '^(([a-zA-Z0-9]+){5,})\s+.*\s+Firmware\sLevel:\s+([a-zA-Z0-9_]+)' -AllMatches).Matches.Groups[3].Value
                 
                 $IBM_DriveFWFile
                 break
-            }elseif (($IBM_DriveProdID) -eq (($_ | Select-String -Pattern '^([0-9A-Z]+)\s+([0-9A-Z]+)$' -AllMatches).Matches.Groups[1].Value)){
+            }
+            if (($IBM_DriveProdID) -eq (($IBM_AllotherDrive | Select-String -Pattern '^([0-9A-Z]+)\s+(\d+_\d+_\d+)' -AllMatches).Matches.Groups[1].Value)){
 
-                $IBM_DriveFWFile = ($_|Select-String -Pattern '^([0-9A-Z]+)\s+([0-9A-Z]+)$' -AllMatches).Matches.Groups[2].Value
+                $IBM_DriveFWFile = ($IBM_AllotherDrive|Select-String -Pattern '^([0-9A-Z]+)\s+(\d+_\d+_\d+)' -AllMatches).Matches.Groups[2].Value
+                
+                $IBM_DriveFWFile
+                break
+            }
+            if (($IBM_DriveProdID) -eq (($IBM_AllotherDrive | Select-String -Pattern '^([0-9A-Z]+)\s+([0-9A-Z]+)$' -AllMatches).Matches.Groups[1].Value)){
+
+                $IBM_DriveFWFile = ($IBM_AllotherDrive|Select-String -Pattern '^([0-9A-Z]+)\s+([0-9A-Z]+)$' -AllMatches).Matches.Groups[2].Value
                 
                 $IBM_DriveFWFile
                 break
             }
             
         }
+        
         if([string]::IsNullOrEmpty($IBM_LatestDriveFW)){
             $IBM_LatestDriveFW = "unknown"
         }

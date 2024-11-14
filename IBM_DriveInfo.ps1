@@ -57,6 +57,7 @@ function IBM_DriveInfo {
         <# suppresses error messages #>
         $ErrorActionPreference="SilentlyContinue"
         $ProgressBar = New-ProgressBar
+        $TD_DriveSplitInfosProductID = ""
         $TD_DriveOverview = @()
         [int]$ProgCounter=0
         <# Connect to Device and get all needed Data #>
@@ -109,19 +110,35 @@ function IBM_DriveInfo {
             [string]$TD_DriveSplitInfos.PhyUsedDriveCap = ($TD_CollectInfo|Select-String -Pattern '^physical_used_capacity\s+(\d+\.\d+\w+)' -AllMatches).Matches.Groups[1].Value
             [string]$TD_DriveSplitInfos.EffeUsedDriveCap = ($TD_CollectInfo|Select-String -Pattern '^effective_used_capacity\s+(\d+\.\d+\w+)' -AllMatches).Matches.Groups[1].Value
 
-            [string]$TD_LatestDriveFW = IBM_DriveFirmwareCheck -IBM_DriveProdID $TD_DriveSplitInfos.ProductID -IBM_DriveCurrentFW $TD_DriveSplitInfos.FWlev -IBM_ProdMTM $TD_NodeSplitInfo.ProdName
-            Write-Debug -Message $TD_DriveSplitInfos.FWlev $TD_LatestDriveFW
-            if($TD_DriveSplitInfos.FWlev -eq $TD_LatestDriveFW){
-                [string]$TD_DriveSplitInfos.FWlevStatus = "LightGreen"
-                [string]$TD_DriveSplitInfos.LatestDriveFW = $TD_LatestDriveFW
-            }elseif ($TD_LatestDriveFW -eq "unknown") {
-                [string]$TD_DriveSplitInfos.FWlevStatus = "LightGray"
-                [string]$TD_DriveSplitInfos.LatestDriveFW = $TD_LatestDriveFW
-            }else {    
-                [string]$TD_DriveSplitInfos.FWlevStatus = "Lightyellow"
-                [string]$TD_DriveSplitInfos.LatestDriveFW = $TD_LatestDriveFW
+            if ((![string]::IsNullOrEmpty($TD_DriveSplitInfos.ProductID))-and(![string]::IsNullOrEmpty($TD_DriveSplitInfos.FWlev))-and(![string]::IsNullOrEmpty($TD_NodeSplitInfo.ProdName))){
+                if(($TD_DriveSplitInfos.ProductID)-ne($TD_DriveSplitInfosProductID)){
+                    [string]$TD_LatestDriveFW = IBM_DriveFirmwareCheck -IBM_DriveProdID $TD_DriveSplitInfos.ProductID -IBM_DriveCurrentFW $TD_DriveSplitInfos.FWlev -IBM_ProdMTM $TD_NodeSplitInfo.ProdName
+                    $TD_DriveSplitInfosProductID = $TD_DriveSplitInfos.ProductID
+                    
+                    Write-Debug -Message $TD_DriveSplitInfos.FWlev $TD_LatestDriveFW
+                    if($TD_DriveSplitInfos.FWlev -eq $TD_LatestDriveFW){
+                        [string]$TD_DriveSplitInfos.FWlevStatus = "LightGreen"
+                        [string]$TD_DriveSplitInfos.LatestDriveFW = $TD_LatestDriveFW
+                    }elseif ($TD_LatestDriveFW -eq "unknown") {
+                        [string]$TD_DriveSplitInfos.FWlevStatus = "LightGray"
+                        [string]$TD_DriveSplitInfos.LatestDriveFW = $TD_LatestDriveFW
+                    }else {    
+                        [string]$TD_DriveSplitInfos.FWlevStatus = "Lightyellow"
+                        [string]$TD_DriveSplitInfos.LatestDriveFW = $TD_LatestDriveFW
+                    }
+                }else {
+                    if($TD_DriveSplitInfos.FWlev -eq $TD_LatestDriveFW){
+                        [string]$TD_DriveSplitInfos.FWlevStatus = "LightGreen"
+                        [string]$TD_DriveSplitInfos.LatestDriveFW = $TD_LatestDriveFW
+                    }elseif ($TD_LatestDriveFW -eq "unknown") {
+                        [string]$TD_DriveSplitInfos.FWlevStatus = "LightGray"
+                        [string]$TD_DriveSplitInfos.LatestDriveFW = $TD_LatestDriveFW
+                    }else {    
+                        [string]$TD_DriveSplitInfos.FWlevStatus = "Lightyellow"
+                        [string]$TD_DriveSplitInfos.LatestDriveFW = $TD_LatestDriveFW
+                    }
+                }
             }
-
             <# Not the best option but for the first stepp ok #>
             if($TD_TransProt -eq "nvme"){
                 if (![string]::IsNullOrEmpty($TD_DriveSplitInfos.EffeUsedDriveCap)){

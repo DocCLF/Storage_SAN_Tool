@@ -802,11 +802,12 @@ $TD_btn_IBM_HostVolumeMap.add_click({
     $TD_stp_FCPortStats,$TD_stp_DriveInfo,$TD_stp_StorageEventLog,$TD_stp_BackUpConfig,$TD_stp_BaseStorageInfo,$TD_stp_IBM_FCPortInfo,$TD_stp_PolicyBased_Rep | ForEach-Object {$_.Visibility="Collapsed"}
 
     $TD_stp_HostVolInfo.Visibility="Visible" 
-    $TD_btn_ClearFilterHVM.Visibility="Visible"
+
 })
 <# filter View for Host Volume Map #>
 <# to keep this file clean :D export the following lines to a func in one if the next Version #>
 $TD_btn_FilterHVM.Add_Click({
+    $TD_btn_ClearFilterHVM.Visibility="Visible"
     [string]$filter= $TD_tb_filter.Text
     [int]$TD_Filter_DG = $TD_cb_ListFilterStorageHVM.Text
     [string]$TD_Filter_DG_Colum = $TD_cb_StorageHVM.Text
@@ -845,11 +846,13 @@ $TD_btn_FilterHVM.Add_Click({
         Write-Host $_.Exception.Message
         $TD_lb_ErrorMsgHVM.Content = $_.Exception.Message
     }
+
 })
 
 $TD_btn_ClearFilterHVM.Add_Click({
 
     [int]$TD_Filter_DG = $TD_cb_ListFilterStorageHVM.Text
+    $TD_tb_filter.Text = ""
     try {
         [array]$TD_CollectVolInfo = Import-Csv -Path $Env:TEMP\$($TD_Filter_DG)_Host_Vol_Map_Temp.csv -ErrorAction Stop
 
