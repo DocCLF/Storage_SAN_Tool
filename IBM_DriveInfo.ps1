@@ -109,7 +109,7 @@ function IBM_DriveInfo {
             [string]$TD_DriveSplitInfos.PhyUsedDriveCap = ($TD_CollectInfo|Select-String -Pattern '^physical_used_capacity\s+(\d+\.\d+\w+)' -AllMatches).Matches.Groups[1].Value
             [string]$TD_DriveSplitInfos.EffeUsedDriveCap = ($TD_CollectInfo|Select-String -Pattern '^effective_used_capacity\s+(\d+\.\d+\w+)' -AllMatches).Matches.Groups[1].Value
 
-            [string]$TD_LatestDriveFW = IBM_DriveFirmwareCheck -IBM_DriveProdID $TD_DriveSplitInfos.ProductID -IBM_DriveCurrentFW $TD_DriveSplitInfos.FWlev
+            [string]$TD_LatestDriveFW = IBM_DriveFirmwareCheck -IBM_DriveProdID $TD_DriveSplitInfos.ProductID -IBM_DriveCurrentFW $TD_DriveSplitInfos.FWlev -IBM_ProdMTM $TD_NodeSplitInfo.ProdName
             Write-Debug -Message $TD_DriveSplitInfos.FWlev $TD_LatestDriveFW
             if($TD_DriveSplitInfos.FWlev -eq $TD_LatestDriveFW){
                 [string]$TD_DriveSplitInfos.FWlevStatus = "LightGreen"
