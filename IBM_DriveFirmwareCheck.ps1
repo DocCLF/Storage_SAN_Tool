@@ -1,9 +1,27 @@
 function IBM_DriveFirmwareCheck {
-    #https://www.ibm.com/support/pages/node/6508601
+    <#
+    .SYNOPSIS
+        The function checks the firmware version of the individual drives.
+    .DESCRIPTION
+        The function checks the specified firmware version of a hard disk of an IBM storage system for its update 
+        If the hard disk FW is unknown, it is sufficient to specify the product ID in connection with the storage system to get the latest firmware version.
+        Furthermore, a file is created on first use that contains all firmware versions of the possible hard disks that are available for the respective storage system.
+    .NOTES
+        Need infos to be added   
+    .LINK
+        https://github.com/DocCLF/Storage_SAN_Kit/blob/v1.2.0/IBM_DriveFirmwareCheck.ps1
+    .EXAMPLE
+        Without hard disk firmware and Debug
+        IBM_DriveFirmwareCheck -IBM_DriveProdID KPM6XMUG400G -IBM_ProdMTM 2078 -ErrorAction SilentlyContinue
+        -or with disk firmware and Debug-
+        IBM_DriveFirmwareCheck -IBM_DriveCurrentFW C6S5 -IBM_DriveProdID 1014068D -IBM_ProdMTM 4666 -Debug -ErrorAction SilentlyContinue
+    #>
     [CmdletBinding()]
     param (
+        [Parameter(Mandatory)]
         $IBM_DriveProdID,
         $IBM_DriveCurrentFW,
+        [Parameter(Mandatory)]
         $IBM_ProdMTM
     )
     
@@ -19,15 +37,16 @@ function IBM_DriveFirmwareCheck {
                 $IBM_WebRNName = ($IBM_WebFWInofs.Content| Select-String -Pattern 'IBM_(.*_release_note.txt)' -AllMatches).Matches.Groups[1].Value 
                 if((Get-Item -Path $PSScriptRoot\Resources\IBM_FlashSystem5x00_and_StorwizeV5000_DRIVES_*).Name -eq "IBM_$($IBM_WebRNName)"){
                     Write-Debug -Message "$(Get-Item -Path $PSScriptRoot\Resources\IBM_FlashSystem5x00_and_StorwizeV5000_DRIVES_*) was used"
-                    $IBM_AllotherDrives = Get-Content -Path D:\GitRepo\Storage_SAN_Kit\Resources\IBM_FlashSystem5x00_and_StorwizeV5000_DRIVES_241024_release_note.txt
-                    Write-Debug -Message $IBM_AllotherDrives.Count
+                    $IBM_AllotherDrives = Get-Content -Path $PSScriptRoot\Resources\* -Filter IBM_FlashSystem5x00_and_StorwizeV5000_DRIVES_*
+                    Write-Debug -Message $IBM_AllotherDrives
                 }else{
                     Remove-Item -Path $PSScriptRoot\Resources\* -Filter 'IBM_FlashSystem5x00_and_StorwizeV5000_DRIVES_*' -Force
                     $IBM_WebRNName = ($IBM_WebFWInofs.Content| Select-String -Pattern 'IBM_(.*_release_note.txt)' -AllMatches).Matches.Groups[1].Value
                     $IBM_UpdateFWDriveFile = Invoke-WebRequest "https://download4.boulder.ibm.com/sar/CMA/SSA/0cm9c/0/IBM_$($IBM_WebRNName)"
                     $IBM_UpdateFWDriveFile.Content | Out-File -FilePath $PSScriptRoot\Resources\IBM_$(($IBM_WebFWInofs.Content| Select-String -Pattern 'IBM_(.*)_release_note' -AllMatches).Matches.Groups[1].Value)_release_note.txt
-                    $IBM_AllotherDrives = $IBM_UpdateFWDriveFile.Content
                     Write-Debug -Message "IBM_$(($IBM_WebFWInofs.Content| Select-String -Pattern 'IBM_(.*)_release_note' -AllMatches).Matches.Groups[1].Value)_release_note.txt was build"
+                    $IBM_AllotherDrives = Get-Content -Path $PSScriptRoot\Resources\* -Filter IBM_FlashSystem5x00_and_StorwizeV5000_DRIVES_*
+                    Write-Debug -Message $IBM_AllotherDrives
                 }
                 
             }
@@ -44,9 +63,9 @@ function IBM_DriveFirmwareCheck {
                     $IBM_WebRNName = ($IBM_WebFWInofs.Content| Select-String -Pattern 'IBM_(.*_release_note.txt)' -AllMatches).Matches.Groups[1].Value
                     $IBM_UpdateFWDriveFile = Invoke-WebRequest "https://download4.boulder.ibm.com/sar/CMA/SDA/0cm74/1/IBM_$($IBM_WebRNName)"
                     $IBM_UpdateFWDriveFile.Content | Out-File -FilePath $PSScriptRoot\Resources\IBM_$(($IBM_WebFWInofs.Content| Select-String -Pattern 'IBM_(.*)_release_note' -AllMatches).Matches.Groups[1].Value)_release_note.txt
-                    $IBM_AllotherDrives = $IBM_UpdateFWDriveFile.Content
                     Write-Debug -Message "IBM_$(($IBM_WebFWInofs.Content| Select-String -Pattern 'IBM_(.*)_release_note' -AllMatches).Matches.Groups[1].Value)_release_note.txt was build"
-                    
+                    $IBM_AllotherDrives = Get-Content -Path $PSScriptRoot\Resources\* -Filter IBM_FlashSystem7x00_and_StorwizeV7000_DRIVES_*
+                    Write-Debug -Message $IBM_AllotherDrives
                 }
             }
             <#  FlashSystem 9x00 Software Levels #>
@@ -62,9 +81,9 @@ function IBM_DriveFirmwareCheck {
                     $IBM_WebRNName = ($IBM_WebFWInofs.Content| Select-String -Pattern 'IBM_(.*_release_note.txt)' -AllMatches).Matches.Groups[1].Value
                     $IBM_UpdateFWDriveFile = Invoke-WebRequest "https://download4.boulder.ibm.com/sar/CMA/SSA//0cm75/1/IBM_$($IBM_WebRNName)"
                     $IBM_UpdateFWDriveFile.Content | Out-File -FilePath $PSScriptRoot\Resources\IBM_$(($IBM_WebFWInofs.Content| Select-String -Pattern 'IBM_(.*)_release_note' -AllMatches).Matches.Groups[1].Value)_release_note.txt
-                    $IBM_AllotherDrives = $IBM_UpdateFWDriveFile.Content
                     Write-Debug -Message "IBM_$(($IBM_WebFWInofs.Content| Select-String -Pattern 'IBM_(.*)_release_note' -AllMatches).Matches.Groups[1].Value)_release_note.txt was build"
-                    
+                    $IBM_AllotherDrives = Get-Content -Path $PSScriptRoot\Resources\* -Filter IBM_FlashSystem9x00_DRIVES_*
+                    Write-Debug -Message $IBM_AllotherDrives
                 }
             }
             <#  FlashSystem 9x00 Software Levels #>
@@ -80,9 +99,9 @@ function IBM_DriveFirmwareCheck {
                     $IBM_WebRNName = ($IBM_WebFWInofs.Content| Select-String -Pattern 'IBM_(.*_release_note.txt)' -AllMatches).Matches.Groups[1].Value
                     $IBM_UpdateFWDriveFile = Invoke-WebRequest "https://download4.boulder.ibm.com/sar/CMA/SSA//0cm78/1/IBM_$($IBM_WebRNName)"
                     $IBM_UpdateFWDriveFile.Content | Out-File -FilePath $PSScriptRoot\Resources\IBM_$(($IBM_WebFWInofs.Content| Select-String -Pattern 'IBM_(.*)_release_note' -AllMatches).Matches.Groups[1].Value)_release_note.txt
-                    $IBM_AllotherDrives = $IBM_UpdateFWDriveFile.Content
                     Write-Debug -Message "IBM_$(($IBM_WebFWInofs.Content| Select-String -Pattern 'IBM_(.*)_release_note' -AllMatches).Matches.Groups[1].Value)_release_note.txt was build"
-                    
+                    $IBM_AllotherDrives = Get-Content -Path $PSScriptRoot\Resources\* -Filter IBM_SVC_DRIVES_*
+                    Write-Debug -Message $IBM_AllotherDrives
                 }
             }
             Default {Write-Debug -Message $IBM_DriveFirmwareResult}
@@ -96,6 +115,18 @@ function IBM_DriveFirmwareCheck {
                 
                 $IBM_DriveFWFile
                 break
+            }elseif (($IBM_DriveProdID) -eq (($_ | Select-String -Pattern '^([0-9A-Z]+)\s+(\d+_\d+_\d+)' -AllMatches).Matches.Groups[1].Value)){
+
+                $IBM_DriveFWFile = ($_|Select-String -Pattern '^([0-9A-Z]+)\s+(\d+_\d+_\d+)' -AllMatches).Matches.Groups[2].Value
+                
+                $IBM_DriveFWFile
+                break
+            }elseif (($IBM_DriveProdID) -eq (($_ | Select-String -Pattern '^([0-9A-Z]+)\s+([0-9A-Z]+)$' -AllMatches).Matches.Groups[1].Value)){
+
+                $IBM_DriveFWFile = ($_|Select-String -Pattern '^([0-9A-Z]+)\s+([0-9A-Z]+)$' -AllMatches).Matches.Groups[2].Value
+                
+                $IBM_DriveFWFile
+                break
             }
             
         }
@@ -106,7 +137,6 @@ function IBM_DriveFirmwareCheck {
     }
     
     end {
-        <# nothing to do here #>
        return $IBM_DriveFirmwareResult
     }
 }
