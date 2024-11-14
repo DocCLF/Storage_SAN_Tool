@@ -6,8 +6,17 @@ function IBM_DriveFirmwareCheck {
         The function checks the specified firmware version of a hard disk of an IBM storage system for its update 
         If the hard disk FW is unknown, it is sufficient to specify the product ID in connection with the storage system to get the latest firmware version.
         Furthermore, a file is created on first use that contains all firmware versions of the possible hard disks that are available for the respective storage system.
+    .PARAMETER IBM_DriveProdID
+        Specifies the product ID of the drive.
+    .PARAMETER IBM_DriveCurrentFW
+        (optional) Specifies the firmware level of the disk; blank if unknown.
+    .PARAMETER IBM_ProdMTM
+        Specifies the product machine type, like 2077, 2078 or 4680 for a FS5x00 etc.
     .NOTES
-        Need infos to be added   
+        Autor: Doc find me by https://github.com/DocCLF
+        MIT license
+        
+        v1.2.0 Initial release
     .LINK
         https://github.com/DocCLF/Storage_SAN_Kit/blob/v1.2.0/IBM_DriveFirmwareCheck.ps1
     .EXAMPLE
