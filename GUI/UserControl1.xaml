@@ -606,13 +606,13 @@
                             <DataGrid.RowStyle>
                                 <Style TargetType="DataGridRow">
                                     <Style.Triggers>
-                                        <DataTrigger Binding="{Binding FWlevStatus}" Value="unknown">
+                                        <DataTrigger Binding="{Binding FWlevStatus}" Value="LightGray">
                                             <Setter Property="Background" Value="LightGray" />
                                         </DataTrigger>
-                                        <DataTrigger Binding="{Binding FWlevStatus}" Value="Yelllow">
+                                        <DataTrigger Binding="{Binding FWlevStatus}" Value="Lightyellow">
                                             <Setter Property="Background" Value="Lightyellow" />
                                         </DataTrigger>
-                                        <DataTrigger Binding="{Binding FWlevStatus}" Value="Green">
+                                        <DataTrigger Binding="{Binding FWlevStatus}" Value="LightGreen">
                                             <Setter Property="Background" Value="LightGreen" />
                                         </DataTrigger>
                                         <DataTrigger Binding="{Binding DriveStatus}" Value="offline">
@@ -672,13 +672,13 @@
                             <DataGrid.RowStyle>
                                 <Style TargetType="DataGridRow">
                                     <Style.Triggers>
-                                        <DataTrigger Binding="{Binding FWlevStatus}" Value="unknown">
+                                        <DataTrigger Binding="{Binding FWlevStatus}" Value="LightGray">
                                             <Setter Property="Background" Value="LightGray" />
                                         </DataTrigger>
-                                        <DataTrigger Binding="{Binding FWlevStatus}" Value="Yelllow">
+                                        <DataTrigger Binding="{Binding FWlevStatus}" Value="Lightyellow">
                                             <Setter Property="Background" Value="Lightyellow" />
                                         </DataTrigger>
-                                        <DataTrigger Binding="{Binding FWlevStatus}" Value="Green">
+                                        <DataTrigger Binding="{Binding FWlevStatus}" Value="LightGreen">
                                             <Setter Property="Background" Value="LightGreen" />
                                         </DataTrigger>
                                         <DataTrigger Binding="{Binding DriveStatus}" Value="offline">
@@ -738,13 +738,13 @@
                             <DataGrid.RowStyle>
                                 <Style TargetType="DataGridRow">
                                     <Style.Triggers>
-                                        <DataTrigger Binding="{Binding FWlevStatus}" Value="unknown">
+                                        <DataTrigger Binding="{Binding FWlevStatus}" Value="LightGray">
                                             <Setter Property="Background" Value="LightGray" />
                                         </DataTrigger>
-                                        <DataTrigger Binding="{Binding FWlevStatus}" Value="Yelllow">
+                                        <DataTrigger Binding="{Binding FWlevStatus}" Value="Lightyellow">
                                             <Setter Property="Background" Value="Lightyellow" />
                                         </DataTrigger>
-                                        <DataTrigger Binding="{Binding FWlevStatus}" Value="Green">
+                                        <DataTrigger Binding="{Binding FWlevStatus}" Value="LightGreen">
                                             <Setter Property="Background" Value="LightGreen" />
                                         </DataTrigger>
                                         <DataTrigger Binding="{Binding DriveStatus}" Value="offline">
@@ -804,13 +804,13 @@
                             <DataGrid.RowStyle>
                                 <Style TargetType="DataGridRow">
                                     <Style.Triggers>
-                                        <DataTrigger Binding="{Binding FWlevStatus}" Value="unknown">
+                                        <DataTrigger Binding="{Binding FWlevStatus}" Value="LightGray">
                                             <Setter Property="Background" Value="LightGray" />
                                         </DataTrigger>
-                                        <DataTrigger Binding="{Binding FWlevStatus}" Value="Yelllow">
+                                        <DataTrigger Binding="{Binding FWlevStatus}" Value="Lightyellow">
                                             <Setter Property="Background" Value="Lightyellow" />
                                         </DataTrigger>
-                                        <DataTrigger Binding="{Binding FWlevStatus}" Value="Green">
+                                        <DataTrigger Binding="{Binding FWlevStatus}" Value="LightGreen">
                                             <Setter Property="Background" Value="LightGreen" />
                                         </DataTrigger>
                                         <DataTrigger Binding="{Binding DriveStatus}" Value="offline">

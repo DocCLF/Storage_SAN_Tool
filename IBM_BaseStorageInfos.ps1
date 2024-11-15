@@ -60,13 +60,36 @@ function IBM_BaseStorageInfos {
             $TD_FSBaseTemp.SideName = ($TD_FSBaseInfo|Select-String -Pattern ':(\d+|):([a-zA-Z0-9-_]+)$' -AllMatches).Matches.Groups[2].Value
             $TD_FSBaseTemp.Prod_MTM = ($TD_BaseInformations|Select-String -Pattern '^product_mtm:([a-zA-Z0-9-]+)' -AllMatches).Matches.Groups[1].Value
             $TD_FSBaseTemp.Code_Level = ($TD_BaseInformations|Select-String -Pattern '^code_level:(\d+.\d+.\d+.\d+)' -AllMatches).Matches.Groups[1].Value
-            <# the following is for later use, maybe #>
-            #if(!([String]::IsNullOrEmpty($TD_FSBaseTemp.Code_Level))-and($TD_FSBaseTemp.Code_Level -ne ($TD_FSBaseInfo|Select-String -Pattern '^code_level:(\d+.\d+.\d+.\d+)' -AllMatches).Matches.Groups[1].Value)){
-            #    Write-Host $TD_FSBaseTemp.Code_Level
-            #    Write-Host ($TD_FSBaseInfo|Select-String -Pattern '^code_level:(\d+.\d+.\d+.\d+)' -AllMatches).Matches.Groups[1].Value
-            #    $TD_FSBaseTemp.Code_Level = ($TD_BaseInformations|Select-String -Pattern '^code_level:(\d+.\d+.\d+.\d+)' -AllMatches).Matches.Groups[1].Value
-            #}
-            #$TD_FSBaseTemp.Product_MTM = ($TD_BaseInformations|Select-String -Pattern '^product_mtm:(.*)' -AllMatches).Matches.Groups[1].Value
+
+            if ((![string]::IsNullOrEmpty($TD_DriveSplitInfos.ProductID))-and(![string]::IsNullOrEmpty($TD_DriveSplitInfos.FWlev))-and(![string]::IsNullOrEmpty($TD_NodeSplitInfo.ProdName))){
+                if(($TD_DriveSplitInfos.ProductID)-ne($TD_DriveSplitInfosProductID)){
+                    [string]$TD_LatestDriveFW = IBM_StorageSWCheck -IBM_DriveCurrentFW $TD_FSBaseTemp.Code_Level -IBM_ProdMTM $TD_FSBaseTemp.Prod_MTM
+                    $TD_DriveSplitInfosProductID = $TD_DriveSplitInfos.ProductID
+                    
+                    Write-Debug -Message $TD_DriveSplitInfos.FWlev $TD_LatestDriveFW
+                    if($TD_DriveSplitInfos.FWlev -eq $TD_LatestDriveFW){
+                        [string]$TD_DriveSplitInfos.FWlevStatus = "LightGreen"
+                        [string]$TD_DriveSplitInfos.LatestDriveFW = $TD_LatestDriveFW
+                    }elseif ($TD_LatestDriveFW -eq "unknown") {
+                        [string]$TD_DriveSplitInfos.FWlevStatus = "LightGray"
+                        [string]$TD_DriveSplitInfos.LatestDriveFW = $TD_LatestDriveFW
+                    }else {    
+                        [string]$TD_DriveSplitInfos.FWlevStatus = "Lightyellow"
+                        [string]$TD_DriveSplitInfos.LatestDriveFW = $TD_LatestDriveFW
+                    }
+                }else {
+                    if($TD_DriveSplitInfos.FWlev -eq $TD_LatestDriveFW){
+                        [string]$TD_DriveSplitInfos.FWlevStatus = "LightGreen"
+                        [string]$TD_DriveSplitInfos.LatestDriveFW = $TD_LatestDriveFW
+                    }elseif ($TD_LatestDriveFW -eq "unknown") {
+                        [string]$TD_DriveSplitInfos.FWlevStatus = "LightGray"
+                        [string]$TD_DriveSplitInfos.LatestDriveFW = $TD_LatestDriveFW
+                    }else {    
+                        [string]$TD_DriveSplitInfos.FWlevStatus = "Lightyellow"
+                        [string]$TD_DriveSplitInfos.LatestDriveFW = $TD_LatestDriveFW
+                    }
+                }
+            }
         
             if(([String]::IsNullOrEmpty($TD_FSBaseTemp.ID))){continue}
             $TD_FSBaseTemp
