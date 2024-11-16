@@ -62,9 +62,9 @@ function IBM_BaseStorageInfos {
             $TD_FSBaseTemp.Code_Level = ($TD_BaseInformations|Select-String -Pattern '^code_level:(\d+.\d+.\d+.\d+)' -AllMatches).Matches.Groups[1].Value
 
             if ((![string]::IsNullOrEmpty($TD_DriveSplitInfos.ProductID))-and(![string]::IsNullOrEmpty($TD_DriveSplitInfos.FWlev))-and(![string]::IsNullOrEmpty($TD_NodeSplitInfo.ProdName))){
-                if(($TD_DriveSplitInfos.ProductID)-ne($TD_DriveSplitInfosProductID)){
-                    [string]$TD_LatestDriveFW = IBM_StorageSWCheck -IBM_DriveCurrentFW $TD_FSBaseTemp.Code_Level -IBM_ProdMTM $TD_FSBaseTemp.Prod_MTM
-                    $TD_DriveSplitInfosProductID = $TD_DriveSplitInfos.ProductID
+                if(($TD_DriveSplitInfos.Serial_Number)-ne($TD_DriveSplitInfosSerial_Number)){
+                    [string]$TD_LatestDriveFW = IBM_StorageSWCheck -IBM_CurrentSpectrVirtuFW $TD_FSBaseTemp.Code_Level -IBM_ProdMTM $TD_FSBaseTemp.Prod_MTM
+                    $TD_DriveSplitInfosSerial_Number = $TD_DriveSplitInfos.Serial_Number
                     
                     Write-Debug -Message $TD_DriveSplitInfos.FWlev $TD_LatestDriveFW
                     if($TD_DriveSplitInfos.FWlev -eq $TD_LatestDriveFW){
