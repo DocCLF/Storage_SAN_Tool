@@ -1505,8 +1505,27 @@
                                 <DataGridTextColumn Width="auto" Header="IO_Group_ID" Binding ="{Binding IO_group_id}" IsReadOnly="True"/> 
                                 <DataGridTextColumn Width="auto" Header="IO_Group_Name" Binding ="{Binding IO_group_Name}" IsReadOnly="True"/>
                                 <DataGridTextColumn Width="auto" Header="Serial Number" Binding ="{Binding Serial_Number}" IsReadOnly="True"/>  
-                                <DataGridTextColumn Width="auto" Header="Code Level" Binding ="{Binding Code_Level}" IsReadOnly="True"/>
-                                <DataGridTextColumn Width="auto" Header="Config Node" Binding ="{Binding Config_Node}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Code Level" Binding ="{Binding Code_Level}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Indicates the current level of machine code that is running on the node or node canister" />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="auto" Header="Recommended Level" Binding ="{Binding RecommendedPTF}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Indicates the Recommended level for the machine or node" />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="auto" Header="Config Node" Binding ="{Binding Config_Node}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Indicates if the node is a configuration node." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
                                 <DataGridTextColumn Width="auto" Header="SideID" Binding ="{Binding SideID}" IsReadOnly="True"/>
                                 <DataGridTextColumn Width="auto" Header="Side Name" Binding ="{Binding SideName}" IsReadOnly="True"/>
                             </DataGrid.Columns>
@@ -1529,8 +1548,27 @@
                                 <DataGridTextColumn Width="auto" Header="IO_Group_ID" Binding ="{Binding IO_group_id}" IsReadOnly="True"/> 
                                 <DataGridTextColumn Width="auto" Header="IO_Group_Name" Binding ="{Binding IO_group_Name}" IsReadOnly="True"/>
                                 <DataGridTextColumn Width="auto" Header="Serial Number" Binding ="{Binding Serial_Number}" IsReadOnly="True"/>  
-                                <DataGridTextColumn Width="auto" Header="Code Level" Binding ="{Binding Code_Level}" IsReadOnly="True"/>
-                                <DataGridTextColumn Width="auto" Header="Config Node" Binding ="{Binding Config_Node}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Code Level" Binding ="{Binding Code_Level}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Indicates the current level of machine code that is running on the node or node canister" />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="auto" Header="Recommended Level" Binding ="{Binding RecommendedPTF}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Indicates the Recommended level for the machine or node" />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="auto" Header="Config Node" Binding ="{Binding Config_Node}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Indicates if the node is a configuration node." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
                                 <DataGridTextColumn Width="auto" Header="SideID" Binding ="{Binding SideID}" IsReadOnly="True"/>
                                 <DataGridTextColumn Width="auto" Header="Side Name" Binding ="{Binding SideName}" IsReadOnly="True"/>
                             </DataGrid.Columns>
@@ -1553,8 +1591,27 @@
                                 <DataGridTextColumn Width="auto" Header="IO_Group_ID" Binding ="{Binding IO_group_id}" IsReadOnly="True"/> 
                                 <DataGridTextColumn Width="auto" Header="IO_Group_Name" Binding ="{Binding IO_group_Name}" IsReadOnly="True"/>
                                 <DataGridTextColumn Width="auto" Header="Serial Number" Binding ="{Binding Serial_Number}" IsReadOnly="True"/>  
-                                <DataGridTextColumn Width="auto" Header="Code Level" Binding ="{Binding Code_Level}" IsReadOnly="True"/>
-                                <DataGridTextColumn Width="auto" Header="Config Node" Binding ="{Binding Config_Node}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Code Level" Binding ="{Binding Code_Level}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Indicates the current level of machine code that is running on the node or node canister" />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="auto" Header="Recommended Level" Binding ="{Binding RecommendedPTF}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Indicates the Recommended level for the machine or node" />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="auto" Header="Config Node" Binding ="{Binding Config_Node}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Indicates if the node is a configuration node." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
                                 <DataGridTextColumn Width="auto" Header="SideID" Binding ="{Binding SideID}" IsReadOnly="True"/>
                                 <DataGridTextColumn Width="auto" Header="Side Name" Binding ="{Binding SideName}" IsReadOnly="True"/>
                             </DataGrid.Columns>
@@ -1577,8 +1634,27 @@
                                 <DataGridTextColumn Width="auto" Header="IO_Group_ID" Binding ="{Binding IO_group_id}" IsReadOnly="True"/> 
                                 <DataGridTextColumn Width="auto" Header="IO_Group_Name" Binding ="{Binding IO_group_Name}" IsReadOnly="True"/>
                                 <DataGridTextColumn Width="auto" Header="Serial Number" Binding ="{Binding Serial_Number}" IsReadOnly="True"/>  
-                                <DataGridTextColumn Width="auto" Header="Code Level" Binding ="{Binding Code_Level}" IsReadOnly="True"/>
-                                <DataGridTextColumn Width="auto" Header="Config Node" Binding ="{Binding Config_Node}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Code Level" Binding ="{Binding Code_Level}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Indicates the current level of machine code that is running on the node or node canister" />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="auto" Header="Recommended Level" Binding ="{Binding RecommendedPTF}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Indicates the Recommended level for the machine or node" />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="auto" Header="Config Node" Binding ="{Binding Config_Node}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Indicates if the node is a configuration node." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
                                 <DataGridTextColumn Width="auto" Header="SideID" Binding ="{Binding SideID}" IsReadOnly="True"/>
                                 <DataGridTextColumn Width="auto" Header="Side Name" Binding ="{Binding SideName}" IsReadOnly="True"/>
                             </DataGrid.Columns>

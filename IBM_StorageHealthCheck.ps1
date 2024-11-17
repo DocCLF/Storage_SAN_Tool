@@ -36,9 +36,9 @@ function IBM_StorageHealthCheck {
 
         $TD_btn_SaveHostStatus.Visibility="Collapsed"
         if($TD_Device_ConnectionTyp -eq "ssh"){
-            $TD_CollectInfo = ssh $TD_Device_UserName@$TD_Device_DeviceIP "lshost && lshostcluster && lspartnership"
+            $TD_CollectInfo = ssh $TD_Device_UserName@$TD_Device_DeviceIP "lssystem |grep code_level && lshost && lshostcluster && lspartnership"
         }else {
-            $TD_CollectInfo = plink $TD_Device_UserName@$TD_Device_DeviceIP -pw $TD_Device_PW -batch "lshost && lshostcluster && lspartnership"
+            $TD_CollectInfo = plink $TD_Device_UserName@$TD_Device_DeviceIP -pw $TD_Device_PW -batch "lssystem |grep code_level && lshost && lshostcluster && lspartnership"
         }
         <# next line one for testing #>
         #$TD_CollectInfo = Get-Content -Path "C:\Users\mailt\Documents\mimixexport.txt" #C:\Users\mailt\Documents\mimixexport.txt hyperswap
@@ -79,7 +79,17 @@ function IBM_StorageHealthCheck {
     }
     
     process {
+        $TD_lb_CurrentSpectVirtFW.Visibility="Visible"
+        $TD_lb_CurrentSpectVirtFW.Content="No Info"
+        $TD_dg_SpectVirtFWIfno.ItemsSource=$EmptyVar
+        $TD_SpectVirtCode_Level = ($TD_CollectInfo|Select-String -Pattern '^code_level\s+(\d+.\d+.\d+.\d+)' -AllMatches).Matches.Groups[1].Value
+        $TD_lb_CurrentSpectVirtFW.Content = $TD_SpectVirtCode_Level
+        $TD_SpectrVirtuFWInfos = IBM_StorageSWCheck -IBM_CurrentSpectrVirtuFW $TD_SpectVirtCode_Level
 
+        $TD_dg_SpectVirtFWIfno.ItemsSource=$TD_SpectrVirtuFWInfos
+        $TD_UserControl3_1.Dispatcher.Invoke([System.Action]{},"Render")
+
+        
         $TD_EventCollection = IBM_EventLog -TD_Line_ID $TD_Line_ID -TD_Device_ConnectionTyp $TD_Device_ConnectionTyp -TD_Device_UserName $TD_Device_UserName -TD_Device_DeviceIP $TD_Device_DeviceIP -TD_Device_PW $TD_Device_PW -TD_Export yes -TD_Exportpath $TD_Exportpath
         $TD_dg_EventlogStatusInfoText.ItemsSource=$EmptyVar
         if($TD_EventCollection.Status -eq "alert"){

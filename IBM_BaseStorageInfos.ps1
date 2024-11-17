@@ -43,7 +43,7 @@ function IBM_BaseStorageInfos {
     
     process {
         $TD_StorageInfo = foreach($TD_FSBaseInfo in $TD_BaseInformations){
-            $TD_FSBaseTemp = "" | Select-Object ID,Name,WWNN,Status,IO_group_id,IO_group_Name,Serial_Number,Code_Level,Config_Node,SideID,SideName,Prod_MTM
+            $TD_FSBaseTemp = "" | Select-Object ID,Name,WWNN,Status,IO_group_id,IO_group_Name,Serial_Number,Code_Level,Config_Node,SideID,SideName,Prod_MTM,RecommendedPTF
             $TD_FSBaseTemp.ID = ($TD_FSBaseInfo|Select-String -Pattern '^(\d+):' -AllMatches).Matches.Groups[1].Value
             $TD_FSBaseTemp.Name = ($TD_FSBaseInfo|Select-String -Pattern '^\d+:([a-zA-Z0-9-_]+):' -AllMatches).Matches.Groups[1].Value
             $TD_FSBaseTemp.WWNN = ($TD_FSBaseInfo|Select-String -Pattern '^\d+:[a-zA-Z0-9-_]+:.*:([a-zA-Z0-9]+):(online|offline|service|flushing|adding|deleting|service):(\d+)' -AllMatches).Matches.Groups[1].Value
@@ -61,33 +61,16 @@ function IBM_BaseStorageInfos {
             $TD_FSBaseTemp.Prod_MTM = ($TD_BaseInformations|Select-String -Pattern '^product_mtm:([a-zA-Z0-9-]+)' -AllMatches).Matches.Groups[1].Value
             $TD_FSBaseTemp.Code_Level = ($TD_BaseInformations|Select-String -Pattern '^code_level:(\d+.\d+.\d+.\d+)' -AllMatches).Matches.Groups[1].Value
 
-            if ((![string]::IsNullOrEmpty($TD_DriveSplitInfos.ProductID))-and(![string]::IsNullOrEmpty($TD_DriveSplitInfos.FWlev))-and(![string]::IsNullOrEmpty($TD_NodeSplitInfo.ProdName))){
-                if(($TD_DriveSplitInfos.Serial_Number)-ne($TD_DriveSplitInfosSerial_Number)){
-                    [string]$TD_LatestDriveFW = IBM_StorageSWCheck -IBM_CurrentSpectrVirtuFW $TD_FSBaseTemp.Code_Level -IBM_ProdMTM $TD_FSBaseTemp.Prod_MTM
-                    $TD_DriveSplitInfosSerial_Number = $TD_DriveSplitInfos.Serial_Number
+            if ((![string]::IsNullOrEmpty($TD_FSBaseTemp.Prod_MTM))-and(![string]::IsNullOrEmpty($TD_FSBaseTemp.Code_Level))){
+                if(($TD_FSBaseTemp.Serial_Number)-ne($TD_FSBaseTempSerial_Number)){
+                    $TD_SpectrVirtuFWInfos = IBM_StorageSWCheck -IBM_CurrentSpectrVirtuFW $TD_FSBaseTemp.Code_Level -IBM_ProdMTM $TD_FSBaseTemp.Prod_MTM
+                    $TD_FSBaseTempSerial_Number = $TD_FSBaseTemp.Serial_Number
                     
-                    Write-Debug -Message $TD_DriveSplitInfos.FWlev $TD_LatestDriveFW
-                    if($TD_DriveSplitInfos.FWlev -eq $TD_LatestDriveFW){
-                        [string]$TD_DriveSplitInfos.FWlevStatus = "LightGreen"
-                        [string]$TD_DriveSplitInfos.LatestDriveFW = $TD_LatestDriveFW
-                    }elseif ($TD_LatestDriveFW -eq "unknown") {
-                        [string]$TD_DriveSplitInfos.FWlevStatus = "LightGray"
-                        [string]$TD_DriveSplitInfos.LatestDriveFW = $TD_LatestDriveFW
-                    }else {    
-                        [string]$TD_DriveSplitInfos.FWlevStatus = "Lightyellow"
-                        [string]$TD_DriveSplitInfos.LatestDriveFW = $TD_LatestDriveFW
-                    }
+                    Write-Debug -Message $TD_FSBaseTemp.Code_Level $TD_SpectrVirtuFWInfos
+
+                    [string]$TD_FSBaseTemp.RecommendedPTF = $TD_SpectrVirtuFWInfos.RecommendedPTF
                 }else {
-                    if($TD_DriveSplitInfos.FWlev -eq $TD_LatestDriveFW){
-                        [string]$TD_DriveSplitInfos.FWlevStatus = "LightGreen"
-                        [string]$TD_DriveSplitInfos.LatestDriveFW = $TD_LatestDriveFW
-                    }elseif ($TD_LatestDriveFW -eq "unknown") {
-                        [string]$TD_DriveSplitInfos.FWlevStatus = "LightGray"
-                        [string]$TD_DriveSplitInfos.LatestDriveFW = $TD_LatestDriveFW
-                    }else {    
-                        [string]$TD_DriveSplitInfos.FWlevStatus = "Lightyellow"
-                        [string]$TD_DriveSplitInfos.LatestDriveFW = $TD_LatestDriveFW
-                    }
+                    [string]$TD_FSBaseTemp.RecommendedPTF = $TD_SpectrVirtuFWInfos.RecommendedPTF
                 }
             }
         
