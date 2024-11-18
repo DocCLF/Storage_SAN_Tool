@@ -114,24 +114,29 @@
                             <ColumnDefinition MinWidth="400" MaxWidth="800" />
                         </Grid.ColumnDefinitions>
                         <Label Grid.Column="0" x:Name="lb_SpectVirtFWIfno" Content="Firmware Check" Margin="10,0,20,0" Style="{StaticResource MainLabelStyle}" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Height="26" Background="Green" />
-                        <StackPanel Orientation="Vertical" Grid.Column="1">
+                        <StackPanel Orientation="Vertical" Grid.Column="1" Visibility="{Binding ElementName=btn_SpectVirtFWFakeBTN, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
                             <Label x:Name="lb_CurrentSpectVirtFW" Content="No Info" Margin="10,0,10,5" Style="{StaticResource MainLabelStyle}" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Height="26" Visibility="Collapsed" />
-                            <DataGrid x:Name="dg_SpectVirtFWIfno" AutoGenerateColumns="False" Margin="10" MaxHeight="400" >
-                                <DataGrid.Style>
-                                    <Style TargetType="DataGrid">
-                                        <Style.Triggers>
-                                            <Trigger Property="HasItems" Value="False">
-                                                <Setter Property="Visibility" Value="Collapsed"></Setter>
-                                            </Trigger>
-                                        </Style.Triggers>
-                                    </Style>
-                                </DataGrid.Style>
-                                <DataGrid.Columns>
-                                    <DataGridTextColumn Header="Minimum PTF" Width="Auto" Binding="{Binding TD_SpectrVirtuFWInfos.MinimumPTF}" IsReadOnly="True"/>
-                                    <DataGridTextColumn Header="Recommended PTF" Width="Auto"  Binding="{Binding TD_SpectrVirtuFWInfos.RecommendedPTF}" IsReadOnly="True"/>
-                                    <DataGridTextColumn Header="Latest PTF" Width="Auto" Binding="{Binding TD_SpectrVirtuFWInfos.LatestPTF}" IsReadOnly="True"/>
-                                </DataGrid.Columns>
-                            </DataGrid>
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="auto" />
+                                        <RowDefinition Height="auto" />
+                                        <RowDefinition Height="auto" />
+                                    </Grid.RowDefinitions>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="auto" />
+                                        <ColumnDefinition Width="auto" />
+                                        <ColumnDefinition Width="auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <Label Grid.Row="0" Grid.Column="0" Width="120" Content="Minimum PTF" Background="LightCoral" HorizontalContentAlignment="Center"/>
+                                    <Label Grid.Row="0" Grid.Column="1" Width="120" Content="Recommended PTF" Background="LightGreen" HorizontalContentAlignment="Center"/>
+                                    <Label Grid.Row="0" Grid.Column="2" Width="120" Content="Latest  PTF" Background="YellowGreen" HorizontalContentAlignment="Center"/>
+                                    <Label Grid.Row="1" Grid.Column="0" x:Name="lb_MinimumPTF" Width="120" Content="no info" Background="LightCoral" HorizontalContentAlignment="Center"/>
+                                    <Label Grid.Row="1" Grid.Column="1" x:Name="lb_RecommendedPTF" Width="120" Content="no info" Background="LightGreen" HorizontalContentAlignment="Center"/>
+                                    <Label Grid.Row="1" Grid.Column="2" x:Name="lb_LatestPTF" Width="120" Content="no info" Background="YellowGreen" HorizontalContentAlignment="Center"/>
+                                    <Label Grid.Row="2" Grid.Column="0" x:Name="lb_MinimumDate" Width="120" Content="no info" Background="LightCoral" HorizontalContentAlignment="Center"/>
+                                    <Label Grid.Row="2" Grid.Column="1" x:Name="lb_RecommendedDate" Width="120" Content="no info" Background="LightGreen" HorizontalContentAlignment="Center"/>
+                                    <Label Grid.Row="2" Grid.Column="2" x:Name="lb_LatestDate" Width="120" Content="no info" Background="YellowGreen" HorizontalContentAlignment="Center"/>
+                                </Grid>
                         </StackPanel>
                     </Grid>
                 </StackPanel> 

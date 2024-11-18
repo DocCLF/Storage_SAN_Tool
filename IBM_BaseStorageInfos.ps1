@@ -62,9 +62,9 @@ function IBM_BaseStorageInfos {
             $TD_FSBaseTemp.Code_Level = ($TD_BaseInformations|Select-String -Pattern '^code_level:(\d+.\d+.\d+.\d+)' -AllMatches).Matches.Groups[1].Value
 
             if ((![string]::IsNullOrEmpty($TD_FSBaseTemp.Prod_MTM))-and(![string]::IsNullOrEmpty($TD_FSBaseTemp.Code_Level))){
-                if(($TD_FSBaseTemp.Serial_Number)-ne($TD_FSBaseTempSerial_Number)){
+                if(($TD_FSBaseTemp.Code_Level)-ne($TD_FSBaseTempCode_Level)){
                     $TD_SpectrVirtuFWInfos = IBM_StorageSWCheck -IBM_CurrentSpectrVirtuFW $TD_FSBaseTemp.Code_Level -IBM_ProdMTM $TD_FSBaseTemp.Prod_MTM
-                    $TD_FSBaseTempSerial_Number = $TD_FSBaseTemp.Serial_Number
+                    $TD_FSBaseTempCode_Level = $TD_FSBaseTemp.Code_Level
                     
                     Write-Debug -Message $TD_FSBaseTemp.Code_Level $TD_SpectrVirtuFWInfos
 
