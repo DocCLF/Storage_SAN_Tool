@@ -96,6 +96,7 @@ function IBM_StorageHealthCheck {
         if(($TD_SpectrVirtuFWInfos.count)-ge 1){
             $TD_btn_SpectVirtFWFakeBTN.IsChecked="True"
         }else {
+            $TD_lb_CurrentSpectVirtFW.Content = "Your current PTF is Version $TD_SpectVirtCode_Level is out of Service!!"
             $TD_lb_SpectVirtFWIfno.Background="red"
         }
         Start-Sleep -Seconds 0.5
