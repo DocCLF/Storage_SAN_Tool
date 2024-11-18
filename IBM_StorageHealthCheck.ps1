@@ -82,7 +82,7 @@ function IBM_StorageHealthCheck {
         $TD_lb_CurrentSpectVirtFW.Visibility="Visible"
         $TD_lb_CurrentSpectVirtFW.Content="No Info"
         $TD_SpectVirtCode_Level = ($TD_CollectInfo|Select-String -Pattern '^code_level\s+(\d+.\d+.\d+.\d+)' -AllMatches).Matches.Groups[1].Value
-        $TD_lb_CurrentSpectVirtFW.Content = "Your current PTF is Version $TD_SpectVirtCode_Level"
+        
         $TD_SpectrVirtuFWInfos = IBM_StorageSWCheck -IBM_CurrentSpectrVirtuFW $TD_SpectVirtCode_Level
 
         #$TD_SpectrVirtuFWInfos.PSObject.Properties.Remove('IBM_ReleaseDate')
@@ -93,23 +93,33 @@ function IBM_StorageHealthCheck {
         $TD_lb_MinimumDate.Content = $TD_SpectrVirtuFWInfos.MinimumPTFDate
         $TD_lb_RecommendedDate.Content = $TD_SpectrVirtuFWInfos.RecommendedPTFDate
         $TD_lb_LatestDate.Content = $TD_SpectrVirtuFWInfos.LatestPTFDate
-        if($TD_SpectrVirtuFWInfos.MinimumPTF -ne ""){
+        if($null -ne $TD_SpectrVirtuFWInfos.MinimumPTF){
+            
+            $TD_lb_MinimumHL.Visibility="Visible"
+			$TD_lb_RecommendedHL.Visibility="Visible"
+			$TD_lb_LatestHL.Visibility="Visible"
 			$TD_lb_MinimumPTF.Visibility="Visible"
 			$TD_lb_RecommendedPTF.Visibility="Visible"
 			$TD_lb_LatestPTF.Visibility="Visible"
 			$TD_lb_MinimumDate.Visibility="Visible"
 			$TD_lb_RecommendedDate.Visibility="Visible"
 			$TD_lb_LatestDate.Visibility="Visible"
-			$TD_lb_CurrentSpectVirtFW.Visibility="Collapsed"
+            $TD_lb_CurrentSpectVirtFW.Content = "Your current PTF is Version $TD_SpectVirtCode_Level"
+            $TD_lb_CurrentSpectVirtFW.Background="LightGreen"
 			$TD_lb_SpectVirtFWIfno.Background="green"
         }else {
+            
+            $TD_lb_MinimumHL.Visibility="Collapsed"
+			$TD_lb_RecommendedHL.Visibility="Collapsed"
+			$TD_lb_LatestHL.Visibility="Collapsed"
 			$TD_lb_MinimumPTF.Visibility="Collapsed"
 			$TD_lb_RecommendedPTF.Visibility="Collapsed"
 			$TD_lb_LatestPTF.Visibility="Collapsed"
 			$TD_lb_MinimumDate.Visibility="Collapsed"
 			$TD_lb_RecommendedDate.Visibility="Collapsed"
 			$TD_lb_LatestDate.Visibility="Collapsed"
-            $TD_lb_CurrentSpectVirtFW.Content = "Your current PTF is Version $TD_SpectVirtCode_Level is out of Service!!"
+            $TD_lb_CurrentSpectVirtFW.Content = "Your current PTF Version $TD_SpectVirtCode_Level is out of Service!!"
+            $TD_lb_CurrentSpectVirtFW.Background="LightCoral"
             $TD_lb_SpectVirtFWIfno.Background="red"
         }
         Start-Sleep -Seconds 0.5

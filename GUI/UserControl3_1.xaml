@@ -127,9 +127,9 @@
                                         <ColumnDefinition Width="auto" />
                                         <ColumnDefinition Width="auto" />
                                     </Grid.ColumnDefinitions>
-                                    <Label Grid.Row="0" Grid.Column="0" Width="120" Content="Minimum PTF" Background="LightCoral" HorizontalContentAlignment="Center"/>
-                                    <Label Grid.Row="0" Grid.Column="1" Width="120" Content="Recommended PTF" Background="LightGreen" HorizontalContentAlignment="Center"/>
-                                    <Label Grid.Row="0" Grid.Column="2" Width="120" Content="Latest  PTF" Background="YellowGreen" HorizontalContentAlignment="Center"/>
+                                    <Label Grid.Row="0" Grid.Column="0" x:Name="lb_MinimumHL" Width="120" Content="Minimum PTF" Background="LightCoral" HorizontalContentAlignment="Center"/>
+                                    <Label Grid.Row="0" Grid.Column="1" x:Name="lb_RecommendedHL" Width="120" Content="Recommended PTF" Background="LightGreen" HorizontalContentAlignment="Center"/>
+                                    <Label Grid.Row="0" Grid.Column="2" x:Name="lb_LatestHL" Width="120" Content="Latest  PTF" Background="YellowGreen" HorizontalContentAlignment="Center"/>
                                     <Label Grid.Row="1" Grid.Column="0" x:Name="lb_MinimumPTF" Width="120" Content="no info" Background="LightCoral" HorizontalContentAlignment="Center"/>
                                     <Label Grid.Row="1" Grid.Column="1" x:Name="lb_RecommendedPTF" Width="120" Content="no info" Background="LightGreen" HorizontalContentAlignment="Center"/>
                                     <Label Grid.Row="1" Grid.Column="2" x:Name="lb_LatestPTF" Width="120" Content="no info" Background="YellowGreen" HorizontalContentAlignment="Center"/>

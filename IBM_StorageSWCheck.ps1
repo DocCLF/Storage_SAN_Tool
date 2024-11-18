@@ -133,7 +133,10 @@ function IBM_StorageSWCheck {
                 $IBM_LocSpecVirtSW
 
             }
-            Default {Write-Debug -Message $IBM_CurrentSpectrVirtuFW}
+            Default {
+                $IBM_LocSpecVirtSW = "" | Select-Object MinimumPTF
+                $IBM_LocSpecVirtSW.MinimumPTF = $null
+                Write-Debug -Message $IBM_CurrentSpectrVirtuFW}
         }
         
         Write-Debug -Message $IBM_SpecVirtSWInfo
