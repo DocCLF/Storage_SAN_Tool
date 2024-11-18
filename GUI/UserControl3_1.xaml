@@ -350,8 +350,8 @@
                                     </Style.Triggers>
                                 </Style>
                             </DataGrid.Style>
-                            <DataGrid.RowStyle>
-                                <Style TargetType="DataGridRow">
+                            <DataGrid.CellStyle>
+                                <Style TargetType="DataGridCell">
                                     <Style.Triggers>
                                         <DataTrigger Binding="{Binding Locked}" Value="auto">
                                             <Setter Property="Background" Value="Red" />
@@ -370,7 +370,7 @@
                                         </DataTrigger>
                                     </Style.Triggers>
                                 </Style>
-                            </DataGrid.RowStyle>
+                            </DataGrid.CellStyle>
                             <DataGrid.Columns>
                                 <DataGridTextColumn Header="User Name" Width="Auto" Binding="{Binding User_Name}" IsReadOnly="True"/>
                                 <DataGridTextColumn Header="Password" Width="Auto" Binding="{Binding Password}" IsReadOnly="True"/>
