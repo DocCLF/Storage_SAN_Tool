@@ -114,7 +114,7 @@
                             <ColumnDefinition MinWidth="400" MaxWidth="800" />
                         </Grid.ColumnDefinitions>
                         <Label Grid.Column="0" x:Name="lb_SpectVirtFWIfno" Content="Firmware Check" Margin="10,0,20,0" Style="{StaticResource MainLabelStyle}" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Height="26" Background="Green" />
-                        <StackPanel Orientation="Vertical" Grid.Column="1" Visibility="{Binding ElementName=btn_SpectVirtFWFakeBTN, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
+                        <StackPanel Orientation="Vertical" Grid.Column="1" >
                             <Label x:Name="lb_CurrentSpectVirtFW" Content="No Info" Margin="0,0,10,5" Style="{StaticResource MainLabelStyle}" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Height="26" Visibility="Collapsed" />
                                 <Grid>
                                     <Grid.RowDefinitions>
