@@ -4,6 +4,7 @@ Add-Type -AssemblyName System.Windows.Forms
 <# Create the xaml Files / Base of GUI Mainwindow #>
 function Storage_San_Kit {
 $ErrorActionPreference="SilentlyContinue"
+$DebugPreference = "Continue"
 $MainxamlFile ="$PSScriptRoot\MainWindow.xaml"
 $inputXAML=Get-Content -Path $MainxamlFile -raw
 $inputXAML=$inputXAML -replace 'mc:Ignorable="d"','' -replace "x:N","N" -replace "^<Win.*","<Window"
@@ -2297,10 +2298,14 @@ $TD_btn_HC_OpenGUI_Four.add_click({
 
 $TD_btn_CloseAll.add_click({
     <#CleanUp before close #>
-    Remove-Item -Path $Env:TEMP\* -Filter '*_Host_Vol_Map_Temp.csv' -Force
-    Remove-Item -Path $Env:TEMP\* -Filter '*_ZoneShow_Temp.csv' -Force
-    Remove-Item -Path $Env:TEMP\* -Filter '*_SwitchShow_Temp.csv' -Force
-    Remove-Item -Path $Env:TEMP\* -Filter '*_IBM_CatAuditLog_Temp.csv' -Force
+    try {
+        Remove-Item -Path $Env:TEMP\* -Filter '*_Temp.csv' -Force -ErrorAction SilentlyContinue
+    }
+    catch {
+        <#Do this if a terminating exception happens#>
+        Write-Debug -Message $_.Exception.Message
+    }
+    Write-Debug -Message "Close the appl via CloseBtn"
     $Mainform.Close()
 })
 
