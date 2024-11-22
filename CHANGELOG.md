@@ -18,6 +18,7 @@ All notable changes to this project will be documented in this file.
 - IBM Storage Security check
 - SSH-Agent and Key Support at Settings Panel
 - IBM FCPort Info
+- IBM AuditLog
 - IBM Storage Base information (this function must be confirmed for a svc-cluster by the check in the first line of the settings panel, the default setting is FlashSystems)
 - IBM Storage replication policies information on the system (Important this is only possible with IBM Spectrum Virtualize software 8.6.x)
 - IBM Storage Volume replication information for a volume group (Important this is only possible with IBM Spectrum Virtualize software 8.5.x)
@@ -25,7 +26,7 @@ All notable changes to this project will be documented in this file.
 - IBM UserInfo as an stand-alone function to remain flexible for further developments
 - IBM VolumeInfo as an stand-alone function to remain flexible for further developments
 - IBM DriveFirmware Check (Phase One)
-- IBM Storage Virtualize Family of Products Software Check
+- IBM Storage Virtualize Family of Products Software Check (currently only LTS, with start at 8.4.x)
 - Clear Filter at IBM HostVolumeMap 
 - Tooltips for the tables and columns where it makes sense.
 - give some tables a color

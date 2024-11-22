@@ -66,11 +66,12 @@
                 Style="{StaticResource MainBtnStyle}"
                 Content="Eventlog" 
                 ToolTip="Get the last 100 Events"/>
-                <!--IBM_CatAuditLog
+                <!--IBM_CatAuditLog-->
                 <Button
                 x:Name="btn_IBM_CatAuditLog"
                 Style="{StaticResource MainBtnStyle}"
-                Content="CatAuditLog" /> -->
+                Content="Audit Log"
+                ToolTip="Get the in-memory content of the audit log" /> 
                 <!--IBM_HostVolumeMap-->
                 <Button
                 x:Name="btn_IBM_HostVolumeMap"
@@ -441,22 +442,110 @@
                         </Grid.RowDefinitions>
                         <StackPanel Grid.Row="0" Grid.Column="0" >
                             <Label Content="Device 1" />
-                            <DataGrid Name="lb_StorageAuditLogOne" AutoGenerateColumns="True" IsReadOnly="True" Height="Auto" Width="Auto" Margin="5,0,5,5" >
+                            <DataGrid Name="dg_StorageAuditLogOne" AutoGenerateColumns="True" IsReadOnly="True" Height="Auto" Width="Auto" Margin="5,0,5,5" >
+                           <DataGrid.Style>
+                                <Style TargetType="DataGrid">
+                                    <Style.Triggers>
+                                        <Trigger Property="HasItems" Value="False">
+                                          <Setter Property="Visibility" Value="Collapsed"></Setter>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGrid.Style>
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Width="auto" Header="AuditSeqNo" Binding="{Binding DriveID}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="TimeStamp" Binding="{Binding DriveCap}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="User" Binding="{Binding PhyDriveCap}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="SourceAddress" Binding="{Binding PhyUsedDriveCap}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="ActionCommand" Binding="{Binding EffeUsedDriveCap}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="The user's executed command" />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                            </DataGrid.Columns>
                             </DataGrid>
                         </StackPanel>
                         <StackPanel Grid.Row="0" Grid.Column="1"  >
                             <Label Content="Device 2" />
-                            <DataGrid Name="lb_StorageAuditLogTwo" AutoGenerateColumns="True" IsReadOnly="True" Height="Auto" Width="Auto" Margin="5,0,5,5" >
+                            <DataGrid Name="dg_StorageAuditLogTwo" AutoGenerateColumns="True" IsReadOnly="True" Height="Auto" Width="Auto" Margin="5,0,5,5" >
+                           <DataGrid.Style>
+                                <Style TargetType="DataGrid">
+                                    <Style.Triggers>
+                                        <Trigger Property="HasItems" Value="False">
+                                          <Setter Property="Visibility" Value="Collapsed"></Setter>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGrid.Style>
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Width="auto" Header="AuditSeqNo" Binding="{Binding DriveID}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="TimeStamp" Binding="{Binding DriveCap}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="User" Binding="{Binding PhyDriveCap}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="SourceAddress" Binding="{Binding PhyUsedDriveCap}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="ActionCommand" Binding="{Binding EffeUsedDriveCap}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="The user's executed command" />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                            </DataGrid.Columns>
                             </DataGrid>
                         </StackPanel>
                         <StackPanel Grid.Row="1" Grid.Column="0"  >
                             <Label Content="Device 3" />
-                            <DataGrid Name="lb_StorageAuditLogThree" AutoGenerateColumns="True" IsReadOnly="True" Height="Auto" Width="Auto" Margin="5,0,5,5" >
+                            <DataGrid Name="dg_StorageAuditLogThree" AutoGenerateColumns="True" IsReadOnly="True" Height="Auto" Width="Auto" Margin="5,0,5,5" >
+                           <DataGrid.Style>
+                                <Style TargetType="DataGrid">
+                                    <Style.Triggers>
+                                        <Trigger Property="HasItems" Value="False">
+                                          <Setter Property="Visibility" Value="Collapsed"></Setter>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGrid.Style>
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Width="auto" Header="AuditSeqNo" Binding="{Binding DriveID}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="TimeStamp" Binding="{Binding DriveCap}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="User" Binding="{Binding PhyDriveCap}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="SourceAddress" Binding="{Binding PhyUsedDriveCap}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="ActionCommand" Binding="{Binding EffeUsedDriveCap}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="The user's executed command" />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                            </DataGrid.Columns>
                             </DataGrid>
                         </StackPanel>
                         <StackPanel Grid.Row="1" Grid.Column="1" >
                             <Label Content="Device 4" />
-                            <DataGrid Name="lb_StorageAuditLogFour" AutoGenerateColumns="True" IsReadOnly="True" Height="Auto" Width="Auto" Margin="5,0,5,5" >
+                            <DataGrid Name="dg_StorageAuditLogFour" AutoGenerateColumns="True" IsReadOnly="True" Height="Auto" Width="Auto" Margin="5,0,5,5" >
+                           <DataGrid.Style>
+                                <Style TargetType="DataGrid">
+                                    <Style.Triggers>
+                                        <Trigger Property="HasItems" Value="False">
+                                          <Setter Property="Visibility" Value="Collapsed"></Setter>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGrid.Style>
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Width="auto" Header="AuditSeqNo" Binding="{Binding DriveID}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="TimeStamp" Binding="{Binding DriveCap}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="User" Binding="{Binding PhyDriveCap}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="SourceAddress" Binding="{Binding PhyUsedDriveCap}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="ActionCommand" Binding="{Binding EffeUsedDriveCap}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="The user's executed command" />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                            </DataGrid.Columns>
                             </DataGrid>
                         </StackPanel>
                     </Grid>

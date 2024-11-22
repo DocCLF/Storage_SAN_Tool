@@ -11,13 +11,9 @@ function IBM_CatAuditLog {
     #>
     [CmdletBinding()]
     param (
-        [Parameter(Mandatory)]
         [Int16]$TD_Line_ID,
-        [Parameter(Mandatory)]
         [string]$TD_Device_ConnectionTyp,
-        [Parameter(Mandatory)]
         [string]$TD_Device_UserName,
-        [Parameter(Mandatory)]
         [string]$TD_Device_DeviceIP,
         [string]$TD_Device_PW,
         [Parameter(ValueFromPipeline)]
@@ -31,46 +27,53 @@ function IBM_CatAuditLog {
         $ErrorActionPreference="SilentlyContinue"
         Write-Debug -Message "IBM_CatAuditLog Begin block |$(Get-Date)"
 
-        $TD_EventCollection = @()
-        
+        [int]$ProgCounter=0
+        $ProgressBar = New-ProgressBar
+
         <# Action when all if and elseif conditions are false #>
         if($TD_Device_ConnectionTyp -eq "ssh"){
-            $TD_CollectEventInfo = ssh $TD_Device_UserName@$TD_Device_DeviceIP "catauditlog -delim :"
+            $TD_CatAuditLogInfos = ssh $TD_Device_UserName@$TD_Device_DeviceIP "catauditlog -delim :"
         }else {
-            $TD_CollectEventInfo = plink $TD_Device_UserName@$TD_Device_DeviceIP -pw $TD_Device_PW -batch "catauditlog -delim :"
+            $TD_CatAuditLogInfos = plink $TD_Device_UserName@$TD_Device_DeviceIP -pw $TD_Device_PW -batch "catauditlog -delim :"
         }
-        <# next line one for testing #>
-        #$TD_CollectVolInfo = Get-Content -Path ""
-        #$TD_CollectEventInfo = $TD_CollectEventInfo | Select-Object -Skip 1
     }
 
     process{
         Write-Debug -Message "IBM_CatAuditLog Process block |$(Get-Date)"
 
 
+        $TD_AuditLog = foreach ($TD_CatAuditLogInfo in $TD_CatAuditLogInfos){
+            $TD_CatAuditLog = "" | Select-Object AuditSeqNo,TimeStamp,User,SourceAddress,ActionCommand
+            $TD_CatAuditLog.AuditSeqNo = ($TD_CatAuditLogInfo|Select-String -Pattern '^(\d+):(\d+):([a-zA-Z0-9-_]+):' -AllMatches).Matches.Groups[1].Value
+            $TD_CatAuditLog.TimeStamp = ($TD_CatAuditLogInfo|Select-String -Pattern '^(\d+):(\d+):([a-zA-Z0-9-_]+):' -AllMatches).Matches.Groups[2].Value
+            $TD_CatAuditLog.User = ($TD_CatAuditLogInfo|Select-String -Pattern '^(\d+):(\d+):([a-zA-Z0-9-_]+):' -AllMatches).Matches.Groups[3].Value
+            $TD_CatAuditLog.SourceAddress = ($TD_CatAuditLogInfo|Select-String -Pattern ':(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}):' -AllMatches).Matches.Groups[2].Value
+            $TD_CatAuditLog.ActionCommand = ($TD_CatAuditLogInfo|Select-String -Pattern ':\d+:(\d+|):(.*)$' -AllMatches).Matches.Groups[1].Value
+            $TD_CatAuditLog
+
+            <# Progressbar  #>
+            $ProgCounter++
+            Write-ProgressBar -ProgressBar $ProgressBar -Activity "Collect data for Device $($TD_Line_ID)" -PercentComplete (($ProgCounter/$TD_CatAuditLogInfos.Count) * 100)
+            Start-Sleep -Seconds 0.5
+        
+        }
+
 
     }
     end {
-        <# returns the hashtable for further processing, not mandatory but the safe way #>
-        Write-Debug -Message "IBM_CatAuditLog End block |$(Get-Date) `n"
-        <# export y or n #>
+
+        Close-ProgressBar -ProgressBar $ProgressBar
+
         if($TD_Export -eq "yes"){
-            <# exported to .\Host_Volume_Map_Result.csv #>
-            if([string]$TD_Exportpath -ne "$PSRootPath\Export\"){
-                $TD_EventCollection | Export-Csv -Path $TD_Exportpath\$($TD_Line_ID)_EventLog_Result_$(Get-Date -Format "yyyy-MM-dd").csv -NoTypeInformation
-                Write-Host "The Export can be found at $TD_Exportpath " -ForegroundColor Green
+            if([string]$TD_Exportpath -ne "$PSCommandPath\Export\"){
+                $TD_AuditLog | Export-Csv -Path $TD_Exportpath\$($TD_Line_ID)_AuditLog_Result_$(Get-Date -Format "yyyy-MM-dd").csv -NoTypeInformation
             }else {
-                $TD_EventCollection | Export-Csv -Path $PSScriptRoot\Export\$($TD_Line_ID)_EventLog_Result_$(Get-Date -Format "yyyy-MM-dd").csv -NoTypeInformation
-                Write-Host "The Export can be found at $PSScriptRoot\Export\ " -ForegroundColor Green
+                $TD_AuditLog | Export-Csv -Path $PSCommandPath\Export\$($TD_Line_ID)_AuditLog_Result_$(Get-Date -Format "yyyy-MM-dd").csv -NoTypeInformation
             }
-            
-            #Invoke-Item "$TD_Exportpath\Host_Volume_Map_Result_$(Get-Date -Format "yyyy-MM-dd").csv"
         }else {
             <# output on the promt #>
-            return $TD_EventCollection
+            return $TD_AuditLog
         }
-
-        return $TD_CollectEventInfo |Select-Object -Last 25
-        
+        return $TD_AuditLog
     }
 }
