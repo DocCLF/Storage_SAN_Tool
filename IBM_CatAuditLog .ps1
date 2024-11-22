@@ -36,6 +36,7 @@ function IBM_CatAuditLog {
         }else {
             $TD_CatAuditLogInfos = plink $TD_Device_UserName@$TD_Device_DeviceIP -pw $TD_Device_PW -batch "catauditlog -delim :"
         }
+        $TD_CatAuditLogInfos = $TD_CatAuditLogInfos | Select-Object -Last 100
     }
 
     process{
@@ -47,8 +48,8 @@ function IBM_CatAuditLog {
             $TD_CatAuditLog.AuditSeqNo = ($TD_CatAuditLogInfo|Select-String -Pattern '^(\d+):(\d+):([a-zA-Z0-9-_]+):' -AllMatches).Matches.Groups[1].Value
             $TD_CatAuditLog.TimeStamp = ($TD_CatAuditLogInfo|Select-String -Pattern '^(\d+):(\d+):([a-zA-Z0-9-_]+):' -AllMatches).Matches.Groups[2].Value
             $TD_CatAuditLog.User = ($TD_CatAuditLogInfo|Select-String -Pattern '^(\d+):(\d+):([a-zA-Z0-9-_]+):' -AllMatches).Matches.Groups[3].Value
-            $TD_CatAuditLog.SourceAddress = ($TD_CatAuditLogInfo|Select-String -Pattern ':(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}):' -AllMatches).Matches.Groups[2].Value
-            $TD_CatAuditLog.ActionCommand = ($TD_CatAuditLogInfo|Select-String -Pattern ':\d+:(\d+|):(.*)$' -AllMatches).Matches.Groups[1].Value
+            $TD_CatAuditLog.SourceAddress = ($TD_CatAuditLogInfo|Select-String -Pattern ':(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}):' -AllMatches).Matches.Groups[1].Value
+            $TD_CatAuditLog.ActionCommand = ($TD_CatAuditLogInfo|Select-String -Pattern ':\d+:(\d+|):(.*)$' -AllMatches).Matches.Groups[2].Value
             $TD_CatAuditLog
 
             <# Progressbar  #>

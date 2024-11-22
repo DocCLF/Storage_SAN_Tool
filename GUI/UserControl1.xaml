@@ -54,7 +54,7 @@
         <StackPanel Grid.Column="0" Grid.RowSpan="2" >
         <GroupBox Header="For all Versions"  HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,10,0,0">
             <StackPanel>
-                <!--IBM_EventLog-->
+                <!--IBM_BaseStorageInfo-->
                 <Button
                 x:Name="btn_IBM_BaseStorageInfo"
                 Style="{StaticResource MainBtnStyle}"
@@ -71,7 +71,7 @@
                 x:Name="btn_IBM_CatAuditLog"
                 Style="{StaticResource MainBtnStyle}"
                 Content="Audit Log"
-                ToolTip="Get the in-memory content of the audit log" /> 
+                ToolTip="Get the last 100 in-memory commands of the audit log" /> 
                 <!--IBM_HostVolumeMap-->
                 <Button
                 x:Name="btn_IBM_HostVolumeMap"
@@ -442,7 +442,7 @@
                         </Grid.RowDefinitions>
                         <StackPanel Grid.Row="0" Grid.Column="0" >
                             <Label Content="Device 1" />
-                            <DataGrid Name="dg_StorageAuditLogOne" AutoGenerateColumns="True" IsReadOnly="True" Height="Auto" Width="Auto" Margin="5,0,5,5" >
+                            <DataGrid Name="dg_StorageAuditLogOne" AutoGenerateColumns="False" Margin="5,5,5,5" MaxHeight="400" >
                            <DataGrid.Style>
                                 <Style TargetType="DataGrid">
                                     <Style.Triggers>
@@ -453,11 +453,11 @@
                                 </Style>
                             </DataGrid.Style>
                             <DataGrid.Columns>
-                                <DataGridTextColumn Width="auto" Header="AuditSeqNo" Binding="{Binding DriveID}" IsReadOnly="True"/>
-                                <DataGridTextColumn Width="auto" Header="TimeStamp" Binding="{Binding DriveCap}" IsReadOnly="True"/>
-                                <DataGridTextColumn Width="auto" Header="User" Binding="{Binding PhyDriveCap}" IsReadOnly="True"/>
-                                <DataGridTextColumn Width="auto" Header="SourceAddress" Binding="{Binding PhyUsedDriveCap}" IsReadOnly="True"/>
-                                <DataGridTextColumn Width="auto" Header="ActionCommand" Binding="{Binding EffeUsedDriveCap}" IsReadOnly="True">
+                                <DataGridTextColumn Width="auto" Header="AuditSeqNo" Binding="{Binding AuditSeqNo}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="TimeStamp" Binding="{Binding TimeStamp}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="User" Binding="{Binding User}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="SourceAddress" Binding="{Binding SourceAddress}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="ActionCommand" Binding="{Binding ActionCommand}" IsReadOnly="True">
                                     <DataGridTextColumn.CellStyle>
                                         <Style TargetType="DataGridCell">
                                             <Setter Property="ToolTip" Value="The user's executed command" />
@@ -469,7 +469,7 @@
                         </StackPanel>
                         <StackPanel Grid.Row="0" Grid.Column="1"  >
                             <Label Content="Device 2" />
-                            <DataGrid Name="dg_StorageAuditLogTwo" AutoGenerateColumns="True" IsReadOnly="True" Height="Auto" Width="Auto" Margin="5,0,5,5" >
+                            <DataGrid Name="dg_StorageAuditLogTwo" AutoGenerateColumns="False" Margin="5,5,5,5" MaxHeight="400" >
                            <DataGrid.Style>
                                 <Style TargetType="DataGrid">
                                     <Style.Triggers>
@@ -480,11 +480,11 @@
                                 </Style>
                             </DataGrid.Style>
                             <DataGrid.Columns>
-                                <DataGridTextColumn Width="auto" Header="AuditSeqNo" Binding="{Binding DriveID}" IsReadOnly="True"/>
-                                <DataGridTextColumn Width="auto" Header="TimeStamp" Binding="{Binding DriveCap}" IsReadOnly="True"/>
-                                <DataGridTextColumn Width="auto" Header="User" Binding="{Binding PhyDriveCap}" IsReadOnly="True"/>
-                                <DataGridTextColumn Width="auto" Header="SourceAddress" Binding="{Binding PhyUsedDriveCap}" IsReadOnly="True"/>
-                                <DataGridTextColumn Width="auto" Header="ActionCommand" Binding="{Binding EffeUsedDriveCap}" IsReadOnly="True">
+                                <DataGridTextColumn Width="auto" Header="AuditSeqNo" Binding="{Binding AuditSeqNo}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="TimeStamp" Binding="{Binding TimeStamp}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="User" Binding="{Binding User}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="SourceAddress" Binding="{Binding SourceAddress}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="ActionCommand" Binding="{Binding ActionCommand}" IsReadOnly="True">
                                     <DataGridTextColumn.CellStyle>
                                         <Style TargetType="DataGridCell">
                                             <Setter Property="ToolTip" Value="The user's executed command" />
@@ -496,7 +496,7 @@
                         </StackPanel>
                         <StackPanel Grid.Row="1" Grid.Column="0"  >
                             <Label Content="Device 3" />
-                            <DataGrid Name="dg_StorageAuditLogThree" AutoGenerateColumns="True" IsReadOnly="True" Height="Auto" Width="Auto" Margin="5,0,5,5" >
+                            <DataGrid Name="dg_StorageAuditLogThree" AutoGenerateColumns="False" Margin="5,5,5,5" MaxHeight="400" >
                            <DataGrid.Style>
                                 <Style TargetType="DataGrid">
                                     <Style.Triggers>
@@ -507,11 +507,11 @@
                                 </Style>
                             </DataGrid.Style>
                             <DataGrid.Columns>
-                                <DataGridTextColumn Width="auto" Header="AuditSeqNo" Binding="{Binding DriveID}" IsReadOnly="True"/>
-                                <DataGridTextColumn Width="auto" Header="TimeStamp" Binding="{Binding DriveCap}" IsReadOnly="True"/>
-                                <DataGridTextColumn Width="auto" Header="User" Binding="{Binding PhyDriveCap}" IsReadOnly="True"/>
-                                <DataGridTextColumn Width="auto" Header="SourceAddress" Binding="{Binding PhyUsedDriveCap}" IsReadOnly="True"/>
-                                <DataGridTextColumn Width="auto" Header="ActionCommand" Binding="{Binding EffeUsedDriveCap}" IsReadOnly="True">
+                                <DataGridTextColumn Width="auto" Header="AuditSeqNo" Binding="{Binding AuditSeqNo}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="TimeStamp" Binding="{Binding TimeStamp}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="User" Binding="{Binding User}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="SourceAddress" Binding="{Binding SourceAddress}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="ActionCommand" Binding="{Binding ActionCommand}" IsReadOnly="True">
                                     <DataGridTextColumn.CellStyle>
                                         <Style TargetType="DataGridCell">
                                             <Setter Property="ToolTip" Value="The user's executed command" />
@@ -523,7 +523,7 @@
                         </StackPanel>
                         <StackPanel Grid.Row="1" Grid.Column="1" >
                             <Label Content="Device 4" />
-                            <DataGrid Name="dg_StorageAuditLogFour" AutoGenerateColumns="True" IsReadOnly="True" Height="Auto" Width="Auto" Margin="5,0,5,5" >
+                            <DataGrid Name="dg_StorageAuditLogFour" AutoGenerateColumns="False" Margin="5,5,5,5" MaxHeight="400" >
                            <DataGrid.Style>
                                 <Style TargetType="DataGrid">
                                     <Style.Triggers>
@@ -534,11 +534,11 @@
                                 </Style>
                             </DataGrid.Style>
                             <DataGrid.Columns>
-                                <DataGridTextColumn Width="auto" Header="AuditSeqNo" Binding="{Binding DriveID}" IsReadOnly="True"/>
-                                <DataGridTextColumn Width="auto" Header="TimeStamp" Binding="{Binding DriveCap}" IsReadOnly="True"/>
-                                <DataGridTextColumn Width="auto" Header="User" Binding="{Binding PhyDriveCap}" IsReadOnly="True"/>
-                                <DataGridTextColumn Width="auto" Header="SourceAddress" Binding="{Binding PhyUsedDriveCap}" IsReadOnly="True"/>
-                                <DataGridTextColumn Width="auto" Header="ActionCommand" Binding="{Binding EffeUsedDriveCap}" IsReadOnly="True">
+                                <DataGridTextColumn Width="auto" Header="AuditSeqNo" Binding="{Binding AuditSeqNo}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="TimeStamp" Binding="{Binding TimeStamp}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="User" Binding="{Binding User}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="SourceAddress" Binding="{Binding SourceAddress}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="ActionCommand" Binding="{Binding ActionCommand}" IsReadOnly="True">
                                     <DataGridTextColumn.CellStyle>
                                         <Style TargetType="DataGridCell">
                                             <Setter Property="ToolTip" Value="The user's executed command" />
