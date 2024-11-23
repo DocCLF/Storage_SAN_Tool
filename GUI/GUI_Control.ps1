@@ -4,7 +4,7 @@ Add-Type -AssemblyName System.Windows.Forms
 <# Create the xaml Files / Base of GUI Mainwindow #>
 function Storage_San_Kit {
 $ErrorActionPreference="SilentlyContinue"
-$DebugPreference = "Continue"
+
 $MainxamlFile ="$PSScriptRoot\MainWindow.xaml"
 $inputXAML=Get-Content -Path $MainxamlFile -raw
 $inputXAML=$inputXAML -replace 'mc:Ignorable="d"','' -replace "x:N","N" -replace "^<Win.*","<Window"
@@ -432,8 +432,7 @@ $TD_btn_addsshkey.add_click({
 
 <# Button SettingsArea Storage #>
 $TD_tbn_storageaddrmLine.add_click({
-    <#log the txtbox (optional for later use)#>
-    #$TD_tb_IPAdr.IsEnabled=$false
+    Write-Debug -Message "Open or Closed the 2 Storage Cred Row"
     if($TD_tbn_storageaddrmLine.Content -eq "ADD"){
         $TD_tbn_storageaddrmLine.Content="REMOVE"
         $TD_stp_storagePanel2.Visibility="Visible"
@@ -444,10 +443,16 @@ $TD_tbn_storageaddrmLine.add_click({
         $TD_stp_storagePanel2.Visibility="Collapsed"
         $TD_stp_storagePanel3.Visibility="Collapsed"
         $TD_stp_storagePanel4.Visibility="Collapsed"
+        $TD_tb_storageUserNameOne.Text=""
+        $TD_tb_storageIPAdrOne.Text=""
+        $TD_tb_storageUserNameTwo.Text=""
+        $TD_tb_storageIPAdrTwo.Text=""
+        $TD_tb_storageUserNameThree.Text=""
+        $TD_tb_storageIPAdrThree.Text=""
     }
 })
 $TD_tbn_storageaddrmLineOne.add_click({
-
+    Write-Debug -Message "Open or Closed the 3 Storage Cred Row"
     if($TD_tbn_storageaddrmLineOne.Content -eq "ADD"){
         $TD_tbn_storageaddrmLineOne.Content="REMOVE"
         $TD_stp_storagePanel3.Visibility="Visible"
@@ -455,17 +460,23 @@ $TD_tbn_storageaddrmLineOne.add_click({
     }else {
         $TD_tbn_storageaddrmLineOne.Content="ADD"
         $TD_stp_storagePanel3.Visibility="Collapsed"
-        $TD_stp_storagePanel4.Visibility="Collapsed"
+        $TD_stp_storagePanel4.Visibility="Collapsed"        
+        $TD_tb_storageUserNameTwo.Text=""
+        $TD_tb_storageIPAdrTwo.Text=""
+        $TD_tb_storageUserNameThree.Text=""
+        $TD_tb_storageIPAdrThree.Text=""
     }
 })
 $TD_tbn_storageaddrmLineTwo.add_click({
-
+    Write-Debug -Message "Open or Closed the 4 Storage Cred Row"
     if($TD_tbn_storageaddrmLineTwo.Content -eq "ADD"){
         $TD_tbn_storageaddrmLineTwo.Content="REMOVE"
         $TD_stp_storagePanel4.Visibility="Visible"
     }else {
         $TD_tbn_storageaddrmLineTwo.Content="ADD"
         $TD_stp_storagePanel4.Visibility="Collapsed"
+        $TD_tb_storageUserNameThree.Text=""
+        $TD_tb_storageIPAdrThree.Text=""
     }
 })
 <# Button SettingsArea SAN #>
@@ -482,6 +493,12 @@ $TD_tbn_sanaddrmLine.add_click({
         $TD_stp_sanPanel2.Visibility="Collapsed"
         $TD_stp_sanPanel3.Visibility="Collapsed"
         $TD_stp_sanPanel4.Visibility="Collapsed"
+        $TD_tb_sanIPAdrOne.Text=""
+        $TD_tb_sanUserNameOne.Text=""
+        $TD_tb_sanIPAdrTwo.Text=""
+        $TD_tb_sanUserNameTwo.Text=""
+        $TD_tb_sanIPAdrThree.Text=""
+        $TD_tb_sanUserNameThree.Text=""
     }
 })
 $TD_tbn_sanaddrmLineOne.add_click({
@@ -494,6 +511,10 @@ $TD_tbn_sanaddrmLineOne.add_click({
         $TD_tbn_sanaddrmLineOne.Content="ADD"
         $TD_stp_sanPanel3.Visibility="Collapsed"
         $TD_stp_sanPanel4.Visibility="Collapsed"
+        $TD_tb_sanIPAdrTwo.Text=""
+        $TD_tb_sanUserNameTwo.Text=""
+        $TD_tb_sanIPAdrThree.Text=""
+        $TD_tb_sanUserNameThree.Text=""
     }
 })
 $TD_tbn_sanaddrmLineTwo.add_click({
@@ -504,6 +525,8 @@ $TD_tbn_sanaddrmLineTwo.add_click({
     }else {
         $TD_tbn_sanaddrmLineTwo.Content="ADD"
         $TD_stp_sanPanel4.Visibility="Collapsed"
+        $TD_tb_sanIPAdrThree.Text=""
+        $TD_tb_sanUserNameThree.Text=""
     }
 })
 <# Button Export Settings #>
@@ -2300,9 +2323,11 @@ $TD_btn_CloseAll.add_click({
     <#CleanUp before close #>
     try {
         Remove-Item -Path $Env:TEMP\* -Filter '*_Temp.csv' -Force -ErrorAction SilentlyContinue
+        Write-Debug -Message "Remove Files from TEMP-Folder, done."
     }
     catch {
         <#Do this if a terminating exception happens#>
+        Write-Debug -Message "Remove Files fail."
         Write-Debug -Message $_.Exception.Message
     }
     Write-Debug -Message "Close the appl via CloseBtn"
