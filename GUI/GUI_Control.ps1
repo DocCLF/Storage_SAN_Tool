@@ -700,7 +700,7 @@ $TD_btn_IBM_Eventlog.add_click({
     }
     if($TD_UCRefresh){$TD_UserControl1.Dispatcher.Invoke([System.Action]{},"Render");$TD_UCRefresh=$false}
 
-    $TD_stp_FCPortStats,$TD_stp_DriveInfo,$TD_stp_HostVolInfo,$TD_stp_BackUpConfig,$TD_stp_BaseStorageInfo,$TD_stp_IBM_FCPortInfo,$TD_stp_PolicyBased_Rep,$TD_stp_StorageAuditLog | ForEach-Object {$_.Visibility="Collapsed"}
+    $TD_stp_FCPortStats,$TD_stp_DriveInfo,$TD_stp_HostVolInfo,$TD_stp_BackUpConfig,$TD_stp_BaseStorageInfo,$TD_stp_IBM_FCPortInfo,$TD_stp_PolicyBased_Rep,$TD_stp_StorageAuditLog,$TD_stp_CleanUpDump | ForEach-Object {$_.Visibility="Collapsed"}
 
     $TD_stp_StorageEventLog.Visibility="Visible" 
 
@@ -768,7 +768,7 @@ $TD_btn_IBM_CatAuditLog.add_click({
 
     if($TD_UCRefresh){$TD_UserControl1.Dispatcher.Invoke([System.Action]{},"Render");$TD_UCRefresh=$false}
 
-    $TD_stp_FCPortStats,$TD_stp_DriveInfo,$TD_stp_StorageEventLog,$TD_stp_HostVolInfo,$TD_stp_BackUpConfig,$TD_stp_BaseStorageInfo,$TD_stp_IBM_FCPortInfo,$TD_stp_PolicyBased_Rep | ForEach-Object {$_.Visibility="Collapsed"}
+    $TD_stp_FCPortStats,$TD_stp_DriveInfo,$TD_stp_StorageEventLog,$TD_stp_HostVolInfo,$TD_stp_BackUpConfig,$TD_stp_BaseStorageInfo,$TD_stp_IBM_FCPortInfo,$TD_stp_PolicyBased_Rep,$TD_stp_CleanUpDump | ForEach-Object {$_.Visibility="Collapsed"}
 
     $TD_stp_StorageAuditLog.Visibility="Visible" 
 
@@ -836,7 +836,7 @@ $TD_btn_IBM_HostVolumeMap.add_click({
 
     if($TD_UCRefresh){$TD_UserControl1.Dispatcher.Invoke([System.Action]{},"Render");$TD_UCRefresh=$false}
 
-    $TD_stp_FCPortStats,$TD_stp_DriveInfo,$TD_stp_StorageEventLog,$TD_stp_BackUpConfig,$TD_stp_BaseStorageInfo,$TD_stp_IBM_FCPortInfo,$TD_stp_PolicyBased_Rep,$TD_stp_StorageAuditLog | ForEach-Object {$_.Visibility="Collapsed"}
+    $TD_stp_FCPortStats,$TD_stp_DriveInfo,$TD_stp_StorageEventLog,$TD_stp_BackUpConfig,$TD_stp_BaseStorageInfo,$TD_stp_IBM_FCPortInfo,$TD_stp_PolicyBased_Rep,$TD_stp_StorageAuditLog,$TD_stp_CleanUpDump | ForEach-Object {$_.Visibility="Collapsed"}
 
     $TD_stp_HostVolInfo.Visibility="Visible" 
 
@@ -979,7 +979,7 @@ $TD_btn_IBM_DriveInfo.add_click({
 
     if($TD_UCRefresh){$TD_UserControl1.Dispatcher.Invoke([System.Action]{},"Render");$TD_UCRefresh=$false}
 
-    $TD_stp_FCPortStats,$TD_stp_DriveInfo,$TD_stp_HostVolInfo,$TD_stp_BackUpConfig,$TD_stp_BaseStorageInfo,$TD_stp_IBM_FCPortInfo,$TD_stp_PolicyBased_Rep,$TD_stp_StorageAuditLog | ForEach-Object {$_.Visibility="Collapsed"}
+    $TD_stp_FCPortStats,$TD_stp_StorageEventLog,$TD_stp_HostVolInfo,$TD_stp_BackUpConfig,$TD_stp_BaseStorageInfo,$TD_stp_IBM_FCPortInfo,$TD_stp_PolicyBased_Rep,$TD_stp_StorageAuditLog,$TD_stp_CleanUpDump | ForEach-Object {$_.Visibility="Collapsed"}
 
     $TD_stp_DriveInfo.Visibility="Visible" 
 
@@ -1048,7 +1048,7 @@ $TD_btn_IBM_FCPortStats.add_click({
     }
     if($TD_UCRefresh){$TD_UserControl1.Dispatcher.Invoke([System.Action]{},"Render");$TD_UCRefresh=$false}
 
-    $TD_stp_FCPortStats,$TD_stp_DriveInfo,$TD_stp_HostVolInfo,$TD_stp_BackUpConfig,$TD_stp_BaseStorageInfo,$TD_stp_IBM_FCPortInfo,$TD_stp_PolicyBased_Rep,$TD_stp_StorageAuditLog | ForEach-Object {$_.Visibility="Collapsed"}
+    $TD_stp_StorageEventLog,$TD_stp_DriveInfo,$TD_stp_HostVolInfo,$TD_stp_BackUpConfig,$TD_stp_BaseStorageInfo,$TD_stp_IBM_FCPortInfo,$TD_stp_PolicyBased_Rep,$TD_stp_StorageAuditLog,$TD_stp_CleanUpDump | ForEach-Object {$_.Visibility="Collapsed"}
 
     $TD_stp_FCPortStats.Visibility="Visible" 
 
@@ -1110,182 +1110,14 @@ $TD_btn_IBM_FCPortInfo.add_click({
     }
     if($TD_UCRefresh){$TD_UserControl1.Dispatcher.Invoke([System.Action]{},"Render");$TD_UCRefresh=$false}
 
-    $TD_stp_FCPortStats,$TD_stp_DriveInfo,$TD_stp_HostVolInfo,$TD_stp_BackUpConfig,$TD_stp_BaseStorageInfo,$TD_stp_IBM_FCPortInfo,$TD_stp_PolicyBased_Rep,$TD_stp_StorageAuditLog | ForEach-Object {$_.Visibility="Collapsed"}
+    $TD_stp_FCPortStats,$TD_stp_DriveInfo,$TD_stp_HostVolInfo,$TD_stp_BackUpConfig,$TD_stp_BaseStorageInfo,$TD_stp_StorageEventLog,$TD_stp_PolicyBased_Rep,$TD_stp_StorageAuditLog,$TD_stp_CleanUpDump | ForEach-Object {$_.Visibility="Collapsed"}
 
     $TD_stp_IBM_FCPortInfo.Visibility="Visible"
     
 })
 
-$TD_btn_IBM_BackUpConfig.add_click({
-    $ErrorActionPreference="Continue"
-    $TD_Credentials=@()
-    $TD_Credentials_Checked = Get_CredGUIInfos -STP_ID 1 -TD_ConnectionTyp $TD_cb_storageConnectionTyp.Text -TD_IPAdresse $TD_tb_storageIPAdr.Text -TD_UserName $TD_tb_storageUserName.Text -TD_Password $TD_tb_storagePassword
-    $TD_Credentials += $TD_Credentials_Checked
-    Start-Sleep -Seconds 0.5
-
-    $TD_Credentials_Checked = Get_CredGUIInfos -STP_ID 2 -TD_ConnectionTyp $TD_cb_storageConnectionTypOne.Text -TD_IPAdresse $TD_tb_storageIPAdrOne.Text -TD_UserName $TD_tb_storageUserNameOne.Text -TD_Password $TD_tb_storagePasswordOne
-    $TD_Credentials += $TD_Credentials_Checked
-    Start-Sleep -Seconds 0.5
-
-    $TD_Credentials_Checked = Get_CredGUIInfos -STP_ID 3 -TD_ConnectionTyp $TD_cb_storageConnectionTypTwo.Text -TD_IPAdresse $TD_tb_storageIPAdrTwo.Text -TD_UserName $TD_tb_storageUserNameTwo.Text -TD_Password $TD_tb_storagePasswordTwo
-    $TD_Credentials += $TD_Credentials_Checked
-    Start-Sleep -Seconds 0.5
-
-    $TD_Credentials_Checked = Get_CredGUIInfos -STP_ID 4 -TD_ConnectionTyp $TD_cb_storageConnectionTypThree.Text -TD_IPAdresse $TD_tb_storageIPAdrThree.Text -TD_UserName $TD_tb_storageUserNameThree.Text -TD_Password $TD_tb_storagePasswordThree
-    $TD_Credentials += $TD_Credentials_Checked
-    Start-Sleep -Seconds 0.5
-
-    foreach($TD_Credential in $TD_Credentials){
-        <# QaD needs a Codeupdate because Grouping dose not work #>
-        switch ($TD_Credential.ID) {
-            {($_ -eq 1)} 
-            {            
-                $StorageUserName = $TD_Credential.StorageUserName; $Device_IP = $TD_Credential.IPAddress
-                if($TD_Credential.ConnectionTyp -eq "ssh"){
-                    try {
-                        $TD_BUInfoOne = ssh $StorageUserName@$Device_IP "svcconfig backup"
-                        $TD_tb_BackUpInfoDeviceOne.Text = $TD_BUInfoOne.TrimStart('.')
-                        Start-Sleep -Seconds 0.5
-                        pscp -unsafe $StorageUserName@$($Device_IP):/dumps/svc.config.backup.* $($TD_tb_ExportPath.Text)
-                    }
-                    catch {
-                        <#Do this if a terminating exception happens#>
-                        Write-Host "Something went wrong" -ForegroundColor DarkMagenta
-                        Write-Host $_.Exception.Message
-                        $TD_tb_BackUpInfoDeviceOne.Text = $_.Exception.Message
-                    }
-                }else{
-                    try {
-                        $TD_BUInfoOne = plink $StorageUserName@$Device_IP -pw $($TD_Credential.StoragePassword) -batch "svcconfig backup"
-                        $TD_tb_BackUpInfoDeviceOne.Text = $TD_BUInfoOne.TrimStart('.')
-                        Start-Sleep -Seconds 0.5
-                        pscp -unsafe -pw $($TD_Credential.StoragePassword) $StorageUserName@$($Device_IP):/dumps/svc.config.backup.* $($TD_tb_ExportPath.Text)
-                    }
-                    catch {
-                        <#Do this if a terminating exception happens#>
-                        Write-Host "Something went wrong" -ForegroundColor DarkMagenta
-                        Write-Host $_.Exception.Message
-                        $TD_tb_BackUpInfoDeviceOne.Text = $_.Exception.Message
-                    }
-                }
-            }
-            {($_ -eq 2)} 
-            {            
-                $StorageUserName = $TD_Credential.StorageUserName; $Device_IP = $TD_Credential.IPAddress
-                if($TD_Credential.ConnectionTyp -eq "ssh"){
-                    try {
-                        $TD_BUInfoTwo = ssh $StorageUserName@$Device_IP "svcconfig backup"
-                        $TD_tb_BackUpInfoDeviceTwo.Text = $TD_BUInfoTwo.TrimStart('.')
-                        Start-Sleep -Seconds 0.5
-                        pscp -unsafe $StorageUserName@$($Device_IP):/dumps/svc.config.backup.* $($TD_tb_ExportPath.Text)
-                    }
-                    catch {
-                        <#Do this if a terminating exception happens#>
-                        Write-Host "Something went wrong" -ForegroundColor DarkMagenta
-                        Write-Host $_.Exception.Message
-                        $TD_tb_BackUpInfoDeviceTwo.Text = $_.Exception.Message
-                    }
-                }else{
-                    try {
-                        $TD_BUInfoTwo = plink $StorageUserName@$Device_IP -pw $($TD_Credential.StoragePassword) -batch "svcconfig backup"
-                        $TD_tb_BackUpInfoDeviceTwo.Text = $TD_BUInfoTwo.TrimStart('.')
-                        Start-Sleep -Seconds 0.5
-                        pscp -unsafe -pw $($TD_Credential.StoragePassword) $StorageUserName@$($Device_IP):/dumps/svc.config.backup.* $($TD_tb_ExportPath.Text)
-                    }
-                    catch {
-                        <#Do this if a terminating exception happens#>
-                        Write-Host "Something went wrong" -ForegroundColor DarkMagenta
-                        Write-Host $_.Exception.Message
-                        $TD_tb_BackUpInfoDeviceTwo.Text = $_.Exception.Message
-                    }
-                }
-            }
-            {($_ -eq 3)} 
-            {            
-                $StorageUserName = $TD_Credential.StorageUserName; $Device_IP = $TD_Credential.IPAddress
-                if($TD_Credential.ConnectionTyp -eq "ssh"){
-                    try {
-                        $TD_BUInfoThree = ssh $StorageUserName@$Device_IP "svcconfig backup"
-                        $TD_tb_BackUpInfoDeviceThree.Text = $TD_BUInfoThree.TrimStart('.')
-                        Start-Sleep -Seconds 0.5
-                        pscp -unsafe $StorageUserName@$($Device_IP):/dumps/svc.config.backup.* $($TD_tb_ExportPath.Text)
-                    }
-                    catch {
-                        <#Do this if a terminating exception happens#>
-                        Write-Host "Something went wrong" -ForegroundColor DarkMagenta
-                        Write-Host $_.Exception.Message
-                        $TD_tb_BackUpInfoDeviceThree.Text = $_.Exception.Message
-                    }
-                }else{
-                    try {
-                        $TD_BUInfoThree = plink $StorageUserName@$Device_IP -pw $($TD_Credential.StoragePassword) -batch "svcconfig backup"
-                        $TD_tb_BackUpInfoDeviceThree.Text = $TD_BUInfoThree.TrimStart('.')
-                        Start-Sleep -Seconds 0.5
-                        pscp -unsafe -pw $($TD_Credential.StoragePassword) $StorageUserName@$($Device_IP):/dumps/svc.config.backup.* $($TD_tb_ExportPath.Text)
-                    }
-                    catch {
-                        <#Do this if a terminating exception happens#>
-                        Write-Host "Something went wrong" -ForegroundColor DarkMagenta
-                        Write-Host $_.Exception.Message
-                        $TD_tb_BackUpInfoDeviceThree.Text = $_.Exception.Message
-                    }
-                }
-            }
-            {($_ -eq 4)} 
-            {            
-                $StorageUserName = $TD_Credential.StorageUserName; $Device_IP = $TD_Credential.IPAddress
-                if($TD_Credential.ConnectionTyp -eq "ssh"){
-                    try {
-                        $TD_BUInfoFour = ssh ssh $StorageUserName@$Device_IP "svcconfig backup"
-                        $TD_tb_BackUpInfoDeviceFour.Text = $TD_BUInfoFour.TrimStart('.')
-                        Start-Sleep -Seconds 0.5
-                        pscp -unsafe $StorageUserName@$($Device_IP):/dumps/svc.config.backup.* $($TD_tb_ExportPath.Text)
-                    }
-                    catch {
-                        <#Do this if a terminating exception happens#>
-                        Write-Host "Something went wrong" -ForegroundColor DarkMagenta
-                        Write-Host $_.Exception.Message
-                        $TD_tb_BackUpInfoDeviceFour.Text = $_.Exception.Message
-                    }
-                }else{
-                    try {
-                        $TD_BUInfoFour = plink $StorageUserName@$Device_IP -pw $($TD_Credential.StoragePassword) -batch "svcconfig backup"
-                        $TD_tb_BackUpInfoDeviceFour.Text = $TD_BUInfoFour.TrimStart('.')
-                        Start-Sleep -Seconds 0.5
-                        pscp -unsafe -pw $($TD_Credential.StoragePassword) $StorageUserName@$($Device_IP):/dumps/svc.config.backup.* $($TD_tb_ExportPath.Text)
-                    }
-                    catch {
-                        <#Do this if a terminating exception happens#>
-                        Write-Host "Something went wrong" -ForegroundColor DarkMagenta
-                        Write-Host $_.Exception.Message
-                        $TD_tb_BackUpInfoDeviceFour.Text = $_.Exception.Message
-                    }
-                }
-            }
-            Default {Write-Debug "Nothing" }
-        }
-    }
-    try {
-        $TD_ExportFiles = Get-ChildItem -Path $TD_tb_Exportpath.Text -Filter "svc.config.backup.*"
-        #Write-Host $TD_ExportFiles.count = $TD_ExportFiles
-        #$TD_tb_BackUpFileErrorInfo.Text = $TD_tb_Exportpath
-        $TD_tb_BackUpFileInfoDevice.ItemsSource = $TD_ExportFiles
-        <# maybe add a filter #>
-    }
-    catch {
-        <#Do this if a terminating exception happens#>
-        Write-Host "Something went wrong" -ForegroundColor DarkMagenta
-        Write-Host $_.Exception.Message
-        $TD_tb_BackUpFileErrorInfo.Text = $_.Exception.Message
-    }
-
-    $TD_stp_FCPortStats,$TD_stp_DriveInfo,$TD_stp_HostVolInfo,$TD_stp_BackUpConfig,$TD_stp_BaseStorageInfo,$TD_stp_IBM_FCPortInfo,$TD_stp_PolicyBased_Rep,$TD_stp_StorageAuditLog | ForEach-Object {$_.Visibility="Collapsed"}
-
-    $TD_stp_BackUpConfig.Visibility="Visible"
-})
-
 $TD_btn_IBM_PolicyBased_Rep.add_click({
-    $TD_stp_FCPortStats,$TD_stp_DriveInfo,$TD_stp_HostVolInfo,$TD_stp_BackUpConfig,$TD_stp_BaseStorageInfo,$TD_stp_IBM_FCPortInfo,$TD_stp_PolicyBased_Rep,$TD_stp_StorageAuditLog | ForEach-Object {$_.Visibility="Collapsed"}
+    $TD_stp_FCPortStats,$TD_stp_DriveInfo,$TD_stp_HostVolInfo,$TD_stp_BackUpConfig,$TD_stp_BaseStorageInfo,$TD_stp_IBM_FCPortInfo,$TD_stp_StorageEventLog,$TD_stp_StorageAuditLog,$TD_stp_CleanUpDump | ForEach-Object {$_.Visibility="Collapsed"}
 
     $TD_stp_PolicyBased_Rep.Visibility="Visible"
 })
@@ -1454,9 +1286,132 @@ $TD_btn_IBM_BaseStorageInfo.add_click({
     }
     if($TD_UCRefresh){$TD_UserControl1.Dispatcher.Invoke([System.Action]{},"Render");$TD_UCRefresh=$false}
 
-    $TD_stp_FCPortStats,$TD_stp_DriveInfo,$TD_stp_HostVolInfo,$TD_stp_BackUpConfig,$TD_stp_StorageEventLog,$TD_stp_IBM_FCPortInfo,$TD_stp_PolicyBased_Rep,$TD_stp_StorageAuditLog | ForEach-Object {$_.Visibility="Collapsed"}
+    $TD_stp_FCPortStats,$TD_stp_DriveInfo,$TD_stp_HostVolInfo,$TD_stp_BackUpConfig,$TD_stp_StorageEventLog,$TD_stp_IBM_FCPortInfo,$TD_stp_PolicyBased_Rep,$TD_stp_StorageAuditLog,$TD_stp_CleanUpDump | ForEach-Object {$_.Visibility="Collapsed"}
     
     $TD_stp_BaseStorageInfo.Visibility="Visible"
+})
+
+$TD_btn_IBM_CleanUpDumps.add_click({
+    $ErrorActionPreference="Continue"
+    $TD_Credentials=@()
+    $TD_Credentials_Checked = Get_CredGUIInfos -STP_ID 1 -TD_ConnectionTyp $TD_cb_storageConnectionTyp.Text -TD_IPAdresse $TD_tb_storageIPAdr.Text -TD_UserName $TD_tb_storageUserName.Text -TD_Password $TD_tb_storagePassword
+    $TD_Credentials += $TD_Credentials_Checked
+    Start-Sleep -Seconds 0.2
+
+    $TD_Credentials_Checked = Get_CredGUIInfos -STP_ID 2 -TD_ConnectionTyp $TD_cb_storageConnectionTypOne.Text -TD_IPAdresse $TD_tb_storageIPAdrOne.Text -TD_UserName $TD_tb_storageUserNameOne.Text -TD_Password $TD_tb_storagePasswordOne
+    $TD_Credentials += $TD_Credentials_Checked
+    Start-Sleep -Seconds 0.2
+
+    $TD_Credentials_Checked = Get_CredGUIInfos -STP_ID 3 -TD_ConnectionTyp $TD_cb_storageConnectionTypTwo.Text -TD_IPAdresse $TD_tb_storageIPAdrTwo.Text -TD_UserName $TD_tb_storageUserNameTwo.Text -TD_Password $TD_tb_storagePasswordTwo
+    $TD_Credentials += $TD_Credentials_Checked
+    Start-Sleep -Seconds 0.2
+
+    $TD_Credentials_Checked = Get_CredGUIInfos -STP_ID 4 -TD_ConnectionTyp $TD_cb_storageConnectionTypThree.Text -TD_IPAdresse $TD_tb_storageIPAdrThree.Text -TD_UserName $TD_tb_storageUserNameThree.Text -TD_Password $TD_tb_storagePasswordThree
+    $TD_Credentials += $TD_Credentials_Checked
+    Start-Sleep -Seconds 0.2
+
+    foreach($TD_Credential in $TD_Credentials){
+        <# QaD needs a Codeupdate because Grouping dose not work #>
+        switch ($TD_Credential.ID) {
+            {($_ -eq 1)} 
+            {            
+                $TD_CleanUpDumpInfoOne = IBM_CleanUpDumps -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.StorageUserName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $TD_Credential.StoragePassword
+                Start-Sleep -Seconds 0.2
+                $TD_tb_CleanUpDumpInfoOne.Text = $TD_CleanUpDumpInfoOne
+            }
+            {($_ -eq 2)} 
+            {            
+                $TD_CleanUpDumpInfoTwo = IBM_CleanUpDumps -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.StorageUserName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $TD_Credential.StoragePassword
+                Start-Sleep -Seconds 0.2
+                $TD_tb_CleanUpDumpInfoTwo.Text = $TD_CleanUpDumpInfoTwo
+            }
+            {($_ -eq 3)} 
+            {            
+                $TD_CleanUpDumpInfoThree = IBM_CleanUpDumps -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.StorageUserName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $TD_Credential.StoragePassword
+                Start-Sleep -Seconds 0.2
+                $TD_tb_CleanUpDumpInfoThree.Text = $TD_CleanUpDumpInfoThree
+            }
+            {($_ -eq 4)} 
+            {            
+                $TD_CleanUpDumpInfoFour = IBM_CleanUpDumps -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.StorageUserName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $TD_Credential.StoragePassword
+                Start-Sleep -Seconds 0.2
+                $TD_tb_CleanUpDumpInfoFour.Text = $TD_CleanUpDumpInfoFour
+            }
+            Default {Write-Debug "Nothing" }
+        }
+    }
+
+    $TD_stp_FCPortStats,$TD_stp_DriveInfo,$TD_stp_HostVolInfo,$TD_stp_BackUpConfig,$TD_stp_BaseStorageInfo,$TD_stp_IBM_FCPortInfo,$TD_stp_PolicyBased_Rep,$TD_stp_StorageAuditLog | ForEach-Object {$_.Visibility="Collapsed"}
+
+    $TD_stp_CleanUpDump.Visibility="Visible"
+})
+
+$TD_btn_IBM_BackUpConfig.add_click({
+    $ErrorActionPreference="Continue"
+    $TD_Credentials=@()
+    $TD_Credentials_Checked = Get_CredGUIInfos -STP_ID 1 -TD_ConnectionTyp $TD_cb_storageConnectionTyp.Text -TD_IPAdresse $TD_tb_storageIPAdr.Text -TD_UserName $TD_tb_storageUserName.Text -TD_Password $TD_tb_storagePassword
+    $TD_Credentials += $TD_Credentials_Checked
+    Start-Sleep -Seconds 0.5
+
+    $TD_Credentials_Checked = Get_CredGUIInfos -STP_ID 2 -TD_ConnectionTyp $TD_cb_storageConnectionTypOne.Text -TD_IPAdresse $TD_tb_storageIPAdrOne.Text -TD_UserName $TD_tb_storageUserNameOne.Text -TD_Password $TD_tb_storagePasswordOne
+    $TD_Credentials += $TD_Credentials_Checked
+    Start-Sleep -Seconds 0.5
+
+    $TD_Credentials_Checked = Get_CredGUIInfos -STP_ID 3 -TD_ConnectionTyp $TD_cb_storageConnectionTypTwo.Text -TD_IPAdresse $TD_tb_storageIPAdrTwo.Text -TD_UserName $TD_tb_storageUserNameTwo.Text -TD_Password $TD_tb_storagePasswordTwo
+    $TD_Credentials += $TD_Credentials_Checked
+    Start-Sleep -Seconds 0.5
+
+    $TD_Credentials_Checked = Get_CredGUIInfos -STP_ID 4 -TD_ConnectionTyp $TD_cb_storageConnectionTypThree.Text -TD_IPAdresse $TD_tb_storageIPAdrThree.Text -TD_UserName $TD_tb_storageUserNameThree.Text -TD_Password $TD_tb_storagePasswordThree
+    $TD_Credentials += $TD_Credentials_Checked
+    Start-Sleep -Seconds 0.5
+
+    foreach($TD_Credential in $TD_Credentials){
+        <# QaD needs a Codeupdate because Grouping dose not work #>
+        switch ($TD_Credential.ID) {
+            {($_ -eq 1)} 
+            {            
+                $TD_BaseStorageInfo = IBM_BackUpConfig -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.StorageUserName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $TD_Credential.StoragePassword -TD_Storage $TD_cb_FCPortStatsDevice -TD_Exportpath $TD_tb_ExportPath.Text
+                Start-Sleep -Seconds 0.2
+                $TD_tb_BackUpInfoDeviceOne.Text = $TD_BUInfoTwo
+            }
+            {($_ -eq 2)} 
+            {            
+                $TD_BUInfoTwo = IBM_BackUpConfig -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.StorageUserName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $TD_Credential.StoragePassword -TD_Exportpath $TD_tb_ExportPath.Text
+                Start-Sleep -Seconds 0.2
+                $TD_tb_BackUpInfoDeviceTwo.Text = $TD_BUInfoTwo
+            }
+            {($_ -eq 3)} 
+            {            
+                $TD_BaseStorageInfo = IBM_BackUpConfig -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.StorageUserName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $TD_Credential.StoragePassword -TD_Exportpath $TD_tb_ExportPath.Text
+                Start-Sleep -Seconds 0.2
+                $TD_tb_BackUpInfoDeviceThree.Text = $TD_BUInfoTwo
+            }
+            {($_ -eq 4)} 
+            {            
+                $TD_BaseStorageInfo = IBM_BackUpConfig -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.StorageUserName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $TD_Credential.StoragePassword -TD_Exportpath $TD_tb_ExportPath.Text
+                Start-Sleep -Seconds 0.2
+                $TD_tb_BackUpInfoDeviceFour.Text = $TD_BUInfoTwo
+            }
+            Default {Write-Debug "Nothing" }
+        }
+    }
+    try {
+        $TD_ExportFiles = Get-ChildItem -Path $TD_tb_Exportpath.Text -Filter "svc.config.backup.*"
+        #Write-Host $TD_ExportFiles.count = $TD_ExportFiles
+        #$TD_tb_BackUpFileErrorInfo.Text = $TD_tb_Exportpath
+        $TD_tb_BackUpFileInfoDevice.ItemsSource = $TD_ExportFiles
+        <# maybe add a filter #>
+    }
+    catch {
+        <#Do this if a terminating exception happens#>
+        Write-Host "Something went wrong" -ForegroundColor DarkMagenta
+        Write-Host $_.Exception.Message
+        $TD_tb_BackUpFileErrorInfo.Text = $_.Exception.Message
+    }
+
+    $TD_stp_FCPortStats,$TD_stp_DriveInfo,$TD_stp_HostVolInfo,$TD_stp_BaseStorageInfo,$TD_stp_StorageEventLog,$TD_stp_IBM_FCPortInfo,$TD_stp_PolicyBased_Rep,$TD_stp_StorageAuditLog,$TD_stp_CleanUpDump | ForEach-Object {$_.Visibility="Collapsed"}
+
+    $TD_stp_BackUpConfig.Visibility="Visible"
 })
 #endregion
 

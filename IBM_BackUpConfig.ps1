@@ -35,50 +35,26 @@ function IBM_BackUpConfig {
         Write-Debug -Message "IBM_BackUpConfig Process block |$(Get-Date)"
         
         Write-ProgressBar -ProgressBar $ProgressBar -Activity "Collect data for Device $($TD_Line_ID)" -PercentComplete (($ProgCounter/50) * 100)
-        Start-Sleep -Seconds 1
+        Start-Sleep -Seconds 0.5
 
         if($TD_Device_ConnectionTyp -eq "ssh"){
-            <# try-catch is placed for later use #>
-            #try {
-                ssh $TD_Device_UserName@$TD_Device_DeviceIP "svcconfig backup"
-                Start-Sleep -Seconds 1
-                pscp -unsafe -pw $TD_Device_PW $TD_Device_UserName@$($TD_Device_DeviceIP):/dumps/svc.config.backup.* $TD_Exportpath
-            #}
-            #catch {
-            #    <#Do this if a terminating exception happens#>
-            #    Write-Host "Somethign went wrong" -ForegroundColor DarkMagenta
-            #    Write-Host $_.Exception.Message
-            #}
+            $TD_BUInfo = ssh $TD_Device_UserName@$TD_Device_DeviceIP "svcconfig backup"
+            $TD_BUResault = $TD_BUInfo.TrimStart('.')
+            Start-Sleep -Seconds 0.5
+            pscp -unsafe -pw $TD_Device_PW $TD_Device_UserName@$($TD_Device_DeviceIP):/dumps/svc.config.backup.* $TD_Exportpath
         }else {
-            <# try-catch is placed for later use #>
-            #try {
-                plink $TD_Device_UserName@$TD_Device_DeviceIP -pw $TD_Device_PW -batch "svcconfig backup"
-                Start-Sleep -Seconds 1
-                pscp -unsafe -pw $TD_Device_PW $TD_Device_UserName@$($TD_Device_DeviceIP):/dumps/svc.config.backup.* $TD_Exportpath
-            #}
-            #catch {
-            #    <#Do this if a terminating exception happens#>
-            #    Write-Host "Somethign went wrong" -ForegroundColor DarkMagenta
-            #    Write-Host $_.Exception.Message
-            #}
+            $TD_BUInfo = plink $TD_Device_UserName@$TD_Device_DeviceIP -pw $TD_Device_PW -batch "svcconfig backup"
+            Start-Sleep -Seconds 0.5
+            $TD_BUResault = $TD_BUInfo.TrimStart('.')
+            pscp -unsafe -pw $TD_Device_PW $TD_Device_UserName@$($TD_Device_DeviceIP):/dumps/svc.config.backup.* $TD_Exportpath
         }
 
-        <# try-catch is placed for later use #>
-        #try {
-            $TD_ExportFiles = Get-ChildItem -Path $TD_Exportpath -Filter "svc.config.backup.* "
-            <# maybe add a filter #>
-        #}
-        #catch {
-        #    <#Do this if a terminating exception happens#>
-        #    Write-Host "Somethign went wrong" -ForegroundColor DarkMagenta
-        #    Write-Host $_.FullyQualifiedErrorId
-        #}
     }
 
     end {
         Close-ProgressBar -ProgressBar $ProgressBar
         Write-Debug -Message "IBM_BackUpConfig End block |$(Get-Date) `n"
-        return $TD_ExportFiles
+        return $TD_BUResault
         Clear-Variable TD* -Scope Global
     }
 }

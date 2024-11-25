@@ -90,6 +90,12 @@
                 Style="{StaticResource MainBtnStyle}"
                 Content="FC Port Info"
                 ToolTip="Generate a list of host count and login count for each worldwide port names (WWPNs) required to set up Fibre Channel (FC) zoning and to display the current failover status of host IO ports." />
+                <!--IBM_CleanUpDumps-->
+                <Button
+                x:Name="btn_IBM_CleanUpDumps"
+                Style="{StaticResource MainBtnStyle}"
+                Content="CleanUp Dumps" 
+                ToolTip="Use the cleardumps command to clear (or delete) the various dump directories on a specified node or node canister."/>
                 <!--IBM_BackUpConfig-->
                 <Button
                 x:Name="btn_IBM_BackUpConfig"
@@ -1329,6 +1335,41 @@
                         </StackPanel>  
                     </Grid>
                 </StackPanel>     
+                <StackPanel x:Name="stp_CleanUpDump" Orientation="Horizontal" Margin="2" Visibility="{Binding ElementName=btn_IBM_CleanUpDumps, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed }">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+                        <!-- Maybe for later use, removed at version 1.1.1
+                        <StackPanel Grid.Row="0" >
+                            <Button x:Name="btn_IBM_CleanUpConfigDir" Style="{StaticResource MainBtnStyle}" Content="CleanUp Config" Margin="2,2,2,5" HorizontalAlignment="Left" Background="LightCoral" />
+                        </StackPanel>
+                        -->
+                        <StackPanel Grid.Row="1" Grid.Column="0" >
+                            <Label Content="Device 1" />
+                            <TextBlock x:Name="tb_CleanUpDumpInfoOne" TextWrapping="Wrap" MaxWidth="400" Text="" />
+                        </StackPanel>
+                        <StackPanel Grid.Row="1" Grid.Column="1" >
+                            <Label Content="Device 2" />
+                            <TextBlock x:Name="tb_CleanUpDumpInfoTwo" TextWrapping="Wrap" MaxWidth="400" Text="" />
+                        </StackPanel>
+                        <StackPanel Grid.Row="2" Grid.Column="0" >
+                            <Label Content="Device 3" />
+                            <TextBlock x:Name="tb_CleanUpDumpInfoThree" TextWrapping="Wrap" MaxWidth="400" Text="" />
+                        </StackPanel>
+                        <StackPanel Grid.Row="2" Grid.Column="1" >
+                            <Label Content="Device 4" />
+                            <TextBlock x:Name="tb_CleanUpDumpInfoFour" TextWrapping="Wrap" MaxWidth="400" Text="" />
+                        </StackPanel>
+                    </Grid>
+                </StackPanel>  
                 <StackPanel x:Name="stp_BackUpConfig" Orientation="Horizontal" Margin="2" Visibility="{Binding ElementName=btn_IBM_BackUpConfig, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed }">
                     <Grid>
                         <Grid.ColumnDefinitions>

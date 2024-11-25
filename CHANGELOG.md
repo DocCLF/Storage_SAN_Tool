@@ -17,6 +17,7 @@ All notable changes to this project will be documented in this file.
 - SSH-Agent and Key Support at Settings Panel
 - IBM FCPort Info with Storage WWPN and Host login overview
 - IBM AuditLog
+- IBM Clear Dumps
 - IBM Storage Base information (this function must be confirmed for a svc-cluster by the check in the first line of the settings panel, the default setting is FlashSystems)
 - IBM Storage replication policies information on the system (Important this is only possible with IBM Spectrum Virtualize software 8.6.x)
 - IBM Storage Volume replication information for a volume group (Important this is only possible with IBM Spectrum Virtualize software 8.5.x)
