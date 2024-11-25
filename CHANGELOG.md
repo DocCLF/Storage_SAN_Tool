@@ -4,9 +4,7 @@ All notable changes to this project will be documented in this file.
 
 ### Unreleased
 - Performance improved
-- Storage Host WWPN overview
 - Storage RC and FC 
-- Stoarge Auditlog
 - Support for Virtual Fabrics
 - Small SAN Healthcheck
 
@@ -17,7 +15,7 @@ All notable changes to this project will be documented in this file.
 - FOS an info that admin rights are required for Statsclear
 - IBM Storage Security check
 - SSH-Agent and Key Support at Settings Panel
-- IBM FCPort Info
+- IBM FCPort Info with Storage WWPN and Host login overview
 - IBM AuditLog
 - IBM Storage Base information (this function must be confirmed for a svc-cluster by the check in the first line of the settings panel, the default setting is FlashSystems)
 - IBM Storage replication policies information on the system (Important this is only possible with IBM Spectrum Virtualize software 8.6.x)

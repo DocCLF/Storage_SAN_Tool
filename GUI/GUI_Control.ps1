@@ -341,6 +341,16 @@ $TD_btn_Settings.add_click({
     $TD_UserContrArea.Children.Remove($TD_UserControl3)
     if($TD_LogoImageSmall.Visibility -eq "hidden"){$TD_LogoImageSmall.Visibility = "visible"}
 })
+<# Button Export Settings #>
+$TD_btn_ChangeExportPath.add_click({
+    $TD_ChPathdialog = New-Object System.Windows.Forms.FolderBrowserDialog
+    if ($TD_ChPathdialog.ShowDialog() -eq [System.Windows.Forms.DialogResult]::OK) {
+        $TD_DirectoryName = $TD_ChPathdialog.SelectedPath
+        #Write-Host "Directory selected is $TD_DirectoryName"
+        $TD_tb_ExportPath.Text = $TD_DirectoryName
+    }
+    $TD_label_ExpPath.Content ="Export Path: $($TD_tb_ExportPath.Text)"
+})
 #endregion
 
 #region SSH Setings
@@ -430,7 +440,7 @@ $TD_btn_addsshkey.add_click({
 })
 #endregion
 
-<# Button SettingsArea Storage #>
+#region AddStorageCred
 $TD_tbn_storageaddrmLine.add_click({
     Write-Debug -Message "Open or Closed the 2 Storage Cred Row"
     if($TD_tbn_storageaddrmLine.Content -eq "ADD"){
@@ -479,10 +489,10 @@ $TD_tbn_storageaddrmLineTwo.add_click({
         $TD_tb_storageIPAdrThree.Text=""
     }
 })
-<# Button SettingsArea SAN #>
+#endregion
+#region AddSANCred
 $TD_tbn_sanaddrmLine.add_click({
-    <#log the txtbox (optional for later use)#>
-    #$TD_tb_IPAdr.IsEnabled=$false
+    Write-Debug -Message "Open or Closed the 2 SAN Cred Row"
     if($TD_tbn_sanaddrmLine.Content -eq "ADD"){
         $TD_tbn_sanaddrmLine.Content="REMOVE"
         $TD_stp_sanPanel2.Visibility="Visible"
@@ -502,7 +512,7 @@ $TD_tbn_sanaddrmLine.add_click({
     }
 })
 $TD_tbn_sanaddrmLineOne.add_click({
-
+    Write-Debug -Message "Open or Closed the 3 SAN Cred Row"
     if($TD_tbn_sanaddrmLineOne.Content -eq "ADD"){
         $TD_tbn_sanaddrmLineOne.Content="REMOVE"
         $TD_stp_sanPanel3.Visibility="Visible"
@@ -518,7 +528,7 @@ $TD_tbn_sanaddrmLineOne.add_click({
     }
 })
 $TD_tbn_sanaddrmLineTwo.add_click({
-
+    Write-Debug -Message "Open or Closed the 4 SAN Cred Row"
     if($TD_tbn_sanaddrmLineTwo.Content -eq "ADD"){
         $TD_tbn_sanaddrmLineTwo.Content="REMOVE"
         $TD_stp_sanPanel4.Visibility="Visible"
@@ -529,16 +539,9 @@ $TD_tbn_sanaddrmLineTwo.add_click({
         $TD_tb_sanUserNameThree.Text=""
     }
 })
-<# Button Export Settings #>
-$TD_btn_ChangeExportPath.add_click({
-    $TD_ChPathdialog = New-Object System.Windows.Forms.FolderBrowserDialog
-    if ($TD_ChPathdialog.ShowDialog() -eq [System.Windows.Forms.DialogResult]::OK) {
-        $TD_DirectoryName = $TD_ChPathdialog.SelectedPath
-        #Write-Host "Directory selected is $TD_DirectoryName"
-        $TD_tb_ExportPath.Text = $TD_DirectoryName
-    }
-    $TD_label_ExpPath.Content ="Export Path: $($TD_tb_ExportPath.Text)"
-})
+#endregion
+
+#region InAndExportCred
 <# Button Credentials In-/ Export #>
 $TD_btn_ExportCred.add_click({
     $TD_ExportCred = @()
@@ -636,6 +639,7 @@ $TD_btn_ImportCred.add_click({
     }
     #Write-Host $TD_GetSavedCred.FileName -ForegroundColor Green
 })
+#endregion
 
 #region IBM Button
 $TD_btn_IBM_Eventlog.add_click({

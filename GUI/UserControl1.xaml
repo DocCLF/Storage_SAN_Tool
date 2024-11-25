@@ -150,53 +150,56 @@
                                         <DataTrigger Binding="{Binding Status}" Value="alert">
                                             <Setter Property="Background" Value="Red" />
                                         </DataTrigger>
+                                        <DataTrigger Binding="{Binding Status}" Value="expired">
+                                            <Setter Property="Background" Value="Yellow" />
+                                        </DataTrigger>
                                     </Style.Triggers>
                                 </Style>
                             </DataGrid.RowStyle>
                             <DataGrid.Columns>
-                                <DataGridTextColumn Width="200" Header="Time" Binding="{Binding LastTime}" IsReadOnly="True">
+                                <DataGridTextColumn Width="auto" Header="Time" Binding="{Binding LastTime}" IsReadOnly="True">
                                     <DataGridTextColumn.CellStyle>
                                         <Style TargetType="DataGridCell">
                                             <Setter Property="ToolTip" Value="Indicates when the event was most recently updated." />
                                         </Style>
                                     </DataGridTextColumn.CellStyle>
                                 </DataGridTextColumn>
-                                <DataGridTextColumn Width="100" Header="ObjectType" Binding="{Binding ObjectType}" IsReadOnly="True">
+                                <DataGridTextColumn Width="auto" Header="ObjectType" Binding="{Binding ObjectType}" IsReadOnly="True">
                                     <DataGridTextColumn.CellStyle>
                                         <Style TargetType="DataGridCell">
                                             <Setter Property="ToolTip" Value="Indicates the type of the object the event is logged against." />
                                         </Style>
                                     </DataGridTextColumn.CellStyle>
                                 </DataGridTextColumn>
-                                <DataGridTextColumn Width="150" Header="ObjectName" Binding="{Binding ObjectName}" IsReadOnly="True">
+                                <DataGridTextColumn Width="auto" Header="ObjectName" Binding="{Binding ObjectName}" IsReadOnly="True">
                                     <DataGridTextColumn.CellStyle>
                                         <Style TargetType="DataGridCell">
                                             <Setter Property="ToolTip" Value="Indicates the name of the object the event is logged against." />
                                         </Style>
                                     </DataGridTextColumn.CellStyle>
                                 </DataGridTextColumn>
-                                <DataGridTextColumn Width="100" Header="Status" Binding="{Binding Status}" IsReadOnly="True">
+                                <DataGridTextColumn Width="auto" Header="Status" Binding="{Binding Status}" IsReadOnly="True">
                                     <DataGridTextColumn.CellStyle>
                                         <Style TargetType="DataGridCell">
                                             <Setter Property="ToolTip" Value="Indicates the event category." />
                                         </Style>
                                     </DataGridTextColumn.CellStyle>
                                 </DataGridTextColumn>
-                                <DataGridTextColumn Width="50"  Header="Fixed" Binding="{Binding Fixed}" IsReadOnly="True">
+                                <DataGridTextColumn Width="auto"  Header="Fixed" Binding="{Binding Fixed}" IsReadOnly="True">
                                     <DataGridTextColumn.CellStyle>
                                         <Style TargetType="DataGridCell">
                                             <Setter Property="ToolTip" Value="Indicates whether the event was marked fixed (for an alert) or read (for a message)." />
                                         </Style>
                                     </DataGridTextColumn.CellStyle>
                                 </DataGridTextColumn>
-                                <DataGridTextColumn Width="100" Header="ErrorCode" Binding="{Binding ErrorCode}" IsReadOnly="True">
+                                <DataGridTextColumn Width="auto" Header="ErrorCode" Binding="{Binding ErrorCode}" IsReadOnly="True">
                                     <DataGridTextColumn.CellStyle>
                                         <Style TargetType="DataGridCell">
                                             <Setter Property="ToolTip" Value="Indicates the error code that is associated with this event, google for it!" />
                                         </Style>
                                     </DataGridTextColumn.CellStyle>
                                 </DataGridTextColumn>
-                                <DataGridTextColumn Width="300" Header="Description" Binding="{Binding Description}" IsReadOnly="True">
+                                <DataGridTextColumn Width="auto" Header="Description" Binding="{Binding Description}" IsReadOnly="True">
                                     <DataGridTextColumn.CellStyle>
                                         <Style TargetType="DataGridCell">
                                             <Setter Property="ToolTip" Value="Indicates the description that is associated with the event." />
@@ -224,53 +227,56 @@
                                         <DataTrigger Binding="{Binding Status}" Value="alert">
                                             <Setter Property="Background" Value="Red" />
                                         </DataTrigger>
+                                        <DataTrigger Binding="{Binding Status}" Value="expired">
+                                            <Setter Property="Background" Value="Yellow" />
+                                        </DataTrigger>
                                     </Style.Triggers>
                                 </Style>
                             </DataGrid.RowStyle>
                             <DataGrid.Columns>
-                                <DataGridTextColumn Width="200" Header="Time" Binding="{Binding LastTime}" IsReadOnly="True">
+                                <DataGridTextColumn Width="auto" Header="Time" Binding="{Binding LastTime}" IsReadOnly="True">
                                     <DataGridTextColumn.CellStyle>
                                         <Style TargetType="DataGridCell">
                                             <Setter Property="ToolTip" Value="Indicates when the event was most recently updated." />
                                         </Style>
                                     </DataGridTextColumn.CellStyle>
                                 </DataGridTextColumn>
-                                <DataGridTextColumn Width="100" Header="ObjectType" Binding="{Binding ObjectType}" IsReadOnly="True">
+                                <DataGridTextColumn Width="auto" Header="ObjectType" Binding="{Binding ObjectType}" IsReadOnly="True">
                                     <DataGridTextColumn.CellStyle>
                                         <Style TargetType="DataGridCell">
                                             <Setter Property="ToolTip" Value="Indicates the type of the object the event is logged against." />
                                         </Style>
                                     </DataGridTextColumn.CellStyle>
                                 </DataGridTextColumn>
-                                <DataGridTextColumn Width="150" Header="ObjectName" Binding="{Binding ObjectName}" IsReadOnly="True">
+                                <DataGridTextColumn Width="auto" Header="ObjectName" Binding="{Binding ObjectName}" IsReadOnly="True">
                                     <DataGridTextColumn.CellStyle>
                                         <Style TargetType="DataGridCell">
                                             <Setter Property="ToolTip" Value="Indicates the name of the object the event is logged against." />
                                         </Style>
                                     </DataGridTextColumn.CellStyle>
                                 </DataGridTextColumn>
-                                <DataGridTextColumn Width="100" Header="Status" Binding="{Binding Status}" IsReadOnly="True">
+                                <DataGridTextColumn Width="auto" Header="Status" Binding="{Binding Status}" IsReadOnly="True">
                                     <DataGridTextColumn.CellStyle>
                                         <Style TargetType="DataGridCell">
                                             <Setter Property="ToolTip" Value="Indicates the event category." />
                                         </Style>
                                     </DataGridTextColumn.CellStyle>
                                 </DataGridTextColumn>
-                                <DataGridTextColumn Width="50"  Header="Fixed" Binding="{Binding Fixed}" IsReadOnly="True">
+                                <DataGridTextColumn Width="auto"  Header="Fixed" Binding="{Binding Fixed}" IsReadOnly="True">
                                     <DataGridTextColumn.CellStyle>
                                         <Style TargetType="DataGridCell">
                                             <Setter Property="ToolTip" Value="Indicates whether the event was marked fixed (for an alert) or read (for a message)." />
                                         </Style>
                                     </DataGridTextColumn.CellStyle>
                                 </DataGridTextColumn>
-                                <DataGridTextColumn Width="100" Header="ErrorCode" Binding="{Binding ErrorCode}" IsReadOnly="True">
+                                <DataGridTextColumn Width="auto" Header="ErrorCode" Binding="{Binding ErrorCode}" IsReadOnly="True">
                                     <DataGridTextColumn.CellStyle>
                                         <Style TargetType="DataGridCell">
                                             <Setter Property="ToolTip" Value="Indicates the error code that is associated with this event, google for it!" />
                                         </Style>
                                     </DataGridTextColumn.CellStyle>
                                 </DataGridTextColumn>
-                                <DataGridTextColumn Width="300" Header="Description" Binding="{Binding Description}" IsReadOnly="True">
+                                <DataGridTextColumn Width="auto" Header="Description" Binding="{Binding Description}" IsReadOnly="True">
                                     <DataGridTextColumn.CellStyle>
                                         <Style TargetType="DataGridCell">
                                             <Setter Property="ToolTip" Value="Indicates the description that is associated with the event." />
@@ -298,53 +304,56 @@
                                         <DataTrigger Binding="{Binding Status}" Value="alert">
                                             <Setter Property="Background" Value="Red" />
                                         </DataTrigger>
+                                        <DataTrigger Binding="{Binding Status}" Value="expired">
+                                            <Setter Property="Background" Value="Yellow" />
+                                        </DataTrigger>
                                     </Style.Triggers>
                                 </Style>
                             </DataGrid.RowStyle>
                             <DataGrid.Columns>
-                                <DataGridTextColumn Width="200" Header="Time" Binding="{Binding LastTime}" IsReadOnly="True">
+                                <DataGridTextColumn Width="auto" Header="Time" Binding="{Binding LastTime}" IsReadOnly="True">
                                     <DataGridTextColumn.CellStyle>
                                         <Style TargetType="DataGridCell">
                                             <Setter Property="ToolTip" Value="Indicates when the event was most recently updated." />
                                         </Style>
                                     </DataGridTextColumn.CellStyle>
                                 </DataGridTextColumn>
-                                <DataGridTextColumn Width="100" Header="ObjectType" Binding="{Binding ObjectType}" IsReadOnly="True">
+                                <DataGridTextColumn Width="auto" Header="ObjectType" Binding="{Binding ObjectType}" IsReadOnly="True">
                                     <DataGridTextColumn.CellStyle>
                                         <Style TargetType="DataGridCell">
                                             <Setter Property="ToolTip" Value="Indicates the type of the object the event is logged against." />
                                         </Style>
                                     </DataGridTextColumn.CellStyle>
                                 </DataGridTextColumn>
-                                <DataGridTextColumn Width="150" Header="ObjectName" Binding="{Binding ObjectName}" IsReadOnly="True">
+                                <DataGridTextColumn Width="auto" Header="ObjectName" Binding="{Binding ObjectName}" IsReadOnly="True">
                                     <DataGridTextColumn.CellStyle>
                                         <Style TargetType="DataGridCell">
                                             <Setter Property="ToolTip" Value="Indicates the name of the object the event is logged against." />
                                         </Style>
                                     </DataGridTextColumn.CellStyle>
                                 </DataGridTextColumn>
-                                <DataGridTextColumn Width="100" Header="Status" Binding="{Binding Status}" IsReadOnly="True">
+                                <DataGridTextColumn Width="auto" Header="Status" Binding="{Binding Status}" IsReadOnly="True">
                                     <DataGridTextColumn.CellStyle>
                                         <Style TargetType="DataGridCell">
                                             <Setter Property="ToolTip" Value="Indicates the event category." />
                                         </Style>
                                     </DataGridTextColumn.CellStyle>
                                 </DataGridTextColumn>
-                                <DataGridTextColumn Width="50"  Header="Fixed" Binding="{Binding Fixed}" IsReadOnly="True">
+                                <DataGridTextColumn Width="auto"  Header="Fixed" Binding="{Binding Fixed}" IsReadOnly="True">
                                     <DataGridTextColumn.CellStyle>
                                         <Style TargetType="DataGridCell">
                                             <Setter Property="ToolTip" Value="Indicates whether the event was marked fixed (for an alert) or read (for a message)." />
                                         </Style>
                                     </DataGridTextColumn.CellStyle>
                                 </DataGridTextColumn>
-                                <DataGridTextColumn Width="100" Header="ErrorCode" Binding="{Binding ErrorCode}" IsReadOnly="True">
+                                <DataGridTextColumn Width="auto" Header="ErrorCode" Binding="{Binding ErrorCode}" IsReadOnly="True">
                                     <DataGridTextColumn.CellStyle>
                                         <Style TargetType="DataGridCell">
                                             <Setter Property="ToolTip" Value="Indicates the error code that is associated with this event, google for it!" />
                                         </Style>
                                     </DataGridTextColumn.CellStyle>
                                 </DataGridTextColumn>
-                                <DataGridTextColumn Width="300" Header="Description" Binding="{Binding Description}" IsReadOnly="True">
+                                <DataGridTextColumn Width="auto" Header="Description" Binding="{Binding Description}" IsReadOnly="True">
                                     <DataGridTextColumn.CellStyle>
                                         <Style TargetType="DataGridCell">
                                             <Setter Property="ToolTip" Value="Indicates the description that is associated with the event." />
@@ -372,53 +381,56 @@
                                         <DataTrigger Binding="{Binding Status}" Value="alert">
                                             <Setter Property="Background" Value="Red" />
                                         </DataTrigger>
+                                        <DataTrigger Binding="{Binding Status}" Value="expired">
+                                            <Setter Property="Background" Value="Yellow" />
+                                        </DataTrigger>
                                     </Style.Triggers>
                                 </Style>
                             </DataGrid.RowStyle>
                             <DataGrid.Columns>
-                                <DataGridTextColumn Width="200" Header="Time" Binding="{Binding LastTime}" IsReadOnly="True">
+                                <DataGridTextColumn Width="auto" Header="Time" Binding="{Binding LastTime}" IsReadOnly="True">
                                     <DataGridTextColumn.CellStyle>
                                         <Style TargetType="DataGridCell">
                                             <Setter Property="ToolTip" Value="Indicates when the event was most recently updated." />
                                         </Style>
                                     </DataGridTextColumn.CellStyle>
                                 </DataGridTextColumn>
-                                <DataGridTextColumn Width="100" Header="ObjectType" Binding="{Binding ObjectType}" IsReadOnly="True">
+                                <DataGridTextColumn Width="auto" Header="ObjectType" Binding="{Binding ObjectType}" IsReadOnly="True">
                                     <DataGridTextColumn.CellStyle>
                                         <Style TargetType="DataGridCell">
                                             <Setter Property="ToolTip" Value="Indicates the type of the object the event is logged against." />
                                         </Style>
                                     </DataGridTextColumn.CellStyle>
                                 </DataGridTextColumn>
-                                <DataGridTextColumn Width="150" Header="ObjectName" Binding="{Binding ObjectName}" IsReadOnly="True">
+                                <DataGridTextColumn Width="auto" Header="ObjectName" Binding="{Binding ObjectName}" IsReadOnly="True">
                                     <DataGridTextColumn.CellStyle>
                                         <Style TargetType="DataGridCell">
                                             <Setter Property="ToolTip" Value="Indicates the name of the object the event is logged against." />
                                         </Style>
                                     </DataGridTextColumn.CellStyle>
                                 </DataGridTextColumn>
-                                <DataGridTextColumn Width="100" Header="Status" Binding="{Binding Status}" IsReadOnly="True">
+                                <DataGridTextColumn Width="auto" Header="Status" Binding="{Binding Status}" IsReadOnly="True">
                                     <DataGridTextColumn.CellStyle>
                                         <Style TargetType="DataGridCell">
                                             <Setter Property="ToolTip" Value="Indicates the event category." />
                                         </Style>
                                     </DataGridTextColumn.CellStyle>
                                 </DataGridTextColumn>
-                                <DataGridTextColumn Width="50"  Header="Fixed" Binding="{Binding Fixed}" IsReadOnly="True">
+                                <DataGridTextColumn Width="auto"  Header="Fixed" Binding="{Binding Fixed}" IsReadOnly="True">
                                     <DataGridTextColumn.CellStyle>
                                         <Style TargetType="DataGridCell">
                                             <Setter Property="ToolTip" Value="Indicates whether the event was marked fixed (for an alert) or read (for a message)." />
                                         </Style>
                                     </DataGridTextColumn.CellStyle>
                                 </DataGridTextColumn>
-                                <DataGridTextColumn Width="100" Header="ErrorCode" Binding="{Binding ErrorCode}" IsReadOnly="True">
+                                <DataGridTextColumn Width="auto" Header="ErrorCode" Binding="{Binding ErrorCode}" IsReadOnly="True">
                                     <DataGridTextColumn.CellStyle>
                                         <Style TargetType="DataGridCell">
                                             <Setter Property="ToolTip" Value="Indicates the error code that is associated with this event, google for it!" />
                                         </Style>
                                     </DataGridTextColumn.CellStyle>
                                 </DataGridTextColumn>
-                                <DataGridTextColumn Width="300" Header="Description" Binding="{Binding Description}" IsReadOnly="True">
+                                <DataGridTextColumn Width="auto" Header="Description" Binding="{Binding Description}" IsReadOnly="True">
                                     <DataGridTextColumn.CellStyle>
                                         <Style TargetType="DataGridCell">
                                             <Setter Property="ToolTip" Value="Indicates the description that is associated with the event." />
