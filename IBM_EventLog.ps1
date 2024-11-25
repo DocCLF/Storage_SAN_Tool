@@ -57,10 +57,10 @@ function IBM_EventLog {
             $TD_EventSplitInfo.ObjectType = ($EventLine|Select-String -Pattern '^(\d+):(\d+):([a-zA-Z0-9-_.]+)' -AllMatches).Matches.Groups[3].Value
             if($TD_EventSplitInfo.ObjectType -ne "cluster"){
                 $TD_EventSplitInfo.ObjectID = ($EventLine|Select-String -Pattern '^(\d+):(\d+):([a-zA-Z0-9]+):(\d+)' -AllMatches).Matches.Groups[4].Value
-                $TD_EventSplitInfo.ObjectName = ($EventLine|Select-String -Pattern '^(\d+):(\d+):([a-zA-Z0-9]+):(\d+|):([a-zA-Z0-9-_.]+):' -AllMatches).Matches.Groups[5].Value
+                $TD_EventSplitInfo.ObjectName = ($EventLine|Select-String -Pattern '^(\d+):(\d+):([a-zA-Z0-9-_.]+):(\d+|):([a-zA-Z0-9-_.]+):' -AllMatches).Matches.Groups[5].Value
             }else {
                 $TD_EventSplitInfo.ObjectID = "none"
-                $TD_EventSplitInfo.ObjectName = ($EventLine|Select-String -Pattern '^(\d+):(\d+):([a-zA-Z0-9]+):(\d+|):([a-zA-Z0-9-_.]+):' -AllMatches).Matches.Groups[5].Value
+                $TD_EventSplitInfo.ObjectName = ($EventLine|Select-String -Pattern '^(\d+):(\d+):([a-zA-Z0-9-_.]+):(\d+|):([a-zA-Z0-9-_.]+):' -AllMatches).Matches.Groups[5].Value
             }
             if(!([String]::IsNullOrEmpty(($EventLine|Select-String -Pattern '(0|1):(message|monitoring|expired|alert):' -AllMatches).Matches.Groups[1].Value))){
                 $TD_EventSplitInfo.CopyID = ($EventLine|Select-String -Pattern '(0|1):(message|monitoring|expired|alert):' -AllMatches).Matches.Groups[1].Value
