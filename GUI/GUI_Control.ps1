@@ -2,7 +2,8 @@ Add-Type -AssemblyName PresentationCore,PresentationFramework
 Add-Type -AssemblyName System.Windows.Forms
 
 <# Create the xaml Files / Base of GUI Mainwindow #>
-function Storage_San_Kit {
+#function Storage_San_Kit {
+[CmdletBinding()]
 $ErrorActionPreference="SilentlyContinue"
 
 $MainxamlFile ="$PSScriptRoot\MainWindow.xaml"
@@ -405,38 +406,81 @@ $TD_btn_Start_sshAgent.add_click({
     }
 })
 
-$TD_btn_addsshkey.add_click({
-    $TD_btn_Text=$TD_btn_addsshkey.Content
-    switch ($TD_btn_Text) {
-        {($_ -like "Add*")} { 
-                                $TD_ImportaddsshkeyObj = OpenFile_from_Directory
-                                if($TD_ImportaddsshkeyObj.FileName -ne ""){
-                                    try {
-                                        ssh-add $TD_ImportaddsshkeyObj.FileName
-                                    }
-                                    catch {
-                                        <#Do this if a terminating exception happens#>
-                                        Write-Host "Something went wrong" -ForegroundColor Yellow
-                                        Write-Host $_.Exception.Message
-                                    }
-                                }
-                                $TD_tb_pathtokey.IsReadOnly="True"
-                                $TD_tb_pathtokey.Text= "$($TD_ImportaddsshkeyObj.FileName)"
-                                $TD_btn_addsshkey.Content="Remove priv. Key"
-                                $TD_btn_addsshkey.Background="coral"
-
-                            }
-        {($_ -like "Remove*")} {    
-                                $TD_btn_addsshkey.Content="Add priv. Key"  
-                                $TD_btn_addsshkey.Background="#FFDDDDDD"
-                                $SSHKeyNamePath=$TD_tb_pathtokey.Text
-                                $SSHKeyName = Split-Path -Path $SSHKeyNamePath -Leaf
-                                Write-Host $SSHKeyName
-                                ssh-add -d $SSHKeyName
-                                $TD_tb_pathtokey.Text= ""
-                            }
+function AddSSHKeytoLine {
+    param (
+        [Int16]$TD_SSHKeyForLine
+    )
+    switch ($TD_SSHKeyForLine) {
+        1 { 
+            $TD_ImportaddsshkeyObj = OpenFile_from_Directory
+            if($TD_ImportaddsshkeyObj.FileName -ne ""){
+                    ssh-add $TD_ImportaddsshkeyObj.FileName 
+            }
+            $TD_tb_pathtokeyone.IsReadOnly="True"
+            $TD_tb_pathtokeyone.Text= "$($TD_ImportaddsshkeyObj.FileName)"
+            #$TD_btn_addsshkey.Content="Remove priv. Key"
+            #$TD_btn_addsshkey.Background="coral"
+        }
+        2 {    
+            $TD_ImportaddsshkeyObj = OpenFile_from_Directory
+            if($TD_ImportaddsshkeyObj.FileName -ne ""){
+                    ssh-add $TD_ImportaddsshkeyObj.FileName 
+            }
+            $TD_tb_pathtokeytwo.IsReadOnly="True"
+            $TD_tb_pathtokeytwo.Text= "$($TD_ImportaddsshkeyObj.FileName)"
+        }
+        3 {    
+            $TD_ImportaddsshkeyObj = OpenFile_from_Directory
+            if($TD_ImportaddsshkeyObj.FileName -ne ""){
+                    ssh-add $TD_ImportaddsshkeyObj.FileName 
+            }
+            $TD_tb_pathtokeythree.IsReadOnly="True"
+            $TD_tb_pathtokeythree.Text= "$($TD_ImportaddsshkeyObj.FileName)"
+        }
+        4 {    
+            $TD_ImportaddsshkeyObj = OpenFile_from_Directory
+            if($TD_ImportaddsshkeyObj.FileName -ne ""){
+                    ssh-add $TD_ImportaddsshkeyObj.FileName 
+            }
+            $TD_tb_pathtokeyfour.IsReadOnly="True"
+            $TD_tb_pathtokeyfour.Text= "$($TD_ImportaddsshkeyObj.FileName)"
+        }
         Default {Write-Output "Something went wrong" -ForegroundColor DarkMagenta}
     }
+    
+}
+function RemoveSSHKeyfromLine {
+    param (
+        [Int16]$TD_SSHKeyForLine
+    )
+    switch ($TD_SSHKeyForLine) {
+        1 { 
+            #$TD_btn_addsshkey.Content="Add priv. Key"  
+            #$TD_btn_addsshkey.Background="#FFDDDDDD"
+            $SSHKeyNamePath=$TD_tb_pathtokeyone.Text
+            $SSHKeyName = Split-Path -Path $SSHKeyNamePath -Leaf
+            #Write-Host $SSHKeyName
+            ssh-add -d $SSHKeyName
+            $TD_tb_pathtokeyone.Text= ""
+        }
+        2 {    
+
+        }
+        Default {Write-Output "Something went wrong" -ForegroundColor DarkMagenta}
+    }
+}
+
+$TD_btn_addsshkeyone.add_click({
+    AddSSHKeytoLine -TD_SSHKeyForLine 1 
+})
+$TD_btn_addsshkeytwo.add_click({
+    AddSSHKeytoLine -TD_SSHKeyForLine 2 
+})
+$TD_btn_addsshkeythree.add_click({
+    AddSSHKeytoLine -TD_SSHKeyForLine 3 
+})
+$TD_btn_addsshkeyfour.add_click({
+    AddSSHKeytoLine -TD_SSHKeyForLine 4 
 })
 #endregion
 
@@ -2300,4 +2344,4 @@ Get-Variable TD_*
 $Mainform.showDialog()
 $Mainform.activate()
 
-}
+#}
