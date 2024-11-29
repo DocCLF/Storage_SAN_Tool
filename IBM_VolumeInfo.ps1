@@ -18,7 +18,7 @@ function IBM_VolumeInfo {
         $ProgressBar = New-ProgressBar
         <# Connect to Device and get all needed Data #>
         if($TD_Device_ConnectionTyp -eq "ssh"){
-            $TD_VDiskInformation = ssh $TD_Device_UserName@$TD_Device_DeviceIP 'lsvdisk -delim :'
+            $TD_VDiskInformation = ssh -i $($TD_tb_pathtokey.Text) $TD_Device_UserName@$TD_Device_DeviceIP 'lsvdisk -delim :'
         }else {
             $TD_VDiskInformation = plink $TD_Device_UserName@$TD_Device_DeviceIP -pw $TD_Device_PW -batch 'lsvdisk -delim :'
         }

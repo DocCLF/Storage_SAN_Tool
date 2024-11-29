@@ -48,7 +48,7 @@ function FOS_PortErrShowInfos {
 
         if($TD_Device_ConnectionTyp -eq "ssh"){
             Write-Debug -Message "ssh |$(Get-Date)"
-            $FOS_MainInformation = ssh $TD_Device_UserName@$TD_Device_DeviceIP "porterrshow"
+            $FOS_MainInformation = ssh -i $($TD_tb_pathtokey.Text) $TD_Device_UserName@$TD_Device_DeviceIP "porterrshow"
         }else {
             Write-Debug -Message "plink |$(Get-Date)"
             $FOS_MainInformation = plink $TD_Device_UserName@$TD_Device_DeviceIP -pw $TD_Device_PW -batch "porterrshow"

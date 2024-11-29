@@ -18,7 +18,7 @@ function IBM_IPQuorum {
         $ProgressBar = New-ProgressBar
         <# Connect to Device and get all needed Data #>
         if($TD_Device_ConnectionTyp -eq "ssh"){
-            $TD_DeviceInformation = ssh $TD_Device_UserName@$TD_Device_DeviceIP 'lsquorum -delim :'
+            $TD_DeviceInformation = ssh -i $($TD_tb_pathtokey.Text) $TD_Device_UserName@$TD_Device_DeviceIP 'lsquorum -delim :'
         }else {
             $TD_DeviceInformation = plink $TD_Device_UserName@$TD_Device_DeviceIP -pw $TD_Device_PW -batch 'lsquorum -delim :'
         }

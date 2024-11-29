@@ -2009,7 +2009,7 @@ $TD_btn_StatsClear.add_click({
                 $SANUserName = $TD_Credential.SANUserName; $Device_IP = $TD_Credential.IPAddress
                 if($TD_Credential.ConnectionTyp -eq "ssh"){
                     try {
-                        $TD_FOS_StatsClear = ssh $SANUserName@$Device_IP "statsClear"
+                        $TD_FOS_StatsClear = ssh -i $($TD_tb_pathtokey.Text) $SANUserName@$Device_IP "statsClear"
                         $TD_FOS_StatsClearDone = $true
                     }
                     catch {
@@ -2046,7 +2046,7 @@ $TD_btn_StatsClear.add_click({
                 $SANUserName = $TD_Credential.SANUserName; $Device_IP = $TD_Credential.IPAddress
                 if($TD_Credential.ConnectionTyp -eq "ssh"){
                     try {
-                        $TD_FOS_StatsClear = ssh $SANUserName@$Device_IP "statsClear"
+                        $TD_FOS_StatsClear = ssh -i $($TD_tb_pathtokey.Text) $SANUserName@$Device_IP "statsClear"
                         $TD_FOS_StatsClearDone = $true
                     }
                     catch {
@@ -2083,7 +2083,7 @@ $TD_btn_StatsClear.add_click({
                 $SANUserName = $TD_Credential.SANUserName; $Device_IP = $TD_Credential.IPAddress
                 if($TD_Credential.ConnectionTyp -eq "ssh"){
                     try {
-                        $TD_FOS_StatsClear = ssh $SANUserName@$Device_IP "statsClear"
+                        $TD_FOS_StatsClear = ssh -i $($TD_tb_pathtokey.Text) $SANUserName@$Device_IP "statsClear"
                         $TD_FOS_StatsClearDone = $true
                     }
                     catch {
@@ -2120,7 +2120,7 @@ $TD_btn_StatsClear.add_click({
                 $SANUserName = $TD_Credential.SANUserName; $Device_IP = $TD_Credential.IPAddress
                 if($TD_Credential.ConnectionTyp -eq "ssh"){
                     try {
-                        $TD_FOS_StatsClear = ssh $SANUserName@$Device_IP "statsClear"
+                        $TD_FOS_StatsClear = ssh -i $($TD_tb_pathtokey.Text) $SANUserName@$Device_IP "statsClear"
                         $TD_FOS_StatsClearDone = $true
                     }
                     catch {

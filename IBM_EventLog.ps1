@@ -35,7 +35,7 @@ function IBM_EventLog {
 
         <# Action when all if and elseif conditions are false #>
         if($TD_Device_ConnectionTyp -eq "ssh"){
-            $TD_CollectEventInfo = ssh $TD_Device_UserName@$TD_Device_DeviceIP "lseventlog -delim :"
+            $TD_CollectEventInfo = ssh -i $($TD_tb_pathtokey.Text) $TD_Device_UserName@$TD_Device_DeviceIP "lseventlog -delim :"
         }else {
             $TD_CollectEventInfo = plink $TD_Device_UserName@$TD_Device_DeviceIP -pw $TD_Device_PW -batch "lseventlog -delim :"
         }

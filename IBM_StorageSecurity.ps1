@@ -23,7 +23,7 @@ function IBM_StorageSecurity {
         $ProgressBar = New-ProgressBar
 
         if($TD_Device_ConnectionTyp -eq "ssh"){
-            $TD_DeviceInformation = ssh $TD_Device_UserName@$TD_Device_DeviceIP 'lssecurity -delim :'
+            $TD_DeviceInformation = ssh -i $($TD_tb_pathtokey.Text) $TD_Device_UserName@$TD_Device_DeviceIP 'lssecurity -delim :'
         }else {
             $TD_DeviceInformation = plink $TD_Device_UserName@$TD_Device_DeviceIP -pw $TD_Device_PW -batch 'lssecurity -delim :'
         }

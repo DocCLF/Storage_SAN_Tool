@@ -19,7 +19,7 @@ function IBM_MDiskInfo {
         $ProgressBar = New-ProgressBar
         <# Connect to Device and get all needed Data #>
         if($TD_Device_ConnectionTyp -eq "ssh"){
-                $TD_MDiskInformation = ssh $TD_Device_UserName@$TD_Device_DeviceIP 'lsmdisk -delim :'
+                $TD_MDiskInformation = ssh -i $($TD_tb_pathtokey.Text) $TD_Device_UserName@$TD_Device_DeviceIP 'lsmdisk -delim :'
         }else {
                 $TD_MDiskInformation = plink $TD_Device_UserName@$TD_Device_DeviceIP -pw $TD_Device_PW -batch 'lsmdisk -delim :'
         }

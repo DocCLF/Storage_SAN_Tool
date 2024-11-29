@@ -19,7 +19,7 @@ function IBM_PolicyBased_Rep {
         $ProgressBar = New-ProgressBar
         <# Connect to Device and get all needed Data #>
         if($TD_Device_ConnectionTyp -eq "ssh"){
-            $TD_PolicyRepInformations = ssh $TD_Device_UserName@$TD_Device_DeviceIP 'lsreplicationpolicy && lsvolumegroupreplication'
+            $TD_PolicyRepInformations = ssh -i $($TD_tb_pathtokey.Text) $TD_Device_UserName@$TD_Device_DeviceIP 'lsreplicationpolicy && lsvolumegroupreplication'
         }else {
             $TD_PolicyRepInformations = plink $TD_Device_UserName@$TD_Device_DeviceIP -pw $TD_Device_PW -batch 'lsreplicationpolicy && lsvolumegroupreplication'
         }

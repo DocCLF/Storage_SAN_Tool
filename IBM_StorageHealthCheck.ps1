@@ -36,7 +36,7 @@ function IBM_StorageHealthCheck {
 
         $TD_btn_SaveHostStatus.Visibility="Collapsed"
         if($TD_Device_ConnectionTyp -eq "ssh"){
-            $TD_CollectInfo = ssh $TD_Device_UserName@$TD_Device_DeviceIP "lssystem |grep code_level && lshost && lshostcluster && lspartnership"
+            $TD_CollectInfo = ssh -i $($TD_tb_pathtokey.Text) $TD_Device_UserName@$TD_Device_DeviceIP "lssystem |grep code_level && lshost && lshostcluster && lspartnership"
         }else {
             $TD_CollectInfo = plink $TD_Device_UserName@$TD_Device_DeviceIP -pw $TD_Device_PW -batch "lssystem |grep code_level && lshost && lshostcluster && lspartnership"
         }

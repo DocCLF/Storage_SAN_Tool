@@ -18,7 +18,7 @@ function IBM_UserInfo {
         $ProgressBar = New-ProgressBar
         <# Connect to Device and get all needed Data #>
         if($TD_Device_ConnectionTyp -eq "ssh"){
-            $TD_UserInformation = ssh $TD_Device_UserName@$TD_Device_DeviceIP 'lsuser -delim :'
+            $TD_UserInformation = ssh -i $($TD_tb_pathtokey.Text) $TD_Device_UserName@$TD_Device_DeviceIP 'lsuser -delim :'
         }else {
             $TD_UserInformation = plink $TD_Device_UserName@$TD_Device_DeviceIP -pw $TD_Device_PW -batch 'lsuser -delim :'
         }

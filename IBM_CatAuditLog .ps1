@@ -32,7 +32,7 @@ function IBM_CatAuditLog {
 
         <# Action when all if and elseif conditions are false #>
         if($TD_Device_ConnectionTyp -eq "ssh"){
-            $TD_CatAuditLogInfos = ssh $TD_Device_UserName@$TD_Device_DeviceIP "catauditlog -delim :"
+            $TD_CatAuditLogInfos = ssh -i $($TD_tb_pathtokey.Text) $TD_Device_UserName@$TD_Device_DeviceIP "catauditlog -delim :"
         }else {
             $TD_CatAuditLogInfos = plink $TD_Device_UserName@$TD_Device_DeviceIP -pw $TD_Device_PW -batch "catauditlog -delim :"
         }

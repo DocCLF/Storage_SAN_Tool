@@ -38,7 +38,7 @@ function IBM_BackUpConfig {
         Start-Sleep -Seconds 0.5
 
         if($TD_Device_ConnectionTyp -eq "ssh"){
-            $TD_BUInfo = ssh $TD_Device_UserName@$TD_Device_DeviceIP "svcconfig backup"
+            $TD_BUInfo = ssh -i $($TD_tb_pathtokey.Text) $TD_Device_UserName@$TD_Device_DeviceIP "svcconfig backup"
             $TD_BUResault = $TD_BUInfo.TrimStart('.')
             Start-Sleep -Seconds 0.5
             pscp -unsafe -pw $TD_Device_PW $TD_Device_UserName@$($TD_Device_DeviceIP):/dumps/svc.config.backup.* $TD_Exportpath

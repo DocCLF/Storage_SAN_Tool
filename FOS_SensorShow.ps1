@@ -22,7 +22,7 @@ function FOS_SensorShow {
         $ProgressBar = New-ProgressBar
         <# Connect to Device and get all needed Data #>
         if($TD_Device_ConnectionTyp -eq "ssh"){
-            $FOS_SensorInformations = ssh $TD_Device_UserName@$TD_Device_DeviceIP 'sensorshow'
+            $FOS_SensorInformations = ssh -i $($TD_tb_pathtokey.Text) $TD_Device_UserName@$TD_Device_DeviceIP 'sensorshow'
         }else {
             $FOS_SensorInformations = plink $TD_Device_UserName@$TD_Device_DeviceIP -pw $TD_Device_PW -batch 'sensorshow'
         }
