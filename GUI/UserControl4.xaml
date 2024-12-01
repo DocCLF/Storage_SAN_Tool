@@ -107,17 +107,18 @@
                             </Style>
                         </PasswordBox.Style>
                     </PasswordBox>
-                    <ToggleButton x:Name="btn_addsshkeyone" Content="Add SSH-Key">
-                        <ToggleButton.Style>
-                            <Style TargetType="ToggleButton">
+                    <TextBox x:Name="tb_pathtokeyone" Text="" Visibility="Collapsed"/>
+                    <Button x:Name="btn_addsshkeyone" Content="Add SSH-Key" Height="30" Margin="5" Padding="2" VerticalContentAlignment="Center" HorizontalContentAlignment="center" >
+                        <Button.Style>
+                            <Style TargetType="Button">
                                 <Style.Triggers>
                                     <DataTrigger Binding="{Binding ElementName=cb_storageConnectionTyp ,Path=SelectedValue}" Value="plink">
                                         <Setter Property="Visibility" Value="Collapsed"/>
                                     </DataTrigger>
                                 </Style.Triggers>
                             </Style>
-                        </ToggleButton.Style>
-                    </ToggleButton>
+                        </Button.Style>
+                    </Button>
                     <Label  Content="SVC-Cluster?" Style="{StaticResource MainLabelStyle}"/>
                     <CheckBox x:Name="cb_StorageSVCone" VerticalAlignment="Center" Margin="2"/>
                     <ToggleButton x:Name="tbn_storageaddrmLine" Content="ADD" Style="{StaticResource MainToggleBtnStyle}"/>
@@ -169,17 +170,18 @@
                             </Style>
                         </PasswordBox.Style>
                     </PasswordBox>
-                    <ToggleButton x:Name="btn_addsshkeytwo" Content="Add SSH-Key">
-                        <ToggleButton.Style>
-                            <Style TargetType="ToggleButton">
+                    <TextBox x:Name="tb_pathtokeytwo" Text="" Style="{StaticResource MainTextBoxStyle}" />
+                    <Button x:Name="btn_addsshkeytwo" Content="Add SSH-Key">
+                        <Button.Style>
+                            <Style TargetType="Button">
                                 <Style.Triggers>
                                     <DataTrigger Binding="{Binding ElementName=cb_storageConnectionTypOne ,Path=SelectedValue}" Value="plink">
                                         <Setter Property="Visibility" Value="Collapsed"/>
                                     </DataTrigger>
                                 </Style.Triggers>
                             </Style>
-                        </ToggleButton.Style>
-                    </ToggleButton>
+                        </Button.Style>
+                    </Button>
                     <ToggleButton x:Name="tbn_storageaddrmLineOne" Content="ADD" Style="{StaticResource MainToggleBtnStyle}"/>
                 </StackPanel>
                 <StackPanel Grid.Row="2" x:Name="stp_storagePanel3" Orientation="Horizontal" Margin="2" Visibility="{Binding ElementName=tbn_storageaddrmLineOne, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Visible}">
@@ -229,17 +231,18 @@
                             </Style>
                         </PasswordBox.Style>
                     </PasswordBox>
-                    <ToggleButton x:Name="btn_addsshkeythree" Content="Add SSH-Key">
-                        <ToggleButton.Style>
-                            <Style TargetType="ToggleButton">
+                    <TextBox x:Name="tb_pathtokeythree" Text="" Style="{StaticResource MainTextBoxStyle}" />
+                    <Button x:Name="btn_addsshkeythree" Content="Add SSH-Key">
+                        <Button.Style>
+                            <Style TargetType="Button">
                                 <Style.Triggers>
                                     <DataTrigger Binding="{Binding ElementName=cb_storageConnectionTypTwo ,Path=SelectedValue}" Value="plink">
                                         <Setter Property="Visibility" Value="Collapsed"/>
                                     </DataTrigger>
                                 </Style.Triggers>
                             </Style>
-                        </ToggleButton.Style>
-                    </ToggleButton>
+                        </Button.Style>
+                    </Button>
                     <ToggleButton x:Name="tbn_storageaddrmLineTwo" Content="ADD" Style="{StaticResource MainToggleBtnStyle}"/>
                 </StackPanel>
                 <StackPanel Grid.Row="3" x:Name="stp_storagePanel4" Orientation="Horizontal" Margin="2" Visibility="{Binding ElementName=tbn_storageaddrmLineTwo, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Visible}">
@@ -289,17 +292,18 @@
                             </Style>
                         </PasswordBox.Style>
                     </PasswordBox>
-                    <ToggleButton x:Name="btn_addsshkeyfour" Content="Add SSH-Key">
-                        <ToggleButton.Style>
-                            <Style TargetType="ToggleButton">
+                    <TextBox x:Name="tb_pathtokeyfour" Text="" Style="{StaticResource MainTextBoxStyle}" />
+                    <Button x:Name="btn_addsshkeyfour" Content="Add SSH-Key">
+                        <Button.Style>
+                            <Style TargetType="Button">
                                 <Style.Triggers>
                                     <DataTrigger Binding="{Binding ElementName=cb_storageConnectionTypThree ,Path=SelectedValue}" Value="plink">
                                         <Setter Property="Visibility" Value="Collapsed"/>
                                     </DataTrigger>
                                 </Style.Triggers>
                             </Style>
-                        </ToggleButton.Style>
-                    </ToggleButton>
+                        </Button.Style>
+                    </Button>
                     <ToggleButton Style="{StaticResource MainToggleBtnStyle}" Visibility="Hidden"/>
                 </StackPanel>
                 <StackPanel Grid.Row="4" Margin="0,10,2,0" Orientation="Vertical" >
@@ -543,7 +547,7 @@
                     <Label Content="If you want to change the status, start a pwsh session with admin rights or open this tool with admin rights." Foreground="Coral" FontSize="10" FontWeight="Bold" Margin="5,0,0,0" HorizontalAlignment="Left" Style="{StaticResource MainLabelStyle}" />
                 </StackPanel>
                 <StackPanel Grid.Row="1" Orientation="Horizontal">
-                    <TextBox x:Name="tb_pathtokeyone" Text="" ToolTip="path to private key" MinWidth="300" Margin="5" Style="{StaticResource MainTextBoxStyle}" />
+                    <TextBox x:Name="tb_pathtokeyones" Text="" ToolTip="path to private key" MinWidth="300" Margin="5" Style="{StaticResource MainTextBoxStyle}" />
                     <Button x:Name="btn_addsshkeys" Content="Add priv. Key" HorizontalAlignment="Left" Style="{StaticResource MainBtnStyle}" />
                 </StackPanel>
             </Grid>

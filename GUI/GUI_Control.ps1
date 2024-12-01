@@ -2,7 +2,7 @@ Add-Type -AssemblyName PresentationCore,PresentationFramework
 Add-Type -AssemblyName System.Windows.Forms
 
 <# Create the xaml Files / Base of GUI Mainwindow #>
-#function Storage_San_Kit {
+function Storage_San_Kit {
 [CmdletBinding()]
 $ErrorActionPreference="SilentlyContinue"
 
@@ -414,36 +414,58 @@ function AddSSHKeytoLine {
         1 { 
             $TD_ImportaddsshkeyObj = OpenFile_from_Directory
             if($TD_ImportaddsshkeyObj.FileName -ne ""){
-                    ssh-add $TD_ImportaddsshkeyObj.FileName 
+                $TD_IsKeyInOne = ssh-add $TD_ImportaddsshkeyObj.FileName 2>&1
+                if(!($($TD_IsKeyInOne.GetType().Name) -eq "ErrorRecord")){
+                    $TD_tb_pathtokeyone.IsReadOnly="True"
+                    $TD_tb_pathtokeyone.Text= "$($TD_ImportaddsshkeyObj.FileName)" 
+                    $TD_btn_addsshkeyone.Background="LightGreen"
+                    $TD_btn_addsshkeyone.Content="Remove Key"
+                }else{
+                    Write-Debug -Message $TD_IsKeyInOne
+                }
             }
-            $TD_tb_pathtokeyone.IsReadOnly="True"
-            $TD_tb_pathtokeyone.Text= "$($TD_ImportaddsshkeyObj.FileName)"
-            #$TD_btn_addsshkey.Content="Remove priv. Key"
-            #$TD_btn_addsshkey.Background="coral"
         }
         2 {    
             $TD_ImportaddsshkeyObj = OpenFile_from_Directory
             if($TD_ImportaddsshkeyObj.FileName -ne ""){
-                    ssh-add $TD_ImportaddsshkeyObj.FileName 
+                $TD_IsKeyInTwo = ssh-add $TD_ImportaddsshkeyObj.FileName
+                if(!([string]::IsNullOrEmpty($TD_IsKeyInTwo))){
+                    $TD_tb_pathtokeytwo.IsReadOnly="True"
+                    $TD_tb_pathtokeytwo.Text= "$($TD_ImportaddsshkeyObj.FileName)" 
+                    $TD_btn_addsshkeytwo.Background="LightGreen"
+                    $TD_btn_addsshkeytwo.Content="Remove Key"
+                }else{
+                    Write-Debug -Message $TD_IsKeyInOne
+                }
             }
-            $TD_tb_pathtokeytwo.IsReadOnly="True"
-            $TD_tb_pathtokeytwo.Text= "$($TD_ImportaddsshkeyObj.FileName)"
         }
         3 {    
             $TD_ImportaddsshkeyObj = OpenFile_from_Directory
             if($TD_ImportaddsshkeyObj.FileName -ne ""){
-                    ssh-add $TD_ImportaddsshkeyObj.FileName 
+                $TD_IsKeyInThree = ssh-add $TD_ImportaddsshkeyObj.FileName
+                if(!([string]::IsNullOrEmpty($TD_IsKeyInThree))){
+                    $TD_tb_pathtokeythree.IsReadOnly="True"
+                    $TD_tb_pathtokeythree.Text= "$($TD_ImportaddsshkeyObj.FileName)" 
+                    $TD_btn_addsshkeythree.Background="LightGreen"
+                    $TD_btn_addsshkeythree.Content="Remove Key"
+                }else{
+                    Write-Debug -Message $TD_IsKeyInOne
+                }
             }
-            $TD_tb_pathtokeythree.IsReadOnly="True"
-            $TD_tb_pathtokeythree.Text= "$($TD_ImportaddsshkeyObj.FileName)"
         }
         4 {    
             $TD_ImportaddsshkeyObj = OpenFile_from_Directory
             if($TD_ImportaddsshkeyObj.FileName -ne ""){
-                    ssh-add $TD_ImportaddsshkeyObj.FileName 
+                $TD_IsKeyInFour = ssh-add $TD_ImportaddsshkeyObj.FileName
+                if(!([string]::IsNullOrEmpty($TD_IsKeyInFour))){
+                    $TD_tb_pathtokeyfour.IsReadOnly="True"
+                    $TD_tb_pathtokeyfour.Text= "$($TD_ImportaddsshkeyObj.FileName)" 
+                    $TD_btn_addsshkeyfour.Background="LightGreen"
+                    $TD_btn_addsshkeyfour.Content="Remove Key"
+                }else{
+                    Write-Debug -Message $TD_IsKeyInOne
+                }
             }
-            $TD_tb_pathtokeyfour.IsReadOnly="True"
-            $TD_tb_pathtokeyfour.Text= "$($TD_ImportaddsshkeyObj.FileName)"
         }
         Default {Write-Output "Something went wrong" -ForegroundColor DarkMagenta}
     }
@@ -455,32 +477,72 @@ function RemoveSSHKeyfromLine {
     )
     switch ($TD_SSHKeyForLine) {
         1 { 
-            #$TD_btn_addsshkey.Content="Add priv. Key"  
-            #$TD_btn_addsshkey.Background="#FFDDDDDD"
             $SSHKeyNamePath=$TD_tb_pathtokeyone.Text
             $SSHKeyName = Split-Path -Path $SSHKeyNamePath -Leaf
-            #Write-Host $SSHKeyName
             ssh-add -d $SSHKeyName
             $TD_tb_pathtokeyone.Text= ""
+            $TD_btn_addsshkeyone.Content="Add SSH-Key"
+            $TD_btn_addsshkeyone.Background="#FFDDDDDD"
         }
-        2 {    
-
+        2 { 
+            $SSHKeyNamePath=$TD_tb_pathtokeytwo.Text
+            $SSHKeyName = Split-Path -Path $SSHKeyNamePath -Leaf
+            ssh-add -d $SSHKeyName
+            $TD_tb_pathtokeytwo.Text= ""
+            $TD_btn_addsshkeytwo.Content="Add SSH-Key"
+            $TD_btn_addsshkeytwo.Background="#FFDDDDDD"
+        }
+        3 { 
+            $SSHKeyNamePath=$TD_tb_pathtokeythree.Text
+            $SSHKeyName = Split-Path -Path $SSHKeyNamePath -Leaf
+            ssh-add -d $SSHKeyName
+            $TD_tb_pathtokeythree.Text= ""
+            $TD_btn_addsshkeythree.Content="Add SSH-Key"
+            $TD_btn_addsshkeythree.Background="#FFDDDDDD"
+        }
+        4 { 
+            $SSHKeyNamePath=$TD_tb_pathtokeyfour.Text
+            $SSHKeyName = Split-Path -Path $SSHKeyNamePath -Leaf
+            ssh-add -d $SSHKeyName
+            $TD_tb_pathtokeyfour.Text= ""
+            $TD_btn_addsshkeyfour.Content="Add SSH-Key"
+            $TD_btn_addsshkeyfour.Background="#FFDDDDDD"
         }
         Default {Write-Output "Something went wrong" -ForegroundColor DarkMagenta}
     }
 }
 
 $TD_btn_addsshkeyone.add_click({
-    AddSSHKeytoLine -TD_SSHKeyForLine 1 
+    $TD_ButtonColorSSH=$TD_btn_addsshkeyone.Background
+    if($TD_ButtonColorSSH -like "*90EE90"){
+        RemoveSSHKeyfromLine -TD_SSHKeyForLine 1
+    }else {
+        AddSSHKeytoLine -TD_SSHKeyForLine 1 
+    }
 })
 $TD_btn_addsshkeytwo.add_click({
-    AddSSHKeytoLine -TD_SSHKeyForLine 2 
+    $TD_ButtonColorSSH=$TD_btn_addsshkeytwo.Background
+    if($TD_ButtonColorSSH -like "*90EE90"){
+        RemoveSSHKeyfromLine -TD_SSHKeyForLine 2
+    }else {
+        AddSSHKeytoLine -TD_SSHKeyForLine 2
+    }
 })
 $TD_btn_addsshkeythree.add_click({
-    AddSSHKeytoLine -TD_SSHKeyForLine 3 
+    $TD_ButtonColorSSH=$TD_btn_addsshkeythree.Background
+    if($TD_ButtonColorSSH -like "*90EE90"){
+        RemoveSSHKeyfromLine -TD_SSHKeyForLine 3
+    }else {
+        AddSSHKeytoLine -TD_SSHKeyForLine 3
+    }
 })
 $TD_btn_addsshkeyfour.add_click({
-    AddSSHKeytoLine -TD_SSHKeyForLine 4 
+    $TD_ButtonColorSSH=$TD_btn_addsshkeyfour.Background
+    if($TD_ButtonColorSSH -like "*90EE90"){
+        RemoveSSHKeyfromLine -TD_SSHKeyForLine 4
+    }else {
+        AddSSHKeytoLine -TD_SSHKeyForLine 4
+    }
 })
 #endregion
 
@@ -2344,4 +2406,4 @@ Get-Variable TD_*
 $Mainform.showDialog()
 $Mainform.activate()
 
-#}
+}
