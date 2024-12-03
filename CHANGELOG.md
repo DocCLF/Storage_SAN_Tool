@@ -29,7 +29,7 @@ All notable changes to this project will be documented in this file.
 - Clear Filter at IBM HostVolumeMap 
 - Tooltips for the tables and columns where it makes sense.
 - give some tables a color
-- Reginon for better readability
+- LogWindow in Settings Tab
 
 ### Fixed
 - Regex error that was sometimes triggered when no host cluster is configured. 
@@ -57,7 +57,7 @@ All notable changes to this project will be documented in this file.
 - Code clean up
 
 ### Known Bugs
-- Try-Catch does not give any feedback regarding the successful or unsuccessful execution of the ssh-agent commands
+- Some Problems with special characters like *\~;#%?.:@/ in Password content
 
 
 # [v1.1.1] - 2024-09-27

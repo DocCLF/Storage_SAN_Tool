@@ -90,14 +90,13 @@ foreach($file in $UserCxamlFile){
     }
 }
 
-
 <# Set some Vars #>
 <# create a export Folder in my documents#>
 try {
     $TD_ExporttoOD = [Environment]::GetFolderPath("mydocuments")
     $ExportFolderPath="$TD_ExporttoOD\StorageSANKit"
     If(!(Test-Path -Path $ExportFolderPath)){
-        $TD_ExportFolderCreated = New-Item $ExportFolderPath -ItemType Directory
+        $TD_ExportFolderCreated = New-Item $ExportFolderPath -ItemType Directory -ErrorAction Stop
         $TD_tb_ExportPath.Text = $TD_ExportFolderCreated.Name
     }else{
         $TD_tb_ExportPath.Text = $ExportFolderPath
@@ -106,9 +105,9 @@ try {
 }
 catch {
     <#Do this if a terminating exception happens#>
-    Write-Host "Something went wrong" -ForegroundColor Blue
-    Write-Host $_.Exception.Message
-    $TD_tb_Exportpath.Text = $_.Exception.Message
+    TD_ToolMessageCollector -TD_ToolMSGCollector $_.Exception.Message
+    Write-Debug -Message $_.Exception.Message
+    #$TD_tb_Exportpath.Text = $_.Exception.Message
 }
 <# MainWindow Background IMG #>
 $TD_LogoImage.Source = "$PSRootPath\Resources\PROFI_Logo_2022_dark.png"
@@ -179,7 +178,7 @@ function Get_CredGUIInfos {
         $TD_CredObject=New-Object -TypeName psobject -Property $TD_CredCollection
     }else {
         <# Action when all if and elseif conditions are false #>
-        Write-Host "IP is not validate or set." -ForegroundColor Red
+        TD_ToolMessageCollector -TD_ToolMSGCollector $("IP in row $STP_ID is not validate or set.")
         $TD_IPAdresse = $null
     }
     return $TD_CredObject
@@ -252,7 +251,7 @@ function ExportCred {
         'IsSVCIP'= $TD_IsSVCIP;
     }
     $TD_CredObject=New-Object -TypeName psobject -Property $TD_CredCollection
- 
+    
     return $TD_CredObject
 }
 
@@ -357,7 +356,7 @@ $TD_btn_ChangeExportPath.add_click({
 #region SSH Setings
 <# ssh-agent Status check #>
 $TD_lb_SSHStatusMsg.Visibility ="Visible"
-$TD_lb_SSHStatusMsg.Content ="SSH-Agent Status is: $((Get-Service ssh-agent).Status)"
+$TD_lb_SSHStatusMsg.Content ="SSH-Agent Status is:`n$((Get-Service ssh-agent).Status)"
 if(((Get-Service ssh-agent).Status)-eq "Running"){
     $TD_btn_Start_sshAgent.Content="Stop ssh-agent"
     $TD_btn_Start_sshAgent.Background="coral"
@@ -380,10 +379,11 @@ $TD_btn_Start_sshAgent.add_click({
                                     <#Do this if a terminating exception happens#>
                                     $TD_btn_Start_sshAgent.Content="Start ssh-agent"
                                     $TD_btn_Start_sshAgent.Background="#FFDDDDDD"
+                                    TD_ToolMessageCollector -TD_ToolMSGCollector $_.Exception.Message
                                     [string]$TD_SSHErrorMsg=$_.Exception.Message
                                 }
                                 
-                                $TD_lb_SSHStatusMsg.Content ="SSH-Agent Status is: $((Get-Service ssh-agent).Status) $($TD_SSHErrorMsg)"
+                                $TD_lb_SSHStatusMsg.Content ="SSH-Agent Status is:`n$((Get-Service ssh-agent).Status) $($TD_SSHErrorMsg)"
                                 Clear-Variable -Name TD_SSHErrorMsg
                             }
         {($_ -like "Stop*")} {
@@ -396,19 +396,22 @@ $TD_btn_Start_sshAgent.add_click({
                                     <#Do this if a terminating exception happens#>
                                     $TD_btn_Start_sshAgent.Content="Stop ssh-agent"
                                     $TD_btn_Start_sshAgent.Background="coral"
+                                    TD_ToolMessageCollector -TD_ToolMSGCollector $_.Exception.Message 
                                     [string]$TD_SSHErrorMsg=$_.Exception.Message
                                 }
 
-                                $TD_lb_SSHStatusMsg.Content ="SSH-Agent Status is: $((Get-Service ssh-agent).Status) $($TD_SSHErrorMsg)"
+                                $TD_lb_SSHStatusMsg.Content ="SSH-Agent Status is:`n$((Get-Service ssh-agent).Status) $($TD_SSHErrorMsg)"
                                 Clear-Variable -Name TD_SSHErrorMsg
                             }
         Default {Write-Output "Something went wrong" -ForegroundColor DarkMagenta}
     }
+    $TD_UserControl4.Dispatcher.Invoke([System.Action]{},"Render")
 })
 
 function AddSSHKeytoLine {
     param (
-        [Int16]$TD_SSHKeyForLine
+        [Int16]$TD_SSHKeyForLine,
+        [string]$TD_Storage
     )
     switch ($TD_SSHKeyForLine) {
         1 { 
@@ -416,11 +419,19 @@ function AddSSHKeytoLine {
             if($TD_ImportaddsshkeyObj.FileName -ne ""){
                 $TD_IsKeyInOne = ssh-add $TD_ImportaddsshkeyObj.FileName 2>&1
                 if(!($($TD_IsKeyInOne.GetType().Name) -eq "ErrorRecord")){
-                    $TD_tb_pathtokeyone.IsReadOnly="True"
-                    $TD_tb_pathtokeyone.Text= "$($TD_ImportaddsshkeyObj.FileName)" 
-                    $TD_btn_addsshkeyone.Background="LightGreen"
-                    $TD_btn_addsshkeyone.Content="Remove Key"
+                    if($TD_Storage -eq "yes"){
+                        $TD_tb_pathtokeyone.IsReadOnly="True"
+                        $TD_tb_pathtokeyone.Text= "$($TD_ImportaddsshkeyObj.FileName)" 
+                        $TD_btn_addsshkeyone.Background="LightGreen"
+                        $TD_btn_addsshkeyone.Content="Remove Key"
+                    }else{
+                        $TD_tb_pathtokeyoneSAN.IsReadOnly="True"
+                        $TD_tb_pathtokeyoneSAN.Text= "$($TD_ImportaddsshkeyObj.FileName)" 
+                        $TD_btn_addsshkeyoneSAN.Background="LightGreen"
+                        $TD_btn_addsshkeyoneSAN.Content="Remove Key"
+                    }
                 }else{
+                    TD_ToolMessageCollector -TD_ToolMSGCollector $($TD_SSHKeyForLine,$TD_IsKeyInOne.GetType() -join " get a ")
                     Write-Debug -Message $TD_IsKeyInOne
                 }
             }
@@ -428,120 +439,223 @@ function AddSSHKeytoLine {
         2 {    
             $TD_ImportaddsshkeyObj = OpenFile_from_Directory
             if($TD_ImportaddsshkeyObj.FileName -ne ""){
-                $TD_IsKeyInTwo = ssh-add $TD_ImportaddsshkeyObj.FileName
-                if(!([string]::IsNullOrEmpty($TD_IsKeyInTwo))){
-                    $TD_tb_pathtokeytwo.IsReadOnly="True"
-                    $TD_tb_pathtokeytwo.Text= "$($TD_ImportaddsshkeyObj.FileName)" 
-                    $TD_btn_addsshkeytwo.Background="LightGreen"
-                    $TD_btn_addsshkeytwo.Content="Remove Key"
+                $TD_IsKeyInTwo = ssh-add $TD_ImportaddsshkeyObj.FileName 2>&1
+                if(!($($TD_IsKeyInTwo.GetType().Name) -eq "ErrorRecord")){
+                    if($TD_Storage -eq "yes"){
+                        $TD_tb_pathtokeytwo.IsReadOnly="True"
+                        $TD_tb_pathtokeytwo.Text= "$($TD_ImportaddsshkeyObj.FileName)" 
+                        $TD_btn_addsshkeytwo.Background="LightGreen"
+                        $TD_btn_addsshkeytwo.Content="Remove Key"
+                    }else {
+                        $TD_tb_pathtokeytwoSAN.IsReadOnly="True"
+                        $TD_tb_pathtokeytwoSAN.Text= "$($TD_ImportaddsshkeyObj.FileName)" 
+                        $TD_btn_addsshkeytwoSAN.Background="LightGreen"
+                        $TD_btn_addsshkeytwoSAN.Content="Remove Key"
+                    }
                 }else{
-                    Write-Debug -Message $TD_IsKeyInOne
+                    TD_ToolMessageCollector -TD_ToolMSGCollector $TD_IsKeyInOne.GetType()
+                    Write-Debug -Message $TD_IsKeyInTwo
                 }
             }
         }
         3 {    
             $TD_ImportaddsshkeyObj = OpenFile_from_Directory
             if($TD_ImportaddsshkeyObj.FileName -ne ""){
-                $TD_IsKeyInThree = ssh-add $TD_ImportaddsshkeyObj.FileName
-                if(!([string]::IsNullOrEmpty($TD_IsKeyInThree))){
-                    $TD_tb_pathtokeythree.IsReadOnly="True"
-                    $TD_tb_pathtokeythree.Text= "$($TD_ImportaddsshkeyObj.FileName)" 
-                    $TD_btn_addsshkeythree.Background="LightGreen"
-                    $TD_btn_addsshkeythree.Content="Remove Key"
+                $TD_IsKeyInThree = ssh-add $TD_ImportaddsshkeyObj.FileName 2>&1
+                if(!($($TD_IsKeyInThree.GetType().Name) -eq "ErrorRecord")){
+                    if($TD_Storage -eq "yes"){
+                        $TD_tb_pathtokeythree.IsReadOnly="True"
+                        $TD_tb_pathtokeythree.Text= "$($TD_ImportaddsshkeyObj.FileName)" 
+                        $TD_btn_addsshkeythree.Background="LightGreen"
+                        $TD_btn_addsshkeythree.Content="Remove Key"
+                    }else {
+                        $TD_tb_pathtokeythreeSAN.IsReadOnly="True"
+                        $TD_tb_pathtokeythreeSAN.Text= "$($TD_ImportaddsshkeyObj.FileName)" 
+                        $TD_btn_addsshkeythreeSAN.Background="LightGreen"
+                        $TD_btn_addsshkeythreeSAN.Content="Remove Key"
+                    }
                 }else{
-                    Write-Debug -Message $TD_IsKeyInOne
+                    TD_ToolMessageCollector -TD_ToolMSGCollector $TD_IsKeyInOne.GetType()
+                    Write-Debug -Message $TD_IsKeyInThree
                 }
             }
         }
         4 {    
             $TD_ImportaddsshkeyObj = OpenFile_from_Directory
             if($TD_ImportaddsshkeyObj.FileName -ne ""){
-                $TD_IsKeyInFour = ssh-add $TD_ImportaddsshkeyObj.FileName
-                if(!([string]::IsNullOrEmpty($TD_IsKeyInFour))){
-                    $TD_tb_pathtokeyfour.IsReadOnly="True"
-                    $TD_tb_pathtokeyfour.Text= "$($TD_ImportaddsshkeyObj.FileName)" 
-                    $TD_btn_addsshkeyfour.Background="LightGreen"
-                    $TD_btn_addsshkeyfour.Content="Remove Key"
+                $TD_IsKeyInFour = ssh-add $TD_ImportaddsshkeyObj.FileName 2>&1
+                if(!($($TD_IsKeyInFour.GetType().Name) -eq "ErrorRecord")){
+                    if($TD_Storage -eq "yes"){
+                        $TD_tb_pathtokeyfour.IsReadOnly="True"
+                        $TD_tb_pathtokeyfour.Text= "$($TD_ImportaddsshkeyObj.FileName)" 
+                        $TD_btn_addsshkeyfour.Background="LightGreen"
+                        $TD_btn_addsshkeyfour.Content="Remove Key"
+                    }else {
+                        $TD_tb_pathtokeyfourSAN.IsReadOnly="True"
+                        $TD_tb_pathtokeyfourSAN.Text= "$($TD_ImportaddsshkeyObj.FileName)" 
+                        $TD_btn_addsshkeyfourSAN.Background="LightGreen"
+                        $TD_btn_addsshkeyfourSAN.Content="Remove Key"
+                    }
                 }else{
-                    Write-Debug -Message $TD_IsKeyInOne
+                    TD_ToolMessageCollector -TD_ToolMSGCollector $TD_IsKeyInOne.GetType()
+                    Write-Debug -Message $TD_IsKeyInFour
                 }
             }
         }
         Default {Write-Output "Something went wrong" -ForegroundColor DarkMagenta}
     }
-    
 }
 function RemoveSSHKeyfromLine {
     param (
-        [Int16]$TD_SSHKeyForLine
+        [Int16]$TD_SSHKeyForLine,
+        [string]$TD_Storage
     )
     switch ($TD_SSHKeyForLine) {
         1 { 
-            $SSHKeyNamePath=$TD_tb_pathtokeyone.Text
+            if($TD_Storage -eq "yes"){
+                $SSHKeyNamePath=$TD_tb_pathtokeyone.Text
+                $TD_tb_pathtokeyone.Text= ""
+            }else {
+                $SSHKeyNamePath=$TD_tb_pathtokeyoneSAN.Text
+                $TD_tb_pathtokeyoneSAN.Text= ""
+            }
             $SSHKeyName = Split-Path -Path $SSHKeyNamePath -Leaf
             ssh-add -d $SSHKeyName
-            $TD_tb_pathtokeyone.Text= ""
-            $TD_btn_addsshkeyone.Content="Add SSH-Key"
-            $TD_btn_addsshkeyone.Background="#FFDDDDDD"
+            if($TD_Storage -eq "yes"){
+                $TD_btn_addsshkeyone.Content="Add SSH-Key"
+                $TD_btn_addsshkeyone.Background="#FFDDDDDD"
+            }else {
+                $TD_btn_addsshkeyoneSAN.Content="Add SSH-Key"
+                $TD_btn_addsshkeyoneSAN.Background="#FFDDDDDD"
+            }
         }
         2 { 
-            $SSHKeyNamePath=$TD_tb_pathtokeytwo.Text
+            if($TD_Storage -eq "yes"){
+                $SSHKeyNamePath=$TD_tb_pathtokeytwo.Text
+                $TD_tb_pathtokeytwo.Text= ""
+            }else {
+                $SSHKeyNamePath=$TD_tb_pathtokeytwoSAN.Text
+                $TD_tb_pathtokeytwoSAN.Text= ""
+            }
             $SSHKeyName = Split-Path -Path $SSHKeyNamePath -Leaf
             ssh-add -d $SSHKeyName
-            $TD_tb_pathtokeytwo.Text= ""
-            $TD_btn_addsshkeytwo.Content="Add SSH-Key"
-            $TD_btn_addsshkeytwo.Background="#FFDDDDDD"
+            if($TD_Storage -eq "yes"){
+                $TD_btn_addsshkeytwo.Content="Add SSH-Key"
+                $TD_btn_addsshkeytwo.Background="#FFDDDDDD"
+            }else {
+                $TD_btn_addsshkeytwoSAN.Content="Add SSH-Key"
+                $TD_btn_addsshkeytwoSAN.Background="#FFDDDDDD"
+            }
         }
         3 { 
-            $SSHKeyNamePath=$TD_tb_pathtokeythree.Text
+            if($TD_Storage -eq "yes"){
+                $SSHKeyNamePath=$TD_tb_pathtokeythree.Text
+                $TD_tb_pathtokeythree.Text= ""
+            }else {
+                $SSHKeyNamePath=$TD_tb_pathtokeythreeSAN.Text
+                $TD_tb_pathtokeythreeSAN.Text= ""
+            }
             $SSHKeyName = Split-Path -Path $SSHKeyNamePath -Leaf
             ssh-add -d $SSHKeyName
-            $TD_tb_pathtokeythree.Text= ""
-            $TD_btn_addsshkeythree.Content="Add SSH-Key"
-            $TD_btn_addsshkeythree.Background="#FFDDDDDD"
+            if($TD_Storage -eq "yes"){
+                $TD_btn_addsshkeythree.Content="Add SSH-Key"
+                $TD_btn_addsshkeythree.Background="#FFDDDDDD"
+            }else {
+                $TD_btn_addsshkeythreeSAN.Content="Add SSH-Key"
+                $TD_btn_addsshkeythreeSAN.Background="#FFDDDDDD"
+            }
         }
         4 { 
-            $SSHKeyNamePath=$TD_tb_pathtokeyfour.Text
+            if($TD_Storage -eq "yes"){
+                $SSHKeyNamePath=$TD_tb_pathtokeyfour.Text
+                $TD_tb_pathtokeyfour.Text= ""
+            }else {
+                $SSHKeyNamePath=$TD_tb_pathtokeyfourSAN.Text
+                $TD_tb_pathtokeyfourSAN.Text= ""
+            }
             $SSHKeyName = Split-Path -Path $SSHKeyNamePath -Leaf
             ssh-add -d $SSHKeyName
-            $TD_tb_pathtokeyfour.Text= ""
-            $TD_btn_addsshkeyfour.Content="Add SSH-Key"
-            $TD_btn_addsshkeyfour.Background="#FFDDDDDD"
+            if($TD_Storage -eq "yes"){
+                $TD_btn_addsshkeyfour.Content="Add SSH-Key"
+                $TD_btn_addsshkeyfour.Background="#FFDDDDDD"
+            }else {
+                $TD_btn_addsshkeyfourSAN.Content="Add SSH-Key"
+                $TD_btn_addsshkeyfourSAN.Background="#FFDDDDDD"
+            }
         }
-        Default {Write-Output "Something went wrong" -ForegroundColor DarkMagenta}
+        Default {
+            if($TD_Storage -eq "yes"){ 
+                $TD_DeviceIs="Storage" 
+            }else {
+                $TD_DeviceIs="SAN"
+            }
+            TD_ToolMessageCollector -TD_ToolMSGCollector $("Line $TD_SSHKeyForLine get a Error at $TD_DeviceIs Type")
+        }
     }
 }
 
 $TD_btn_addsshkeyone.add_click({
     $TD_ButtonColorSSH=$TD_btn_addsshkeyone.Background
     if($TD_ButtonColorSSH -like "*90EE90"){
-        RemoveSSHKeyfromLine -TD_SSHKeyForLine 1
+        RemoveSSHKeyfromLine -TD_SSHKeyForLine 1 -TD_Storage "yes"
     }else {
-        AddSSHKeytoLine -TD_SSHKeyForLine 1 
+        AddSSHKeytoLine -TD_SSHKeyForLine 1 -TD_Storage "yes"
     }
 })
 $TD_btn_addsshkeytwo.add_click({
     $TD_ButtonColorSSH=$TD_btn_addsshkeytwo.Background
     if($TD_ButtonColorSSH -like "*90EE90"){
-        RemoveSSHKeyfromLine -TD_SSHKeyForLine 2
+        RemoveSSHKeyfromLine -TD_SSHKeyForLine 2 -TD_Storage "yes"
     }else {
-        AddSSHKeytoLine -TD_SSHKeyForLine 2
+        AddSSHKeytoLine -TD_SSHKeyForLine 2 -TD_Storage "yes"
     }
 })
 $TD_btn_addsshkeythree.add_click({
     $TD_ButtonColorSSH=$TD_btn_addsshkeythree.Background
     if($TD_ButtonColorSSH -like "*90EE90"){
-        RemoveSSHKeyfromLine -TD_SSHKeyForLine 3
+        RemoveSSHKeyfromLine -TD_SSHKeyForLine 3 -TD_Storage "yes"
     }else {
-        AddSSHKeytoLine -TD_SSHKeyForLine 3
+        AddSSHKeytoLine -TD_SSHKeyForLine 3 -TD_Storage "yes"
     }
 })
 $TD_btn_addsshkeyfour.add_click({
     $TD_ButtonColorSSH=$TD_btn_addsshkeyfour.Background
     if($TD_ButtonColorSSH -like "*90EE90"){
-        RemoveSSHKeyfromLine -TD_SSHKeyForLine 4
+        RemoveSSHKeyfromLine -TD_SSHKeyForLine 4 -TD_Storage "yes"
     }else {
-        AddSSHKeytoLine -TD_SSHKeyForLine 4
+        AddSSHKeytoLine -TD_SSHKeyForLine 4 -TD_Storage "yes"
+    }
+})
+$TD_btn_addsshkeyoneSAN.add_click({
+    $TD_ButtonColorSSH=$TD_btn_addsshkeyoneSAN.Background
+    if($TD_ButtonColorSSH -like "*90EE90"){
+        RemoveSSHKeyfromLine -TD_SSHKeyForLine 1 -TD_Storage "no"
+    }else {
+        AddSSHKeytoLine -TD_SSHKeyForLine 1 -TD_Storage "no"
+    }
+})
+$TD_btn_addsshkeytwoSAN.add_click({
+    $TD_ButtonColorSSHSAN=$TD_btn_addsshkeytwoSAN.Background
+    if($TD_ButtonColorSSHSAN -like "*90EE90"){
+        RemoveSSHKeyfromLine -TD_SSHKeyForLine 2 -TD_Storage "no"
+    }else {
+        AddSSHKeytoLine -TD_SSHKeyForLine 2 -TD_Storage "no"
+    }
+})
+$TD_btn_addsshkeythreeSAN.add_click({
+    $TD_ButtonColorSSH=$TD_btn_addsshkeythreeSAN.Background
+    if($TD_ButtonColorSSH -like "*90EE90"){
+        RemoveSSHKeyfromLine -TD_SSHKeyForLine 3 -TD_Storage "no"
+    }else {
+        AddSSHKeytoLine -TD_SSHKeyForLine 3 -TD_Storage "no"
+    }
+})
+$TD_btn_addsshkeyfourSAN.add_click({
+    $TD_ButtonColorSSH=$TD_btn_addsshkeyfourSAN.Background
+    if($TD_ButtonColorSSH -like "*90EE90"){
+        RemoveSSHKeyfromLine -TD_SSHKeyForLine 4 -TD_Storage "no"
+    }else {
+        AddSSHKeytoLine -TD_SSHKeyForLine 4 -TD_Storage "no"
     }
 })
 #endregion
@@ -678,9 +792,9 @@ $TD_btn_ExportCred.add_click({
     if ($TD_tb_sanIPAdrThree.Text -ne "") {
         $TD_ExportCred += ExportCred -TD_DeviceType "SAN" -STP_ID 4 -TD_ConnectionTyp $TD_cb_sanConnectionTypThree.Text -TD_IPAdresse $TD_tb_sanIPAdrThree.Text -TD_UserName $TD_tb_sanUserNameThree.Text
     }
-    #Write-Host $TD_ExportCred -ForegroundColor Red
+
     $TD_SaveCred = SaveFile_to_Directory -TD_UserDataObject $TD_ExportCred
-    #Write-Host $TD_SaveCred.FileName -ForegroundColor Green
+    TD_ToolMessageCollector -TD_ToolMSGCollector $("Credentials successfully exported to $($TD_SaveCred.FileName)")
 })
 $TD_btn_ImportCred.add_click({
 
@@ -688,7 +802,7 @@ $TD_btn_ImportCred.add_click({
     $TD_cb_StorageSVCone.IsChecked=$false; $TD_tb_storageIPAdr.CLear(); $TD_tb_storageIPAdrOne.CLear(); $TD_tb_storageIPAdrThree.CLear(); $TD_tb_storageIPAdrTwo.CLear();$TD_tb_storagePassword.CLear(); $TD_tb_storagePasswordOne.CLear(); $TD_tb_storagePasswordThree.CLear(); $TD_tb_storagePasswordTwo.CLear(); $TD_tb_storageUserName.CLear(); $TD_tb_storageUserNameOne.CLear(); $TD_tb_storageUserNameThree.CLear(); $TD_tb_storageUserNameTwo.CLear();
     $TD_tb_sanIPAdr.CLear(); $TD_tb_sanIPAdrOne.CLear(); $TD_tb_sanIPAdrTwo.CLear(); $TD_tb_sanIPAdrThree.CLear();$TD_tb_sanPassword.CLear(); $TD_tb_sanPasswordOne.CLear(); $TD_tb_sanPasswordTwo.CLear(); $TD_tb_sanPasswordThree.CLear(); $TD_tb_sanUserName.CLear(); $TD_tb_sanUserNameOne.CLear(); $TD_tb_sanUserNameTwo.CLear(); $TD_tb_sanUserNameThree.CLear();    
     $TD_ImportedCredentials = ImportCred
-    $TD_ImportedCredentials | Format-Table
+    #$TD_ImportedCredentials | Format-Table
     #Write-Host $TD_ImportedCredentials -ForegroundColor Yellow
     foreach($TD_Cred in $TD_ImportedCredentials){
         if($TD_Cred.DeviceType -eq "Storage"){
@@ -701,49 +815,57 @@ $TD_btn_ImportCred.add_click({
                         <# Action when all if and elseif conditions are false #>
                         $TD_cb_StorageSVCone.IsChecked=$true
                     }
+                    TD_ToolMessageCollector -TD_ToolMSGCollector $("Credentials successfully imported to line $($TD_Cred.ID)")
                 }
                 {($_ -eq 2)} { 
                     $TD_tbn_storageaddrmLine.Content="REMOVE"
                     $TD_stp_storagePanel2.Visibility="Visible"
                     $TD_cb_storageConnectionTypOne.Text = $TD_Cred.ConnectionTyp;  $TD_tb_storageIPAdrOne.Text = $TD_Cred.IPAddress;  $TD_tb_storageUserNameOne.Text= $TD_Cred.UserName; 
+                    TD_ToolMessageCollector -TD_ToolMSGCollector $("Credentials successfully imported to line $($TD_Cred.ID)") -TD_ToolMSGType "red"
                 }
                 {($_ -eq 3)} { 
                     $TD_tbn_storageaddrmLineOne.Content="REMOVE"
                     $TD_stp_storagePanel3.Visibility="Visible"
                     $TD_cb_storageConnectionTypTwo.Text = $TD_Cred.ConnectionTyp;  $TD_tb_storageIPAdrTwo.Text = $TD_Cred.IPAddress;  $TD_tb_storageUserNameTwo.Text= $TD_Cred.UserName; 
+                    TD_ToolMessageCollector -TD_ToolMSGCollector $("Credentials successfully imported to line $($TD_Cred.ID)")
                 }
                 {($_ -eq 4)} { 
                     $TD_tbn_storageaddrmLineTwo.Content="REMOVE"
                     $TD_stp_storagePanel4.Visibility="Visible"
-                    $TD_cb_storageConnectionTypThree.Text = $TD_Cred.ConnectionTyp;  $TD_tb_storageIPAdrThree.Text = $TD_Cred.IPAddress;  $TD_tb_storageUserNameThree.Text= $TD_Cred.UserName; 
+                    $TD_cb_storageConnectionTypThree.Text = $TD_Cred.ConnectionTyp;  $TD_tb_storageIPAdrThree.Text = $TD_Cred.IPAddress;  $TD_tb_storageUserNameThree.Text= $TD_Cred.UserName;
+                    TD_ToolMessageCollector -TD_ToolMSGCollector $("Credentials successfully imported to line $($TD_Cred.ID)")
                 }
-                Default {Write-Host "What"}
+                Default {TD_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong, check the prompt for more information.")}
             }
         }else {
             switch ($TD_Cred.ID) {
                 {($_ -eq 1)} { 
                     $TD_cb_sanConnectionTyp.Text = $TD_Cred.ConnectionTyp;  $TD_tb_sanIPAdr.Text = $TD_Cred.IPAddress;  $TD_tb_sanUserName.Text= $TD_Cred.UserName; 
+                    TD_ToolMessageCollector -TD_ToolMSGCollector $("Credentials successfully imported to line $($TD_Cred.ID)")
                 }
                 {($_ -eq 2)} { 
                     $TD_tbn_sanaddrmLine.Content="REMOVE"
                     $TD_stp_sanPanel2.Visibility="Visible"
                     $TD_cb_sanConnectionTypOne.Text = $TD_Cred.ConnectionTyp;  $TD_tb_sanIPAdrOne.Text = $TD_Cred.IPAddress;  $TD_tb_sanUserNameOne.Text= $TD_Cred.UserName; 
+                    TD_ToolMessageCollector -TD_ToolMSGCollector $("Credentials successfully imported to line $($TD_Cred.ID)")
                 }
                 {($_ -eq 3)} { 
                     $TD_tbn_sanaddrmLineOne.Content="REMOVE"
                     $TD_stp_sanPanel3.Visibility="Visible"
                     $TD_cb_sanConnectionTypTwo.Text = $TD_Cred.ConnectionTyp;  $TD_tb_sanIPAdrTwo.Text = $TD_Cred.IPAddress;  $TD_tb_sanUserNameTwo.Text= $TD_Cred.UserName; 
+                    TD_ToolMessageCollector -TD_ToolMSGCollector $("Credentials successfully imported to line $($TD_Cred.ID)")
                 }
                 {($_ -eq 4)} { 
                     $TD_tbn_sanaddrmLineTwo.Content="REMOVE"
                     $TD_stp_sanPanel4.Visibility="Visible"
                     $TD_cb_sanConnectionTypThree.Text = $TD_Cred.ConnectionTyp;  $TD_tb_sanIPAdrThree.Text = $TD_Cred.IPAddress;  $TD_tb_sanUserNameThree.Text= $TD_Cred.UserName; 
+                    TD_ToolMessageCollector -TD_ToolMSGCollector $("Credentials successfully imported to line $($TD_Cred.ID)")
                 }
-                Default {Write-Host "What"}
+                Default {TD_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong, check the prompt for more information.")}
             }
         }
     }
-    #Write-Host $TD_GetSavedCred.FileName -ForegroundColor Green
+
 })
 #endregion
 
