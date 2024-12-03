@@ -16,7 +16,9 @@ function TD_ToolMessageCollector {
     [CmdletBinding()]
     param (
         $TD_ToolMSGCollector,
-        $TD_ToolMSGType
+        [Parameter(ValueFromPipeline,HelpMessage="Enter Error, Warning or Message to be able to categorize the message correctly in the GUI and in the log files.")]
+        [ValidateSet("Error","Warning","Message")]
+        $TD_ToolMSGType ="Message"
     )
     <# Create a DateTime for each entry #>
     $TD_GetMSGDate = Get-Date -Format "dd.MM.yyy HH:mm:ss"

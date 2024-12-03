@@ -379,12 +379,9 @@ $TD_btn_Start_sshAgent.add_click({
                                     <#Do this if a terminating exception happens#>
                                     $TD_btn_Start_sshAgent.Content="Start ssh-agent"
                                     $TD_btn_Start_sshAgent.Background="#FFDDDDDD"
-                                    TD_ToolMessageCollector -TD_ToolMSGCollector $_.Exception.Message
-                                    [string]$TD_SSHErrorMsg=$_.Exception.Message
+                                    TD_ToolMessageCollector -TD_ToolMSGCollector $_.Exception.Message -TD_ToolMSGType Error
                                 }
-                                
-                                $TD_lb_SSHStatusMsg.Content ="SSH-Agent Status is:`n$((Get-Service ssh-agent).Status) $($TD_SSHErrorMsg)"
-                                Clear-Variable -Name TD_SSHErrorMsg
+                                $TD_lb_SSHStatusMsg.Content ="SSH-Agent Status is:`n$((Get-Service ssh-agent).Status) "
                             }
         {($_ -like "Stop*")} {
                                 try {
@@ -396,14 +393,11 @@ $TD_btn_Start_sshAgent.add_click({
                                     <#Do this if a terminating exception happens#>
                                     $TD_btn_Start_sshAgent.Content="Stop ssh-agent"
                                     $TD_btn_Start_sshAgent.Background="coral"
-                                    TD_ToolMessageCollector -TD_ToolMSGCollector $_.Exception.Message 
-                                    [string]$TD_SSHErrorMsg=$_.Exception.Message
+                                    TD_ToolMessageCollector -TD_ToolMSGCollector $_.Exception.Message -TD_ToolMSGType Error
                                 }
-
-                                $TD_lb_SSHStatusMsg.Content ="SSH-Agent Status is:`n$((Get-Service ssh-agent).Status) $($TD_SSHErrorMsg)"
-                                Clear-Variable -Name TD_SSHErrorMsg
+                                $TD_lb_SSHStatusMsg.Content ="SSH-Agent Status is:`n$((Get-Service ssh-agent).Status) "
                             }
-        Default {Write-Output "Something went wrong" -ForegroundColor DarkMagenta}
+        Default {TD_ToolMessageCollector -TD_ToolMSGCollector "Something went wrong by get informations about the ssh-agent." -TD_ToolMSGType Error}
     }
     $TD_UserControl4.Dispatcher.Invoke([System.Action]{},"Render")
 })
@@ -431,7 +425,7 @@ function AddSSHKeytoLine {
                         $TD_btn_addsshkeyoneSAN.Content="Remove Key"
                     }
                 }else{
-                    TD_ToolMessageCollector -TD_ToolMSGCollector $($TD_SSHKeyForLine,$TD_IsKeyInOne.GetType() -join " get a ")
+                    TD_ToolMessageCollector -TD_ToolMSGCollector $($TD_SSHKeyForLine,$TD_IsKeyInOne.GetType() -join " get a ") -TD_ToolMSGType Warning
                     Write-Debug -Message $TD_IsKeyInOne
                 }
             }
@@ -453,7 +447,7 @@ function AddSSHKeytoLine {
                         $TD_btn_addsshkeytwoSAN.Content="Remove Key"
                     }
                 }else{
-                    TD_ToolMessageCollector -TD_ToolMSGCollector $TD_IsKeyInOne.GetType()
+                    TD_ToolMessageCollector -TD_ToolMSGCollector $($TD_SSHKeyForLine,$TD_IsKeyInOne.GetType() -join " get a ") -TD_ToolMSGType Warning
                     Write-Debug -Message $TD_IsKeyInTwo
                 }
             }
@@ -475,7 +469,7 @@ function AddSSHKeytoLine {
                         $TD_btn_addsshkeythreeSAN.Content="Remove Key"
                     }
                 }else{
-                    TD_ToolMessageCollector -TD_ToolMSGCollector $TD_IsKeyInOne.GetType()
+                    TD_ToolMessageCollector -TD_ToolMSGCollector $($TD_SSHKeyForLine,$TD_IsKeyInOne.GetType() -join " get a ") -TD_ToolMSGType Warning
                     Write-Debug -Message $TD_IsKeyInThree
                 }
             }
@@ -497,12 +491,19 @@ function AddSSHKeytoLine {
                         $TD_btn_addsshkeyfourSAN.Content="Remove Key"
                     }
                 }else{
-                    TD_ToolMessageCollector -TD_ToolMSGCollector $TD_IsKeyInOne.GetType()
+                    TD_ToolMessageCollector -TD_ToolMSGCollector $($TD_SSHKeyForLine,$TD_IsKeyInOne.GetType() -join " get a ") -TD_ToolMSGType Warning
                     Write-Debug -Message $TD_IsKeyInFour
                 }
             }
         }
-        Default {Write-Output "Something went wrong" -ForegroundColor DarkMagenta}
+        Default {
+            if($TD_Storage -eq "yes"){ 
+                $TD_DeviceIs="Storage" 
+            }else {
+                $TD_DeviceIs="SAN"
+            }
+            TD_ToolMessageCollector -TD_ToolMSGCollector $("Line $TD_SSHKeyForLine get a Error at $TD_DeviceIs Type") -TD_ToolMSGType Error
+        }
     }
 }
 function RemoveSSHKeyfromLine {
@@ -589,7 +590,7 @@ function RemoveSSHKeyfromLine {
             }else {
                 $TD_DeviceIs="SAN"
             }
-            TD_ToolMessageCollector -TD_ToolMSGCollector $("Line $TD_SSHKeyForLine get a Error at $TD_DeviceIs Type")
+            TD_ToolMessageCollector -TD_ToolMSGCollector $("Line $TD_SSHKeyForLine get a Error at $TD_DeviceIs Type") -TD_ToolMSGType Error
         }
     }
 }
