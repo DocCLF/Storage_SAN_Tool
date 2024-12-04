@@ -379,7 +379,7 @@ $TD_btn_Start_sshAgent.add_click({
                                     <#Do this if a terminating exception happens#>
                                     $TD_btn_Start_sshAgent.Content="Start ssh-agent"
                                     $TD_btn_Start_sshAgent.Background="#FFDDDDDD"
-                                    TD_ToolMessageCollector -TD_ToolMSGCollector $_.Exception.Message -TD_ToolMSGType Error
+                                    TD_ToolMessageCollector -TD_ToolMSGCollector $_.Exception.Message -TD_ToolMSGType Warning
                                 }
                                 $TD_lb_SSHStatusMsg.Content ="SSH-Agent Status is:`n$((Get-Service ssh-agent).Status) "
                             }
@@ -393,7 +393,7 @@ $TD_btn_Start_sshAgent.add_click({
                                     <#Do this if a terminating exception happens#>
                                     $TD_btn_Start_sshAgent.Content="Stop ssh-agent"
                                     $TD_btn_Start_sshAgent.Background="coral"
-                                    TD_ToolMessageCollector -TD_ToolMSGCollector $_.Exception.Message -TD_ToolMSGType Error
+                                    TD_ToolMessageCollector -TD_ToolMSGCollector $_.Exception.Message -TD_ToolMSGType Warning
                                 }
                                 $TD_lb_SSHStatusMsg.Content ="SSH-Agent Status is:`n$((Get-Service ssh-agent).Status) "
                             }
@@ -418,11 +418,13 @@ function AddSSHKeytoLine {
                         $TD_tb_pathtokeyone.Text= "$($TD_ImportaddsshkeyObj.FileName)" 
                         $TD_btn_addsshkeyone.Background="LightGreen"
                         $TD_btn_addsshkeyone.Content="Remove Key"
+                        TD_ToolMessageCollector -TD_ToolMSGCollector $("SSH-Key is added to Storage Cred Line $TD_SSHKeyForLine") -TD_ToolMSGType Message
                     }else{
                         $TD_tb_pathtokeyoneSAN.IsReadOnly="True"
                         $TD_tb_pathtokeyoneSAN.Text= "$($TD_ImportaddsshkeyObj.FileName)" 
                         $TD_btn_addsshkeyoneSAN.Background="LightGreen"
                         $TD_btn_addsshkeyoneSAN.Content="Remove Key"
+                        TD_ToolMessageCollector -TD_ToolMSGCollector $("SSH-Key is added to SAN Cred Line $TD_SSHKeyForLine") -TD_ToolMSGType Message
                     }
                 }else{
                     TD_ToolMessageCollector -TD_ToolMSGCollector $($TD_SSHKeyForLine,$TD_IsKeyInOne.GetType() -join " get a ") -TD_ToolMSGType Warning
@@ -440,11 +442,13 @@ function AddSSHKeytoLine {
                         $TD_tb_pathtokeytwo.Text= "$($TD_ImportaddsshkeyObj.FileName)" 
                         $TD_btn_addsshkeytwo.Background="LightGreen"
                         $TD_btn_addsshkeytwo.Content="Remove Key"
+                        TD_ToolMessageCollector -TD_ToolMSGCollector $("SSH-Key is added to Storage Cred Line $TD_SSHKeyForLine") -TD_ToolMSGType Message
                     }else {
                         $TD_tb_pathtokeytwoSAN.IsReadOnly="True"
                         $TD_tb_pathtokeytwoSAN.Text= "$($TD_ImportaddsshkeyObj.FileName)" 
                         $TD_btn_addsshkeytwoSAN.Background="LightGreen"
                         $TD_btn_addsshkeytwoSAN.Content="Remove Key"
+                        TD_ToolMessageCollector -TD_ToolMSGCollector $("SSH-Key is added to SAN Cred Line $TD_SSHKeyForLine") -TD_ToolMSGType Message
                     }
                 }else{
                     TD_ToolMessageCollector -TD_ToolMSGCollector $($TD_SSHKeyForLine,$TD_IsKeyInOne.GetType() -join " get a ") -TD_ToolMSGType Warning
@@ -462,11 +466,13 @@ function AddSSHKeytoLine {
                         $TD_tb_pathtokeythree.Text= "$($TD_ImportaddsshkeyObj.FileName)" 
                         $TD_btn_addsshkeythree.Background="LightGreen"
                         $TD_btn_addsshkeythree.Content="Remove Key"
+                        TD_ToolMessageCollector -TD_ToolMSGCollector $("SSH-Key is added to Storage Cred Line $TD_SSHKeyForLine") -TD_ToolMSGType Message
                     }else {
                         $TD_tb_pathtokeythreeSAN.IsReadOnly="True"
                         $TD_tb_pathtokeythreeSAN.Text= "$($TD_ImportaddsshkeyObj.FileName)" 
                         $TD_btn_addsshkeythreeSAN.Background="LightGreen"
                         $TD_btn_addsshkeythreeSAN.Content="Remove Key"
+                        TD_ToolMessageCollector -TD_ToolMSGCollector $("SSH-Key is added to SAN Cred Line $TD_SSHKeyForLine") -TD_ToolMSGType Message
                     }
                 }else{
                     TD_ToolMessageCollector -TD_ToolMSGCollector $($TD_SSHKeyForLine,$TD_IsKeyInOne.GetType() -join " get a ") -TD_ToolMSGType Warning
@@ -484,11 +490,13 @@ function AddSSHKeytoLine {
                         $TD_tb_pathtokeyfour.Text= "$($TD_ImportaddsshkeyObj.FileName)" 
                         $TD_btn_addsshkeyfour.Background="LightGreen"
                         $TD_btn_addsshkeyfour.Content="Remove Key"
+                        TD_ToolMessageCollector -TD_ToolMSGCollector $("SSH-Key is added to Storage Cred Line $TD_SSHKeyForLine") -TD_ToolMSGType Message
                     }else {
                         $TD_tb_pathtokeyfourSAN.IsReadOnly="True"
                         $TD_tb_pathtokeyfourSAN.Text= "$($TD_ImportaddsshkeyObj.FileName)" 
                         $TD_btn_addsshkeyfourSAN.Background="LightGreen"
                         $TD_btn_addsshkeyfourSAN.Content="Remove Key"
+                        TD_ToolMessageCollector -TD_ToolMSGCollector $("SSH-Key is added to SAN Cred Line $TD_SSHKeyForLine") -TD_ToolMSGType Message
                     }
                 }else{
                     TD_ToolMessageCollector -TD_ToolMSGCollector $($TD_SSHKeyForLine,$TD_IsKeyInOne.GetType() -join " get a ") -TD_ToolMSGType Warning
@@ -795,7 +803,7 @@ $TD_btn_ExportCred.add_click({
     }
 
     $TD_SaveCred = SaveFile_to_Directory -TD_UserDataObject $TD_ExportCred
-    TD_ToolMessageCollector -TD_ToolMSGCollector $("Credentials successfully exported to $($TD_SaveCred.FileName)")
+    TD_ToolMessageCollector -TD_ToolMSGCollector $("Credentials successfully exported to $($TD_SaveCred.FileName)") -TD_ToolMSGType Message
 })
 $TD_btn_ImportCred.add_click({
 
@@ -822,47 +830,47 @@ $TD_btn_ImportCred.add_click({
                     $TD_tbn_storageaddrmLine.Content="REMOVE"
                     $TD_stp_storagePanel2.Visibility="Visible"
                     $TD_cb_storageConnectionTypOne.Text = $TD_Cred.ConnectionTyp;  $TD_tb_storageIPAdrOne.Text = $TD_Cred.IPAddress;  $TD_tb_storageUserNameOne.Text= $TD_Cred.UserName; 
-                    TD_ToolMessageCollector -TD_ToolMSGCollector $("Credentials successfully imported to line $($TD_Cred.ID)") -TD_ToolMSGType "red"
+                    TD_ToolMessageCollector -TD_ToolMSGCollector $("Credentials successfully imported to line $($TD_Cred.ID)") -TD_ToolMSGType Message
                 }
                 {($_ -eq 3)} { 
                     $TD_tbn_storageaddrmLineOne.Content="REMOVE"
                     $TD_stp_storagePanel3.Visibility="Visible"
                     $TD_cb_storageConnectionTypTwo.Text = $TD_Cred.ConnectionTyp;  $TD_tb_storageIPAdrTwo.Text = $TD_Cred.IPAddress;  $TD_tb_storageUserNameTwo.Text= $TD_Cred.UserName; 
-                    TD_ToolMessageCollector -TD_ToolMSGCollector $("Credentials successfully imported to line $($TD_Cred.ID)")
+                    TD_ToolMessageCollector -TD_ToolMSGCollector $("Credentials successfully imported to line $($TD_Cred.ID)") -TD_ToolMSGType Message
                 }
                 {($_ -eq 4)} { 
                     $TD_tbn_storageaddrmLineTwo.Content="REMOVE"
                     $TD_stp_storagePanel4.Visibility="Visible"
                     $TD_cb_storageConnectionTypThree.Text = $TD_Cred.ConnectionTyp;  $TD_tb_storageIPAdrThree.Text = $TD_Cred.IPAddress;  $TD_tb_storageUserNameThree.Text= $TD_Cred.UserName;
-                    TD_ToolMessageCollector -TD_ToolMSGCollector $("Credentials successfully imported to line $($TD_Cred.ID)")
+                    TD_ToolMessageCollector -TD_ToolMSGCollector $("Credentials successfully imported to line $($TD_Cred.ID)") -TD_ToolMSGType Message
                 }
-                Default {TD_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong, check the prompt for more information.")}
+                Default {TD_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong, check the prompt for more information.") -TD_ToolMSGType Error}
             }
         }else {
             switch ($TD_Cred.ID) {
                 {($_ -eq 1)} { 
                     $TD_cb_sanConnectionTyp.Text = $TD_Cred.ConnectionTyp;  $TD_tb_sanIPAdr.Text = $TD_Cred.IPAddress;  $TD_tb_sanUserName.Text= $TD_Cred.UserName; 
-                    TD_ToolMessageCollector -TD_ToolMSGCollector $("Credentials successfully imported to line $($TD_Cred.ID)")
+                    TD_ToolMessageCollector -TD_ToolMSGCollector $("Credentials successfully imported to line $($TD_Cred.ID)") -TD_ToolMSGType Message
                 }
                 {($_ -eq 2)} { 
                     $TD_tbn_sanaddrmLine.Content="REMOVE"
                     $TD_stp_sanPanel2.Visibility="Visible"
                     $TD_cb_sanConnectionTypOne.Text = $TD_Cred.ConnectionTyp;  $TD_tb_sanIPAdrOne.Text = $TD_Cred.IPAddress;  $TD_tb_sanUserNameOne.Text= $TD_Cred.UserName; 
-                    TD_ToolMessageCollector -TD_ToolMSGCollector $("Credentials successfully imported to line $($TD_Cred.ID)")
+                    TD_ToolMessageCollector -TD_ToolMSGCollector $("Credentials successfully imported to line $($TD_Cred.ID)") -TD_ToolMSGType Message
                 }
                 {($_ -eq 3)} { 
                     $TD_tbn_sanaddrmLineOne.Content="REMOVE"
                     $TD_stp_sanPanel3.Visibility="Visible"
                     $TD_cb_sanConnectionTypTwo.Text = $TD_Cred.ConnectionTyp;  $TD_tb_sanIPAdrTwo.Text = $TD_Cred.IPAddress;  $TD_tb_sanUserNameTwo.Text= $TD_Cred.UserName; 
-                    TD_ToolMessageCollector -TD_ToolMSGCollector $("Credentials successfully imported to line $($TD_Cred.ID)")
+                    TD_ToolMessageCollector -TD_ToolMSGCollector $("Credentials successfully imported to line $($TD_Cred.ID)") -TD_ToolMSGType Message
                 }
                 {($_ -eq 4)} { 
                     $TD_tbn_sanaddrmLineTwo.Content="REMOVE"
                     $TD_stp_sanPanel4.Visibility="Visible"
                     $TD_cb_sanConnectionTypThree.Text = $TD_Cred.ConnectionTyp;  $TD_tb_sanIPAdrThree.Text = $TD_Cred.IPAddress;  $TD_tb_sanUserNameThree.Text= $TD_Cred.UserName; 
-                    TD_ToolMessageCollector -TD_ToolMSGCollector $("Credentials successfully imported to line $($TD_Cred.ID)")
+                    TD_ToolMessageCollector -TD_ToolMSGCollector $("Credentials successfully imported to line $($TD_Cred.ID)") -TD_ToolMSGType Message
                 }
-                Default {TD_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong, check the prompt for more information.")}
+                Default {TD_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong, check the prompt for more information.") -TD_ToolMSGType Error}
             }
         }
     }
@@ -924,7 +932,7 @@ $TD_btn_IBM_Eventlog.add_click({
                 Start-Sleep -Seconds 0.2
                 $TD_lb_StorageEventLogFour.ItemsSource = $TD_IBM_EventLogShow
             }
-            Default {Write-Debug "Nothing" }
+            Default { TD_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong, please check the prompt output first and then the log files.") -TD_ToolMSGType Error }
         }
     }
     if($TD_UCRefresh){$TD_UserControl1.Dispatcher.Invoke([System.Action]{},"Render");$TD_UCRefresh=$false}
@@ -990,9 +998,8 @@ $TD_btn_IBM_CatAuditLog.add_click({
                 $TD_dg_StorageAuditLogFour.ItemsSource =$TD_CatAuditLog
                 $TD_CatAuditLog | Export-Csv -Path $Env:TEMP\$($_)_IBM_CatAuditLog_Temp.csv
             }
-            Default {Write-Debug "Nothing" }
+            Default {TD_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong, please check the prompt output first and then the log files.") -TD_ToolMSGType Error}
         }
-        #Write-Host $TD_Host_Volume_Map
     }
 
     if($TD_UCRefresh){$TD_UserControl1.Dispatcher.Invoke([System.Action]{},"Render");$TD_UCRefresh=$false}
@@ -1058,7 +1065,7 @@ $TD_btn_IBM_HostVolumeMap.add_click({
                 $TD_dg_HostVolInfoFour.ItemsSource =$TD_Host_Volume_Map
                 $TD_Host_Volume_Map | Export-Csv -Path $Env:TEMP\$($_)_Host_Vol_Map_Temp.csv
             }
-            Default {Write-Debug "Nothing" }
+            Default {TD_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong, please check the prompt output first and then the log files.") -TD_ToolMSGType Error}
         }
         #Write-Host $TD_Host_Volume_Map
     }
@@ -1078,7 +1085,7 @@ $TD_btn_FilterHVM.Add_Click({
     [int]$TD_Filter_DG = $TD_cb_ListFilterStorageHVM.Text
     [string]$TD_Filter_DG_Colum = $TD_cb_StorageHVM.Text
     try {
-        [array]$TD_CollectVolInfo = Import-Csv -Path $Env:TEMP\$($TD_Filter_DG)_Host_Vol_Map_Temp.csv
+        [array]$TD_CollectVolInfo = Import-Csv -Path $Env:TEMP\$($TD_Filter_DG)_Host_Vol_Map_Temp.csv -ErrorAction Stop
         switch ($TD_Filter_DG) {
             1 { $TD_Host_Volume_Map = $TD_dg_HostVolInfo.ItemsSource }
             2 { $TD_Host_Volume_Map = $TD_dg_HostVolInfoTwo.ItemsSource }
@@ -1108,8 +1115,8 @@ $TD_btn_FilterHVM.Add_Click({
         }
     catch {
         <#Do this if a terminating exception happens#>
-        Write-Host "Something went wrong" -ForegroundColor DarkMagenta
-        Write-Host $_.Exception.Message
+        TD_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong, please check the prompt output first and then the log files.") -TD_ToolMSGType Error
+        TD_ToolMessageCollector -TD_ToolMSGCollector $_.Exception.Message -TD_ToolMSGType Error
         $TD_lb_ErrorMsgHVM.Content = $_.Exception.Message
     }
 
@@ -1133,8 +1140,8 @@ $TD_btn_ClearFilterHVM.Add_Click({
         }
     catch {
         <#Do this if a terminating exception happens#>
-        Write-Host "Something went wrong" -ForegroundColor DarkMagenta
-        Write-Host $_.Exception.Message
+        TD_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong, please check the prompt output first and then the log files.") -TD_ToolMSGType Error
+        TD_ToolMessageCollector -TD_ToolMSGCollector $_.Exception.Message -TD_ToolMSGType Error
         $TD_lb_ErrorMsgHVM.Content = $_.Exception.Message
     }
 })
@@ -1202,7 +1209,7 @@ $TD_btn_IBM_DriveInfo.add_click({
                 Start-Sleep -Seconds 0.2
                 $TD_dg_DriveInfoFour.ItemsSource = $TD_DriveInfo
             }
-            Default {Write-Debug "Nothing" }
+            Default {TD_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong, please check the prompt output first and then the log files.") -TD_ToolMSGType Error}
         }
     }
 
@@ -1271,7 +1278,7 @@ $TD_btn_IBM_FCPortStats.add_click({
                 Start-Sleep -Seconds 0.5
                 $TD_dg_FCPortStatsFour.ItemsSource = $TD_FCPortStats
             }
-            Default {Write-Debug "Nothing" }
+            Default { TD_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong, please check the prompt output first and then the log files.") -TD_ToolMSGType Error }
         }
 
     }
@@ -1333,7 +1340,7 @@ $TD_btn_IBM_FCPortInfo.add_click({
                 Start-Sleep -Seconds 0.5
                 $TD_dg_FCPortInfoFour.ItemsSource = $TD_FCPortInfo
             }
-            Default {Write-Debug "Nothing" }
+            Default { TD_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong, please check the prompt output first and then the log files.") -TD_ToolMSGType Error }
         }
 
     }
@@ -1406,7 +1413,7 @@ $TD_btn_FilterPBR.add_click({
                         Start-Sleep -Seconds 0.2
                         $TD_dg_ReplicationPolicyFour.ItemsSource = $TD_PolicyBased_Rep
                     }
-                    Default {Write-Debug "Nothing" }
+                    Default { TD_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong, please check the prompt output first and then the log files.") -TD_ToolMSGType Error }
                 }
             }
         }
@@ -1444,7 +1451,7 @@ $TD_btn_FilterPBR.add_click({
                         Start-Sleep -Seconds 0.2
                         $TD_dg_VolumeGrpReplicationFour.ItemsSource = $TD_VolumeGroupRep
                     }
-                    Default {Write-Debug "Nothing" }
+                    Default { TD_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong, please check the prompt output first and then the log files.") -TD_ToolMSGType Error }
                 }
             }
          }
@@ -1510,7 +1517,7 @@ $TD_btn_IBM_BaseStorageInfo.add_click({
                 Start-Sleep -Seconds 0.2
                 $TD_dg_BaseStorageInfoFour.ItemsSource = $TD_BaseStorageInfo
             }
-            Default {Write-Debug "Nothing" }
+            Default { TD_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong, please check the prompt output first and then the log files.") -TD_ToolMSGType Error }
         }
     }
     if($TD_UCRefresh){$TD_UserControl1.Dispatcher.Invoke([System.Action]{},"Render");$TD_UCRefresh=$false}
@@ -1566,7 +1573,7 @@ $TD_btn_IBM_CleanUpDumps.add_click({
                 Start-Sleep -Seconds 0.2
                 $TD_tb_CleanUpDumpInfoFour.Text = $TD_CleanUpDumpInfoFour
             }
-            Default {Write-Debug "Nothing" }
+            Default { TD_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong, please check the prompt output first and then the log files.") -TD_ToolMSGType Error }
         }
     }
 
@@ -1621,11 +1628,11 @@ $TD_btn_IBM_BackUpConfig.add_click({
                 Start-Sleep -Seconds 0.2
                 $TD_tb_BackUpInfoDeviceFour.Text = $TD_BUInfoTwo
             }
-            Default {Write-Debug "Nothing" }
+            Default { WTD_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong, please check the prompt output first and then the log files.") -TD_ToolMSGType Error }
         }
     }
     try {
-        $TD_ExportFiles = Get-ChildItem -Path $TD_tb_Exportpath.Text -Filter "svc.config.backup.*"
+        $TD_ExportFiles = Get-ChildItem -Path $TD_tb_Exportpath.Text -Filter "svc.config.backup.*" -ErrorAction Stop
         #Write-Host $TD_ExportFiles.count = $TD_ExportFiles
         #$TD_tb_BackUpFileErrorInfo.Text = $TD_tb_Exportpath
         $TD_tb_BackUpFileInfoDevice.ItemsSource = $TD_ExportFiles
@@ -1633,8 +1640,8 @@ $TD_btn_IBM_BackUpConfig.add_click({
     }
     catch {
         <#Do this if a terminating exception happens#>
-        Write-Host "Something went wrong" -ForegroundColor DarkMagenta
-        Write-Host $_.Exception.Message
+        TD_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong, please check the prompt output first and then the log files.") -TD_ToolMSGType Error
+        TD_ToolMessageCollector -TD_ToolMSGCollector $_.Exception.Message -TD_ToolMSGType Error 
         $TD_tb_BackUpFileErrorInfo.Text = $_.Exception.Message
     }
 
@@ -1695,7 +1702,7 @@ $TD_btn_FOS_BasicSwitchInfo.add_click({
                 Start-Sleep -Seconds 0.5
                 $TD_dg_sanBasicSwitchInfoFour.ItemsSource =$FOS_BasicSwitch
             }
-            Default {Write-Debug "Nothing" }
+            Default {TD_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong, please check the prompt output first and then the log files.") -TD_ToolMSGType Error}
         }
     }
 
@@ -1762,7 +1769,7 @@ $TD_btn_FOS_SwitchShow.add_click({
                 $TD_lb_SwitchShowFour.ItemsSource =$FOS_SwitchShow
                 $FOS_SwitchShow | Export-Csv -Path $Env:TEMP\$($_)_SwitchShow_Temp.csv
             }
-            Default {Write-Debug "Nothing" }
+            Default {TD_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong, please check the prompt output first and then the log files.") -TD_ToolMSGType Error}
         }
     }
     if($TD_UCRefresh){$TD_UserControl1.Dispatcher.Invoke([System.Action]{},"Render");$TD_UCRefresh=$false}
@@ -1779,7 +1786,7 @@ $TD_btn_FilterSANSwShow.Add_Click({
     [string]$ColumFilter= $TD_cb_FilterColumSANSwShow.Text
     [int]$TD_SANFilter_DG_Colum = $TD_cb_ListFilterSANSwShow.Text
     try {
-        [array]$TD_CollectVolInfo = Import-Csv -Path $Env:TEMP\$($TD_SANFilter_DG_Colum)_SwitchShow_Temp.csv
+        [array]$TD_CollectVolInfo = Import-Csv -Path $Env:TEMP\$($TD_SANFilter_DG_Colum)_SwitchShow_Temp.csv -ErrorAction Stop
         switch ($TD_SANFilter_DG_Colum) {
             1 { $FOS_SwitchShow = $TD_lb_SwitchShowOne.ItemsSource }
             2 { $FOS_SwitchShow = $TD_lb_SwitchShowTwo.ItemsSource }
@@ -1808,8 +1815,8 @@ $TD_btn_FilterSANSwShow.Add_Click({
         }
     catch {
         <#Do this if a terminating exception happens#>
-        Write-Host "Something went wrong at Switchshow" -ForegroundColor DarkMagenta
-        Write-Host $_.Exception.Message
+        TD_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong, please check the prompt output first and then the log files.") -TD_ToolMSGType Error
+        TD_ToolMessageCollector -TD_ToolMSGCollector $_.Exception.Message -TD_ToolMSGType Error
         $TD_lb_ErrorMsgSANSwShow.Content = $_.Exception.Message
     }
 })
@@ -1886,7 +1893,7 @@ $TD_btn_FOS_ZoneDetailsShow.add_click({
             #    Start-Sleep -Seconds 0.5
             #    $TD_lb_PortBufferShowFour.ItemsSource =$TD_FOS_PortbufferShow
             #}
-            Default {Write-Debug "Nothing" }
+            Default {TD_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong, please check the prompt output first and then the log files.") -TD_ToolMSGType Error}
         }
     }
     if($TD_UCRefresh){$TD_UserControl1.Dispatcher.Invoke([System.Action]{},"Render");$TD_UCRefresh=$false}
@@ -1902,7 +1909,7 @@ $TD_btn_FilterFabricOne.Add_Click({
     [string]$FOS_filter= $TD_tb_FilterFabricOne.Text
     [string]$TD_Filter_DG_Colum = $TD_cb_FilterFabricOne.Text
     try {
-        [array]$TD_CollectZoneInfo = Import-Csv -Path $Env:TEMP\$($TD_lb_FabricOne.Content)_ZoneShow_Temp.csv
+        [array]$TD_CollectZoneInfo = Import-Csv -Path $Env:TEMP\$($TD_lb_FabricOne.Content)_ZoneShow_Temp.csv -ErrorAction Stop
         $TD_FOS_ZoneShow = $TD_dg_ZoneDetailsOne.ItemsSource
         if($TD_FOS_ZoneShow.Count -ne $TD_CollectZoneInfo.Count){
             $TD_FOS_ZoneShow = $TD_CollectZoneInfo }
@@ -1911,23 +1918,22 @@ $TD_btn_FilterFabricOne.Add_Click({
                 "Zone" { [array]$WPF_dataGrid = $TD_FOS_ZoneShow | Where-Object { $_.Zone -Match $FOS_filter } }
                 "WWPN" { [array]$WPF_dataGrid = $TD_FOS_ZoneShow | Where-Object { $_.WWPN -Match $FOS_filter } }
                 "Alias" { [array]$WPF_dataGrid = $TD_FOS_ZoneShow | Where-Object { $_.Alias -Match $FOS_filter } }
-                Default {Write-Host "Something went wrong" -ForegroundColor DarkMagenta}
+                Default {TD_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong, please check the prompt output first and then the log files.") -TD_ToolMSGType Error}
             }
             
             $TD_dg_ZoneDetailsOne.ItemsSource = $WPF_dataGrid
         }
     catch {
         <#Do this if a terminating exception happens#>
-        Write-Host "Something went wrong" -ForegroundColor DarkMagenta
-        Write-Host $_.Exception.Message
-        #$TD_lb_ErrorMsgHVM.Content = $_.Exception.Message
+        TD_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong, please check the prompt output first and then the log files.") -TD_ToolMSGType Error
+        TD_ToolMessageCollector -TD_ToolMSGCollector $_.Exception.Message -TD_ToolMSGType Error
     }
 })
 $TD_btn_FilterFabricTwo.Add_Click({
     [string]$FOS_filter= $TD_tb_FilterFabricTwo.Text
     [string]$TD_Filter_DG_Colum = $TD_cb_FilterFabricTwo.Text
     try {
-        [array]$TD_CollectZoneInfo = Import-Csv -Path $Env:TEMP\$($TD_lb_FabricTwo.Content)_ZoneShow_Temp.csv
+        [array]$TD_CollectZoneInfo = Import-Csv -Path $Env:TEMP\$($TD_lb_FabricTwo.Content)_ZoneShow_Temp.csv -ErrorAction Stop
         $TD_FOS_ZoneShow = $TD_dg_ZoneDetailsTwo.ItemsSource
         if($TD_FOS_ZoneShow.Count -ne $TD_CollectZoneInfo.Count){
             $TD_FOS_ZoneShow = $TD_CollectZoneInfo }
@@ -1936,16 +1942,15 @@ $TD_btn_FilterFabricTwo.Add_Click({
                 "Zone" { [array]$WPF_dataGrid = $TD_FOS_ZoneShow | Where-Object { $_.Zone -Match $FOS_filter } }
                 "WWPN" { [array]$WPF_dataGrid = $TD_FOS_ZoneShow | Where-Object { $_.WWPN -Match $FOS_filter } }
                 "Alias" { [array]$WPF_dataGrid = $TD_FOS_ZoneShow | Where-Object { $_.Alias -Match $FOS_filter } }
-                Default {Write-Host "Something went wrong" -ForegroundColor DarkMagenta}
+                Default {TD_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong, please check the prompt output first and then the log files.") -TD_ToolMSGType Error}
             }
             
             $TD_dg_ZoneDetailsTwo.ItemsSource = $WPF_dataGrid
         }
     catch {
         <#Do this if a terminating exception happens#>
-        Write-Host "Something went wrong" -ForegroundColor DarkMagenta
-        Write-Host $_.Exception.Message
-        #$TD_lb_ErrorMsgHVM.Content = $_.Exception.Message
+        TD_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong, please check the prompt output first and then the log files.") -TD_ToolMSGType Error
+        TD_ToolMessageCollector -TD_ToolMSGCollector $_.Exception.Message -TD_ToolMSGType Error
     }
 })
 
@@ -2005,7 +2010,7 @@ $TD_btn_FOS_PortLicenseShow.add_click({
                 $TD_lb_SANInfoFour.Visibility="Visible"
                 $TD_lb_SANInfoFour.Text = (Out-String -InputObject $TD_FOS_PortLicenseShow)
             }
-            Default {Write-Debug "Nothing" }
+            Default {TD_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong, please check the prompt output first and then the log files.") -TD_ToolMSGType Error}
         }
     }
     if($TD_UCRefresh){$TD_UserControl1.Dispatcher.Invoke([System.Action]{},"Render");$TD_UCRefresh=$false}
@@ -2071,7 +2076,7 @@ $TD_btn_FOS_SensorShow.add_click({
                 $TD_tb_SensorInfoFour.Visibility="Visible"
                 $TD_tb_SensorInfoFour.Text = (Out-String -InputObject $TD_FOS_SensorShow)
             }
-            Default {Write-Debug "Nothing" }
+            Default {TD_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong, please check the prompt output first and then the log files.") -TD_ToolMSGType Error}
         }
     }
 
@@ -2135,7 +2140,7 @@ $TD_btn_FOS_PortErrorShow.add_click({
                 Start-Sleep -Seconds 0.5
                 $TD_lb_PortErrorShowFour.ItemsSource =$TD_FOS_PortErrShow
             }
-            Default {Write-Debug "Nothing" }
+            Default {TD_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong, please check the prompt output first and then the log files.") -TD_ToolMSGType Error}
         }
     }
 
@@ -2198,7 +2203,7 @@ $TD_btn_FOS_SFPHealthShow.add_click({
                 Start-Sleep -Seconds 0.5
                 $TD_dg_SFPShowFour.ItemsSource =$TD_FOS_SFPDetailsShow
             }
-            Default {Write-Debug "Nothing" }
+            Default {TD_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong, please check the prompt output first and then the log files.") -TD_ToolMSGType Error}
         }
     }
 
@@ -2238,7 +2243,8 @@ $TD_btn_StatsClear.add_click({
                 $SANUserName = $TD_Credential.SANUserName; $Device_IP = $TD_Credential.IPAddress
                 if($TD_Credential.ConnectionTyp -eq "ssh"){
                     try {
-                        $TD_FOS_StatsClear = ssh -i $($TD_tb_pathtokey.Text) $SANUserName@$Device_IP "statsClear"
+                        $TD_FOS_StatsClear = ssh -i $($TD_tb_pathtokey.Text) $SANUserName@$Device_IP "statsClear" 2>&1
+                        TD_ToolMessageCollector -TD_ToolMSGCollector $("result of StatsClear at Line $($TD_Credentials.ID) is $($TD_FOS_StatsClear)") -TD_ToolMSGType Warning
                         $TD_FOS_StatsClearDone = $true
                     }
                     catch {
@@ -2416,28 +2422,28 @@ $TD_btn_FOS_PortBufferShow.add_click({
             {($_ -eq 1)} 
             {   
                 $TD_FOS_PortbufferShow += FOS_PortbufferShowInfo -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.SANUserName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $TD_Credential.SANPassword -TD_Exportpath $TD_tb_ExportPath.Text
-                Start-Sleep -Seconds 0.5
+                Start-Sleep -Seconds 0.2
                 $TD_lb_PortBufferShowOne.ItemsSource =$TD_FOS_PortbufferShow
             }
             {($_ -eq 2) }
             {            
                 $TD_FOS_PortbufferShow += FOS_PortbufferShowInfo -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.SANUserName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $TD_Credential.SANPassword -TD_Exportpath $TD_tb_ExportPath.Text
-                Start-Sleep -Seconds 0.5
+                Start-Sleep -Seconds 0.2
                 $TD_lb_PortBufferShowTwo.ItemsSource =$TD_FOS_PortbufferShow
             }
             {($_ -eq 3) }
             {            
                 $TD_FOS_PortbufferShow += FOS_PortbufferShowInfo -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.SANUserName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $TD_Credential.SANPassword -TD_Exportpath $TD_tb_ExportPath.Text
-                Start-Sleep -Seconds 0.5
+                Start-Sleep -Seconds 0.2
                 $TD_lb_PortBufferShowThree.ItemsSource =$TD_FOS_PortbufferShow
             }
             {($_ -eq 4) }
             {            
                 $TD_FOS_PortbufferShow += FOS_PortbufferShowInfo -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.SANUserName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $TD_Credential.SANPassword -TD_Exportpath $TD_tb_ExportPath.Text
-                Start-Sleep -Seconds 0.5
+                Start-Sleep -Seconds 0.2
                 $TD_lb_PortBufferShowFour.ItemsSource =$TD_FOS_PortbufferShow
             }
-            Default {Write-Debug "Nothing" }
+            Default {TD_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong, please check the prompt output first and then the log files.") -TD_ToolMSGType Error}
         }
     }
     if($TD_UCRefresh){$TD_UserControl1.Dispatcher.Invoke([System.Action]{},"Render");$TD_UCRefresh=$false}
@@ -2455,19 +2461,19 @@ $TD_btn_Storage_SysCheck.add_click({
    $TD_Credentials=@()
    $TD_Credentials_Checked = Get_CredGUIInfos -STP_ID 1 -TD_ConnectionTyp $TD_cb_storageConnectionTyp.Text -TD_IPAdresse $TD_tb_storageIPAdr.Text -TD_UserName $TD_tb_storageUserName.Text -TD_Password $TD_tb_storagePassword
    $TD_Credentials += $TD_Credentials_Checked
-   Start-Sleep -Seconds 0.5
+   Start-Sleep -Seconds 0.2
 
    $TD_Credentials_Checked = Get_CredGUIInfos -STP_ID 2 -TD_ConnectionTyp $TD_cb_storageConnectionTypOne.Text -TD_IPAdresse $TD_tb_storageIPAdrOne.Text -TD_UserName $TD_tb_storageUserNameOne.Text -TD_Password $TD_tb_storagePasswordOne
    $TD_Credentials += $TD_Credentials_Checked
-   Start-Sleep -Seconds 0.5
+   Start-Sleep -Seconds 0.2
 
    $TD_Credentials_Checked = Get_CredGUIInfos -STP_ID 3 -TD_ConnectionTyp $TD_cb_storageConnectionTypTwo.Text -TD_IPAdresse $TD_tb_storageIPAdrTwo.Text -TD_UserName $TD_tb_storageUserNameTwo.Text -TD_Password $TD_tb_storagePasswordTwo
    $TD_Credentials += $TD_Credentials_Checked
-   Start-Sleep -Seconds 0.5
+   Start-Sleep -Seconds 0.2
 
    $TD_Credentials_Checked = Get_CredGUIInfos -STP_ID 4 -TD_ConnectionTyp $TD_cb_storageConnectionTypThree.Text -TD_IPAdresse $TD_tb_storageIPAdrThree.Text -TD_UserName $TD_tb_storageUserNameThree.Text -TD_Password $TD_tb_storagePasswordThree
    $TD_Credentials += $TD_Credentials_Checked
-   Start-Sleep -Seconds 0.5
+   Start-Sleep -Seconds 0.2
 
     foreach($TD_Credential in $TD_Credentials){
         <# QaD needs a Codeupdate because Grouping dose not work #>
@@ -2489,7 +2495,7 @@ $TD_btn_Storage_SysCheck.add_click({
             {
                 IBM_StorageHealthCheck -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.StorageUserName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $TD_Credential.StoragePassword -TD_Exportpath $TD_tb_ExportPath.Text
             }
-            Default {Write-Debug "Nothing" }
+            Default {TD_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong, please check the prompt output first and then the log files.") -TD_ToolMSGType Error}
         }
     }
 })
