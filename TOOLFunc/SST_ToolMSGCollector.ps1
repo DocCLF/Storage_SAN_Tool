@@ -1,4 +1,4 @@
-function TD_ToolMessageCollector {
+function SST_ToolMessageCollector {
     <#
     .SYNOPSIS
         Collects all essential information and presents it in the log window and/or in the respective log files.

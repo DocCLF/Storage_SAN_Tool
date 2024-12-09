@@ -26,6 +26,7 @@ All notable changes to this project will be documented in this file.
 - IBM VolumeInfo as an stand-alone function to remain flexible for further developments
 - IBM DriveFirmware Check (Phase One)
 - IBM Storage Virtualize Family of Products Software Check (currently only LTS, with start at 8.4.x)
+- Message Box for a short overview "whats goning on"
 - Clear Filter at IBM HostVolumeMap 
 - Tooltips for the tables and columns where it makes sense.
 - give some tables a color

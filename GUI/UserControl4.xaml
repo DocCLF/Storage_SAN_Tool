@@ -623,7 +623,7 @@
                 </GroupBox>
             </StackPanel>
         </GroupBox>
-        <GroupBox Grid.Row="4" Grid.ColumnSpan="2" Header="Tool Window for Debug and Massages" Margin="10,10,0,0" >
+        <GroupBox Grid.Row="4" Grid.ColumnSpan="2" Header="Tool Window for Debug and Message" Margin="10,10,0,0" >
             <DataGrid x:Name="dg_ToolWindowForDebug" AutoGenerateColumns="False" Margin="2" MaxHeight="300">
                 <DataGrid.Style>
                     <Style TargetType="DataGrid">
