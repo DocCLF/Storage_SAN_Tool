@@ -100,115 +100,6 @@ foreach($file in $UserCxamlFile){
    
 
 <# start with functions #>
-function Get_CredGUIInfos {
-    [CmdletBinding()]
-    param(
-        #[Parameter(Mandatory)]
-        [Int16]$STP_ID = 0,
-        #[Parameter(Mandatory)]
-        [string]$TD_ConnectionTyp,
-        #[Parameter(Mandatory)]
-        [string]$TD_IPAdresse,
-        #[Parameter(Mandatory)]
-        [string]$TD_UserName,
-        #[Parameter(Mandatory)]
-        $TD_Password,
-        [string]$TD_Exportpath = "$PSRootPath\Export\"
-    )
-    #Write-Host $STP_ID $TD_ConnectionTyp $TD_IPAdresse $TD_UserName $TD_Password.Password -ForegroundColor Red
-    # alternate IPcheck with regex -> '\b(?:(?:2(?:[0-4][0-9]|5[0-5])|[0-1]?[0-9]?[0-9])\.){3}(?:(?:2([0-4][0-9]|5[0-5])|[0-1]?[0-9]?[0-9]))\b'
-    $TD_IPPattern = '^(?:[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3})$'
-    if($TD_IPAdresse -ne ""){
-        $TD_IPCheck = $TD_IPAdresse -match $TD_IPPattern
-        #$TD_IPConnectionTest=Test-Connection $TD_IPAdresse -Count 1
-    }
-    #Write-Host $TD_IPConnectionTest.Status -ForegroundColor Yellow
-    #if(($TD_IPCheck)-and($TD_IPConnectionTest.Status-eq "Success")){
-    if(($TD_IPCheck)){    
-        if((!($TD_cb_storageSamePW.IsChecked))-and($TD_ConnectionTyp -eq "plink")){
-                $TD_StoragePassword=$TD_Password
-        }elseif ((($TD_cb_storageSamePW.IsChecked)-or($TD_ConnectionTyp -eq "plink"))-and($TD_ConnectionTyp -ne "ssh")) {
-            $TD_StoragePassword=$TD_tb_storagePassword
-        }elseif (($TD_ConnectionTyp -eq "ssh")) {
-            $TD_StoragePassword=""
-        }
-        if((!($TD_cb_sanSamePW.IsChecked))-and($TD_ConnectionTyp -eq "plink")){
-            $TD_SANPassword=$TD_Password
-        }elseif ((($TD_cb_sanSamePW.IsChecked)-or($TD_ConnectionTyp -eq "plink"))-and($TD_ConnectionTyp -ne "ssh")) {
-            $TD_SANPassword=$TD_tb_sanPassword
-        }elseif (($TD_ConnectionTyp -eq "ssh")) {
-            $TD_SANPassword=""
-        }
-        if($TD_cb_storageSameUserName.IsChecked){
-            $TD_StorageUserName=$TD_tb_storageUserName.Text
-        }else{
-            $TD_StorageUserName =$TD_UserName
-        }
-        if($TD_cb_sanSameUserName.IsChecked){
-            $TD_SANUserName=$TD_tb_sanUserName.Text
-        }else{
-            $TD_SANUserName =$TD_UserName
-        }
-        $TD_CredCollection=[ordered]@{
-            'ID'= $STP_ID;
-            'ConnectionTyp'= $TD_ConnectionTyp;
-            'IPAddress'= $TD_IPAdresse;
-            'StorageUserName'= $TD_StorageUserName;
-            'SANUserName'= $TD_SANUserName;
-            'StoragePassword'= $TD_StoragePassword.Password;
-            'SANPassword'= $TD_SANPassword.Password;
-            'ExportPath'= $TD_Exportpath;
-        }
-        $TD_CredObject=New-Object -TypeName psobject -Property $TD_CredCollection
-    }else {
-        <# Action when all if and elseif conditions are false #>
-        SST_ToolMessageCollector -TD_ToolMSGCollector $("IP in row $STP_ID is not validate or set.") -TD_ToolMSGType Warning
-        $TD_IPAdresse = $null
-    }
-    return $TD_CredObject
-}
-
-<# Test connection need a rework and a better option for 5.1#>
-function Get-TestConnection {
-    param (
-        [string]$TD_StorageIPAdresse,
-        [string]$TD_StorageIPAdresseOne,
-        [string]$TD_StorageIPAdresseTwo,
-        [string]$TD_StorageIPAdresseThree
-    )
-    $TD_IPTests=@()
-    $TD_IPTestTemp = $TD_StorageIPAdresse
-    $TD_IPTests+=$TD_IPTestTemp
-    $TD_IPTestTemp = $TD_StorageIPAdresseOne
-    $TD_IPTests+=$TD_IPTestTemp
-    $TD_IPTestTemp = $TD_StorageIPAdresseTwo
-    $TD_IPTests+=$TD_IPTestTemp
-    $TD_IPTestTemp = $TD_StorageIPAdresseThree
-    $TD_IPTests+=$TD_IPTestTemp
-    
-    foreach($TD_IPTest in $TD_IPTests){
-        <# Check if ip is a ip#>
-        $res = Get_CredGUIInfos -TD_IPAdresse $TD_IPTest
-        <# if ip is -eq ip the test it and change color #>
-        if($res.IPAddress -eq $TD_IPTest){
-            $TD_IPConnectionTest=Test-Connection $TD_IPTest -Count 1
-        }else {
-            <# Action when all if and elseif conditions are false #>
-            $TD_IPConnectionTest = "Fail"
-        }
-        <# change the color of TBs #>
-        switch ($TD_IPTest) {
-            $TD_StorageIPAdresse { If($TD_IPConnectionTest.Status-eq "Success"){$TD_tb_storageIPAdr.Background = "lightgreen"}else{$TD_tb_storageIPAdr.Background = "red"} }
-            $TD_StorageIPAdresseOne { If($TD_IPConnectionTest.Status-eq "Success"){$TD_tb_storageIPAdrOne.Background = "lightgreen"}else{$TD_tb_storageIPAdrOne.Background = "red"} }
-            $TD_StorageIPAdresseTwo { If($TD_IPConnectionTest.Status-eq "Success"){$TD_tb_storageIPAdrTwo.Background = "lightgreen"}else{$TD_tb_storageIPAdrTwo.Background = "red"} }
-            $TD_StorageIPAdresseThree { If($TD_IPConnectionTest.Status-eq "Success"){$TD_tb_storageIPAdrThree.Background = "lightgreen"}else{$TD_tb_storageIPAdrThree.Background = "red"} }
-            Default {Write-Host "something went wrong" -ForegroundColor red}
-        }
-        $TD_IPTest=""  
-    }
-   
-    $TD_IPTests=@()   
-}
 
 
 
@@ -313,36 +204,12 @@ $TD_btn_Start_sshAgent.add_click({
     $TD_UserControl4.Dispatcher.Invoke([System.Action]{},"Render")
 })
 
-$TD_btn_addsshkeyone.add_click({
+$TD_BTN_AddSSHKey.add_click({
     $TD_ButtonColorSSH=$TD_btn_addsshkeyone.Background
     if($TD_ButtonColorSSH -like "*90EE90"){
         RemoveSSHKeyfromLine -TD_SSHKeyForLine 1 -TD_Storage "yes"
     }else {
         AddSSHKeytoLine -TD_SSHKeyForLine 1 -TD_Storage "yes"
-    }
-})
-$TD_btn_addsshkeytwo.add_click({
-    $TD_ButtonColorSSH=$TD_btn_addsshkeytwo.Background
-    if($TD_ButtonColorSSH -like "*90EE90"){
-        RemoveSSHKeyfromLine -TD_SSHKeyForLine 2 -TD_Storage "yes"
-    }else {
-        AddSSHKeytoLine -TD_SSHKeyForLine 2 -TD_Storage "yes"
-    }
-})
-$TD_btn_addsshkeythree.add_click({
-    $TD_ButtonColorSSH=$TD_btn_addsshkeythree.Background
-    if($TD_ButtonColorSSH -like "*90EE90"){
-        RemoveSSHKeyfromLine -TD_SSHKeyForLine 3 -TD_Storage "yes"
-    }else {
-        AddSSHKeytoLine -TD_SSHKeyForLine 3 -TD_Storage "yes"
-    }
-})
-$TD_btn_addsshkeyfour.add_click({
-    $TD_ButtonColorSSH=$TD_btn_addsshkeyfour.Background
-    if($TD_ButtonColorSSH -like "*90EE90"){
-        RemoveSSHKeyfromLine -TD_SSHKeyForLine 4 -TD_Storage "yes"
-    }else {
-        AddSSHKeytoLine -TD_SSHKeyForLine 4 -TD_Storage "yes"
     }
 })
 $TD_btn_addsshkeyoneSAN.add_click({
@@ -380,54 +247,20 @@ $TD_btn_addsshkeyfourSAN.add_click({
 #endregion
 
 #region AddStorageCred
-$TD_tbn_storageaddrmLine.add_click({
-    Write-Debug -Message "Open or Closed the 2 Storage Cred Row"
-    if($TD_tbn_storageaddrmLine.Content -eq "ADD"){
-        $TD_tbn_storageaddrmLine.Content="REMOVE"
-        $TD_stp_storagePanel2.Visibility="Visible"
-        $TD_tbn_storageaddrmLineOne.Content="ADD"
-        $TD_tbn_storageaddrmLineTwo.Content="ADD"
-    }else {
-        $TD_tbn_storageaddrmLine.Content="ADD"
-        $TD_stp_storagePanel2.Visibility="Collapsed"
-        $TD_stp_storagePanel3.Visibility="Collapsed"
-        $TD_stp_storagePanel4.Visibility="Collapsed"
-        $TD_tb_storageUserNameOne.Text=""
-        $TD_tb_storageIPAdrOne.Text=""
-        $TD_tb_storageUserNameTwo.Text=""
-        $TD_tb_storageIPAdrTwo.Text=""
-        $TD_tb_storageUserNameThree.Text=""
-        $TD_tb_storageIPAdrThree.Text=""
+$TD_TBTN_SaveCredtoDG.add_click({
+
+    $TD_CredfGUIArray = SST_GetCredfGUI
+    Start-Sleep -Seconds 0.2
+    if($TD_CredfGUIArray.count -gt 0){
+                
+        $TD_TB_DeviceIPAddr.Text=""
+        $TD_TB_DeviceUserName.Text=""
+        $TD_TB_DevicePassword.Password=""
+        $TD_TB_PathtoSSHKeyNotVisibil.Text=""
+        $TD_CB_SVCorVF.IsChecked=$false
     }
 })
-$TD_tbn_storageaddrmLineOne.add_click({
-    Write-Debug -Message "Open or Closed the 3 Storage Cred Row"
-    if($TD_tbn_storageaddrmLineOne.Content -eq "ADD"){
-        $TD_tbn_storageaddrmLineOne.Content="REMOVE"
-        $TD_stp_storagePanel3.Visibility="Visible"
-        $TD_tbn_storageaddrmLineTwo.Content="ADD"
-    }else {
-        $TD_tbn_storageaddrmLineOne.Content="ADD"
-        $TD_stp_storagePanel3.Visibility="Collapsed"
-        $TD_stp_storagePanel4.Visibility="Collapsed"        
-        $TD_tb_storageUserNameTwo.Text=""
-        $TD_tb_storageIPAdrTwo.Text=""
-        $TD_tb_storageUserNameThree.Text=""
-        $TD_tb_storageIPAdrThree.Text=""
-    }
-})
-$TD_tbn_storageaddrmLineTwo.add_click({
-    Write-Debug -Message "Open or Closed the 4 Storage Cred Row"
-    if($TD_tbn_storageaddrmLineTwo.Content -eq "ADD"){
-        $TD_tbn_storageaddrmLineTwo.Content="REMOVE"
-        $TD_stp_storagePanel4.Visibility="Visible"
-    }else {
-        $TD_tbn_storageaddrmLineTwo.Content="ADD"
-        $TD_stp_storagePanel4.Visibility="Collapsed"
-        $TD_tb_storageUserNameThree.Text=""
-        $TD_tb_storageIPAdrThree.Text=""
-    }
-})
+
 #endregion
 #region AddSANCred
 $TD_tbn_sanaddrmLine.add_click({
