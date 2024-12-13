@@ -8,7 +8,7 @@ All notable changes to this project will be documented in this file.
 - Support for Virtual Fabrics
 - Small SAN Healthcheck
 
-# [v1.2.0] - 2024-tbd
+# [v1.2.0] - 2025-tbd
 ### Added
 - FOS Sensor BasicInfo
 - FOS SFP BasicDetails
@@ -40,6 +40,7 @@ All notable changes to this project will be documented in this file.
 
 ### Changed
 - GUI from Storage Healthcheck compl. redesigned 
+- Tool structure completely redesigned to make it easier to add new functions
 - IBM GUI from IBM Spectrum Virtualize Panel, due to the new possibilities, a breakdown by software version has now been made.
 - FOS PortBufferShow from Listview to Datagrid
 - FOS Add a Information that shows a Info for StatsClear Func

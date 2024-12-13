@@ -2,7 +2,7 @@ Add-Type -AssemblyName PresentationCore,PresentationFramework
 Add-Type -AssemblyName System.Windows.Forms
 
 <# Create the xaml Files / Base of GUI Mainwindow #>
-function SST_GUI_Control {
+function Storage_San_Tool {
 [CmdletBinding()]
 #$ErrorActionPreference="SilentlyContinue"
 
@@ -97,11 +97,6 @@ foreach($file in $UserCxamlFile){
     $TD_LogoImageSmall.Source = "$PSRootPath\Resources\PROFI_Logo_2022_dark.png"
     $TD_LogoImageSmall.Visibility = "hidden"
 #endregion
-   
-
-<# start with functions #>
-
-
 
 #region Menu Button
 <# Button Area Menu #>
@@ -212,47 +207,14 @@ $TD_BTN_AddSSHKey.add_click({
         AddSSHKeytoLine -TD_SSHKeyForLine 1 -TD_Storage "yes"
     }
 })
-$TD_btn_addsshkeyoneSAN.add_click({
-    $TD_ButtonColorSSH=$TD_btn_addsshkeyoneSAN.Background
-    if($TD_ButtonColorSSH -like "*90EE90"){
-        RemoveSSHKeyfromLine -TD_SSHKeyForLine 1 -TD_Storage "no"
-    }else {
-        AddSSHKeytoLine -TD_SSHKeyForLine 1 -TD_Storage "no"
-    }
-})
-$TD_btn_addsshkeytwoSAN.add_click({
-    $TD_ButtonColorSSHSAN=$TD_btn_addsshkeytwoSAN.Background
-    if($TD_ButtonColorSSHSAN -like "*90EE90"){
-        RemoveSSHKeyfromLine -TD_SSHKeyForLine 2 -TD_Storage "no"
-    }else {
-        AddSSHKeytoLine -TD_SSHKeyForLine 2 -TD_Storage "no"
-    }
-})
-$TD_btn_addsshkeythreeSAN.add_click({
-    $TD_ButtonColorSSH=$TD_btn_addsshkeythreeSAN.Background
-    if($TD_ButtonColorSSH -like "*90EE90"){
-        RemoveSSHKeyfromLine -TD_SSHKeyForLine 3 -TD_Storage "no"
-    }else {
-        AddSSHKeytoLine -TD_SSHKeyForLine 3 -TD_Storage "no"
-    }
-})
-$TD_btn_addsshkeyfourSAN.add_click({
-    $TD_ButtonColorSSH=$TD_btn_addsshkeyfourSAN.Background
-    if($TD_ButtonColorSSH -like "*90EE90"){
-        RemoveSSHKeyfromLine -TD_SSHKeyForLine 4 -TD_Storage "no"
-    }else {
-        AddSSHKeytoLine -TD_SSHKeyForLine 4 -TD_Storage "no"
-    }
-})
 #endregion
 
-#region AddStorageCred
+#region AddDeviceCred
 $TD_TBTN_SaveCredtoDG.add_click({
 
-    $TD_CredfGUIArray = SST_GetCredfGUI
-    Start-Sleep -Seconds 0.2
-    if($TD_CredfGUIArray.count -gt 0){
-                
+    $TD_CredfGUIArray = SST_GetCredfGUI -TD_AddaNewDevice "yes"
+    Start-Sleep -Seconds 0.3
+    if(!([string]::IsNullOrEmpty($TD_CredfGUIArray))){
         $TD_TB_DeviceIPAddr.Text=""
         $TD_TB_DeviceUserName.Text=""
         $TD_TB_DevicePassword.Password=""
@@ -260,164 +222,41 @@ $TD_TBTN_SaveCredtoDG.add_click({
         $TD_CB_SVCorVF.IsChecked=$false
     }
 })
-
-#endregion
-#region AddSANCred
-$TD_tbn_sanaddrmLine.add_click({
-    Write-Debug -Message "Open or Closed the 2 SAN Cred Row"
-    if($TD_tbn_sanaddrmLine.Content -eq "ADD"){
-        $TD_tbn_sanaddrmLine.Content="REMOVE"
-        $TD_stp_sanPanel2.Visibility="Visible"
-        $TD_tbn_sanaddrmLineOne.Content="ADD"
-        $TD_tbn_sanaddrmLineTwo.Content="ADD"
-    }else {
-        $TD_tbn_sanaddrmLine.Content="ADD"
-        $TD_stp_sanPanel2.Visibility="Collapsed"
-        $TD_stp_sanPanel3.Visibility="Collapsed"
-        $TD_stp_sanPanel4.Visibility="Collapsed"
-        $TD_tb_sanIPAdrOne.Text=""
-        $TD_tb_sanUserNameOne.Text=""
-        $TD_tb_sanIPAdrTwo.Text=""
-        $TD_tb_sanUserNameTwo.Text=""
-        $TD_tb_sanIPAdrThree.Text=""
-        $TD_tb_sanUserNameThree.Text=""
-    }
-})
-$TD_tbn_sanaddrmLineOne.add_click({
-    Write-Debug -Message "Open or Closed the 3 SAN Cred Row"
-    if($TD_tbn_sanaddrmLineOne.Content -eq "ADD"){
-        $TD_tbn_sanaddrmLineOne.Content="REMOVE"
-        $TD_stp_sanPanel3.Visibility="Visible"
-        $TD_tbn_sanaddrmLineTwo.Content="ADD"
-    }else {
-        $TD_tbn_sanaddrmLineOne.Content="ADD"
-        $TD_stp_sanPanel3.Visibility="Collapsed"
-        $TD_stp_sanPanel4.Visibility="Collapsed"
-        $TD_tb_sanIPAdrTwo.Text=""
-        $TD_tb_sanUserNameTwo.Text=""
-        $TD_tb_sanIPAdrThree.Text=""
-        $TD_tb_sanUserNameThree.Text=""
-    }
-})
-$TD_tbn_sanaddrmLineTwo.add_click({
-    Write-Debug -Message "Open or Closed the 4 SAN Cred Row"
-    if($TD_tbn_sanaddrmLineTwo.Content -eq "ADD"){
-        $TD_tbn_sanaddrmLineTwo.Content="REMOVE"
-        $TD_stp_sanPanel4.Visibility="Visible"
-    }else {
-        $TD_tbn_sanaddrmLineTwo.Content="ADD"
-        $TD_stp_sanPanel4.Visibility="Collapsed"
-        $TD_tb_sanIPAdrThree.Text=""
-        $TD_tb_sanUserNameThree.Text=""
-    }
-})
 #endregion
 
 #region InAndSST_ExportCred
 <# Button Credentials In-/ Export #>
 $TD_btn_ExportCred.add_click({
-    $TD_SST_ExportCred = @()
-    <#Storage#>
-    if($TD_tb_storageIPAdr.Text -ne ""){
-        $TD_SST_ExportCred += SST_ExportCred -TD_DeviceType "Storage" -STP_ID 1 -TD_ConnectionTyp $TD_cb_storageConnectionTyp.Text -TD_IPAdresse $TD_tb_storageIPAdr.Text -TD_UserName $TD_tb_storageUserName.Text -TD_IsSVCIP $TD_cb_StorageSVCone.IsChecked
-    }
-    if ($TD_tb_storageIPAdrOne.Text -ne "") {
-        $TD_SST_ExportCred += SST_ExportCred -TD_DeviceType "Storage" -STP_ID 2 -TD_ConnectionTyp $TD_cb_storageConnectionTypOne.Text -TD_IPAdresse $TD_tb_storageIPAdrOne.Text -TD_UserName $TD_tb_storageUserNameOne.Text
-    }
-    if ($TD_tb_storageIPAdrTwo.Text -ne "") {
-        $TD_SST_ExportCred += SST_ExportCred -TD_DeviceType "Storage" -STP_ID 3 -TD_ConnectionTyp $TD_cb_storageConnectionTypTwo.Text -TD_IPAdresse $TD_tb_storageIPAdrTwo.Text -TD_UserName $TD_tb_storageUserNameTwo.Text
-    }
-    if ($TD_tb_storageIPAdrThree.Text -ne "") {
-        $TD_SST_ExportCred += SST_ExportCred -TD_DeviceType "Storage" -STP_ID 4 -TD_ConnectionTyp $TD_cb_storageConnectionTypThree.Text -TD_IPAdresse $TD_tb_storageIPAdrThree.Text -TD_UserName $TD_tb_storageUserNameThree.Text
-    }
-    #Write-Host $TD_SST_ExportCred -ForegroundColor Yellow
-    <#SAN#>
-    if($TD_tb_sanIPAdr.Text -ne ""){
-        $TD_SST_ExportCred += SST_ExportCred -TD_DeviceType "SAN" -STP_ID 1 -TD_ConnectionTyp $TD_cb_sanConnectionTyp.Text -TD_IPAdresse $TD_tb_sanIPAdr.Text -TD_UserName $TD_tb_sanUserName.Text
-    }
-    if ($TD_tb_sanIPAdrOne.Text -ne "") {
-        $TD_SST_ExportCred += SST_ExportCred -TD_DeviceType "SAN" -STP_ID 2 -TD_ConnectionTyp $TD_cb_sanConnectionTypOne.Text -TD_IPAdresse $TD_tb_sanIPAdrOne.Text -TD_UserName $TD_tb_sanUserNameOne.Text
-    }
-    if ($TD_tb_sanIPAdrTwo.Text -ne "") {
-        $TD_SST_ExportCred += SST_ExportCred -TD_DeviceType "SAN" -STP_ID 3 -TD_ConnectionTyp $TD_cb_sanConnectionTypTwo.Text -TD_IPAdresse $TD_tb_sanIPAdrTwo.Text -TD_UserName $TD_tb_sanUserNameTwo.Text
-    }
-    if ($TD_tb_sanIPAdrThree.Text -ne "") {
-        $TD_SST_ExportCred += SST_ExportCred -TD_DeviceType "SAN" -STP_ID 4 -TD_ConnectionTyp $TD_cb_sanConnectionTypThree.Text -TD_IPAdresse $TD_tb_sanIPAdrThree.Text -TD_UserName $TD_tb_sanUserNameThree.Text
-    }
-
+    <# Not all needs to exported, if you want to modify the Export got to the SST_ExportCred Func #>
+    $TD_SST_ExportCred = SST_ExportCredential -TD_CollectedCredData $TD_DG_KnownDeviceList.ItemsSource
+    <# Save to Dir #>
     $TD_SaveCred = SST_SaveFile_to_Directory -TD_UserDataObject $TD_SST_ExportCred
-    SST_ToolMessageCollector -TD_ToolMSGCollector $("Credentials successfully exported to $($TD_SaveCred.FileName)") -TD_ToolMSGType Message
+    if([string]::IsNullOrEmpty($TD_SaveCred.FileName)){
+        SST_ToolMessageCollector -TD_ToolMSGCollector $("Export failed!") -TD_ToolMSGType Warning
+    }else {
+        SST_ToolMessageCollector -TD_ToolMSGCollector $("Credentials successfully exported to $($TD_SaveCred.FileName)") -TD_ToolMSGType Message
+    }
 })
 $TD_btn_ImportCred.add_click({
 
-    <#there must be a better option for this line#>
-    $TD_cb_StorageSVCone.IsChecked=$false; $TD_tb_storageIPAdr.CLear(); $TD_tb_storageIPAdrOne.CLear(); $TD_tb_storageIPAdrThree.CLear(); $TD_tb_storageIPAdrTwo.CLear();$TD_tb_storagePassword.CLear(); $TD_tb_storagePasswordOne.CLear(); $TD_tb_storagePasswordThree.CLear(); $TD_tb_storagePasswordTwo.CLear(); $TD_tb_storageUserName.CLear(); $TD_tb_storageUserNameOne.CLear(); $TD_tb_storageUserNameThree.CLear(); $TD_tb_storageUserNameTwo.CLear();
-    $TD_tb_sanIPAdr.CLear(); $TD_tb_sanIPAdrOne.CLear(); $TD_tb_sanIPAdrTwo.CLear(); $TD_tb_sanIPAdrThree.CLear();$TD_tb_sanPassword.CLear(); $TD_tb_sanPasswordOne.CLear(); $TD_tb_sanPasswordTwo.CLear(); $TD_tb_sanPasswordThree.CLear(); $TD_tb_sanUserName.CLear(); $TD_tb_sanUserNameOne.CLear(); $TD_tb_sanUserNameTwo.CLear(); $TD_tb_sanUserNameThree.CLear();    
     $TD_ImportedCredentials = SST_ImportCredential
-    #$TD_ImportedCredentials | Format-Table
-    #Write-Host $TD_ImportedCredentials -ForegroundColor Yellow
-    foreach($TD_Cred in $TD_ImportedCredentials){
-        if($TD_Cred.DeviceType -eq "Storage"){
-            switch ($TD_Cred.ID) {
-                {($_ -eq 1)} { 
-                    $TD_cb_storageConnectionTyp.Text = $TD_Cred.ConnectionTyp;  $TD_tb_storageIPAdr.Text = $TD_Cred.IPAddress;  $TD_tb_storageUserName.Text= $TD_Cred.UserName; 
-                    if($TD_Cred.IsSVCIP -eq "False"){
-                        $TD_cb_StorageSVCone.IsChecked=$false
-                    }else {
-                        <# Action when all if and elseif conditions are false #>
-                        $TD_cb_StorageSVCone.IsChecked=$true
-                    }
-                    SST_ToolMessageCollector -TD_ToolMSGCollector $("Credentials successfully imported to line $($TD_Cred.ID)")
-                }
-                {($_ -eq 2)} { 
-                    $TD_tbn_storageaddrmLine.Content="REMOVE"
-                    $TD_stp_storagePanel2.Visibility="Visible"
-                    $TD_cb_storageConnectionTypOne.Text = $TD_Cred.ConnectionTyp;  $TD_tb_storageIPAdrOne.Text = $TD_Cred.IPAddress;  $TD_tb_storageUserNameOne.Text= $TD_Cred.UserName; 
-                    SST_ToolMessageCollector -TD_ToolMSGCollector $("Credentials successfully imported to line $($TD_Cred.ID)") -TD_ToolMSGType Message
-                }
-                {($_ -eq 3)} { 
-                    $TD_tbn_storageaddrmLineOne.Content="REMOVE"
-                    $TD_stp_storagePanel3.Visibility="Visible"
-                    $TD_cb_storageConnectionTypTwo.Text = $TD_Cred.ConnectionTyp;  $TD_tb_storageIPAdrTwo.Text = $TD_Cred.IPAddress;  $TD_tb_storageUserNameTwo.Text= $TD_Cred.UserName; 
-                    SST_ToolMessageCollector -TD_ToolMSGCollector $("Credentials successfully imported to line $($TD_Cred.ID)") -TD_ToolMSGType Message
-                }
-                {($_ -eq 4)} { 
-                    $TD_tbn_storageaddrmLineTwo.Content="REMOVE"
-                    $TD_stp_storagePanel4.Visibility="Visible"
-                    $TD_cb_storageConnectionTypThree.Text = $TD_Cred.ConnectionTyp;  $TD_tb_storageIPAdrThree.Text = $TD_Cred.IPAddress;  $TD_tb_storageUserNameThree.Text= $TD_Cred.UserName;
-                    SST_ToolMessageCollector -TD_ToolMSGCollector $("Credentials successfully imported to line $($TD_Cred.ID)") -TD_ToolMSGType Message
-                }
-                Default {SST_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong, check the prompt for more information.") -TD_ToolMSGType Error}
-            }
-        }else {
-            switch ($TD_Cred.ID) {
-                {($_ -eq 1)} { 
-                    $TD_cb_sanConnectionTyp.Text = $TD_Cred.ConnectionTyp;  $TD_tb_sanIPAdr.Text = $TD_Cred.IPAddress;  $TD_tb_sanUserName.Text= $TD_Cred.UserName; 
-                    SST_ToolMessageCollector -TD_ToolMSGCollector $("Credentials successfully imported to line $($TD_Cred.ID)") -TD_ToolMSGType Message
-                }
-                {($_ -eq 2)} { 
-                    $TD_tbn_sanaddrmLine.Content="REMOVE"
-                    $TD_stp_sanPanel2.Visibility="Visible"
-                    $TD_cb_sanConnectionTypOne.Text = $TD_Cred.ConnectionTyp;  $TD_tb_sanIPAdrOne.Text = $TD_Cred.IPAddress;  $TD_tb_sanUserNameOne.Text= $TD_Cred.UserName; 
-                    SST_ToolMessageCollector -TD_ToolMSGCollector $("Credentials successfully imported to line $($TD_Cred.ID)") -TD_ToolMSGType Message
-                }
-                {($_ -eq 3)} { 
-                    $TD_tbn_sanaddrmLineOne.Content="REMOVE"
-                    $TD_stp_sanPanel3.Visibility="Visible"
-                    $TD_cb_sanConnectionTypTwo.Text = $TD_Cred.ConnectionTyp;  $TD_tb_sanIPAdrTwo.Text = $TD_Cred.IPAddress;  $TD_tb_sanUserNameTwo.Text= $TD_Cred.UserName; 
-                    SST_ToolMessageCollector -TD_ToolMSGCollector $("Credentials successfully imported to line $($TD_Cred.ID)") -TD_ToolMSGType Message
-                }
-                {($_ -eq 4)} { 
-                    $TD_tbn_sanaddrmLineTwo.Content="REMOVE"
-                    $TD_stp_sanPanel4.Visibility="Visible"
-                    $TD_cb_sanConnectionTypThree.Text = $TD_Cred.ConnectionTyp;  $TD_tb_sanIPAdrThree.Text = $TD_Cred.IPAddress;  $TD_tb_sanUserNameThree.Text= $TD_Cred.UserName; 
-                    SST_ToolMessageCollector -TD_ToolMSGCollector $("Credentials successfully imported to line $($TD_Cred.ID)") -TD_ToolMSGType Message
-                }
-                Default {SST_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong, check the prompt for more information.") -TD_ToolMSGType Error}
-            }
-        }
+    if([string]::IsNullOrEmpty($TD_ImportedCredentials)){
+        SST_ToolMessageCollector -TD_ToolMSGCollector $("Import failed!") -TD_ToolMSGType Warning
+    }else {
+        $TD_DG_KnownDeviceList.ItemsSource = $TD_ImportedCredentials
+        SST_ToolMessageCollector -TD_ToolMSGCollector $("Credentials successfully Import") -TD_ToolMSGType Message
     }
-
+    
+})
+<# this part is needed if there are any Updates on the cred in DG #>
+$TD_DG_KnownDeviceList.add_SelectionChanged({
+    $TD_DG_KnownDeviceList | ForEach-Object {
+        $TD_CB_DeviceType.Text = $_.selecteditem.DeviceTyp
+        $TD_CB_DeviceConnectionType.Text = $_.selecteditem.ConnectionTyp
+        $TD_TB_DeviceIPAddr.Text = $_.selecteditem.IPAdresse
+        $TD_TB_DeviceUserName.Text = $_.selecteditem.UserName
+        if($_.selecteditem.SVCorVF -ne ""){$TD_CB_SVCorVF.IsChecked=$true}else{$TD_CB_SVCorVF.IsChecked=$false}
+    }
 })
 #endregion
 

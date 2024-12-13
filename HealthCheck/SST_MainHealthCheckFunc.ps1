@@ -1,0 +1,2 @@
+<# übernimmt die steuerung des healthchecks prüft dabei ob bestimmt funktionen die vorhanden sind genutzt werden können etc.#>
+<# zu prüfen ist ob man eine für storage und ein für san nimmt oder alles über diese eine abarbeitet #>
