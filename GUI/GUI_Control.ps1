@@ -263,27 +263,8 @@ $TD_DG_KnownDeviceList.add_SelectionChanged({
 #region IBM Button
 $TD_btn_IBM_Eventlog.add_click({
 
-    $TD_Credentials=@()
-    $TD_Credentials_Checked = Get_CredGUIInfos -STP_ID 1 -TD_ConnectionTyp $TD_cb_storageConnectionTyp.Text -TD_IPAdresse $TD_tb_storageIPAdr.Text -TD_UserName $TD_tb_storageUserName.Text -TD_Password $TD_tb_storagePassword
-    $TD_Credentials += $TD_Credentials_Checked
-    Start-Sleep -Seconds 0.2
-
-    $TD_Credentials_Checked = Get_CredGUIInfos -STP_ID 2 -TD_ConnectionTyp $TD_cb_storageConnectionTypOne.Text -TD_IPAdresse $TD_tb_storageIPAdrOne.Text -TD_UserName $TD_tb_storageUserNameOne.Text -TD_Password $TD_tb_storagePasswordOne
-    $TD_Credentials += $TD_Credentials_Checked
-    Start-Sleep -Seconds 0.2
-
-    $TD_Credentials_Checked = Get_CredGUIInfos -STP_ID 3 -TD_ConnectionTyp $TD_cb_storageConnectionTypTwo.Text -TD_IPAdresse $TD_tb_storageIPAdrTwo.Text -TD_UserName $TD_tb_storageUserNameTwo.Text -TD_Password $TD_tb_storagePasswordTwo
-    $TD_Credentials += $TD_Credentials_Checked
-    Start-Sleep -Seconds 0.2
-
-    $TD_Credentials_Checked = Get_CredGUIInfos -STP_ID 4 -TD_ConnectionTyp $TD_cb_storageConnectionTypThree.Text -TD_IPAdresse $TD_tb_storageIPAdrThree.Text -TD_UserName $TD_tb_storageUserNameThree.Text -TD_Password $TD_tb_storagePasswordThree
-    $TD_Credentials += $TD_Credentials_Checked
-    Start-Sleep -Seconds 0.2
-
-    $TD_lb_StorageEventLogOne,$TD_lb_StorageEventLogTwo,$TD_lb_StorageEventLogThree,$TD_lb_StorageEventLogFour |ForEach-Object {
-        if($_.items.count -gt 0){$TD_UCRefresh = $true}; $_.ItemsSource = $EmptyVar
-    }
-
+    $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_.DeviceTyp -eq "Storage"}
+    Write-Host $TD_Credentials -ForegroundColor Cyan
     foreach($TD_Credential in $TD_Credentials){
         <# QaD needs a Codeupdate #>
         $TD_IBM_EventLogShow =@()
@@ -291,25 +272,32 @@ $TD_btn_IBM_Eventlog.add_click({
         switch ($TD_Credential.ID) {
             {($_ -eq 1)} 
             {   
-                Write-Host $TD_lb_StorageEventLogOne.ItemsSource
+                Write-Host $TD_Credential.ID -ForegroundColor Red
+                continue
                 $TD_IBM_EventLogShow = IBM_EventLog -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.StorageUserName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $TD_Credential.StoragePassword -TD_Exportpath $TD_tb_ExportPath.Text
                 Start-Sleep -Seconds 0.2
                 $TD_lb_StorageEventLogOne.ItemsSource = $TD_IBM_EventLogShow
             }
             {($_ -eq 2) } 
             {           
+                Write-Host $TD_Credential.ID -ForegroundColor Green
+                continue
                 $TD_IBM_EventLogShow = IBM_EventLog -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.StorageUserName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $TD_Credential.StoragePassword -TD_Exportpath $TD_tb_ExportPath.Text
                 Start-Sleep -Seconds 0.2
                 $TD_lb_StorageEventLogTwo.ItemsSource = $TD_IBM_EventLogShow
             }
             {($_ -eq 3) } 
             {           
+                Write-Host $TD_Credential.ID -ForegroundColor Magenta
+                continue
                 $TD_IBM_EventLogShow = IBM_EventLog -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.StorageUserName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $TD_Credential.StoragePassword -TD_Exportpath $TD_tb_ExportPath.Text
                 Start-Sleep -Seconds 0.2
                 $TD_lb_StorageEventLogThree.ItemsSource = $TD_IBM_EventLogShow
             }
             {($_ -eq 4) }
             {           
+                Write-Host $TD_Credential.ID -ForegroundColor Yellow
+                continue
                 $TD_IBM_EventLogShow = IBM_EventLog -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.StorageUserName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $TD_Credential.StoragePassword -TD_Exportpath $TD_tb_ExportPath.Text
                 Start-Sleep -Seconds 0.2
                 $TD_lb_StorageEventLogFour.ItemsSource = $TD_IBM_EventLogShow
