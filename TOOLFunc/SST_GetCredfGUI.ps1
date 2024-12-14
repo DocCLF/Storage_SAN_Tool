@@ -20,7 +20,7 @@ function SST_GetCredfGUI {
         }
         $TD_AddaNewDevice="no"
     }
-    if($TD_ErrorCode -eq 1){
+    if($TD_ErrorCode -eq 0){
         $TD_ExistingCreds = $TD_DG_KnownDeviceList.ItemsSource
         <# ForEach is needed if you import ced, because you musst add the pw this was not exported  #>
         [array]$TD_Credentials = foreach ($TD_ExistingCred in $TD_ExistingCreds) {
