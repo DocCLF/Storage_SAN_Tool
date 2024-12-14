@@ -1,7 +1,8 @@
 function SST_GetCredfGUI {
     [CmdletBinding()]
     param(
-        [int]$TD_ErrorCode =0,
+        [Int16]$TD_ErrorCode =0,
+        [Int16]$TD_CredentialsCount=1,
         [string]$TD_AddaNewDevice
     )
 
@@ -27,13 +28,19 @@ function SST_GetCredfGUI {
             if($TD_ExistingCred.IPAdresse -eq $TD_TB_DeviceIPAddr.Text){continue}
             
             $TD_ExistingCred
-        }    
-        #$TD_StorageDevices = (($TD_Credentials |Where-Object {$_.DeviceTyp -eq "Storage"}).count + 1)
-        #$TD_SANDevices = (($TD_Credentials |Where-Object {$_.DeviceTyp -eq "SAN"}).count + 1)
-        Write-Host $TD_StorageDevices - $TD_SANDevices
+        }
+        <# Split between Storage and SAN #>
+        if($TD_CB_DeviceType.Text -eq "Storage"){
+            $TD_CredentialsCount=(($TD_Credentials |Where-Object {$_.DeviceTyp -eq "Storage"}).count + 1)
+        }
+
+        if($TD_CB_DeviceType.Text -eq "SAN"){
+            $TD_CredentialsCount= (($TD_Credentials |Where-Object {$_.DeviceTyp -eq "SAN"}).count + 1)
+        }
+
+        <# Create the Main_CredObj #>
         $TD_UserInputCred = "" | Select-Object ID,DeviceTyp,ConnectionTyp,IPAdresse,UserName,Password,SSHKeyPath,SVCorVF,MTMCode,ProductDescr,CurrentFirmware,Exportpath
-        if($TD_Credentials.DeviceTyp -eq "Storage"){$TD_UserInputCred.ID = ($TD_Credentials |Where-Object {$_.DeviceTyp -eq "Storage"}).count + 1 ;}
-        if($TD_Credentials.DeviceTyp -eq "SAN"){$TD_UserInputCred.ID = ($TD_Credentials |Where-Object {$_.DeviceTyp -eq "SAN"}).count + 1 ;}    
+        $TD_UserInputCred.ID               =   $TD_CredentialsCount;
         $TD_UserInputCred.DeviceTyp        =   $TD_CB_DeviceType.Text;
         $TD_UserInputCred.ConnectionTyp    =   $TD_CB_DeviceConnectionType.Text;
         $TD_UserInputCred.IPAdresse        =   $TD_TB_DeviceIPAddr.Text;
@@ -47,9 +54,8 @@ function SST_GetCredfGUI {
         $TD_UserInputCred.ProductDescr     =   $TD_BasicDeviceInfo.ProductDes
         $TD_UserInputCred.CurrentFirmware  =   $TD_BasicDeviceInfo.Code_Level
         $TD_UserInputCred.Exportpath       =   "$PSRootPath\Export\";
-                    
+
         $TD_Credentials += $TD_UserInputCred
-        Write-Host $TD_Credentials.id $TD_Credentials.DeviceTyp -ForegroundColor Magenta
         $TD_DG_KnownDeviceList.ItemsSource = $TD_Credentials
     }
 
