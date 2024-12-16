@@ -9,7 +9,7 @@ function SST_ExportCredential {
         $TD_ToExportCredInfo.ID = $TD_CollectedCredData.ID
         $TD_ToExportCredInfo.DeviceTyp = $TD_CollectedCredData.DeviceTyp;
         $TD_ToExportCredInfo.ConnectionTyp = $TD_CollectedCredData.ConnectionTyp;
-        $TD_ToExportCredInfo.IPAdresse = $TD_CollectedCredData.IPAdresse;
+        $TD_ToExportCredInfo.IPAddress = $TD_CollectedCredData.IPAddress;
         $TD_ToExportCredInfo.UserName = $TD_CollectedCredData.UserName;
         $TD_ToExportCredInfo.SVCorVF = $TD_CollectedCredData.SVCorVF;
         $TD_ToExportCredInfo

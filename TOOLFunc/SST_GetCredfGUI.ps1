@@ -20,7 +20,7 @@ function SST_GetCredfGUI {
         }
         $TD_AddaNewDevice="no"
     }
-    if($TD_ErrorCode -eq 0){
+    if($TD_ErrorCode -eq 1){
         $TD_ExistingCreds = $TD_DG_KnownDeviceList.ItemsSource
         <# ForEach is needed if you import ced, because you musst add the pw this was not exported  #>
         [array]$TD_Credentials = foreach ($TD_ExistingCred in $TD_ExistingCreds) {
@@ -37,19 +37,20 @@ function SST_GetCredfGUI {
         if($TD_CB_DeviceType.Text -eq "SAN"){
             $TD_CredentialsCount= (($TD_Credentials |Where-Object {$_.DeviceTyp -eq "SAN"}).count + 1)
         }
-
+        if($TD_CB_DeviceConnectionType.Text -like "Classic*"){$TD_CB_DeviceConnectionTypeText="plink"}else{$TD_CB_DeviceConnectionTypeText="ssh"}
+        Write-Host $TD_CB_DeviceConnectionTypeText
         <# Create the Main_CredObj #>
-        $TD_UserInputCred = "" | Select-Object ID,DeviceTyp,ConnectionTyp,IPAdresse,UserName,Password,SSHKeyPath,SVCorVF,MTMCode,ProductDescr,CurrentFirmware,Exportpath
+        $TD_UserInputCred = "" | Select-Object ID,DeviceTyp,ConnectionTyp,IPAddress,UserName,Password,SSHKeyPath,SVCorVF,MTMCode,ProductDescr,CurrentFirmware,Exportpath
         $TD_UserInputCred.ID               =   $TD_CredentialsCount;
         $TD_UserInputCred.DeviceTyp        =   $TD_CB_DeviceType.Text;
-        $TD_UserInputCred.ConnectionTyp    =   $TD_CB_DeviceConnectionType.Text;
-        $TD_UserInputCred.IPAdresse        =   $TD_TB_DeviceIPAddr.Text;
+        $TD_UserInputCred.ConnectionTyp    =   $TD_CB_DeviceConnectionTypeText;
+        $TD_UserInputCred.IPAddress        =   $TD_TB_DeviceIPAddr.Text;
         $TD_UserInputCred.UserName         =   $TD_TB_DeviceUserName.Text;
-        $TD_UserInputCred.Password         =   $TD_TB_DevicePassword;
+        <# The PwLine needs a better Option #>
+        $TD_UserInputCred.Password         =   ConvertTo-SecureString $TD_TB_DevicePassword.Password -AsPlainText -Force;
         $TD_UserInputCred.SSHKeyPath       =   $TD_TB_PathtoSSHKeyNotVisibil.Text;
-        if($TD_CB_SVCorVF.IsChecked -and ($TD_CB_DeviceType.Text -eq "Storage")){$TD_UserInputCred.SVCorVF = "SVC"};
-        if($TD_CB_SVCorVF.IsChecked -and ($TD_CB_DeviceType.Text -eq "SAN")){$TD_UserInputCred.SVCorVF = "VF"};
-        if(!($TD_CB_SVCorVF.IsChecked)){$TD_UserInputCred.SVCorVF = ""};
+        if($TD_CB_SVCorVF.IsChecked -and ($TD_CB_DeviceType.Text -eq "Storage")){$TD_UserInputCred.SVCorVF = "SVC"}else{if($TD_CB_DeviceType.Text -eq "Storage"){$TD_UserInputCred.SVCorVF = "FSystem"}};
+        if($TD_CB_SVCorVF.IsChecked -and ($TD_CB_DeviceType.Text -eq "SAN")){$TD_UserInputCred.SVCorVF = "VF"}else{if($TD_CB_DeviceType.Text -eq "SAN"){$TD_UserInputCred.SVCorVF = ""}};
         $TD_UserInputCred.MTMCode          =   $TD_BasicDeviceInfo.Prod_MTM
         $TD_UserInputCred.ProductDescr     =   $TD_BasicDeviceInfo.ProductDes
         $TD_UserInputCred.CurrentFirmware  =   $TD_BasicDeviceInfo.Code_Level
