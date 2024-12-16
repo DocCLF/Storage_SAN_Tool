@@ -15,7 +15,5 @@ function SST_ExportCredential {
         $TD_ToExportCredInfo
     }
     
-    #$TD_CredObject=New-Object -TypeName psobject -Property $TD_CredCollection
-    
     return $TD_CredCollection
 }
