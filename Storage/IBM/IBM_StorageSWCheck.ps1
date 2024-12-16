@@ -32,9 +32,11 @@ function IBM_StorageSWCheck {
     )
     
     begin {
+        
+        $PSRootPath = ((([IO.DirectoryInfo] $PSScriptRoot).Parent).Parent).FullName
 
         try {
-            $IBM_LocDateInfo=((((Get-Item -Path $PSScriptRoot\Resources\IBM_StorageSWCheck*).FullName).TrimStart('$PSScriptRoot\Resources\IBM_StorageSWCheck').TrimEnd('.txt')).Trim())  
+            $IBM_LocDateInfo=((((Get-Item -Path $PSRootPath\Resources\IBM_StorageSWCheck*).FullName).TrimStart('$PSScriptRoot\Resources\IBM_StorageSWCheck').TrimEnd('.txt')).Trim())  
         }
         catch {
             <#Do this if a terminating exception happens#>
@@ -67,11 +69,11 @@ function IBM_StorageSWCheck {
             }
 
             $IBM_LocSpecVirtSWInofs = $IBM_LocSpecVirtSWInofs |Select-Object -SkipLast ($IBM_LocSpecVirtSWInofs.Count - 80)
-            $IBM_LocSpecVirtSWInofs | Out-File -FilePath $PSScriptRoot\Resources\IBM_StorageSWCheck_$IBM_WebDateInfo.txt
+            $IBM_LocSpecVirtSWInofs | Out-File -FilePath $PSRootPath\Resources\IBM_StorageSWCheck_$IBM_WebDateInfo.txt
             
         }else {
             <# Action when all if and elseif conditions are false #>
-            $IBM_LocSpecVirtSWInofs = Get-Content -Path $PSScriptRoot\Resources\IBM_StorageSWCheck_$IBM_WebDateInfo.txt
+            $IBM_LocSpecVirtSWInofs = Get-Content -Path $PSRootPath\Resources\IBM_StorageSWCheck_$IBM_WebDateInfo.txt
         }
     }
     
