@@ -34,9 +34,11 @@ function SST_GetCredfGUI {
         if($TD_CB_DeviceType.Text -eq "Storage"){
             $TD_CredentialsCount=(($TD_Credentials |Where-Object {$_.DeviceTyp -eq "Storage"}).count + 1)
         }
+
         if($TD_CB_DeviceType.Text -eq "SAN"){
             $TD_CredentialsCount= (($TD_Credentials |Where-Object {$_.DeviceTyp -eq "SAN"}).count + 1)
         }
+
         if($TD_CB_DeviceConnectionType.Text -like "Classic*"){$TD_CB_DeviceConnectionTypeText="plink"}else{$TD_CB_DeviceConnectionTypeText="ssh"}
         <# Create the Main_CredObj #>
         $TD_UserInputCred = "" | Select-Object ID,DeviceTyp,ConnectionTyp,IPAddress,UserName,Password,SSHKeyPath,SVCorVF,MTMCode,ProductDescr,CurrentFirmware,Exportpath

@@ -167,7 +167,7 @@
                                 <DataGridTextColumn Header="Connection Typ" Width="Auto" Binding="{Binding ConnectionTyp}" IsReadOnly="True"/>
                                 <DataGridTextColumn Header="IP-Adresse" Width="Auto"  Binding="{Binding IPAddress}" IsReadOnly="True"/>
                                 <DataGridTextColumn Header="Login User" Width="Auto"  Binding="{Binding UserName}" IsReadOnly="True"/>
-                                <DataGridTextColumn Header="Login PW" Width="Auto"  Binding="{Binding Password}" IsReadOnly="True"/>
+                                <DataGridTextColumn Header="Login PW" Binding="{Binding Password}" Visibility="{Binding ElementName=Password, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}"/>
                                 <DataGridTextColumn Header="MTM-Code" Width="Auto"  Binding="{Binding MTMCode}" IsReadOnly="True"/>
                                 <DataGridTextColumn Header="Product" Width="Auto"  Binding="{Binding ProductDescr}" IsReadOnly="True"/>
                                 <DataGridTextColumn Header="Firmware" Width="Auto"  Binding="{Binding CurrentFirmware}" IsReadOnly="True"/>

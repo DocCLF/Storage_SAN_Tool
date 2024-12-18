@@ -46,6 +46,12 @@ function SST_DeviceConnecCheck {
         
                     switch ($TD_BasicDeviceInfos.Prod_MTM[0]) {
                         {$_ -like "2078-324"}  { $TD_BInfo.ProductDes = "V5030 Gen2" }
+                        {$_ -like "4666-AH8"}  { $TD_BInfo.ProductDes = "FlashSystem 9500" }
+                        {$_ -like "4666-AG8"}  { $TD_BInfo.ProductDes = "FlashSystem 9200" }
+                        {$_ -like "2145-SV1"}  { $TD_BInfo.ProductDes = "SVC SV1" }
+                        {$_ -like "2145-SV2"}  { $TD_BInfo.ProductDes = "SVC SV2" }
+                        {$_ -like "2145-SA2"}  { $TD_BInfo.ProductDes = "SVC SA2" }
+                        {$_ -like "2145-SV3"}  { $TD_BInfo.ProductDes = "SVC SV3" }
             
                         Default {
                             $TD_BInfo.ProductDes = "Unknown Type"
@@ -110,7 +116,6 @@ function SST_DeviceConnecCheck {
     
     end {
         if($TD_Selected_Items -eq "no"){
-            Write-Host -> $TD_BasicDeviceInfo
             return $TD_BasicDeviceInfo
         }
     }
