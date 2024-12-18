@@ -80,8 +80,14 @@ foreach($file in $UserCxamlFile){
         $TD_ExporttoOD = [Environment]::GetFolderPath("mydocuments")
         $ExportFolderPath="$TD_ExporttoOD\StorageSANKit"
         If(!(Test-Path -Path $ExportFolderPath)){
-            $TD_ExportFolderCreated = New-Item $ExportFolderPath -ItemType Directory -ErrorAction Stop
-            $TD_tb_ExportPath.Text = $TD_ExportFolderCreated.Name
+            try {
+                $TD_ExportFolderCreated = New-Item $ExportFolderPath -ItemType Directory -ErrorAction Stop
+                $TD_tb_ExportPath.Text = $TD_ExportFolderCreated.Name
+            }
+            catch {
+                SST_ToolMessageCollector -TD_ToolMSGCollector $_.Exception.Message -TD_ToolMSGType Error
+            }
+
         }else{
             $TD_tb_ExportPath.Text = $ExportFolderPath
             #PowerShell Create directory if not exists
@@ -240,22 +246,18 @@ $TD_btn_ExportCred.add_click({
 $TD_btn_ImportCred.add_click({
 
     $TD_ImportedCredentials = SST_ImportCredential
-    if([string]::IsNullOrEmpty($TD_ImportedCredentials)){
+    if($TD_ImportedCredentials -lt 1){
         SST_ToolMessageCollector -TD_ToolMSGCollector $("Import failed!") -TD_ToolMSGType Warning
     }else {
-        $TD_DG_KnownDeviceList.ItemsSource = $TD_ImportedCredentials
         SST_ToolMessageCollector -TD_ToolMSGCollector $("Credentials successfully Import") -TD_ToolMSGType Message
     }
     
 })
 <# this part is needed if there are any Updates on the cred in DG #>
 $TD_DG_KnownDeviceList.add_SelectionChanged({
-    $TD_DG_KnownDeviceList | ForEach-Object {
-        $TD_CB_DeviceType.Text = $_.selecteditem.DeviceTyp
-        $TD_CB_DeviceConnectionType.Text = $_.selecteditem.ConnectionTyp
-        $TD_TB_DeviceIPAddr.Text = $_.selecteditem.IPAdresse
-        $TD_TB_DeviceUserName.Text = $_.selecteditem.UserName
-        if($_.selecteditem.SVCorVF -ne ""){$TD_CB_SVCorVF.IsChecked=$true}else{$TD_CB_SVCorVF.IsChecked=$false}
+    <# to prevent the function from being executed more than once #>
+    if(!([string]::IsNullOrWhiteSpace($TD_DG_KnownDeviceList.selecteditem.IPAddress))){
+        SST_DeviceConnecCheck -TD_Selected_Items "yes" -TD_Selected_DeviceType $TD_DG_KnownDeviceList.selecteditem.DeviceTyp -TD_Selected_DeviceConnectionType $TD_DG_KnownDeviceList.selecteditem.ConnectionTyp -TD_Selected_DeviceIPAddr $TD_DG_KnownDeviceList.selecteditem.IPAddress -TD_Selected_DeviceUserName $TD_DG_KnownDeviceList.selecteditem.UserName -TD_Selected_DevicePassword $TD_DG_KnownDeviceList.selecteditem.Password -TD_Selected_SVCorVF $TD_DG_KnownDeviceList.selecteditem.SVCorVF
     }
 })
 #endregion
@@ -1599,9 +1601,7 @@ $TD_btn_CloseAll.add_click({
     $Mainform.Close()
 })
 
-
 Get-Variable TD_*
-
 
 $Mainform.showDialog()
 $Mainform.activate()

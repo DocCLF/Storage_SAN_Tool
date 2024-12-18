@@ -40,6 +40,7 @@ All notable changes to this project will be documented in this file.
 
 ### Changed
 - GUI from Storage Healthcheck compl. redesigned 
+- Credentials Export from *.csv to *.xml
 - Tool structure completely redesigned to make it easier to add new functions
 - IBM GUI from IBM Spectrum Virtualize Panel, due to the new possibilities, a breakdown by software version has now been made.
 - FOS PortBufferShow from Listview to Datagrid

@@ -1,20 +1,45 @@
 function SST_DeviceConnecCheck {
     [CmdletBinding()]
     param (
-        
+        $TD_Selected_Items,
+        $TD_Selected_DeviceType,
+        $TD_Selected_DeviceConnectionType,
+        $TD_Selected_DeviceIPAddr,
+        $TD_Selected_DeviceUserName,
+        $TD_Selected_DevicePassword,
+        $TD_Selected_SVCorVF
     )
     
     begin {
-        if($TD_CB_SVCorVF.IsChecked -and ($TD_CB_DeviceType.Text -eq "Storage")){$TD_UserInputCred = "SVC"};
-        if($TD_CB_SVCorVF.IsChecked -and ($TD_CB_DeviceType.Text -eq "SAN")){$TD_UserInputCred = "VF"};
-        if(!($TD_CB_SVCorVF.IsChecked)){$TD_UserInputCred = ""};
+        switch ($TD_Selected_Items) {
+            "yes" { 
+                $TD_Selected_DeviceType
+                $TD_Selected_DeviceConnectionType
+                $TD_Selected_DeviceIPAddr
+                $TD_Selected_DeviceUserName
+                $TD_Selected_DevicePassword
+                $TD_UserInputCred = $TD_Selected_SVCorVF
+             }
+            "no" { 
+                $TD_Selected_DeviceConnectionType = $TD_CB_DeviceConnectionType.Text
+                $TD_Selected_DeviceIPAddr = $TD_TB_DeviceIPAddr.Text
+                $TD_Selected_DeviceUserName = $TD_TB_DeviceUserName.Text
+                $TD_Selected_DevicePassword = $TD_TB_DevicePassword.Password
+                $TD_Selected_DeviceType = $TD_CB_DeviceType.Text
+                if($TD_CB_SVCorVF.IsChecked -and ($TD_Selected_DeviceType -eq "Storage")){$TD_UserInputCred = "SVC"};
+                if($TD_CB_SVCorVF.IsChecked -and ($TD_Selected_DeviceType -eq "SAN")){$TD_UserInputCred = "VF"};
+                if(!($TD_CB_SVCorVF.IsChecked)){$TD_UserInputCred = ""};
+             }
+            Default {SST_ToolMessageCollector -TD_ToolMSGCollector "Something went wrong at SST_DeviceConnecCheck Func please check the promt or close the gui and write $error in the promt." -TD_ToolMSGType Warning}
+        }
+
     }
     
     process {
 
-        switch ($TD_CB_DeviceType.Text) {
+        switch ($TD_Selected_DeviceType) {
             "Storage" { 
-                $TD_BasicDeviceInfos = IBM_BaseStorageInfos -TD_Device_ConnectionTyp $TD_CB_DeviceConnectionType.Text -TD_Device_DeviceIP $TD_TB_DeviceIPAddr.Text -TD_Device_UserName $TD_TB_DeviceUserName.Text -TD_Device_PW $TD_TB_DevicePassword.Password -TD_Storage $TD_UserInputCred
+                $TD_BasicDeviceInfos = IBM_BaseStorageInfos -TD_Device_ConnectionTyp $TD_Selected_DeviceConnectionType -TD_Device_DeviceIP $TD_Selected_DeviceIPAddr -TD_Device_UserName $TD_Selected_DeviceUserName -TD_Device_PW $([Net.NetworkCredential]::new('', $TD_Selected_DevicePassword).Password) -TD_Storage $TD_UserInputCred
                 <# not the best check but try-catch do not work, i have to check why #>
                 if($TD_BasicDeviceInfos.count -gt 0){
                     $TD_BInfo = "" | Select-Object ProductDes,Prod_MTM,Code_Level
@@ -38,7 +63,7 @@ function SST_DeviceConnecCheck {
                 }
             }
             "SAN" { 
-                $TD_BasicDeviceInfos = FOS_BasicSwitchInfos -TD_Device_ConnectionTyp $TD_CB_DeviceConnectionType.Text -TD_Device_DeviceIP $TD_TB_DeviceIPAddr.Text -TD_Device_UserName $TD_TB_DeviceUserName.Text -TD_Device_PW $TD_TB_DevicePassword.Password
+                $TD_BasicDeviceInfos = FOS_BasicSwitchInfos -TD_Device_ConnectionTyp $TD_Selected_DeviceConnectionType -TD_Device_DeviceIP $TD_Selected_DeviceIPAddr -TD_Device_UserName $TD_Selected_DeviceUserName -TD_Device_PW $([Net.NetworkCredential]::new('', $TD_Selected_DevicePassword).Password)
                 if($TD_BasicDeviceInfos.count -gt 0){
                     $TD_BInfo = "" | Select-Object ProductDes,Prod_MTM,Code_Level
                     $TD_BInfo.ProductDes = $TD_BasicDeviceInfos.'Brocade Product Name'
@@ -53,10 +78,40 @@ function SST_DeviceConnecCheck {
             }
             Default {SST_ToolMessageCollector -TD_ToolMSGCollector "Something went wrong at SST_DeviceConnecCheck Func or no Device Type was found, please check the promt." -TD_ToolMSGType Warning}
         }
-
+        
+        if($TD_Selected_Items -eq "yes"){
+            $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource
+            <# ForEach is needed if you import ced, because you musst add the pw this was not exported  #>
+            [array]$TD_Credentials = foreach ($TD_ExistingCred in $TD_Credentials) {
+                if($TD_ExistingCred.IPAddress -eq $TD_Selected_DeviceIPAddr){
+                    $TD_UserInputCred = "" | Select-Object ID,DeviceTyp,ConnectionTyp,IPAddress,UserName,Password,SSHKeyPath,SVCorVF,MTMCode,ProductDescr,CurrentFirmware,Exportpath
+                    $TD_UserInputCred.ID               =   $TD_ExistingCred.ID;
+                    $TD_UserInputCred.DeviceTyp        =   $TD_ExistingCred.DeviceTyp;
+                    $TD_UserInputCred.ConnectionTyp    =   $TD_ExistingCred.ConnectionTyp;
+                    $TD_UserInputCred.IPAddress        =   $TD_ExistingCred.IPAddress;
+                    $TD_UserInputCred.UserName         =   $TD_ExistingCred.UserName;
+                    <# The PwLine needs a better Option #>
+                    $TD_UserInputCred.Password         =   $TD_Selected_DevicePassword;
+                    $TD_UserInputCred.SSHKeyPath       =   $TD_ExistingCred.SSHKeyPath;
+                    $TD_UserInputCred.SVCorVF          =   $TD_ExistingCred.SVCorVF;
+                    $TD_UserInputCred.MTMCode          =   $TD_BasicDeviceInfo.Prod_MTM;
+                    $TD_UserInputCred.ProductDescr     =   $TD_BasicDeviceInfo.ProductDes;
+                    $TD_UserInputCred.CurrentFirmware  =   $TD_BasicDeviceInfo.Code_Level;
+                    
+                    $TD_ExistingCredUpdate = $TD_UserInputCred
+                }else{
+                    $TD_ExistingCredUpdate = $TD_ExistingCred |Where-Object {$_}
+                }
+                $TD_ExistingCredUpdate
+            }
+            $TD_DG_KnownDeviceList.ItemsSource = $TD_Credentials
+        }
     }
     
     end {
-        return $TD_BasicDeviceInfo
+        if($TD_Selected_Items -eq "no"){
+            Write-Host -> $TD_BasicDeviceInfo
+            return $TD_BasicDeviceInfo
+        }
     }
 }
