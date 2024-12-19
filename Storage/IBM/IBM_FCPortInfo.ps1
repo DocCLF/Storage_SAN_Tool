@@ -43,9 +43,9 @@ function IBM_FCPortInfo {
             #Infos from lstargetportfc
             $TD_FCPortInfo.WWPN = ($TD_FCPortMore|Select-String -Pattern '^\d+:([0-9A-z]+):' -AllMatches).Matches.Groups[1].Value
             $TD_FCPortInfo.WWNN = ($TD_FCPortMore|Select-String -Pattern '^\d+:([0-9A-z]+):([0-9A-z]+):' -AllMatches).Matches.Groups[2].Value
-            $TD_FCPortInfo.HostIOPermitted = ($TD_FCPortMore|Select-String -Pattern ':(yes|no):(yes|no):(scsi|nvme):' -AllMatches).Matches.Groups[1].Value
-            $TD_FCPortInfo.Virtualized = ($TD_FCPortMore|Select-String -Pattern ':(yes|no):(yes|no):(scsi|nvme):' -AllMatches).Matches.Groups[2].Value
-            $TD_FCPortInfo.Protocol = ($TD_FCPortMore|Select-String -Pattern ':(yes|no):(yes|no):(scsi|nvme):' -AllMatches).Matches.Groups[3].Value
+            $TD_FCPortInfo.HostIOPermitted = ($TD_FCPortMore|Select-String -Pattern ':(yes|no):(yes|no):(scsi|nvme)' -AllMatches).Matches.Groups[1].Value
+            $TD_FCPortInfo.Virtualized = ($TD_FCPortMore|Select-String -Pattern ':(yes|no):(yes|no):(scsi|nvme)' -AllMatches).Matches.Groups[2].Value
+            $TD_FCPortInfo.Protocol = ($TD_FCPortMore|Select-String -Pattern ':(yes|no):(yes|no):(scsi|nvme)' -AllMatches).Matches.Groups[3].Value
             $TD_FCPortInfo.HostCount = ($TD_FCPortMore|Select-String -Pattern ':(\d+):\d+$' -AllMatches).Matches.Groups[1].Value
             $TD_FCPortInfo.ActiveLoginCount = ($TD_FCPortMore|Select-String -Pattern ':\d+:(\d+)$' -AllMatches).Matches.Groups[1].Value
 
