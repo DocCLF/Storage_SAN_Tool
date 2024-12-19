@@ -51,10 +51,8 @@ function IBM_VolumeInfo {
 
             if([string]$TD_Exportpath -ne "$PSCommandPath\Export\"){
                 $TD_VDiskFuncResault | Export-Csv -Path $TD_Exportpath\$($TD_Line_ID)_Volume_Result_$(Get-Date -Format "yyyy-MM-dd").csv -NoTypeInformation
-                Write-Host "The Export can be found at $TD_Exportpath " -ForegroundColor Green
             }else {
                 $TD_VDiskFuncResault | Export-Csv -Path $PSCommandPath\Export\$($TD_Line_ID)_Volume_Result_$(Get-Date -Format "yyyy-MM-dd").csv -NoTypeInformation
-                Write-Host "The Export can be found at $PSCommandPath\Export\ " -ForegroundColor Green
             }
         }else {
             <# output on the promt #>

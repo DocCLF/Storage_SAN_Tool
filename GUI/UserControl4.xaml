@@ -128,7 +128,7 @@
                             <Style TargetType="Label">
                                 <Style.Triggers>
                                     <DataTrigger Binding="{Binding ElementName=CB_DeviceType ,Path=SelectedValue}" Value="SAN">
-                                        <Setter Property="Visibility" Value="Collapsed" />
+                                        <Setter Property="Content" Value="Virtual Fabric?" />
                                     </DataTrigger>
                                 </Style.Triggers>
                             </Style>

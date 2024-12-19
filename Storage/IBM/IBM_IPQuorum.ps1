@@ -45,7 +45,7 @@ function IBM_IPQuorum {
                 }
              }
             {($_ -lt 3)} { $TD_Quorum = $null }
-            Default {Write-Host "Something went wrong at lsquorum" -ForegroundColor DarkMagenta}
+            Default { SST_ToolMessageCollector -TD_ToolMSGCollector "Something went wrong at lsquorum" -TD_ToolMSGType Error }
         }
     }
     
@@ -54,10 +54,8 @@ function IBM_IPQuorum {
         if($TD_Export -eq "yes"){
             if([string]$TD_Exportpath -ne "$PSCommandPath\Export\"){
                 $TD_Quorum | Export-Csv -Path $TD_Exportpath\$($TD_Line_ID)_Quorum_Result_$(Get-Date -Format "yyyy-MM-dd").csv -NoTypeInformation
-                Write-Host "The Export can be found at $TD_Exportpath " -ForegroundColor Green
             }else {
                 $TD_Quorum | Export-Csv -Path $PSCommandPath\Export\$($TD_Line_ID)_Quorum_Result_$(Get-Date -Format "yyyy-MM-dd").csv -NoTypeInformation
-                Write-Host "The Export can be found at $PSCommandPath\Export\ " -ForegroundColor Green
             }
         }else {
             <# output on the promt #>

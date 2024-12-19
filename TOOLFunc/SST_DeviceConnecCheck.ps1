@@ -46,8 +46,14 @@ function SST_DeviceConnecCheck {
         
                     switch ($TD_BasicDeviceInfos.Prod_MTM[0]) {
                         {$_ -like "2078-324"}  { $TD_BInfo.ProductDes = "V5030 Gen2" }
-                        {$_ -like "4666-AH8"}  { $TD_BInfo.ProductDes = "FlashSystem 9500" }
-                        {$_ -like "4666-AG8"}  { $TD_BInfo.ProductDes = "FlashSystem 9200" }
+                        {$_ -like "2077-4H4" -or $_ -like "2078-4H4" }  { $TD_BInfo.ProductDes = "FlashSystem 5100" }
+                        {$_ -like "4662-6H2" -or $_ -like "4662-UH6" }  { $TD_BInfo.ProductDes = "FlashSystem 5200" }
+                        {$_ -like "4662-7H2"}  { $TD_BInfo.ProductDes = "FlashSystem 5300" }
+                        {$_ -like "2076-824" -or $_ -like "4664-824" -or $_ -like "*-U7C" }  { $TD_BInfo.ProductDes = "FlashSystem 7200" }
+                        {$_ -like "4657-924" -or $_ -like "4657-U7D"}  { $TD_BInfo.ProductDes = "FlashSystem 7300" }
+                        {$_ -like "4666-AH8" -or $_ -like "4666-UH8" -or $_ -like "4983-AH8" }  { $TD_BInfo.ProductDes = "FlashSystem 9500" }
+                        {$_ -like "4666-AG8" -or $_ -like "4666-UG8" -or $_ -like "984*G8" }  { $TD_BInfo.ProductDes = "FlashSystem 9200" }
+                        {$_ -like "2145-DH8"}  { $TD_BInfo.ProductDes = "SVC DH8" }
                         {$_ -like "2145-SV1"}  { $TD_BInfo.ProductDes = "SVC SV1" }
                         {$_ -like "2145-SV2"}  { $TD_BInfo.ProductDes = "SVC SV2" }
                         {$_ -like "2145-SA2"}  { $TD_BInfo.ProductDes = "SVC SA2" }
