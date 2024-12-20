@@ -30,13 +30,13 @@ All notable changes to this project will be documented in this file.
 - Clear Filter at IBM HostVolumeMap 
 - Tooltips for the tables and columns where it makes sense.
 - give some tables a color
-- LogWindow in Settings Tab
 
 ### Fixed
 - Regex error that was sometimes triggered when no host cluster is configured. 
 - DriveInfo the message that the SVC has no drives was not displayed
 - SVC IP CheckBox setting was not exported
 - FOS SFP BasicDetails Status View
+- Temp and Export File-Locations
 
 ### Changed
 - GUI from Storage Healthcheck compl. redesigned 

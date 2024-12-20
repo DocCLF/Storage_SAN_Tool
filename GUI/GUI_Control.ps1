@@ -257,7 +257,17 @@ $TD_btn_ImportCred.add_click({
 $TD_DG_KnownDeviceList.add_SelectionChanged({
     <# to prevent the function from being executed more than once #>
     if(!([string]::IsNullOrWhiteSpace($TD_DG_KnownDeviceList.selecteditem.IPAddress))){
-        SST_DeviceConnecCheck -TD_Selected_Items "yes" -TD_Selected_DeviceType $TD_DG_KnownDeviceList.selecteditem.DeviceTyp -TD_Selected_DeviceConnectionType $TD_DG_KnownDeviceList.selecteditem.ConnectionTyp -TD_Selected_DeviceIPAddr $TD_DG_KnownDeviceList.selecteditem.IPAddress -TD_Selected_DeviceUserName $TD_DG_KnownDeviceList.selecteditem.UserName -TD_Selected_DevicePassword $TD_DG_KnownDeviceList.selecteditem.Password -TD_Selected_SVCorVF $TD_DG_KnownDeviceList.selecteditem.SVCorVF
+        if($TD_CB_CredUpdate.IsChecked){
+            $TD_DG_KnownDeviceList | ForEach-Object {
+                $TD_CB_DeviceType.Text = $_.selecteditem.DeviceTyp
+                if($_.selecteditem.ConnectionTyp -eq "plink"){$TD_CB_DeviceConnectionType.Text = "Classic (UN/PW)"}else{$TD_CB_DeviceConnectionType.Text = "Secure Shell (SSH)"}
+                $TD_TB_DeviceIPAddr.Text = $_.selecteditem.IPAddress
+                $TD_TB_DeviceUserName.Text = $_.selecteditem.UserName
+                if($_.selecteditem.SVCorVF -ne ""){$TD_CB_SVCorVF.IsChecked=$true}else{$TD_CB_SVCorVF.IsChecked=$false}
+            }
+        }else{
+            SST_DeviceConnecCheck -TD_Selected_Items "yes" -TD_Selected_DeviceType $TD_DG_KnownDeviceList.selecteditem.DeviceTyp -TD_Selected_DeviceConnectionType $TD_DG_KnownDeviceList.selecteditem.ConnectionTyp -TD_Selected_DeviceIPAddr $TD_DG_KnownDeviceList.selecteditem.IPAddress -TD_Selected_DeviceUserName $TD_DG_KnownDeviceList.selecteditem.UserName -TD_Selected_DevicePassword $TD_DG_KnownDeviceList.selecteditem.Password -TD_Selected_SVCorVF $TD_DG_KnownDeviceList.selecteditem.SVCorVF
+        }
     }
 })
 #endregion
@@ -380,28 +390,28 @@ $TD_btn_IBM_HostVolumeMap.add_click({
                 $TD_Host_Volume_Map = IBM_Host_Volume_Map -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.UserName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $([Net.NetworkCredential]::new('', $TD_Credential.Password).Password) -TD_Exportpath $TD_tb_ExportPath.Text
                 Start-Sleep -Seconds 0.2
                 $TD_dg_HostVolInfo.ItemsSource =$TD_Host_Volume_Map
-                $TD_Host_Volume_Map | Export-Csv -Path $Env:TEMP\$($_)_Host_Vol_Map_Temp.csv
+                $TD_Host_Volume_Map | Export-Csv -Path $PSRootPath\ToolLog\ToolTEMP\$($_)_Host_Vol_Map_Temp.csv
             }
             {($_ -eq 2) } 
             {            
                 $TD_Host_Volume_Map = IBM_Host_Volume_Map -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.UserName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $([Net.NetworkCredential]::new('', $TD_Credential.Password).Password) -TD_Exportpath $TD_tb_ExportPath.Text
                 Start-Sleep -Seconds 0.2
                 $TD_dg_HostVolInfoTwo.ItemsSource =$TD_Host_Volume_Map
-                $TD_Host_Volume_Map | Export-Csv -Path $Env:TEMP\$($_)_Host_Vol_Map_Temp.csv
+                $TD_Host_Volume_Map | Export-Csv -Path $PSRootPath\ToolLog\ToolTEMP\$($_)_Host_Vol_Map_Temp.csv
             }
             {($_ -eq 3) } 
             {            
                 $TD_Host_Volume_Map = IBM_Host_Volume_Map -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.UserName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $([Net.NetworkCredential]::new('', $TD_Credential.Password).Password) -TD_Exportpath $TD_tb_ExportPath.Text
                 Start-Sleep -Seconds 0.2
                 $TD_dg_HostVolInfoThree.ItemsSource =$TD_Host_Volume_Map
-                $TD_Host_Volume_Map | Export-Csv -Path $Env:TEMP\$($_)_Host_Vol_Map_Temp.csv
+                $TD_Host_Volume_Map | Export-Csv -Path $PSRootPath\ToolLog\ToolTEMP\$($_)_Host_Vol_Map_Temp.csv
             }
             {($_ -eq 4) } 
             {            
                 $TD_Host_Volume_Map = IBM_Host_Volume_Map -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.UserName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $([Net.NetworkCredential]::new('', $TD_Credential.Password).Password) -TD_Exportpath $TD_tb_ExportPath.Text
                 Start-Sleep -Seconds 0.2
                 $TD_dg_HostVolInfoFour.ItemsSource =$TD_Host_Volume_Map
-                $TD_Host_Volume_Map | Export-Csv -Path $Env:TEMP\$($_)_Host_Vol_Map_Temp.csv
+                $TD_Host_Volume_Map | Export-Csv -Path $PSRootPath\ToolLog\ToolTEMP\$($_)_Host_Vol_Map_Temp.csv
             }
             Default {SST_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong, please check the prompt output first and then the log files.") -TD_ToolMSGType Error}
         }
@@ -506,24 +516,28 @@ $TD_btn_IBM_DriveInfo.add_click({
                 $TD_DriveInfo = IBM_DriveInfo -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.UserName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $([Net.NetworkCredential]::new('', $TD_Credential.Password).Password) -TD_Storage $TD_Credential.SVCorVF -TD_Exportpath $TD_tb_ExportPath.Text
                 Start-Sleep -Seconds 0.2
                 $TD_dg_DriveInfo.ItemsSource = $TD_DriveInfo
+                $TD_DriveInfo | Export-Csv -Path $PSRootPath\ToolLog\ToolTEMP\$($_)_DriveInfo_Temp.csv
             }
             {($_ -eq 2)} 
             {            
                 $TD_DriveInfo = IBM_DriveInfo -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.UserName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $([Net.NetworkCredential]::new('', $TD_Credential.Password).Password) -TD_Exportpath $TD_tb_ExportPath.Text
                 Start-Sleep -Seconds 0.2
                 $TD_dg_DriveInfoTwo.ItemsSource = $TD_DriveInfo
+                $TD_DriveInfo | Export-Csv -Path $PSRootPath\ToolLog\ToolTEMP\$($_)_DriveInfo_Temp.csv
             }
             {($_ -eq 3)} 
             {            
                 $TD_DriveInfo = IBM_DriveInfo -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.UserName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $([Net.NetworkCredential]::new('', $TD_Credential.Password).Password) -TD_Exportpath $TD_tb_ExportPath.Text
                 Start-Sleep -Seconds 0.2
                 $TD_dg_DriveInfoThree.ItemsSource = $TD_DriveInfo
+                $TD_DriveInfo | Export-Csv -Path $PSRootPath\ToolLog\ToolTEMP\$($_)_DriveInfo_Temp.csv
             }
             {($_ -eq 4)} 
             {            
                 $TD_DriveInfo = IBM_DriveInfo -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.UserName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $([Net.NetworkCredential]::new('', $TD_Credential.Password).Password) -TD_Exportpath $TD_tb_ExportPath.Text
                 Start-Sleep -Seconds 0.2
                 $TD_dg_DriveInfoFour.ItemsSource = $TD_DriveInfo
+                $TD_DriveInfo | Export-Csv -Path $PSRootPath\ToolLog\ToolTEMP\$($_)_DriveInfo_Temp.csv
             }
             Default {SST_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong, please check the prompt output first and then the log files.") -TD_ToolMSGType Error}
         }
@@ -554,24 +568,28 @@ $TD_btn_IBM_FCPortStats.add_click({
                 $TD_FCPortStats = IBM_FCPortStats -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.UserName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $([Net.NetworkCredential]::new('', $TD_Credential.Password).Password) -TD_Storage $TD_Credential.SVCorVF -TD_Exportpath $TD_tb_ExportPath.Text
                 Start-Sleep -Seconds 0.5
                 $TD_dg_FCPortStatsOne.ItemsSource = $TD_FCPortStats
+                $TD_FCPortStats | Export-Csv -Path $PSRootPath\ToolLog\ToolTEMP\$($_)_FCPortStats_Temp.csv
             }
             {($_ -eq 2)} 
             {            
                 $TD_FCPortStats = IBM_FCPortStats -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.UserName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $([Net.NetworkCredential]::new('', $TD_Credential.Password).Password) -TD_Exportpath $TD_tb_ExportPath.Text
                 Start-Sleep -Seconds 0.5
                 $TD_dg_FCPortStatsTwo.ItemsSource = $TD_FCPortStats
+                $TD_FCPortStats | Export-Csv -Path $PSRootPath\ToolLog\ToolTEMP\$($_)_FCPortStats_Temp.csv
             }
             {($_ -eq 3)} 
             {            
                 $TD_FCPortStats = IBM_FCPortStats -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.UserName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $([Net.NetworkCredential]::new('', $TD_Credential.Password).Password) -TD_Exportpath $TD_tb_ExportPath.Text
                 Start-Sleep -Seconds 0.5
                 $TD_dg_FCPortStatsThree.ItemsSource = $TD_FCPortStats
+                $TD_FCPortStats | Export-Csv -Path $PSRootPath\ToolLog\ToolTEMP\$($_)_FCPortStats_Temp.csv
             }
             {($_ -eq 4)} 
             {            
                 $TD_FCPortStats = IBM_FCPortStats -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.UserName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $([Net.NetworkCredential]::new('', $TD_Credential.Password).Password) -TD_Exportpath $TD_tb_ExportPath.Text
                 Start-Sleep -Seconds 0.5
                 $TD_dg_FCPortStatsFour.ItemsSource = $TD_FCPortStats
+                $TD_FCPortStats | Export-Csv -Path $PSRootPath\ToolLog\ToolTEMP\$($_)_FCPortStats_Temp.csv
             }
             Default { SST_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong, please check the prompt output first and then the log files.") -TD_ToolMSGType Error }
         }
@@ -602,24 +620,28 @@ $TD_btn_IBM_FCPortInfo.add_click({
                 $TD_FCPortInfo = IBM_FCPortInfo -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.UserName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $([Net.NetworkCredential]::new('', $TD_Credential.Password).Password) -TD_Exportpath $TD_tb_ExportPath.Text
                 Start-Sleep -Seconds 0.5
                 $TD_dg_FCPortInfoOne.ItemsSource = $TD_FCPortInfo
+                $TD_FCPortInfo | Export-Csv -Path $PSRootPath\ToolLog\ToolTEMP\$($_)_FCPortInfo_Temp.csv
             }
             {($_ -eq 2)} 
             {            
                 $TD_FCPortInfo = IBM_FCPortInfo -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.UserName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $([Net.NetworkCredential]::new('', $TD_Credential.Password).Password) -TD_Exportpath $TD_tb_ExportPath.Text
                 Start-Sleep -Seconds 0.5
                 $TD_dg_FCPortInfoTwo.ItemsSource = $TD_FCPortInfo
+                $TD_FCPortInfo | Export-Csv -Path $PSRootPath\ToolLog\ToolTEMP\$($_)_FCPortInfo_Temp.csv
             }
             {($_ -eq 3)} 
             {            
                 $TD_FCPortInfo = IBM_FCPortInfo -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.UserName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $([Net.NetworkCredential]::new('', $TD_Credential.Password).Password) -TD_Exportpath $TD_tb_ExportPath.Text
                 Start-Sleep -Seconds 0.5
                 $TD_dg_FCPortInfoThree.ItemsSource = $TD_FCPortInfo
+                $TD_FCPortInfo | Export-Csv -Path $PSRootPath\ToolLog\ToolTEMP\$($_)_FCPortInfo_Temp.csv
             }
             {($_ -eq 4)} 
             {            
                 $TD_FCPortInfo = IBM_FCPortInfo -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.UserName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $([Net.NetworkCredential]::new('', $TD_Credential.Password).Password) -TD_Exportpath $TD_tb_ExportPath.Text
                 Start-Sleep -Seconds 0.5
                 $TD_dg_FCPortInfoFour.ItemsSource = $TD_FCPortInfo
+                $TD_FCPortInfo | Export-Csv -Path $PSRootPath\ToolLog\ToolTEMP\$($_)_FCPortInfo_Temp.csv
             }
             Default { SST_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong, please check the prompt output first and then the log files.") -TD_ToolMSGType Error }
         }
@@ -744,24 +766,28 @@ $TD_btn_IBM_BaseStorageInfo.add_click({
                 $TD_BaseStorageInfo = IBM_BaseStorageInfos -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.UserName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $([Net.NetworkCredential]::new('', $TD_Credential.Password).Password) -TD_Storage $TD_Credential.SVCorVF -TD_Exportpath $TD_tb_ExportPath.Text
                 Start-Sleep -Seconds 0.2
                 $TD_dg_BaseStorageInfoOne.ItemsSource = $TD_BaseStorageInfo
+                $TD_BaseStorageInfo | Export-Csv -Path $PSRootPath\ToolLog\ToolTEMP\$($_)_BaseStorageInfo_Temp.csv
             }
             {($_ -eq 2)} 
             {            
                 $TD_BaseStorageInfo = IBM_BaseStorageInfos -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.UserName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $([Net.NetworkCredential]::new('', $TD_Credential.Password).Password) -TD_Exportpath $TD_tb_ExportPath.Text
                 Start-Sleep -Seconds 0.2
                 $TD_dg_BaseStorageInfoTwo.ItemsSource = $TD_BaseStorageInfo
+                $TD_BaseStorageInfo | Export-Csv -Path $PSRootPath\ToolLog\ToolTEMP\$($_)_BaseStorageInfo_Temp.csv
             }
             {($_ -eq 3)} 
             {            
                 $TD_BaseStorageInfo = IBM_BaseStorageInfos -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.UserName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $([Net.NetworkCredential]::new('', $TD_Credential.Password).Password) -TD_Exportpath $TD_tb_ExportPath.Text
                 Start-Sleep -Seconds 0.2
                 $TD_dg_BaseStorageInfoThree.ItemsSource = $TD_BaseStorageInfo
+                $TD_BaseStorageInfo | Export-Csv -Path $PSRootPath\ToolLog\ToolTEMP\$($_)_BaseStorageInfo_Temp.csv
             }
             {($_ -eq 4)} 
             {            
                 $TD_BaseStorageInfo = IBM_BaseStorageInfos -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.UserName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $([Net.NetworkCredential]::new('', $TD_Credential.Password).Password) -TD_Exportpath $TD_tb_ExportPath.Text
                 Start-Sleep -Seconds 0.2
                 $TD_dg_BaseStorageInfoFour.ItemsSource = $TD_BaseStorageInfo
+                $TD_BaseStorageInfo | Export-Csv -Path $PSRootPath\ToolLog\ToolTEMP\$($_)_BaseStorageInfo_Temp.csv
             }
             Default { SST_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong, please check the prompt output first and then the log files.") -TD_ToolMSGType Error }
         }
@@ -936,28 +962,28 @@ $TD_btn_FOS_SwitchShow.add_click({
                 $FOS_SwitchShow += FOS_SwitchShowInfo -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.UserName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $([Net.NetworkCredential]::new('', $TD_Credential.Password).Password) -TD_Exportpath $TD_tb_ExportPath.Text
                 Start-Sleep -Seconds 0.2
                 $TD_lb_SwitchShowOne.ItemsSource =$FOS_SwitchShow
-                $FOS_SwitchShow | Export-Csv -Path $Env:TEMP\$($_)_SwitchShow_Temp.csv
+                $FOS_SwitchShow | Export-Csv -Path $PSRootPath\ToolLog\ToolTEMP\$($_)_SwitchShow_Temp.csv
             }
             {($_ -eq 2) } <# -or ($_ -eq 3) -or ($_ -eq 4)}  for later use maybe #>
             {            
                 $FOS_SwitchShow += FOS_SwitchShowInfo -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.UserName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $([Net.NetworkCredential]::new('', $TD_Credential.Password).Password) -TD_Exportpath $TD_tb_ExportPath.Text
                 Start-Sleep -Seconds 0.2
                 $TD_lb_SwitchShowTwo.ItemsSource =$FOS_SwitchShow
-                $FOS_SwitchShow | Export-Csv -Path $Env:TEMP\$($_)_SwitchShow_Temp.csv
+                $FOS_SwitchShow | Export-Csv -Path $PSRootPath\ToolLog\ToolTEMP\$($_)_SwitchShow_Temp.csv
             }
             {($_ -eq 3) } <# -or ($_ -eq 3) -or ($_ -eq 4)}  for later use maybe #>
             {            
                 $FOS_SwitchShow += FOS_SwitchShowInfo -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.UserName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $([Net.NetworkCredential]::new('', $TD_Credential.Password).Password) -TD_Exportpath $TD_tb_ExportPath.Text
                 Start-Sleep -Seconds 0.2
                 $TD_lb_SwitchShowThree.ItemsSource =$FOS_SwitchShow
-                $FOS_SwitchShow | Export-Csv -Path $Env:TEMP\$($_)_SwitchShow_Temp.csv
+                $FOS_SwitchShow | Export-Csv -Path $PSRootPath\ToolLog\ToolTEMP\$($_)_SwitchShow_Temp.csv
             }
             {($_ -eq 4) }
             {            
                 $FOS_SwitchShow += FOS_SwitchShowInfo -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.UserName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $([Net.NetworkCredential]::new('', $TD_Credential.Password).Password) -TD_Exportpath $TD_tb_ExportPath.Text
                 Start-Sleep -Seconds 0.2
                 $TD_lb_SwitchShowFour.ItemsSource =$FOS_SwitchShow
-                $FOS_SwitchShow | Export-Csv -Path $Env:TEMP\$($_)_SwitchShow_Temp.csv
+                $FOS_SwitchShow | Export-Csv -Path $PSRootPath\ToolLog\ToolTEMP\$($_)_SwitchShow_Temp.csv
             }
             Default {SST_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong, please check the prompt output first and then the log files.") -TD_ToolMSGType Error}
         }
@@ -1036,7 +1062,7 @@ $TD_btn_FOS_ZoneDetailsShow.add_click({
                 $TD_lb_FabricOne.Visibility = "Visible";
                 $TD_lb_FabricOne.Content = $FOS_EffeZoneNameOne
                 $TD_stp_FilterFabricOneVisibilty.Visibility = "Visible"
-                $TD_FOS_ZoneShow | Export-Csv -Path $Env:TEMP\$($FOS_EffeZoneNameOne)_ZoneShow_Temp.csv
+                $TD_FOS_ZoneShow | Export-Csv -Path $PSRootPath\ToolLog\ToolTEMP\$($FOS_EffeZoneNameOne)_ZoneShow_Temp.csv
             }
             {($_ -eq 2) } <# -or ($_ -eq 3) -or ($_ -eq 4)}  for later use maybe #>
             {            
@@ -1047,7 +1073,7 @@ $TD_btn_FOS_ZoneDetailsShow.add_click({
                 $TD_lb_FabricTwo.Visibility = "Visible";
                 $TD_stp_FilterFabricTwoVisibilty.Visibility = "Visible"
                 $TD_lb_FabricTwo.Content = $FOS_EffeZoneNameTwo
-                $TD_FOS_ZoneShow | Export-Csv -Path $Env:TEMP\$($FOS_EffeZoneNameTwo)_ZoneShow_Temp.csv
+                $TD_FOS_ZoneShow | Export-Csv -Path $PSRootPath\ToolLog\ToolTEMP\$($FOS_EffeZoneNameTwo)_ZoneShow_Temp.csv
                 }
             }
             {($_ -eq 3) } <# -or ($_ -eq 3) -or ($_ -eq 4)}  for later use maybe #>
@@ -1058,7 +1084,7 @@ $TD_btn_FOS_ZoneDetailsShow.add_click({
                     if($FOS_EffeZoneNameThree -ne $FOS_EffeZoneNameTwo){
                         Start-Sleep -Seconds 0.5
                         $FOS_EffeZoneNameThree.ItemsSource =$TD_FOS_ZoneShow}
-                        $TD_FOS_ZoneShow | Export-Csv -Path $Env:TEMP\$($FOS_EffeZoneNameThree)_ZoneShow_Temp.csv
+                        $TD_FOS_ZoneShow | Export-Csv -Path $PSRootPath\ToolLog\ToolTEMP\$($FOS_EffeZoneNameThree)_ZoneShow_Temp.csv
                     }
             }
             <# not needed becaus max support at moment are 2 fabs #>
@@ -1199,6 +1225,8 @@ $TD_btn_FOS_SensorShow.add_click({
                 Start-Sleep -Seconds 0.2
                 $TD_tb_SensorInfoOne.Visibility="Visible"
                 $TD_tb_SensorInfoOne.Text = (Out-String -InputObject $TD_FOS_SensorShow)
+                $TD_FOS_SensorShow | Export-Csv -Path $PSRootPath\ToolLog\ToolTEMP\$($_)_SensorShow_Temp.csv
+                
             }
             {($_ -eq 2) }
             {            
@@ -1206,6 +1234,7 @@ $TD_btn_FOS_SensorShow.add_click({
                 Start-Sleep -Seconds 0.2
                 $TD_tb_SensorInfoTwo.Visibility="Visible"
                 $TD_tb_SensorInfoTwo.Text = (Out-String -InputObject $TD_FOS_SensorShow)
+                $TD_FOS_SensorShow | Export-Csv -Path $PSRootPath\ToolLog\ToolTEMP\$($_)_SensorShow_Temp.csv
             }
             {($_ -eq 3) }
             {            
@@ -1213,6 +1242,7 @@ $TD_btn_FOS_SensorShow.add_click({
                 Start-Sleep -Seconds 0.2
                 $TD_tb_SensorInfoThree.Visibility="Visible"
                 $TD_tb_SensorInfoThree.Text = (Out-String -InputObject $TD_FOS_SensorShow)
+                $TD_FOS_SensorShow | Export-Csv -Path $PSRootPath\ToolLog\ToolTEMP\$($_)_SensorShow_Temp.csv
             }
             {($_ -eq 4) }
             {            
@@ -1220,6 +1250,7 @@ $TD_btn_FOS_SensorShow.add_click({
                 Start-Sleep -Seconds 0.2
                 $TD_tb_SensorInfoFour.Visibility="Visible"
                 $TD_tb_SensorInfoFour.Text = (Out-String -InputObject $TD_FOS_SensorShow)
+                $TD_FOS_SensorShow | Export-Csv -Path $PSRootPath\ToolLog\ToolTEMP\$($_)_SensorShow_Temp.csv
             }
             Default {SST_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong, please check the prompt output first and then the log files.") -TD_ToolMSGType Error}
         }
@@ -1252,24 +1283,28 @@ $TD_btn_FOS_PortErrorShow.add_click({
                 $TD_FOS_PortErrShow += FOS_PortErrShowInfos -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.UserName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $([Net.NetworkCredential]::new('', $TD_Credential.Password).Password) -TD_Exportpath $TD_tb_ExportPath.Text
                 Start-Sleep -Seconds 0.5
                 $TD_lb_PortErrorShowOne.ItemsSource =$TD_FOS_PortErrShow
+                $TD_FOS_PortErrShow | Export-Csv -Path $PSRootPath\ToolLog\ToolTEMP\$($_)_PortErrShow_Temp.csv
             }
             {($_ -eq 2) } 
             {            
                 $TD_FOS_PortErrShow += FOS_PortErrShowInfos -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.UserName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $([Net.NetworkCredential]::new('', $TD_Credential.Password).Password) -TD_Exportpath $TD_tb_ExportPath.Text
                 Start-Sleep -Seconds 0.5
                 $TD_lb_PortErrorShowTwo.ItemsSource =$TD_FOS_PortErrShow
+                $TD_FOS_PortErrShow | Export-Csv -Path $PSRootPath\ToolLog\ToolTEMP\$($_)_PortErrShow_Temp.csv
             }
             {($_ -eq 3) } 
             {            
                 $TD_FOS_PortErrShow += FOS_PortErrShowInfos -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.UserName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $([Net.NetworkCredential]::new('', $TD_Credential.Password).Password) -TD_Exportpath $TD_tb_ExportPath.Text
                 Start-Sleep -Seconds 0.5
                 $TD_lb_PortErrorShowThree.ItemsSource =$TD_FOS_PortErrShow
+                $TD_FOS_PortErrShow | Export-Csv -Path $PSRootPath\ToolLog\ToolTEMP\$($_)_PortErrShow_Temp.csv
             }
             {($_ -eq 4) }
             {            
                 $TD_FOS_PortErrShow += FOS_PortErrShowInfos -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.UserName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $([Net.NetworkCredential]::new('', $TD_Credential.Password).Password) -TD_Exportpath $TD_tb_ExportPath.Text
                 Start-Sleep -Seconds 0.5
                 $TD_lb_PortErrorShowFour.ItemsSource =$TD_FOS_PortErrShow
+                $TD_FOS_PortErrShow | Export-Csv -Path $PSRootPath\ToolLog\ToolTEMP\$($_)_PortErrShow_Temp.csv
             }
             Default {SST_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong, please check the prompt output first and then the log files.") -TD_ToolMSGType Error}
         }
@@ -1301,24 +1336,28 @@ $TD_btn_FOS_SFPHealthShow.add_click({
                 $TD_FOS_SFPDetailsShow += FOS_SFPDetails -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.UserName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $([Net.NetworkCredential]::new('', $TD_Credential.Password).Password) -TD_Exportpath $TD_tb_ExportPath.Text
                 Start-Sleep -Seconds 0.5
                 $TD_dg_SFPShowOne.ItemsSource =$TD_FOS_SFPDetailsShow
+                $TD_FOS_SFPDetailsShow | Export-Csv -Path $PSRootPath\ToolLog\ToolTEMP\$($_)_SFPHealth_Temp.csv
             }
             {($_ -eq 2) } 
             {            
                 $TD_FOS_SFPDetailsShow += FOS_SFPDetails -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.UserName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $([Net.NetworkCredential]::new('', $TD_Credential.Password).Password) -TD_Exportpath $TD_tb_ExportPath.Text
                 Start-Sleep -Seconds 0.5
                 $TD_dg_SFPShowTwo.ItemsSource =$TD_FOS_SFPDetailsShow
+                $TD_FOS_SFPDetailsShow | Export-Csv -Path $PSRootPath\ToolLog\ToolTEMP\$($_)_SFPHealth_Temp.csv
             }
             {($_ -eq 3) } 
             {            
                 $TD_FOS_SFPDetailsShow += FOS_SFPDetails -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.UserName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $([Net.NetworkCredential]::new('', $TD_Credential.Password).Password) -TD_Exportpath $TD_tb_ExportPath.Text
                 Start-Sleep -Seconds 0.5
                 $TD_dg_SFPShowThree.ItemsSource =$TD_FOS_SFPDetailsShow
+                $TD_FOS_SFPDetailsShow | Export-Csv -Path $PSRootPath\ToolLog\ToolTEMP\$($_)_SFPHealth_Temp.csv
             }
             {($_ -eq 4) }
             {            
                 $TD_FOS_SFPDetailsShow += FOS_SFPDetails -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.UserName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $([Net.NetworkCredential]::new('', $TD_Credential.Password).Password) -TD_Exportpath $TD_tb_ExportPath.Text
                 Start-Sleep -Seconds 0.5
                 $TD_dg_SFPShowFour.ItemsSource =$TD_FOS_SFPDetailsShow
+                $TD_FOS_SFPDetailsShow | Export-Csv -Path $PSRootPath\ToolLog\ToolTEMP\$($_)_SFPHealth_Temp.csv
             }
             Default {SST_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong, please check the prompt output first and then the log files.") -TD_ToolMSGType Error}
         }
@@ -1512,24 +1551,28 @@ $TD_btn_FOS_PortBufferShow.add_click({
                 $TD_FOS_PortbufferShow += FOS_PortbufferShowInfo -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.UserName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $([Net.NetworkCredential]::new('', $TD_Credential.Password).Password) -TD_Exportpath $TD_tb_ExportPath.Text
                 Start-Sleep -Seconds 0.2
                 $TD_lb_PortBufferShowOne.ItemsSource =$TD_FOS_PortbufferShow
+                $TD_FOS_PortbufferShow | Export-Csv -Path $PSRootPath\ToolLog\ToolTEMP\$($_)_Portbuffer_Temp.csv
             }
             {($_ -eq 2) }
             {            
                 $TD_FOS_PortbufferShow += FOS_PortbufferShowInfo -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.UserName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $([Net.NetworkCredential]::new('', $TD_Credential.Password).Password) -TD_Exportpath $TD_tb_ExportPath.Text
                 Start-Sleep -Seconds 0.2
                 $TD_lb_PortBufferShowTwo.ItemsSource =$TD_FOS_PortbufferShow
+                $TD_FOS_PortbufferShow | Export-Csv -Path $PSRootPath\ToolLog\ToolTEMP\$($_)_Portbuffer_Temp.csv
             }
             {($_ -eq 3) }
             {            
                 $TD_FOS_PortbufferShow += FOS_PortbufferShowInfo -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.UserName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $([Net.NetworkCredential]::new('', $TD_Credential.Password).Password) -TD_Exportpath $TD_tb_ExportPath.Text
                 Start-Sleep -Seconds 0.2
                 $TD_lb_PortBufferShowThree.ItemsSource =$TD_FOS_PortbufferShow
+                $TD_FOS_PortbufferShow | Export-Csv -Path $PSRootPath\ToolLog\ToolTEMP\$($_)_Portbuffer_Temp.csv
             }
             {($_ -eq 4) }
             {            
                 $TD_FOS_PortbufferShow += FOS_PortbufferShowInfo -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.UserName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $([Net.NetworkCredential]::new('', $TD_Credential.Password).Password) -TD_Exportpath $TD_tb_ExportPath.Text
                 Start-Sleep -Seconds 0.2
                 $TD_lb_PortBufferShowFour.ItemsSource =$TD_FOS_PortbufferShow
+                $TD_FOS_PortbufferShow | Export-Csv -Path $PSRootPath\ToolLog\ToolTEMP\$($_)_Portbuffer_Temp.csv
             }
             Default {SST_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong, please check the prompt output first and then the log files.") -TD_ToolMSGType Error}
         }
@@ -1589,7 +1632,7 @@ $TD_btn_HC_OpenGUI_Four.add_click({
 $TD_btn_CloseAll.add_click({
     <#CleanUp before close #>
     try {
-        Remove-Item -Path $Env:TEMP\* -Filter '*_Temp.csv' -Force -ErrorAction SilentlyContinue
+        Remove-Item -Path $PSRootPath\ToolLog\ToolTEMP\* -Filter '*_Temp.csv' -Force -ErrorAction SilentlyContinue
         Write-Debug -Message "Remove Files from TEMP-Folder, done."
     }
     catch {

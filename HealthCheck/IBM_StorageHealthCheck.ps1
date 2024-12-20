@@ -43,7 +43,7 @@ function IBM_StorageHealthCheck {
         <# next line one for testing #>
         #$TD_CollectInfo = Get-Content -Path "C:\Users\mailt\Documents\mimixexport.txt" #C:\Users\mailt\Documents\mimixexport.txt hyperswap
         #$TD_CollectInfo = Get-Content -Path "C:\Users\mailt\Desktop\FS5200_W.txt"
-        $PSPath = Split-Path -Parent $PSCommandPath 
+        $PSPath = ((([IO.DirectoryInfo] $PSScriptRoot).Parent).Parent).FullName
         #Write-Host $PSPath
         #$TD_dg_HostStatusInfoText.Add_SelectionChanged({
         #    $TD_dg_HostStatusInfoText | ForEach-Object {
@@ -150,7 +150,7 @@ function IBM_StorageHealthCheck {
 
 
         <# check if there are old files of that device and collect them into array #>
-        $TD_HostLogHistoryFiles = Get-ChildItem -Path $PSPath\DeviceLog\ -Filter "*_$($TD_DeviceName)_HostLog.csv"
+        $TD_HostLogHistoryFiles = Get-ChildItem -Path $PSPath\ToolLog\ -Filter "*_$($TD_DeviceName)_HostLog.csv"
         #Write-Host $TD_HostLogHistoryFiles / $TD_HostLogHistoryFiles.Count
 
         <# create a array of newest data from the device #>
@@ -224,7 +224,7 @@ function IBM_StorageHealthCheck {
                                     if($_.Status -ne $TD_HostResaultSplit.Status){
                                         $_.Status = $TD_HostResaultSplit.Status
                                         <# update the file if the status change to offline #>
-                                        $TD_HostLogHistoryEntrys | Export-Csv -Path $PSPath\DeviceLog\$(Get-Date -Format "yyyy-MM-dd")_$($TD_DeviceName)_HostLog.csv -Delimiter ';'
+                                        $TD_HostLogHistoryEntrys | Export-Csv -Path $PSPath\ToolLog\$(Get-Date -Format "yyyy-MM-dd")_$($TD_DeviceName)_HostLog.csv -Delimiter ';'
                                     }
 
                                     if(!($_.ACKHosts -eq $false)){ break }
@@ -254,7 +254,7 @@ function IBM_StorageHealthCheck {
                                     $_.HostClusterName = $null
                                     $_.DeviceName = $null
                                     <# needs a clean up of the empty obj #>
-                                    $TD_HostLogHistoryEntrys | Export-Csv -Path $PSPath\DeviceLog\$(Get-Date -Format "yyyy-MM-dd")_$($TD_DeviceName)_HostLog.csv -Delimiter ';'
+                                    $TD_HostLogHistoryEntrys | Export-Csv -Path $PSPath\ToolLog\$(Get-Date -Format "yyyy-MM-dd")_$($TD_DeviceName)_HostLog.csv -Delimiter ';'
                                     
                                 }
                             }
@@ -264,7 +264,7 @@ function IBM_StorageHealthCheck {
             }
         }else{
             $TD_HostChostClusterResault = $TD_HostChostClusterResaultTemp
-            $TD_HostChostClusterResaultTemp | Export-Csv -Path $PSPath\DeviceLog\$(Get-Date -Format "yyyy-MM-dd")_$($TD_DeviceName)_HostLog.csv -Delimiter ';'
+            $TD_HostChostClusterResaultTemp | Export-Csv -Path $PSPath\ToolLog\$(Get-Date -Format "yyyy-MM-dd")_$($TD_DeviceName)_HostLog.csv -Delimiter ';'
         }
         <# Save the DG View as new logfile #> 
         $TD_btn_SaveHostStatus.add_click({
@@ -282,7 +282,7 @@ function IBM_StorageHealthCheck {
                 Default { <# Write a Message in the ToolLog #> }
             }
             
-            $TD_HostLogHistoryFiles = Get-ChildItem -Path $PSPath\DeviceLog\ -Filter "*_$($TD_DeviceName)_HostLog.csv"
+            $TD_HostLogHistoryFiles = Get-ChildItem -Path $PSPath\ToolLog\ -Filter "*_$($TD_DeviceName)_HostLog.csv"
             #Write-Host $TD_HostLogHistoryFiles -ForegroundColor Magenta
             $TD_HostLogHistoryFile = Get-ChildItem -Path $TD_HostLogHistoryFiles |Sort-Object Fullname -Desc |Select-Object -First 1
             #Write-Host $TD_HostLogHistoryFile.FullName -ForegroundColor Magenta
@@ -327,7 +327,7 @@ function IBM_StorageHealthCheck {
             }
 
             #Write-Host $TD_HostChostClusterResaultTemp.count -ForegroundColor Red
-            $TD_HostChostClusterResaultTemp | Export-Csv -Path $PSPath\DeviceLog\$(Get-Date -Format "yyyy-MM-dd")_$($TD_DeviceName)_HostLog.csv -Delimiter ';'
+            $TD_HostChostClusterResaultTemp | Export-Csv -Path $PSPath\ToolLog\$(Get-Date -Format "yyyy-MM-dd")_$($TD_DeviceName)_HostLog.csv -Delimiter ';'
         })
 
         #Write-Host $TD_HostChostClusterResault
@@ -347,7 +347,7 @@ function IBM_StorageHealthCheck {
             $TD_lb_HostStatusLight.Background = "green"
             $TD_UserControl3_1.Dispatcher.Invoke([System.Action]{},"Render")
             if($TD_HostLogHistoryFiles.Count -lt 1){
-                $TD_HostChostClusterResaultTemp | Export-Csv -Path $PSPath\DeviceLog\$(Get-Date -Format "yyyy-MM-dd")_$($TD_DeviceName)_HostLog.csv -Delimiter ';' 
+                $TD_HostChostClusterResaultTemp | Export-Csv -Path $PSPath\ToolLog\$(Get-Date -Format "yyyy-MM-dd")_$($TD_DeviceName)_HostLog.csv -Delimiter ';' 
             }
         }
         

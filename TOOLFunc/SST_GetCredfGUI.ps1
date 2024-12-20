@@ -26,17 +26,22 @@ function SST_GetCredfGUI {
         <# ForEach is needed if you import ced, because you musst add the pw this was not exported  #>
         [array]$TD_Credentials = foreach ($TD_ExistingCred in $TD_ExistingCreds) {
             
-            if($TD_ExistingCred.IPAddress -eq $TD_TB_DeviceIPAddr.Text){continue}
+            if($TD_ExistingCred.IPAddress -eq $TD_TB_DeviceIPAddr.Text){
+                SST_ToolMessageCollector -TD_ToolMSGCollector $("This $($TD_TB_DeviceIPAddr.Text) is already in use") -TD_ToolMSGType Warning
+                continue
+            }
             
             $TD_ExistingCred
         }
         <# Split between Storage and SAN #>
         if($TD_CB_DeviceType.Text -eq "Storage"){
             $TD_CredentialsCount=(($TD_Credentials |Where-Object {$_.DeviceTyp -eq "Storage"}).count + 1)
+            SST_ToolMessageCollector -TD_ToolMSGCollector "Storage ID is $TD_CredentialsCount" -TD_ToolMSGType Debug
         }
 
         if($TD_CB_DeviceType.Text -eq "SAN"){
             $TD_CredentialsCount= (($TD_Credentials |Where-Object {$_.DeviceTyp -eq "SAN"}).count + 1)
+            SST_ToolMessageCollector -TD_ToolMSGCollector "SAN ID is $TD_CredentialsCount" -TD_ToolMSGType Debug
         }
 
         if($TD_CB_DeviceConnectionType.Text -like "Classic*"){$TD_CB_DeviceConnectionTypeText="plink"}else{$TD_CB_DeviceConnectionTypeText="ssh"}
