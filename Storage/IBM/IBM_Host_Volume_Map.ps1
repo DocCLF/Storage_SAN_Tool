@@ -37,7 +37,6 @@ function IBM_Host_Volume_Map {
         [ValidateSet("yes","no")]
         [string]$TD_Export = "yes",
         [string]$TD_Exportpath
-
     )
     begin{
         <# suppresses error messages #>
@@ -121,6 +120,5 @@ function IBM_Host_Volume_Map {
             return $TD_Mappingresault
         }
         return $TD_Mappingresault 
-
     }
 }

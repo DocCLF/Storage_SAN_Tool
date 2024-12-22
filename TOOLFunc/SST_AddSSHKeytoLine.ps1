@@ -55,7 +55,7 @@ function AddSSHKeytoLine {
         3 {    
             $TD_ImportaddsshkeyObj = SST_OpenFile_from_Directory
             if($TD_ImportaddsshkeyObj.FileName -ne ""){
-                $TD_IsKeyInThree = ssh-add $TD_ImportaddsshkeyObj.FileName 2>&1
+                $TD_IsKeyInThree = ssh-add $TD_ImportaddsshkeyObj.FileName 21
                 if(!($($TD_IsKeyInThree.GetType().Name) -eq "ErrorRecord")){
                     if($TD_Storage -eq "yes"){
                         $TD_tb_pathtokeythree.IsReadOnly="True"

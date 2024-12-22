@@ -85,9 +85,9 @@ function IBM_BaseStorageInfos {
         <# export y or n #>
         if($TD_export -eq "yes"){
             if([string]$TD_Exportpath -ne "$PSRootPath\Export\"){
-                $TD_StorageInfo | Export-Csv -Path $TD_Exportpath\$($TD_Line_ID)_StorageBaseInfo_$(Get-Date -Format "yyyy-MM-dd").csv -NoTypeInformation
+                $TD_StorageInfo | Export-Csv -Path $TD_Exportpath\$($TD_Line_ID)_$($TD_StorageInfo.Name)_StorageBaseInfo_$(Get-Date -Format "yyyy-MM-dd").csv -NoTypeInformation
             }else {
-                $TD_StorageInfo | Export-Csv -Path $PSScriptRoot\Export\$($TD_Line_ID)_StorageBaseInfo_$(Get-Date -Format "yyyy-MM-dd").csv -NoTypeInformation
+                $TD_StorageInfo | Export-Csv -Path $PSScriptRoot\ToolLog\$($TD_Line_ID)_$($TD_StorageInfo.Name)_StorageBaseInfo_$(Get-Date -Format "yyyy-MM-dd").csv -NoTypeInformation
             }
         }else {
             Start-Sleep -Seconds 0.5

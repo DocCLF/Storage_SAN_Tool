@@ -174,6 +174,7 @@
                                     <DataGridTextColumn Header="Device Typ" Width="Auto" Binding="{Binding DeviceTyp}" IsReadOnly="True"/>
                                     <DataGridTextColumn Header="Connection Typ" Width="Auto" Binding="{Binding ConnectionTyp}" IsReadOnly="True"/>
                                     <DataGridTextColumn Header="IP-Adresse" Width="Auto"  Binding="{Binding IPAddress}" IsReadOnly="True"/>
+                                    <DataGridTextColumn Header="Device Name" Width="Auto"  Binding="{Binding DeviceName}" IsReadOnly="True"/>
                                     <DataGridTextColumn Header="Login User" Width="Auto"  Binding="{Binding UserName}" IsReadOnly="True"/>
                                     <DataGridTextColumn Header="Login PW" Binding="{Binding Password}" Visibility="{Binding ElementName=Password, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}"/>
                                     <DataGridTextColumn Header="MTM-Code" Width="Auto"  Binding="{Binding MTMCode}" IsReadOnly="True"/>

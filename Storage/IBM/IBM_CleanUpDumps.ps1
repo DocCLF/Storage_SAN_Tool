@@ -7,9 +7,12 @@ function IBM_CleanUpDumps {
         [string]$TD_Device_ConnectionTyp,
         [Parameter(Mandatory)]
         [string]$TD_Device_UserName,
+        [string]$TD_DeviceName,
         [Parameter(Mandatory)]
         [string]$TD_Device_DeviceIP,
-        [string]$TD_Device_PW
+        [string]$TD_Device_PW,
+        [string]$TD_Storage,
+        [string]$TD_Exportpath
     )
     
     begin {
@@ -43,7 +46,7 @@ function IBM_CleanUpDumps {
         Write-Debug -Message "IBM_CleanUpDumps End block |$(Get-Date) `n"
         <# export y or n #>
         if([String]::IsNullOrEmpty($D_CleanUpDumps)){
-            $TD_CleanUpDumpResult ="Everything on Device $($TD_Line_ID) deleted."
+            $TD_CleanUpDumpResult ="Everything on Device $($TD_DeviceName) deleted."
         }else{
             $TD_CleanUpDumpResult = $TD_CleanUpDumps
         }

@@ -78,6 +78,12 @@
                 Style="{StaticResource MainBtnStyle}"
                 Content="Host Volume Info" 
                 ToolTip="Get Infos to Host, HostCluster and their Volumes" />
+                <!--IBM_HostVolumeMap-->
+                <Button
+                x:Name="btn_IBM_HostInfo"
+                Style="{StaticResource MainBtnStyle}"
+                Content="Hosts Info" 
+                ToolTip="Get Infos to Host, HostCluster only" />
                 <!--IBM_DriveInfo-->
                 <Button
                 x:Name="btn_IBM_DriveInfo"
@@ -599,7 +605,7 @@
                             <Label x:Name="lb_ErrorMsgHVM" Foreground="Red" Content="" Style="{StaticResource MainLabelStyle}" Padding="2" Margin="25,5,0,5"/>
                         </StackPanel>
                         <StackPanel Grid.Row="1" Orientation="Vertical" >
-                        <DataGrid x:Name="dg_HostVolInfo" AutoGenerateColumns="False" Margin="5,5,5,5" MaxHeight="400">
+                        <DataGrid x:Name="dg_HostVolInfoOne" AutoGenerateColumns="False" Margin="5,5,5,5" MaxHeight="400">
                             <DataGrid.Style>
                                 <Style TargetType="DataGrid">
                                     <Style.Triggers>
@@ -686,6 +692,157 @@
                         </StackPanel>
                     </Grid>
                 </StackPanel>
+                <StackPanel  x:Name="stp_IBM_HostInfo" Orientation="Horizontal" Margin="2" Visibility="{Binding ElementName=btn_IBM_HostInfo, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+                        <StackPanel Grid.Row="1" Orientation="Vertical" >
+                        <DataGrid x:Name="dg_CollectedHostInfoOne" AutoGenerateColumns="False" Margin="5,5,5,5" MaxHeight="400">
+                            <DataGrid.Style>
+                                <Style TargetType="DataGrid">
+                                    <Style.Triggers>
+                                        <Trigger Property="HasItems" Value="False">
+                                          <Setter Property="Visibility" Value="Collapsed"></Setter>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGrid.Style>
+                            <DataGrid.Columns> 
+                                <DataGridTextColumn Width="auto" Header="Host ID" Binding="{Binding HostID}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Host Name" Binding="{Binding HostName}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Port Count" Binding="{Binding PortCount}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Type" Binding="{Binding Type}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Status" Binding="{Binding Status}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="SiteName" Binding="{Binding SiteName}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Host Cluster Name" Binding="{Binding HostClusterName}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Protocol" Binding="{Binding Protocol}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="StatusPolicy" Binding="{Binding StatusPolicy}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="StatusSite" Binding="{Binding StatusSite}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="WWPN" Binding="{Binding WWPNOne}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Node LoggedIn" Binding="{Binding NodeLoggedInCountOne}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Node StateOne" Binding="{Binding StateOne}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="WWPN" Binding="{Binding WWPNTwo}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Node LoggedIn" Binding="{Binding NodeLoggedInCountTwo}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Node StateOne" Binding="{Binding StateTwo}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="WWPN" Binding="{Binding WWPNThree}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Node LoggedIn" Binding="{Binding NodeLoggedInCountThree}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Node StateOne" Binding="{Binding StateThree}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="WWPN" Binding="{Binding WWPNFour}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Node LoggedIn" Binding="{Binding NodeLoggedInCountFour}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Node StateOne" Binding="{Binding StateFour}" IsReadOnly="True"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                        <DataGrid x:Name="dg_CollectedHostInfoTwo" AutoGenerateColumns="False" Margin="5,25,5,5" MaxHeight="400">
+                            <DataGrid.Style>
+                                <Style TargetType="DataGrid">
+                                    <Style.Triggers>
+                                        <Trigger Property="HasItems" Value="False">
+                                          <Setter Property="Visibility" Value="Collapsed"></Setter>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGrid.Style>
+                            <DataGrid.Columns> 
+                                <DataGridTextColumn Width="auto" Header="Host ID" Binding="{Binding HostID}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Host Name" Binding="{Binding HostName}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Port Count" Binding="{Binding PortCount}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Type" Binding="{Binding Type}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Status" Binding="{Binding Status}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="SiteName" Binding="{Binding SiteName}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Host Cluster Name" Binding="{Binding HostClusterName}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Protocol" Binding="{Binding Protocol}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="StatusPolicy" Binding="{Binding StatusPolicy}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="StatusSite" Binding="{Binding StatusSite}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="WWPN" Binding="{Binding WWPNOne}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Node LoggedIn" Binding="{Binding NodeLoggedInCountOne}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Node StateOne" Binding="{Binding StateOne}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="WWPN" Binding="{Binding WWPNTwo}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Node LoggedIn" Binding="{Binding NodeLoggedInCountTwo}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Node StateOne" Binding="{Binding StateTwo}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="WWPN" Binding="{Binding WWPNThree}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Node LoggedIn" Binding="{Binding NodeLoggedInCountThree}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Node StateOne" Binding="{Binding StateThree}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="WWPN" Binding="{Binding WWPNFour}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Node LoggedIn" Binding="{Binding NodeLoggedInCountFour}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Node StateOne" Binding="{Binding StateFour}" IsReadOnly="True"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                        <DataGrid x:Name="dg_CollectedHostInfoThree" AutoGenerateColumns="False" Margin="5,25,5,5" MaxHeight="400">
+                            <DataGrid.Style>
+                                <Style TargetType="DataGrid">
+                                    <Style.Triggers>
+                                        <Trigger Property="HasItems" Value="False">
+                                          <Setter Property="Visibility" Value="Collapsed"></Setter>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGrid.Style>
+                            <DataGrid.Columns> 
+                                <DataGridTextColumn Width="auto" Header="Host ID" Binding="{Binding HostID}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Host Name" Binding="{Binding HostName}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Port Count" Binding="{Binding PortCount}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Type" Binding="{Binding Type}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Status" Binding="{Binding Status}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="SiteName" Binding="{Binding SiteName}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Host Cluster Name" Binding="{Binding HostClusterName}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Protocol" Binding="{Binding Protocol}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="StatusPolicy" Binding="{Binding StatusPolicy}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="StatusSite" Binding="{Binding StatusSite}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="WWPN" Binding="{Binding WWPNOne}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Node LoggedIn" Binding="{Binding NodeLoggedInCountOne}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Node StateOne" Binding="{Binding StateOne}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="WWPN" Binding="{Binding WWPNTwo}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Node LoggedIn" Binding="{Binding NodeLoggedInCountTwo}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Node StateOne" Binding="{Binding StateTwo}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="WWPN" Binding="{Binding WWPNThree}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Node LoggedIn" Binding="{Binding NodeLoggedInCountThree}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Node StateOne" Binding="{Binding StateThree}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="WWPN" Binding="{Binding WWPNFour}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Node LoggedIn" Binding="{Binding NodeLoggedInCountFour}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Node StateOne" Binding="{Binding StateFour}" IsReadOnly="True"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                        <DataGrid x:Name="dg_CollectedHostInfoFour" AutoGenerateColumns="False" Margin="5,25,5,5" MaxHeight="400">
+                            <DataGrid.Style>
+                                <Style TargetType="DataGrid">
+                                    <Style.Triggers>
+                                        <Trigger Property="HasItems" Value="False">
+                                          <Setter Property="Visibility" Value="Collapsed"></Setter>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGrid.Style>
+                            <DataGrid.Columns> 
+                                <DataGridTextColumn Width="auto" Header="Host ID" Binding="{Binding HostID}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Host Name" Binding="{Binding HostName}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Port Count" Binding="{Binding PortCount}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Type" Binding="{Binding Type}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Status" Binding="{Binding Status}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="SiteName" Binding="{Binding SiteName}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Host Cluster Name" Binding="{Binding HostClusterName}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Protocol" Binding="{Binding Protocol}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="StatusPolicy" Binding="{Binding StatusPolicy}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="StatusSite" Binding="{Binding StatusSite}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="WWPN" Binding="{Binding WWPNOne}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Node LoggedIn" Binding="{Binding NodeLoggedInCountOne}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Node StateOne" Binding="{Binding StateOne}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="WWPN" Binding="{Binding WWPNTwo}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Node LoggedIn" Binding="{Binding NodeLoggedInCountTwo}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Node StateOne" Binding="{Binding StateTwo}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="WWPN" Binding="{Binding WWPNThree}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Node LoggedIn" Binding="{Binding NodeLoggedInCountThree}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Node StateOne" Binding="{Binding StateThree}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="WWPN" Binding="{Binding WWPNFour}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Node LoggedIn" Binding="{Binding NodeLoggedInCountFour}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Node StateOne" Binding="{Binding StateFour}" IsReadOnly="True"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                        </StackPanel>
+                    </Grid>
+                </StackPanel>
                 <StackPanel  x:Name="stp_DriveInfo" Orientation="Vertical" Margin="2" Visibility="{Binding ElementName=btn_IBM_DriveInfo, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
                     <Grid>
                         <Grid.RowDefinitions>
@@ -700,7 +857,7 @@
                         <StackPanel Grid.Row="1" Grid.Column="0" Orientation="Vertical">
                         <Label x:Name="lb_DriveErrorInfo" Content="" Visibility="Collapsed" Style="{StaticResource MainLabelStyle}" Margin="0,5"/> 
                         <Label x:Name="lb_DriveInfoOne" Content="No Device Info" Padding="2" Margin="0,5"/>
-                        <DataGrid x:Name="dg_DriveInfo" AutoGenerateColumns="False" Margin="5" MaxHeight="400">
+                        <DataGrid x:Name="dg_DriveInfoOne" AutoGenerateColumns="False" Margin="5" MaxHeight="400">
                             <DataGrid.Style>
                                 <Style TargetType="DataGrid">
                                     <Style.Triggers>

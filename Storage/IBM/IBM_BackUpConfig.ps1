@@ -19,6 +19,7 @@ function IBM_BackUpConfig {
         [string]$TD_Device_UserName,
         [string]$TD_Device_DeviceIP,
         [string]$TD_Device_PW,
+        [string]$TD_Storage,
         [string]$TD_Exportpath
 
     )
@@ -34,7 +35,7 @@ function IBM_BackUpConfig {
     process{
         Write-Debug -Message "IBM_BackUpConfig Process block |$(Get-Date)"
         
-        Write-ProgressBar -ProgressBar $ProgressBar -Activity "Collect data for Device $($TD_Line_ID)" -PercentComplete (($ProgCounter/50) * 100)
+        Write-ProgressBar -ProgressBar $ProgressBar -Activity "Collect data for Device $($TD_Line_ID) please wait this can take some seconds" -PercentComplete (($ProgCounter/50) * 100)
         Start-Sleep -Seconds 0.5
 
         if($TD_Device_ConnectionTyp -eq "ssh"){
@@ -48,7 +49,6 @@ function IBM_BackUpConfig {
             $TD_BUResault = $TD_BUInfo.TrimStart('.')
             pscp -unsafe -pw $TD_Device_PW $TD_Device_UserName@$($TD_Device_DeviceIP):/dumps/svc.config.backup.* $TD_Exportpath
         }
-
     }
 
     end {

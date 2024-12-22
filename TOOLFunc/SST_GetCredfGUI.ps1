@@ -46,11 +46,12 @@ function SST_GetCredfGUI {
 
         if($TD_CB_DeviceConnectionType.Text -like "Classic*"){$TD_CB_DeviceConnectionTypeText="plink"}else{$TD_CB_DeviceConnectionTypeText="ssh"}
         <# Create the Main_CredObj #>
-        $TD_UserInputCred = "" | Select-Object ID,DeviceTyp,ConnectionTyp,IPAddress,UserName,Password,SSHKeyPath,SVCorVF,MTMCode,ProductDescr,CurrentFirmware,Exportpath
+        $TD_UserInputCred = "" | Select-Object ID,DeviceTyp,ConnectionTyp,IPAddress,Name,UserName,Password,SSHKeyPath,SVCorVF,MTMCode,ProductDescr,CurrentFirmware,Exportpath
         $TD_UserInputCred.ID               =   $TD_CredentialsCount;
         $TD_UserInputCred.DeviceTyp        =   $TD_CB_DeviceType.Text;
         $TD_UserInputCred.ConnectionTyp    =   $TD_CB_DeviceConnectionTypeText;
         $TD_UserInputCred.IPAddress        =   $TD_TB_DeviceIPAddr.Text;
+        $TD_UserInputCred.DeviceName       =   $TD_BasicDeviceInfo.DeviceName;
         $TD_UserInputCred.UserName         =   $TD_TB_DeviceUserName.Text;
         <# The PwLine needs a better Option #>
         $TD_UserInputCred.Password         =   ConvertTo-SecureString $TD_TB_DevicePassword.Password -AsPlainText -Force;
