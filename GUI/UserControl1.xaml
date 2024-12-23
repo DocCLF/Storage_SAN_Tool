@@ -78,12 +78,18 @@
                 Style="{StaticResource MainBtnStyle}"
                 Content="Host Volume Info" 
                 ToolTip="Get Infos to Host, HostCluster and their Volumes" />
-                <!--IBM_HostVolumeMap-->
+                <!--IBM_HostInfo-->
                 <Button
                 x:Name="btn_IBM_HostInfo"
                 Style="{StaticResource MainBtnStyle}"
                 Content="Hosts Info" 
                 ToolTip="Get Infos to Host, HostCluster only" />
+                <!--IBM_PoolVolumeInfo-->
+                <Button
+                x:Name="btn_IBM_PoolVolumeInfo"
+                Style="{StaticResource MainBtnStyle}"
+                Content="Pool+Volume Info" 
+                ToolTip="Get Infos to Pool and Volume only" />
                 <!--IBM_DriveInfo-->
                 <Button
                 x:Name="btn_IBM_DriveInfo"
@@ -2538,6 +2544,239 @@
                                 <DataGridTextColumn Width="auto" Header="VLAN" Binding ="{Binding VLAN}" IsReadOnly="True"/>
                                 <DataGridTextColumn Width="auto" Header="GateWay" Binding ="{Binding GateWay}" IsReadOnly="True"/>
                             </DataGrid.Columns>
+                        </DataGrid>
+                        </StackPanel>  
+                    </Grid>
+                </StackPanel> 
+                <StackPanel  x:Name="stp_PoolVolumeInfo" Orientation="Horizontal" Margin="2" Visibility="{Binding ElementName=btn_IBM_PoolVolumeInfo, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+                        <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="2">
+                        <Label Grid.Row="0" Grid.ColumnSpan="2" Content="" Visibility="Collapsed" Style="{StaticResource MainLabelStyle}" Margin="2,5,0,5"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Vertical" Grid.Row="1">
+                        <DataGrid Grid.Row="1" x:Name="dg_ExpandMDiskInfoOne" AutoGenerateColumns="False" Margin="5" MaxHeight="400">
+                            <DataGrid.Style>
+                                <Style TargetType="DataGrid">
+                                    <Style.Triggers>
+                                        <Trigger Property="HasItems" Value="False">
+                                          <Setter Property="Visibility" Value="Collapsed"></Setter>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGrid.Style>
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Width="auto" Header="MDiskID"  Binding ="{Binding MDiskID}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Name" Binding ="{Binding Name}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="NodeWWNN"  Binding ="{Binding WWNN}" IsReadOnly="True"/>  
+                                <DataGridTextColumn Width="auto" Header="Status" Binding ="{Binding Status}" IsReadOnly="True"/>  
+                                <DataGridTextColumn Width="auto" Header="Mode" Binding ="{Binding Mode}" IsReadOnly="True"/> 
+                                <DataGridTextColumn Width="auto" Header="MDiskGrpName" Binding ="{Binding MDiskGrpName}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Capacity" Binding ="{Binding Capacity}" IsReadOnly="True"/>  
+                                <DataGridTextColumn Width="auto" Header="Phys Capacity"  Binding ="{Binding PhysicalCapacity}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Phys FreeCapacity" Binding ="{Binding PhysicalFreeCapacity}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Allocated Capacity"  Binding ="{Binding AllocatedCapacity}" IsReadOnly="True"/>  
+                                <DataGridTextColumn Width="auto" Header="Effec UsedCapacity" Binding ="{Binding EffectiveUsedCapacity}" IsReadOnly="True"/>  
+                                <DataGridTextColumn Width="auto" Header="Drive Count" Binding ="{Binding DriveCount}" IsReadOnly="True"/> 
+                                <DataGridTextColumn Width="auto" Header="Raid Status" Binding ="{Binding RaidStatus}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Raid Level" Binding ="{Binding RaidLevel}" IsReadOnly="True"/> 
+                                <DataGridTextColumn Width="auto" Header="Strip Size" Binding ="{Binding StripSize}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Tier"  Binding ="{Binding Tier}" IsReadOnly="True"/>  
+                                <DataGridTextColumn Width="auto" Header="Encrypt" Binding ="{Binding Encrypt}" IsReadOnly="True"/>  
+                                <DataGridTextColumn Width="auto" Header="Site Name" Binding ="{Binding SiteName}" IsReadOnly="True"/> 
+                                <DataGridTextColumn Width="auto" Header="Over Provisioned" Binding ="{Binding OverProvisioned}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="UnMap" Binding ="{Binding unmap}" IsReadOnly="True"/> 
+                            </DataGrid.Columns>
+                        </DataGrid>
+                        <DataGrid Grid.Row="1" x:Name="dg_ExpandVolumeInfoOne" AutoGenerateColumns="False" Margin="5" MaxHeight="400">
+                            <DataGrid.Style>
+                                <Style TargetType="DataGrid">
+                                    <Style.Triggers>
+                                        <Trigger Property="HasItems" Value="False">
+                                          <Setter Property="Visibility" Value="Collapsed"></Setter>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGrid.Style>
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Width="auto" Header="Volume Name"  Binding ="{Binding Volume_Name}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="IO Group" Binding ="{Binding IO_Group}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Status"  Binding ="{Binding Status}" IsReadOnly="True"/>  
+                                <DataGridTextColumn Width="auto" Header="Pool" Binding ="{Binding Pool}" IsReadOnly="True"/>  
+                                <DataGridTextColumn Width="auto" Header="Volume_UID" Binding ="{Binding Volume_UID}" IsReadOnly="True"/> 
+                                <DataGridTextColumn Width="auto" Header="Preferred NodeID" Binding ="{Binding PreferredNodeID}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Preferred NodeName" Binding ="{Binding PreferredNodeName}" IsReadOnly="True"/> 
+                                <DataGridTextColumn Width="auto" Header="Site VolFunc" Binding ="{Binding VolFunc}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Site HAType" Binding ="{Binding HAType}" IsReadOnly="True"/>
+                            </DataGrid.Columns> 
+                        </DataGrid>
+                        <DataGrid Grid.Row="1" x:Name="dg_ExpandMDiskInfoTwo" AutoGenerateColumns="False" Margin="5,20,5,5" MaxHeight="400">
+                            <DataGrid.Style>
+                                <Style TargetType="DataGrid">
+                                    <Style.Triggers>
+                                        <Trigger Property="HasItems" Value="False">
+                                          <Setter Property="Visibility" Value="Collapsed"></Setter>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGrid.Style>
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Width="auto" Header="MDiskID"  Binding ="{Binding MDiskID}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Name" Binding ="{Binding Name}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="NodeWWNN"  Binding ="{Binding WWNN}" IsReadOnly="True"/>  
+                                <DataGridTextColumn Width="auto" Header="Status" Binding ="{Binding Status}" IsReadOnly="True"/>  
+                                <DataGridTextColumn Width="auto" Header="Mode" Binding ="{Binding Mode}" IsReadOnly="True"/> 
+                                <DataGridTextColumn Width="auto" Header="MDiskGrpName" Binding ="{Binding MDiskGrpName}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Capacity" Binding ="{Binding Capacity}" IsReadOnly="True"/>  
+                                <DataGridTextColumn Width="auto" Header="Phys Capacity"  Binding ="{Binding PhysicalCapacity}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Phys FreeCapacity" Binding ="{Binding PhysicalFreeCapacity}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Allocated Capacity"  Binding ="{Binding AllocatedCapacity}" IsReadOnly="True"/>  
+                                <DataGridTextColumn Width="auto" Header="Effec UsedCapacity" Binding ="{Binding EffectiveUsedCapacity}" IsReadOnly="True"/>  
+                                <DataGridTextColumn Width="auto" Header="Drive Count" Binding ="{Binding DriveCount}" IsReadOnly="True"/> 
+                                <DataGridTextColumn Width="auto" Header="Raid Status" Binding ="{Binding RaidStatus}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Raid Level" Binding ="{Binding RaidLevel}" IsReadOnly="True"/> 
+                                <DataGridTextColumn Width="auto" Header="Strip Size" Binding ="{Binding StripSize}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Tier"  Binding ="{Binding Tier}" IsReadOnly="True"/>  
+                                <DataGridTextColumn Width="auto" Header="Encrypt" Binding ="{Binding Encrypt}" IsReadOnly="True"/>  
+                                <DataGridTextColumn Width="auto" Header="Site Name" Binding ="{Binding SiteName}" IsReadOnly="True"/> 
+                                <DataGridTextColumn Width="auto" Header="Over Provisioned" Binding ="{Binding OverProvisioned}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="UnMap" Binding ="{Binding unmap}" IsReadOnly="True"/> 
+                            </DataGrid.Columns>
+                        </DataGrid>
+                        <DataGrid Grid.Row="1" x:Name="dg_ExpandVolumeInfoTwo" AutoGenerateColumns="False" Margin="5" MaxHeight="400">
+                            <DataGrid.Style>
+                                <Style TargetType="DataGrid">
+                                    <Style.Triggers>
+                                        <Trigger Property="HasItems" Value="False">
+                                          <Setter Property="Visibility" Value="Collapsed"></Setter>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGrid.Style>
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Width="auto" Header="Volume Name"  Binding ="{Binding Volume_Name}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="IO Group" Binding ="{Binding IO_Group}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Status"  Binding ="{Binding Status}" IsReadOnly="True"/>  
+                                <DataGridTextColumn Width="auto" Header="Pool" Binding ="{Binding Pool}" IsReadOnly="True"/>  
+                                <DataGridTextColumn Width="auto" Header="Volume_UID" Binding ="{Binding Volume_UID}" IsReadOnly="True"/> 
+                                <DataGridTextColumn Width="auto" Header="Preferred NodeID" Binding ="{Binding PreferredNodeID}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Preferred NodeName" Binding ="{Binding PreferredNodeName}" IsReadOnly="True"/> 
+                                <DataGridTextColumn Width="auto" Header="Site VolFunc" Binding ="{Binding VolFunc}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Site HAType" Binding ="{Binding HAType}" IsReadOnly="True"/>
+                            </DataGrid.Columns> 
+                        </DataGrid>
+                        <DataGrid Grid.Row="1" x:Name="dg_ExpandMDiskInfoThree" AutoGenerateColumns="False" Margin="5,20,5,5" MaxHeight="400">
+                            <DataGrid.Style>
+                                <Style TargetType="DataGrid">
+                                    <Style.Triggers>
+                                        <Trigger Property="HasItems" Value="False">
+                                          <Setter Property="Visibility" Value="Collapsed"></Setter>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGrid.Style>
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Width="auto" Header="MDiskID"  Binding ="{Binding MDiskID}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Name" Binding ="{Binding Name}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="NodeWWNN"  Binding ="{Binding WWNN}" IsReadOnly="True"/>  
+                                <DataGridTextColumn Width="auto" Header="Status" Binding ="{Binding Status}" IsReadOnly="True"/>  
+                                <DataGridTextColumn Width="auto" Header="Mode" Binding ="{Binding Mode}" IsReadOnly="True"/> 
+                                <DataGridTextColumn Width="auto" Header="MDiskGrpName" Binding ="{Binding MDiskGrpName}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Capacity" Binding ="{Binding Capacity}" IsReadOnly="True"/>  
+                                <DataGridTextColumn Width="auto" Header="Phys Capacity"  Binding ="{Binding PhysicalCapacity}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Phys FreeCapacity" Binding ="{Binding PhysicalFreeCapacity}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Allocated Capacity"  Binding ="{Binding AllocatedCapacity}" IsReadOnly="True"/>  
+                                <DataGridTextColumn Width="auto" Header="Effec UsedCapacity" Binding ="{Binding EffectiveUsedCapacity}" IsReadOnly="True"/>  
+                                <DataGridTextColumn Width="auto" Header="Drive Count" Binding ="{Binding DriveCount}" IsReadOnly="True"/> 
+                                <DataGridTextColumn Width="auto" Header="Raid Status" Binding ="{Binding RaidStatus}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Raid Level" Binding ="{Binding RaidLevel}" IsReadOnly="True"/> 
+                                <DataGridTextColumn Width="auto" Header="Strip Size" Binding ="{Binding StripSize}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Tier"  Binding ="{Binding Tier}" IsReadOnly="True"/>  
+                                <DataGridTextColumn Width="auto" Header="Encrypt" Binding ="{Binding Encrypt}" IsReadOnly="True"/>  
+                                <DataGridTextColumn Width="auto" Header="Site Name" Binding ="{Binding SiteName}" IsReadOnly="True"/> 
+                                <DataGridTextColumn Width="auto" Header="Over Provisioned" Binding ="{Binding OverProvisioned}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="UnMap" Binding ="{Binding unmap}" IsReadOnly="True"/> 
+                            </DataGrid.Columns>
+                        </DataGrid>
+                        <DataGrid Grid.Row="1" x:Name="dg_ExpandVolumeInfoThree" AutoGenerateColumns="False" Margin="5" MaxHeight="400">
+                            <DataGrid.Style>
+                                <Style TargetType="DataGrid">
+                                    <Style.Triggers>
+                                        <Trigger Property="HasItems" Value="False">
+                                          <Setter Property="Visibility" Value="Collapsed"></Setter>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGrid.Style>
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Width="auto" Header="Volume Name"  Binding ="{Binding Volume_Name}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="IO Group" Binding ="{Binding IO_Group}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Status"  Binding ="{Binding Status}" IsReadOnly="True"/>  
+                                <DataGridTextColumn Width="auto" Header="Pool" Binding ="{Binding Pool}" IsReadOnly="True"/>  
+                                <DataGridTextColumn Width="auto" Header="Volume_UID" Binding ="{Binding Volume_UID}" IsReadOnly="True"/> 
+                                <DataGridTextColumn Width="auto" Header="Preferred NodeID" Binding ="{Binding PreferredNodeID}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Preferred NodeName" Binding ="{Binding PreferredNodeName}" IsReadOnly="True"/> 
+                                <DataGridTextColumn Width="auto" Header="Site VolFunc" Binding ="{Binding VolFunc}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Site HAType" Binding ="{Binding HAType}" IsReadOnly="True"/>
+                            </DataGrid.Columns> 
+                        </DataGrid>
+                        <DataGrid Grid.Row="1" x:Name="dg_ExpandMDiskInfoFour" AutoGenerateColumns="False" Margin="5,20,5,5" MaxHeight="400">
+                            <DataGrid.Style>
+                                <Style TargetType="DataGrid">
+                                    <Style.Triggers>
+                                        <Trigger Property="HasItems" Value="False">
+                                          <Setter Property="Visibility" Value="Collapsed"></Setter>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGrid.Style>
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Width="auto" Header="MDiskID"  Binding ="{Binding MDiskID}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Name" Binding ="{Binding Name}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="NodeWWNN"  Binding ="{Binding WWNN}" IsReadOnly="True"/>  
+                                <DataGridTextColumn Width="auto" Header="Status" Binding ="{Binding Status}" IsReadOnly="True"/>  
+                                <DataGridTextColumn Width="auto" Header="Mode" Binding ="{Binding Mode}" IsReadOnly="True"/> 
+                                <DataGridTextColumn Width="auto" Header="MDiskGrpName" Binding ="{Binding MDiskGrpName}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Capacity" Binding ="{Binding Capacity}" IsReadOnly="True"/>  
+                                <DataGridTextColumn Width="auto" Header="Phys Capacity"  Binding ="{Binding PhysicalCapacity}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Phys FreeCapacity" Binding ="{Binding PhysicalFreeCapacity}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Allocated Capacity"  Binding ="{Binding AllocatedCapacity}" IsReadOnly="True"/>  
+                                <DataGridTextColumn Width="auto" Header="Effec UsedCapacity" Binding ="{Binding EffectiveUsedCapacity}" IsReadOnly="True"/>  
+                                <DataGridTextColumn Width="auto" Header="Drive Count" Binding ="{Binding DriveCount}" IsReadOnly="True"/> 
+                                <DataGridTextColumn Width="auto" Header="Raid Status" Binding ="{Binding RaidStatus}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Raid Level" Binding ="{Binding RaidLevel}" IsReadOnly="True"/> 
+                                <DataGridTextColumn Width="auto" Header="Strip Size" Binding ="{Binding StripSize}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Tier"  Binding ="{Binding Tier}" IsReadOnly="True"/>  
+                                <DataGridTextColumn Width="auto" Header="Encrypt" Binding ="{Binding Encrypt}" IsReadOnly="True"/>  
+                                <DataGridTextColumn Width="auto" Header="Site Name" Binding ="{Binding SiteName}" IsReadOnly="True"/> 
+                                <DataGridTextColumn Width="auto" Header="Over Provisioned" Binding ="{Binding OverProvisioned}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="UnMap" Binding ="{Binding unmap}" IsReadOnly="True"/> 
+                            </DataGrid.Columns>
+                        </DataGrid>
+                        <DataGrid Grid.Row="1" x:Name="dg_ExpandVolumeInfoFour" AutoGenerateColumns="False" Margin="5" MaxHeight="400">
+                            <DataGrid.Style>
+                                <Style TargetType="DataGrid">
+                                    <Style.Triggers>
+                                        <Trigger Property="HasItems" Value="False">
+                                          <Setter Property="Visibility" Value="Collapsed"></Setter>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGrid.Style>
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Width="auto" Header="Volume Name"  Binding ="{Binding Volume_Name}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="IO Group" Binding ="{Binding IO_Group}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Status"  Binding ="{Binding Status}" IsReadOnly="True"/>  
+                                <DataGridTextColumn Width="auto" Header="Pool" Binding ="{Binding Pool}" IsReadOnly="True"/>  
+                                <DataGridTextColumn Width="auto" Header="Volume_UID" Binding ="{Binding Volume_UID}" IsReadOnly="True"/> 
+                                <DataGridTextColumn Width="auto" Header="Preferred NodeID" Binding ="{Binding PreferredNodeID}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Preferred NodeName" Binding ="{Binding PreferredNodeName}" IsReadOnly="True"/> 
+                                <DataGridTextColumn Width="auto" Header="Site VolFunc" Binding ="{Binding VolFunc}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Site HAType" Binding ="{Binding HAType}" IsReadOnly="True"/>
+                            </DataGrid.Columns> 
                         </DataGrid>
                         </StackPanel>  
                     </Grid>

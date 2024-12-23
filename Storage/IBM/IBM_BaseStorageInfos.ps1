@@ -5,6 +5,7 @@ function IBM_BaseStorageInfos {
         [string]$TD_Device_ConnectionTyp,
         [string]$TD_Device_UserName,
         [string]$TD_Device_DeviceIP,
+        [string]$TD_Device_DeviceName,
         [string]$TD_Device_PW,
         [string]$TD_Storage = "FSystem",
         [Parameter(ValueFromPipeline)]
