@@ -1792,7 +1792,7 @@
                         <Label Grid.Row="0" Grid.ColumnSpan="2" x:Name="lb_BaseStorageErrorInfo" Content="" Visibility="Collapsed" Style="{StaticResource MainLabelStyle}" Margin="2,5,0,5"/>
                         </StackPanel>
                         <StackPanel Orientation="Vertical" Grid.Row="1">
-                        <DataGrid Grid.Row="1" Grid.Column="1" x:Name="dg_BaseStorageInfoOne" AutoGenerateColumns="False" Margin="5" MaxHeight="400">
+                        <DataGrid Grid.Row="1" x:Name="dg_BaseStorageInfoOne" AutoGenerateColumns="False" Margin="5" MaxHeight="400">
                             <DataGrid.Style>
                                 <Style TargetType="DataGrid">
                                     <Style.Triggers>
@@ -1835,7 +1835,28 @@
                                 <DataGridTextColumn Width="auto" Header="Side Name" Binding ="{Binding SideName}" IsReadOnly="True"/>
                             </DataGrid.Columns>
                         </DataGrid>
-                        <DataGrid Grid.Row="1" Grid.Column="1" x:Name="dg_BaseStorageInfoTwo" AutoGenerateColumns="False" Margin="5,20,5,5" MaxHeight="400">
+                        <DataGrid Grid.Row="1" x:Name="dg_IPQuorumInfoOne" AutoGenerateColumns="False" Margin="5" MaxHeight="400">
+                            <DataGrid.Style>
+                                <Style TargetType="DataGrid">
+                                    <Style.Triggers>
+                                        <Trigger Property="HasItems" Value="False">
+                                          <Setter Property="Visibility" Value="Collapsed"></Setter>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGrid.Style>
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Width="auto" Header="QuorumIndex"  Binding ="{Binding QuorumIndex}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Status" Binding ="{Binding Status}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="ID"  Binding ="{Binding ID}" IsReadOnly="True"/>  
+                                <DataGridTextColumn Width="auto" Header="Name" Binding ="{Binding Name}" IsReadOnly="True"/>  
+                                <DataGridTextColumn Width="auto" Header="Active" Binding ="{Binding Active}" IsReadOnly="True"/> 
+                                <DataGridTextColumn Width="auto" Header="Object Type" Binding ="{Binding ObjectType}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Override" Binding ="{Binding Override}" IsReadOnly="True"/> 
+                                <DataGridTextColumn Width="auto" Header="Site Name" Binding ="{Binding SiteName}" IsReadOnly="True"/>
+                            </DataGrid.Columns> 
+                        </DataGrid>
+                        <DataGrid Grid.Row="1" x:Name="dg_BaseStorageInfoTwo" AutoGenerateColumns="False" Margin="5,20,5,5" MaxHeight="400">
                             <DataGrid.Style>
                                 <Style TargetType="DataGrid">
                                     <Style.Triggers>
@@ -1878,7 +1899,28 @@
                                 <DataGridTextColumn Width="auto" Header="Side Name" Binding ="{Binding SideName}" IsReadOnly="True"/>
                             </DataGrid.Columns>
                         </DataGrid>
-                        <DataGrid Grid.Row="1" Grid.Column="1" x:Name="dg_BaseStorageInfoThree" AutoGenerateColumns="False" Margin="5,20,5,5" MaxHeight="400">
+                        <DataGrid Grid.Row="1" x:Name="dg_IPQuorumInfoTwo" AutoGenerateColumns="False" Margin="5" MaxHeight="400">
+                            <DataGrid.Style>
+                                <Style TargetType="DataGrid">
+                                    <Style.Triggers>
+                                        <Trigger Property="HasItems" Value="False">
+                                          <Setter Property="Visibility" Value="Collapsed"></Setter>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGrid.Style>
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Width="auto" Header="QuorumIndex"  Binding ="{Binding QuorumIndex}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Status" Binding ="{Binding Status}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="ID"  Binding ="{Binding ID}" IsReadOnly="True"/>  
+                                <DataGridTextColumn Width="auto" Header="Name" Binding ="{Binding Name}" IsReadOnly="True"/>  
+                                <DataGridTextColumn Width="auto" Header="Active" Binding ="{Binding Active}" IsReadOnly="True"/> 
+                                <DataGridTextColumn Width="auto" Header="Object Type" Binding ="{Binding ObjectType}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Override" Binding ="{Binding Override}" IsReadOnly="True"/> 
+                                <DataGridTextColumn Width="auto" Header="Site Name" Binding ="{Binding SiteName}" IsReadOnly="True"/>
+                            </DataGrid.Columns> 
+                        </DataGrid>
+                        <DataGrid Grid.Row="1" x:Name="dg_BaseStorageInfoThree" AutoGenerateColumns="False" Margin="5,20,5,5" MaxHeight="400">
                             <DataGrid.Style>
                                 <Style TargetType="DataGrid">
                                     <Style.Triggers>
@@ -1921,7 +1963,28 @@
                                 <DataGridTextColumn Width="auto" Header="Side Name" Binding ="{Binding SideName}" IsReadOnly="True"/>
                             </DataGrid.Columns>
                         </DataGrid>
-                        <DataGrid Grid.Row="1" Grid.Column="1" x:Name="dg_BaseStorageInfoFour" AutoGenerateColumns="False" Margin="5,20,5,5" MaxHeight="400">
+                        <DataGrid Grid.Row="1" x:Name="dg_IPQuorumInfoThree" AutoGenerateColumns="False" Margin="5" MaxHeight="400">
+                            <DataGrid.Style>
+                                <Style TargetType="DataGrid">
+                                    <Style.Triggers>
+                                        <Trigger Property="HasItems" Value="False">
+                                          <Setter Property="Visibility" Value="Collapsed"></Setter>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGrid.Style>
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Width="auto" Header="QuorumIndex"  Binding ="{Binding QuorumIndex}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Status" Binding ="{Binding Status}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="ID"  Binding ="{Binding ID}" IsReadOnly="True"/>  
+                                <DataGridTextColumn Width="auto" Header="Name" Binding ="{Binding Name}" IsReadOnly="True"/>  
+                                <DataGridTextColumn Width="auto" Header="Active" Binding ="{Binding Active}" IsReadOnly="True"/> 
+                                <DataGridTextColumn Width="auto" Header="Object Type" Binding ="{Binding ObjectType}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Override" Binding ="{Binding Override}" IsReadOnly="True"/> 
+                                <DataGridTextColumn Width="auto" Header="Site Name" Binding ="{Binding SiteName}" IsReadOnly="True"/>
+                            </DataGrid.Columns> 
+                        </DataGrid>
+                        <DataGrid Grid.Row="1" x:Name="dg_BaseStorageInfoFour" AutoGenerateColumns="False" Margin="5,20,5,5" MaxHeight="400">
                             <DataGrid.Style>
                                 <Style TargetType="DataGrid">
                                     <Style.Triggers>
@@ -1963,6 +2026,27 @@
                                 <DataGridTextColumn Width="auto" Header="SideID" Binding ="{Binding SideID}" IsReadOnly="True"/>
                                 <DataGridTextColumn Width="auto" Header="Side Name" Binding ="{Binding SideName}" IsReadOnly="True"/>
                             </DataGrid.Columns>
+                        </DataGrid>
+                        <DataGrid Grid.Row="1" x:Name="dg_IPQuorumInfoFour" AutoGenerateColumns="False" Margin="5" MaxHeight="400">
+                            <DataGrid.Style>
+                                <Style TargetType="DataGrid">
+                                    <Style.Triggers>
+                                        <Trigger Property="HasItems" Value="False">
+                                          <Setter Property="Visibility" Value="Collapsed"></Setter>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGrid.Style>
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Width="auto" Header="QuorumIndex"  Binding ="{Binding QuorumIndex}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Status" Binding ="{Binding Status}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="ID"  Binding ="{Binding ID}" IsReadOnly="True"/>  
+                                <DataGridTextColumn Width="auto" Header="Name" Binding ="{Binding Name}" IsReadOnly="True"/>  
+                                <DataGridTextColumn Width="auto" Header="Active" Binding ="{Binding Active}" IsReadOnly="True"/> 
+                                <DataGridTextColumn Width="auto" Header="Object Type" Binding ="{Binding ObjectType}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Override" Binding ="{Binding Override}" IsReadOnly="True"/> 
+                                <DataGridTextColumn Width="auto" Header="Site Name" Binding ="{Binding SiteName}" IsReadOnly="True"/>
+                            </DataGrid.Columns> 
                         </DataGrid>
                         </StackPanel>  
                     </Grid>

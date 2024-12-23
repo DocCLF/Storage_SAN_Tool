@@ -601,8 +601,8 @@ $TD_btn_IBM_BaseStorageInfo.add_click({
 
     $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_.DeviceTyp -eq "Storage"}
 
-    $TD_dg_BaseStorageInfoOne,$TD_dg_BaseStorageInfoTwo,$TD_dg_BaseStorageInfoThree,$TD_dg_BaseStorageInfoFour |ForEach-Object {
-        if($_.items.count -gt 0){$TD_UCRefresh = $true}; $_.ItemsSource = $EmptyVar
+    $TD_dg_BaseStorageInfoOne,$TD_dg_BaseStorageInfoTwo,$TD_dg_BaseStorageInfoThree,$TD_dg_BaseStorageInfoFour,$TD_dg_IPQuorumInfoOne,$TD_dg_IPQuorumInfoTwo,$TD_dg_IPQuorumInfoThree,$TD_dg_IPQuorumInfoFour |ForEach-Object {
+        if($_.items.count -gt 0){$_.ItemsSource = $EmptyVar; $TD_UCRefresh = $true}
     }
 
     $TD_Credentials | ForEach-Object {
@@ -619,6 +619,22 @@ $TD_btn_IBM_BaseStorageInfo.add_click({
             Default { SST_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong, please check the prompt output first and then the log files.") -TD_ToolMSGType Error }
         }
         $TD_BaseStorageInfo | Export-Csv -Path $PSRootPath\ToolLog\ToolTEMP\$($_.ID)_$($_.DeviceName)_BaseStorageInfo_$(Get-Date -Format "yyyy-MM-dd")_Temp.csv
+    }
+
+    $TD_Credentials | ForEach-Object {
+        [array]$TD_IPQuorumInfo = IBM_IPQuorum -TD_Line_ID $_.ID -TD_Device_ConnectionTyp $_.ConnectionTyp -TD_Device_UserName $_.UserName -TD_Device_DeviceIP $_.IPAddress -TD_Device_DeviceName $_.DeviceName -TD_Device_PW $([Net.NetworkCredential]::new('', $_.Password).Password) -TD_Storage $TD_Credential.SVCorVF -TD_Exportpath $TD_tb_ExportPath.Text
+        switch ($_.ID) {
+            {($_ -eq 1)} { $TD_dg_IPQuorumInfoOne.ItemsSource = $TD_IPQuorumInfo }
+            {($_ -eq 2)} { $TD_dg_IPQuorumInfoTwo.ItemsSource = $TD_IPQuorumInfo }
+            {($_ -eq 3)} { $TD_dg_IPQuorumInfoThree.ItemsSource = $TD_IPQuorumInfo }
+            {($_ -eq 4)} { $TD_dg_IPQuorumInfoFour.ItemsSource = $TD_IPQuorumInfo }
+            {($_ -eq 5)} { $TD_dg_IPQuorumInfoFour.ItemsSource = $TD_IPQuorumInfo }
+            {($_ -eq 6)} { $TD_dg_IPQuorumInfoFour.ItemsSource = $TD_IPQuorumInfo }
+            {($_ -eq 7)} { $TD_dg_IPQuorumInfoFour.ItemsSource = $TD_IPQuorumInfo }
+            {($_ -eq 8)} { $TD_dg_IPQuorumInfoFour.ItemsSource = $TD_IPQuorumInfo }
+            Default { SST_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong, please check the prompt output first and then the log files.") -TD_ToolMSGType Error }
+        }
+        $TD_IPQuorumInfo | Export-Csv -Path $PSRootPath\ToolLog\ToolTEMP\$($_.ID)_$($_.DeviceName)_IPQuorumInfo_$(Get-Date -Format "yyyy-MM-dd")_Temp.csv
     }
 
     if($TD_UCRefresh){$TD_UserControl1.Dispatcher.Invoke([System.Action]{},"Render");$TD_UCRefresh=$false}
