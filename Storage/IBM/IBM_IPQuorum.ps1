@@ -10,6 +10,7 @@ function IBM_IPQuorum {
         [Parameter(ValueFromPipeline)]
         [ValidateSet("yes","no")]
         [string]$TD_Export = "yes",
+        [string]$TD_Storage,
         [string]$TD_Exportpath
     )
     
@@ -31,9 +32,9 @@ function IBM_IPQuorum {
                 $TD_Quorum = foreach($TD_Line in $TD_DeviceInformation) {
                     $TD_QuorumInfo = "" | Select-Object QuorumIndex,Status,ID,Name,Active,ObjectType,Override,SiteName
                     $TD_QuorumInfo.QuorumIndex = ($TD_Line|Select-String -Pattern '^(\d+):'-AllMatches).Matches.Groups[1].Value
-                    $TD_QuorumInfo.Status = ($TD_Line|Select-String -Pattern '^\d+:(online|offline|degraded):'-AllMatches).Matches.Groups[2].Value
-                    $TD_QuorumInfo.ID = ($TD_Line|Select-String -Pattern '^\d+:(online|offline|degraded):(\d+|):'-AllMatches).Matches.Groups[3].Value
-                    $TD_QuorumInfo.Name = ($TD_Line|Select-String -Pattern '^(\d):(online|offline|degraded):(\d+):([a-zA-Z0-9_]+|):'-AllMatches).Matches.Groups[4].Value
+                    $TD_QuorumInfo.Status = ($TD_Line|Select-String -Pattern '^\d+:(online|offline|degraded):'-AllMatches).Matches.Groups[1].Value
+                    $TD_QuorumInfo.ID = ($TD_Line|Select-String -Pattern '^\d+:(online|offline|degraded):(\d+|):'-AllMatches).Matches.Groups[2].Value
+                    $TD_QuorumInfo.Name = ($TD_Line|Select-String -Pattern '^\d+:(online|offline|degraded):(\d+):([a-zA-Z0-9_]+|):'-AllMatches).Matches.Groups[3].Value
                     $TD_QuorumInfo.Active =($TD_Line|Select-String -Pattern ':(yes|no|):(drive|device):(yes|no):(\d+|):(.*)$'-AllMatches).Matches.Groups[1].Value
                     $TD_QuorumInfo.ObjectType =($TD_Line|Select-String -Pattern ':(yes|no|):(drive|device):(yes|no):(\d+|):(.*)$'-AllMatches).Matches.Groups[2].Value
                     $TD_QuorumInfo.Override =($TD_Line|Select-String -Pattern ':(yes|no|):(drive|device):(yes|no):(\d+|):(.*)$'-AllMatches).Matches.Groups[3].Value

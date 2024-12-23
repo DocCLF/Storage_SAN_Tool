@@ -10,6 +10,7 @@ function IBM_VolumeInfo {
         [Parameter(ValueFromPipeline)]
         [ValidateSet("yes","no")]
         [string]$TD_Export = "yes",
+        [string]$TD_Storage,
         [string]$TD_Exportpath
     )
     
@@ -32,7 +33,7 @@ function IBM_VolumeInfo {
             $TD_VDiskinfo.IO_Group = ($TD_VDisk|Select-String -Pattern '^\d+:([a-zA-Z0-9-_]+):\d+:([a-zA-Z0-9-_]+):' -AllMatches).Matches.Groups[2].Value
             $TD_VDiskinfo.Status = ($TD_VDisk|Select-String -Pattern ':(online|offline|deleting|degraded):' -AllMatches).Matches.Groups[1].Value
             $TD_VDiskinfo.Pool = ($TD_VDisk|Select-String -Pattern ':(online|offline|deleting|degraded):\d+:([a-zA-Z0-9-_]+):' -AllMatches).Matches.Groups[2].Value
-            $TD_VDiskinfo.Volume_UID = ($TD_VDisk|Select-String -Pattern '(many|\d+|):([0-9a-zA-Z-_]+):(\d+|):([0-9a-zA-Z-_]+|):(yes|no):([0-9A-F]+):\d+:\d+' -AllMatches).Matches.Groups[6].Value
+            $TD_VDiskinfo.Volume_UID = ($TD_VDisk|Select-String -Pattern '(many|\d+|):([0-9a-zA-Z-_]+|):(\d+|):([0-9a-zA-Z-_]+|):(yes|no):([0-9A-F]+):\d+:\d+' -AllMatches).Matches.Groups[6].Value
             $TD_VDiskinfo.PreferredNodeID = ($TD_VDisk|Select-String -Pattern ':(balanced|active|inactive|measured):(\d+|):([0-9a-zA-Z-_]+|)::(\d+):' -AllMatches).Matches.Groups[4].Value
             $TD_VDiskinfo.PreferredNodeName = ($TD_VDisk|Select-String -Pattern ':([0-9A-F]{16,32}):(no|yes):(\d+|):(\d+|):([0-9a-zA-Z-_]+):' -AllMatches).Matches.Groups[5].Value
             $TD_VDiskinfo.VolFunc = ($TD_VDisk|Select-String -Pattern ':(master_change|master|aux_change|aux):' -AllMatches).Matches.Groups[1].Value

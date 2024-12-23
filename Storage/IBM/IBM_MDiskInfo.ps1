@@ -10,6 +10,7 @@ function IBM_MDiskInfo {
         [Parameter(ValueFromPipeline)]
         [ValidateSet("yes","no")]
         [string]$TD_Export = "yes",
+        [string]$TD_Storage,
         [string]$TD_Exportpath
     )
     
@@ -24,7 +25,6 @@ function IBM_MDiskInfo {
         }else {
                 $TD_MDiskInformation = plink $TD_Device_UserName@$TD_Device_DeviceIP -pw $TD_Device_PW -batch 'lsmdisk -gui -delim : -nohdr'
         }
-        $TD_MDiskInformation = $TD_MDiskInformation |Select-Object -Skip 1
     }
     
     process {

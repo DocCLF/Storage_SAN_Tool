@@ -10,8 +10,8 @@ function IBM_IPPortInfo {
         [Parameter(ValueFromPipeline)]
         [ValidateSet("yes","no")]
         [string]$TD_Export = "yes",
-        [string]$TD_Exportpath,
-        [int]$TD_i=0
+        [string]$TD_Storage,
+        [string]$TD_Exportpath
     )
     
     begin {
@@ -32,16 +32,16 @@ function IBM_IPPortInfo {
         $TD_IPPortInfoResault = foreach($TD_CollectIPPortInfo in $TD_CollectIPPortInfos){
             $TD_IPPortInfo = "" | Select-Object ID,NodeID,NodeName,PortID,PortSetName,IPAddresse,Prefix,VLAN,GateWay
             $TD_IPPortInfo.ID = ($TD_CollectIPPortInfo|Select-String -Pattern '^(\d+)' -AllMatches).Matches.Groups[1].Value
-            $TD_IPPortInfo.NodeID = ($TD_CollectIPPortInfo|Select-String -Pattern '^\d+\s+(\d+|)' -AllMatches).Matches.Groups[1].Value
-            $TD_IPPortInfo.NodeName = ($TD_CollectIPPortInfo|Select-String -Pattern '^\d+\s+(\d+|)\s+([a-zA-Z0-9-_]+|)\s+(\d+)\s+(\d+)' -AllMatches).Matches.Groups[2].Value
-            $TD_IPPortInfo.PortID = ($TD_CollectIPPortInfo|Select-String -Pattern '^\d+\s+(\d+|)\s+([a-zA-Z0-9-_]+|)\s+(\d+)\s+(\d+)' -AllMatches).Matches.Groups[3].Value
-            $TD_IPPortInfo.PortSetName = ($TD_CollectIPPortInfo|Select-String -Pattern '\d+\s+\d+\s+([a-zA-Z0-9-_]+)\s+(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})' -AllMatches).Matches.Groups[1].Value
-            $TD_IPPortInfo.IPAddresse = ($TD_CollectIPPortInfo|Select-String -Pattern '\d+\s+\d+\s+([a-zA-Z0-9-_]+)\s+(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})' -AllMatches).Matches.Groups[2].Value
-            $TD_IPPortInfoIPV6Addresse = ($TD_CollectIPPortInfo|Select-String -Pattern '\s+((([a-fA-F0-9:]{0,4}):([a-fA-F0-9]{0,4}))+)\s+' -AllMatches).Matches.Groups[1].Value
+            $TD_IPPortInfo.NodeID = ($TD_CollectIPPortInfo|Select-String -Pattern '^\d+:(\d+|)' -AllMatches).Matches.Groups[1].Value
+            $TD_IPPortInfo.NodeName = ($TD_CollectIPPortInfo|Select-String -Pattern '^\d+:(\d+|):([a-zA-Z0-9-_]+|):(\d+):(\d+)' -AllMatches).Matches.Groups[2].Value
+            $TD_IPPortInfo.PortID = ($TD_CollectIPPortInfo|Select-String -Pattern '^\d+:(\d+|):([a-zA-Z0-9-_]+|):(\d+):(\d+)' -AllMatches).Matches.Groups[3].Value
+            $TD_IPPortInfo.PortSetName = ($TD_CollectIPPortInfo|Select-String -Pattern '\d+:\d+:([a-zA-Z0-9-_]+):(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})' -AllMatches).Matches.Groups[1].Value
+            $TD_IPPortInfo.IPAddresse = ($TD_CollectIPPortInfo|Select-String -Pattern '\d+:\d+:([a-zA-Z0-9-_]+):(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})' -AllMatches).Matches.Groups[2].Value
+            $TD_IPPortInfoIPV6Addresse = ($TD_CollectIPPortInfo|Select-String -Pattern ':((([a-fA-F0-9:]{0,4}):([a-fA-F0-9]{0,4}))+):' -AllMatches).Matches.Groups[1].Value
             if(([string]::IsNullOrWhiteSpace($TD_IPPortInfo.IPAddresse))-and (!([string]::IsNullOrWhiteSpace($TD_IPPortInfoIPV6Addresse)))){$TD_IPPortInfo.IPAddresse = $TD_IPPortInfoIPV6Addresse}
-            $TD_IPPortInfo.Prefix = ($TD_CollectIPPortInfo|Select-String -Pattern '\s+(\d+|)\s+(\d+|)\s+(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}|)\s+(\d+|)\s+([a-zA-Z0-9-_]+|)$' -AllMatches).Matches.Groups[1].Value
-            $TD_IPPortInfo.VLAN = ($TD_CollectIPPortInfo|Select-String -Pattern '\s+(\d+|)\s+(\d+|)\s+(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}|)\s+(\d+|)\s+([a-zA-Z0-9-_]+|)$' -AllMatches).Matches.Groups[2].Value
-            $TD_IPPortInfo.GateWay = ($TD_CollectIPPortInfo|Select-String -Pattern '\s+(\d+|)\s+(\d+|)\s+(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}|)\s+(\d+|)\s+([a-zA-Z0-9-_]+|)$' -AllMatches).Matches.Groups[3].Value
+            $TD_IPPortInfo.Prefix = ($TD_CollectIPPortInfo|Select-String -Pattern ':(\d+|):(\d+|):(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}|):(\d+|):([a-zA-Z0-9-_]+|)$' -AllMatches).Matches.Groups[1].Value
+            $TD_IPPortInfo.VLAN = ($TD_CollectIPPortInfo|Select-String -Pattern ':(\d+|):(\d+|):(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}|):(\d+|):([a-zA-Z0-9-_]+|)$$' -AllMatches).Matches.Groups[2].Value
+            $TD_IPPortInfo.GateWay = ($TD_CollectIPPortInfo|Select-String -Pattern ':(\d+|):(\d+|):(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}|):(\d+|):([a-zA-Z0-9-_]+|)$' -AllMatches).Matches.Groups[3].Value
 
             $TD_IPPortInfo
             <# Progressbar  #>

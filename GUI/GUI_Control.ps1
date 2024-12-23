@@ -624,7 +624,7 @@ $TD_btn_IBM_BaseStorageInfo.add_click({
     $TD_Credentials | ForEach-Object {
         [array]$TD_IPQuorumInfo = IBM_IPQuorum -TD_Line_ID $_.ID -TD_Device_ConnectionTyp $_.ConnectionTyp -TD_Device_UserName $_.UserName -TD_Device_DeviceIP $_.IPAddress -TD_Device_DeviceName $_.DeviceName -TD_Device_PW $([Net.NetworkCredential]::new('', $_.Password).Password) -TD_Storage $TD_Credential.SVCorVF -TD_Exportpath $TD_tb_ExportPath.Text
         switch ($_.ID) {
-            {($_ -eq 1)} { $TD_dg_IPQuorumInfoOne.ItemsSource = $TD_IPQuorumInfo }
+            {($_ -eq 1)} { $TD_dg_IPQuorumInfoOne.ItemsSource = $TD_IPQuorumInfo; $TD_lb_QuorumInfoOne.Visibility="visible" }
             {($_ -eq 2)} { $TD_dg_IPQuorumInfoTwo.ItemsSource = $TD_IPQuorumInfo }
             {($_ -eq 3)} { $TD_dg_IPQuorumInfoThree.ItemsSource = $TD_IPQuorumInfo }
             {($_ -eq 4)} { $TD_dg_IPQuorumInfoFour.ItemsSource = $TD_IPQuorumInfo }
@@ -767,7 +767,7 @@ $TD_btn_IBM_HostInfo.add_click({
     }
 
     $TD_Credentials | ForEach-Object {
-        [array]$TD_Collected_HostInfoResult = IBM_Host_Volume_Map -TD_Line_ID $_.ID -TD_Device_ConnectionTyp $_.ConnectionTyp -TD_Device_UserName $_.UserName -TD_Device_DeviceIP $_.IPAddress -TD_Device_DeviceName $_.DeviceName -TD_Device_PW $([Net.NetworkCredential]::new('', $_.Password).Password) -TD_Exportpath $TD_tb_ExportPath.Text
+        [array]$TD_Collected_HostInfoResult = IBM_HostInfo -TD_Line_ID $_.ID -TD_Device_ConnectionTyp $_.ConnectionTyp -TD_Device_UserName $_.UserName -TD_Device_DeviceIP $_.IPAddress -TD_Device_DeviceName $_.DeviceName -TD_Device_PW $([Net.NetworkCredential]::new('', $_.Password).Password) -TD_Exportpath $TD_tb_ExportPath.Text
         switch ($_.ID) {
             {($_ -eq 1)} { $TD_dg_CollectedHostInfoOne.ItemsSource = $TD_Collected_HostInfoResult }
             {($_ -eq 2)} { $TD_dg_CollectedHostInfoTwo.ItemsSource = $TD_Collected_HostInfoResult }
@@ -797,7 +797,7 @@ $TD_btn_IBM_IPPortInfo.add_click({
     $TD_dg_IPPortInfoOne,$TD_dg_IPPortInfoTwo,$TD_dg_IPPortInfoThree,$TD_dg_IPPortInfoFour |ForEach-Object {
         if($_.items.count -gt 0){$_.ItemsSource = $EmptyVar; $TD_UCRefresh = $true}
     }
-
+    
     $TD_Credentials | ForEach-Object {
         [array]$TD_IPPortInfo = IBM_IPPortInfo -TD_Line_ID $_.ID -TD_Device_ConnectionTyp $_.ConnectionTyp -TD_Device_UserName $_.UserName -TD_Device_DeviceIP $_.IPAddress -TD_Device_DeviceName $_.DeviceName -TD_Device_PW $([Net.NetworkCredential]::new('', $_.Password).Password) -TD_Storage $_.SVCorVF -TD_Exportpath $TD_tb_ExportPath.Text
         switch ($_.ID) {

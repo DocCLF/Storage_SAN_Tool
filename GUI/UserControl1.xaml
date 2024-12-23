@@ -1841,6 +1841,7 @@
                                 <DataGridTextColumn Width="auto" Header="Side Name" Binding ="{Binding SideName}" IsReadOnly="True"/>
                             </DataGrid.Columns>
                         </DataGrid>
+                        <Label Grid.Row="1" Grid.ColumnSpan="2" x:Name="lb_QuorumInfoOne" Content="Quorum Information" Visibility="Collapsed" Style="{StaticResource MainLabelStyle}" Margin="2,5,0,5"/>
                         <DataGrid Grid.Row="1" x:Name="dg_IPQuorumInfoOne" AutoGenerateColumns="False" Margin="5" MaxHeight="400">
                             <DataGrid.Style>
                                 <Style TargetType="DataGrid">
@@ -2555,7 +2556,7 @@
                             <RowDefinition Height="*" />
                         </Grid.RowDefinitions>
                         <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="2">
-                        <Label Grid.Row="0" Grid.ColumnSpan="2" Content="" Visibility="Collapsed" Style="{StaticResource MainLabelStyle}" Margin="2,5,0,5"/>
+                        <Label Grid.Row="0" Content="" Visibility="Collapsed" Style="{StaticResource MainLabelStyle}" Margin="2,5,0,5"/>
                         </StackPanel>
                         <StackPanel Orientation="Vertical" Grid.Row="1">
                         <DataGrid Grid.Row="1" x:Name="dg_ExpandMDiskInfoOne" AutoGenerateColumns="False" Margin="5" MaxHeight="400">
@@ -2571,7 +2572,6 @@
                             <DataGrid.Columns>
                                 <DataGridTextColumn Width="auto" Header="MDiskID"  Binding ="{Binding MDiskID}" IsReadOnly="True"/>
                                 <DataGridTextColumn Width="auto" Header="Name" Binding ="{Binding Name}" IsReadOnly="True"/>
-                                <DataGridTextColumn Width="auto" Header="NodeWWNN"  Binding ="{Binding WWNN}" IsReadOnly="True"/>  
                                 <DataGridTextColumn Width="auto" Header="Status" Binding ="{Binding Status}" IsReadOnly="True"/>  
                                 <DataGridTextColumn Width="auto" Header="Mode" Binding ="{Binding Mode}" IsReadOnly="True"/> 
                                 <DataGridTextColumn Width="auto" Header="MDiskGrpName" Binding ="{Binding MDiskGrpName}" IsReadOnly="True"/>
@@ -2625,8 +2625,7 @@
                             </DataGrid.Style>
                             <DataGrid.Columns>
                                 <DataGridTextColumn Width="auto" Header="MDiskID"  Binding ="{Binding MDiskID}" IsReadOnly="True"/>
-                                <DataGridTextColumn Width="auto" Header="Name" Binding ="{Binding Name}" IsReadOnly="True"/>
-                                <DataGridTextColumn Width="auto" Header="NodeWWNN"  Binding ="{Binding WWNN}" IsReadOnly="True"/>  
+                                <DataGridTextColumn Width="auto" Header="Name" Binding ="{Binding Name}" IsReadOnly="True"/> 
                                 <DataGridTextColumn Width="auto" Header="Status" Binding ="{Binding Status}" IsReadOnly="True"/>  
                                 <DataGridTextColumn Width="auto" Header="Mode" Binding ="{Binding Mode}" IsReadOnly="True"/> 
                                 <DataGridTextColumn Width="auto" Header="MDiskGrpName" Binding ="{Binding MDiskGrpName}" IsReadOnly="True"/>
@@ -2680,8 +2679,7 @@
                             </DataGrid.Style>
                             <DataGrid.Columns>
                                 <DataGridTextColumn Width="auto" Header="MDiskID"  Binding ="{Binding MDiskID}" IsReadOnly="True"/>
-                                <DataGridTextColumn Width="auto" Header="Name" Binding ="{Binding Name}" IsReadOnly="True"/>
-                                <DataGridTextColumn Width="auto" Header="NodeWWNN"  Binding ="{Binding WWNN}" IsReadOnly="True"/>  
+                                <DataGridTextColumn Width="auto" Header="Name" Binding ="{Binding Name}" IsReadOnly="True"/> 
                                 <DataGridTextColumn Width="auto" Header="Status" Binding ="{Binding Status}" IsReadOnly="True"/>  
                                 <DataGridTextColumn Width="auto" Header="Mode" Binding ="{Binding Mode}" IsReadOnly="True"/> 
                                 <DataGridTextColumn Width="auto" Header="MDiskGrpName" Binding ="{Binding MDiskGrpName}" IsReadOnly="True"/>
@@ -2736,7 +2734,6 @@
                             <DataGrid.Columns>
                                 <DataGridTextColumn Width="auto" Header="MDiskID"  Binding ="{Binding MDiskID}" IsReadOnly="True"/>
                                 <DataGridTextColumn Width="auto" Header="Name" Binding ="{Binding Name}" IsReadOnly="True"/>
-                                <DataGridTextColumn Width="auto" Header="NodeWWNN"  Binding ="{Binding WWNN}" IsReadOnly="True"/>  
                                 <DataGridTextColumn Width="auto" Header="Status" Binding ="{Binding Status}" IsReadOnly="True"/>  
                                 <DataGridTextColumn Width="auto" Header="Mode" Binding ="{Binding Mode}" IsReadOnly="True"/> 
                                 <DataGridTextColumn Width="auto" Header="MDiskGrpName" Binding ="{Binding MDiskGrpName}" IsReadOnly="True"/>

@@ -39,10 +39,11 @@ function IBM_HostInfo {
         }else{
             $TD_CollectInfos = plink $TD_Device_UserName@$TD_Device_DeviceIP -pw $TD_Device_PW -batch 'lshost -nohdr |while read id name IO_group_id;do lshost -delim : $id ;echo;done'
         }
+        $TD_CollectInfos = Get-Content -Path C:\Users\mailt\Documents\lshostInfo.txt
     }
     
     process {
-        $iCounter=0; [bool]$TDCheckOne=$false; [bool]$TDCheckTwo=$false; [bool]$TDCheckThree=$false; [bool]$TDCheckFour=$false
+        $iCounter=0;
         $TD_HostBaseTemp = "" | Select-Object HostID,HostName,PortCount,Type,Status,SiteName,HostClusterName,Protocol,StatusPolicy,StatusSite,WWPNOne,NodeLoggedInCountOne,StateOne,WWPNTwo,NodeLoggedInCountTwo,StateTwo,WWPNThree,NodeLoggedInCountThree,StateThree,WWPNFour,NodeLoggedInCountFour,StateFour
         [array]$CollectedHostInfo = foreach($TD_CollectInfo in $TD_CollectInfos){
             if([string]::IsNullOrWhiteSpace($TD_CollectInfo) -or ($iCounter -gt ($TD_CollectInfos.Count - 2)) ){
@@ -63,8 +64,8 @@ function IBM_HostInfo {
             $TD_HostBaseTemp.StatusSite = ($TD_CollectInfo|Select-String -Pattern '^status_site:(.*)' -AllMatches).Matches.Groups[1].Value
             switch (($TD_CollectInfo|Select-String -Pattern '^WWPN:(.*)' -AllMatches).Matches.Groups[1].Value) {
                 {($_ -ne $TD_HostBaseTemp.WWPNOne) -and ([string]::IsNullOrWhiteSpace($TD_HostBaseTemp.WWPNOne)) } { 
-                    $TD_HostBaseTemp.WWPNOne = ($TD_CollectInfo|Select-String -Pattern '^WWPN:(.*)' -AllMatches).Matches.Groups[1].Value
-                    $TDCheckOne =$true
+                    $TD_HostBaseTemp.WWPNOne = ($TD_CollectInfo|Select-String -Pattern 'WWPN:(.*)' -AllMatches).Matches.Groups[1].Value
+                    
                 }
                 {($_ -ne $TD_HostBaseTemp.WWPNOne) -and ([string]::IsNullOrWhiteSpace($TD_HostBaseTemp.WWPNTwo))} { 
                     $TD_HostBaseTemp.WWPNTwo = ($TD_CollectInfo|Select-String -Pattern '^WWPN:(.*)' -AllMatches).Matches.Groups[1].Value
@@ -80,14 +81,21 @@ function IBM_HostInfo {
                 }
                 Default {}
             }
-            $NodeLoggedInCountTemp = ($TD_CollectInfo|Select-String -Pattern '^node_logged_in_count:(\d+)' -AllMatches).Matches.Groups[1].Value
-            $StateOneTemp = ($TD_CollectInfo|Select-String -Pattern '^state:(.*)' -AllMatches).Matches.Groups[1].Value
-            switch ($true) {
-                $TDCheckOne { $TD_HostBaseTemp.NodeLoggedInCountOne = $NodeLoggedInCountTemp; $TD_HostBaseTemp.StateOne = $StateOneTemp; $TDCheckOne=$false }
-                $TDCheckTwo { $TD_HostBaseTemp.NodeLoggedInCountTwo = $NodeLoggedInCountTemp; $TD_HostBaseTemp.StateTwo = $StateOneTemp; $TDCheckTwo=$false }
-                $TDCheckThree { $TD_HostBaseTemp.NodeLoggedInCountThree = $NodeLoggedInCountTemp; $TD_HostBaseTemp.StateThree = $StateOneTemp; $TDCheckThree=$false }
-                $TDCheckFour { $TD_HostBaseTemp.NodeLoggedInCountFour = $NodeLoggedInCountTemp; $TD_HostBaseTemp.StateFour = $StateOneTemp; $TDCheckFour=$false }
-                Default {}
+            if([string]::IsNullOrWhiteSpace($TD_HostBaseTemp.WWPNTwo)){
+                $TD_HostBaseTemp.NodeLoggedInCountOne = (($TD_CollectInfo|Select-String -Pattern '^node_logged_in_count:(\d+)' -AllMatches).Matches.Groups[1].Value)
+                $TD_HostBaseTemp.StateOne = (($TD_CollectInfo|Select-String -Pattern '^state:(.*)' -AllMatches).Matches.Groups[1].Value)
+            }
+            if([string]::IsNullOrWhiteSpace($TD_HostBaseTemp.WWPNThree)){
+                $TD_HostBaseTemp.NodeLoggedInCountTwo = (($TD_CollectInfo|Select-String -Pattern '^node_logged_in_count:(\d+)' -AllMatches).Matches.Groups[1].Value)
+                $TD_HostBaseTemp.StateTwo = (($TD_CollectInfo|Select-String -Pattern '^state:(.*)' -AllMatches).Matches.Groups[1].Value)
+            }
+            if([string]::IsNullOrWhiteSpace($TD_HostBaseTemp.WWPNFour)){
+                $TD_HostBaseTemp.NodeLoggedInCountThree = (($TD_CollectInfo|Select-String -Pattern '^node_logged_in_count:(\d+)' -AllMatches).Matches.Groups[1].Value)
+                $TD_HostBaseTemp.StateThree = (($TD_CollectInfo|Select-String -Pattern '^state:(.*)' -AllMatches).Matches.Groups[1].Value)
+            }
+            if(!([string]::IsNullOrWhiteSpace($TD_HostBaseTemp.StateThree))){
+                $TD_HostBaseTemp.NodeLoggedInCountFour = (($TD_CollectInfo|Select-String -Pattern '^node_logged_in_count:(\d+)' -AllMatches).Matches.Groups[1].Value)
+                $TD_HostBaseTemp.StateFour = (($TD_CollectInfo|Select-String -Pattern '^state:(.*)' -AllMatches).Matches.Groups[1].Value)
             }
             $iCounter++
         }
