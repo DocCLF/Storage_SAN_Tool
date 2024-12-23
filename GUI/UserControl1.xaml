@@ -96,6 +96,12 @@
                 Style="{StaticResource MainBtnStyle}"
                 Content="FC Port Info"
                 ToolTip="Generate a list of host count and login count for each worldwide port names (WWPNs) required to set up Fibre Channel (FC) zoning and to display the current failover status of host IO ports." />
+                <!--IBM_IPPortInfo-->
+                <Button
+                x:Name="btn_IBM_IPPortInfo"
+                Style="{StaticResource MainBtnStyle}"
+                Content="IP Port Info"
+                ToolTip="Generate a list the currently configured IP addresses" />
                 <!--IBM_CleanUpDumps-->
                 <Button
                 x:Name="btn_IBM_CleanUpDumps"
@@ -2349,6 +2355,104 @@
                                         </Style>
                                     </DataGridTextColumn.CellStyle>
                                 </DataGridTextColumn>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                        </StackPanel>  
+                    </Grid>
+                </StackPanel> 
+                <StackPanel  x:Name="stp_IBM_IPPortInfo" Orientation="Horizontal" Margin="2" Visibility="{Binding ElementName=btn_IBM_IPPortInfo, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+                        <StackPanel Orientation="Vertical" Grid.Row="1">
+                        <DataGrid Grid.Row="1" Grid.Column="1" x:Name="dg_IPPortInfoOne" AutoGenerateColumns="False" Margin="5" MaxHeight="400">
+                            <DataGrid.Style>
+                                <Style TargetType="DataGrid">
+                                    <Style.Triggers>
+                                        <Trigger Property="HasItems" Value="False">
+                                          <Setter Property="Visibility" Value="Collapsed"></Setter>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGrid.Style>
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Width="auto" Header="ID"  Binding ="{Binding ID}" IsReadOnly="True" />
+                                <DataGridTextColumn Width="auto" Header="Node ID" Binding ="{Binding NodeID}" IsReadOnly="True" />
+                                <DataGridTextColumn Width="auto" Header="Node Name"  Binding ="{Binding NodeName}" IsReadOnly="True"/>  
+                                <DataGridTextColumn Width="auto" Header="Port ID" Binding ="{Binding PortID}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="PortSet Name" Binding ="{Binding PortSetName}" IsReadOnly="True"/> 
+                                <DataGridTextColumn Width="auto" Header="IPAddresse" Binding ="{Binding IPAddresse}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Prefix" Binding ="{Binding Prefix}" IsReadOnly="True" />
+                                <DataGridTextColumn Width="auto" Header="VLAN" Binding ="{Binding VLAN}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="GateWay" Binding ="{Binding GateWay}" IsReadOnly="True"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                        <DataGrid Grid.Row="1" Grid.Column="1" x:Name="dg_IPPortInfoTwo" AutoGenerateColumns="False" Margin="5,20,5,5" MaxHeight="400">
+                            <DataGrid.Style>
+                                <Style TargetType="DataGrid">
+                                    <Style.Triggers>
+                                        <Trigger Property="HasItems" Value="False">
+                                          <Setter Property="Visibility" Value="Collapsed"></Setter>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGrid.Style>
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Width="auto" Header="ID"  Binding ="{Binding ID}" IsReadOnly="True" />
+                                <DataGridTextColumn Width="auto" Header="Node ID" Binding ="{Binding NodeID}" IsReadOnly="True" />
+                                <DataGridTextColumn Width="auto" Header="Node Name"  Binding ="{Binding NodeName}" IsReadOnly="True"/>  
+                                <DataGridTextColumn Width="auto" Header="Port ID" Binding ="{Binding PortID}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="PortSet Name" Binding ="{Binding PortSetName}" IsReadOnly="True"/> 
+                                <DataGridTextColumn Width="auto" Header="IPAddresse" Binding ="{Binding IPAddresse}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Prefix" Binding ="{Binding Prefix}" IsReadOnly="True" />
+                                <DataGridTextColumn Width="auto" Header="VLAN" Binding ="{Binding VLAN}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="GateWay" Binding ="{Binding GateWay}" IsReadOnly="True"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                        <DataGrid Grid.Row="1" Grid.Column="1" x:Name="dg_IPPortInfoThree" AutoGenerateColumns="False" Margin="5,20,5,5" MaxHeight="400">
+                            <DataGrid.Style>
+                                <Style TargetType="DataGrid">
+                                    <Style.Triggers>
+                                        <Trigger Property="HasItems" Value="False">
+                                          <Setter Property="Visibility" Value="Collapsed"></Setter>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGrid.Style>
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Width="auto" Header="ID"  Binding ="{Binding ID}" IsReadOnly="True" />
+                                <DataGridTextColumn Width="auto" Header="Node ID" Binding ="{Binding NodeID}" IsReadOnly="True" />
+                                <DataGridTextColumn Width="auto" Header="Node Name"  Binding ="{Binding NodeName}" IsReadOnly="True"/>  
+                                <DataGridTextColumn Width="auto" Header="Port ID" Binding ="{Binding PortID}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="PortSet Name" Binding ="{Binding PortSetName}" IsReadOnly="True"/> 
+                                <DataGridTextColumn Width="auto" Header="IPAddresse" Binding ="{Binding IPAddresse}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Prefix" Binding ="{Binding Prefix}" IsReadOnly="True" />
+                                <DataGridTextColumn Width="auto" Header="VLAN" Binding ="{Binding VLAN}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="GateWay" Binding ="{Binding GateWay}" IsReadOnly="True"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                        <DataGrid Grid.Row="1" Grid.Column="1" x:Name="dg_IPPortInfoFour" AutoGenerateColumns="False" Margin="5,20,5,5" MaxHeight="400">
+                            <DataGrid.Style>
+                                <Style TargetType="DataGrid">
+                                    <Style.Triggers>
+                                        <Trigger Property="HasItems" Value="False">
+                                          <Setter Property="Visibility" Value="Collapsed"></Setter>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGrid.Style>
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Width="auto" Header="ID"  Binding ="{Binding ID}" IsReadOnly="True" />
+                                <DataGridTextColumn Width="auto" Header="Node ID" Binding ="{Binding NodeID}" IsReadOnly="True" />
+                                <DataGridTextColumn Width="auto" Header="Node Name"  Binding ="{Binding NodeName}" IsReadOnly="True"/>  
+                                <DataGridTextColumn Width="auto" Header="Port ID" Binding ="{Binding PortID}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="PortSet Name" Binding ="{Binding PortSetName}" IsReadOnly="True"/> 
+                                <DataGridTextColumn Width="auto" Header="IPAddresse" Binding ="{Binding IPAddresse}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Prefix" Binding ="{Binding Prefix}" IsReadOnly="True" />
+                                <DataGridTextColumn Width="auto" Header="VLAN" Binding ="{Binding VLAN}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="GateWay" Binding ="{Binding GateWay}" IsReadOnly="True"/>
                             </DataGrid.Columns>
                         </DataGrid>
                         </StackPanel>  

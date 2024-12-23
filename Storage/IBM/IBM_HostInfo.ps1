@@ -99,10 +99,10 @@ function IBM_HostInfo {
         Close-ProgressBar -ProgressBar $ProgressBar
         <# export y or n #>
         if($TD_Export -eq "yes"){
-            if([string]$TD_Exportpath -ne "$PSCommandPath\Export\"){
+            if([string]$TD_Exportpath -ne "$PSCommandPath\ToolLog\"){
                 $CollectedHostInfo | Export-Csv -Path $TD_Exportpath\$($TD_Line_ID)_($TD_Device_DeviceName)_IBM_HostInfo_$(Get-Date -Format "yyyy-MM-dd").csv -NoTypeInformation
             }else {
-                $CollectedHostInfo | Export-Csv -Path $PSCommandPath\Export\$($TD_Line_ID)_($TD_Device_DeviceName)_IBM_HostInfo_$(Get-Date -Format "yyyy-MM-dd").csv -NoTypeInformation
+                $CollectedHostInfo | Export-Csv -Path $PSCommandPath\ToolLog\$($TD_Line_ID)_($TD_Device_DeviceName)_IBM_HostInfo_$(Get-Date -Format "yyyy-MM-dd").csv -NoTypeInformation
             }
         }else {
             <# output on the promt #>
