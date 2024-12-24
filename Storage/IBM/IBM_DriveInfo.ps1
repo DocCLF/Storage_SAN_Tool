@@ -42,6 +42,7 @@ function IBM_DriveInfo {
         [string]$TD_Device_ConnectionTyp,
         [Parameter(Mandatory)]
         [string]$TD_Device_UserName,
+        [string]$TD_Device_DeviceName,
         [Parameter(Mandatory)]
         [string]$TD_Device_DeviceIP,
         [string]$TD_Device_PW,

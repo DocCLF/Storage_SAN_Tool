@@ -17,12 +17,14 @@ function IBM_EventLog {
         [string]$TD_Device_ConnectionTyp,
         [Parameter(Mandatory)]
         [string]$TD_Device_UserName,
+        [string]$TD_Device_DeviceName,
         [Parameter(Mandatory)]
         [string]$TD_Device_DeviceIP,
         [string]$TD_Device_PW,
         [Parameter(ValueFromPipeline)]
         [ValidateSet("yes","no")]
         [string]$TD_Export = "yes",
+        [string]$TD_Storage,
         [string]$TD_Exportpath
     )
     

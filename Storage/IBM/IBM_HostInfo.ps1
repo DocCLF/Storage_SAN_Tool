@@ -24,6 +24,7 @@ function IBM_HostInfo {
         [Parameter(ValueFromPipeline)]
         [ValidateSet("yes","no")]
         [string]$TD_Export = "yes",
+        [string]$TD_Storage,
         [string]$TD_Exportpath
     )
     

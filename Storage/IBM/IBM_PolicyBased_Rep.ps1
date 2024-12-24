@@ -5,11 +5,13 @@ function IBM_PolicyBased_Rep {
         [string]$TD_Device_ConnectionTyp,
         [string]$TD_Device_UserName,
         [string]$TD_Device_DeviceIP,
+        [string]$TD_Device_DeviceName,
         [string]$TD_Device_PW,
         [string]$TD_RepInfoChose,
         [Parameter(ValueFromPipeline)]
         [ValidateSet("yes","no")]
         [string]$TD_Export = "yes",
+        [string]$TD_Storage,
         [string]$TD_Exportpath
     )
     

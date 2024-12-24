@@ -5,10 +5,12 @@ function IBM_FCPortInfo {
         [string]$TD_Device_ConnectionTyp,
         [string]$TD_Device_UserName,
         [string]$TD_Device_DeviceIP,
+        [string]$TD_Device_DeviceName,
         [string]$TD_Device_PW,
         [Parameter(ValueFromPipeline)]
         [ValidateSet("yes","no")]
         [string]$TD_Export = "yes",
+        [string]$TD_Storage,
         [string]$TD_Exportpath,
         [int]$TD_i=0
     )
