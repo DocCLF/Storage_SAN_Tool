@@ -49,10 +49,12 @@ function IBM_BaseStorageInfos {
             $TD_FSBaseTemp.Status = ($TD_FSBaseInfo|Select-String -Pattern '^\d+:[a-zA-Z0-9-_]+:.*:([a-zA-Z0-9-_]+):(online|offline|service|flushing|adding|deleting|service):(\d+)' -AllMatches).Matches.Groups[2].Value
             $TD_FSBaseTemp.IO_group_id = ($TD_FSBaseInfo|Select-String -Pattern '^\d+:[a-zA-Z0-9-_]+:.*:([a-zA-Z0-9-_]+):(online|offline|service|flushing|adding|deleting|service):(\d+)' -AllMatches).Matches.Groups[3].Value
             $TD_FSBaseTemp.IO_group_Name = ($TD_FSBaseInfo|Select-String -Pattern '\d+:([a-zA-Z0-9-_]+):(yes|no):' -AllMatches).Matches.Groups[1].Value
+            $TD_FSBaseBackEndSerial_Number = ($TD_FSBaseInfo|Select-String -Pattern ':\d+:\d+:([a-zA-Z0-9]+):' -AllMatches).Matches.Groups[1].Value
+            $TD_FSBaseSVCSerialNumber = ($TD_FSBaseInfo|Select-String -Pattern ':([a-zA-Z0-9]+):(\d+|):(\d+|):([a-zA-Z0-9]+|):(\d+|):([a-zA-Z0-9-_]+)' -AllMatches).Matches.Groups[1].Value
             if($TD_Storage -eq "FSystem"){
-               $TD_FSBaseTemp.Serial_Number = ($TD_FSBaseInfo|Select-String -Pattern ':\d+:\d+:([a-zA-Z0-9]+):' -AllMatches).Matches.Groups[1].Value
+               $TD_FSBaseTemp.Serial_Number = $TD_FSBaseBackEndSerial_Number
             }else {
-                $TD_FSBaseTemp.Serial_Number = ($TD_FSBaseInfo|Select-String -Pattern ':([a-zA-Z0-9]+):(\d+|):(\d+|):([a-zA-Z0-9]+|):(\d+|):([a-zA-Z0-9-_]+)' -AllMatches).Matches.Groups[1].Value
+                $TD_FSBaseTemp.Serial_Number = $TD_FSBaseSVCSerialNumber
             }
             $TD_FSBaseTemp.Config_Node = ($TD_FSBaseInfo|Select-String -Pattern '\d+:([a-zA-Z0-9-_]+):(yes|no):' -AllMatches).Matches.Groups[2].Value
             $TD_FSBaseTemp.SideID = ($TD_FSBaseInfo|Select-String -Pattern ':(\d+|):([a-zA-Z0-9-_]+)$' -AllMatches).Matches.Groups[1].Value

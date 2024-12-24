@@ -40,7 +40,6 @@ function IBM_HostInfo {
         }else{
             $TD_CollectInfos = plink $TD_Device_UserName@$TD_Device_DeviceIP -pw $TD_Device_PW -batch 'lshost -nohdr |while read id name IO_group_id;do lshost -delim : $id ;echo;done'
         }
-        $TD_CollectInfos = Get-Content -Path C:\Users\mailt\Documents\lshostInfo.txt
     }
     
     process {
@@ -82,26 +81,29 @@ function IBM_HostInfo {
                 }
                 Default {}
             }
-            if([string]::IsNullOrWhiteSpace($TD_HostBaseTemp.WWPNTwo)){
+            if(([string]::IsNullOrWhiteSpace($TD_HostBaseTemp.WWPNTwo)-and(!([string]::IsNullOrWhiteSpace($TD_HostBaseTemp.WWPNOne))))){
                 $TD_HostBaseTemp.NodeLoggedInCountOne = (($TD_CollectInfo|Select-String -Pattern '^node_logged_in_count:(\d+)' -AllMatches).Matches.Groups[1].Value)
                 $TD_HostBaseTemp.StateOne = (($TD_CollectInfo|Select-String -Pattern '^state:(.*)' -AllMatches).Matches.Groups[1].Value)
             }
-            if([string]::IsNullOrWhiteSpace($TD_HostBaseTemp.WWPNThree)){
+            if(([string]::IsNullOrWhiteSpace($TD_HostBaseTemp.WWPNThree)-and(!([string]::IsNullOrWhiteSpace($TD_HostBaseTemp.WWPNTwo))))){
                 $TD_HostBaseTemp.NodeLoggedInCountTwo = (($TD_CollectInfo|Select-String -Pattern '^node_logged_in_count:(\d+)' -AllMatches).Matches.Groups[1].Value)
                 $TD_HostBaseTemp.StateTwo = (($TD_CollectInfo|Select-String -Pattern '^state:(.*)' -AllMatches).Matches.Groups[1].Value)
             }
-            if([string]::IsNullOrWhiteSpace($TD_HostBaseTemp.WWPNFour)){
+            if(([string]::IsNullOrWhiteSpace($TD_HostBaseTemp.WWPNFour)-and(!([string]::IsNullOrWhiteSpace($TD_HostBaseTemp.WWPNThree))))){
                 $TD_HostBaseTemp.NodeLoggedInCountThree = (($TD_CollectInfo|Select-String -Pattern '^node_logged_in_count:(\d+)' -AllMatches).Matches.Groups[1].Value)
                 $TD_HostBaseTemp.StateThree = (($TD_CollectInfo|Select-String -Pattern '^state:(.*)' -AllMatches).Matches.Groups[1].Value)
             }
-            if(!([string]::IsNullOrWhiteSpace($TD_HostBaseTemp.StateThree))){
+            if((!([string]::IsNullOrWhiteSpace($TD_HostBaseTemp.StateThree))-and(!([string]::IsNullOrWhiteSpace($TD_HostBaseTemp.WWPNFour))))){
                 $TD_HostBaseTemp.NodeLoggedInCountFour = (($TD_CollectInfo|Select-String -Pattern '^node_logged_in_count:(\d+)' -AllMatches).Matches.Groups[1].Value)
                 $TD_HostBaseTemp.StateFour = (($TD_CollectInfo|Select-String -Pattern '^state:(.*)' -AllMatches).Matches.Groups[1].Value)
             }
             $iCounter++
+            
+            $ProgCounter++
+            Write-ProgressBar -ProgressBar $ProgressBar -Activity "Collect data for Device $($TD_Line_ID)" -PercentComplete (($ProgCounter/$TD_CollectInfos.Count) * 100)
         }
-        $ProgCounter++
-        Write-ProgressBar -ProgressBar $ProgressBar -Activity "Collect data for Device $($TD_Line_ID)" -PercentComplete (($ProgCounter/$TD_CollectInfos.Count) * 100)
+        
+        
     }
     
     end {
