@@ -92,10 +92,10 @@ function IBM_EventLog {
         Write-Debug -Message "IBM_EventLog End block |$(Get-Date) `n"
         <# export y or n #>
         if($TD_Export -eq "yes"){
-            if([string]$TD_Exportpath -ne "$PSRootPath\Export\"){
+            if([string]$TD_Exportpath -ne "$PSRootPath\ToolLog\"){
                 $TD_EventCollection | Export-Csv -Path $TD_Exportpath\$($TD_Line_ID)_EventLog_Result_$(Get-Date -Format "yyyy-MM-dd").csv -NoTypeInformation
             }else {
-                $TD_EventCollection | Export-Csv -Path $PSScriptRoot\Export\$($TD_Line_ID)_EventLog_Result_$(Get-Date -Format "yyyy-MM-dd").csv -NoTypeInformation
+                $TD_EventCollection | Export-Csv -Path $PSScriptRoot\ToolLog\$($TD_Line_ID)_EventLog_Result_$(Get-Date -Format "yyyy-MM-dd").csv -NoTypeInformation
             }
         }else {
             <# output on the promt #>

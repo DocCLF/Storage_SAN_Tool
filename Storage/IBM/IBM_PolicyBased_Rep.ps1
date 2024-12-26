@@ -90,7 +90,7 @@ function IBM_PolicyBased_Rep {
         <# export y or n #>
         if($TD_export -eq "yes"){
 
-            if([string]$TD_Exportpath -ne "$PSRootPath\Export\"){
+            if([string]$TD_Exportpath -ne "$PSRootPath\ToolLog\"){
                 switch ($TD_RepInfoChose) {
                     "lsreplicationpolicy" { $TD_ReplicationPolicy | Export-Csv -Path $TD_Exportpath\$($TD_Line_ID)_ReplicationPolicy_$(Get-Date -Format "yyyy-MM-dd").csv -NoTypeInformation }
                     "lsvolumegroupreplication" { $TD_VolumeGroupRep | Export-Csv -Path $TD_Exportpath\$($TD_Line_ID)_VolumeGroupRep_$(Get-Date -Format "yyyy-MM-dd").csv -NoTypeInformation }
@@ -115,7 +115,7 @@ function IBM_PolicyBased_Rep {
         switch ($TD_RepInfoChose) {
             "lsreplicationpolicy" { return $TD_ReplicationPolicy }
             "lsvolumegroupreplication" { return $TD_VolumeGroupRep }
-            Default {Write-Host "Something went wrong please try again or contact tools upport" -ForegroundColor Red}
+            Default {Write-Host "Something went wrong please try again or contact tool upport" -ForegroundColor Red}
         }
 
     }

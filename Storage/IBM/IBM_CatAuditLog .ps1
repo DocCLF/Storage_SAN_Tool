@@ -38,7 +38,7 @@ function IBM_CatAuditLog {
         }else {
             $TD_CatAuditLogInfos = plink $TD_Device_UserName@$TD_Device_DeviceIP -pw $TD_Device_PW -batch "catauditlog -delim :"
         }
-        $TD_CatAuditLogInfos = $TD_CatAuditLogInfos | Select-Object -Last 100
+        $TD_CatAuditLogInfos = $TD_CatAuditLogInfos | Select-Object -Last 75
     }
 
     process{
@@ -68,10 +68,10 @@ function IBM_CatAuditLog {
         Close-ProgressBar -ProgressBar $ProgressBar
 
         if($TD_Export -eq "yes"){
-            if([string]$TD_Exportpath -ne "$PSCommandPath\Export\"){
+            if([string]$TD_Exportpath -ne "$PSCommandPath\ToolLog\"){
                 $TD_AuditLog | Export-Csv -Path $TD_Exportpath\$($TD_Line_ID)_AuditLog_Result_$(Get-Date -Format "yyyy-MM-dd").csv -NoTypeInformation
             }else {
-                $TD_AuditLog | Export-Csv -Path $PSCommandPath\Export\$($TD_Line_ID)_AuditLog_Result_$(Get-Date -Format "yyyy-MM-dd").csv -NoTypeInformation
+                $TD_AuditLog | Export-Csv -Path $PSCommandPath\ToolLog\$($TD_Line_ID)_AuditLog_Result_$(Get-Date -Format "yyyy-MM-dd").csv -NoTypeInformation
             }
         }else {
             <# output on the promt #>

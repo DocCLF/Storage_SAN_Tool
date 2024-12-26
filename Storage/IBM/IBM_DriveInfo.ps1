@@ -171,10 +171,10 @@ function IBM_DriveInfo {
         
         <# export y or n #>
         if($TD_export -eq "yes"){
-            if([string]$TD_Exportpath -ne "$PSRootPath\Export\"){
+            if([string]$TD_Exportpath -ne "$PSRootPath\ToolLog\"){
                 $TD_DriveOverview | Export-Csv -Path $TD_Exportpath\$($TD_Line_ID)_Drive_Overview_$(Get-Date -Format "yyyy-MM-dd").csv -NoTypeInformation
             }else {
-                $TD_DriveOverview | Export-Csv -Path $PSScriptRoot\Export\$($TD_Line_ID)_Drive_Overview_$(Get-Date -Format "yyyy-MM-dd").csv -NoTypeInformation
+                $TD_DriveOverview | Export-Csv -Path $PSScriptRoot\ToolLog\$($TD_Line_ID)_Drive_Overview_$(Get-Date -Format "yyyy-MM-dd").csv -NoTypeInformation
             }
             Start-Sleep -Seconds 0.2
         }else {

@@ -16,7 +16,6 @@ function IBM_BaseStorageInfos {
     
     begin {
         $ErrorActionPreference="SilentlyContinue"
-        $TD_lb_BaseStorageErrorInfo.Visibility="Collapsed"
         [int]$ProgCounter=0
         $ProgressBar = New-ProgressBar
         <# Connect to Device and get all needed Data #>
@@ -87,7 +86,7 @@ function IBM_BaseStorageInfos {
         Close-ProgressBar -ProgressBar $ProgressBar
         <# export y or n #>
         if($TD_export -eq "yes"){
-            if([string]$TD_Exportpath -ne "$PSRootPath\Export\"){
+            if([string]$TD_Exportpath -ne "$PSRootPath\ToolLog\"){
                 $TD_StorageInfo | Export-Csv -Path $TD_Exportpath\$($TD_Line_ID)_$($TD_StorageInfo.Name)_StorageBaseInfo_$(Get-Date -Format "yyyy-MM-dd").csv -NoTypeInformation
             }else {
                 $TD_StorageInfo | Export-Csv -Path $PSScriptRoot\ToolLog\$($TD_Line_ID)_$($TD_StorageInfo.Name)_StorageBaseInfo_$(Get-Date -Format "yyyy-MM-dd").csv -NoTypeInformation

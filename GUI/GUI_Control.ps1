@@ -285,14 +285,14 @@ $TD_btn_IBM_Eventlog.add_click({
     $TD_Credentials | ForEach-Object {
         [array]$TD_IBM_EventLogShow = IBM_EventLog -TD_Line_ID $_.ID -TD_Device_ConnectionTyp $_.ConnectionTyp -TD_Device_UserName $_.UserName -TD_Device_DeviceIP $_.IPAddress -TD_Device_PW $([Net.NetworkCredential]::new('', $_.Password).Password) -TD_Exportpath $TD_tb_ExportPath.Text
         switch ($_.ID) {
-            {($_ -eq 1)} { $TD_lb_StorageEventLogOne.ItemsSource = $TD_IBM_EventLogShow }
-            {($_ -eq 2)} { $TD_lb_StorageEventLogTwo.ItemsSource = $TD_IBM_EventLogShow }
-            {($_ -eq 3)} { $TD_lb_StorageEventLogThree.ItemsSource = $TD_IBM_EventLogShow }
-            {($_ -eq 4)} { $TD_lb_StorageEventLogFour.ItemsSource = $TD_IBM_EventLogShow }
-            {($_ -eq 5)} { $TD_lb_StorageEventLogOne.ItemsSource = $TD_IBM_EventLogShow }
-            {($_ -eq 6)} { $TD_lb_StorageEventLogOne.ItemsSource = $TD_IBM_EventLogShow }
-            {($_ -eq 7)} { $TD_lb_StorageEventLogOne.ItemsSource = $TD_IBM_EventLogShow }
-            {($_ -eq 8)} { $TD_lb_StorageEventLogOne.ItemsSource = $TD_IBM_EventLogShow }
+            {($_ -eq 1)} { $TD_lb_StorageEventLogOne.ItemsSource = $TD_IBM_EventLogShow ;  $TD_lb_StoEventLogOne.Content="$($_.DeviceName)" ;$TD_lb_StoEventLogOne.Visibility="visible"}
+            {($_ -eq 2)} { $TD_lb_StorageEventLogTwo.ItemsSource = $TD_IBM_EventLogShow ;  $TD_lb_StoEventLogTwo.Content="$($_.DeviceName)" ;$TD_lb_StoEventLogTwo.Visibility="visible"}
+            {($_ -eq 3)} { $TD_lb_StorageEventLogThree.ItemsSource = $TD_IBM_EventLogShow ;$TD_lb_StoEventLogThree.Content="$($_.DeviceName)" ;$TD_lb_StoEventLogThree.Visibility="visible"}
+            {($_ -eq 4)} { $TD_lb_StorageEventLogFour.ItemsSource = $TD_IBM_EventLogShow ; $TD_lb_StoEventLogFour.Content="$($_.DeviceName)" ;$TD_lb_StoEventLogFour.Visibility="visible"}
+            {($_ -eq 5)} { $TD_lb_StorageEventLogFive.ItemsSource = $TD_IBM_EventLogShow ; $TD_lb_StoEventLogFive.Content="$($_.DeviceName)" ;$TD_lb_StoEventLogFive.Visibility="visible"}
+            {($_ -eq 6)} { $TD_lb_StorageEventLogSix.ItemsSource = $TD_IBM_EventLogShow ;  $TD_lb_StoEventLogSix.Content="$($_.DeviceName)" ;$TD_lb_StoEventLogSix.Visibility="visible"}
+            {($_ -eq 7)} { $TD_lb_StorageEventLogSeven.ItemsSource = $TD_IBM_EventLogShow ;$TD_lb_StoEventLogSeven.Content="$($_.DeviceName)" ;$TD_lb_StoEventLogSeven.Visibility="visible"}
+            {($_ -eq 8)} { $TD_lb_StorageEventLogEight.ItemsSource = $TD_IBM_EventLogShow ;$TD_lb_StoEventLogEight.Content="$($_.DeviceName)" ;$TD_lb_StoEventLogEight.Visibility="visible"}
             Default { SST_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong, please check the prompt output first and then the log files.") -TD_ToolMSGType Error }
         }
     }
@@ -316,14 +316,14 @@ $TD_btn_IBM_CatAuditLog.add_click({
     $TD_Credentials | ForEach-Object {
         [array]$TD_CatAuditLog = IBM_CatAuditLog -TD_Line_ID $_.ID -TD_Device_ConnectionTyp $_.ConnectionTyp -TD_Device_UserName $_.UserName -TD_Device_DeviceIP $_.IPAddress -TD_Device_PW $([Net.NetworkCredential]::new('', $_.Password).Password) -TD_Exportpath $TD_tb_ExportPath.Text
         switch ($_.ID) {
-            {($_ -eq 1)} { $TD_dg_StorageAuditLogOne.ItemsSource = $TD_CatAuditLog }
-            {($_ -eq 2)} { $TD_dg_StorageAuditLogTwo.ItemsSource = $TD_CatAuditLog }
-            {($_ -eq 3)} { $TD_dg_StorageAuditLogThree.ItemsSource = $TD_CatAuditLog }
-            {($_ -eq 4)} { $TD_dg_StorageAuditLogFour.ItemsSource = $TD_CatAuditLog }
-            {($_ -eq 5)} { $TD_dg_StorageAuditLogOne.ItemsSource = $TD_CatAuditLog }
-            {($_ -eq 6)} { $TD_dg_StorageAuditLogOne.ItemsSource = $TD_CatAuditLog }
-            {($_ -eq 7)} { $TD_dg_StorageAuditLogOne.ItemsSource = $TD_CatAuditLog }
-            {($_ -eq 8)} { $TD_dg_StorageAuditLogOne.ItemsSource = $TD_CatAuditLog }
+            {($_ -eq 1)} { $TD_dg_StorageAuditLogOne.ItemsSource = $TD_CatAuditLog  ; $TD_lb_StorageAuditLogOne.Content="$($_.DeviceName)" ;    $TD_lb_StorageAuditLogOne.Visibility="visible"}
+            {($_ -eq 2)} { $TD_dg_StorageAuditLogTwo.ItemsSource = $TD_CatAuditLog  ; $TD_lb_StorageAuditLogTwo.Content="$($_.DeviceName)" ;    $TD_lb_StorageAuditLogTwo.Visibility="visible"}
+            {($_ -eq 3)} { $TD_dg_StorageAuditLogThree.ItemsSource = $TD_CatAuditLog; $TD_lb_StorageAuditLogThree.Content="$($_.DeviceName)" ;  $TD_lb_StorageAuditLogThree.Visibility="visible"} 
+            {($_ -eq 4)} { $TD_dg_StorageAuditLogFour.ItemsSource = $TD_CatAuditLog ; $TD_lb_StorageAuditLogFour.Content="$($_.DeviceName)" ;   $TD_lb_StorageAuditLogFour.Visibility="visible"}
+            {($_ -eq 5)} { $TD_dg_StorageAuditLogOne.ItemsSource = $TD_CatAuditLog  ; $TD_lb_StorageAuditLogFive.Content="$($_.DeviceName)" ;   $TD_lb_StorageAuditLogFive.Visibility="visible"}
+            {($_ -eq 6)} { $TD_dg_StorageAuditLogOne.ItemsSource = $TD_CatAuditLog  ; $TD_lb_StorageAuditLogSix.Content="$($_.DeviceName)" ;    $TD_lb_StorageAuditLogSix.Visibility="visible"}
+            {($_ -eq 7)} { $TD_dg_StorageAuditLogOne.ItemsSource = $TD_CatAuditLog  ; $TD_lb_StorageAuditLogSeven.Content="$($_.DeviceName)" ;  $TD_lb_StorageAuditLogSeven.Visibility="visible"}
+            {($_ -eq 8)} { $TD_dg_StorageAuditLogOne.ItemsSource = $TD_CatAuditLog  ; $TD_lb_StorageAuditLogEight.Content="$($_.DeviceName)" ;  $TD_lb_StorageAuditLogEight.Visibility="visible"}
             Default { SST_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong, please check the prompt output first and then the log files.") -TD_ToolMSGType Error }
         }
         $TD_CatAuditLog | Export-Csv -Path $PSRootPath\ToolLog\ToolTEMP\$($_.ID)_$($_.DeviceName)_IBM_CatAuditLog_$(Get-Date -Format "yyyy-MM-dd")_Temp.csv
@@ -346,7 +346,7 @@ $TD_btn_IBM_HostVolumeMap.add_click({
     }
 
     $TD_Credentials | ForEach-Object {
-        [array]$TD_Host_Volume_Map = IBM_Host_Volume_Map -TD_Line_ID $_.ID -TD_Device_ConnectionTyp $_.ConnectionTyp -TD_Device_UserName $_.UserName -TD_Device_DeviceIP $_.IPAddress -TD_Device_PW $([Net.NetworkCredential]::new('', $_.Password).Password) -TD_Exportpath $TD_tb_ExportPath.Text
+        [array]$TD_Host_Volume_Map = IBM_Host_Volume_Map -TD_Line_ID $_.ID -TD_Device_ConnectionTyp $_.ConnectionTyp -TD_Device_UserName $_.UserName -TD_Device_DeviceName $_.DeviceName -TD_Device_DeviceIP $_.IPAddress -TD_Device_PW $([Net.NetworkCredential]::new('', $_.Password).Password) -TD_Exportpath $TD_tb_ExportPath.Text
         switch ($_.ID) {
             {($_ -eq 1)} { $TD_dg_HostVolInfoOne.ItemsSource = $TD_Host_Volume_Map }
             {($_ -eq 2)} { $TD_dg_HostVolInfoTwo.ItemsSource = $TD_Host_Volume_Map }
@@ -482,7 +482,7 @@ $TD_btn_IBM_FCPortStats.add_click({
     }
 
     $TD_Credentials | ForEach-Object {
-        [array]$TD_FCPortStats = IBM_FCPortStats -TD_Line_ID $_.ID -TD_Device_ConnectionTyp $_.ConnectionTyp -TD_Device_UserName $_.UserName -TD_Device_DeviceIP $_.IPAddress -TD_Device_PW $([Net.NetworkCredential]::new('', $_.Password).Password) -TD_Storage $TD_Credential.SVCorVF -TD_Exportpath $TD_tb_ExportPath.Text
+        [array]$TD_FCPortStats = IBM_FCPortStats -TD_Line_ID $_.ID -TD_Device_ConnectionTyp $_.ConnectionTyp -TD_Device_UserName $_.UserName -TD_Device_DeviceIP $_.IPAddress -TD_Device_PW $([Net.NetworkCredential]::new('', $_.Password).Password) -TD_Storage $_.SVCorVF -TD_Exportpath $TD_tb_ExportPath.Text
         switch ($_.ID) {
             {($_ -eq 1)} { $TD_dg_FCPortStatsOne.ItemsSource = $TD_FCPortStats }
             {($_ -eq 2)} { $TD_dg_FCPortStatsTwo.ItemsSource = $TD_FCPortStats }
@@ -516,14 +516,14 @@ $TD_btn_IBM_FCPortInfo.add_click({
     $TD_Credentials | ForEach-Object {
         [array]$TD_FCPortInfo = IBM_FCPortInfo -TD_Line_ID $_.ID -TD_Device_ConnectionTyp $_.ConnectionTyp -TD_Device_UserName $_.UserName -TD_Device_DeviceIP $_.IPAddress -TD_Device_PW $([Net.NetworkCredential]::new('', $_.Password).Password) -TD_Storage $_.SVCorVF -TD_Exportpath $TD_tb_ExportPath.Text
         switch ($_.ID) {
-            {($_ -eq 1)} { $TD_dg_FCPortStatsOne.ItemsSource = $TD_FCPortInfo }
-            {($_ -eq 2)} { $TD_dg_FCPortStatsTwo.ItemsSource = $TD_FCPortInfo }
-            {($_ -eq 3)} { $TD_dg_FCPortStatsThree.ItemsSource = $TD_FCPortInfo }
-            {($_ -eq 4)} { $TD_dg_FCPortStatsFour.ItemsSource = $TD_FCPortInfo }
-            {($_ -eq 5)} { $TD_dg_FCPortStatsFour.ItemsSource = $TD_FCPortInfo }
-            {($_ -eq 6)} { $TD_dg_FCPortStatsFour.ItemsSource = $TD_FCPortInfo }
-            {($_ -eq 7)} { $TD_dg_FCPortStatsFour.ItemsSource = $TD_FCPortInfo }
-            {($_ -eq 8)} { $TD_dg_FCPortStatsFour.ItemsSource = $TD_FCPortInfo }
+            {($_ -eq 1)} { $TD_dg_FCPortInfoOne.ItemsSource = $TD_FCPortInfo }
+            {($_ -eq 2)} { $TD_dg_FCPortInfoTwo.ItemsSource = $TD_FCPortInfo }
+            {($_ -eq 3)} { $TD_dg_FCPortInfoThree.ItemsSource = $TD_FCPortInfo }
+            {($_ -eq 4)} { $TD_dg_FCPortInfoFour.ItemsSource = $TD_FCPortInfo }
+            {($_ -eq 5)} { $TD_dg_FCPortInfoFour.ItemsSource = $TD_FCPortInfo }
+            {($_ -eq 6)} { $TD_dg_FCPortInfoFour.ItemsSource = $TD_FCPortInfo }
+            {($_ -eq 7)} { $TD_dg_FCPortInfoFour.ItemsSource = $TD_FCPortInfo }
+            {($_ -eq 8)} { $TD_dg_FCPortInfoFour.ItemsSource = $TD_FCPortInfo }
             Default { SST_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong, please check the prompt output first and then the log files.") -TD_ToolMSGType Error }
         }
         $TD_FCPortInfo | Export-Csv -Path $PSRootPath\ToolLog\ToolTEMP\$($_.ID)_$($_.DeviceName)_FCPortInfo_$(Get-Date -Format "yyyy-MM-dd")_Temp.csv
@@ -557,7 +557,7 @@ $TD_btn_FilterPBR.add_click({
             }
 
             $TD_Credentials | ForEach-Object {
-                [array]$TD_PolicyBased_Rep = IBM_PolicyBased_Rep -TD_Line_ID $_.ID -TD_Device_ConnectionTyp $_.ConnectionTyp -TD_Device_UserName $_.UserName -TD_Device_DeviceIP $_.IPAddress -TD_Device_PW $([Net.NetworkCredential]::new('', $_.Password).Password) -TD_Storage $TD_Credential.SVCorVF -TD_RepInfoChose $TD_RepInfoChose -TD_Exportpath $TD_tb_ExportPath.Text
+                [array]$TD_PolicyBased_Rep = IBM_PolicyBased_Rep -TD_Line_ID $_.ID -TD_Device_ConnectionTyp $_.ConnectionTyp -TD_Device_UserName $_.UserName -TD_Device_DeviceIP $_.IPAddress -TD_Device_PW $([Net.NetworkCredential]::new('', $_.Password).Password) -TD_Storage $_.SVCorVF -TD_RepInfoChose $TD_RepInfoChose -TD_Exportpath $TD_tb_ExportPath.Text
                 switch ($_.ID) {
                     {($_ -eq 1)} { $TD_dg_ReplicationPolicyOne.ItemsSource = $TD_PolicyBased_Rep }
                     {($_ -eq 2)} { $TD_dg_ReplicationPolicyTwo.ItemsSource = $TD_PolicyBased_Rep }
@@ -578,7 +578,7 @@ $TD_btn_FilterPBR.add_click({
             }
 
             $TD_Credentials | ForEach-Object {
-                [array]$TD_VolumeGroupRep = IBM_PolicyBased_Rep -TD_Line_ID $_.ID -TD_Device_ConnectionTyp $_.ConnectionTyp -TD_Device_UserName $_.UserName -TD_Device_DeviceIP $_.IPAddress -TD_Device_PW $([Net.NetworkCredential]::new('', $_.Password).Password) -TD_Storage $TD_Credential.SVCorVF -TD_RepInfoChose $TD_RepInfoChose -TD_Exportpath $TD_tb_ExportPath.Text
+                [array]$TD_VolumeGroupRep = IBM_PolicyBased_Rep -TD_Line_ID $_.ID -TD_Device_ConnectionTyp $_.ConnectionTyp -TD_Device_UserName $_.UserName -TD_Device_DeviceIP $_.IPAddress -TD_Device_PW $([Net.NetworkCredential]::new('', $_.Password).Password) -TD_Storage $_.SVCorVF -TD_RepInfoChose $TD_RepInfoChose -TD_Exportpath $TD_tb_ExportPath.Text
                 switch ($_.ID) {
                     {($_ -eq 1)} { $TD_dg_VolumeGrpReplicationOne.ItemsSource = $TD_VolumeGroupRep }
                     {($_ -eq 2)} { $TD_dg_VolumeGrpReplicationTwo.ItemsSource = $TD_VolumeGroupRep }
@@ -612,10 +612,10 @@ $TD_btn_IBM_BaseStorageInfo.add_click({
             {($_ -eq 2)} { $TD_dg_BaseStorageInfoTwo.ItemsSource = $TD_BaseStorageInfo }
             {($_ -eq 3)} { $TD_dg_BaseStorageInfoThree.ItemsSource = $TD_BaseStorageInfo }
             {($_ -eq 4)} { $TD_dg_BaseStorageInfoFour.ItemsSource = $TD_BaseStorageInfo }
-            {($_ -eq 5)} { $TD_dg_BaseStorageInfoFour.ItemsSource = $TD_BaseStorageInfo }
-            {($_ -eq 6)} { $TD_dg_BaseStorageInfoFour.ItemsSource = $TD_BaseStorageInfo }
-            {($_ -eq 7)} { $TD_dg_BaseStorageInfoFour.ItemsSource = $TD_BaseStorageInfo }
-            {($_ -eq 8)} { $TD_dg_BaseStorageInfoFour.ItemsSource = $TD_BaseStorageInfo }
+            {($_ -eq 5)} { $TD_dg_BaseStorageInfoFive.ItemsSource = $TD_BaseStorageInfo }
+            {($_ -eq 6)} { $TD_dg_BaseStorageInfoSix.ItemsSource = $TD_BaseStorageInfo }
+            {($_ -eq 7)} { $TD_dg_BaseStorageInfoSeven.ItemsSource = $TD_BaseStorageInfo }
+            {($_ -eq 8)} { $TD_dg_BaseStorageInfoEight.ItemsSource = $TD_BaseStorageInfo }
             Default { SST_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong, please check the prompt output first and then the log files.") -TD_ToolMSGType Error }
         }
         $TD_BaseStorageInfo | Export-Csv -Path $PSRootPath\ToolLog\ToolTEMP\$($_.ID)_$($_.DeviceName)_BaseStorageInfo_$(Get-Date -Format "yyyy-MM-dd")_Temp.csv
@@ -625,13 +625,13 @@ $TD_btn_IBM_BaseStorageInfo.add_click({
         [array]$TD_IPQuorumInfo = IBM_IPQuorum -TD_Line_ID $_.ID -TD_Device_ConnectionTyp $_.ConnectionTyp -TD_Device_UserName $_.UserName -TD_Device_DeviceIP $_.IPAddress -TD_Device_DeviceName $_.DeviceName -TD_Device_PW $([Net.NetworkCredential]::new('', $_.Password).Password) -TD_Storage $TD_Credential.SVCorVF -TD_Exportpath $TD_tb_ExportPath.Text
         switch ($_.ID) {
             {($_ -eq 1)} { $TD_dg_IPQuorumInfoOne.ItemsSource = $TD_IPQuorumInfo; $TD_lb_QuorumInfoOne.Visibility="visible" }
-            {($_ -eq 2)} { $TD_dg_IPQuorumInfoTwo.ItemsSource = $TD_IPQuorumInfo }
-            {($_ -eq 3)} { $TD_dg_IPQuorumInfoThree.ItemsSource = $TD_IPQuorumInfo }
-            {($_ -eq 4)} { $TD_dg_IPQuorumInfoFour.ItemsSource = $TD_IPQuorumInfo }
-            {($_ -eq 5)} { $TD_dg_IPQuorumInfoFour.ItemsSource = $TD_IPQuorumInfo }
-            {($_ -eq 6)} { $TD_dg_IPQuorumInfoFour.ItemsSource = $TD_IPQuorumInfo }
-            {($_ -eq 7)} { $TD_dg_IPQuorumInfoFour.ItemsSource = $TD_IPQuorumInfo }
-            {($_ -eq 8)} { $TD_dg_IPQuorumInfoFour.ItemsSource = $TD_IPQuorumInfo }
+            {($_ -eq 2)} { $TD_dg_IPQuorumInfoTwo.ItemsSource = $TD_IPQuorumInfo ; $TD_lb_QuorumInfoTwo.Visibility="Visible"}
+            {($_ -eq 3)} { $TD_dg_IPQuorumInfoThree.ItemsSource = $TD_IPQuorumInfo ; $TD_lb_QuorumInfoThree.Visibility="Visible"}
+            {($_ -eq 4)} { $TD_dg_IPQuorumInfoFour.ItemsSource = $TD_IPQuorumInfo ; $TD_lb_QuorumInfoFour.Visibility="Visible"}
+            {($_ -eq 5)} { $TD_dg_IPQuorumInfoFive.ItemsSource = $TD_IPQuorumInfo ; $TD_lb_QuorumInfoFive.Visibility="Visible"}
+            {($_ -eq 6)} { $TD_dg_IPQuorumInfoSix.ItemsSource = $TD_IPQuorumInfo ; $TD_lb_QuorumInfoSix.Visibility="Visible"}
+            {($_ -eq 7)} { $TD_dg_IPQuorumInfoSeven.ItemsSource = $TD_IPQuorumInfo ; $TD_lb_QuorumInfoSeven.Visibility="Visible"}
+            {($_ -eq 8)} { $TD_dg_IPQuorumInfoEight.ItemsSource = $TD_IPQuorumInfo ; $TD_lb_QuorumInfoEight.Visibility="Visible"}
             Default { SST_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong, please check the prompt output first and then the log files.") -TD_ToolMSGType Error }
         }
         $TD_IPQuorumInfo | Export-Csv -Path $PSRootPath\ToolLog\ToolTEMP\$($_.ID)_$($_.DeviceName)_IPQuorumInfo_$(Get-Date -Format "yyyy-MM-dd")_Temp.csv
@@ -690,7 +690,6 @@ $TD_btn_IBM_PoolVolumeInfo.add_click({
     
     $TD_stp_PoolVolumeInfo.Visibility="Visible"
 })
-
 
 $TD_btn_IBM_CleanUpDumps.add_click({
     $ErrorActionPreference="Continue"
@@ -773,10 +772,10 @@ $TD_btn_IBM_HostInfo.add_click({
             {($_ -eq 2)} { $TD_dg_CollectedHostInfoTwo.ItemsSource = $TD_Collected_HostInfoResult }
             {($_ -eq 3)} { $TD_dg_CollectedHostInfoThree.ItemsSource = $TD_Collected_HostInfoResult }
             {($_ -eq 4)} { $TD_dg_CollectedHostInfoFour.ItemsSource = $TD_Collected_HostInfoResult }
-            {($_ -eq 5)} { $TD_dg_HostVolInfoFour.ItemsSource = $TD_Collected_HostInfoResult }
-            {($_ -eq 6)} { $TD_dg_HostVolInfoFour.ItemsSource = $TD_Collected_HostInfoResult }
-            {($_ -eq 7)} { $TD_dg_HostVolInfoFour.ItemsSource = $TD_Collected_HostInfoResult }
-            {($_ -eq 8)} { $TD_dg_HostVolInfoFour.ItemsSource = $TD_Collected_HostInfoResult }
+            {($_ -eq 5)} { $TD_dg_CollectedHostInfoFour.ItemsSource = $TD_Collected_HostInfoResult }
+            {($_ -eq 6)} { $TD_dg_CollectedHostInfoFour.ItemsSource = $TD_Collected_HostInfoResult }
+            {($_ -eq 7)} { $TD_dg_CollectedHostInfoFour.ItemsSource = $TD_Collected_HostInfoResult }
+            {($_ -eq 8)} { $TD_dg_CollectedHostInfoFour.ItemsSource = $TD_Collected_HostInfoResult }
             Default { SST_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong, please check the prompt output first and then the log files.") -TD_ToolMSGType Error }
         }
         $TD_Collected_HostInfoResult | Export-Csv -Path $PSRootPath\ToolLog\ToolTEMP\$($_.ID)_$($_.DeviceName)_Collected_HostInfo_$(Get-Date -Format "yyyy-MM-dd")_Temp.csv
@@ -784,7 +783,7 @@ $TD_btn_IBM_HostInfo.add_click({
 
     if($TD_UCRefresh){$TD_UserControl1.Dispatcher.Invoke([System.Action]{},"Render");$TD_UCRefresh=$false}
 
-    $TD_stp_PoolVolumeInfo,$TD_stp_IBM_IPPortInfo,$TD_stp_FCPortStats,$TD_stp_DriveInfo,$TD_stp_StorageEventLog,$TD_stp_BackUpConfig,$TD_stp_BaseStorageInfo,$TD_stp_IBM_FCPortInfo,$TD_stp_PolicyBased_Rep,$TD_stp_StorageAuditLog,$TD_stp_CleanUpDump | ForEach-Object {$_.Visibility="Collapsed"}
+    $TD_stp_PoolVolumeInfo,$TD_stp_IBM_IPPortInfo,$TD_stp_HostVolInfo,$TD_stp_FCPortStats,$TD_stp_DriveInfo,$TD_stp_StorageEventLog,$TD_stp_BackUpConfig,$TD_stp_BaseStorageInfo,$TD_stp_IBM_FCPortInfo,$TD_stp_PolicyBased_Rep,$TD_stp_StorageAuditLog,$TD_stp_CleanUpDump | ForEach-Object {$_.Visibility="Collapsed"}
 
     $TD_stp_IBM_HostInfo.Visibility="Visible" 
 

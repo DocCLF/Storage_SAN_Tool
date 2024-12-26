@@ -139,7 +139,7 @@
                 x:Name="btn_IBM_PolicyBased_Rep"
                 Style="{StaticResource MainBtnStyle}"
                 Content="Policy Based Repl." 
-                ToolTip="Get some information about the replication policy and VolGrp replication." />
+                ToolTip="Get some information about the replication policy and VolGrp replication, only if there in use!" />
             </StackPanel>
         </GroupBox>   
         </StackPanel> 
@@ -147,18 +147,8 @@
             <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" >
                 <Grid>
                 <StackPanel x:Name="stp_StorageEventLog" Orientation="Vertical" Margin="2" Visibility="{Binding ElementName=btn_IBM_Eventlog, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="Auto" />
-                        </Grid.ColumnDefinitions>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="auto" />
-                            <RowDefinition Height="auto" />
-                        </Grid.RowDefinitions>
-                        <StackPanel Grid.Row="0" Grid.Column="0" >
-                            <Label Content="Device 1" />   
-                            <DataGrid x:Name="lb_StorageEventLogOne" AutoGenerateColumns="False" Margin="5,0,5,5" MaxHeight="420">
+                    <Label x:Name="lb_StoEventLogOne" Content="Device 1" Visibility="Collapsed" FontSize="10" Style="{StaticResource MainLabelStyle}" Margin="2,5,0,5" />   
+                    <DataGrid x:Name="lb_StorageEventLogOne" AutoGenerateColumns="False" Margin="5,0,5,5" MaxHeight="420">
                             <DataGrid.Style>
                                 <Style TargetType="DataGrid">
                                     <Style.Triggers>
@@ -231,11 +221,9 @@
                                     </DataGridTextColumn.CellStyle>
                                 </DataGridTextColumn>
                             </DataGrid.Columns>
-                        </DataGrid>
-                        </StackPanel>
-                        <StackPanel Grid.Row="0" Grid.Column="1" >
-                            <Label Content="Device 2" />
-                            <DataGrid x:Name="lb_StorageEventLogTwo" AutoGenerateColumns="False" Margin="5,0,5,5" MaxHeight="420">
+                    </DataGrid>
+                    <Label x:Name="lb_StoEventLogTwo" Content="Device 2" Visibility="Collapsed" FontSize="10" Style="{StaticResource MainLabelStyle}" Margin="2,5,0,5" />
+                    <DataGrid x:Name="lb_StorageEventLogTwo" AutoGenerateColumns="False" Margin="5,0,5,5" MaxHeight="420">
                             <DataGrid.Style>
                                 <Style TargetType="DataGrid">
                                     <Style.Triggers>
@@ -308,11 +296,9 @@
                                     </DataGridTextColumn.CellStyle>
                                 </DataGridTextColumn>
                             </DataGrid.Columns>
-                        </DataGrid>
-                        </StackPanel>
-                        <StackPanel Grid.Row="1" Grid.Column="0"  >
-                            <Label Content="Device 3" />
-                            <DataGrid x:Name="lb_StorageEventLogThree" AutoGenerateColumns="False" Margin="5,0,5,5" MaxHeight="420">
+                    </DataGrid>
+                    <Label x:Name="lb_StoEventLogThree" Content="Device 3" Visibility="Collapsed" FontSize="10" Style="{StaticResource MainLabelStyle}" Margin="2,5,0,5" />
+                    <DataGrid x:Name="lb_StorageEventLogThree" AutoGenerateColumns="False" Margin="5,0,5,5" MaxHeight="420">
                             <DataGrid.Style>
                                 <Style TargetType="DataGrid">
                                     <Style.Triggers>
@@ -385,11 +371,9 @@
                                     </DataGridTextColumn.CellStyle>
                                 </DataGridTextColumn>
                             </DataGrid.Columns>
-                        </DataGrid>
-                        </StackPanel>
-                        <StackPanel Grid.Row="1" Grid.Column="1" >
-                            <Label Content="Device 4" />
-                            <DataGrid x:Name="lb_StorageEventLogFour" AutoGenerateColumns="False" Margin="5,0,5,5" MaxHeight="420">
+                    </DataGrid>
+                    <Label x:Name="lb_StoEventLogFour" Content="Device 4" Visibility="Collapsed" FontSize="10" Style="{StaticResource MainLabelStyle}" Margin="2,5,0,5" />
+                    <DataGrid x:Name="lb_StorageEventLogFour" AutoGenerateColumns="False" Margin="5,0,5,5" MaxHeight="420">
                             <DataGrid.Style>
                                 <Style TargetType="DataGrid">
                                     <Style.Triggers>
@@ -462,129 +446,509 @@
                                     </DataGridTextColumn.CellStyle>
                                 </DataGridTextColumn>
                             </DataGrid.Columns>
-                        </DataGrid>
-                        </StackPanel>
-                    </Grid>
+                    </DataGrid>
+                    <Label x:Name="lb_StoEventLogFive" Content="Device 5" Visibility="Collapsed" FontSize="10" Style="{StaticResource MainLabelStyle}" Margin="2,5,0,5" />
+                    <DataGrid x:Name="lb_StorageEventLogFive" AutoGenerateColumns="False" Margin="5,0,5,5" MaxHeight="420">
+                            <DataGrid.Style>
+                                <Style TargetType="DataGrid">
+                                    <Style.Triggers>
+                                        <Trigger Property="HasItems" Value="False">
+                                          <Setter Property="Visibility" Value="Collapsed"></Setter>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGrid.Style>
+                            <DataGrid.RowStyle>
+                                <Style TargetType="DataGridRow">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding Status}" Value="alert">
+                                            <Setter Property="Background" Value="Red" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding Status}" Value="expired">
+                                            <Setter Property="Background" Value="Yellow" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGrid.RowStyle>
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Width="auto" Header="Time" Binding="{Binding LastTime}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Indicates when the event was most recently updated." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="auto" Header="ObjectType" Binding="{Binding ObjectType}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Indicates the type of the object the event is logged against." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="auto" Header="ObjectName" Binding="{Binding ObjectName}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Indicates the name of the object the event is logged against." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="auto" Header="Status" Binding="{Binding Status}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Indicates the event category." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="auto"  Header="Fixed" Binding="{Binding Fixed}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Indicates whether the event was marked fixed (for an alert) or read (for a message)." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="auto" Header="ErrorCode" Binding="{Binding ErrorCode}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Indicates the error code that is associated with this event, google for it!" />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="auto" Header="Description" Binding="{Binding Description}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Indicates the description that is associated with the event." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                            </DataGrid.Columns>
+                    </DataGrid>
+                    <Label x:Name="lb_StoEventLogSix" Content="Device 6" Visibility="Collapsed" FontSize="10" Style="{StaticResource MainLabelStyle}" Margin="2,5,0,5" />
+                    <DataGrid x:Name="lb_StorageEventLogSix" AutoGenerateColumns="False" Margin="5,0,5,5" MaxHeight="420">
+                            <DataGrid.Style>
+                                <Style TargetType="DataGrid">
+                                    <Style.Triggers>
+                                        <Trigger Property="HasItems" Value="False">
+                                          <Setter Property="Visibility" Value="Collapsed"></Setter>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGrid.Style>
+                            <DataGrid.RowStyle>
+                                <Style TargetType="DataGridRow">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding Status}" Value="alert">
+                                            <Setter Property="Background" Value="Red" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding Status}" Value="expired">
+                                            <Setter Property="Background" Value="Yellow" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGrid.RowStyle>
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Width="auto" Header="Time" Binding="{Binding LastTime}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Indicates when the event was most recently updated." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="auto" Header="ObjectType" Binding="{Binding ObjectType}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Indicates the type of the object the event is logged against." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="auto" Header="ObjectName" Binding="{Binding ObjectName}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Indicates the name of the object the event is logged against." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="auto" Header="Status" Binding="{Binding Status}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Indicates the event category." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="auto"  Header="Fixed" Binding="{Binding Fixed}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Indicates whether the event was marked fixed (for an alert) or read (for a message)." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="auto" Header="ErrorCode" Binding="{Binding ErrorCode}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Indicates the error code that is associated with this event, google for it!" />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="auto" Header="Description" Binding="{Binding Description}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Indicates the description that is associated with the event." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                            </DataGrid.Columns>
+                    </DataGrid>
+                    <Label x:Name="lb_StoEventLogSeven" Content="Device 7" Visibility="Collapsed" FontSize="10" Style="{StaticResource MainLabelStyle}" Margin="2,5,0,5" />
+                    <DataGrid x:Name="lb_StorageEventLogSeven" AutoGenerateColumns="False" Margin="5,0,5,5" MaxHeight="420">
+                            <DataGrid.Style>
+                                <Style TargetType="DataGrid">
+                                    <Style.Triggers>
+                                        <Trigger Property="HasItems" Value="False">
+                                          <Setter Property="Visibility" Value="Collapsed"></Setter>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGrid.Style>
+                            <DataGrid.RowStyle>
+                                <Style TargetType="DataGridRow">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding Status}" Value="alert">
+                                            <Setter Property="Background" Value="Red" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding Status}" Value="expired">
+                                            <Setter Property="Background" Value="Yellow" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGrid.RowStyle>
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Width="auto" Header="Time" Binding="{Binding LastTime}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Indicates when the event was most recently updated." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="auto" Header="ObjectType" Binding="{Binding ObjectType}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Indicates the type of the object the event is logged against." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="auto" Header="ObjectName" Binding="{Binding ObjectName}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Indicates the name of the object the event is logged against." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="auto" Header="Status" Binding="{Binding Status}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Indicates the event category." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="auto"  Header="Fixed" Binding="{Binding Fixed}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Indicates whether the event was marked fixed (for an alert) or read (for a message)." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="auto" Header="ErrorCode" Binding="{Binding ErrorCode}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Indicates the error code that is associated with this event, google for it!" />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="auto" Header="Description" Binding="{Binding Description}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Indicates the description that is associated with the event." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                            </DataGrid.Columns>
+                    </DataGrid>
+                    <Label x:Name="lb_StoEventLogEight" Content="Device 8" Visibility="Collapsed" FontSize="10" Style="{StaticResource MainLabelStyle}" Margin="2,5,0,5" />
+                    <DataGrid x:Name="lb_StorageEventLogEight" AutoGenerateColumns="False" Margin="5,0,5,5" MaxHeight="420">
+                            <DataGrid.Style>
+                                <Style TargetType="DataGrid">
+                                    <Style.Triggers>
+                                        <Trigger Property="HasItems" Value="False">
+                                          <Setter Property="Visibility" Value="Collapsed"></Setter>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGrid.Style>
+                            <DataGrid.RowStyle>
+                                <Style TargetType="DataGridRow">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding Status}" Value="alert">
+                                            <Setter Property="Background" Value="Red" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding Status}" Value="expired">
+                                            <Setter Property="Background" Value="Yellow" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGrid.RowStyle>
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Width="auto" Header="Time" Binding="{Binding LastTime}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Indicates when the event was most recently updated." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="auto" Header="ObjectType" Binding="{Binding ObjectType}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Indicates the type of the object the event is logged against." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="auto" Header="ObjectName" Binding="{Binding ObjectName}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Indicates the name of the object the event is logged against." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="auto" Header="Status" Binding="{Binding Status}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Indicates the event category." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="auto"  Header="Fixed" Binding="{Binding Fixed}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Indicates whether the event was marked fixed (for an alert) or read (for a message)." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="auto" Header="ErrorCode" Binding="{Binding ErrorCode}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Indicates the error code that is associated with this event, google for it!" />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="auto" Header="Description" Binding="{Binding Description}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Indicates the description that is associated with the event." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                            </DataGrid.Columns>
+                    </DataGrid>
                 </StackPanel>
-                <StackPanel x:Name="stp_StorageAuditLog" Margin="2" Visibility="{Binding ElementName=btn_IBM_CatAuditLog, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="Auto" />
-                        </Grid.ColumnDefinitions>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="auto" />
-                            <RowDefinition Height="auto" />
-                        </Grid.RowDefinitions>
-                        <StackPanel Grid.Row="0" Grid.Column="0" >
-                            <Label Content="Device 1" />
-                            <DataGrid Name="dg_StorageAuditLogOne" AutoGenerateColumns="False" Margin="5,5,5,5" MaxHeight="400" >
-                           <DataGrid.Style>
-                                <Style TargetType="DataGrid">
-                                    <Style.Triggers>
-                                        <Trigger Property="HasItems" Value="False">
-                                          <Setter Property="Visibility" Value="Collapsed"></Setter>
-                                        </Trigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </DataGrid.Style>
-                            <DataGrid.Columns>
-                                <DataGridTextColumn Width="auto" Header="AuditSeqNo" Binding="{Binding AuditSeqNo}" IsReadOnly="True"/>
-                                <DataGridTextColumn Width="auto" Header="TimeStamp" Binding="{Binding TimeStamp}" IsReadOnly="True"/>
-                                <DataGridTextColumn Width="auto" Header="User" Binding="{Binding User}" IsReadOnly="True"/>
-                                <DataGridTextColumn Width="auto" Header="SourceAddress" Binding="{Binding SourceAddress}" IsReadOnly="True"/>
-                                <DataGridTextColumn Width="auto" Header="ActionCommand" Binding="{Binding ActionCommand}" IsReadOnly="True">
-                                    <DataGridTextColumn.CellStyle>
-                                        <Style TargetType="DataGridCell">
-                                            <Setter Property="ToolTip" Value="The user's executed command" />
-                                        </Style>
-                                    </DataGridTextColumn.CellStyle>
-                                </DataGridTextColumn>
-                            </DataGrid.Columns>
-                            </DataGrid>
-                        </StackPanel>
-                        <StackPanel Grid.Row="0" Grid.Column="1"  >
-                            <Label Content="Device 2" />
-                            <DataGrid Name="dg_StorageAuditLogTwo" AutoGenerateColumns="False" Margin="5,5,5,5" MaxHeight="400" >
-                           <DataGrid.Style>
-                                <Style TargetType="DataGrid">
-                                    <Style.Triggers>
-                                        <Trigger Property="HasItems" Value="False">
-                                          <Setter Property="Visibility" Value="Collapsed"></Setter>
-                                        </Trigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </DataGrid.Style>
-                            <DataGrid.Columns>
-                                <DataGridTextColumn Width="auto" Header="AuditSeqNo" Binding="{Binding AuditSeqNo}" IsReadOnly="True"/>
-                                <DataGridTextColumn Width="auto" Header="TimeStamp" Binding="{Binding TimeStamp}" IsReadOnly="True"/>
-                                <DataGridTextColumn Width="auto" Header="User" Binding="{Binding User}" IsReadOnly="True"/>
-                                <DataGridTextColumn Width="auto" Header="SourceAddress" Binding="{Binding SourceAddress}" IsReadOnly="True"/>
-                                <DataGridTextColumn Width="auto" Header="ActionCommand" Binding="{Binding ActionCommand}" IsReadOnly="True">
-                                    <DataGridTextColumn.CellStyle>
-                                        <Style TargetType="DataGridCell">
-                                            <Setter Property="ToolTip" Value="The user's executed command" />
-                                        </Style>
-                                    </DataGridTextColumn.CellStyle>
-                                </DataGridTextColumn>
-                            </DataGrid.Columns>
-                            </DataGrid>
-                        </StackPanel>
-                        <StackPanel Grid.Row="1" Grid.Column="0"  >
-                            <Label Content="Device 3" />
-                            <DataGrid Name="dg_StorageAuditLogThree" AutoGenerateColumns="False" Margin="5,5,5,5" MaxHeight="400" >
-                           <DataGrid.Style>
-                                <Style TargetType="DataGrid">
-                                    <Style.Triggers>
-                                        <Trigger Property="HasItems" Value="False">
-                                          <Setter Property="Visibility" Value="Collapsed"></Setter>
-                                        </Trigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </DataGrid.Style>
-                            <DataGrid.Columns>
-                                <DataGridTextColumn Width="auto" Header="AuditSeqNo" Binding="{Binding AuditSeqNo}" IsReadOnly="True"/>
-                                <DataGridTextColumn Width="auto" Header="TimeStamp" Binding="{Binding TimeStamp}" IsReadOnly="True"/>
-                                <DataGridTextColumn Width="auto" Header="User" Binding="{Binding User}" IsReadOnly="True"/>
-                                <DataGridTextColumn Width="auto" Header="SourceAddress" Binding="{Binding SourceAddress}" IsReadOnly="True"/>
-                                <DataGridTextColumn Width="auto" Header="ActionCommand" Binding="{Binding ActionCommand}" IsReadOnly="True">
-                                    <DataGridTextColumn.CellStyle>
-                                        <Style TargetType="DataGridCell">
-                                            <Setter Property="ToolTip" Value="The user's executed command" />
-                                        </Style>
-                                    </DataGridTextColumn.CellStyle>
-                                </DataGridTextColumn>
-                            </DataGrid.Columns>
-                            </DataGrid>
-                        </StackPanel>
-                        <StackPanel Grid.Row="1" Grid.Column="1" >
-                            <Label Content="Device 4" />
-                            <DataGrid Name="dg_StorageAuditLogFour" AutoGenerateColumns="False" Margin="5,5,5,5" MaxHeight="400" >
-                           <DataGrid.Style>
-                                <Style TargetType="DataGrid">
-                                    <Style.Triggers>
-                                        <Trigger Property="HasItems" Value="False">
-                                          <Setter Property="Visibility" Value="Collapsed"></Setter>
-                                        </Trigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </DataGrid.Style>
-                            <DataGrid.Columns>
-                                <DataGridTextColumn Width="auto" Header="AuditSeqNo" Binding="{Binding AuditSeqNo}" IsReadOnly="True"/>
-                                <DataGridTextColumn Width="auto" Header="TimeStamp" Binding="{Binding TimeStamp}" IsReadOnly="True"/>
-                                <DataGridTextColumn Width="auto" Header="User" Binding="{Binding User}" IsReadOnly="True"/>
-                                <DataGridTextColumn Width="auto" Header="SourceAddress" Binding="{Binding SourceAddress}" IsReadOnly="True"/>
-                                <DataGridTextColumn Width="auto" Header="ActionCommand" Binding="{Binding ActionCommand}" IsReadOnly="True">
-                                    <DataGridTextColumn.CellStyle>
-                                        <Style TargetType="DataGridCell">
-                                            <Setter Property="ToolTip" Value="The user's executed command" />
-                                        </Style>
-                                    </DataGridTextColumn.CellStyle>
-                                </DataGridTextColumn>
-                            </DataGrid.Columns>
-                            </DataGrid>
-                        </StackPanel>
-                    </Grid>
+                <StackPanel x:Name="stp_StorageAuditLog" Orientation="Vertical" Margin="2" Visibility="{Binding ElementName=btn_IBM_CatAuditLog, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
+                    <Label x:Name="lb_StorageAuditLogOne" Content="Device 1" Visibility="Collapsed" FontSize="10" Style="{StaticResource MainLabelStyle}" Margin="2,5,0,5" />
+                    <DataGrid Name="dg_StorageAuditLogOne" AutoGenerateColumns="False" Margin="5,5,5,5" MaxHeight="400" >
+                        <DataGrid.Style>
+                             <Style TargetType="DataGrid">
+                                 <Style.Triggers>
+                                     <Trigger Property="HasItems" Value="False">
+                                       <Setter Property="Visibility" Value="Collapsed"></Setter>
+                                     </Trigger>
+                                 </Style.Triggers>
+                             </Style>
+                         </DataGrid.Style>
+                         <DataGrid.Columns>
+                             <DataGridTextColumn Width="auto" Header="AuditSeqNo" Binding="{Binding AuditSeqNo}" IsReadOnly="True"/>
+                             <DataGridTextColumn Width="auto" Header="TimeStamp" Binding="{Binding TimeStamp}" IsReadOnly="True"/>
+                             <DataGridTextColumn Width="auto" Header="User" Binding="{Binding User}" IsReadOnly="True"/>
+                             <DataGridTextColumn Width="auto" Header="SourceAddress" Binding="{Binding SourceAddress}" IsReadOnly="True"/>
+                             <DataGridTextColumn Width="auto" Header="ActionCommand" Binding="{Binding ActionCommand}" IsReadOnly="True">
+                                 <DataGridTextColumn.CellStyle>
+                                     <Style TargetType="DataGridCell">
+                                         <Setter Property="ToolTip" Value="The user's executed command" />
+                                     </Style>
+                                 </DataGridTextColumn.CellStyle>
+                             </DataGridTextColumn>
+                         </DataGrid.Columns>
+                    </DataGrid>
+                    <Label x:Name="lb_StorageAuditLogTwo" Content="Device 2" Visibility="Collapsed" FontSize="10" Style="{StaticResource MainLabelStyle}" Margin="2,5,0,5" />
+                    <DataGrid Name="dg_StorageAuditLogTwo" AutoGenerateColumns="False" Margin="5,5,5,5" MaxHeight="400" >
+                        <DataGrid.Style>
+                             <Style TargetType="DataGrid">
+                                 <Style.Triggers>
+                                     <Trigger Property="HasItems" Value="False">
+                                       <Setter Property="Visibility" Value="Collapsed"></Setter>
+                                     </Trigger>
+                                 </Style.Triggers>
+                             </Style>
+                        </DataGrid.Style>
+                        <DataGrid.Columns>
+                             <DataGridTextColumn Width="auto" Header="AuditSeqNo" Binding="{Binding AuditSeqNo}" IsReadOnly="True"/>
+                             <DataGridTextColumn Width="auto" Header="TimeStamp" Binding="{Binding TimeStamp}" IsReadOnly="True"/>
+                             <DataGridTextColumn Width="auto" Header="User" Binding="{Binding User}" IsReadOnly="True"/>
+                             <DataGridTextColumn Width="auto" Header="SourceAddress" Binding="{Binding SourceAddress}" IsReadOnly="True"/>
+                             <DataGridTextColumn Width="auto" Header="ActionCommand" Binding="{Binding ActionCommand}" IsReadOnly="True">
+                                 <DataGridTextColumn.CellStyle>
+                                     <Style TargetType="DataGridCell">
+                                         <Setter Property="ToolTip" Value="The user's executed command" />
+                                     </Style>
+                                 </DataGridTextColumn.CellStyle>
+                             </DataGridTextColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                    <Label x:Name="lb_StorageAuditLogThree" Content="Device 3" Visibility="Collapsed" FontSize="10" Style="{StaticResource MainLabelStyle}" Margin="2,5,0,5" />
+                    <DataGrid Name="dg_StorageAuditLogThree" AutoGenerateColumns="False" Margin="5,5,5,5" MaxHeight="400" >
+                        <DataGrid.Style>
+                            <Style TargetType="DataGrid">
+                                <Style.Triggers>
+                                    <Trigger Property="HasItems" Value="False">
+                                      <Setter Property="Visibility" Value="Collapsed"></Setter>
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </DataGrid.Style>
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Width="auto" Header="AuditSeqNo" Binding="{Binding AuditSeqNo}" IsReadOnly="True"/>
+                            <DataGridTextColumn Width="auto" Header="TimeStamp" Binding="{Binding TimeStamp}" IsReadOnly="True"/>
+                            <DataGridTextColumn Width="auto" Header="User" Binding="{Binding User}" IsReadOnly="True"/>
+                            <DataGridTextColumn Width="auto" Header="SourceAddress" Binding="{Binding SourceAddress}" IsReadOnly="True"/>
+                            <DataGridTextColumn Width="auto" Header="ActionCommand" Binding="{Binding ActionCommand}" IsReadOnly="True">
+                                <DataGridTextColumn.CellStyle>
+                                    <Style TargetType="DataGridCell">
+                                        <Setter Property="ToolTip" Value="The user's executed command" />
+                                    </Style>
+                                </DataGridTextColumn.CellStyle>
+                            </DataGridTextColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                    <Label x:Name="lb_StorageAuditLogFour" Content="Device 4" Visibility="Collapsed" FontSize="10" Style="{StaticResource MainLabelStyle}" Margin="2,5,0,5" />
+                    <DataGrid Name="dg_StorageAuditLogFour" AutoGenerateColumns="False" Margin="5,5,5,5" MaxHeight="400" >
+                        <DataGrid.Style>
+                            <Style TargetType="DataGrid">
+                                <Style.Triggers>
+                                    <Trigger Property="HasItems" Value="False">
+                                      <Setter Property="Visibility" Value="Collapsed"></Setter>
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </DataGrid.Style>
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Width="auto" Header="AuditSeqNo" Binding="{Binding AuditSeqNo}" IsReadOnly="True"/>
+                            <DataGridTextColumn Width="auto" Header="TimeStamp" Binding="{Binding TimeStamp}" IsReadOnly="True"/>
+                            <DataGridTextColumn Width="auto" Header="User" Binding="{Binding User}" IsReadOnly="True"/>
+                            <DataGridTextColumn Width="auto" Header="SourceAddress" Binding="{Binding SourceAddress}" IsReadOnly="True"/>
+                            <DataGridTextColumn Width="auto" Header="ActionCommand" Binding="{Binding ActionCommand}" IsReadOnly="True">
+                                <DataGridTextColumn.CellStyle>
+                                    <Style TargetType="DataGridCell">
+                                        <Setter Property="ToolTip" Value="The user's executed command" />
+                                    </Style>
+                                </DataGridTextColumn.CellStyle>
+                            </DataGridTextColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                    <Label x:Name="lb_StorageAuditLogFive" Content="Device 5" Visibility="Collapsed" FontSize="10" Style="{StaticResource MainLabelStyle}" Margin="2,5,0,5" />
+                    <DataGrid Name="dg_StorageAuditLogFive" AutoGenerateColumns="False" Margin="5,5,5,5" MaxHeight="400" >
+                        <DataGrid.Style>
+                            <Style TargetType="DataGrid">
+                                <Style.Triggers>
+                                    <Trigger Property="HasItems" Value="False">
+                                      <Setter Property="Visibility" Value="Collapsed"></Setter>
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </DataGrid.Style>
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Width="auto" Header="AuditSeqNo" Binding="{Binding AuditSeqNo}" IsReadOnly="True"/>
+                            <DataGridTextColumn Width="auto" Header="TimeStamp" Binding="{Binding TimeStamp}" IsReadOnly="True"/>
+                            <DataGridTextColumn Width="auto" Header="User" Binding="{Binding User}" IsReadOnly="True"/>
+                            <DataGridTextColumn Width="auto" Header="SourceAddress" Binding="{Binding SourceAddress}" IsReadOnly="True"/>
+                            <DataGridTextColumn Width="auto" Header="ActionCommand" Binding="{Binding ActionCommand}" IsReadOnly="True">
+                                <DataGridTextColumn.CellStyle>
+                                    <Style TargetType="DataGridCell">
+                                        <Setter Property="ToolTip" Value="The user's executed command" />
+                                    </Style>
+                                </DataGridTextColumn.CellStyle>
+                            </DataGridTextColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                    <Label x:Name="lb_StorageAuditLogSix" Content="Device 6" Visibility="Collapsed" FontSize="10" Style="{StaticResource MainLabelStyle}" Margin="2,5,0,5" />
+                    <DataGrid Name="dg_StorageAuditLogSix" AutoGenerateColumns="False" Margin="5,5,5,5" MaxHeight="400" >
+                        <DataGrid.Style>
+                            <Style TargetType="DataGrid">
+                                <Style.Triggers>
+                                    <Trigger Property="HasItems" Value="False">
+                                      <Setter Property="Visibility" Value="Collapsed"></Setter>
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </DataGrid.Style>
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Width="auto" Header="AuditSeqNo" Binding="{Binding AuditSeqNo}" IsReadOnly="True"/>
+                            <DataGridTextColumn Width="auto" Header="TimeStamp" Binding="{Binding TimeStamp}" IsReadOnly="True"/>
+                            <DataGridTextColumn Width="auto" Header="User" Binding="{Binding User}" IsReadOnly="True"/>
+                            <DataGridTextColumn Width="auto" Header="SourceAddress" Binding="{Binding SourceAddress}" IsReadOnly="True"/>
+                            <DataGridTextColumn Width="auto" Header="ActionCommand" Binding="{Binding ActionCommand}" IsReadOnly="True">
+                                <DataGridTextColumn.CellStyle>
+                                    <Style TargetType="DataGridCell">
+                                        <Setter Property="ToolTip" Value="The user's executed command" />
+                                    </Style>
+                                </DataGridTextColumn.CellStyle>
+                            </DataGridTextColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                    <Label x:Name="lb_StorageAuditLogSeven" Content="Device 7" Visibility="Collapsed" FontSize="10" Style="{StaticResource MainLabelStyle}" Margin="2,5,0,5" />
+                    <DataGrid Name="dg_StorageAuditLogSeven" AutoGenerateColumns="False" Margin="5,5,5,5" MaxHeight="400" >
+                        <DataGrid.Style>
+                            <Style TargetType="DataGrid">
+                                <Style.Triggers>
+                                    <Trigger Property="HasItems" Value="False">
+                                      <Setter Property="Visibility" Value="Collapsed"></Setter>
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </DataGrid.Style>
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Width="auto" Header="AuditSeqNo" Binding="{Binding AuditSeqNo}" IsReadOnly="True"/>
+                            <DataGridTextColumn Width="auto" Header="TimeStamp" Binding="{Binding TimeStamp}" IsReadOnly="True"/>
+                            <DataGridTextColumn Width="auto" Header="User" Binding="{Binding User}" IsReadOnly="True"/>
+                            <DataGridTextColumn Width="auto" Header="SourceAddress" Binding="{Binding SourceAddress}" IsReadOnly="True"/>
+                            <DataGridTextColumn Width="auto" Header="ActionCommand" Binding="{Binding ActionCommand}" IsReadOnly="True">
+                                <DataGridTextColumn.CellStyle>
+                                    <Style TargetType="DataGridCell">
+                                        <Setter Property="ToolTip" Value="The user's executed command" />
+                                    </Style>
+                                </DataGridTextColumn.CellStyle>
+                            </DataGridTextColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                    <Label x:Name="lb_StorageAuditLogEight" Content="Device 8" Visibility="Collapsed" FontSize="10" Style="{StaticResource MainLabelStyle}" Margin="2,5,0,5" />
+                    <DataGrid Name="dg_StorageAuditLogEight" AutoGenerateColumns="False" Margin="5,5,5,5" MaxHeight="400" >
+                        <DataGrid.Style>
+                            <Style TargetType="DataGrid">
+                                <Style.Triggers>
+                                    <Trigger Property="HasItems" Value="False">
+                                      <Setter Property="Visibility" Value="Collapsed"></Setter>
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </DataGrid.Style>
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Width="auto" Header="AuditSeqNo" Binding="{Binding AuditSeqNo}" IsReadOnly="True"/>
+                            <DataGridTextColumn Width="auto" Header="TimeStamp" Binding="{Binding TimeStamp}" IsReadOnly="True"/>
+                            <DataGridTextColumn Width="auto" Header="User" Binding="{Binding User}" IsReadOnly="True"/>
+                            <DataGridTextColumn Width="auto" Header="SourceAddress" Binding="{Binding SourceAddress}" IsReadOnly="True"/>
+                            <DataGridTextColumn Width="auto" Header="ActionCommand" Binding="{Binding ActionCommand}" IsReadOnly="True">
+                                <DataGridTextColumn.CellStyle>
+                                    <Style TargetType="DataGridCell">
+                                        <Setter Property="ToolTip" Value="The user's executed command" />
+                                    </Style>
+                                </DataGridTextColumn.CellStyle>
+                            </DataGridTextColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
                 </StackPanel>
                 <StackPanel  x:Name="stp_HostVolInfo" Orientation="Horizontal" Margin="2" Visibility="{Binding ElementName=btn_IBM_HostVolumeMap, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
                     <Grid>
@@ -1794,9 +2158,6 @@
                             <RowDefinition Height="auto" />
                             <RowDefinition Height="*" />
                         </Grid.RowDefinitions>
-                        <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="2">
-                        <Label Grid.Row="0" Grid.ColumnSpan="2" x:Name="lb_BaseStorageErrorInfo" Content="" Visibility="Collapsed" Style="{StaticResource MainLabelStyle}" Margin="2,5,0,5"/>
-                        </StackPanel>
                         <StackPanel Orientation="Vertical" Grid.Row="1">
                         <DataGrid Grid.Row="1" x:Name="dg_BaseStorageInfoOne" AutoGenerateColumns="False" Margin="5" MaxHeight="400">
                             <DataGrid.Style>
@@ -1808,6 +2169,21 @@
                                     </Style.Triggers>
                                 </Style>
                             </DataGrid.Style>
+                            <DataGrid.CellStyle>
+                                <Style TargetType="DataGridCell">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding Status}" Value="online">
+                                            <Setter Property="Background" Value="LightGreen" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding Status}" Value="service">
+                                            <Setter Property="Background" Value="yellow" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding Status}" Value="offline">
+                                            <Setter Property="Background" Value="red" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGrid.CellStyle>
                             <DataGrid.Columns>
                                 <DataGridTextColumn Width="auto" Header="NodeID"  Binding ="{Binding ID}" IsReadOnly="True"/>
                                 <DataGridTextColumn Width="auto" Header="NodeName" Binding ="{Binding Name}" IsReadOnly="True"/>
@@ -1852,6 +2228,18 @@
                                     </Style.Triggers>
                                 </Style>
                             </DataGrid.Style>
+                            <DataGrid.CellStyle>
+                                <Style TargetType="DataGridCell">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding Status}" Value="Online">
+                                            <Setter Property="Background" Value="LightGreen" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding Status}" Value="Offline">
+                                            <Setter Property="Background" Value="yellow" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGrid.CellStyle>
                             <DataGrid.Columns>
                                 <DataGridTextColumn Width="auto" Header="QuorumIndex"  Binding ="{Binding QuorumIndex}" IsReadOnly="True"/>
                                 <DataGridTextColumn Width="auto" Header="Status" Binding ="{Binding Status}" IsReadOnly="True"/>
@@ -1873,6 +2261,21 @@
                                     </Style.Triggers>
                                 </Style>
                             </DataGrid.Style>
+                            <DataGrid.CellStyle>
+                                <Style TargetType="DataGridCell">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding Status}" Value="online">
+                                            <Setter Property="Background" Value="LightGreen" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding Status}" Value="service">
+                                            <Setter Property="Background" Value="yellow" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding Status}" Value="offline">
+                                            <Setter Property="Background" Value="red" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGrid.CellStyle>
                             <DataGrid.Columns>
                                 <DataGridTextColumn Width="auto" Header="NodeID"  Binding ="{Binding ID}" IsReadOnly="True"/>
                                 <DataGridTextColumn Width="auto" Header="NodeName" Binding ="{Binding Name}" IsReadOnly="True"/>
@@ -1906,6 +2309,7 @@
                                 <DataGridTextColumn Width="auto" Header="Side Name" Binding ="{Binding SideName}" IsReadOnly="True"/>
                             </DataGrid.Columns>
                         </DataGrid>
+                        <Label Grid.Row="1" Grid.ColumnSpan="2" x:Name="lb_QuorumInfoTwo" Content="Quorum Information" Visibility="Collapsed" Style="{StaticResource MainLabelStyle}" Margin="2,5,0,5"/>
                         <DataGrid Grid.Row="1" x:Name="dg_IPQuorumInfoTwo" AutoGenerateColumns="False" Margin="5" MaxHeight="400">
                             <DataGrid.Style>
                                 <Style TargetType="DataGrid">
@@ -1916,6 +2320,18 @@
                                     </Style.Triggers>
                                 </Style>
                             </DataGrid.Style>
+                            <DataGrid.CellStyle>
+                                <Style TargetType="DataGridCell">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding Status}" Value="Online">
+                                            <Setter Property="Background" Value="LightGreen" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding Status}" Value="Offline">
+                                            <Setter Property="Background" Value="yellow" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGrid.CellStyle>
                             <DataGrid.Columns>
                                 <DataGridTextColumn Width="auto" Header="QuorumIndex"  Binding ="{Binding QuorumIndex}" IsReadOnly="True"/>
                                 <DataGridTextColumn Width="auto" Header="Status" Binding ="{Binding Status}" IsReadOnly="True"/>
@@ -1937,6 +2353,21 @@
                                     </Style.Triggers>
                                 </Style>
                             </DataGrid.Style>
+                            <DataGrid.CellStyle>
+                                <Style TargetType="DataGridCell">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding Status}" Value="online">
+                                            <Setter Property="Background" Value="LightGreen" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding Status}" Value="service">
+                                            <Setter Property="Background" Value="yellow" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding Status}" Value="offline">
+                                            <Setter Property="Background" Value="red" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGrid.CellStyle>
                             <DataGrid.Columns>
                                 <DataGridTextColumn Width="auto" Header="NodeID"  Binding ="{Binding ID}" IsReadOnly="True"/>
                                 <DataGridTextColumn Width="auto" Header="NodeName" Binding ="{Binding Name}" IsReadOnly="True"/>
@@ -1970,6 +2401,7 @@
                                 <DataGridTextColumn Width="auto" Header="Side Name" Binding ="{Binding SideName}" IsReadOnly="True"/>
                             </DataGrid.Columns>
                         </DataGrid>
+                        <Label Grid.Row="1" Grid.ColumnSpan="2" x:Name="lb_QuorumInfoThree" Content="Quorum Information" Visibility="Collapsed" Style="{StaticResource MainLabelStyle}" Margin="2,5,0,5"/>
                         <DataGrid Grid.Row="1" x:Name="dg_IPQuorumInfoThree" AutoGenerateColumns="False" Margin="5" MaxHeight="400">
                             <DataGrid.Style>
                                 <Style TargetType="DataGrid">
@@ -1980,6 +2412,18 @@
                                     </Style.Triggers>
                                 </Style>
                             </DataGrid.Style>
+                            <DataGrid.CellStyle>
+                                <Style TargetType="DataGridCell">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding Status}" Value="Online">
+                                            <Setter Property="Background" Value="LightGreen" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding Status}" Value="Offline">
+                                            <Setter Property="Background" Value="yellow" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGrid.CellStyle>
                             <DataGrid.Columns>
                                 <DataGridTextColumn Width="auto" Header="QuorumIndex"  Binding ="{Binding QuorumIndex}" IsReadOnly="True"/>
                                 <DataGridTextColumn Width="auto" Header="Status" Binding ="{Binding Status}" IsReadOnly="True"/>
@@ -2001,6 +2445,21 @@
                                     </Style.Triggers>
                                 </Style>
                             </DataGrid.Style>
+                            <DataGrid.CellStyle>
+                                <Style TargetType="DataGridCell">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding Status}" Value="online">
+                                            <Setter Property="Background" Value="LightGreen" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding Status}" Value="service">
+                                            <Setter Property="Background" Value="yellow" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding Status}" Value="offline">
+                                            <Setter Property="Background" Value="red" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGrid.CellStyle>
                             <DataGrid.Columns>
                                 <DataGridTextColumn Width="auto" Header="NodeID"  Binding ="{Binding ID}" IsReadOnly="True"/>
                                 <DataGridTextColumn Width="auto" Header="NodeName" Binding ="{Binding Name}" IsReadOnly="True"/>
@@ -2034,6 +2493,7 @@
                                 <DataGridTextColumn Width="auto" Header="Side Name" Binding ="{Binding SideName}" IsReadOnly="True"/>
                             </DataGrid.Columns>
                         </DataGrid>
+                        <Label Grid.Row="1" Grid.ColumnSpan="2" x:Name="lb_QuorumInfoFour" Content="Quorum Information" Visibility="Collapsed" Style="{StaticResource MainLabelStyle}" Margin="2,5,0,5"/>
                         <DataGrid Grid.Row="1" x:Name="dg_IPQuorumInfoFour" AutoGenerateColumns="False" Margin="5" MaxHeight="400">
                             <DataGrid.Style>
                                 <Style TargetType="DataGrid">
@@ -2044,6 +2504,386 @@
                                     </Style.Triggers>
                                 </Style>
                             </DataGrid.Style>
+                            <DataGrid.CellStyle>
+                                <Style TargetType="DataGridCell">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding Status}" Value="Online">
+                                            <Setter Property="Background" Value="LightGreen" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding Status}" Value="Offline">
+                                            <Setter Property="Background" Value="yellow" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGrid.CellStyle>
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Width="auto" Header="QuorumIndex"  Binding ="{Binding QuorumIndex}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Status" Binding ="{Binding Status}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="ID"  Binding ="{Binding ID}" IsReadOnly="True"/>  
+                                <DataGridTextColumn Width="auto" Header="Name" Binding ="{Binding Name}" IsReadOnly="True"/>  
+                                <DataGridTextColumn Width="auto" Header="Active" Binding ="{Binding Active}" IsReadOnly="True"/> 
+                                <DataGridTextColumn Width="auto" Header="Object Type" Binding ="{Binding ObjectType}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Override" Binding ="{Binding Override}" IsReadOnly="True"/> 
+                                <DataGridTextColumn Width="auto" Header="Site Name" Binding ="{Binding SiteName}" IsReadOnly="True"/>
+                            </DataGrid.Columns> 
+                        </DataGrid>
+                        <DataGrid Grid.Row="1" x:Name="dg_BaseStorageInfoFive" AutoGenerateColumns="False" Margin="5,20,5,5" MaxHeight="400">
+                            <DataGrid.Style>
+                                <Style TargetType="DataGrid">
+                                    <Style.Triggers>
+                                        <Trigger Property="HasItems" Value="False">
+                                          <Setter Property="Visibility" Value="Collapsed"></Setter>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGrid.Style>
+                            <DataGrid.CellStyle>
+                                <Style TargetType="DataGridCell">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding Status}" Value="online">
+                                            <Setter Property="Background" Value="LightGreen" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding Status}" Value="service">
+                                            <Setter Property="Background" Value="yellow" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding Status}" Value="offline">
+                                            <Setter Property="Background" Value="red" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGrid.CellStyle>
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Width="auto" Header="NodeID"  Binding ="{Binding ID}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="NodeName" Binding ="{Binding Name}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="NodeWWNN"  Binding ="{Binding WWNN}" IsReadOnly="True"/>  
+                                <DataGridTextColumn Width="auto" Header="Status" Binding ="{Binding Status}" IsReadOnly="True"/>  
+                                <DataGridTextColumn Width="auto" Header="IO_Group_ID" Binding ="{Binding IO_group_id}" IsReadOnly="True"/> 
+                                <DataGridTextColumn Width="auto" Header="IO_Group_Name" Binding ="{Binding IO_group_Name}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Serial Number" Binding ="{Binding Serial_Number}" IsReadOnly="True"/>  
+                                <DataGridTextColumn Width="auto" Header="Code Level" Binding ="{Binding Code_Level}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Indicates the current level of machine code that is running on the node or node canister" />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="auto" Header="Recommended Level" Binding ="{Binding RecommendedPTF}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Indicates the Recommended level for the machine or node" />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="auto" Header="Config Node" Binding ="{Binding Config_Node}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Indicates if the node is a configuration node." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="auto" Header="SideID" Binding ="{Binding SideID}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Side Name" Binding ="{Binding SideName}" IsReadOnly="True"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                        <Label Grid.Row="1" Grid.ColumnSpan="2" x:Name="lb_QuorumInfoFive" Content="Quorum Information" Visibility="Collapsed" Style="{StaticResource MainLabelStyle}" Margin="2,5,0,5"/>
+                        <DataGrid Grid.Row="1" x:Name="dg_IPQuorumInfoFive" AutoGenerateColumns="False" Margin="5" MaxHeight="400">
+                            <DataGrid.Style>
+                                <Style TargetType="DataGrid">
+                                    <Style.Triggers>
+                                        <Trigger Property="HasItems" Value="False">
+                                          <Setter Property="Visibility" Value="Collapsed"></Setter>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGrid.Style>
+                            <DataGrid.CellStyle>
+                                <Style TargetType="DataGridCell">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding Status}" Value="Online">
+                                            <Setter Property="Background" Value="LightGreen" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding Status}" Value="Offline">
+                                            <Setter Property="Background" Value="yellow" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGrid.CellStyle>
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Width="auto" Header="QuorumIndex"  Binding ="{Binding QuorumIndex}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Status" Binding ="{Binding Status}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="ID"  Binding ="{Binding ID}" IsReadOnly="True"/>  
+                                <DataGridTextColumn Width="auto" Header="Name" Binding ="{Binding Name}" IsReadOnly="True"/>  
+                                <DataGridTextColumn Width="auto" Header="Active" Binding ="{Binding Active}" IsReadOnly="True"/> 
+                                <DataGridTextColumn Width="auto" Header="Object Type" Binding ="{Binding ObjectType}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Override" Binding ="{Binding Override}" IsReadOnly="True"/> 
+                                <DataGridTextColumn Width="auto" Header="Site Name" Binding ="{Binding SiteName}" IsReadOnly="True"/>
+                            </DataGrid.Columns> 
+                        </DataGrid>
+                        <DataGrid Grid.Row="1" x:Name="dg_BaseStorageInfoSix" AutoGenerateColumns="False" Margin="5,20,5,5" MaxHeight="400">
+                            <DataGrid.Style>
+                                <Style TargetType="DataGrid">
+                                    <Style.Triggers>
+                                        <Trigger Property="HasItems" Value="False">
+                                          <Setter Property="Visibility" Value="Collapsed"></Setter>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGrid.Style>
+                            <DataGrid.CellStyle>
+                                <Style TargetType="DataGridCell">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding Status}" Value="online">
+                                            <Setter Property="Background" Value="LightGreen" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding Status}" Value="service">
+                                            <Setter Property="Background" Value="yellow" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding Status}" Value="offline">
+                                            <Setter Property="Background" Value="red" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGrid.CellStyle>
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Width="auto" Header="NodeID"  Binding ="{Binding ID}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="NodeName" Binding ="{Binding Name}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="NodeWWNN"  Binding ="{Binding WWNN}" IsReadOnly="True"/>  
+                                <DataGridTextColumn Width="auto" Header="Status" Binding ="{Binding Status}" IsReadOnly="True"/>  
+                                <DataGridTextColumn Width="auto" Header="IO_Group_ID" Binding ="{Binding IO_group_id}" IsReadOnly="True"/> 
+                                <DataGridTextColumn Width="auto" Header="IO_Group_Name" Binding ="{Binding IO_group_Name}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Serial Number" Binding ="{Binding Serial_Number}" IsReadOnly="True"/>  
+                                <DataGridTextColumn Width="auto" Header="Code Level" Binding ="{Binding Code_Level}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Indicates the current level of machine code that is running on the node or node canister" />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="auto" Header="Recommended Level" Binding ="{Binding RecommendedPTF}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Indicates the Recommended level for the machine or node" />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="auto" Header="Config Node" Binding ="{Binding Config_Node}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Indicates if the node is a configuration node." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="auto" Header="SideID" Binding ="{Binding SideID}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Side Name" Binding ="{Binding SideName}" IsReadOnly="True"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                        <Label Grid.Row="1" Grid.ColumnSpan="2" x:Name="lb_QuorumInfoSix" Content="Quorum Information" Visibility="Collapsed" Style="{StaticResource MainLabelStyle}" Margin="2,5,0,5"/>
+                        <DataGrid Grid.Row="1" x:Name="dg_IPQuorumInfoSix" AutoGenerateColumns="False" Margin="5" MaxHeight="400">
+                            <DataGrid.Style>
+                                <Style TargetType="DataGrid">
+                                    <Style.Triggers>
+                                        <Trigger Property="HasItems" Value="False">
+                                          <Setter Property="Visibility" Value="Collapsed"></Setter>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGrid.Style>
+                            <DataGrid.CellStyle>
+                                <Style TargetType="DataGridCell">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding Status}" Value="Online">
+                                            <Setter Property="Background" Value="LightGreen" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding Status}" Value="Offline">
+                                            <Setter Property="Background" Value="yellow" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGrid.CellStyle>
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Width="auto" Header="QuorumIndex"  Binding ="{Binding QuorumIndex}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Status" Binding ="{Binding Status}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="ID"  Binding ="{Binding ID}" IsReadOnly="True"/>  
+                                <DataGridTextColumn Width="auto" Header="Name" Binding ="{Binding Name}" IsReadOnly="True"/>  
+                                <DataGridTextColumn Width="auto" Header="Active" Binding ="{Binding Active}" IsReadOnly="True"/> 
+                                <DataGridTextColumn Width="auto" Header="Object Type" Binding ="{Binding ObjectType}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Override" Binding ="{Binding Override}" IsReadOnly="True"/> 
+                                <DataGridTextColumn Width="auto" Header="Site Name" Binding ="{Binding SiteName}" IsReadOnly="True"/>
+                            </DataGrid.Columns> 
+                        </DataGrid>
+                        <DataGrid Grid.Row="1" x:Name="dg_BaseStorageInfoSeven" AutoGenerateColumns="False" Margin="5,20,5,5" MaxHeight="400">
+                            <DataGrid.Style>
+                                <Style TargetType="DataGrid">
+                                    <Style.Triggers>
+                                        <Trigger Property="HasItems" Value="False">
+                                          <Setter Property="Visibility" Value="Collapsed"></Setter>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGrid.Style>
+                            <DataGrid.CellStyle>
+                                <Style TargetType="DataGridCell">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding Status}" Value="online">
+                                            <Setter Property="Background" Value="LightGreen" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding Status}" Value="service">
+                                            <Setter Property="Background" Value="yellow" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding Status}" Value="offline">
+                                            <Setter Property="Background" Value="red" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGrid.CellStyle>
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Width="auto" Header="NodeID"  Binding ="{Binding ID}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="NodeName" Binding ="{Binding Name}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="NodeWWNN"  Binding ="{Binding WWNN}" IsReadOnly="True"/>  
+                                <DataGridTextColumn Width="auto" Header="Status" Binding ="{Binding Status}" IsReadOnly="True"/>  
+                                <DataGridTextColumn Width="auto" Header="IO_Group_ID" Binding ="{Binding IO_group_id}" IsReadOnly="True"/> 
+                                <DataGridTextColumn Width="auto" Header="IO_Group_Name" Binding ="{Binding IO_group_Name}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Serial Number" Binding ="{Binding Serial_Number}" IsReadOnly="True"/>  
+                                <DataGridTextColumn Width="auto" Header="Code Level" Binding ="{Binding Code_Level}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Indicates the current level of machine code that is running on the node or node canister" />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="auto" Header="Recommended Level" Binding ="{Binding RecommendedPTF}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Indicates the Recommended level for the machine or node" />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="auto" Header="Config Node" Binding ="{Binding Config_Node}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Indicates if the node is a configuration node." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="auto" Header="SideID" Binding ="{Binding SideID}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Side Name" Binding ="{Binding SideName}" IsReadOnly="True"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                        <Label Grid.Row="1" Grid.ColumnSpan="2" x:Name="lb_QuorumInfoSeven" Content="Quorum Information" Visibility="Collapsed" Style="{StaticResource MainLabelStyle}" Margin="2,5,0,5"/>
+                        <DataGrid Grid.Row="1" x:Name="dg_IPQuorumInfoSeven" AutoGenerateColumns="False" Margin="5" MaxHeight="400">
+                            <DataGrid.Style>
+                                <Style TargetType="DataGrid">
+                                    <Style.Triggers>
+                                        <Trigger Property="HasItems" Value="False">
+                                          <Setter Property="Visibility" Value="Collapsed"></Setter>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGrid.Style>
+                            <DataGrid.CellStyle>
+                                <Style TargetType="DataGridCell">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding Status}" Value="Online">
+                                            <Setter Property="Background" Value="LightGreen" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding Status}" Value="Offline">
+                                            <Setter Property="Background" Value="yellow" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGrid.CellStyle>
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Width="auto" Header="QuorumIndex"  Binding ="{Binding QuorumIndex}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Status" Binding ="{Binding Status}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="ID"  Binding ="{Binding ID}" IsReadOnly="True"/>  
+                                <DataGridTextColumn Width="auto" Header="Name" Binding ="{Binding Name}" IsReadOnly="True"/>  
+                                <DataGridTextColumn Width="auto" Header="Active" Binding ="{Binding Active}" IsReadOnly="True"/> 
+                                <DataGridTextColumn Width="auto" Header="Object Type" Binding ="{Binding ObjectType}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Override" Binding ="{Binding Override}" IsReadOnly="True"/> 
+                                <DataGridTextColumn Width="auto" Header="Site Name" Binding ="{Binding SiteName}" IsReadOnly="True"/>
+                            </DataGrid.Columns> 
+                        </DataGrid>
+                        <DataGrid Grid.Row="1" x:Name="dg_BaseStorageInfoEight" AutoGenerateColumns="False" Margin="5,20,5,5" MaxHeight="400">
+                            <DataGrid.Style>
+                                <Style TargetType="DataGrid">
+                                    <Style.Triggers>
+                                        <Trigger Property="HasItems" Value="False">
+                                          <Setter Property="Visibility" Value="Collapsed"></Setter>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGrid.Style>
+                            <DataGrid.CellStyle>
+                                <Style TargetType="DataGridCell">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding Status}" Value="online">
+                                            <Setter Property="Background" Value="LightGreen" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding Status}" Value="service">
+                                            <Setter Property="Background" Value="yellow" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding Status}" Value="offline">
+                                            <Setter Property="Background" Value="red" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGrid.CellStyle>
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Width="auto" Header="NodeID"  Binding ="{Binding ID}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="NodeName" Binding ="{Binding Name}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="NodeWWNN"  Binding ="{Binding WWNN}" IsReadOnly="True"/>  
+                                <DataGridTextColumn Width="auto" Header="Status" Binding ="{Binding Status}" IsReadOnly="True"/>  
+                                <DataGridTextColumn Width="auto" Header="IO_Group_ID" Binding ="{Binding IO_group_id}" IsReadOnly="True"/> 
+                                <DataGridTextColumn Width="auto" Header="IO_Group_Name" Binding ="{Binding IO_group_Name}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Serial Number" Binding ="{Binding Serial_Number}" IsReadOnly="True"/>  
+                                <DataGridTextColumn Width="auto" Header="Code Level" Binding ="{Binding Code_Level}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Indicates the current level of machine code that is running on the node or node canister" />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="auto" Header="Recommended Level" Binding ="{Binding RecommendedPTF}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Indicates the Recommended level for the machine or node" />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="auto" Header="Config Node" Binding ="{Binding Config_Node}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Indicates if the node is a configuration node." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="auto" Header="SideID" Binding ="{Binding SideID}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Side Name" Binding ="{Binding SideName}" IsReadOnly="True"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                        <Label Grid.Row="1" Grid.ColumnSpan="2" x:Name="lb_QuorumInfoEight" Content="Quorum Information" Visibility="Collapsed" Style="{StaticResource MainLabelStyle}" Margin="2,5,0,5"/>
+                        <DataGrid Grid.Row="1" x:Name="dg_IPQuorumInfoEight" AutoGenerateColumns="False" Margin="5" MaxHeight="400">
+                            <DataGrid.Style>
+                                <Style TargetType="DataGrid">
+                                    <Style.Triggers>
+                                        <Trigger Property="HasItems" Value="False">
+                                          <Setter Property="Visibility" Value="Collapsed"></Setter>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGrid.Style>
+                            <DataGrid.CellStyle>
+                                <Style TargetType="DataGridCell">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding Status}" Value="Online">
+                                            <Setter Property="Background" Value="LightGreen" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding Status}" Value="Offline">
+                                            <Setter Property="Background" Value="yellow" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGrid.CellStyle>
                             <DataGrid.Columns>
                                 <DataGridTextColumn Width="auto" Header="QuorumIndex"  Binding ="{Binding QuorumIndex}" IsReadOnly="True"/>
                                 <DataGridTextColumn Width="auto" Header="Status" Binding ="{Binding Status}" IsReadOnly="True"/>

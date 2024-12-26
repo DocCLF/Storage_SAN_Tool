@@ -134,10 +134,10 @@ function IBM_FCPortStats {
         <# export y or n #>
         if($TD_export -eq "yes"){
 
-            if([string]$TD_Exportpath -ne "$PSRootPath\Export\"){
+            if([string]$TD_Exportpath -ne "$PSRootPath\ToolLog\"){
                 $TD_PortStats_Overview | Export-Csv -Path $TD_Exportpath\$($TD_Line_ID)_FCPortStatsOverview_$(Get-Date -Format "yyyy-MM-dd").csv -NoTypeInformation
             }else {
-                $TD_PortStats_Overview | Export-Csv -Path $PSScriptRoot\Export\$($TD_Line_ID)_FCPortStatsOverview_$(Get-Date -Format "yyyy-MM-dd").csv -NoTypeInformation
+                $TD_PortStats_Overview | Export-Csv -Path $PSScriptRoot\ToolLog\$($TD_Line_ID)_FCPortStatsOverview_$(Get-Date -Format "yyyy-MM-dd").csv -NoTypeInformation
             }
         }else {
             <# output on the promt #>
