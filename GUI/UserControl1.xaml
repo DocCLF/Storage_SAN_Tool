@@ -967,6 +967,10 @@
                                     <ComboBoxItem>2</ComboBoxItem>
                                     <ComboBoxItem>3</ComboBoxItem>
                                     <ComboBoxItem>4</ComboBoxItem>
+                                    <ComboBoxItem>5</ComboBoxItem>
+                                    <ComboBoxItem>6</ComboBoxItem>
+                                    <ComboBoxItem>7</ComboBoxItem>
+                                    <ComboBoxItem>8</ComboBoxItem>
                                 </ComboBox>
                             <ComboBox x:Name="cb_StorageHVM" ToolTip="Selcet your Filter" SelectedIndex="0" SelectedValuePath="Content" Style="{StaticResource MainComboBoxStyle}">
                                 <ComboBoxItem>Host</ComboBoxItem>
@@ -978,9 +982,10 @@
                             <TextBox x:Name="tb_filter" HorizontalAlignment="Left" MinWidth="100" MaxWidth="250" Margin="5" Text="Filter" TextWrapping="Wrap" FontSize="14" VerticalContentAlignment="Center"/>
                             <Button x:Name="btn_FilterHVM" Style="{StaticResource MainBtnStyle}" Content="Apply Filter" />
                             <Button x:Name="btn_ClearFilterHVM" Style="{StaticResource MainBtnStyle}" Content="Clear Filter" Visibility="Collapsed" Background="LightPink"/>
-                            <Label x:Name="lb_ErrorMsgHVM" Foreground="Red" Content="" Style="{StaticResource MainLabelStyle}" Padding="2" Margin="25,5,0,5"/>
                         </StackPanel>
                         <StackPanel Grid.Row="1" Orientation="Vertical" >
+                        <Label x:Name="lb_ErrorMsgHVM" Foreground="Red" Content="" Style="{StaticResource MainLabelStyle}" Padding="2" Margin="25,5,0,5"/>
+                        <Label x:Name="lb_HostVolInfoOne" Content="Device 1" Visibility="Collapsed" FontSize="10" Style="{StaticResource MainLabelStyle}" Margin="2,5,0,5" />
                         <DataGrid x:Name="dg_HostVolInfoOne" AutoGenerateColumns="False" Margin="5,5,5,5" MaxHeight="400">
                             <DataGrid.Style>
                                 <Style TargetType="DataGrid">
@@ -1002,6 +1007,7 @@
                                 <DataGridTextColumn Width="auto" Header="Capacity" Binding="{Binding Capacity}" IsReadOnly="True"/>
                             </DataGrid.Columns>
                         </DataGrid>
+                        <Label x:Name="lb_HostVolInfoTwo" Content="Device 2" Visibility="Collapsed" FontSize="10" Style="{StaticResource MainLabelStyle}" Margin="2,5,0,5" />
                         <DataGrid x:Name="dg_HostVolInfoTwo" AutoGenerateColumns="False" Margin="5,25,5,5" MaxHeight="400">
                             <DataGrid.Style>
                                 <Style TargetType="DataGrid">
@@ -1023,6 +1029,7 @@
                                 <DataGridTextColumn Width="auto" Header="Capacity" Binding="{Binding Capacity}" IsReadOnly="True"/>
                             </DataGrid.Columns>
                         </DataGrid>
+                        <Label x:Name="lb_HostVolInfoThree" Content="Device 3" Visibility="Collapsed" FontSize="10" Style="{StaticResource MainLabelStyle}" Margin="2,5,0,5" />
                         <DataGrid x:Name="dg_HostVolInfoThree" AutoGenerateColumns="False" Margin="5,25,5,5" MaxHeight="400">
                             <DataGrid.Style>
                                 <Style TargetType="DataGrid">
@@ -1044,7 +1051,96 @@
                                 <DataGridTextColumn Width="auto" Header="Capacity" Binding="{Binding Capacity}" IsReadOnly="True"/>
                             </DataGrid.Columns>
                         </DataGrid>
+                        <Label x:Name="lb_HostVolInfoFour" Content="Device 4" Visibility="Collapsed" FontSize="10" Style="{StaticResource MainLabelStyle}" Margin="2,5,0,5" />
                         <DataGrid x:Name="dg_HostVolInfoFour" AutoGenerateColumns="False" Margin="5,25,5,5" MaxHeight="400">
+                            <DataGrid.Style>
+                                <Style TargetType="DataGrid">
+                                    <Style.Triggers>
+                                        <Trigger Property="HasItems" Value="False">
+                                          <Setter Property="Visibility" Value="Collapsed"></Setter>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGrid.Style>
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Width="auto" Header="HostID" Binding="{Binding HostID}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="HostName" Binding="{Binding HostName}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="HostClusterID" Binding="{Binding HostClusterID}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="HostCluster" Binding="{Binding HostCluster}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="VolumeID" Binding="{Binding VolumeID}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="VolumeName" Binding="{Binding VolumeName}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="UID" Binding="{Binding UID}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Capacity" Binding="{Binding Capacity}" IsReadOnly="True"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                        <Label x:Name="lb_HostVolInfoFive" Content="Device 5" Visibility="Collapsed" FontSize="10" Style="{StaticResource MainLabelStyle}" Margin="2,5,0,5" />
+                        <DataGrid x:Name="dg_HostVolInfoFive" AutoGenerateColumns="False" Margin="5,25,5,5" MaxHeight="400">
+                            <DataGrid.Style>
+                                <Style TargetType="DataGrid">
+                                    <Style.Triggers>
+                                        <Trigger Property="HasItems" Value="False">
+                                          <Setter Property="Visibility" Value="Collapsed"></Setter>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGrid.Style>
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Width="auto" Header="HostID" Binding="{Binding HostID}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="HostName" Binding="{Binding HostName}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="HostClusterID" Binding="{Binding HostClusterID}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="HostCluster" Binding="{Binding HostCluster}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="VolumeID" Binding="{Binding VolumeID}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="VolumeName" Binding="{Binding VolumeName}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="UID" Binding="{Binding UID}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Capacity" Binding="{Binding Capacity}" IsReadOnly="True"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                        <Label x:Name="lb_HostVolInfoSix" Content="Device 6" Visibility="Collapsed" FontSize="10" Style="{StaticResource MainLabelStyle}" Margin="2,5,0,5" />
+                        <DataGrid x:Name="dg_HostVolInfoSix" AutoGenerateColumns="False" Margin="5,25,5,5" MaxHeight="400">
+                            <DataGrid.Style>
+                                <Style TargetType="DataGrid">
+                                    <Style.Triggers>
+                                        <Trigger Property="HasItems" Value="False">
+                                          <Setter Property="Visibility" Value="Collapsed"></Setter>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGrid.Style>
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Width="auto" Header="HostID" Binding="{Binding HostID}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="HostName" Binding="{Binding HostName}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="HostClusterID" Binding="{Binding HostClusterID}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="HostCluster" Binding="{Binding HostCluster}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="VolumeID" Binding="{Binding VolumeID}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="VolumeName" Binding="{Binding VolumeName}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="UID" Binding="{Binding UID}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Capacity" Binding="{Binding Capacity}" IsReadOnly="True"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                        <Label x:Name="lb_HostVolInfoSeven" Content="Device 7" Visibility="Collapsed" FontSize="10" Style="{StaticResource MainLabelStyle}" Margin="2,5,0,5" />
+                        <DataGrid x:Name="dg_HostVolInfoSeven" AutoGenerateColumns="False" Margin="5,25,5,5" MaxHeight="400">
+                            <DataGrid.Style>
+                                <Style TargetType="DataGrid">
+                                    <Style.Triggers>
+                                        <Trigger Property="HasItems" Value="False">
+                                          <Setter Property="Visibility" Value="Collapsed"></Setter>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGrid.Style>
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Width="auto" Header="HostID" Binding="{Binding HostID}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="HostName" Binding="{Binding HostName}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="HostClusterID" Binding="{Binding HostClusterID}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="HostCluster" Binding="{Binding HostCluster}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="VolumeID" Binding="{Binding VolumeID}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="VolumeName" Binding="{Binding VolumeName}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="UID" Binding="{Binding UID}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Capacity" Binding="{Binding Capacity}" IsReadOnly="True"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                        <Label x:Name="lb_HostVolInfoEight" Content="Device 8" Visibility="Collapsed" FontSize="10" Style="{StaticResource MainLabelStyle}" Margin="2,5,0,5" />
+                        <DataGrid x:Name="dg_HostVolInfoEight" AutoGenerateColumns="False" Margin="5,25,5,5" MaxHeight="400">
                             <DataGrid.Style>
                                 <Style TargetType="DataGrid">
                                     <Style.Triggers>
@@ -1224,14 +1320,16 @@
                         <Grid.RowDefinitions>
                             <RowDefinition Height="auto" />
                             <RowDefinition Height="auto" />
-                            <RowDefinition Height="*" />
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="auto" />
                         </Grid.RowDefinitions>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="auto" />
                             <ColumnDefinition Width="auto" />
                         </Grid.ColumnDefinitions>
+                        <Label Grid.Row="0" Grid.ColumnSpan="2" x:Name="lb_DriveErrorInfo" Content="" Visibility="Collapsed" Style="{StaticResource MainLabelStyle}" Margin="0,5"/> 
                         <StackPanel Grid.Row="1" Grid.Column="0" Orientation="Vertical">
-                        <Label x:Name="lb_DriveErrorInfo" Content="" Visibility="Collapsed" Style="{StaticResource MainLabelStyle}" Margin="0,5"/> 
                         <Label x:Name="lb_DriveInfoOne" Content="No Device Info" Padding="2" Margin="0,5"/>
                         <DataGrid x:Name="dg_DriveInfoOne" AutoGenerateColumns="False" Margin="5" MaxHeight="400">
                             <DataGrid.Style>
@@ -1432,6 +1530,270 @@
                         <StackPanel Grid.Row="2" Grid.Column="1" Orientation="Vertical">
                         <Label x:Name="lb_DriveInfoFour" Content="No Device Info" Margin="0,5" FontSize="14" Height="26"/>
                         <DataGrid x:Name="dg_DriveInfoFour" AutoGenerateColumns="False" Margin="5" MaxHeight="400">
+                            <DataGrid.Style>
+                                <Style TargetType="DataGrid">
+                                    <Style.Triggers>
+                                        <Trigger Property="HasItems" Value="False">
+                                          <Setter Property="Visibility" Value="Collapsed"></Setter>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGrid.Style>
+                            <DataGrid.RowStyle>
+                                <Style TargetType="DataGridRow">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding FWlevStatus}" Value="LightGray">
+                                            <Setter Property="Background" Value="LightGray" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding FWlevStatus}" Value="Lightyellow">
+                                            <Setter Property="Background" Value="Lightyellow" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding FWlevStatus}" Value="LightGreen">
+                                            <Setter Property="Background" Value="LightGreen" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding DriveStatus}" Value="offline">
+                                            <Setter Property="Background" Value="Red" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding DriveStatus}" Value="degraded">
+                                            <Setter Property="Background" Value="yellow" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGrid.RowStyle>
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Width="auto" Header="DriveID" Binding="{Binding DriveID}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="DriveCap" Binding="{Binding DriveCap}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="PhyDriveCap" Binding="{Binding PhyDriveCap}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="PhyUsedDriveCap" Binding="{Binding PhyUsedDriveCap}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="EffeUsedDriveCap" Binding="{Binding EffeUsedDriveCap}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="DriveStatus" Binding="{Binding DriveStatus}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="DriveCap" Binding="{Binding DriveCap}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="ProductID" Binding="{Binding ProductID}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="FWlev" Binding="{Binding FWlev}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Indicates the firmware level of the disk; blank if unknown." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="auto" Header="LatestFW" Binding="{Binding LatestDriveFW}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Indicates the latest firmware level of the disk." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="auto" Header="Slot" Binding="{Binding Slot}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Indicates the Slot ID of the drive in the enclosure or node." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                        </StackPanel>
+                        <StackPanel Grid.Row="3" Grid.Column="0" Orientation="Vertical">
+                        <Label x:Name="lb_DriveInfoFive" Content="No Device Info" Margin="0,5" FontSize="14" Height="26"/>
+                        <DataGrid x:Name="dg_DriveInfoFive" AutoGenerateColumns="False" Margin="5" MaxHeight="400">
+                            <DataGrid.Style>
+                                <Style TargetType="DataGrid">
+                                    <Style.Triggers>
+                                        <Trigger Property="HasItems" Value="False">
+                                          <Setter Property="Visibility" Value="Collapsed"></Setter>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGrid.Style>
+                            <DataGrid.RowStyle>
+                                <Style TargetType="DataGridRow">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding FWlevStatus}" Value="LightGray">
+                                            <Setter Property="Background" Value="LightGray" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding FWlevStatus}" Value="Lightyellow">
+                                            <Setter Property="Background" Value="Lightyellow" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding FWlevStatus}" Value="LightGreen">
+                                            <Setter Property="Background" Value="LightGreen" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding DriveStatus}" Value="offline">
+                                            <Setter Property="Background" Value="Red" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding DriveStatus}" Value="degraded">
+                                            <Setter Property="Background" Value="yellow" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGrid.RowStyle>
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Width="auto" Header="DriveID" Binding="{Binding DriveID}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="DriveCap" Binding="{Binding DriveCap}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="PhyDriveCap" Binding="{Binding PhyDriveCap}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="PhyUsedDriveCap" Binding="{Binding PhyUsedDriveCap}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="EffeUsedDriveCap" Binding="{Binding EffeUsedDriveCap}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="DriveStatus" Binding="{Binding DriveStatus}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="DriveCap" Binding="{Binding DriveCap}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="ProductID" Binding="{Binding ProductID}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="FWlev" Binding="{Binding FWlev}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Indicates the firmware level of the disk; blank if unknown." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="auto" Header="LatestFW" Binding="{Binding LatestDriveFW}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Indicates the latest firmware level of the disk." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="auto" Header="Slot" Binding="{Binding Slot}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Indicates the Slot ID of the drive in the enclosure or node." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                        </StackPanel>
+                        <StackPanel Grid.Row="3" Grid.Column="1" Orientation="Vertical">
+                        <Label x:Name="lb_DriveInfoSix" Content="No Device Info" Margin="0,5" FontSize="14" Height="26"/>
+                        <DataGrid x:Name="dg_DriveInfoSix" AutoGenerateColumns="False" Margin="5" MaxHeight="400">
+                            <DataGrid.Style>
+                                <Style TargetType="DataGrid">
+                                    <Style.Triggers>
+                                        <Trigger Property="HasItems" Value="False">
+                                          <Setter Property="Visibility" Value="Collapsed"></Setter>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGrid.Style>
+                            <DataGrid.RowStyle>
+                                <Style TargetType="DataGridRow">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding FWlevStatus}" Value="LightGray">
+                                            <Setter Property="Background" Value="LightGray" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding FWlevStatus}" Value="Lightyellow">
+                                            <Setter Property="Background" Value="Lightyellow" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding FWlevStatus}" Value="LightGreen">
+                                            <Setter Property="Background" Value="LightGreen" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding DriveStatus}" Value="offline">
+                                            <Setter Property="Background" Value="Red" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding DriveStatus}" Value="degraded">
+                                            <Setter Property="Background" Value="yellow" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGrid.RowStyle>
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Width="auto" Header="DriveID" Binding="{Binding DriveID}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="DriveCap" Binding="{Binding DriveCap}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="PhyDriveCap" Binding="{Binding PhyDriveCap}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="PhyUsedDriveCap" Binding="{Binding PhyUsedDriveCap}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="EffeUsedDriveCap" Binding="{Binding EffeUsedDriveCap}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="DriveStatus" Binding="{Binding DriveStatus}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="DriveCap" Binding="{Binding DriveCap}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="ProductID" Binding="{Binding ProductID}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="FWlev" Binding="{Binding FWlev}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Indicates the firmware level of the disk; blank if unknown." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="auto" Header="LatestFW" Binding="{Binding LatestDriveFW}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Indicates the latest firmware level of the disk." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="auto" Header="Slot" Binding="{Binding Slot}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Indicates the Slot ID of the drive in the enclosure or node." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                        </StackPanel>
+                        <StackPanel Grid.Row="4" Grid.Column="0" Orientation="Vertical">
+                        <Label x:Name="lb_DriveInfoSeven" Content="No Device Info" Margin="0,5" FontSize="14" Height="26"/>
+                        <DataGrid x:Name="dg_DriveInfoSeven" AutoGenerateColumns="False" Margin="5" MaxHeight="400">
+                            <DataGrid.Style>
+                                <Style TargetType="DataGrid">
+                                    <Style.Triggers>
+                                        <Trigger Property="HasItems" Value="False">
+                                          <Setter Property="Visibility" Value="Collapsed"></Setter>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGrid.Style>
+                            <DataGrid.RowStyle>
+                                <Style TargetType="DataGridRow">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding FWlevStatus}" Value="LightGray">
+                                            <Setter Property="Background" Value="LightGray" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding FWlevStatus}" Value="Lightyellow">
+                                            <Setter Property="Background" Value="Lightyellow" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding FWlevStatus}" Value="LightGreen">
+                                            <Setter Property="Background" Value="LightGreen" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding DriveStatus}" Value="offline">
+                                            <Setter Property="Background" Value="Red" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding DriveStatus}" Value="degraded">
+                                            <Setter Property="Background" Value="yellow" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGrid.RowStyle>
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Width="auto" Header="DriveID" Binding="{Binding DriveID}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="DriveCap" Binding="{Binding DriveCap}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="PhyDriveCap" Binding="{Binding PhyDriveCap}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="PhyUsedDriveCap" Binding="{Binding PhyUsedDriveCap}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="EffeUsedDriveCap" Binding="{Binding EffeUsedDriveCap}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="DriveStatus" Binding="{Binding DriveStatus}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="DriveCap" Binding="{Binding DriveCap}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="ProductID" Binding="{Binding ProductID}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="FWlev" Binding="{Binding FWlev}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Indicates the firmware level of the disk; blank if unknown." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="auto" Header="LatestFW" Binding="{Binding LatestDriveFW}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Indicates the latest firmware level of the disk." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="auto" Header="Slot" Binding="{Binding Slot}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Indicates the Slot ID of the drive in the enclosure or node." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                        </StackPanel>
+                        <StackPanel Grid.Row="4" Grid.Column="1" Orientation="Vertical">
+                        <Label x:Name="lb_DriveInfoEight" Content="No Device Info" Margin="0,5" FontSize="14" Height="26"/>
+                        <DataGrid x:Name="dg_DriveInfoEight" AutoGenerateColumns="False" Margin="5" MaxHeight="400">
                             <DataGrid.Style>
                                 <Style TargetType="DataGrid">
                                     <Style.Triggers>

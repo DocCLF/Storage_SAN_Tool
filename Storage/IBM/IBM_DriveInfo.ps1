@@ -168,6 +168,10 @@ function IBM_DriveInfo {
         if($TD_Line_ID -eq 2){$TD_lb_DriveInfoTwo.Visibility = "Visible"; $TD_lb_DriveInfoTwo.Content = "Node Name: $($TD_NodeSplitInfo.NodeName)  Product-Type: $($TD_NodeSplitInfo.ProdName)"}
         if($TD_Line_ID -eq 3){$TD_lb_DriveInfoThree.Visibility = "Visible"; $TD_lb_DriveInfoThree.Content = "Node Name: $($TD_NodeSplitInfo.NodeName)  Product-Type: $($TD_NodeSplitInfo.ProdName)"}
         if($TD_Line_ID -eq 4){$TD_lb_DriveInfoFour.Visibility = "Visible"; $TD_lb_DriveInfoFour.Content = "Node Name: $($TD_NodeSplitInfo.NodeName)  Product-Type: $($TD_NodeSplitInfo.ProdName)"}
+        if($TD_Line_ID -eq 5){$TD_lb_DriveInfoFive.Visibility = "Visible"; $TD_lb_DriveInfoFive.Content = "Node Name: $($TD_NodeSplitInfo.NodeName)  Product-Type: $($TD_NodeSplitInfo.ProdName)"}
+        if($TD_Line_ID -eq 6){$TD_lb_DriveInfoSix.Visibility = "Visible"; $TD_lb_DriveInfoSix.Content = "Node Name: $($TD_NodeSplitInfo.NodeName)  Product-Type: $($TD_NodeSplitInfo.ProdName)"}
+        if($TD_Line_ID -eq 7){$TD_lb_DriveInfoSeven.Visibility = "Visible"; $TD_lb_DriveInfoSeven.Content = "Node Name: $($TD_NodeSplitInfo.NodeName)  Product-Type: $($TD_NodeSplitInfo.ProdName)"}
+        if($TD_Line_ID -eq 8){$TD_lb_DriveInfoEight.Visibility = "Visible"; $TD_lb_DriveInfoEight.Content = "Node Name: $($TD_NodeSplitInfo.NodeName)  Product-Type: $($TD_NodeSplitInfo.ProdName)"}
         
         <# export y or n #>
         if($TD_export -eq "yes"){

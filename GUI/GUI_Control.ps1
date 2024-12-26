@@ -348,14 +348,14 @@ $TD_btn_IBM_HostVolumeMap.add_click({
     $TD_Credentials | ForEach-Object {
         [array]$TD_Host_Volume_Map = IBM_Host_Volume_Map -TD_Line_ID $_.ID -TD_Device_ConnectionTyp $_.ConnectionTyp -TD_Device_UserName $_.UserName -TD_Device_DeviceName $_.DeviceName -TD_Device_DeviceIP $_.IPAddress -TD_Device_PW $([Net.NetworkCredential]::new('', $_.Password).Password) -TD_Exportpath $TD_tb_ExportPath.Text
         switch ($_.ID) {
-            {($_ -eq 1)} { $TD_dg_HostVolInfoOne.ItemsSource = $TD_Host_Volume_Map }
-            {($_ -eq 2)} { $TD_dg_HostVolInfoTwo.ItemsSource = $TD_Host_Volume_Map }
-            {($_ -eq 3)} { $TD_dg_HostVolInfoThree.ItemsSource = $TD_Host_Volume_Map }
-            {($_ -eq 4)} { $TD_dg_HostVolInfoFour.ItemsSource = $TD_Host_Volume_Map }
-            {($_ -eq 5)} { $TD_dg_HostVolInfoFour.ItemsSource = $TD_Host_Volume_Map }
-            {($_ -eq 6)} { $TD_dg_HostVolInfoFour.ItemsSource = $TD_Host_Volume_Map }
-            {($_ -eq 7)} { $TD_dg_HostVolInfoFour.ItemsSource = $TD_Host_Volume_Map }
-            {($_ -eq 8)} { $TD_dg_HostVolInfoFour.ItemsSource = $TD_Host_Volume_Map }
+            {($_ -eq 1)} { $TD_dg_HostVolInfoOne.ItemsSource = $TD_Host_Volume_Map  ; $TD_lb_HostVolInfoOne.Content="$($_.DeviceName)" ;    $TD_lb_HostVolInfoOne.Visibility="visible"}
+            {($_ -eq 2)} { $TD_dg_HostVolInfoTwo.ItemsSource = $TD_Host_Volume_Map  ; $TD_lb_HostVolInfoTwo.Content="$($_.DeviceName)" ;    $TD_lb_HostVolInfoTwo.Visibility="visible"}
+            {($_ -eq 3)} { $TD_dg_HostVolInfoThree.ItemsSource = $TD_Host_Volume_Map; $TD_lb_HostVolInfoThree.Content="$($_.DeviceName)" ;  $TD_lb_HostVolInfoThree.Visibility="visible"}
+            {($_ -eq 4)} { $TD_dg_HostVolInfoFour.ItemsSource = $TD_Host_Volume_Map ; $TD_lb_HostVolInfoFour.Content="$($_.DeviceName)" ;   $TD_lb_HostVolInfoFour.Visibility="visible"}
+            {($_ -eq 5)} { $TD_dg_HostVolInfoFive.ItemsSource = $TD_Host_Volume_Map ; $TD_lb_HostVolInfoFive.Content="$($_.DeviceName)" ;   $TD_lb_HostVolInfoFive.Visibility="visible"}
+            {($_ -eq 6)} { $TD_dg_HostVolInfoSix.ItemsSource = $TD_Host_Volume_Map ;  $TD_lb_HostVolInfoSix.Content="$($_.DeviceName)" ;    $TD_lb_HostVolInfoSix.Visibility="visible"}
+            {($_ -eq 7)} { $TD_dg_HostVolInfoSeven.ItemsSource = $TD_Host_Volume_Map; $TD_lb_HostVolInfoSeven.Content="$($_.DeviceName)" ;  $TD_lb_HostVolInfoSeven.Visibility="visible"}
+            {($_ -eq 8)} { $TD_dg_HostVolInfoEight.ItemsSource = $TD_Host_Volume_Map; $TD_lb_HostVolInfoEight.Content="$($_.DeviceName)" ;  $TD_lb_HostVolInfoEight.Visibility="visible"}
             Default { SST_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong, please check the prompt output first and then the log files.") -TD_ToolMSGType Error }
         }
         $TD_Host_Volume_Map | Export-Csv -Path $PSRootPath\ToolLog\ToolTEMP\$($_.ID)_$($_.DeviceName)_Host_Vol_Map_$(Get-Date -Format "yyyy-MM-dd")_Temp.csv
@@ -375,13 +375,18 @@ $TD_btn_FilterHVM.Add_Click({
     [string]$filter= $TD_tb_filter.Text
     [int]$TD_Filter_DG = $TD_cb_ListFilterStorageHVM.Text
     [string]$TD_Filter_DG_Colum = $TD_cb_StorageHVM.Text
+    $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {(($_.DeviceTyp -eq "Storage")-and($_.ID -eq $TD_Filter_DG))}
     try {
-        [array]$TD_CollectVolInfo = Import-Csv -Path $Env:TEMP\$($TD_Filter_DG)_Host_Vol_Map_Temp.csv -ErrorAction Stop
+        [array]$TD_CollectVolInfo = Import-Csv -Path $PSRootPath\ToolLog\ToolTEMP\$($TD_Filter_DG)_$($TD_Credentials.DeviceName)_Host_Vol_Map_$(Get-Date -Format "yyyy-MM-dd")_Temp.csv -ErrorAction Stop
         switch ($TD_Filter_DG) {
             1 { $TD_Host_Volume_Map = $TD_dg_HostVolInfo.ItemsSource }
             2 { $TD_Host_Volume_Map = $TD_dg_HostVolInfoTwo.ItemsSource }
             3 { $TD_Host_Volume_Map = $TD_dg_HostVolInfoThree.ItemsSource }
             4 { $TD_Host_Volume_Map = $TD_dg_HostVolInfoFour.ItemsSource }
+            5 { $TD_Host_Volume_Map = $TD_dg_HostVolInfoFive.ItemsSource }
+            6 { $TD_Host_Volume_Map = $TD_dg_HostVolInfoSix.ItemsSource }
+            7 { $TD_Host_Volume_Map = $TD_dg_HostVolInfoSeven.ItemsSource }
+            8 { $TD_Host_Volume_Map = $TD_dg_HostVolInfoEight.ItemsSource }
             Default {}
         }
         if($TD_Host_Volume_Map.Count -ne $TD_CollectVolInfo.Count){
@@ -393,14 +398,18 @@ $TD_btn_FilterHVM.Add_Click({
                 "Volume" { [array]$WPF_dataGrid = $TD_Host_Volume_Map | Where-Object { $_.VolumeName -Match $filter } }
                 "UID" { [array]$WPF_dataGrid = $TD_Host_Volume_Map | Where-Object { $_.UID -Match $filter } }
                 "Capacity" { [array]$WPF_dataGrid = $TD_Host_Volume_Map | Where-Object { $_.Capacity -Match $filter } }
-                Default {Write-Host "Something went wrong" -ForegroundColor DarkMagenta}
+                Default {SST_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong, there are no or wrong Data in CollectVolInfo found.") -TD_ToolMSGType Error}
             }
             switch ($TD_Filter_DG) {
                 1 { $TD_dg_HostVolInfo.ItemsSource = $WPF_dataGrid }
                 2 { $TD_dg_HostVolInfoTwo.ItemsSource = $WPF_dataGrid }
                 3 { $TD_dg_HostVolInfoThree.ItemsSource = $WPF_dataGrid }
                 4 { $TD_dg_HostVolInfoFour.ItemsSource = $WPF_dataGrid }
-                Default {}
+                5 { $TD_dg_HostVolInfoFive.ItemsSource = $WPF_dataGrid }
+                6 { $TD_dg_HostVolInfoSix.ItemsSource = $WPF_dataGrid }
+                7 { $TD_dg_HostVolInfoSeven.ItemsSource = $WPF_dataGrid }
+                8 { $TD_dg_HostVolInfoEight.ItemsSource = $WPF_dataGrid }
+                Default {SST_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong, please check the the Filter or Datapath.") -TD_ToolMSGType Error}
             }
             
         }
@@ -416,16 +425,21 @@ $TD_btn_FilterHVM.Add_Click({
 $TD_btn_ClearFilterHVM.Add_Click({
 
     [int]$TD_Filter_DG = $TD_cb_ListFilterStorageHVM.Text
+    $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {(($_.DeviceTyp -eq "Storage")-and($_.ID -eq $TD_Filter_DG))}
+    
     $TD_tb_filter.Text = ""
     try {
-        [array]$TD_CollectVolInfo = Import-Csv -Path $Env:TEMP\$($TD_Filter_DG)_Host_Vol_Map_Temp.csv -ErrorAction Stop
-
+        [array]$TD_CollectVolInfo = Import-Csv -Path $PSRootPath\ToolLog\ToolTEMP\$($TD_Filter_DG)_$($TD_Credentials.DeviceName)_Host_Vol_Map_$(Get-Date -Format "yyyy-MM-dd")_Temp.csv -ErrorAction Stop
         switch ($TD_Filter_DG) {
             1 { $TD_dg_HostVolInfo.ItemsSource = $TD_CollectVolInfo }
             2 { $TD_dg_HostVolInfoTwo.ItemsSource = $TD_CollectVolInfo }
             3 { $TD_dg_HostVolInfoThree.ItemsSource = $TD_CollectVolInfo }
             4 { $TD_dg_HostVolInfoFour.ItemsSource = $TD_CollectVolInfo }
-            Default {}
+            5 { $TD_dg_HostVolInfoFive.ItemsSource = $TD_CollectVolInfo }
+            6 { $TD_dg_HostVolInfoSix.ItemsSource = $TD_CollectVolInfo }
+            7 { $TD_dg_HostVolInfoSeven.ItemsSource = $TD_CollectVolInfo }
+            8 { $TD_dg_HostVolInfoEight.ItemsSource = $TD_CollectVolInfo }
+            Default {SST_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong, ID $($TD_Filter_DG) or DeviceName $($TD_Credentials.DeviceName) can not be found") -TD_ToolMSGType Error}
         }
             
         }
@@ -438,10 +452,8 @@ $TD_btn_ClearFilterHVM.Add_Click({
 })
 
 $TD_btn_IBM_DriveInfo.add_click({
-    $TD_lb_DriveInfoOne.Visibility = "Hidden";
-    $TD_lb_DriveInfoTwo.Visibility = "Hidden";
-    $TD_lb_DriveInfoThree.Visibility = "Hidden";
-    $TD_lb_DriveInfoFour.Visibility = "Hidden"; 
+    $TD_lb_DriveInfoOne.Visibility = "Hidden"; $TD_lb_DriveInfoTwo.Visibility = "Hidden"; $TD_lb_DriveInfoThree.Visibility = "Hidden"; $TD_lb_DriveInfoFour.Visibility = "Hidden"; 
+    $TD_lb_DriveInfoFive.Visibility = "Hidden"; $TD_lb_DriveInfoSix.Visibility = "Hidden"; $TD_lb_DriveInfoSeven.Visibility = "Hidden"; $TD_lb_DriveInfoEight.Visibility = "Hidden";
 
     $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_.DeviceTyp -eq "Storage"}
 
@@ -456,10 +468,10 @@ $TD_btn_IBM_DriveInfo.add_click({
             {($_ -eq 2)} { $TD_dg_DriveInfoTwo.ItemsSource = $TD_DriveInfo }
             {($_ -eq 3)} { $TD_dg_DriveInfoThree.ItemsSource = $TD_DriveInfo }
             {($_ -eq 4)} { $TD_dg_DriveInfoFour.ItemsSource = $TD_DriveInfo }
-            {($_ -eq 5)} { $TD_dg_DriveInfoFour.ItemsSource = $TD_DriveInfo }
-            {($_ -eq 6)} { $TD_dg_DriveInfoFour.ItemsSource = $TD_DriveInfo }
-            {($_ -eq 7)} { $TD_dg_DriveInfoFour.ItemsSource = $TD_DriveInfo }
-            {($_ -eq 8)} { $TD_dg_DriveInfoFour.ItemsSource = $TD_DriveInfo }
+            {($_ -eq 5)} { $TD_dg_DriveInfoFive.ItemsSource = $TD_DriveInfo }
+            {($_ -eq 6)} { $TD_dg_DriveInfoSix.ItemsSource = $TD_DriveInfo }
+            {($_ -eq 7)} { $TD_dg_DriveInfoSeven.ItemsSource = $TD_DriveInfo }
+            {($_ -eq 8)} { $TD_dg_DriveInfoEight.ItemsSource = $TD_DriveInfo }
             Default { SST_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong, please check the prompt output first and then the log files.") -TD_ToolMSGType Error }
         }
         $TD_DriveInfo | Export-Csv -Path $PSRootPath\ToolLog\ToolTEMP\$($_.ID)_$($_.DeviceName)_DriveInfo_$(Get-Date -Format "yyyy-MM-dd")_Temp.csv
