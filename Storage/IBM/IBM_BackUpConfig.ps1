@@ -36,7 +36,7 @@ function IBM_BackUpConfig {
     process{
         Write-Debug -Message "IBM_BackUpConfig Process block |$(Get-Date)"
         
-        Write-ProgressBar -ProgressBar $ProgressBar -Activity "Collect data for Device $($TD_Line_ID) please wait this can take some seconds" -PercentComplete (($ProgCounter/50) * 100)
+        Write-ProgressBar -ProgressBar $ProgressBar -Activity "Collect data for Device $($TD_Line_ID) $($TD_Device_DeviceName) please wait this can take some seconds" -PercentComplete (($ProgCounter/50) * 100)
         Start-Sleep -Seconds 0.5
 
         if($TD_Device_ConnectionTyp -eq "ssh"){

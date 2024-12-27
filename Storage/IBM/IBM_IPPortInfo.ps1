@@ -53,6 +53,15 @@ function IBM_IPPortInfo {
     
     end {
         Close-ProgressBar -ProgressBar $ProgressBar
+        if($TD_Line_ID -eq 1){$TD_LB_IPPortInfoOne.Visibility = "Visible";  $TD_LB_IPPortInfoOne.Content = "There is NO IP Port Info for $($TD_Device_DeviceName)."}
+        if($TD_Line_ID -eq 2){$TD_LB_IPPortInfoTwo.Visibility = "Visible";  $TD_LB_IPPortInfoTwo.Content = "There is NO IP Port Info for $($TD_Device_DeviceName)."}
+        if($TD_Line_ID -eq 3){$TD_LB_IPPortInfoThree.Visibility = "Visible";$TD_LB_IPPortInfoThree.Content = "There is NO IP Port Info for $($TD_Device_DeviceName)."}
+        if($TD_Line_ID -eq 4){$TD_LB_IPPortInfoFour.Visibility = "Visible"; $TD_LB_IPPortInfoFour.Content = "There is NO IP Port Info for $($TD_Device_DeviceName)."}
+        if($TD_Line_ID -eq 5){$TD_LB_IPPortInfoFive.Visibility = "Visible"; $TD_LB_IPPortInfoFive.Content = "There is NO IP Port Info for $($TD_Device_DeviceName)."}
+        if($TD_Line_ID -eq 6){$TD_LB_IPPortInfoSix.Visibility = "Visible";  $TD_LB_IPPortInfoSix.Content = "There is NO IP Port Info for $($TD_Device_DeviceName)."}
+        if($TD_Line_ID -eq 7){$TD_LB_IPPortInfoSeven.Visibility = "Visible";$TD_LB_IPPortInfoSeven.Content = "There is NO IP Port Info for $($TD_Device_DeviceName)."}
+        if($TD_Line_ID -eq 8){$TD_LB_IPPortInfoEight.Visibility = "Visible";$TD_LB_IPPortInfoEight.Content = "There is NO IP Port Info for $($TD_Device_DeviceName)."}
+        
         <# export y or n #>
         if($TD_export -eq "yes"){
             if([string]$TD_Exportpath -ne "$PSRootPath\ToolLog\"){

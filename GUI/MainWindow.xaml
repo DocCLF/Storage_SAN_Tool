@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:GUI"
         mc:Ignorable="d"
-        Title="Storage SAN Kit" MinHeight="600" MinWidth="1200" WindowState="Normal" WindowStartupLocation="CenterScreen" >
+        Title="Storage SAN Tool" MinHeight="600" MinWidth="1200" WindowState="Normal" WindowStartupLocation="CenterScreen" >
     <Window.Resources>
         <ResourceDictionary>
             <Style x:Key="MainBtnStyle" TargetType="{x:Type Button}">
@@ -51,7 +51,7 @@
             </StackPanel>
         </Grid>
         <Label Grid.Row="2" Content="v1.2.0" Margin="10,0" VerticalAlignment="Bottom" HorizontalAlignment="Right" />
-        <Label Grid.Row="2" Content="Tool-Support: r.glanz@profi-ag.de [or] GitHub: https://github.com/DocCLF/Storage_SAN_Kit" Margin="10,0" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="16" />
+        <Label Grid.Row="2" Content="Tool-Support: r.glanz@profi-ag.de [or] GitHub: https://github.com/DocCLF/Storage_SAN_Tool" Margin="10,0" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="16" />
         <Image Grid.Row="2" x:Name="LogoImageSmall" Margin="10,10" VerticalAlignment="Bottom" HorizontalAlignment="Left" MaxHeight="30"/>
     </Grid>
 </Window>
