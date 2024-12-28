@@ -114,7 +114,7 @@ function IBM_DriveFirmwareCheck {
                    
                 }
             }
-            Default {Write-Debug -Message $IBM_ProdMTM}
+            Default {SST_ToolMessageCollector -TD_ToolMSGCollector "There is a problem with the online check of the drive software status for $IBM_ProdMTM" -TD_ToolMSGType Debug}
         }
         
         $IBM_LatestDriveFW = $null

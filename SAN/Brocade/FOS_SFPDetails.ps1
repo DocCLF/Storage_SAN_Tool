@@ -4,6 +4,7 @@ function FOS_SFPDetails {
         [Int16]$TD_Line_ID,
         [string]$TD_Device_ConnectionTyp,
         [string]$TD_Device_UserName,
+        [string]$TD_Device_DeviceName,
         [string]$TD_Device_DeviceIP,
         [string]$TD_Device_PW,
         [Parameter(ValueFromPipeline)]
@@ -32,7 +33,7 @@ function FOS_SFPDetails {
             
             $TD_SFPInfo.SFPUsed = ($TD_SFP|Select-String -Pattern '^Port\s+\d+:\s+(Media\snot\sinstalled)' -AllMatches).Matches.Groups[1].Value
             if($TD_SFPInfo.SFPUsed -eq "Media not installed"){
-                Write-Debug $TD_SFPInfo.SFPUsed
+                SST_ToolMessageCollector -TD_ToolMSGCollector "$TD_SFPInfo.SFPUsed" -TD_NotShown yes
                 continue
             }
 
@@ -56,10 +57,12 @@ function FOS_SFPDetails {
         <# export y or n #>
         if($TD_Export -eq "yes"){
             <# exported to .\Host_Volume_Map_Result.csv #>
-            if([string]$TD_Exportpath -ne "$PSRootPath\Export\"){
-                $TD_SFPDetailsResault | Export-Csv -Path $TD_Exportpath\$($TD_Line_ID)_SFPDetails_Result_$(Get-Date -Format "yyyy-MM-dd").csv -NoTypeInformation
+            if([string]$TD_Exportpath -ne "$PSRootPath\ToolLog\"){
+                $TD_SFPDetailsResault | Export-Csv -Path $TD_Exportpath\$($TD_Line_ID)_$($TD_Device_DeviceName)_SFPDetails_Result_$(Get-Date -Format "yyyy-MM-dd").csv -NoTypeInformation
+                SST_ToolMessageCollector -TD_ToolMSGCollector "$TD_Exportpath\$($TD_Line_ID)_$($TD_Device_DeviceName)_SFPDetails_Result_$(Get-Date -Format "yyyy-MM-dd").csv" -TD_ToolMSGType Debug
             }else {
-                $TD_SFPDetailsResault | Export-Csv -Path $PSScriptRoot\Export\$($TD_Line_ID)_SFPDetails_Result_$(Get-Date -Format "yyyy-MM-dd").csv -NoTypeInformation
+                $TD_SFPDetailsResault | Export-Csv -Path $PSScriptRoot\ToolLog\$($TD_Line_ID)_$($TD_Device_DeviceName)_SFPDetails_Result_$(Get-Date -Format "yyyy-MM-dd").csv -NoTypeInformation
+                SST_ToolMessageCollector -TD_ToolMSGCollector "$PSScriptRoot\ToolLog\$($TD_Line_ID)_$($TD_Device_DeviceName)_SFPDetails_Result_$(Get-Date -Format "yyyy-MM-dd").csv" -TD_ToolMSGType Debug
             }
         }else {
             <# output on the promt #>

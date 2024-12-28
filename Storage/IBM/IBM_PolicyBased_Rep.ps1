@@ -49,7 +49,7 @@ function IBM_PolicyBased_Rep {
         
                     <# Progressbar  #>
                     $ProgCounter++
-                    Write-ProgressBar -ProgressBar $ProgressBar -Activity "Collect data for Device $($TD_Line_ID)" -PercentComplete (($ProgCounter/$TD_PolicyRepInformations.Count) * 100)
+                    Write-ProgressBar -ProgressBar $ProgressBar -Activity "Collect data for Device $($TD_Line_ID) $($TD_Device_DeviceName)" -PercentComplete (($ProgCounter/$TD_PolicyRepInformations.Count) * 100)
                 }
              }
             "VolumeGroupReplication" { 
@@ -78,10 +78,10 @@ function IBM_PolicyBased_Rep {
         
                     <# Progressbar  #>
                     $ProgCounter++
-                    Write-ProgressBar -ProgressBar $ProgressBar -Activity "Collect data for Device $($TD_Line_ID)" -PercentComplete (($ProgCounter/$TD_PolicyRepInformations.Count) * 100)
+                    Write-ProgressBar -ProgressBar $ProgressBar -Activity "Collect data for Device $($TD_Line_ID) $($TD_Device_DeviceName)" -PercentComplete (($ProgCounter/$TD_PolicyRepInformations.Count) * 100)
                 }
              }
-            Default {Write-Host "Something went wrong please try again or contact tool support" -ForegroundColor Red}
+            Default {SST_ToolMessageCollector -TD_ToolMSGCollector "Something went wrong please try again or contact tool support" -TD_ToolMSGType Error}
         }
     }
     
@@ -92,15 +92,15 @@ function IBM_PolicyBased_Rep {
 
             if([string]$TD_Exportpath -ne "$PSRootPath\ToolLog\"){
                 switch ($TD_RepInfoChose) {
-                    "lsreplicationpolicy" { $TD_ReplicationPolicy | Export-Csv -Path $TD_Exportpath\$($TD_Line_ID)_ReplicationPolicy_$(Get-Date -Format "yyyy-MM-dd").csv -NoTypeInformation }
-                    "lsvolumegroupreplication" { $TD_VolumeGroupRep | Export-Csv -Path $TD_Exportpath\$($TD_Line_ID)_VolumeGroupRep_$(Get-Date -Format "yyyy-MM-dd").csv -NoTypeInformation }
-                    Default {Write-Host "Something went wrong please try again or contact tool support" -ForegroundColor Red}
+                    "lsreplicationpolicy" { $TD_ReplicationPolicy | Export-Csv -Path $TD_Exportpath\$($TD_Line_ID)_$($TD_Device_DeviceName)_ReplicationPolicy_$(Get-Date -Format "yyyy-MM-dd").csv -NoTypeInformation }
+                    "lsvolumegroupreplication" { $TD_VolumeGroupRep | Export-Csv -Path $TD_Exportpath\$($TD_Line_ID)_$($TD_Device_DeviceName)_VolumeGroupRep_$(Get-Date -Format "yyyy-MM-dd").csv -NoTypeInformation }
+                    Default {SST_ToolMessageCollector -TD_ToolMSGCollector "Something went wrong please try again or contact tool support" -TD_ToolMSGType Error}
                 }
             }else {
                 switch ($TD_RepInfoChose) {
-                    "lsreplicationpolicy" { $TD_ReplicationPolicy | Export-Csv -Path $TD_Exportpath\$($TD_Line_ID)_ReplicationPolicy_$(Get-Date -Format "yyyy-MM-dd").csv -NoTypeInformation }
-                    "lsvolumegroupreplication" { $TD_VolumeGroupRep | Export-Csv -Path $TD_Exportpath\$($TD_Line_ID)_VolumeGroupRep_$(Get-Date -Format "yyyy-MM-dd").csv -NoTypeInformation }
-                    Default {Write-Host "Something went wrong please try again or contact tool support" -ForegroundColor Red}
+                    "lsreplicationpolicy" { $TD_ReplicationPolicy | Export-Csv -Path $TD_Exportpath\$($TD_Line_ID)_$($TD_Device_DeviceName)_ReplicationPolicy_$(Get-Date -Format "yyyy-MM-dd").csv -NoTypeInformation }
+                    "lsvolumegroupreplication" { $TD_VolumeGroupRep | Export-Csv -Path $TD_Exportpath\$($TD_Line_ID)_$($TD_Device_DeviceName)_VolumeGroupRep_$(Get-Date -Format "yyyy-MM-dd").csv -NoTypeInformation }
+                    Default {SST_ToolMessageCollector -TD_ToolMSGCollector "Something went wrong please try again or contact tool support" -TD_ToolMSGType Error}
                 }
             }
         }else {
@@ -108,14 +108,14 @@ function IBM_PolicyBased_Rep {
             switch ($TD_RepInfoChose) {
                 "lsreplicationpolicy" { return $TD_ReplicationPolicy }
                 "lsvolumegroupreplication" { return $TD_VolumeGroupRep }
-                Default {Write-Host "Something went wrong please try again or contact tool support" -ForegroundColor Red}
+                Default {SST_ToolMessageCollector -TD_ToolMSGCollector "Something went wrong please try again or contact tool support" -TD_ToolMSGType Error}
             }
         }
 
         switch ($TD_RepInfoChose) {
             "lsreplicationpolicy" { return $TD_ReplicationPolicy }
             "lsvolumegroupreplication" { return $TD_VolumeGroupRep }
-            Default {Write-Host "Something went wrong please try again or contact tool upport" -ForegroundColor Red}
+            Default {SST_ToolMessageCollector -TD_ToolMSGCollector "Something went wrong please try again or contact tool support" -TD_ToolMSGType Error}
         }
 
     }

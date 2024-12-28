@@ -42,7 +42,7 @@ function IBM_UserInfo {
 
             <# Progressbar  #>
             $ProgCounter++
-            Write-ProgressBar -ProgressBar $ProgressBar -Activity "Collect data for Device $($TD_Line_ID)" -PercentComplete (($ProgCounter/$TD_UserInformation.Count) * 100)
+            Write-ProgressBar -ProgressBar $ProgressBar -Activity "Collect data for Device $($TD_Line_ID) $($TD_Device_DeviceName)" -PercentComplete (($ProgCounter/$TD_UserInformation.Count) * 100)
         }
     }
     
@@ -50,10 +50,12 @@ function IBM_UserInfo {
         Close-ProgressBar -ProgressBar $ProgressBar
         if($TD_Export -eq "yes"){
             
-            if([string]$TD_Exportpath -ne "$PSCommandPath\Export\"){
-                $TD_UserInfoResault | Export-Csv -Path $TD_Exportpath\$($TD_Line_ID)_User_Result_$(Get-Date -Format "yyyy-MM-dd").csv -NoTypeInformation
+            if([string]$TD_Exportpath -ne "$PSCommandPath\ToolLog\"){
+                $TD_UserInfoResault | Export-Csv -Path $TD_Exportpath\$($TD_Line_ID)_$($TD_Device_DeviceName)_User_Result_$(Get-Date -Format "yyyy-MM-dd").csv -NoTypeInformation
+                SST_ToolMessageCollector -TD_ToolMSGCollector "$TD_Exportpath\$($TD_Line_ID)_$($TD_Device_DeviceName)_User_Result_$(Get-Date -Format "yyyy-MM-dd").csv" -TD_ToolMSGType Debug
             }else {
-                $TD_UserInfoResault | Export-Csv -Path $PSCommandPath\Export\$($TD_Line_ID)_User_Result_$(Get-Date -Format "yyyy-MM-dd").csv -NoTypeInformation
+                $TD_UserInfoResault | Export-Csv -Path $PSCommandPath\ToolLog\$($TD_Line_ID)_$($TD_Device_DeviceName)_User_Result_$(Get-Date -Format "yyyy-MM-dd").csv -NoTypeInformation
+                SST_ToolMessageCollector -TD_ToolMSGCollector "$PSCommandPath\ToolLog\$($TD_Line_ID)_$($TD_Device_DeviceName)_User_Result_$(Get-Date -Format "yyyy-MM-dd").csv" -TD_ToolMSGType Debug
             }
         }else {
             <# output on the promt #>

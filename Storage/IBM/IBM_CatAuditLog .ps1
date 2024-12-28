@@ -27,7 +27,6 @@ function IBM_CatAuditLog {
     begin{
         <# suppresses error messages #>
         $ErrorActionPreference="SilentlyContinue"
-        Write-Debug -Message "IBM_CatAuditLog Begin block |$(Get-Date)"
 
         [int]$ProgCounter=0
         $ProgressBar = New-ProgressBar
@@ -42,9 +41,6 @@ function IBM_CatAuditLog {
     }
 
     process{
-        Write-Debug -Message "IBM_CatAuditLog Process block |$(Get-Date)"
-
-
         $TD_AuditLog = foreach ($TD_CatAuditLogInfo in $TD_CatAuditLogInfos){
             $TD_CatAuditLog = "" | Select-Object AuditSeqNo,TimeStamp,User,SourceAddress,ActionCommand
             $TD_CatAuditLog.AuditSeqNo = ($TD_CatAuditLogInfo|Select-String -Pattern '^(\d+):(\d+):([a-zA-Z0-9-_]+):' -AllMatches).Matches.Groups[1].Value
@@ -56,12 +52,9 @@ function IBM_CatAuditLog {
 
             <# Progressbar  #>
             $ProgCounter++
-            Write-ProgressBar -ProgressBar $ProgressBar -Activity "Collect data for Device $($TD_Line_ID)" -PercentComplete (($ProgCounter/$TD_CatAuditLogInfos.Count) * 100)
+            Write-ProgressBar -ProgressBar $ProgressBar -Activity "Collect data for Device $($TD_Line_ID) $($TD_Device_DeviceName)" -PercentComplete (($ProgCounter/$TD_CatAuditLogInfos.Count) * 100)
             Start-Sleep -Seconds 0.5
-        
         }
-
-
     }
     end {
 
@@ -69,9 +62,11 @@ function IBM_CatAuditLog {
 
         if($TD_Export -eq "yes"){
             if([string]$TD_Exportpath -ne "$PSCommandPath\ToolLog\"){
-                $TD_AuditLog | Export-Csv -Path $TD_Exportpath\$($TD_Line_ID)_AuditLog_Result_$(Get-Date -Format "yyyy-MM-dd").csv -NoTypeInformation
+                $TD_AuditLog | Export-Csv -Path $TD_Exportpath\$($TD_Line_ID)_$($TD_Device_DeviceName)_AuditLog_Result_$(Get-Date -Format "yyyy-MM-dd").csv -NoTypeInformation
+                SST_ToolMessageCollector -TD_ToolMSGCollector "$TD_Exportpath\$($TD_Line_ID)_$($TD_Device_DeviceName)_AuditLog_Result_$(Get-Date -Format "yyyy-MM-dd").csv" -TD_ToolMSGType Debug
             }else {
-                $TD_AuditLog | Export-Csv -Path $PSCommandPath\ToolLog\$($TD_Line_ID)_AuditLog_Result_$(Get-Date -Format "yyyy-MM-dd").csv -NoTypeInformation
+                $TD_AuditLog | Export-Csv -Path $PSCommandPath\ToolLog\$($TD_Line_ID)_$($TD_Device_DeviceName)_AuditLog_Result_$(Get-Date -Format "yyyy-MM-dd").csv -NoTypeInformation
+                SST_ToolMessageCollector -TD_ToolMSGCollector "$PSCommandPath\ToolLog\$($TD_Line_ID)_$($TD_Device_DeviceName)_AuditLog_Result_$(Get-Date -Format "yyyy-MM-dd").csv" -TD_ToolMSGType Debug
             }
         }else {
             <# output on the promt #>

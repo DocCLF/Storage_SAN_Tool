@@ -22,7 +22,6 @@ function IBM_BackUpConfig {
         [string]$TD_Device_PW,
         [string]$TD_Storage,
         [string]$TD_Exportpath
-
     )
     
     begin{
@@ -54,7 +53,7 @@ function IBM_BackUpConfig {
 
     end {
         Close-ProgressBar -ProgressBar $ProgressBar
-        Write-Debug -Message "IBM_BackUpConfig End block |$(Get-Date) `n"
+        SST_ToolMessageCollector -TD_ToolMSGCollector "BM_BackUpConfig End block" -TD_ToolMSGType Debug
         return $TD_BUResault
         Clear-Variable TD* -Scope Global
     }

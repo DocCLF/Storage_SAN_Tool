@@ -29,7 +29,6 @@ function IBM_StorageSecurity {
         }else {
             $TD_DeviceInformation = plink $TD_Device_UserName@$TD_Device_DeviceIP -pw $TD_Device_PW -batch 'lssecurity -delim :'
         }
-        #$TD_DeviceInformation = Get-Content -Path C:\Users\mailt\Documents\w_lssec.txt.txt
     }
     
     process {
@@ -76,7 +75,7 @@ function IBM_StorageSecurity {
             $TD_SecSettingsInfo
             <# Progressbar  #>
             $ProgCounter++
-            Write-ProgressBar -ProgressBar $ProgressBar -Activity "Collect data for Device $($TD_Line_ID)" -PercentComplete (($ProgCounter/$TD_DeviceInformation.Count) * 100)
+            Write-ProgressBar -ProgressBar $ProgressBar -Activity "Collect data for Device $($TD_Line_ID) $($TD_Device_DeviceName)" -PercentComplete (($ProgCounter/$TD_DeviceInformation.Count) * 100)
         }
         Start-Sleep -Seconds 0.5
         
@@ -86,12 +85,12 @@ function IBM_StorageSecurity {
         Close-ProgressBar -ProgressBar $ProgressBar
         if($TD_Export -eq "yes"){
             <# exported as .\<nbr>_Host_Volume_Map_Result_<date>.csv #>
-            if([string]$TD_Exportpath -ne "$PSCommandPath\Export\"){
-                $TD_lsSecSettings | Export-Csv -Path $TD_Exportpath\$($TD_Line_ID)_lssecurity_Result_$(Get-Date -Format "yyyy-MM-dd").csv -NoTypeInformation
-                Write-Host "The Export can be found at $TD_Exportpath " -ForegroundColor Green
+            if([string]$TD_Exportpath -ne "$PSCommandPath\ToolLog\"){
+                $TD_lsSecSettings | Export-Csv -Path $TD_Exportpath\$($TD_Line_ID)_$($TD_Device_DeviceName)_lssecurity_Result_$(Get-Date -Format "yyyy-MM-dd").csv -NoTypeInformation
+                SST_ToolMessageCollector -TD_ToolMSGCollector "$TD_Exportpath\$($TD_Line_ID)_$($TD_Device_DeviceName)_lssecurity_Result_$(Get-Date -Format "yyyy-MM-dd").csv" -TD_ToolMSGType Debug
             }else {
-                $TD_lsSecSettings | Export-Csv -Path $PSCommandPath\Export\$($TD_Line_ID)_lssecurity_Result_$(Get-Date -Format "yyyy-MM-dd").csv -NoTypeInformation
-                Write-Host "The Export can be found at $PSCommandPath\Export\ " -ForegroundColor Green
+                $TD_lsSecSettings | Export-Csv -Path $PSCommandPath\ToolLog\$($TD_Line_ID)_$($TD_Device_DeviceName)_lssecurity_Result_$(Get-Date -Format "yyyy-MM-dd").csv -NoTypeInformation
+                SST_ToolMessageCollector -TD_ToolMSGCollector "$PSCommandPath\ToolLog\$($TD_Line_ID)_$($TD_Device_DeviceName)_lssecurity_Result_$(Get-Date -Format "yyyy-MM-dd").csv" -TD_ToolMSGType Debug
             }
         }else {
             <# output on the promt #>

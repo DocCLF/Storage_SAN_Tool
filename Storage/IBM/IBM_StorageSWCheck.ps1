@@ -55,6 +55,8 @@ function IBM_StorageSWCheck {
         catch {
             <#Do this if a terminating exception happens#>
             Write-Debug -Message "Something went wrong"
+            SST_ToolMessageCollector -TD_ToolMSGCollector "There is a problem with the online check of the software status." -TD_ToolMSGType Error
+            SST_ToolMessageCollector -TD_ToolMSGCollector "$($_.Exception.Message)" -TD_ToolMSGType Error
             Write-Debug -Message $_.Exception.Message
             $IBM_WebSpecVirtSWInofs ="nothin in here"
         }
@@ -138,9 +140,10 @@ function IBM_StorageSWCheck {
             Default {
                 $IBM_LocSpecVirtSW = "" | Select-Object MinimumPTF
                 $IBM_LocSpecVirtSW.MinimumPTF = $null
+                SST_ToolMessageCollector -TD_ToolMSGCollector "Feedback Switch-Case of Storage FWCheck $IBM_CurrentSpectrVirtuFW" -TD_ToolMSGType Debug
                 Write-Debug -Message $IBM_CurrentSpectrVirtuFW}
         }
-        
+        SST_ToolMessageCollector -TD_ToolMSGCollector "Result Storage FWCheck $IBM_SpecVirtSWInfo" -TD_ToolMSGType Debug
         Write-Debug -Message $IBM_SpecVirtSWInfo
     }
     

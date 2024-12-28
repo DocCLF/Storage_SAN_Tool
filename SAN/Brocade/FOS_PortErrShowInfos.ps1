@@ -22,6 +22,7 @@ function FOS_PortErrShowInfos {
         [Int16]$TD_Line_ID,
         [string]$TD_Device_ConnectionTyp,
         [string]$TD_Device_UserName,
+        [string]$TD_Device_DeviceName,
         [string]$TD_Device_DeviceIP,
         [string]$TD_Device_PW,
         [Parameter(ValueFromPipeline)]
@@ -30,17 +31,10 @@ function FOS_PortErrShowInfos {
         [string]$TD_Exportpath,
         [string]$TD_RefreshView
     )
-    #[Parameter(Mandatory,ValueFromPipeline)]
-    #$FOS_MainInformation,
-    #[Parameter(Mandatory,ValueFromPipeline)]
-    #$FOS_GetUsedPorts
 
     begin{
         <# suppresses error messages #>
         $ErrorActionPreference="SilentlyContinue"
-
-        Write-Debug -Message "Begin GET_PortErrShowInfos |$(Get-Date)"
-        Write-Debug -Message "Counted MainInformation $($FOS_MainInformation.count) - UsedPorts: $($FOS_GetUsedPorts)"`
         <# Create a Array for the unique information of the switch used at Porterrshow #>
 
         [int]$ProgCounter=0
@@ -58,7 +52,6 @@ function FOS_PortErrShowInfos {
         #Out-File -FilePath $Env:TEMP\$($TD_Line_ID)_PortErrShow_Temp.txt -InputObject $FOS_MainInformation
 
         $FOS_InfoCount = $FOS_MainInformation.count
-        Write-Debug -Message "Number of Lines: $FOS_InfoCount "
         0..$FOS_InfoCount |ForEach-Object {
             # Pull only the effective ZoneCFG back into ZoneList
             if($FOS_MainInformation[$_] -match '^\s+frames'){
@@ -68,8 +61,6 @@ function FOS_PortErrShowInfos {
         }
     }
     process{
-        Write-Debug -Message "Start of Process from GET_PortErrShowInfos |$(Get-Date) ` "
-        
         $FOS_PortErrShowfiltered = foreach ($FOS_port in $FOS_perrsh_temp){
             
             # create a var and pipe some objects in
@@ -139,10 +130,12 @@ function FOS_PortErrShowInfos {
         <# export y or n #>
         if($TD_Export -eq "yes"){
             <# exported to .\Host_Volume_Map_Result.csv #>
-            if([string]$TD_Exportpath -ne "$PSRootPath\Export\"){
-                $FOS_PortErrShowfiltered | Export-Csv -Path $TD_Exportpath\$($TD_Line_ID)_PortErrShow_Result_$(Get-Date -Format "yyyy-MM-dd").csv -NoTypeInformation
+            if([string]$TD_Exportpath -ne "$PSRootPath\ToolLog\"){
+                $FOS_PortErrShowfiltered | Export-Csv -Path $TD_Exportpath\$($TD_Line_ID)_$($TD_Device_DeviceName)_PortErrShow_Result_$(Get-Date -Format "yyyy-MM-dd").csv -NoTypeInformation
+                SST_ToolMessageCollector -TD_ToolMSGCollector "$TD_Exportpath\$($TD_Line_ID)_$($TD_Device_DeviceName)_PortErrShow_Result_$(Get-Date -Format "yyyy-MM-dd").csv" -TD_ToolMSGType Debug
             }else {
-                $FOS_PortErrShowfiltered | Export-Csv -Path $PSScriptRoot\Export\$($TD_Line_ID)_PortErrShow_Result_$(Get-Date -Format "yyyy-MM-dd").csv -NoTypeInformation
+                $FOS_PortErrShowfiltered | Export-Csv -Path $PSScriptRoot\ToolLog\$($TD_Line_ID)_$($TD_Device_DeviceName)_PortErrShow_Result_$(Get-Date -Format "yyyy-MM-dd").csv -NoTypeInformation
+                SST_ToolMessageCollector -TD_ToolMSGCollector "$PSScriptRoot\ToolLog\$($TD_Line_ID)_$($TD_Device_DeviceName)_PortErrShow_Result_$(Get-Date -Format "yyyy-MM-dd").csv" -TD_ToolMSGType Debug
             }
         }else {
             <# output on the promt #>

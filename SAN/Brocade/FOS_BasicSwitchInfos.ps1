@@ -19,6 +19,7 @@ function FOS_BasicSwitchInfos {
         [Int16]$TD_Line_ID,
         [string]$TD_Device_ConnectionTyp,
         [string]$TD_Device_UserName,
+        [string]$TD_Device_DeviceName,
         [string]$TD_Device_DeviceIP,
         [string]$TD_Device_PW,
         [Parameter(ValueFromPipeline)]
@@ -114,17 +115,18 @@ function FOS_BasicSwitchInfos {
         <# export y or n #>
         if($TD_Export -eq "yes"){
             <# exported to .\Host_Volume_Map_Result.csv #>
-            if([string]$TD_Exportpath -ne "$PSRootPath\Export\"){
-                Out-File -FilePath $TD_Exportpath\$($TD_Line_ID)_BasicSwitchInfo_Result_$(Get-Date -Format "yyyy-MM-dd").csv -InputObject $FOS_SwGeneralInfos
+            if([string]$TD_Exportpath -ne "$PSRootPath\ToolLog\"){
+                Out-File -FilePath $TD_Exportpath\$($TD_Line_ID)_$($TD_Device_DeviceName)_BasicSwitchInfo_Result_$(Get-Date -Format "yyyy-MM-dd").csv -InputObject $FOS_SwGeneralInfos
+                SST_ToolMessageCollector -TD_ToolMSGCollector "$TD_Exportpath\$($TD_Line_ID)_$($TD_Device_DeviceName)_BasicSwitchInfo_Result_$(Get-Date -Format "yyyy-MM-dd").csv" -TD_ToolMSGType Debug
             }else {
-                Out-File -FilePath $PSScriptRoot\Export\$($TD_Line_ID)_BasicSwitchInfo_Result_$(Get-Date -Format "yyyy-MM-dd").csv -InputObject $FOS_SwGeneralInfos
+                Out-File -FilePath $PSScriptRoot\ToolLog\$($TD_Line_ID)_$($TD_Device_DeviceName)_BasicSwitchInfo_Result_$(Get-Date -Format "yyyy-MM-dd").csv -InputObject $FOS_SwGeneralInfos
+                SST_ToolMessageCollector -TD_ToolMSGCollector "$PSScriptRoot\ToolLog\$($TD_Line_ID)_$($TD_Device_DeviceName)_BasicSwitchInfo_Result_$(Get-Date -Format "yyyy-MM-dd").csv" -TD_ToolMSGType Debug
             }
         }else {
             <# output on the promt #>
             return $FOS_SwGeneralInfos
         }
-        Write-Debug -Message "End Func GET_BasicSwitchInfos |$(Get-Date)` "
-        Write-Debug -Message "return $FOS_SwGeneralInfos ` $(Get-Date)` "
+
         return $FOS_SwGeneralInfos
         
     }

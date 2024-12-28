@@ -24,7 +24,7 @@ function IBM_CleanUpDumps {
         
         <# Progressbar  #>
         $ProgCounter++
-        Write-ProgressBar -ProgressBar $ProgressBar -Activity "Delete all unnecessary files from the device $($TD_Line_ID)" -PercentComplete (($ProgCounter/50) * 100)
+        Write-ProgressBar -ProgressBar $ProgressBar -Activity "Delete all unnecessary files from the device $($TD_Line_ID) $($TD_Device_DeviceName)" -PercentComplete (($ProgCounter/50) * 100)
 
     }
     
@@ -37,12 +37,13 @@ function IBM_CleanUpDumps {
         }else {
             $TD_CleanUpDumps = plink $TD_Device_UserName@$TD_Device_DeviceIP -pw $TD_Device_PW -batch "cleardumps -prefix /dumps && cleardumps -prefix /home/admin/upgrade "
         }
-        Write-Debug -Message "IBM_CleanUpDumps end of Process block |$(Get-Date) `n $($TD_CleanUpDumps) "
+        SST_ToolMessageCollector -TD_ToolMSGCollector "IBM_CleanUpDumps end of Process block $($TD_CleanUpDumps)" -TD_ToolMSGType Debug
     }
     
     end {
         Close-ProgressBar -ProgressBar $ProgressBar
         <# returns the hashtable for further processing, not mandatory but the safe way #>
+        SST_ToolMessageCollector -TD_ToolMSGCollector "IBM_CleanUpDumps End block " -TD_ToolMSGType Debug
         Write-Debug -Message "IBM_CleanUpDumps End block |$(Get-Date) `n"
         <# export y or n #>
         if([String]::IsNullOrEmpty($D_CleanUpDumps)){

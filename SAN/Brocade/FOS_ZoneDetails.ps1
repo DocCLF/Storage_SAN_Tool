@@ -20,6 +20,7 @@ function FOS_ZoneDetails  {
         [Int16]$TD_Line_ID,
         [string]$TD_Device_ConnectionTyp,
         [string]$TD_Device_UserName,
+        [string]$TD_Device_DeviceName,
         [string]$TD_Device_DeviceIP,
         [string]$TD_Device_PW,
         [Parameter(ValueFromPipeline)]
@@ -52,15 +53,14 @@ function FOS_ZoneDetails  {
         }
         $FOS_ZoneName = (($FOS_ZoneList | Select-String -Pattern '\s+cfg:\s+(.*)' |ForEach-Object {$_.Matches.Groups[1].Value}))
         $FOS_ZoneName = $FOS_ZoneName.Trim()
-        Write-Debug -Message "`nZoneliste`n $FOS_ZoneList,`nZoneName`n $FOS_ZoneName,`nZoneCount`n $FOS_ZoneCollection "
+        SST_ToolMessageCollector -TD_ToolMSGCollector "`nZoneliste`n $FOS_ZoneList,`nZoneName`n $FOS_ZoneName,`nZoneCount`n $FOS_ZoneCollection " -TD_NotShown export
         
     }
     process{
         Write-Debug -Message "Start of Process from GET_ZoneDetails |$(Get-Date)"
         # Creat a list of Aliase with WWPN based on the decision by AliasName, with a "wildcard" there is only a list similar Aliasen or without a Aliasname there will be all Aliases of the cfg in the List.
 
-
-        Write-Debug -Message "FOS_Operand Default`n, Search: zoneshow`n, Zoneliste`n $FOS_ZoneCount, `nZoneEntrys`n $FOS_MainInformation, `nZoneCount`n $FOS_ZoneList "
+        SST_ToolMessageCollector -TD_ToolMSGCollector "FOS_Operand Default`n, Search: zoneshow`n, Zoneliste`n $FOS_ZoneCount, `nZoneEntrys`n $FOS_MainInformation, `nZoneCount`n $FOS_ZoneList " -TD_NotShown export
 
         # is not necessary, but even a system needs a break from time to time
         Start-Sleep -Seconds 0.5;
@@ -74,7 +74,7 @@ function FOS_ZoneDetails  {
                 if(Select-String -InputObject $FOS_Zone -Pattern '^ zone:\s+(.*)'){
                     $FOS_AliName = Select-String -InputObject $FOS_Zone -Pattern '^ zone:\s+(.*)' |ForEach-Object {$_.Matches.Groups[1].Value}
                     $FOS_TempCollection.Zone = $FOS_AliName.Trim()
-                    Write-Debug -Message "$FOS_TempCollection"
+                    SST_ToolMessageCollector -TD_ToolMSGCollector "$FOS_TempCollection" -TD_NotShown export
                 }elseif(Select-String -InputObject $FOS_Zone -Pattern '(:[\da-f]{2}:[\da-f]{2}:[\da-f]{2})$') {
                     $FOS_AliWWN = $FOS_Zone
                     $FOS_TempCollection.WWPN = $FOS_AliWWN.Trim()
@@ -84,14 +84,14 @@ function FOS_ZoneDetails  {
                         <# Start of the do until loop #>
                         do {
                             if($FOS_BasicZoneListTemp -match '^ alias:\s(.*)'){
-                                Write-Debug -Message "$FOS_BasicZoneListTemp "
+                                SST_ToolMessageCollector -TD_ToolMSGCollector "$FOS_BasicZoneListTemp" -TD_NotShown export
                                 $FOS_TeampAliasName = $FOS_BasicZoneListTemp
                                 $FOS_TempAliasName = $FOS_TeampAliasName -replace '^ alias:\s',''.Trim()
                                 break
                             }
 
                             if($FOS_BasicZoneListTemp -match ($FOS_AliWWN.Trim())){
-                                Write-Debug -Message " $FOS_BasicZoneListTemp "
+                                SST_ToolMessageCollector -TD_ToolMSGCollector "$FOS_BasicZoneListTemp" -TD_NotShown export
                                 $FOS_DoUntilLoop = $false
                                 $FOS_TempCollection.Alias = $FOS_TempAliasName
                                 break
@@ -105,8 +105,7 @@ function FOS_ZoneDetails  {
                         <# Boolean to control the do until loop with break out option #>
                         If($FOS_DoUntilLoop -eq $false){break}
                     }
-
-                    Write-Debug -Message "$FOS_AliName`n, $FOS_Zone"
+                    SST_ToolMessageCollector -TD_ToolMSGCollector "$FOS_AliName`n, $FOS_Zone" -TD_NotShown export
                 }else{
                     <# Action when all if and elseif conditions are false #>
                     Write-Host "`n"
@@ -123,8 +122,8 @@ function FOS_ZoneDetails  {
 
         }else {
              <# Action when all if and elseif conditions are false #>
-            Write-Host "Something wrong, notthing was not found. " -ForegroundColor red
-            Write-Debug -Message "Some Infos: notthing was found, ZoneEntry count: $($FOS_ZoneList.count)`n, $FOS_ZoneList"
+            SST_ToolMessageCollector -TD_ToolMSGCollector "Something wrong, notthing was not found." -TD_ToolMSGType Error
+            SST_ToolMessageCollector -TD_ToolMSGCollector "Some Infos: notthing was found, ZoneEntry count: $($FOS_ZoneList.count)`n, $FOS_ZoneList" -TD_NotShown export
         }
 
     }
@@ -136,17 +135,20 @@ function FOS_ZoneDetails  {
         <# export y or n #>
         if($TD_Export -eq "yes"){
             <# exported to .\Host_Volume_Map_Result.csv #>
-            if([string]$TD_Exportpath -ne "$PSRootPath\Export\"){
+            if([string]$TD_Exportpath -ne "$PSRootPath\ToolLog\"){
                 $FOS_ZoneCollection | Export-Csv -Path $TD_Exportpath\$($TD_Line_ID)_$($FOS_ZoneName)_ZoneShow_Result_$(Get-Date -Format "yyyy-MM-dd").csv -NoTypeInformation
+                SST_ToolMessageCollector -TD_ToolMSGCollector "$TD_Exportpath\$($TD_Line_ID)_$($FOS_ZoneName)_ZoneShow_Result_$(Get-Date -Format "yyyy-MM-dd").csv" -TD_ToolMSGType Debug
             }else {
-                $FOS_ZoneCollection | Export-Csv -Path $PSScriptRoot\Export\$($TD_Line_ID)_$($FOS_ZoneName)_ZoneShow_Result_$(Get-Date -Format "yyyy-MM-dd").csv -NoTypeInformation
+                $FOS_ZoneCollection | Export-Csv -Path $PSScriptRoot\ToolLog\$($TD_Line_ID)_$($FOS_ZoneName)_ZoneShow_Result_$(Get-Date -Format "yyyy-MM-dd").csv -NoTypeInformation
+                SST_ToolMessageCollector -TD_ToolMSGCollector "$PSScriptRoot\ToolLog\$($TD_Line_ID)_$($FOS_ZoneName)_ZoneShow_Result_$(Get-Date -Format "yyyy-MM-dd").csv" -TD_ToolMSGType Debug
             }
         }else {
             <# output on the promt #>
             return $FOS_ZoneCollection
         }
-        Write-Debug -Message "$(Get-Date) return:`n $FOS_ZoneCollection `n "
-        Write-Debug -Message "$(Get-Date) return:`n $FOS_ZoneName `n "
+        SST_ToolMessageCollector -TD_ToolMSGCollector "$TD_Device_DeviceName `n$FOS_ZoneCollection" -TD_NotShown export
+        SST_ToolMessageCollector -TD_ToolMSGCollector "$TD_Device_DeviceName `n$FOS_ZoneName" -TD_NotShown export
+
         <# FOS_usedPorts commented out can be used later via filter option if necessary #>
         return $FOS_ZoneCollection, $FOS_ZoneName
         

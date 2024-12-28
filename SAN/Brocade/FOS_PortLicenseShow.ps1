@@ -18,6 +18,7 @@ function FOS_PortLicenseShowInfo {
         [string]$TD_Device_ConnectionTyp,
         [string]$TD_Device_UserName,
         [string]$TD_Device_DeviceIP,
+        [string]$TD_Device_DeviceName,
         [string]$TD_Device_PW,
         [Parameter(ValueFromPipeline)]
         [ValidateSet("yes","no")]
@@ -76,10 +77,12 @@ function FOS_PortLicenseShowInfo {
         <# export y or n #>
         if($TD_Export -eq "yes"){
             <# exported to .\Host_Volume_Map_Result.csv #>
-            if([string]$TD_Exportpath -ne "$PSRootPath\Export\"){
-                Out-File -FilePath $TD_Exportpath\$($TD_Line_ID)_PortLicenseShow_Result_$(Get-Date -Format "yyyy-MM-dd").csv -InputObject $TD_Resaults
+            if([string]$TD_Exportpath -ne "$PSRootPath\ToolLog\"){
+                Out-File -FilePath $TD_Exportpath\$($TD_Line_ID)_$($TD_Device_DeviceName)_PortLicenseShow_Result_$(Get-Date -Format "yyyy-MM-dd").csv -InputObject $TD_Resaults
+                SST_ToolMessageCollector -TD_ToolMSGCollector "$TD_Exportpath\$($TD_Line_ID)_$($TD_Device_DeviceName)_PortLicenseShow_Result_$(Get-Date -Format "yyyy-MM-dd").csv" -TD_ToolMSGType Debug
             }else {
-                Out-File -FilePath $PSScriptRoot\Export\$($TD_Line_ID)_PortLicenseShow_Result_$(Get-Date -Format "yyyy-MM-dd").csv -InputObject $TD_Resaults
+                Out-File -FilePath $PSScriptRoot\ToolLog\$($TD_Line_ID)_$($TD_Device_DeviceName)_PortLicenseShow_Result_$(Get-Date -Format "yyyy-MM-dd").csv -InputObject $TD_Resaults
+                SST_ToolMessageCollector -TD_ToolMSGCollector "$PSScriptRoot\ToolLog\$($TD_Line_ID)_$($TD_Device_DeviceName)_PortLicenseShow_Result_$(Get-Date -Format "yyyy-MM-dd").csv" -TD_ToolMSGType Debug
             }
         }else {
             <# output on the promt #>
