@@ -106,6 +106,15 @@ function FOS_PortbufferShowInfo {
 
     end {
 
+        if($TD_Line_ID -eq 1){$TD_LB_PortBufferShowOne.Visibility = "Visible";     $TD_LB_PortBufferShowOne.Content = "$TD_Device_DeviceName" }
+        if($TD_Line_ID -eq 2){$TD_LB_PortBufferShowTwo.Visibility = "Visible";     $TD_LB_PortBufferShowTwo.Content = "$TD_Device_DeviceName" }
+        if($TD_Line_ID -eq 3){$TD_LB_PortBufferShowThree.Visibility = "Visible";   $TD_LB_PortBufferShowThree.Content = "$TD_Device_DeviceName" }
+        if($TD_Line_ID -eq 4){$TD_LB_PortBufferShowFour.Visibility = "Visible";    $TD_LB_PortBufferShowFour.Content = "$TD_Device_DeviceName" }
+        if($TD_Line_ID -eq 5){$TD_LB_PortBufferShowFive.Visibility = "Visible";    $TD_LB_PortBufferShowFive.Content = "$TD_Device_DeviceName" }
+        if($TD_Line_ID -eq 6){$TD_LB_PortBufferShowSix.Visibility = "Visible";     $TD_LB_PortBufferShowSix.Content = "$TD_Device_DeviceName" }
+        if($TD_Line_ID -eq 7){$TD_LB_PortBufferShowSeven.Visibility = "Visible";   $TD_LB_PortBufferShowSeven.Content = "$TD_Device_DeviceName" }
+        if($TD_Line_ID -eq 8){$TD_LB_PortBufferShowEight.Visibility = "Visible";   $TD_LB_PortBufferShowEight.Content = "$TD_Device_DeviceName" }
+
         Close-ProgressBar -ProgressBar $ProgressBar
 
         <# export y or n #>

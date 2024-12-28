@@ -67,13 +67,22 @@ function FOS_PortLicenseShowInfo {
             $i = $_
             <# Progressbar  #>
             $ProgCounter++
-            Write-ProgressBar -ProgressBar $ProgressBar -Activity "Collect data for Device $($TD_Line_ID)" -PercentComplete (($ProgCounter/$FOS_PortLicenseInfo.Count) * 100)
+            Write-ProgressBar -ProgressBar $ProgressBar -Activity "Collect data for Device $($TD_Line_ID) $($TD_Device_DeviceName)" -PercentComplete (($ProgCounter/$FOS_PortLicenseInfo.Count) * 100)
         }  
     }
     end {
-        <# returns the hashtable for further processing, not mandatory but the safe way #>
+        
+        if($TD_Line_ID -eq 1){$TD_LB_SANInfoOne.Visibility = "Visible";     $TD_LB_SANInfoOne.Content = "$TD_Device_DeviceName" }
+        if($TD_Line_ID -eq 2){$TD_LB_SANInfoTwo.Visibility = "Visible";     $TD_LB_SANInfoTwo.Content = "$TD_Device_DeviceName" }
+        if($TD_Line_ID -eq 3){$TD_LB_SANInfoThree.Visibility = "Visible";   $TD_LB_SANInfoThree.Content = "$TD_Device_DeviceName" }
+        if($TD_Line_ID -eq 4){$TD_LB_SANInfoFour.Visibility = "Visible";    $TD_LB_SANInfoFour.Content = "$TD_Device_DeviceName" }
+        if($TD_Line_ID -eq 5){$TD_LB_SANInfoFive.Visibility = "Visible";    $TD_LB_SANInfoFive.Content = "$TD_Device_DeviceName" }
+        if($TD_Line_ID -eq 6){$TD_LB_SANInfoSix.Visibility = "Visible";     $TD_LB_SANInfoSix.Content = "$TD_Device_DeviceName" }
+        if($TD_Line_ID -eq 7){$TD_LB_SANInfoSeven.Visibility = "Visible";   $TD_LB_SANInfoSeven.Content = "$TD_Device_DeviceName" }
+        if($TD_Line_ID -eq 8){$TD_LB_SANInfoEight.Visibility = "Visible";   $TD_LB_SANInfoEight.Content = "$TD_Device_DeviceName" }
+
         Close-ProgressBar -ProgressBar $ProgressBar
-        Write-Debug -Message "FOS_PortLicenseShow End block |$(Get-Date) `n"
+       
         <# export y or n #>
         if($TD_Export -eq "yes"){
             <# exported to .\Host_Volume_Map_Result.csv #>

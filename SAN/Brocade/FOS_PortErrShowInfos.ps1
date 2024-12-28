@@ -124,6 +124,16 @@ function FOS_PortErrShowInfos {
 
     end {
 
+        if($TD_Line_ID -eq 1){$TD_LB_PortErrorShowOne.Visibility = "Visible";     $TD_LB_PortErrorShowOne.Content = "$TD_Device_DeviceName" }
+        if($TD_Line_ID -eq 2){$TD_LB_PortErrorShowTwo.Visibility = "Visible";     $TD_LB_PortErrorShowTwo.Content = "$TD_Device_DeviceName" }
+        if($TD_Line_ID -eq 3){$TD_LB_PortErrorShowThree.Visibility = "Visible";   $TD_LB_PortErrorShowThree.Content = "$TD_Device_DeviceName" }
+        if($TD_Line_ID -eq 4){$TD_LB_PortErrorShowFour.Visibility = "Visible";    $TD_LB_PortErrorShowFour.Content = "$TD_Device_DeviceName" }
+        if($TD_Line_ID -eq 5){$TD_LB_PortErrorShowFive.Visibility = "Visible";    $TD_LB_PortErrorShowFive.Content = "$TD_Device_DeviceName" }
+        if($TD_Line_ID -eq 6){$TD_LB_PortErrorShowSix.Visibility = "Visible";     $TD_LB_PortErrorShowSix.Content = "$TD_Device_DeviceName" }
+        if($TD_Line_ID -eq 7){$TD_LB_PortErrorShowSeven.Visibility = "Visible";   $TD_LB_PortErrorShowSeven.Content = "$TD_Device_DeviceName" }
+        if($TD_Line_ID -eq 8){$TD_LB_PortErrorShowEight.Visibility = "Visible";   $TD_LB_PortErrorShowEight.Content = "$TD_Device_DeviceName" }
+
+
         Close-ProgressBar -ProgressBar $ProgressBar
         <# returns the hashtable for further processing, not mandatory but the safe way #>
         Write-Debug -Message "Start End-Block GET_PortErrShowInfos |$(Get-Date) ` "

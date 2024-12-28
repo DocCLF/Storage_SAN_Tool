@@ -847,24 +847,27 @@ $TD_btn_IBM_IPPortInfo.add_click({
 #region SAN Button
 $TD_btn_FOS_BasicSwitchInfo.add_click({
 
+    $TD_LB_sanBasicSwitchInfoOne,$TD_LB_sanBasicSwitchInfoTwo,$TD_LB_sanBasicSwitchInfoThree,$TD_LB_sanBasicSwitchInfoFour,$TD_LB_sanBasicSwitchInfoFive,$TD_LB_sanBasicSwitchInfoSix,$TD_LB_sanBasicSwitchInfoSeven,$TD_LB_sanBasicSwitchInfoEight |ForEach-Object {
+        $_.Visibility="Collapsed"
+    }
     $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_.DeviceTyp -eq "SAN"}
 
-    $TD_dg_sanBasicSwitchInfoOne,$TD_dg_sanBasicSwitchInfoTwo,$TD_dg_sanBasicSwitchInfoThree,$TD_dg_sanBasicSwitchInfoFour |ForEach-Object {
+    $TD_dg_sanBasicSwitchInfoOne,$TD_dg_sanBasicSwitchInfoTwo,$TD_dg_sanBasicSwitchInfoThree,$TD_dg_sanBasicSwitchInfoFour,$TD_dg_sanBasicSwitchInfoFive,$TD_dg_sanBasicSwitchInfoSix,$TD_dg_sanBasicSwitchInfoSeven,$TD_dg_sanBasicSwitchInfoEight |ForEach-Object {
         if($_.items.count -gt 0){ $_.ItemsSource = $EmptyVar; $TD_UCRefresh = $true}
     }
 
     $TD_Credentials | ForEach-Object {
         $FOS_BasicSwitch = $null
-        $FOS_BasicSwitch = FOS_BasicSwitchInfos -TD_Line_ID $_.ID -TD_Device_ConnectionTyp $_.ConnectionTyp -TD_Device_UserName $_.UserName -TD_Device_DeviceIP $_.IPAddress -TD_Device_PW $([Net.NetworkCredential]::new('', $_.Password).Password) -TD_Exportpath $TD_tb_ExportPath.Text
+        $FOS_BasicSwitch = FOS_BasicSwitchInfos -TD_Line_ID $_.ID -TD_Device_ConnectionTyp $_.ConnectionTyp -TD_Device_UserName $_.UserName -TD_Device_DeviceName $_.DeviceName -TD_Device_DeviceIP $_.IPAddress -TD_Device_PW $([Net.NetworkCredential]::new('', $_.Password).Password) -TD_Exportpath $TD_tb_ExportPath.Text
         switch ($_.ID) {
             {($_ -eq 1)} { $TD_dg_sanBasicSwitchInfoOne.ItemsSource = $FOS_BasicSwitch }
             {($_ -eq 2)} { $TD_dg_sanBasicSwitchInfoTwo.ItemsSource = $FOS_BasicSwitch }
             {($_ -eq 3)} { $TD_dg_sanBasicSwitchInfoThree.ItemsSource = $FOS_BasicSwitch }
             {($_ -eq 4)} { $TD_dg_sanBasicSwitchInfoFour.ItemsSource = $FOS_BasicSwitch }
-            {($_ -eq 5)} { $TD_dg_sanBasicSwitchInfoFour.ItemsSource = $FOS_BasicSwitch }
-            {($_ -eq 6)} { $TD_dg_sanBasicSwitchInfoFour.ItemsSource = $FOS_BasicSwitch }
-            {($_ -eq 7)} { $TD_dg_sanBasicSwitchInfoFour.ItemsSource = $FOS_BasicSwitch }
-            {($_ -eq 8)} { $TD_dg_sanBasicSwitchInfoFour.ItemsSource = $FOS_BasicSwitch }
+            {($_ -eq 5)} { $TD_dg_sanBasicSwitchInfoFive.ItemsSource = $FOS_BasicSwitch }
+            {($_ -eq 6)} { $TD_dg_sanBasicSwitchInfoSix.ItemsSource = $FOS_BasicSwitch }
+            {($_ -eq 7)} { $TD_dg_sanBasicSwitchInfoSeven.ItemsSource = $FOS_BasicSwitch }
+            {($_ -eq 8)} { $TD_dg_sanBasicSwitchInfoEight.ItemsSource = $FOS_BasicSwitch }
             Default { SST_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong, please check the prompt output first and then the log files.") -TD_ToolMSGType Error }
         }
         $FOS_BasicSwitch | Export-Csv -Path $PSRootPath\ToolLog\ToolTEMP\$($_.ID)_$($_.DeviceName)_FOS_BasicSwitchInfos_$(Get-Date -Format "yyyy-MM-dd")_Temp.csv
@@ -880,23 +883,26 @@ $TD_btn_FOS_BasicSwitchInfo.add_click({
 
 $TD_btn_FOS_SwitchShow.add_click({
 
+    $TD_LB_SwitchShowOne,$TD_LB_SwitchShowTwo,$TD_LB_SwitchShowThree,$TD_LB_SwitchShowFour,$TD_LB_SwitchShowFive,$TD_LB_SwitchShowSix,$TD_LB_SwitchShowSeven,$TD_LB_SwitchShowEight |ForEach-Object {
+        $_.Visibility="Collapsed"
+    }
     $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_.DeviceTyp -eq "SAN"}
 
-    $TD_lb_SwitchShowOne,$TD_lb_SwitchShowTwo,$TD_lb_SwitchShowThree,$TD_lb_SwitchShowFour |ForEach-Object {
+    $TD_DG_SwitchShowOne,$TD_DG_SwitchShowTwo,$TD_DG_SwitchShowThree,$TD_DG_SwitchShowFour,$TD_DG_SwitchShowFive,$TD_DG_SwitchShowSix,$TD_DG_SwitchShowSeven,$TD_DG_SwitchShowEight |ForEach-Object {
         if($_.items.count -gt 0){$_.ItemsSource = $EmptyVar; $TD_UCRefresh = $true}
     }
 
     $TD_Credentials | ForEach-Object {
-        [array]$FOS_SwitchShow = FOS_SwitchShowInfo -TD_Line_ID $_.ID -TD_Device_ConnectionTyp $_.ConnectionTyp -TD_Device_UserName $_.UserName -TD_Device_DeviceIP $_.IPAddress -TD_Device_PW $([Net.NetworkCredential]::new('', $_.Password).Password) -TD_Exportpath $TD_tb_ExportPath.Text
+        [array]$FOS_SwitchShow = FOS_SwitchShowInfo -TD_Line_ID $_.ID -TD_Device_ConnectionTyp $_.ConnectionTyp -TD_Device_UserName $_.UserName -TD_Device_DeviceName $_.DeviceName -TD_Device_DeviceIP $_.IPAddress -TD_Device_PW $([Net.NetworkCredential]::new('', $_.Password).Password) -TD_Exportpath $TD_tb_ExportPath.Text
         switch ($_.ID) {
-            {($_ -eq 1)} { $TD_lb_SwitchShowOne.ItemsSource = $FOS_SwitchShow }
-            {($_ -eq 2)} { $TD_lb_SwitchShowTwo.ItemsSource = $FOS_SwitchShow }
-            {($_ -eq 3)} { $TD_lb_SwitchShowThree.ItemsSource = $FOS_SwitchShow }
-            {($_ -eq 4)} { $TD_lb_SwitchShowFour.ItemsSource = $FOS_SwitchShow }
-            {($_ -eq 5)} { $TD_lb_SwitchShowFour.ItemsSource = $FOS_SwitchShow }
-            {($_ -eq 6)} { $TD_lb_SwitchShowFour.ItemsSource = $FOS_SwitchShow }
-            {($_ -eq 7)} { $TD_lb_SwitchShowFour.ItemsSource = $FOS_SwitchShow }
-            {($_ -eq 8)} { $TD_lb_SwitchShowFour.ItemsSource = $FOS_SwitchShow }
+            {($_ -eq 1)} { $TD_DG_SwitchShowOne.ItemsSource = $FOS_SwitchShow }
+            {($_ -eq 2)} { $TD_DG_SwitchShowTwo.ItemsSource = $FOS_SwitchShow }
+            {($_ -eq 3)} { $TD_DG_SwitchShowThree.ItemsSource = $FOS_SwitchShow }
+            {($_ -eq 4)} { $TD_DG_SwitchShowFour.ItemsSource = $FOS_SwitchShow }
+            {($_ -eq 5)} { $TD_DG_SwitchShowFive.ItemsSource = $FOS_SwitchShow }
+            {($_ -eq 6)} { $TD_DG_SwitchShowSix.ItemsSource = $FOS_SwitchShow }
+            {($_ -eq 7)} { $TD_DG_SwitchShowSeven.ItemsSource = $FOS_SwitchShow }
+            {($_ -eq 8)} { $TD_DG_SwitchShowEight.ItemsSource = $FOS_SwitchShow }
             Default { SST_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong, please check the prompt output first and then the log files.") -TD_ToolMSGType Error }
         }
         $FOS_SwitchShow | Export-Csv -Path $PSRootPath\ToolLog\ToolTEMP\$($_.ID)_$($_.DeviceName)_FOS_SwitchShowInfo_$(Get-Date -Format "yyyy-MM-dd")_Temp.csv
@@ -915,14 +921,19 @@ $TD_btn_FilterSANSwShow.Add_Click({
     [string]$filter= $TD_tb_FilterWordSANSwShow.Text
     [string]$ColumFilter= $TD_cb_FilterColumSANSwShow.Text
     [int]$TD_SANFilter_DG_Colum = $TD_cb_ListFilterSANSwShow.Text
+    $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {(($_.DeviceTyp -eq "SAN")-and($_.ID -eq $TD_SANFilter_DG_Colum))}
     try {
-        [array]$TD_CollectVolInfo = Import-Csv -Path $Env:TEMP\$($TD_SANFilter_DG_Colum)_SwitchShow_Temp.csv -ErrorAction Stop
+        [array]$TD_CollectVolInfo = Import-Csv -Path $PSRootPath\ToolLog\ToolTEMP\$($TD_SANFilter_DG_Colum)_$($TD_Credentials.DeviceName)_FOS_SwitchShowInfo_$(Get-Date -Format "yyyy-MM-dd")_Temp.csv -ErrorAction Stop
         switch ($TD_SANFilter_DG_Colum) {
-            1 { $FOS_SwitchShow = $TD_lb_SwitchShowOne.ItemsSource }
-            2 { $FOS_SwitchShow = $TD_lb_SwitchShowTwo.ItemsSource }
-            3 { $FOS_SwitchShow = $TD_lb_SwitchShowThree.ItemsSource }
-            4 { $FOS_SwitchShow = $TD_lb_SwitchShowFour.ItemsSource }
-            Default {Write-Host "Something went wrong at Switchshow" -ForegroundColor DarkMagenta}
+            1 { $FOS_SwitchShow = $TD_DG_SwitchShowOne.ItemsSource }
+            2 { $FOS_SwitchShow = $TD_DG_SwitchShowTwo.ItemsSource }
+            3 { $FOS_SwitchShow = $TD_DG_SwitchShowThree.ItemsSource }
+            4 { $FOS_SwitchShow = $TD_DG_SwitchShowFour.ItemsSource }
+            5 { $FOS_SwitchShow = $TD_DG_SwitchShowFive.ItemsSource }
+            6 { $FOS_SwitchShow = $TD_DG_SwitchShowSix.ItemsSource }
+            7 { $FOS_SwitchShow = $TD_DG_SwitchShowSeven.ItemsSource }
+            8 { $FOS_SwitchShow = $TD_DG_SwitchShowEight.ItemsSource }
+            Default {SST_ToolMessageCollector -TD_ToolMSGCollector "Something went wrong at Switchshow" -TD_ToolMSGType Error -TD_NotShown no}
         }
         if($FOS_SwitchShow.Count -ne $TD_CollectVolInfo.Count){
             $FOS_SwitchShow = $TD_CollectVolInfo }
@@ -932,20 +943,24 @@ $TD_btn_FilterSANSwShow.Add_Click({
                 "Speed" { [array]$WPF_dataGrid = $FOS_SwitchShow | Where-Object { $_.Speed -Match $filter } }
                 "State" { [array]$WPF_dataGrid = $FOS_SwitchShow | Where-Object { $_.State -Match $filter } }
                 "PortConnect" { [array]$WPF_dataGrid = $FOS_SwitchShow | Where-Object { $_.PortConnect -Match $filter } }
-                Default {Write-Host "Something went wrong at Switchshow" -ForegroundColor DarkMagenta}
+                Default {SST_ToolMessageCollector -TD_ToolMSGCollector "Something went wrong at Switchshow" -TD_ToolMSGType Error -TD_NotShown no}
             }
 
             switch ($TD_SANFilter_DG_Colum) {
-                1 { $TD_lb_SwitchShowOne.ItemsSource = $WPF_dataGrid }
-                2 { $TD_lb_SwitchShowTwo.ItemsSource = $WPF_dataGrid }
-                3 { $TD_lb_SwitchShowThree.ItemsSource = $WPF_dataGrid }
-                4 { $TD_lb_SwitchShowFour.ItemsSource = $WPF_dataGrid }
-                Default {Write-Host "Something went wrong at Switchshow" -ForegroundColor DarkMagenta}
+                1 { $TD_DG_SwitchShowOne.ItemsSource = $WPF_dataGrid }
+                2 { $TD_DG_SwitchShowTwo.ItemsSource = $WPF_dataGrid }
+                3 { $TD_DG_SwitchShowThree.ItemsSource = $WPF_dataGrid }
+                4 { $TD_DG_SwitchShowFour.ItemsSource = $WPF_dataGrid }
+                5 { $TD_DG_SwitchShowFive.ItemsSource = $WPF_dataGrid }
+                6 { $TD_DG_SwitchShowSix.ItemsSource = $WPF_dataGrid }
+                7 { $TD_DG_SwitchShowSeven.ItemsSource = $WPF_dataGrid }
+                8 { $TD_DG_SwitchShowEight.ItemsSource = $WPF_dataGrid }
+                Default {SST_ToolMessageCollector -TD_ToolMSGCollector "Something went wrong at Switchshow" -TD_ToolMSGType Error -TD_NotShown no}
             }
         }
     catch {
         <#Do this if a terminating exception happens#>
-        SST_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong, please check the prompt output first and then the log files.") -TD_ToolMSGType Error
+        SST_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong, please check the prompt output first and then the log files.") -TD_ToolMSGType Error -TD_NotShown no
         SST_ToolMessageCollector -TD_ToolMSGCollector $_.Exception.Message -TD_ToolMSGType Error
         $TD_lb_ErrorMsgSANSwShow.Content = $_.Exception.Message
     }
@@ -1044,6 +1059,7 @@ $TD_btn_FilterFabricOne.Add_Click({
         SST_ToolMessageCollector -TD_ToolMSGCollector $_.Exception.Message -TD_ToolMSGType Error
     }
 })
+
 $TD_btn_FilterFabricTwo.Add_Click({
     [string]$FOS_filter= $TD_tb_FilterFabricTwo.Text
     [string]$TD_Filter_DG_Colum = $TD_cb_FilterFabricTwo.Text
@@ -1071,35 +1087,26 @@ $TD_btn_FilterFabricTwo.Add_Click({
 
 $TD_btn_FOS_PortLicenseShow.add_click({
 
+    $TD_LB_SANInfoOne,$TD_LB_SANInfoTwo,$TD_LB_SANInfoThree,$TD_LB_SANInfoFour,$TD_LB_SANInfoFive,$TD_LB_SANInfoSix,$TD_LB_SANInfoSeven,$TD_LB_SANInfoEight |ForEach-Object {
+        $_.Visibility="Collapsed"
+    }
     $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_.DeviceTyp -eq "SAN"}
 
-    $TD_lb_SANInfoOne,$TD_lb_SANInfoTwo,$TD_lb_SANInfoThree,$TD_lb_SANInfoFour |ForEach-Object {
-        if($_.items.count -gt 0){$_.ItemsSource = $EmptyVar; $TD_UCRefresh = $true}
+    $TD_TB_SANInfoOne,$TD_TB_SANInfoTwo,$TD_TB_SANInfoThree,$TD_TB_SANInfoFour,$TD_TB_SANInfoFive,$TD_TB_SANInfoSix,$TD_TB_SANInfoSeven,$TD_TB_SANInfoEight |ForEach-Object {
+        if($_.Text -ne ""){$_.Text = ""; $TD_UCRefresh = $true}
     }
 
     $TD_Credentials | ForEach-Object {
-        [array]$TD_FOS_PortLicenseShow = FOS_PortLicenseShowInfo -TD_Line_ID $_.ID -TD_Device_ConnectionTyp $_.ConnectionTyp -TD_Device_UserName $_.UserName -TD_Device_DeviceIP $_.IPAddress -TD_Device_PW $([Net.NetworkCredential]::new('', $_.Password).Password) -TD_Exportpath $TD_tb_ExportPath.Text
+        [array]$TD_FOS_PortLicenseShow = FOS_PortLicenseShowInfo -TD_Line_ID $_.ID -TD_Device_ConnectionTyp $_.ConnectionTyp -TD_Device_UserName $_.UserName -TD_Device_DeviceName $_.DeviceName -TD_Device_DeviceIP $_.IPAddress -TD_Device_PW $([Net.NetworkCredential]::new('', $_.Password).Password) -TD_Exportpath $TD_tb_ExportPath.Text
         switch ($_.ID) {
-            {($_ -eq 1)} { 
-                $TD_lb_SANInfoOne.Visibility="Visible"
-                $TD_lb_SANInfoOne.Text = (Out-String -InputObject $TD_FOS_PortLicenseShow)
-            }
-            {($_ -eq 2)} { 
-                $TD_lb_SANInfoTwo.Visibility="Visible"
-                $TD_lb_SANInfoTwo.Text = (Out-String -InputObject $TD_FOS_PortLicenseShow)
-            }
-            {($_ -eq 3)} {
-                $TD_lb_SANInfoThree.Visibility="Visible"
-                $TD_lb_SANInfoThree.Text = (Out-String -InputObject $TD_FOS_PortLicenseShow)
-            }
-            {($_ -eq 4)} { 
-                $TD_lb_SANInfoFour.Visibility="Visible"
-                $TD_lb_SANInfoFour.Text = (Out-String -InputObject $TD_FOS_PortLicenseShow)
-            }
-            {($_ -eq 5)} { $TD_lb_SwitchShowFour.ItemsSource = $TD_FOS_PortLicenseShow }
-            {($_ -eq 6)} { $TD_lb_SwitchShowFour.ItemsSource = $TD_FOS_PortLicenseShow }
-            {($_ -eq 7)} { $TD_lb_SwitchShowFour.ItemsSource = $TD_FOS_PortLicenseShow }
-            {($_ -eq 8)} { $TD_lb_SwitchShowFour.ItemsSource = $TD_FOS_PortLicenseShow }
+            {($_ -eq 1)} {$TD_TB_SANInfoOne.Visibility="Visible"; $TD_TB_SANInfoOne.Text = (Out-String -InputObject $TD_FOS_PortLicenseShow)}
+            {($_ -eq 2)} {$TD_TB_SANInfoTwo.Visibility="Visible"; $TD_TB_SANInfoTwo.Text = (Out-String -InputObject $TD_FOS_PortLicenseShow)}
+            {($_ -eq 3)} {$TD_TB_SANInfoThree.Visibility="Visible"; $TD_TB_SANInfoThree.Text = (Out-String -InputObject $TD_FOS_PortLicenseShow)}
+            {($_ -eq 4)} {$TD_TB_SANInfoFour.Visibility="Visible"; $TD_TB_SANInfoFour.Text = (Out-String -InputObject $TD_FOS_PortLicenseShow)}
+            {($_ -eq 5)} {$TD_TB_SANInfoFive.Visibility="Visible";  $TD_TB_SANInfoFive.Text = (Out-String -InputObject $TD_FOS_PortLicenseShow)}
+            {($_ -eq 6)} {$TD_TB_SANInfoSix.Visibility="Visible";  $TD_TB_SANInfoSix.Text = (Out-String -InputObject $TD_FOS_PortLicenseShow)}
+            {($_ -eq 7)} {$TD_TB_SANInfoSeven.Visibility="Visible";  $TD_TB_SANInfoSeven.Text = (Out-String -InputObject $TD_FOS_PortLicenseShow) }
+            {($_ -eq 8)} {$TD_TB_SANInfoEight.Visibility="Visible";  $TD_TB_SANInfoEight.Text = (Out-String -InputObject $TD_FOS_PortLicenseShow)}
             Default { SST_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong, please check the prompt output first and then the log files.") -TD_ToolMSGType Error }
         }
         $TD_FOS_PortLicenseShow | Export-Csv -Path $PSRootPath\ToolLog\ToolTEMP\$($_.ID)_$($_.DeviceName)_FOS_PortLicenseShowInfo_$(Get-Date -Format "yyyy-MM-dd")_Temp.csv
@@ -1115,35 +1122,26 @@ $TD_btn_FOS_PortLicenseShow.add_click({
 
 $TD_btn_FOS_SensorShow.add_click({
 
+    $TD_LB_SensorInfoOne,$TD_LB_SensorInfoTwo,$TD_LB_SensorInfoThree,$TD_LB_SensorInfoFour,$TD_LB_SensorInfoFive,$TD_LB_SensorInfoSix,$TD_LB_SensorInfoSeven,$TD_LB_SensorInfoEight |ForEach-Object {
+        $_.Visibility="Collapsed"
+    }
     $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_.DeviceTyp -eq "SAN"}
 
-    $TD_tb_SensorInfoOne,$TD_tb_SensorInfoTwo,$TD_tb_SensorInfoThree,$TD_tb_SensorInfoFour |ForEach-Object {
-        if($_.items.count -gt 0){$_.ItemsSource = $EmptyVar; $TD_UCRefresh = $true}
+    $TD_tb_SensorInfoOne,$TD_tb_SensorInfoTwo,$TD_tb_SensorInfoThree,$TD_tb_SensorInfoFour,$TD_tb_SensorInfoFive,$TD_tb_SensorInfoSix,$TD_tb_SensorInfoSeven,$TD_tb_SensorInfoEight |ForEach-Object {
+        if($_.Text -ne ""){$_.Text = ""; $TD_UCRefresh = $true}
     }
 
     $TD_Credentials | ForEach-Object {
-        [array]$TD_FOS_SensorShow = FOS_SensorShow -TD_Line_ID $_.ID -TD_Device_ConnectionTyp $_.ConnectionTyp -TD_Device_UserName $_.UserName -TD_Device_DeviceIP $_.IPAddress -TD_Device_PW $([Net.NetworkCredential]::new('', $_.Password).Password) -TD_Exportpath $TD_tb_ExportPath.Text
+        [array]$TD_FOS_SensorShow = FOS_SensorShow -TD_Line_ID $_.ID -TD_Device_ConnectionTyp $_.ConnectionTyp -TD_Device_UserName $_.UserName -TD_Device_DeviceName $_.DeviceName -TD_Device_DeviceIP $_.IPAddress -TD_Device_PW $([Net.NetworkCredential]::new('', $_.Password).Password) -TD_Exportpath $TD_tb_ExportPath.Text
         switch ($_.ID) {
-            {($_ -eq 1)} { 
-                $TD_tb_SensorInfoOne.Visibility="Visible"
-                $TD_tb_SensorInfoOne.Text = (Out-String -InputObject $TD_FOS_SensorShow)
-            }
-            {($_ -eq 2)} { 
-                $TD_tb_SensorInfoTwo.Visibility="Visible"
-                $TD_tb_SensorInfoTwo.Text = (Out-String -InputObject $TD_FOS_SensorShow)
-            }
-            {($_ -eq 3)} {
-                $TD_tb_SensorInfoThree.Visibility="Visible"
-                $TD_tb_SensorInfoThree.Text = (Out-String -InputObject $TD_FOS_SensorShow)
-            }
-            {($_ -eq 4)} {
-                $TD_tb_SensorInfoFour.Visibility="Visible"
-                $TD_tb_SensorInfoFour.Text = (Out-String -InputObject $TD_FOS_SensorShow)
-            }
-            {($_ -eq 5)} { $TD_lb_SwitchShowFour.ItemsSource = $FOS_SwitchShow }
-            {($_ -eq 6)} { $TD_lb_SwitchShowFour.ItemsSource = $FOS_SwitchShow }
-            {($_ -eq 7)} { $TD_lb_SwitchShowFour.ItemsSource = $FOS_SwitchShow }
-            {($_ -eq 8)} { $TD_lb_SwitchShowFour.ItemsSource = $FOS_SwitchShow }
+            {($_ -eq 1)} { $TD_tb_SensorInfoOne.Visibility="Visible"; $TD_tb_SensorInfoOne.Text = (Out-String -InputObject $TD_FOS_SensorShow) }
+            {($_ -eq 2)} { $TD_tb_SensorInfoTwo.Visibility="Visible"; $TD_tb_SensorInfoTwo.Text = (Out-String -InputObject $TD_FOS_SensorShow) }
+            {($_ -eq 3)} { $TD_tb_SensorInfoThree.Visibility="Visible"; $TD_tb_SensorInfoThree.Text = (Out-String -InputObject $TD_FOS_SensorShow) }
+            {($_ -eq 4)} { $TD_tb_SensorInfoFour.Visibility="Visible"; $TD_tb_SensorInfoFour.Text = (Out-String -InputObject $TD_FOS_SensorShow) }
+            {($_ -eq 5)} { $TD_tb_SensorInfoFive.Visibility="Visible"; $TD_tb_SensorInfoFive.Text = (Out-String -InputObject $TD_FOS_SensorShow) }
+            {($_ -eq 6)} { $TD_tb_SensorInfoSix.Visibility="Visible"; $TD_tb_SensorInfoSix.Text = (Out-String -InputObject $TD_FOS_SensorShow) }
+            {($_ -eq 7)} { $TD_tb_SensorInfoSeven.Visibility="Visible"; $TD_tb_SensorInfoSeven.Text = (Out-String -InputObject $TD_FOS_SensorShow) }
+            {($_ -eq 8)} { $TD_tb_SensorInfoEight.Visibility="Visible"; $TD_tb_SensorInfoEight.Text = (Out-String -InputObject $TD_FOS_SensorShow) }
             Default { SST_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong, please check the prompt output first and then the log files.") -TD_ToolMSGType Error }
         }
         $TD_FOS_SensorShow | Export-Csv -Path $PSRootPath\ToolLog\ToolTEMP\$($_.ID)_$($_.DeviceName)_FOS_SensorShow_$(Get-Date -Format "yyyy-MM-dd")_Temp.csv
@@ -1160,23 +1158,27 @@ $TD_btn_FOS_SensorShow.add_click({
 <# Unnecessary duplicated code with TD_btn_StatsClear, needs a better implementation but for the first step it's okay. #>
 $TD_btn_FOS_PortErrorShow.add_click({
 
+    $TD_LB_PortErrorShowOne,$TD_LB_PortErrorShowTwo,$TD_LB_PortErrorShowThree,$TD_LB_PortErrorShowFour,$TD_LB_PortErrorShowFive,$TD_LB_PortErrorShowSix,$TD_LB_PortErrorShowSeven,$TD_LB_PortErrorShowEight |ForEach-Object {
+        $_.Visibility="Collapsed"
+    }
+
     $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_.DeviceTyp -eq "SAN"}
 
-    $TD_lb_PortErrorShowOne,$TD_lb_PortErrorShowTwo,$TD_lb_PortErrorShowThree,$TD_lb_PortErrorShowFour |ForEach-Object {
+    $TD_DG_PortErrorShowOne,$TD_DG_PortErrorShowTwo,$TD_DG_PortErrorShowThree,$TD_DG_PortErrorShowFour,$TD_DG_PortErrorShowFive,$TD_DG_PortErrorShowSix,$TD_DG_PortErrorShowSeven,$TD_DG_PortErrorShowEight |ForEach-Object {
         if($_.items.count -gt 0){$_.ItemsSource = $EmptyVar; $TD_UCRefresh = $true}
     }
 
     $TD_Credentials | ForEach-Object {
-        [array]$TD_FOS_PortErrShow = FOS_PortErrShowInfos -TD_Line_ID $_.ID -TD_Device_ConnectionTyp $_.ConnectionTyp -TD_Device_UserName $_.UserName -TD_Device_DeviceIP $_.IPAddress -TD_Device_PW $([Net.NetworkCredential]::new('', $_.Password).Password) -TD_Exportpath $TD_tb_ExportPath.Text
+        [array]$TD_FOS_PortErrShow = FOS_PortErrShowInfos -TD_Line_ID $_.ID -TD_Device_ConnectionTyp $_.ConnectionTyp -TD_Device_UserName $_.UserName -TD_Device_DeviceName $_.DeviceName -TD_Device_DeviceIP $_.IPAddress -TD_Device_PW $([Net.NetworkCredential]::new('', $_.Password).Password) -TD_Exportpath $TD_tb_ExportPath.Text
         switch ($_.ID) {
-            {($_ -eq 1)} { $TD_lb_PortErrorShowOne.ItemsSource = $TD_FOS_PortErrShow }
-            {($_ -eq 2)} { $TD_lb_PortErrorShowTwo.ItemsSource = $TD_FOS_PortErrShow }
-            {($_ -eq 3)} { $TD_lb_PortErrorShowThree.ItemsSource = $TD_FOS_PortErrShow }
-            {($_ -eq 4)} { $TD_lb_PortErrorShowFour.ItemsSource = $TD_FOS_PortErrShow }
-            {($_ -eq 5)} { $TD_lb_PortErrorShowFour.ItemsSource = $TD_FOS_PortErrShow }
-            {($_ -eq 6)} { $TD_lb_PortErrorShowFour.ItemsSource = $TD_FOS_PortErrShow }
-            {($_ -eq 7)} { $TD_lb_PortErrorShowFour.ItemsSource = $TD_FOS_PortErrShow }
-            {($_ -eq 8)} { $TD_lb_PortErrorShowFour.ItemsSource = $TD_FOS_PortErrShow }
+            {($_ -eq 1)} { $TD_DG_PortErrorShowOne.ItemsSource = $TD_FOS_PortErrShow }
+            {($_ -eq 2)} { $TD_DG_PortErrorShowTwo.ItemsSource = $TD_FOS_PortErrShow }
+            {($_ -eq 3)} { $TD_DG_PortErrorShowThree.ItemsSource = $TD_FOS_PortErrShow }
+            {($_ -eq 4)} { $TD_DG_PortErrorShowFour.ItemsSource = $TD_FOS_PortErrShow }
+            {($_ -eq 5)} { $TD_DG_PortErrorShowFive.ItemsSource = $TD_FOS_PortErrShow }
+            {($_ -eq 6)} { $TD_DG_PortErrorShowSix.ItemsSource = $TD_FOS_PortErrShow }
+            {($_ -eq 7)} { $TD_DG_PortErrorShowSeven.ItemsSource = $TD_FOS_PortErrShow }
+            {($_ -eq 8)} { $TD_DG_PortErrorShowEight.ItemsSource = $TD_FOS_PortErrShow }
             Default { SST_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong, please check the prompt output first and then the log files.") -TD_ToolMSGType Error }
         }
         $TD_FOS_PortErrShow | Export-Csv -Path $PSRootPath\ToolLog\ToolTEMP\$($_.ID)_$($_.DeviceName)_FOS_PortErrShowInfo_$(Get-Date -Format "yyyy-MM-dd")_Temp.csv
@@ -1192,23 +1194,26 @@ $TD_btn_FOS_PortErrorShow.add_click({
 
 $TD_btn_FOS_SFPHealthShow.add_click({
 
+    $TD_LB_SFPShowOne,$TD_LB_SFPShowTwo,$TD_LB_SFPShowThree,$TD_LB_SFPShowFour,$TD_LB_SFPShowFive,$TD_LB_SFPShowSix,$TD_LB_SFPShowSeven,$TD_LB_SFPShowEight |ForEach-Object {
+        $_.Visibility="Collapsed"
+    }
     $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_.DeviceTyp -eq "SAN"}
 
-    $TD_dg_SFPShowOne,$TD_dg_SFPShowTwo,$TD_dg_SFPShowThree,$TD_dg_SFPShowFour |ForEach-Object {
+    $TD_dg_SFPShowOne,$TD_dg_SFPShowTwo,$TD_dg_SFPShowThree,$TD_dg_SFPShowFour,$TD_dg_SFPShowFive,$TD_dg_SFPShowSix,$TD_dg_SFPShowSeven,$TD_dg_SFPShowEight |ForEach-Object {
         if($_.items.count -gt 0){$_.ItemsSource = $EmptyVar; $TD_UCRefresh = $true}
     }
-
+    
     $TD_Credentials | ForEach-Object {
-        [array]$TD_FOS_SFPDetailsShow = FOS_SFPDetails -TD_Line_ID $_.ID -TD_Device_ConnectionTyp $_.ConnectionTyp -TD_Device_UserName $_.UserName -TD_Device_DeviceIP $_.IPAddress -TD_Device_PW $([Net.NetworkCredential]::new('', $_.Password).Password) -TD_Exportpath $TD_tb_ExportPath.Text
+        [array]$TD_FOS_SFPDetailsShow = FOS_SFPDetails -TD_Line_ID $_.ID -TD_Device_ConnectionTyp $_.ConnectionTyp -TD_Device_UserName $_.UserName -TD_Device_DeviceName $_.DeviceName -TD_Device_DeviceIP $_.IPAddress -TD_Device_PW $([Net.NetworkCredential]::new('', $_.Password).Password) -TD_Exportpath $TD_tb_ExportPath.Text
         switch ($_.ID) {
             {($_ -eq 1)} { $TD_dg_SFPShowOne.ItemsSource = $TD_FOS_SFPDetailsShow }
             {($_ -eq 2)} { $TD_dg_SFPShowTwo.ItemsSource = $TD_FOS_SFPDetailsShow }
             {($_ -eq 3)} { $TD_dg_SFPShowThree.ItemsSource = $TD_FOS_SFPDetailsShow }
             {($_ -eq 4)} { $TD_dg_SFPShowFour.ItemsSource = $TD_FOS_SFPDetailsShow }
-            {($_ -eq 5)} { $TD_dg_SFPShowFour.ItemsSource = $TD_FOS_SFPDetailsShow }
-            {($_ -eq 6)} { $TD_dg_SFPShowFour.ItemsSource = $TD_FOS_SFPDetailsShow }
-            {($_ -eq 7)} { $TD_dg_SFPShowFour.ItemsSource = $TD_FOS_SFPDetailsShow }
-            {($_ -eq 8)} { $TD_dg_SFPShowFour.ItemsSource = $TD_FOS_SFPDetailsShow }
+            {($_ -eq 5)} { $TD_dg_SFPShowFive.ItemsSource = $TD_FOS_SFPDetailsShow }
+            {($_ -eq 6)} { $TD_dg_SFPShowSix.ItemsSource = $TD_FOS_SFPDetailsShow }
+            {($_ -eq 7)} { $TD_dg_SFPShowSeven.ItemsSource = $TD_FOS_SFPDetailsShow }
+            {($_ -eq 8)} { $TD_dg_SFPShowEight.ItemsSource = $TD_FOS_SFPDetailsShow }
             Default { SST_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong, please check the prompt output first and then the log files.") -TD_ToolMSGType Error }
         }
         $TD_FOS_SFPDetailsShow | Export-Csv -Path $PSRootPath\ToolLog\ToolTEMP\$($_.ID)_$($_.DeviceName)_FOS_SFPDetails_$(Get-Date -Format "yyyy-MM-dd")_Temp.csv
@@ -1379,6 +1384,154 @@ $TD_btn_StatsClear.add_click({
                     $TD_FOS_StatsClearDone = $false
                 }
             }
+            {($_ -eq 5)} 
+            {            
+                $SANUserName = $TD_Credential.UserName; $Device_IP = $TD_Credential.IPAddress
+                if($TD_Credential.ConnectionTyp -eq "ssh"){
+                    try {
+                        $TD_FOS_StatsClear = ssh -i $($TD_tb_pathtokey.Text) $SANUserName@$Device_IP "statsClear" 2>&1
+                        $TD_FOS_StatsClearDone = $true
+                    }
+                    catch {
+                        <#Do this if a terminating exception happens#>
+                        SST_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong $TD_FOS_StatsClear, please check the prompt output first and then the log files.") -TD_ToolMSGType Error
+                        Write-Host $_.Exception.Message
+                        #$TD_tb_BackUpInfoDeviceOne.Text = $_.Exception.Message
+                    }
+                }else{
+                    try {
+                        $TD_FOS_StatsClear = plink $SANUserName@$Device_IP -pw $($([Net.NetworkCredential]::new('', $TD_Credential.Password).Password)) -batch "statsClear" 2>&1
+                        $TD_FOS_StatsClearDone = $true
+                    }
+                    catch {
+                        <#Do this if a terminating exception happens#>
+                        SST_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong $TD_FOS_StatsClear, please check the prompt output first and then the log files.") -TD_ToolMSGType Error
+                        Write-Host $_.Exception.Message
+                        #$TD_tb_BackUpInfoDeviceOne.Text = $_.Exception.Message
+                    }
+                }
+                if($TD_FOS_StatsClearDone){
+                    $TD_lb_PortErrorShowFive.ItemsSource = $EmptyVar
+                    $TD_lb_FiveClear.Visibility = "Visible"
+                    <# next line is a test, because performance#>
+                    $TD_UserControl2.Dispatcher.Invoke([System.Action]{},"Render")
+                    $TD_FOS_PortErrShow += FOS_PortErrShowInfos -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.UserName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $([Net.NetworkCredential]::new('', $TD_Credential.Password).Password) -TD_Exportpath $TD_tb_ExportPath.Text
+                    Start-Sleep -Seconds 0.5
+                    $TD_lb_PortErrorShowFive.ItemsSource =$TD_FOS_PortErrShow
+                    $TD_FOS_StatsClearDone = $false
+                }
+            }
+            {($_ -eq 6)} 
+            {            
+                $SANUserName = $TD_Credential.UserName; $Device_IP = $TD_Credential.IPAddress
+                if($TD_Credential.ConnectionTyp -eq "ssh"){
+                    try {
+                        $TD_FOS_StatsClear = ssh -i $($TD_tb_pathtokey.Text) $SANUserName@$Device_IP "statsClear" 2>&1
+                        $TD_FOS_StatsClearDone = $true
+                    }
+                    catch {
+                        <#Do this if a terminating exception happens#>
+                        SST_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong $TD_FOS_StatsClear, please check the prompt output first and then the log files.") -TD_ToolMSGType Error
+                        Write-Host $_.Exception.Message
+                        #$TD_tb_BackUpInfoDeviceOne.Text = $_.Exception.Message
+                    }
+                }else{
+                    try {
+                        $TD_FOS_StatsClear = plink $SANUserName@$Device_IP -pw $($([Net.NetworkCredential]::new('', $TD_Credential.Password).Password)) -batch "statsClear" 2>&1
+                        $TD_FOS_StatsClearDone = $true
+                    }
+                    catch {
+                        <#Do this if a terminating exception happens#>
+                        SST_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong $TD_FOS_StatsClear, please check the prompt output first and then the log files.") -TD_ToolMSGType Error
+                        Write-Host $_.Exception.Message
+                        #$TD_tb_BackUpInfoDeviceOne.Text = $_.Exception.Message
+                    }
+                }
+                if($TD_FOS_StatsClearDone){
+                    $TD_lb_PortErrorShowSix.ItemsSource = $EmptyVar
+                    $TD_lb_SixClear.Visibility = "Visible"
+                    <# next line is a test, because performance#>
+                    $TD_UserControl2.Dispatcher.Invoke([System.Action]{},"Render")
+                    $TD_FOS_PortErrShow += FOS_PortErrShowInfos -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.UserName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $([Net.NetworkCredential]::new('', $TD_Credential.Password).Password) -TD_Exportpath $TD_tb_ExportPath.Text
+                    Start-Sleep -Seconds 0.5
+                    $TD_lb_PortErrorShowSix.ItemsSource =$TD_FOS_PortErrShow
+                    $TD_FOS_StatsClearDone = $false
+                }
+            }
+            {($_ -eq 7)} 
+            {            
+                $SANUserName = $TD_Credential.UserName; $Device_IP = $TD_Credential.IPAddress
+                if($TD_Credential.ConnectionTyp -eq "ssh"){
+                    try {
+                        $TD_FOS_StatsClear = ssh -i $($TD_tb_pathtokey.Text) $SANUserName@$Device_IP "statsClear" 2>&1
+                        $TD_FOS_StatsClearDone = $true
+                    }
+                    catch {
+                        <#Do this if a terminating exception happens#>
+                        SST_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong $TD_FOS_StatsClear, please check the prompt output first and then the log files.") -TD_ToolMSGType Error
+                        Write-Host $_.Exception.Message
+                        #$TD_tb_BackUpInfoDeviceOne.Text = $_.Exception.Message
+                    }
+                }else{
+                    try {
+                        $TD_FOS_StatsClear = plink $SANUserName@$Device_IP -pw $($([Net.NetworkCredential]::new('', $TD_Credential.Password).Password)) -batch "statsClear" 2>&1
+                        $TD_FOS_StatsClearDone = $true
+                    }
+                    catch {
+                        <#Do this if a terminating exception happens#>
+                        SST_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong $TD_FOS_StatsClear, please check the prompt output first and then the log files.") -TD_ToolMSGType Error
+                        Write-Host $_.Exception.Message
+                        #$TD_tb_BackUpInfoDeviceOne.Text = $_.Exception.Message
+                    }
+                }
+                if($TD_FOS_StatsClearDone){
+                    $TD_lb_PortErrorShowSeven.ItemsSource = $EmptyVar
+                    $TD_lb_SevenClear.Visibility = "Visible"
+                    <# next line is a test, because performance#>
+                    $TD_UserControl2.Dispatcher.Invoke([System.Action]{},"Render")
+                    $TD_FOS_PortErrShow += FOS_PortErrShowInfos -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.UserName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $([Net.NetworkCredential]::new('', $TD_Credential.Password).Password) -TD_Exportpath $TD_tb_ExportPath.Text
+                    Start-Sleep -Seconds 0.5
+                    $TD_lb_PortErrorShowSeven.ItemsSource =$TD_FOS_PortErrShow
+                    $TD_FOS_StatsClearDone = $false
+                }
+            }
+            {($_ -eq 8)} 
+            {            
+                $SANUserName = $TD_Credential.UserName; $Device_IP = $TD_Credential.IPAddress
+                if($TD_Credential.ConnectionTyp -eq "ssh"){
+                    try {
+                        $TD_FOS_StatsClear = ssh -i $($TD_tb_pathtokey.Text) $SANUserName@$Device_IP "statsClear" 2>&1
+                        $TD_FOS_StatsClearDone = $true
+                    }
+                    catch {
+                        <#Do this if a terminating exception happens#>
+                        SST_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong $TD_FOS_StatsClear, please check the prompt output first and then the log files.") -TD_ToolMSGType Error
+                        Write-Host $_.Exception.Message
+                        #$TD_tb_BackUpInfoDeviceOne.Text = $_.Exception.Message
+                    }
+                }else{
+                    try {
+                        $TD_FOS_StatsClear = plink $SANUserName@$Device_IP -pw $($([Net.NetworkCredential]::new('', $TD_Credential.Password).Password)) -batch "statsClear" 2>&1
+                        $TD_FOS_StatsClearDone = $true
+                    }
+                    catch {
+                        <#Do this if a terminating exception happens#>
+                        SST_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong $TD_FOS_StatsClear, please check the prompt output first and then the log files.") -TD_ToolMSGType Error
+                        Write-Host $_.Exception.Message
+                        #$TD_tb_BackUpInfoDeviceOne.Text = $_.Exception.Message
+                    }
+                }
+                if($TD_FOS_StatsClearDone){
+                    $TD_lb_PortErrorShowEight.ItemsSource = $EmptyVar
+                    $TD_lb_EightClear.Visibility = "Visible"
+                    <# next line is a test, because performance#>
+                    $TD_UserControl2.Dispatcher.Invoke([System.Action]{},"Render")
+                    $TD_FOS_PortErrShow += FOS_PortErrShowInfos -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.UserName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $([Net.NetworkCredential]::new('', $TD_Credential.Password).Password) -TD_Exportpath $TD_tb_ExportPath.Text
+                    Start-Sleep -Seconds 0.5
+                    $TD_lb_PortErrorShowEight.ItemsSource =$TD_FOS_PortErrShow
+                    $TD_FOS_StatsClearDone = $false
+                }
+            }
             Default {SST_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong, please check the prompt output first and then the log files.") -TD_ToolMSGType Error}
         }
     }
@@ -1386,23 +1539,27 @@ $TD_btn_StatsClear.add_click({
 
 $TD_btn_FOS_PortBufferShow.add_click({
 
+    $TD_LB_PortBufferShowOne,$TD_LB_PortBufferShowTwo,$TD_LB_PortBufferShowThree,$TD_LB_PortBufferShowFour,$TD_LB_PortBufferShowFive,$TD_LB_PortBufferShowSix,$TD_LB_PortBufferShowSeven,$TD_LB_PortBufferShowEight |ForEach-Object {
+        $_.Visibility="Collapsed"
+    }
+
     $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_.DeviceTyp -eq "SAN"}
 
-    $TD_lb_PortBufferShowOne,$TD_lb_PortBufferShowTwo,$TD_lb_PortBufferShowThree,$TD_lb_PortBufferShowFour |ForEach-Object {
+    $TD_lb_PortBufferShowOne,$TD_lb_PortBufferShowTwo,$TD_lb_PortBufferShowThree,$TD_lb_PortBufferShowFour,$TD_lb_PortBufferShowFive,$TD_lb_PortBufferShowSix,$TD_lb_PortBufferShowSeven,$TD_lb_PortBufferShowEight |ForEach-Object {
         if($_.items.count -gt 0){$_.ItemsSource = $EmptyVar; $TD_UCRefresh = $true}
     }
 
     $TD_Credentials | ForEach-Object {
-        [array]$TD_FOS_PortbufferShow = FOS_PortbufferShowInfo -TD_Line_ID $_.ID -TD_Device_ConnectionTyp $_.ConnectionTyp -TD_Device_UserName $_.UserName -TD_Device_DeviceIP $_.IPAddress -TD_Device_PW $([Net.NetworkCredential]::new('', $_.Password).Password) -TD_Exportpath $TD_tb_ExportPath.Text
+        [array]$TD_FOS_PortbufferShow = FOS_PortbufferShowInfo -TD_Line_ID $_.ID -TD_Device_ConnectionTyp $_.ConnectionTyp -TD_Device_UserName $_.UserName -TD_Device_DeviceName $_.DeviceName -TD_Device_DeviceIP $_.IPAddress -TD_Device_PW $([Net.NetworkCredential]::new('', $_.Password).Password) -TD_Exportpath $TD_tb_ExportPath.Text
         switch ($_.ID) {
             {($_ -eq 1)} { $TD_lb_PortBufferShowOne.ItemsSource = $TD_FOS_PortbufferShow }
             {($_ -eq 2)} { $TD_lb_PortBufferShowTwo.ItemsSource = $TD_FOS_PortbufferShow }
             {($_ -eq 3)} { $TD_lb_PortBufferShowThree.ItemsSource = $TD_FOS_PortbufferShow }
             {($_ -eq 4)} { $TD_lb_PortBufferShowFour.ItemsSource = $TD_FOS_PortbufferShow }
-            {($_ -eq 5)} { $TD_lb_PortBufferShowFour.ItemsSource = $TD_FOS_PortbufferShow }
-            {($_ -eq 6)} { $TD_lb_PortBufferShowFour.ItemsSource = $TD_FOS_PortbufferShow }
-            {($_ -eq 7)} { $TD_lb_PortBufferShowFour.ItemsSource = $TD_FOS_PortbufferShow }
-            {($_ -eq 8)} { $TD_lb_PortBufferShowFour.ItemsSource = $TD_FOS_PortbufferShow }
+            {($_ -eq 5)} { $TD_lb_PortBufferShowFive.ItemsSource = $TD_FOS_PortbufferShow }
+            {($_ -eq 6)} { $TD_lb_PortBufferShowSix.ItemsSource = $TD_FOS_PortbufferShow }
+            {($_ -eq 7)} { $TD_lb_PortBufferShowSeven.ItemsSource = $TD_FOS_PortbufferShow }
+            {($_ -eq 8)} { $TD_lb_PortBufferShowEight.ItemsSource = $TD_FOS_PortbufferShow }
             Default { SST_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong, please check the prompt output first and then the log files.") -TD_ToolMSGType Error }
         }
         $TD_FOS_PortbufferShow | Export-Csv -Path $PSRootPath\ToolLog\ToolTEMP\$($_.ID)_$($_.DeviceName)_FOS_PortbufferShowInfo_$(Get-Date -Format "yyyy-MM-dd")_Temp.csv

@@ -129,13 +129,21 @@
                     <Grid.RowDefinitions>
                         <RowDefinition Height="auto" />
                         <RowDefinition Height="auto" />
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="auto" />
                     </Grid.RowDefinitions>
-                    <StackPanel Grid.RowSpan="3" Grid.Column="3" Margin="25,20,0,0" >
+                    <StackPanel Grid.RowSpan="5" Grid.Column="3" Margin="25,20,0,0" >
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
                             <Grid.RowDefinitions>
+                                <RowDefinition Height="auto" />
+                                <RowDefinition Height="auto" />
+                                <RowDefinition Height="auto" />
+                                <RowDefinition Height="auto" />
+                                <RowDefinition Height="auto" />
+                                <RowDefinition Height="auto" />
                                 <RowDefinition Height="auto" />
                                 <RowDefinition Height="auto" />
                                 <RowDefinition Height="auto" />
@@ -162,83 +170,89 @@
                                 <TextBox Width="100" Padding="2" Text="Target Path" FontSize="15" FontWeight="Bold" Background="LightGreen" IsReadOnly="True"/>
                                 <TextBox Width="300" Padding="2" Text="Notes" FontSize="15" FontWeight="Bold" IsReadOnly="True"/>
                             </StackPanel>
-                            <StackPanel Orientation="Horizontal" Grid.Row="2" Margin="5,0,0,0" ToolTip="FICON qualified version.">
-                                <TextBox Width="150" Padding="2" Text="FOS v9.2.1a" Background="LightGreen" IsReadOnly="True" />
-                                <TextBox Width="100" Padding="2" Text="March 1, 2024" IsReadOnly="True"/>
+                            <StackPanel Orientation="Horizontal" Grid.Row="5" Margin="5,0,0,0" ToolTip="FICON qualified version.">
+                                <TextBox Width="150" Padding="2" Text="FOS v9.2.2" Background="LightGreen" IsReadOnly="True" />
+                                <TextBox Width="100" Padding="2" Text="October 15, 2024" IsReadOnly="True"/>
                                 <TextBox Width="100" Padding="2" Text="" IsReadOnly="True"/>
                                 <TextBox Width="300" Padding="2" Text="latest Release" IsReadOnly="True"/>
                             </StackPanel>
-                            <StackPanel Orientation="Horizontal" Grid.Row="3" Margin="5,0,0,0" ToolTip="Target Path version.">
-                                <TextBox Width="150" Padding="2" Text="FOS v9.2.0b1" Background="LightGreen" IsReadOnly="True"/>
-                                <TextBox Width="100" Padding="2" Text="June 27, 2024" IsReadOnly="True"/>
-                                <TextBox Width="100" Padding="2" Text=" Yes" Background="LightGreen" IsReadOnly="True"/>
-                                <TextBox Width="300" Padding="2" Text="No Notes" IsReadOnly="True"/>
+                            <StackPanel Orientation="Horizontal" Grid.Row="6" Margin="5,0,0,0" ToolTip="FICON qualified version.">
+                                <TextBox Width="150" Padding="2" Text="FOS v9.2.1a/a1" Background="LightGreen" IsReadOnly="True" />
+                                <TextBox Width="100" Padding="2" Text="March 1, 2024/ Oct 31, 2024 " IsReadOnly="True" TextWrapping="Wrap" />
+                                <TextBox Width="100" Padding="2" Text="" IsReadOnly="True"/>
+                                <TextBox Width="300" Padding="2" Text="FOS v9.2.1a1 addresses TSB-2024-293-A. FOS v9.2.1a1 is FICON Qualified." IsReadOnly="True" TextWrapping="Wrap"/>
                             </StackPanel>
-                            <TextBox Grid.Row="4" Padding="2" Width="650" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Text="Latest Major Version (Supported): FOS v9.1.X " FontSize="20" FontWeight="Bold" Foreground="White" Background="DarkGreen" Margin="5,20,5,0" IsReadOnly="True"/>
-                            <StackPanel Orientation="Horizontal" Grid.Row="5" Margin="5,0,0,0">
+                            <StackPanel Orientation="Horizontal" Grid.Row="7" Margin="5,0,0,0" ToolTip="Target Path version.">
+                                <TextBox Width="150" Padding="2" Text="FOS v9.2.0c/c1" Background="LightGreen" IsReadOnly="True"/>
+                                <TextBox Width="100" Padding="2" Text="Sep 27, 2024/ Oct 30, 2024" IsReadOnly="True" TextWrapping="Wrap"/>
+                                <TextBox Width="100" Padding="2" Text=" Yes" Background="LightGreen" IsReadOnly="True"/>
+                                <TextBox Width="300" Padding="2" Text="FOS v9.2.0c1 addresses TSB-2024-293-A. FOS v9.2.0c1 is FICON Qualified." IsReadOnly="True" TextWrapping="Wrap"/>
+                            </StackPanel>
+                            <TextBox Grid.Row="8" Padding="2" Width="650" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Text="Latest Major Version (Supported): FOS v9.1.X " FontSize="20" FontWeight="Bold" Foreground="White" Background="DarkGreen" Margin="5,20,5,0" IsReadOnly="True"/>
+                            <StackPanel Orientation="Horizontal" Grid.Row="9" Margin="5,0,0,0">
                                 <TextBox Width="150" Padding="2" Text="FOS v9.1.1d/d1/d2" Background="LightGreen" IsReadOnly="True"/>
                                 <TextBox Width="100" Padding="2" Text="January 11, 2024" IsReadOnly="True"/>
                                 <TextBox Width="100" Padding="2" Text="Yes" Background="LightGreen" IsReadOnly="True"/>
                                 <TextBox Width="300" Padding="2" Text="FOS v9.1.1d1 is available with a critical security vulnerability fix. FOS v9.1.1d2 is available with additional fixes including security vulnerability fixes also included in FOS v9.2.x."  TextWrapping="Wrap" IsReadOnly="True"/>
                             </StackPanel>
-                            <StackPanel Orientation="Horizontal" Grid.Row="6" Margin="5,0,0,0">
+                            <StackPanel Orientation="Horizontal" Grid.Row="10" Margin="5,0,0,0">
                                 <TextBox Width="150" Padding="2" Text="FOS v9.1.1c" Background="LightGreen" IsReadOnly="True"/>
                                 <TextBox Width="100" Padding="2" Text="June 23, 2023" IsReadOnly="True"/>
                                 <TextBox Width="100" Padding="2" Text="Yes" Background="LightGreen" IsReadOnly="True"/>
                                 <TextBox Width="300" Padding="2" Text="No Notes"  TextWrapping="Wrap" IsReadOnly="True"/>
                             </StackPanel>
-                            <StackPanel Orientation="Horizontal" Grid.Row="7" Margin="5,0,0,0">
+                            <StackPanel Orientation="Horizontal" Grid.Row="11" Margin="5,0,0,0">
                                 <TextBox Width="150" Padding="2" Text="FOS v9.1.1b" Background="LightCoral" IsReadOnly="True"/>
                                 <TextBox Width="100" Padding="2" Text="January 20, 2023" IsReadOnly="True"/>
                                 <TextBox Width="100" Padding="2" Text="Retired" Background="LightGreen" IsReadOnly="True"/>
                                 <TextBox Width="300" Padding="2" Text="If possible, please perform an update!" Background="LightCoral" TextWrapping="Wrap" IsReadOnly="True"/>
                             </StackPanel>
-                            <TextBox Grid.Row="8" Padding="2" Width="650" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Text="Latest Major Version (Supported): FOS v9.0.X " FontSize="20" FontWeight="Bold" Foreground="White" Background="DarkGreen" Margin="5,20,5,0" IsReadOnly="True"/>
-                            <StackPanel Orientation="Horizontal" Grid.Row="9" Margin="5,0,0,0">
+                            <TextBox Grid.Row="12" Padding="2" Width="650" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Text="Latest Major Version (Supported): FOS v9.0.X " FontSize="20" FontWeight="Bold" Foreground="White" Background="DarkGreen" Margin="5,20,5,0" IsReadOnly="True"/>
+                            <StackPanel Orientation="Horizontal" Grid.Row="13" Margin="5,0,0,0">
                                 <TextBox Width="150" Padding="2" Text="FOS v9.0.1e/e1" Background="LightGreen" IsReadOnly="True"/>
                                 <TextBox Width="100" Padding="2" Text="August 19, 2022" IsReadOnly="True"/>
                                 <TextBox Width="100" Padding="2" Text="Yes" Background="LightGreen" IsReadOnly="True"/>
                                 <TextBox Width="300" Padding="2" Text="FOS v9.0.1e1 is available with a critical security vulnerability fix." TextWrapping="Wrap" IsReadOnly="True"/>
                             </StackPanel>
-                            <StackPanel Orientation="Horizontal" Grid.Row="10" Margin="5,0,0,0">
+                            <StackPanel Orientation="Horizontal" Grid.Row="14" Margin="5,0,0,0">
                                 <TextBox Width="150" Padding="2" Text="FOS v9.0.1d" Background="LightGreen" IsReadOnly="True"/>
                                 <TextBox Width="100" Padding="2" Text="March 16, 2022" IsReadOnly="True"/>
                                 <TextBox Width="100" Padding="2" Text="Yes" Background="LightGreen" IsReadOnly="True"/>
                                 <TextBox Width="300" Padding="2" Text="No Notes" TextWrapping="Wrap" IsReadOnly="True"/>
                             </StackPanel>
-                            <StackPanel Orientation="Horizontal" Grid.Row="11" Margin="5,0,0,0">
+                            <StackPanel Orientation="Horizontal" Grid.Row="15" Margin="5,0,0,0">
                                 <TextBox Width="150" Padding="2" Text="FOS v9.0.1c" Background="LightCoral" IsReadOnly="True"/>
                                 <TextBox Width="100" Padding="2" Text="Sep 24, 2021" IsReadOnly="True"/>
                                 <TextBox Width="100" Padding="2" Text="Retired" Background="LightGreen" IsReadOnly="True"/>
                                 <TextBox Width="300" Padding="2" Text="If possible, please perform an update!" Background="LightCoral" TextWrapping="Wrap" IsReadOnly="True"/>
                             </StackPanel>
-                            <TextBox Grid.Row="12" Padding="2" Width="650" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Text="Legacy Support and Availability Version (Supported Only as Specified): FOS v8.2.X" TextWrapping="Wrap" FontSize="20" FontWeight="Bold" Background="OrangeRed" Margin="5,20,5,0" IsReadOnly="True"/>
-                            <StackPanel Orientation="Horizontal" Grid.Row="13" Margin="5,0,0,0">
+                            <TextBox Grid.Row="16" Padding="2" Width="650" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Text="Legacy Support and Availability Version (Supported Only as Specified): FOS v8.2.X" TextWrapping="Wrap" FontSize="20" FontWeight="Bold" Background="OrangeRed" Margin="5,20,5,0" IsReadOnly="True"/>
+                            <StackPanel Orientation="Horizontal" Grid.Row="17" Margin="5,0,0,0">
                                 <TextBox Width="150" Padding="2" Text="FOS v8.2.3e/e1" Background="LightGreen" IsReadOnly="True"/>
                                 <TextBox Width="100" Padding="2" Text="April 17, 2024" IsReadOnly="True"/>
                                 <TextBox Width="100" Padding="2" Text="Yes" Background="LightGreen" IsReadOnly="True"/>
                                 <TextBox Width="300" Padding="2" Text="Available for supported Gen 5 platforms only. FOS v8.2.3e1 is available with a critical fix. " TextWrapping="Wrap" IsReadOnly="True"/>
                             </StackPanel>
-                            <StackPanel Orientation="Horizontal" Grid.Row="14" Margin="5,0,0,0">
+                            <StackPanel Orientation="Horizontal" Grid.Row="18" Margin="5,0,0,0">
                                 <TextBox Width="150" Padding="2" Text="FOS v8.2.3d" Background="LightGreen" />
                                 <TextBox Width="100" Padding="2" Text="April 14, 2023" />
                                 <TextBox Width="100" Padding="2" Text="Yes" Background="LightGreen" />
                                 <TextBox Width="300" Padding="2" Text="Available and supported for Gen 5 platforms only. FICON qualified for Brocade 7840 only." TextWrapping="Wrap" IsReadOnly="True"/>
                             </StackPanel>
-                            <StackPanel Orientation="Horizontal" Grid.Row="15" Margin="5,0,0,0">
+                            <StackPanel Orientation="Horizontal" Grid.Row="19" Margin="5,0,0,0">
                                 <TextBox Width="150" Padding="2" Text="FOS v8.2.3c/c1" Background="LightCoral" IsReadOnly="True"/>
                                 <TextBox Width="100" Padding="2" Text="July 19, 2022" IsReadOnly="True"/>
                                 <TextBox Width="100" Padding="2" Text="Retired" Background="LightGreen" IsReadOnly="True"/>
                                 <TextBox Width="300" Padding="2" Text="FOS v8.2.3c1 is available with a critical security vulnerability fix. If possible, please perform an update!" Background="LightCoral" TextWrapping="Wrap" IsReadOnly="True"/>
                             </StackPanel>
-                            <StackPanel Orientation="Vertical" Grid.Row="16" Margin="0,20,0,0">
-                            <TextBox Padding="5" Foreground="White" Background="red"  Width="650" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Text="Effective October 2024, upgrades from FOS v7.x to FOS v8.2.x will only be supported by migrating through FOS v8.0.x. This is a disruptive upgrade migration path." TextWrapping="Wrap" IsReadOnly="True"/>
-                            <TextBox Padding="5" Margin="0,25,0,0" Foreground="White" Background="red"  Width="650" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Text="Quelle: https://docs.broadcom.com/doc/Brocade-SW-Support-RM" TextWrapping="Wrap" IsReadOnly="True"/>
+                            <StackPanel Orientation="Vertical" Grid.Row="20" Margin="0,20,0,0">
+                                <TextBox Padding="5" Foreground="White" Background="red"  Width="650" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Text="Effective October 2024, upgrades from FOS v7.x to FOS v8.2.x will only be supported by migrating through FOS v8.0.x. This is a disruptive upgrade migration path." TextWrapping="Wrap" IsReadOnly="True"/>
+                                <TextBox Padding="5" Margin="0,25,0,0" Foreground="White" Background="red"  Width="650" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Text="Quelle: https://docs.broadcom.com/doc/Brocade-SW-Support-RM" TextWrapping="Wrap" IsReadOnly="True"/>
                             </StackPanel>
                         </Grid>
                     </StackPanel>
                     <StackPanel Grid.Row="0" Grid.Column="0" >
-                        <Label Content="Switch 1" />
+                        <Label x:Name="LB_sanBasicSwitchInfoOne" Content="Switch 1" />
                         <DataGrid Name="dg_sanBasicSwitchInfoOne" CanUserSortColumns="False" AutoGenerateColumns="False" Height="Auto" Width="Auto" Margin="5,0,5,5" >
                             <DataGrid.Style>
                                 <Style TargetType="DataGrid">
@@ -256,7 +270,7 @@
                         </DataGrid>
                     </StackPanel>
                     <StackPanel Grid.Row="0" Grid.Column="1"  >
-                        <Label Content="Switch 2" />
+                        <Label x:Name="LB_sanBasicSwitchInfoTwo" Content="Switch 2" />
                         <DataGrid Name="dg_sanBasicSwitchInfoTwo" CanUserSortColumns="False" AutoGenerateColumns="False" Height="Auto" Width="Auto" Margin="5,0,5,5" >
                             <DataGrid.Style>
                                 <Style TargetType="DataGrid">
@@ -274,7 +288,7 @@
                         </DataGrid>
                     </StackPanel>
                     <StackPanel Grid.Row="1" Grid.Column="0"  >
-                        <Label Content="Switch 3" />
+                        <Label x:Name="LB_sanBasicSwitchInfoThree" Content="Switch 3" />
                         <DataGrid Name="dg_sanBasicSwitchInfoThree" CanUserSortColumns="False" AutoGenerateColumns="False" Height="Auto" Width="Auto" Margin="5,0,5,5" >
                             <DataGrid.Style>
                                 <Style TargetType="DataGrid">
@@ -292,8 +306,80 @@
                         </DataGrid>
                     </StackPanel>
                     <StackPanel Grid.Row="1" Grid.Column="1" >
-                        <Label Content="Switch 4" />
+                        <Label x:Name="LB_sanBasicSwitchInfoFour" Content="Switch 4" />
                         <DataGrid Name="dg_sanBasicSwitchInfoFour" CanUserSortColumns="False" AutoGenerateColumns="False" Height="Auto" Width="Auto" Margin="5,0,5,5" >
+                            <DataGrid.Style>
+                                <Style TargetType="DataGrid">
+                                    <Style.Triggers>
+                                        <Trigger Property="HasItems" Value="False">
+                                          <Setter Property="Visibility" Value="Collapsed"></Setter>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGrid.Style>
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="Name" Binding="{Binding Key}" IsReadOnly="True"/>
+                                <DataGridTextColumn Header="Value" Binding="{Binding Value}" IsReadOnly="True"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </StackPanel>
+                    <StackPanel Grid.Row="2" Grid.Column="0" >
+                        <Label x:Name="LB_sanBasicSwitchInfoFive" Content="Switch 5" />
+                        <DataGrid Name="dg_sanBasicSwitchInfoFive" CanUserSortColumns="False" AutoGenerateColumns="False" Height="Auto" Width="Auto" Margin="5,0,5,5" >
+                            <DataGrid.Style>
+                                <Style TargetType="DataGrid">
+                                    <Style.Triggers>
+                                        <Trigger Property="HasItems" Value="False">
+                                          <Setter Property="Visibility" Value="Collapsed"></Setter>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGrid.Style>
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="Name" Binding="{Binding Key}" IsReadOnly="True"/>
+                                <DataGridTextColumn Header="Value" Binding="{Binding Value}" IsReadOnly="True"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </StackPanel>
+                    <StackPanel Grid.Row="2" Grid.Column="1"  >
+                        <Label x:Name="LB_sanBasicSwitchInfoSix" Content="Switch 6" />
+                        <DataGrid Name="dg_sanBasicSwitchInfoSix" CanUserSortColumns="False" AutoGenerateColumns="False" Height="Auto" Width="Auto" Margin="5,0,5,5" >
+                            <DataGrid.Style>
+                                <Style TargetType="DataGrid">
+                                    <Style.Triggers>
+                                        <Trigger Property="HasItems" Value="False">
+                                          <Setter Property="Visibility" Value="Collapsed"></Setter>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGrid.Style>
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="Name" Binding="{Binding Key}" IsReadOnly="True"/>
+                                <DataGridTextColumn Header="Value" Binding="{Binding Value}" IsReadOnly="True"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </StackPanel>
+                    <StackPanel Grid.Row="3" Grid.Column="0"  >
+                        <Label x:Name="LB_sanBasicSwitchInfoTSeven" Content="Switch 7" />
+                        <DataGrid Name="dg_sanBasicSwitchInfoTSeven" CanUserSortColumns="False" AutoGenerateColumns="False" Height="Auto" Width="Auto" Margin="5,0,5,5" >
+                            <DataGrid.Style>
+                                <Style TargetType="DataGrid">
+                                    <Style.Triggers>
+                                        <Trigger Property="HasItems" Value="False">
+                                          <Setter Property="Visibility" Value="Collapsed"></Setter>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGrid.Style>
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="Name" Binding="{Binding Key}" IsReadOnly="True"/>
+                                <DataGridTextColumn Header="Value" Binding="{Binding Value}" IsReadOnly="True"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </StackPanel>
+                    <StackPanel Grid.Row="3" Grid.Column="1" >
+                        <Label x:Name="LB_sanBasicSwitchInfoEight" Content="Switch 8" />
+                        <DataGrid Name="dg_sanBasicSwitchInfoEight" CanUserSortColumns="False" AutoGenerateColumns="False" Height="Auto" Width="Auto" Margin="5,0,5,5" >
                             <DataGrid.Style>
                                 <Style TargetType="DataGrid">
                                     <Style.Triggers>
@@ -320,22 +406,24 @@
                     <Grid.RowDefinitions>
                         <RowDefinition Height="auto" />
                         <RowDefinition Height="auto" />
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="auto" />
                     </Grid.RowDefinitions>
                     <StackPanel Grid.Row="0" Grid.Column="0" >
-                        <Label Content="Switch 1" />
-                        <TextBox HorizontalAlignment="Left" TextWrapping="WrapWithOverflow" x:Name="lb_SANInfoOne" Margin="5,0,5,5" IsReadOnly="True" Visibility="Collapsed"/>
+                        <Label x:Name="LB_SANInfoOne" Content="Switch 1" Visibility="Collapsed"/>
+                        <TextBox HorizontalAlignment="Left" TextWrapping="WrapWithOverflow" x:Name="TB_SANInfoOne" Margin="5,0,5,5" IsReadOnly="True" Visibility="Collapsed"/>
                     </StackPanel>
                     <StackPanel Grid.Row="0" Grid.Column="1"  >
-                        <Label Content="Switch 2" />
-                        <TextBox HorizontalAlignment="Left" TextWrapping="WrapWithOverflow" x:Name="lb_SANInfoTwo" Margin="5,0,5,5" IsReadOnly="True" Visibility="Collapsed"/>
+                        <Label x:Name="LB_SANInfoTwo" Content="Switch 2" Visibility="Collapsed"/>
+                        <TextBox HorizontalAlignment="Left" TextWrapping="WrapWithOverflow" x:Name="TB_SANInfoTwo" Margin="5,0,5,5" IsReadOnly="True" Visibility="Collapsed"/>
                     </StackPanel>
                     <StackPanel Grid.Row="1" Grid.Column="0"  >
-                        <Label Content="Switch 3" />
-                        <TextBox HorizontalAlignment="Left" TextWrapping="WrapWithOverflow" x:Name="lb_SANInfoThree" Margin="5,0,5,5" IsReadOnly="True" Visibility="Collapsed"/>
+                        <Label x:Name="LB_SANInfoThree" Content="Switch 3" Visibility="Collapsed" />
+                        <TextBox HorizontalAlignment="Left" TextWrapping="WrapWithOverflow" x:Name="TB_SANInfoThree" Margin="5,0,5,5" IsReadOnly="True" Visibility="Collapsed"/>
                     </StackPanel>
                     <StackPanel Grid.Row="1" Grid.Column="1" >
-                        <Label Content="Switch 4" />
-                        <TextBox HorizontalAlignment="Left" TextWrapping="WrapWithOverflow" x:Name="lb_SANInfoFour" Margin="5,0,5,5" IsReadOnly="True" Visibility="Collapsed">
+                        <Label x:Name="LB_SANInfoFour" Content="Switch 4" Visibility="Collapsed"/>
+                        <TextBox HorizontalAlignment="Left" TextWrapping="WrapWithOverflow" x:Name="TB_SANInfoFour" Margin="5,0,5,5" IsReadOnly="True" Visibility="Collapsed">
                             <TextBox.ToolTip>
                                 <StackPanel>
                                     <Image Source="data\flower.jpg"/>
@@ -343,6 +431,22 @@
                                 </StackPanel>
                             </TextBox.ToolTip>
                         </TextBox>
+                    </StackPanel>
+                    <StackPanel Grid.Row="2" Grid.Column="0" >
+                        <Label x:Name="LB_SANInfoFive" Content="Switch 5" Visibility="Collapsed"/>
+                        <TextBox HorizontalAlignment="Left" TextWrapping="WrapWithOverflow" x:Name="TB_SANInfoFive" Margin="5,0,5,5" IsReadOnly="True" Visibility="Collapsed"/>
+                    </StackPanel>
+                    <StackPanel Grid.Row="2" Grid.Column="1"  >
+                        <Label x:Name="LB_SANInfoSix" Content="Switch 6" Visibility="Collapsed"/>
+                        <TextBox HorizontalAlignment="Left" TextWrapping="WrapWithOverflow" x:Name="TB_SANInfoSix" Margin="5,0,5,5" IsReadOnly="True" Visibility="Collapsed"/>
+                    </StackPanel>
+                    <StackPanel Grid.Row="3" Grid.Column="0" >
+                        <Label x:Name="LB_SANInfoSeven" Content="Switch 7" Visibility="Collapsed" />
+                        <TextBox HorizontalAlignment="Left" TextWrapping="WrapWithOverflow" x:Name="TB_SANInfoSeven" Margin="5,0,5,5" IsReadOnly="True" Visibility="Collapsed"/>
+                    </StackPanel>
+                    <StackPanel Grid.Row="3" Grid.Column="1" >
+                        <Label x:Name="LB_SANInfoEight" Content="Switch 8" Visibility="Collapsed"/>
+                        <TextBox HorizontalAlignment="Left" TextWrapping="WrapWithOverflow" x:Name="TB_SANInfoEight" Margin="5,0,5,5" IsReadOnly="True" Visibility="Collapsed"/>
                     </StackPanel>
                 </Grid>
             </StackPanel>
@@ -355,22 +459,40 @@
                     <Grid.RowDefinitions>
                         <RowDefinition Height="auto" />
                         <RowDefinition Height="auto" />
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="auto" />
                     </Grid.RowDefinitions>
                     <StackPanel Grid.Row="0" Grid.Column="0" >
-                        <Label Content="Switch 1" />
+                        <Label x:Name="LB_SensorInfoOne" Content="Switch 1" Visibility="Collapsed"/>
                         <TextBox HorizontalAlignment="Left" TextWrapping="WrapWithOverflow" x:Name="tb_SensorInfoOne" Margin="5,0,5,5" IsReadOnly="True" Visibility="Collapsed"/>
                     </StackPanel>
                     <StackPanel Grid.Row="0" Grid.Column="1"  >
-                        <Label Content="Switch 2" />
+                        <Label x:Name="LB_SensorInfoTwo" Content="Switch 2" Visibility="Collapsed"/>
                         <TextBox HorizontalAlignment="Left" TextWrapping="WrapWithOverflow" x:Name="tb_SensorInfoTwo" Margin="5,0,5,5" IsReadOnly="True" Visibility="Collapsed"/>
                     </StackPanel>
                     <StackPanel Grid.Row="1" Grid.Column="0"  >
-                        <Label Content="Switch 3" />
+                        <Label x:Name="LB_SensorInfoThree" Content="Switch 3" Visibility="Collapsed"/>
                         <TextBox HorizontalAlignment="Left" TextWrapping="WrapWithOverflow" x:Name="tb_SensorInfoThree" Margin="5,0,5,5" IsReadOnly="True" Visibility="Collapsed"/>
                     </StackPanel>
                     <StackPanel Grid.Row="1" Grid.Column="1" >
-                        <Label Content="Switch 4" />
+                        <Label x:Name="LB_SensorInfoFour" Content="Switch 4" Visibility="Collapsed"/>
                         <TextBox HorizontalAlignment="Left" TextWrapping="WrapWithOverflow" x:Name="tb_SensorInfoFour" Margin="5,0,5,5" IsReadOnly="True" Visibility="Collapsed" />
+                    </StackPanel>
+                    <StackPanel Grid.Row="2" Grid.Column="0" >
+                        <Label x:Name="LB_SensorInfoFive" Content="Switch 5" Visibility="Collapsed"/>
+                        <TextBox HorizontalAlignment="Left" TextWrapping="WrapWithOverflow" x:Name="tb_SensorInfoFive" Margin="5,0,5,5" IsReadOnly="True" Visibility="Collapsed"/>
+                    </StackPanel>
+                    <StackPanel Grid.Row="2" Grid.Column="1"  >
+                        <Label x:Name="LB_SensorInfoSix" Content="Switch 6" Visibility="Collapsed"/>
+                        <TextBox HorizontalAlignment="Left" TextWrapping="WrapWithOverflow" x:Name="tb_SensorInfoSix" Margin="5,0,5,5" IsReadOnly="True" Visibility="Collapsed"/>
+                    </StackPanel>
+                    <StackPanel Grid.Row="3" Grid.Column="0"  >
+                        <Label x:Name="LB_SensorInfoSeven" Content="Switch 7" Visibility="Collapsed"/>
+                        <TextBox HorizontalAlignment="Left" TextWrapping="WrapWithOverflow" x:Name="tb_SensorInfoSeven" Margin="5,0,5,5" IsReadOnly="True" Visibility="Collapsed"/>
+                    </StackPanel>
+                    <StackPanel Grid.Row="3" Grid.Column="1" >
+                        <Label x:Name="LB_SensorInfoEight" Content="Switch 8" Visibility="Collapsed"/>
+                        <TextBox HorizontalAlignment="Left" TextWrapping="WrapWithOverflow" x:Name="tb_SensorInfoEight" Margin="5,0,5,5" IsReadOnly="True" Visibility="Collapsed" />
                     </StackPanel>
                 </Grid>
             </StackPanel>
@@ -383,9 +505,11 @@
                     <Grid.RowDefinitions>
                         <RowDefinition Height="auto" />
                         <RowDefinition Height="auto" />
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="auto" />
                     </Grid.RowDefinitions>
                     <StackPanel Grid.Row="0" Grid.Column="0" >
-                        <Label Content="Switch 1" />
+                        <Label x:Name="LB_PortBufferShowOne" Content="Switch 1" Visibility="Collapsed"/>
                         <DataGrid x:Name="lb_PortBufferShowOne" CanUserSortColumns="False" AutoGenerateColumns="False" Margin="5" MinWidth="600" Height="400">
                             <DataGrid.Style>
                                 <Style TargetType="DataGrid">
@@ -447,7 +571,7 @@
                         </DataGrid >
                     </StackPanel>
                     <StackPanel Grid.Row="0" Grid.Column="1"  >
-                        <Label Content="Switch 2" />
+                        <Label x:Name="LB_PortBufferShowTwo" Content="Switch 2" Visibility="Collapsed"/>
                         <DataGrid x:Name="lb_PortBufferShowTwo" CanUserSortColumns="False" AutoGenerateColumns="False" Margin="5" MinWidth="600" Height="400">
                             <DataGrid.Style>
                                 <Style TargetType="DataGrid">
@@ -509,7 +633,7 @@
                         </DataGrid >
                     </StackPanel>
                     <StackPanel Grid.Row="1" Grid.Column="0"  >
-                        <Label Content="Switch 3" />
+                        <Label x:Name="LB_PortBufferShowThree" Content="Switch 3" Visibility="Collapsed"/>
                         <DataGrid x:Name="lb_PortBufferShowThree" CanUserSortColumns="False" AutoGenerateColumns="False" Margin="5" MinWidth="600" Height="400">
                             <DataGrid.Style>
                                 <Style TargetType="DataGrid">
@@ -571,8 +695,256 @@
                         </DataGrid >
                     </StackPanel>
                     <StackPanel Grid.Row="1" Grid.Column="1" >
-                        <Label Content="Switch 4" />
+                        <Label x:Name="LB_PortBufferShowFour" Content="Switch 4" Visibility="Collapsed"/>
                         <DataGrid x:Name="lb_PortBufferShowFour" CanUserSortColumns="False" AutoGenerateColumns="False" Margin="5" MinWidth="600" Height="400">
+                            <DataGrid.Style>
+                                <Style TargetType="DataGrid">
+                                    <Style.Triggers>
+                                        <Trigger Property="HasItems" Value="False">
+                                          <Setter Property="Visibility" Value="Collapsed"></Setter>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGrid.Style>
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn Header="Port"  Binding ="{Binding Port}" IsReadOnly="True" Width="60"/>  
+                                    <DataGridTextColumn Header="Type" Binding ="{Binding Type}" IsReadOnly="True" Width="60"/>  
+                                    <DataGridTextColumn Header="Mode" Binding ="{Binding Mode}" IsReadOnly="True" Width="60"/>
+                                    <DataGridTextColumn Header="Max_Resv"  Binding ="{Binding Max_Resv}" IsReadOnly="True" Width="60">
+                                        <DataGridTextColumn.CellStyle>
+                                            <Style TargetType="DataGridCell">
+                                                <Setter Property="ToolTip" Value="The maximum or reserved number of buffers that are allocated to the port based on the estimated distance." />
+                                            </Style>
+                                        </DataGridTextColumn.CellStyle>
+                                    </DataGridTextColumn>
+                                    <DataGridTextColumn Header="Tx" Binding ="{Binding Tx}" IsReadOnly="True" Width="60">
+                                        <DataGridTextColumn.CellStyle>
+                                            <Style TargetType="DataGridCell">
+                                                <Setter Property="ToolTip" Value="The average buffer usage and average frame size for Tx." />
+                                            </Style>
+                                        </DataGridTextColumn.CellStyle>
+                                    </DataGridTextColumn>
+                                    <DataGridTextColumn Header="Rx" Binding ="{Binding Rx}" IsReadOnly="True" Width="60">
+                                        <DataGridTextColumn.CellStyle>
+                                            <Style TargetType="DataGridCell">
+                                                <Setter Property="ToolTip" Value="The average buffer usage and average frame size for Rx." />
+                                            </Style>
+                                        </DataGridTextColumn.CellStyle>
+                                    </DataGridTextColumn>
+                                    <DataGridTextColumn Header="Usage" Binding ="{Binding Usage}" IsReadOnly="True" Width="60">
+                                        <DataGridTextColumn.CellStyle>
+                                            <Style TargetType="DataGridCell">
+                                                <Setter Property="ToolTip" Value="The actual number of buffers allocated to the port" />
+                                            </Style>
+                                        </DataGridTextColumn.CellStyle>
+                                    </DataGridTextColumn>
+                                    <DataGridTextColumn Header="Buffers" Binding ="{Binding Buffers}" IsReadOnly="True" Width="60">
+                                        <DataGridTextColumn.CellStyle>
+                                            <Style TargetType="DataGridCell">
+                                                <Setter Property="ToolTip" Value="The number of buffers needed to utilize the port at full bandwidth (depending on the port configuration)" />
+                                            </Style>
+                                        </DataGridTextColumn.CellStyle>
+                                    </DataGridTextColumn>
+                                    <DataGridTextColumn Header="Distance" Binding ="{Binding Distance}" IsReadOnly="True" Width="60"/> 
+                                    <DataGridTextColumn Header="Buffer" Binding ="{Binding Buffer}" IsReadOnly="True" Width="60">
+                                        <DataGridTextColumn.CellStyle>
+                                            <Style TargetType="DataGridCell">
+                                                <Setter Property="ToolTip" Value="The remaining (unallocated) buffers available for allocation in this group." />
+                                            </Style>
+                                        </DataGridTextColumn.CellStyle>
+                                    </DataGridTextColumn>
+                                </DataGrid.Columns>
+                        </DataGrid >
+                    </StackPanel>
+                    <StackPanel Grid.Row="2" Grid.Column="0" >
+                        <Label x:Name="LB_PortBufferShowFive" Content="Switch 5" Visibility="Collapsed"/>
+                        <DataGrid x:Name="lb_PortBufferShowFive" CanUserSortColumns="False" AutoGenerateColumns="False" Margin="5" MinWidth="600" Height="400">
+                            <DataGrid.Style>
+                                <Style TargetType="DataGrid">
+                                    <Style.Triggers>
+                                        <Trigger Property="HasItems" Value="False">
+                                          <Setter Property="Visibility" Value="Collapsed"></Setter>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGrid.Style>
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn Header="Port"  Binding ="{Binding Port}" IsReadOnly="True" Width="60"/>  
+                                    <DataGridTextColumn Header="Type" Binding ="{Binding Type}" IsReadOnly="True" Width="60"/>  
+                                    <DataGridTextColumn Header="Mode" Binding ="{Binding Mode}" IsReadOnly="True" Width="60"/>
+                                    <DataGridTextColumn Header="Max_Resv"  Binding ="{Binding Max_Resv}" IsReadOnly="True" Width="60">
+                                        <DataGridTextColumn.CellStyle>
+                                            <Style TargetType="DataGridCell">
+                                                <Setter Property="ToolTip" Value="The maximum or reserved number of buffers that are allocated to the port based on the estimated distance." />
+                                            </Style>
+                                        </DataGridTextColumn.CellStyle>
+                                    </DataGridTextColumn>
+                                    <DataGridTextColumn Header="Tx" Binding ="{Binding Tx}" IsReadOnly="True" Width="60">
+                                        <DataGridTextColumn.CellStyle>
+                                            <Style TargetType="DataGridCell">
+                                                <Setter Property="ToolTip" Value="The average buffer usage and average frame size for Tx." />
+                                            </Style>
+                                        </DataGridTextColumn.CellStyle>
+                                    </DataGridTextColumn>
+                                    <DataGridTextColumn Header="Rx" Binding ="{Binding Rx}" IsReadOnly="True" Width="60">
+                                        <DataGridTextColumn.CellStyle>
+                                            <Style TargetType="DataGridCell">
+                                                <Setter Property="ToolTip" Value="The average buffer usage and average frame size for Rx." />
+                                            </Style>
+                                        </DataGridTextColumn.CellStyle>
+                                    </DataGridTextColumn>
+                                    <DataGridTextColumn Header="Usage" Binding ="{Binding Usage}" IsReadOnly="True" Width="60">
+                                        <DataGridTextColumn.CellStyle>
+                                            <Style TargetType="DataGridCell">
+                                                <Setter Property="ToolTip" Value="The actual number of buffers allocated to the port" />
+                                            </Style>
+                                        </DataGridTextColumn.CellStyle>
+                                    </DataGridTextColumn>
+                                    <DataGridTextColumn Header="Buffers" Binding ="{Binding Buffers}" IsReadOnly="True" Width="60">
+                                        <DataGridTextColumn.CellStyle>
+                                            <Style TargetType="DataGridCell">
+                                                <Setter Property="ToolTip" Value="The number of buffers needed to utilize the port at full bandwidth (depending on the port configuration)" />
+                                            </Style>
+                                        </DataGridTextColumn.CellStyle>
+                                    </DataGridTextColumn>
+                                    <DataGridTextColumn Header="Distance" Binding ="{Binding Distance}" IsReadOnly="True" Width="60"/> 
+                                    <DataGridTextColumn Header="Buffer" Binding ="{Binding Buffer}" IsReadOnly="True" Width="60">
+                                        <DataGridTextColumn.CellStyle>
+                                            <Style TargetType="DataGridCell">
+                                                <Setter Property="ToolTip" Value="The remaining (unallocated) buffers available for allocation in this group." />
+                                            </Style>
+                                        </DataGridTextColumn.CellStyle>
+                                    </DataGridTextColumn>
+                                </DataGrid.Columns>
+                        </DataGrid >
+                    </StackPanel>
+                    <StackPanel Grid.Row="2" Grid.Column="1"  >
+                        <Label x:Name="LB_PortBufferShowSix" Content="Switch 6" Visibility="Collapsed"/>
+                        <DataGrid x:Name="lb_PortBufferShowSix" CanUserSortColumns="False" AutoGenerateColumns="False" Margin="5" MinWidth="600" Height="400">
+                            <DataGrid.Style>
+                                <Style TargetType="DataGrid">
+                                    <Style.Triggers>
+                                        <Trigger Property="HasItems" Value="False">
+                                          <Setter Property="Visibility" Value="Collapsed"></Setter>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGrid.Style>
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn Header="Port"  Binding ="{Binding Port}" IsReadOnly="True" Width="60"/>  
+                                    <DataGridTextColumn Header="Type" Binding ="{Binding Type}" IsReadOnly="True" Width="60"/>  
+                                    <DataGridTextColumn Header="Mode" Binding ="{Binding Mode}" IsReadOnly="True" Width="60"/>
+                                    <DataGridTextColumn Header="Max_Resv"  Binding ="{Binding Max_Resv}" IsReadOnly="True" Width="60">
+                                        <DataGridTextColumn.CellStyle>
+                                            <Style TargetType="DataGridCell">
+                                                <Setter Property="ToolTip" Value="The maximum or reserved number of buffers that are allocated to the port based on the estimated distance." />
+                                            </Style>
+                                        </DataGridTextColumn.CellStyle>
+                                    </DataGridTextColumn>
+                                    <DataGridTextColumn Header="Tx" Binding ="{Binding Tx}" IsReadOnly="True" Width="60">
+                                        <DataGridTextColumn.CellStyle>
+                                            <Style TargetType="DataGridCell">
+                                                <Setter Property="ToolTip" Value="The average buffer usage and average frame size for Tx." />
+                                            </Style>
+                                        </DataGridTextColumn.CellStyle>
+                                    </DataGridTextColumn>
+                                    <DataGridTextColumn Header="Rx" Binding ="{Binding Rx}" IsReadOnly="True" Width="60">
+                                        <DataGridTextColumn.CellStyle>
+                                            <Style TargetType="DataGridCell">
+                                                <Setter Property="ToolTip" Value="The average buffer usage and average frame size for Rx." />
+                                            </Style>
+                                        </DataGridTextColumn.CellStyle>
+                                    </DataGridTextColumn>
+                                    <DataGridTextColumn Header="Usage" Binding ="{Binding Usage}" IsReadOnly="True" Width="60">
+                                        <DataGridTextColumn.CellStyle>
+                                            <Style TargetType="DataGridCell">
+                                                <Setter Property="ToolTip" Value="The actual number of buffers allocated to the port" />
+                                            </Style>
+                                        </DataGridTextColumn.CellStyle>
+                                    </DataGridTextColumn>
+                                    <DataGridTextColumn Header="Buffers" Binding ="{Binding Buffers}" IsReadOnly="True" Width="60">
+                                        <DataGridTextColumn.CellStyle>
+                                            <Style TargetType="DataGridCell">
+                                                <Setter Property="ToolTip" Value="The number of buffers needed to utilize the port at full bandwidth (depending on the port configuration)" />
+                                            </Style>
+                                        </DataGridTextColumn.CellStyle>
+                                    </DataGridTextColumn>
+                                    <DataGridTextColumn Header="Distance" Binding ="{Binding Distance}" IsReadOnly="True" Width="60"/> 
+                                    <DataGridTextColumn Header="Buffer" Binding ="{Binding Buffer}" IsReadOnly="True" Width="60">
+                                        <DataGridTextColumn.CellStyle>
+                                            <Style TargetType="DataGridCell">
+                                                <Setter Property="ToolTip" Value="The remaining (unallocated) buffers available for allocation in this group." />
+                                            </Style>
+                                        </DataGridTextColumn.CellStyle>
+                                    </DataGridTextColumn>
+                                </DataGrid.Columns>
+                        </DataGrid >
+                    </StackPanel>
+                    <StackPanel Grid.Row="3" Grid.Column="0"  >
+                        <Label x:Name="LB_PortBufferShowSeven" Content="Switch 7" Visibility="Collapsed"/>
+                        <DataGrid x:Name="lb_PortBufferShowSeven" CanUserSortColumns="False" AutoGenerateColumns="False" Margin="5" MinWidth="600" Height="400">
+                            <DataGrid.Style>
+                                <Style TargetType="DataGrid">
+                                    <Style.Triggers>
+                                        <Trigger Property="HasItems" Value="False">
+                                          <Setter Property="Visibility" Value="Collapsed"></Setter>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGrid.Style>
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn Header="Port"  Binding ="{Binding Port}" IsReadOnly="True" Width="60"/>  
+                                    <DataGridTextColumn Header="Type" Binding ="{Binding Type}" IsReadOnly="True" Width="60"/>  
+                                    <DataGridTextColumn Header="Mode" Binding ="{Binding Mode}" IsReadOnly="True" Width="60"/>
+                                    <DataGridTextColumn Header="Max_Resv"  Binding ="{Binding Max_Resv}" IsReadOnly="True" Width="60">
+                                        <DataGridTextColumn.CellStyle>
+                                            <Style TargetType="DataGridCell">
+                                                <Setter Property="ToolTip" Value="The maximum or reserved number of buffers that are allocated to the port based on the estimated distance." />
+                                            </Style>
+                                        </DataGridTextColumn.CellStyle>
+                                    </DataGridTextColumn>
+                                    <DataGridTextColumn Header="Tx" Binding ="{Binding Tx}" IsReadOnly="True" Width="60">
+                                        <DataGridTextColumn.CellStyle>
+                                            <Style TargetType="DataGridCell">
+                                                <Setter Property="ToolTip" Value="The average buffer usage and average frame size for Tx." />
+                                            </Style>
+                                        </DataGridTextColumn.CellStyle>
+                                    </DataGridTextColumn>
+                                    <DataGridTextColumn Header="Rx" Binding ="{Binding Rx}" IsReadOnly="True" Width="60">
+                                        <DataGridTextColumn.CellStyle>
+                                            <Style TargetType="DataGridCell">
+                                                <Setter Property="ToolTip" Value="The average buffer usage and average frame size for Rx." />
+                                            </Style>
+                                        </DataGridTextColumn.CellStyle>
+                                    </DataGridTextColumn>
+                                    <DataGridTextColumn Header="Usage" Binding ="{Binding Usage}" IsReadOnly="True" Width="60">
+                                        <DataGridTextColumn.CellStyle>
+                                            <Style TargetType="DataGridCell">
+                                                <Setter Property="ToolTip" Value="The actual number of buffers allocated to the port" />
+                                            </Style>
+                                        </DataGridTextColumn.CellStyle>
+                                    </DataGridTextColumn>
+                                    <DataGridTextColumn Header="Buffers" Binding ="{Binding Buffers}" IsReadOnly="True" Width="60">
+                                        <DataGridTextColumn.CellStyle>
+                                            <Style TargetType="DataGridCell">
+                                                <Setter Property="ToolTip" Value="The number of buffers needed to utilize the port at full bandwidth (depending on the port configuration)" />
+                                            </Style>
+                                        </DataGridTextColumn.CellStyle>
+                                    </DataGridTextColumn>
+                                    <DataGridTextColumn Header="Distance" Binding ="{Binding Distance}" IsReadOnly="True" Width="60"/> 
+                                    <DataGridTextColumn Header="Buffer" Binding ="{Binding Buffer}" IsReadOnly="True" Width="60">
+                                        <DataGridTextColumn.CellStyle>
+                                            <Style TargetType="DataGridCell">
+                                                <Setter Property="ToolTip" Value="The remaining (unallocated) buffers available for allocation in this group." />
+                                            </Style>
+                                        </DataGridTextColumn.CellStyle>
+                                    </DataGridTextColumn>
+                                </DataGrid.Columns>
+                        </DataGrid >
+                    </StackPanel>
+                    <StackPanel Grid.Row="3" Grid.Column="1" >
+                        <Label x:Name="LB_PortBufferShowEight" Content="Switch 8" Visibility="Collapsed"/>
+                        <DataGrid x:Name="lb_PortBufferShowEight" CanUserSortColumns="False" AutoGenerateColumns="False" Margin="5" MinWidth="600" Height="400">
                             <DataGrid.Style>
                                 <Style TargetType="DataGrid">
                                     <Style.Triggers>
@@ -636,27 +1008,25 @@
             </StackPanel>
             <StackPanel x:Name="stp_sanPortErrorShow" Margin="2" Visibility="{Binding ElementName=btn_FOS_PortErrorShow, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
                 <Grid>
-                    <Grid.ColumnDefinitions> 
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="Auto" />
-                    </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="auto" />
                         <RowDefinition Height="auto" />
-                        <RowDefinition Height="auto" />
-                        <RowDefinition Height="auto" />
                     </Grid.RowDefinitions>
-                    <Label Grid.Row="0" Content="StatsClear requires administrator rights!" Foreground="Coral" FontSize="10" FontWeight="Bold" Margin="2,0,0,0" HorizontalAlignment="Left" Style="{StaticResource MainLabelStyle}" />
+                    <Label Grid.Row="0" Content="StatsClear requires administrator rights on the SAN-Switch!" Foreground="Coral" FontSize="12" FontWeight="Bold" Margin="2,0,0,0" HorizontalAlignment="Left" Style="{StaticResource MainLabelStyle}" />
                     <StackPanel Grid.Row="1" Orientation="Horizontal" >
                       <Button x:Name="btn_StatsClear" Style="{StaticResource MainBtnStyle}" Content="Stats Clear" Margin="2,2,2,5" HorizontalAlignment="Left" Background="LightCoral" />
                       <Label x:Name="lb_OneClear" Content="One Clear" Style="{StaticResource MainLabelStyle}" Width="75" FontWeight="Normal" Margin="10,0,0,0" Background="green" Visibility="Collapsed" />
                       <Label x:Name="lb_TwoClear" Content="Two Clear" Style="{StaticResource MainLabelStyle}" Width="75" FontWeight="Normal" Margin="0" Background="green" Visibility="Collapsed" />
                       <Label x:Name="lb_ThreeClear" Content="Three Clear" Style="{StaticResource MainLabelStyle}" Width="75" FontWeight="Normal" Margin="0" Background="green" Visibility="Collapsed" />
                       <Label x:Name="lb_FourClear" Content="Four Clear" Style="{StaticResource MainLabelStyle}" Width="75" FontWeight="Normal" Margin="0" Background="green" Visibility="Collapsed" />
+                      <Label x:Name="lb_FiveClear" Content="Five Clear" Style="{StaticResource MainLabelStyle}" Width="75" FontWeight="Normal" Margin="10,0,0,0" Background="green" Visibility="Collapsed" />
+                      <Label x:Name="lb_SixClear" Content="Six Clear" Style="{StaticResource MainLabelStyle}" Width="75" FontWeight="Normal" Margin="0" Background="green" Visibility="Collapsed" />
+                      <Label x:Name="lb_SevenClear" Content="Seven Clear" Style="{StaticResource MainLabelStyle}" Width="75" FontWeight="Normal" Margin="0" Background="green" Visibility="Collapsed" />
+                      <Label x:Name="lb_EightClear" Content="Eight Clear" Style="{StaticResource MainLabelStyle}" Width="75" FontWeight="Normal" Margin="0" Background="green" Visibility="Collapsed" />
                     </StackPanel>
-                    <StackPanel Grid.Row="2" Grid.Column="0" >
-                        <Label Content="Switch 1" />
-                        <DataGrid x:Name="lb_PortErrorShowOne" AutoGenerateColumns="False" Margin="5" MinWidth="600" Height="400">
+                    <StackPanel Grid.Row="2" Orientation="Vertical" >
+                        <Label x:Name="LB_PortErrorShowOne" Content="Switch 1" Visibility="Collapsed"/>
+                        <DataGrid x:Name="DG_PortErrorShowOne" AutoGenerateColumns="False" Margin="5" MinWidth="600" Height="400">
                             <DataGrid.Style>
                                 <Style TargetType="DataGrid">
                                     <Style.Triggers>
@@ -791,10 +1161,8 @@
                                 </DataGridTextColumn>
                             </DataGrid.Columns>
                         </DataGrid>
-                    </StackPanel>
-                    <StackPanel Grid.Row="2" Grid.Column="2"  >
-                        <Label Content="Switch 2" />
-                        <DataGrid x:Name="lb_PortErrorShowTwo" AutoGenerateColumns="False" Margin="5" MinWidth="600" Height="400">
+                        <Label x:Name="LB_PortErrorShowTwo" Content="Switch 2" Visibility="Collapsed"/>
+                        <DataGrid x:Name="DG_PortErrorShowTwo" AutoGenerateColumns="False" Margin="5" MinWidth="600" Height="400">
                             <DataGrid.Style>
                                 <Style TargetType="DataGrid">
                                     <Style.Triggers>
@@ -929,10 +1297,8 @@
                                 </DataGridTextColumn>
                             </DataGrid.Columns>
                         </DataGrid>
-                    </StackPanel>
-                    <StackPanel Grid.Row="3" Grid.Column="0"  >
-                        <Label Content="Switch 3" />
-                        <DataGrid x:Name="lb_PortErrorShowThree" AutoGenerateColumns="False" Margin="5" MinWidth="600" Height="400">
+                        <Label x:Name="LB_PortErrorShowThree" Content="Switch 3" Visibility="Collapsed"/>
+                        <DataGrid x:Name="DG_PortErrorShowThree" AutoGenerateColumns="False" Margin="5" MinWidth="600" Height="400">
                             <DataGrid.Style>
                                 <Style TargetType="DataGrid">
                                     <Style.Triggers>
@@ -1067,10 +1433,552 @@
                                 </DataGridTextColumn>
                             </DataGrid.Columns>
                         </DataGrid>
-                    </StackPanel>
-                    <StackPanel Grid.Row="3" Grid.Column="1" >
-                        <Label Content="Switch 4" />
-                        <DataGrid x:Name="lb_PortErrorShowFour" AutoGenerateColumns="False" Margin="5" MinWidth="600" Height="400">
+                        <Label x:Name="LB_PortErrorShowFour" Content="Switch 4" Visibility="Collapsed"/>
+                        <DataGrid x:Name="DG_PortErrorShowFour" AutoGenerateColumns="False" Margin="5" MinWidth="600" Height="400">
+                            <DataGrid.Style>
+                                <Style TargetType="DataGrid">
+                                    <Style.Triggers>
+                                        <Trigger Property="HasItems" Value="False">
+                                          <Setter Property="Visibility" Value="Collapsed"></Setter>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGrid.Style>
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Width="auto" Header="Port" Binding ="{Binding Port}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Frames_TX" Binding ="{Binding Frames_TX}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Frames_RX" Binding ="{Binding Frames_RX}" IsReadOnly="True"/>  
+                                <DataGridTextColumn Width="auto" Header="enc_in" Binding ="{Binding enc_in}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Number of encoding errors inside frames received (Rx)" />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="auto" Header="crc_err" Binding ="{Binding crc_err}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Number of frames with CRC errors received (Rx)." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="auto" Header="crc_g_eof" Binding ="{Binding crc_g_eof}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Number of frames with CRC errors with good EOF received (Rx)." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="auto" Header="too_short" Binding ="{Binding too_short}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Number of frames shorter than minimum received (Rx)." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="auto" Header="too_long" Binding ="{Binding too_long}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Number of frames longer than maximum received (Rx)." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="auto" Header="bad_eof" Binding ="{Binding bad_eof}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Number of frames with bad end-of-frame delimiters received (Rx)." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="auto" Header="enc_out" Binding ="{Binding enc_out}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Number of encoding error outside of frames received (Rx)." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="auto" Header="disc_c3" Binding ="{Binding disc_c3}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Number of Class 3 frames discarded (Rx)." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="auto" Header="link_fail" Binding ="{Binding link_fail}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Number of link failures (LF1 or LF2 states) received (Rx)." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="auto" Header="loss_sync" Binding ="{Binding loss_sync}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Number of times synchronization was lost (Rx)." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="auto" Header="loss_sig" Binding ="{Binding loss_sig}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Number of times a loss of signal was received (increments whenever an SFP is removed) (Rx)." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="auto" Header="f_rejected" Binding ="{Binding f_rejected}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Number of transmitted frames rejected with F_RJT (Tx)." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="auto" Header="f_busied" Binding ="{Binding f_busied}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Number of transmitted frames busied with F_BSY (Tx)." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="auto" Header="c3timeout_tx" Binding ="{Binding c3timeout_tx}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="The number of transmit class 3 frames discarded at the transmission port due to timeout (platform- and port-specific)." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="auto" Header="c3timeout_rx" Binding ="{Binding c3timeout_rx}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="The number of receive class 3 frames received at this port and discarded at the transmission port due to timeout (platform- and port-specific)." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="auto" Header="psc_err" Binding ="{Binding psc_err}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="The number of Physical Coding Sublayer (PCS) block errors. This counter records encoding violations on 10Gb/s, 16Gb/s, or 32Gb/s ports." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="auto" Header="uncor_err" Binding ="{Binding uncor_err}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="The number of uncorrectable forward error corrections (FEC)." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                        <Label x:Name="LB_PortErrorShowFive" Content="Switch 5" Visibility="Collapsed"/>
+                        <DataGrid x:Name="DG_PortErrorShowFive" AutoGenerateColumns="False" Margin="5" MinWidth="600" Height="400">
+                            <DataGrid.Style>
+                                <Style TargetType="DataGrid">
+                                    <Style.Triggers>
+                                        <Trigger Property="HasItems" Value="False">
+                                          <Setter Property="Visibility" Value="Collapsed"></Setter>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGrid.Style>
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Width="auto" Header="Port" Binding ="{Binding Port}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Frames_TX" Binding ="{Binding Frames_TX}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Frames_RX" Binding ="{Binding Frames_RX}" IsReadOnly="True"/>  
+                                <DataGridTextColumn Width="auto" Header="enc_in" Binding ="{Binding enc_in}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Number of encoding errors inside frames received (Rx)" />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="auto" Header="crc_err" Binding ="{Binding crc_err}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Number of frames with CRC errors received (Rx)." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="auto" Header="crc_g_eof" Binding ="{Binding crc_g_eof}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Number of frames with CRC errors with good EOF received (Rx)." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="auto" Header="too_short" Binding ="{Binding too_short}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Number of frames shorter than minimum received (Rx)." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="auto" Header="too_long" Binding ="{Binding too_long}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Number of frames longer than maximum received (Rx)." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="auto" Header="bad_eof" Binding ="{Binding bad_eof}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Number of frames with bad end-of-frame delimiters received (Rx)." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="auto" Header="enc_out" Binding ="{Binding enc_out}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Number of encoding error outside of frames received (Rx)." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="auto" Header="disc_c3" Binding ="{Binding disc_c3}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Number of Class 3 frames discarded (Rx)." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="auto" Header="link_fail" Binding ="{Binding link_fail}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Number of link failures (LF1 or LF2 states) received (Rx)." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="auto" Header="loss_sync" Binding ="{Binding loss_sync}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Number of times synchronization was lost (Rx)." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="auto" Header="loss_sig" Binding ="{Binding loss_sig}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Number of times a loss of signal was received (increments whenever an SFP is removed) (Rx)." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="auto" Header="f_rejected" Binding ="{Binding f_rejected}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Number of transmitted frames rejected with F_RJT (Tx)." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="auto" Header="f_busied" Binding ="{Binding f_busied}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Number of transmitted frames busied with F_BSY (Tx)." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="auto" Header="c3timeout_tx" Binding ="{Binding c3timeout_tx}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="The number of transmit class 3 frames discarded at the transmission port due to timeout (platform- and port-specific)." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="auto" Header="c3timeout_rx" Binding ="{Binding c3timeout_rx}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="The number of receive class 3 frames received at this port and discarded at the transmission port due to timeout (platform- and port-specific)." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="auto" Header="psc_err" Binding ="{Binding psc_err}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="The number of Physical Coding Sublayer (PCS) block errors. This counter records encoding violations on 10Gb/s, 16Gb/s, or 32Gb/s ports." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="auto" Header="uncor_err" Binding ="{Binding uncor_err}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="The number of uncorrectable forward error corrections (FEC)." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                        <Label x:Name="LB_PortErrorShowSix" Content="Switch 6" Visibility="Collapsed"/>
+                        <DataGrid x:Name="DG_PortErrorShowSix" AutoGenerateColumns="False" Margin="5" MinWidth="600" Height="400">
+                            <DataGrid.Style>
+                                <Style TargetType="DataGrid">
+                                    <Style.Triggers>
+                                        <Trigger Property="HasItems" Value="False">
+                                          <Setter Property="Visibility" Value="Collapsed"></Setter>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGrid.Style>
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Width="auto" Header="Port" Binding ="{Binding Port}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Frames_TX" Binding ="{Binding Frames_TX}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Frames_RX" Binding ="{Binding Frames_RX}" IsReadOnly="True"/>  
+                                <DataGridTextColumn Width="auto" Header="enc_in" Binding ="{Binding enc_in}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Number of encoding errors inside frames received (Rx)" />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="auto" Header="crc_err" Binding ="{Binding crc_err}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Number of frames with CRC errors received (Rx)." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="auto" Header="crc_g_eof" Binding ="{Binding crc_g_eof}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Number of frames with CRC errors with good EOF received (Rx)." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="auto" Header="too_short" Binding ="{Binding too_short}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Number of frames shorter than minimum received (Rx)." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="auto" Header="too_long" Binding ="{Binding too_long}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Number of frames longer than maximum received (Rx)." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="auto" Header="bad_eof" Binding ="{Binding bad_eof}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Number of frames with bad end-of-frame delimiters received (Rx)." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="auto" Header="enc_out" Binding ="{Binding enc_out}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Number of encoding error outside of frames received (Rx)." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="auto" Header="disc_c3" Binding ="{Binding disc_c3}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Number of Class 3 frames discarded (Rx)." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="auto" Header="link_fail" Binding ="{Binding link_fail}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Number of link failures (LF1 or LF2 states) received (Rx)." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="auto" Header="loss_sync" Binding ="{Binding loss_sync}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Number of times synchronization was lost (Rx)." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="auto" Header="loss_sig" Binding ="{Binding loss_sig}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Number of times a loss of signal was received (increments whenever an SFP is removed) (Rx)." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="auto" Header="f_rejected" Binding ="{Binding f_rejected}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Number of transmitted frames rejected with F_RJT (Tx)." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="auto" Header="f_busied" Binding ="{Binding f_busied}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Number of transmitted frames busied with F_BSY (Tx)." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="auto" Header="c3timeout_tx" Binding ="{Binding c3timeout_tx}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="The number of transmit class 3 frames discarded at the transmission port due to timeout (platform- and port-specific)." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="auto" Header="c3timeout_rx" Binding ="{Binding c3timeout_rx}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="The number of receive class 3 frames received at this port and discarded at the transmission port due to timeout (platform- and port-specific)." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="auto" Header="psc_err" Binding ="{Binding psc_err}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="The number of Physical Coding Sublayer (PCS) block errors. This counter records encoding violations on 10Gb/s, 16Gb/s, or 32Gb/s ports." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="auto" Header="uncor_err" Binding ="{Binding uncor_err}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="The number of uncorrectable forward error corrections (FEC)." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                        <Label x:Name="LB_PortErrorShowSeven" Content="Switch 7" Visibility="Collapsed"/>
+                        <DataGrid x:Name="DG_PortErrorShowSeven" AutoGenerateColumns="False" Margin="5" MinWidth="600" Height="400">
+                            <DataGrid.Style>
+                                <Style TargetType="DataGrid">
+                                    <Style.Triggers>
+                                        <Trigger Property="HasItems" Value="False">
+                                          <Setter Property="Visibility" Value="Collapsed"></Setter>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGrid.Style>
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Width="auto" Header="Port" Binding ="{Binding Port}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Frames_TX" Binding ="{Binding Frames_TX}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Frames_RX" Binding ="{Binding Frames_RX}" IsReadOnly="True"/>  
+                                <DataGridTextColumn Width="auto" Header="enc_in" Binding ="{Binding enc_in}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Number of encoding errors inside frames received (Rx)" />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="auto" Header="crc_err" Binding ="{Binding crc_err}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Number of frames with CRC errors received (Rx)." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="auto" Header="crc_g_eof" Binding ="{Binding crc_g_eof}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Number of frames with CRC errors with good EOF received (Rx)." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="auto" Header="too_short" Binding ="{Binding too_short}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Number of frames shorter than minimum received (Rx)." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="auto" Header="too_long" Binding ="{Binding too_long}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Number of frames longer than maximum received (Rx)." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="auto" Header="bad_eof" Binding ="{Binding bad_eof}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Number of frames with bad end-of-frame delimiters received (Rx)." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="auto" Header="enc_out" Binding ="{Binding enc_out}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Number of encoding error outside of frames received (Rx)." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="auto" Header="disc_c3" Binding ="{Binding disc_c3}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Number of Class 3 frames discarded (Rx)." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="auto" Header="link_fail" Binding ="{Binding link_fail}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Number of link failures (LF1 or LF2 states) received (Rx)." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="auto" Header="loss_sync" Binding ="{Binding loss_sync}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Number of times synchronization was lost (Rx)." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="auto" Header="loss_sig" Binding ="{Binding loss_sig}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Number of times a loss of signal was received (increments whenever an SFP is removed) (Rx)." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="auto" Header="f_rejected" Binding ="{Binding f_rejected}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Number of transmitted frames rejected with F_RJT (Tx)." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="auto" Header="f_busied" Binding ="{Binding f_busied}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Number of transmitted frames busied with F_BSY (Tx)." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="auto" Header="c3timeout_tx" Binding ="{Binding c3timeout_tx}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="The number of transmit class 3 frames discarded at the transmission port due to timeout (platform- and port-specific)." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="auto" Header="c3timeout_rx" Binding ="{Binding c3timeout_rx}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="The number of receive class 3 frames received at this port and discarded at the transmission port due to timeout (platform- and port-specific)." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="auto" Header="psc_err" Binding ="{Binding psc_err}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="The number of Physical Coding Sublayer (PCS) block errors. This counter records encoding violations on 10Gb/s, 16Gb/s, or 32Gb/s ports." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="auto" Header="uncor_err" Binding ="{Binding uncor_err}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="The number of uncorrectable forward error corrections (FEC)." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                        <Label x:Name="LB_PortErrorShowEight" Content="Switch 8" Visibility="Collapsed"/>
+                        <DataGrid x:Name="DG_PortErrorShowEight" AutoGenerateColumns="False" Margin="5" MinWidth="600" Height="400">
                             <DataGrid.Style>
                                 <Style TargetType="DataGrid">
                                     <Style.Triggers>
@@ -1218,6 +2126,8 @@
                         <RowDefinition Height="auto" />
                         <RowDefinition Height="auto" />
                         <RowDefinition Height="auto" />
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="auto" />
                     </Grid.RowDefinitions>
                         <StackPanel Grid.Row="0" Grid.ColumnSpan="2" Orientation="Horizontal" Margin="2">
                             <ComboBox x:Name="cb_ListFilterSANSwShow" ToolTip="Selcet your Device Panel" SelectedIndex="0" SelectedValuePath="Content" Style="{StaticResource MainComboBoxStyle}">
@@ -1225,6 +2135,10 @@
                                     <ComboBoxItem>2</ComboBoxItem>
                                     <ComboBoxItem>3</ComboBoxItem>
                                     <ComboBoxItem>4</ComboBoxItem>
+                                    <ComboBoxItem>5</ComboBoxItem>
+                                    <ComboBoxItem>6</ComboBoxItem>
+                                    <ComboBoxItem>7</ComboBoxItem>
+                                    <ComboBoxItem>8</ComboBoxItem>
                                 </ComboBox>
                             <ComboBox x:Name="cb_FilterColumSANSwShow" ToolTip="Selcet your Filter" SelectedIndex="0" SelectedValuePath="Content" Style="{StaticResource MainComboBoxStyle}">
                                 <ComboBoxItem>Port</ComboBoxItem>
@@ -1237,8 +2151,8 @@
                             <Label x:Name="lb_ErrorMsgSANSwShow" Foreground="Red" Content="" Style="{StaticResource MainLabelStyle}" Padding="2" Margin="25,5,0,5"/>
                         </StackPanel>
                     <StackPanel Grid.Row="1" Grid.Column="0" >
-                        <Label Content="Switch 1" />
-                        <DataGrid x:Name="lb_SwitchShowOne" CanUserSortColumns="False" AutoGenerateColumns="False" Margin="5" MinWidth="600" Height="400">
+                        <Label x:Name="LB_SwitchShowOne" Content="Switch 1" Visibility="Collapsed"/>
+                        <DataGrid x:Name="DG_SwitchShowOne" CanUserSortColumns="False" AutoGenerateColumns="False" Margin="5" MinWidth="600" Height="400">
                             <DataGrid.Style>
                                 <Style TargetType="DataGrid">
                                     <Style.Triggers>
@@ -1273,8 +2187,8 @@
                         </DataGrid>
                     </StackPanel>
                     <StackPanel Grid.Row="1" Grid.Column="1"  >
-                        <Label Content="Switch 2" />
-                        <DataGrid x:Name="lb_SwitchShowTwo" CanUserSortColumns="False" AutoGenerateColumns="False" Margin="5" MinWidth="600" Height="400">
+                        <Label x:Name="LB_SwitchShowTwo" Content="Switch 2" Visibility="Collapsed"/>
+                        <DataGrid x:Name="DG_SwitchShowTwo" CanUserSortColumns="False" AutoGenerateColumns="False" Margin="5" MinWidth="600" Height="400">
                             <DataGrid.Style>
                                 <Style TargetType="DataGrid">
                                     <Style.Triggers>
@@ -1309,8 +2223,8 @@
                         </DataGrid>
                     </StackPanel>
                     <StackPanel Grid.Row="2" Grid.Column="0"  >
-                        <Label Content="Switch 3" />
-                        <DataGrid x:Name="lb_SwitchShowThree" CanUserSortColumns="False" AutoGenerateColumns="False" Margin="5" MinWidth="600" Height="400">
+                        <Label x:Name="LB_SwitchShowThree" Content="Switch 3" Visibility="Collapsed"/>
+                        <DataGrid x:Name="DG_SwitchShowThree" CanUserSortColumns="False" AutoGenerateColumns="False" Margin="5" MinWidth="600" Height="400">
                             <DataGrid.Style>
                                 <Style TargetType="DataGrid">
                                     <Style.Triggers>
@@ -1345,8 +2259,152 @@
                         </DataGrid>
                     </StackPanel>
                     <StackPanel Grid.Row="2" Grid.Column="1" >
-                        <Label Content="Switch 4" />
-                        <DataGrid x:Name="lb_SwitchShowFour" CanUserSortColumns="False" AutoGenerateColumns="False" Margin="5" MinWidth="600" Height="400">
+                        <Label x:Name="LB_SwitchShowFour" Content="Switch 4" Visibility="Collapsed"/>
+                        <DataGrid x:Name="DG_SwitchShowFour" CanUserSortColumns="False" AutoGenerateColumns="False" Margin="5" MinWidth="600" Height="400">
+                            <DataGrid.Style>
+                                <Style TargetType="DataGrid">
+                                    <Style.Triggers>
+                                        <Trigger Property="HasItems" Value="False">
+                                          <Setter Property="Visibility" Value="Collapsed"></Setter>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGrid.Style>
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Width="auto" Header="Index"  Binding ="{Binding Index}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="The port index identifies the port number relative to the switch." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="auto" Header="Port" Binding ="{Binding Port}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Address"  Binding ="{Binding Address}" IsReadOnly="True">  
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="The 24-bit Address Identifier." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="auto" Header="Media" Binding ="{Binding Media}" IsReadOnly="True"/>  
+                                <DataGridTextColumn Width="auto" Header="Speed" Binding ="{Binding Speed}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="State" Binding ="{Binding State}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Proto" Binding ="{Binding Proto}" IsReadOnly="True"/>  
+                                <DataGridTextColumn Width="auto" Header="PortConnect" Binding ="{Binding PortConnect}" IsReadOnly="True"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </StackPanel>
+                    <StackPanel Grid.Row="3" Grid.Column="0" >
+                        <Label x:Name="LB_SwitchShowFive" Content="Switch 6" Visibility="Collapsed"/>
+                        <DataGrid x:Name="DG_SwitchShowFive" CanUserSortColumns="False" AutoGenerateColumns="False" Margin="5" MinWidth="600" Height="400">
+                            <DataGrid.Style>
+                                <Style TargetType="DataGrid">
+                                    <Style.Triggers>
+                                        <Trigger Property="HasItems" Value="False">
+                                          <Setter Property="Visibility" Value="Collapsed"></Setter>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGrid.Style>
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Width="auto" Header="Index"  Binding ="{Binding Index}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="The port index identifies the port number relative to the switch." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="auto" Header="Port" Binding ="{Binding Port}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Address"  Binding ="{Binding Address}" IsReadOnly="True">  
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="The 24-bit Address Identifier." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="auto" Header="Media" Binding ="{Binding Media}" IsReadOnly="True"/>  
+                                <DataGridTextColumn Width="auto" Header="Speed" Binding ="{Binding Speed}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="State" Binding ="{Binding State}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Proto" Binding ="{Binding Proto}" IsReadOnly="True"/>  
+                                <DataGridTextColumn Width="auto" Header="PortConnect" Binding ="{Binding PortConnect}" IsReadOnly="True"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </StackPanel>
+                    <StackPanel Grid.Row="3" Grid.Column="1"  >
+                        <Label x:Name="LB_SwitchShowSix" Content="Switch 6" Visibility="Collapsed"/>
+                        <DataGrid x:Name="DG_SwitchShowSix" CanUserSortColumns="False" AutoGenerateColumns="False" Margin="5" MinWidth="600" Height="400">
+                            <DataGrid.Style>
+                                <Style TargetType="DataGrid">
+                                    <Style.Triggers>
+                                        <Trigger Property="HasItems" Value="False">
+                                          <Setter Property="Visibility" Value="Collapsed"></Setter>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGrid.Style>
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Width="auto" Header="Index"  Binding ="{Binding Index}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="The port index identifies the port number relative to the switch." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="auto" Header="Port" Binding ="{Binding Port}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Address"  Binding ="{Binding Address}" IsReadOnly="True">  
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="The 24-bit Address Identifier." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="auto" Header="Media" Binding ="{Binding Media}" IsReadOnly="True"/>  
+                                <DataGridTextColumn Width="auto" Header="Speed" Binding ="{Binding Speed}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="State" Binding ="{Binding State}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Proto" Binding ="{Binding Proto}" IsReadOnly="True"/>  
+                                <DataGridTextColumn Width="auto" Header="PortConnect" Binding ="{Binding PortConnect}" IsReadOnly="True"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </StackPanel>
+                    <StackPanel Grid.Row="4" Grid.Column="0"  >
+                        <Label x:Name="LB_SwitchShowSeven" Content="Switch 7" Visibility="Collapsed"/>
+                        <DataGrid x:Name="DG_SwitchShowSeven" CanUserSortColumns="False" AutoGenerateColumns="False" Margin="5" MinWidth="600" Height="400">
+                            <DataGrid.Style>
+                                <Style TargetType="DataGrid">
+                                    <Style.Triggers>
+                                        <Trigger Property="HasItems" Value="False">
+                                          <Setter Property="Visibility" Value="Collapsed"></Setter>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGrid.Style>
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Width="auto" Header="Index"  Binding ="{Binding Index}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="The port index identifies the port number relative to the switch." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="auto" Header="Port" Binding ="{Binding Port}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Address"  Binding ="{Binding Address}" IsReadOnly="True">  
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="The 24-bit Address Identifier." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Width="auto" Header="Media" Binding ="{Binding Media}" IsReadOnly="True"/>  
+                                <DataGridTextColumn Width="auto" Header="Speed" Binding ="{Binding Speed}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="State" Binding ="{Binding State}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Proto" Binding ="{Binding Proto}" IsReadOnly="True"/>  
+                                <DataGridTextColumn Width="auto" Header="PortConnect" Binding ="{Binding PortConnect}" IsReadOnly="True"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </StackPanel>
+                    <StackPanel Grid.Row="4" Grid.Column="1" >
+                        <Label x:Name="LB_SwitchShowEight" Content="Switch 8" Visibility="Collapsed"/>
+                        <DataGrid x:Name="DG_SwitchShowEight" CanUserSortColumns="False" AutoGenerateColumns="False" Margin="5" MinWidth="600" Height="400">
                             <DataGrid.Style>
                                 <Style TargetType="DataGrid">
                                     <Style.Triggers>
@@ -1392,9 +2450,10 @@
                         <RowDefinition Height="auto" />
                         <RowDefinition Height="auto" />
                         <RowDefinition Height="auto" />
+                        <RowDefinition Height="auto" />
                     </Grid.RowDefinitions>
-                    <StackPanel Grid.Row="1" Grid.Column="0" >
-                        <Label Content="Switch 1" />
+                    <StackPanel Grid.Row="0" Grid.Column="0" >
+                        <Label x:Name="LB_SFPShowOne" Content="Switch 1" Visibility="Collapsed"/>
                         <DataGrid x:Name="dg_SFPShowOne" CanUserSortColumns="False" AutoGenerateColumns="False" Margin="5" MinWidth="600" Height="400">
                             <DataGrid.Style>
                                 <Style TargetType="DataGrid">
@@ -1433,8 +2492,8 @@
                             </DataGrid.Columns>
                         </DataGrid>
                     </StackPanel>
-                    <StackPanel Grid.Row="1" Grid.Column="1"  >
-                        <Label Content="Switch 2" />
+                    <StackPanel Grid.Row="0" Grid.Column="1"  >
+                        <Label x:Name="LB_SFPShowTwo" Content="Switch 2" Visibility="Collapsed"/>
                         <DataGrid x:Name="dg_SFPShowTwo" CanUserSortColumns="False" AutoGenerateColumns="False" Margin="5" MinWidth="600" Height="400">
                             <DataGrid.Style>
                                 <Style TargetType="DataGrid">
@@ -1473,8 +2532,8 @@
                             </DataGrid.Columns>
                         </DataGrid>
                     </StackPanel>
-                    <StackPanel Grid.Row="2" Grid.Column="0"  >
-                        <Label Content="Switch 3" />
+                    <StackPanel Grid.Row="1" Grid.Column="0"  >
+                        <Label x:Name="LB_SFPShowThree" Content="Switch 3" Visibility="Collapsed"/>
                         <DataGrid x:Name="dg_SFPShowThree" CanUserSortColumns="False" AutoGenerateColumns="False" Margin="5" MinWidth="600" Height="400">
                             <DataGrid.Style>
                                 <Style TargetType="DataGrid">
@@ -1513,9 +2572,169 @@
                             </DataGrid.Columns>
                         </DataGrid>
                     </StackPanel>
-                    <StackPanel Grid.Row="2" Grid.Column="1" >
-                        <Label Content="Switch 4" />
+                    <StackPanel Grid.Row="1" Grid.Column="1" >
+                        <Label x:Name="LB_SFPShowFour" Content="Switch 4" Visibility="Collapsed"/>
                         <DataGrid x:Name="dg_SFPShowFour" CanUserSortColumns="False" AutoGenerateColumns="False" Margin="5" MinWidth="600" Height="400">
+                            <DataGrid.Style>
+                                <Style TargetType="DataGrid">
+                                    <Style.Triggers>
+                                        <Trigger Property="HasItems" Value="False">
+                                          <Setter Property="Visibility" Value="Collapsed"></Setter>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGrid.Style>
+                            <DataGrid.RowStyle>
+                                <Style TargetType="DataGridRow">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding HealthStatus}" Value="Yellow">
+                                            <Setter Property="Background" Value="Yellow" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding HealthStatus}" Value="No License">
+                                            <Setter Property="Background" Value="LightBlue" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding HealthStatus}" Value="Unknown">
+                                            <Setter Property="Background" Value="LightGray" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding HealthStatus}" Value="Green">
+                                            <Setter Property="Background" Value="LightGreen" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGrid.RowStyle>
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Width="auto" Header="Port"  Binding ="{Binding Port}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="SFP Typ" Binding ="{Binding SFPTyp}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Vendor"  Binding ="{Binding Vendor}" IsReadOnly="True"/>  
+                                <DataGridTextColumn Width="auto" Header="Serial No" Binding ="{Binding SerialNo}" IsReadOnly="True"/>  
+                                <DataGridTextColumn Width="auto" Header="Speed Range" Binding ="{Binding SpeedRange}" IsReadOnly="True"/> 
+                                <DataGridTextColumn Width="auto" Header="Health" Binding ="{Binding HealthStatus}" IsReadOnly="True"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </StackPanel>
+                    <StackPanel Grid.Row="2" Grid.Column="0" >
+                        <Label x:Name="LB_SFPShowFive" Content="Switch 5" Visibility="Collapsed"/>
+                        <DataGrid x:Name="dg_SFPShowFive" CanUserSortColumns="False" AutoGenerateColumns="False" Margin="5" MinWidth="600" Height="400">
+                            <DataGrid.Style>
+                                <Style TargetType="DataGrid">
+                                    <Style.Triggers>
+                                        <Trigger Property="HasItems" Value="False">
+                                          <Setter Property="Visibility" Value="Collapsed"></Setter>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGrid.Style>
+                            <DataGrid.RowStyle>
+                                <Style TargetType="DataGridRow">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding HealthStatus}" Value="Yellow">
+                                            <Setter Property="Background" Value="Yellow" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding HealthStatus}" Value="No License">
+                                            <Setter Property="Background" Value="LightBlue" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding HealthStatus}" Value="Unknown">
+                                            <Setter Property="Background" Value="LightGray" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding HealthStatus}" Value="Green">
+                                            <Setter Property="Background" Value="LightGreen" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGrid.RowStyle>
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Width="auto" Header="Port"  Binding ="{Binding Port}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="SFP Typ" Binding ="{Binding SFPTyp}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Vendor"  Binding ="{Binding Vendor}" IsReadOnly="True"/>  
+                                <DataGridTextColumn Width="auto" Header="Serial No" Binding ="{Binding SerialNo}" IsReadOnly="True"/>  
+                                <DataGridTextColumn Width="auto" Header="Speed Range" Binding ="{Binding SpeedRange}" IsReadOnly="True"/> 
+                                <DataGridTextColumn Width="auto" Header="Health" Binding ="{Binding HealthStatus}" IsReadOnly="True"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </StackPanel>
+                    <StackPanel Grid.Row="2" Grid.Column="1"  >
+                        <Label x:Name="LB_SFPShowSix" Content="Switch 6" Visibility="Collapsed"/>
+                        <DataGrid x:Name="dg_SFPShowSix" CanUserSortColumns="False" AutoGenerateColumns="False" Margin="5" MinWidth="600" Height="400">
+                            <DataGrid.Style>
+                                <Style TargetType="DataGrid">
+                                    <Style.Triggers>
+                                        <Trigger Property="HasItems" Value="False">
+                                          <Setter Property="Visibility" Value="Collapsed"></Setter>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGrid.Style>
+                            <DataGrid.RowStyle>
+                                <Style TargetType="DataGridRow">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding HealthStatus}" Value="Yellow">
+                                            <Setter Property="Background" Value="Yellow" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding HealthStatus}" Value="No License">
+                                            <Setter Property="Background" Value="LightBlue" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding HealthStatus}" Value="Unknown">
+                                            <Setter Property="Background" Value="LightGray" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding HealthStatus}" Value="Green">
+                                            <Setter Property="Background" Value="LightGreen" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGrid.RowStyle>
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Width="auto" Header="Port"  Binding ="{Binding Port}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="SFP Typ" Binding ="{Binding SFPTyp}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Vendor"  Binding ="{Binding Vendor}" IsReadOnly="True"/>  
+                                <DataGridTextColumn Width="auto" Header="Serial No" Binding ="{Binding SerialNo}" IsReadOnly="True"/>  
+                                <DataGridTextColumn Width="auto" Header="Speed Range" Binding ="{Binding SpeedRange}" IsReadOnly="True"/> 
+                                <DataGridTextColumn Width="auto" Header="Health" Binding ="{Binding HealthStatus}" IsReadOnly="True"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </StackPanel>
+                    <StackPanel Grid.Row="3" Grid.Column="0"  >
+                        <Label x:Name="LB_SFPShowSeven" Content="Switch 7" Visibility="Collapsed"/>
+                        <DataGrid x:Name="dg_SFPShowSeven" CanUserSortColumns="False" AutoGenerateColumns="False" Margin="5" MinWidth="600" Height="400">
+                            <DataGrid.Style>
+                                <Style TargetType="DataGrid">
+                                    <Style.Triggers>
+                                        <Trigger Property="HasItems" Value="False">
+                                          <Setter Property="Visibility" Value="Collapsed"></Setter>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGrid.Style>
+                            <DataGrid.RowStyle>
+                                <Style TargetType="DataGridRow">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding HealthStatus}" Value="Yellow">
+                                            <Setter Property="Background" Value="Yellow" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding HealthStatus}" Value="No License">
+                                            <Setter Property="Background" Value="LightBlue" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding HealthStatus}" Value="Unknown">
+                                            <Setter Property="Background" Value="LightGray" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding HealthStatus}" Value="Green">
+                                            <Setter Property="Background" Value="LightGreen" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGrid.RowStyle>
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Width="auto" Header="Port"  Binding ="{Binding Port}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="SFP Typ" Binding ="{Binding SFPTyp}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Vendor"  Binding ="{Binding Vendor}" IsReadOnly="True"/>  
+                                <DataGridTextColumn Width="auto" Header="Serial No" Binding ="{Binding SerialNo}" IsReadOnly="True"/>  
+                                <DataGridTextColumn Width="auto" Header="Speed Range" Binding ="{Binding SpeedRange}" IsReadOnly="True"/> 
+                                <DataGridTextColumn Width="auto" Header="Health" Binding ="{Binding HealthStatus}" IsReadOnly="True"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </StackPanel>
+                    <StackPanel Grid.Row="3" Grid.Column="1" >
+                        <Label x:Name="LB_SFPShowEight" Content="Switch 8" Visibility="Collapsed"/>
+                        <DataGrid x:Name="dg_SFPShowEight" CanUserSortColumns="False" AutoGenerateColumns="False" Margin="5" MinWidth="600" Height="400">
                             <DataGrid.Style>
                                 <Style TargetType="DataGrid">
                                     <Style.Triggers>

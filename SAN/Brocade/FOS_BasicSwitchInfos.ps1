@@ -103,14 +103,21 @@ function FOS_BasicSwitchInfos {
             <# Progressbar  #>
             $ProgCounter++
             #$Completed = ($ProgCounter/$TD_HostInfos.Count) * 100
-            Write-ProgressBar -ProgressBar $ProgressBar -Activity "Collect data for Device $($TD_Line_ID)" -PercentComplete (($ProgCounter/$FOS_MainInformation.Count) * 100)
+            Write-ProgressBar -ProgressBar $ProgressBar -Activity "Collect data for Device $($TD_Line_ID) $($FOS_SwGeneralInfos.'Swicht Name')" -PercentComplete (($ProgCounter/$FOS_MainInformation.Count) * 100)
         }
         
     }
     
     end {
+        if($TD_Line_ID -eq 1){$TD_LB_sanBasicSwitchInfoOne.Visibility = "Visible";     $TD_LB_sanBasicSwitchInfoOne.Content = "$($FOS_SwGeneralInfos.'Swicht Name')" }
+        if($TD_Line_ID -eq 2){$TD_LB_sanBasicSwitchInfoTwo.Visibility = "Visible";     $TD_LB_sanBasicSwitchInfoTwo.Content = "$($FOS_SwGeneralInfos.'Swicht Name')" }
+        if($TD_Line_ID -eq 3){$TD_LB_sanBasicSwitchInfoThree.Visibility = "Visible";   $TD_LB_sanBasicSwitchInfoThree.Content = "$($FOS_SwGeneralInfos.'Swicht Name')"}
+        if($TD_Line_ID -eq 4){$TD_LB_sanBasicSwitchInfoFour.Visibility = "Visible";    $TD_LB_sanBasicSwitchInfoFour.Content = "$($FOS_SwGeneralInfos.'Swicht Name')"}
+        if($TD_Line_ID -eq 5){$TD_LB_sanBasicSwitchInfoFive.Visibility = "Visible";    $TD_LB_sanBasicSwitchInfoFive.Content = "$($FOS_SwGeneralInfos.'Swicht Name')"}
+        if($TD_Line_ID -eq 6){$TD_LB_sanBasicSwitchInfoSix.Visibility = "Visible";     $TD_LB_sanBasicSwitchInfoSix.Content = "$($FOS_SwGeneralInfos.'Swicht Name')" }
+        if($TD_Line_ID -eq 7){$TD_LB_sanBasicSwitchInfoSeven.Visibility = "Visible";   $TD_LB_sanBasicSwitchInfoSeven.Content = "$($FOS_SwGeneralInfos.'Swicht Name')"}
+        if($TD_Line_ID -eq 8){$TD_LB_sanBasicSwitchInfoEight.Visibility = "Visible";   $TD_LB_sanBasicSwitchInfoEight.Content = "$($FOS_SwGeneralInfos.'Swicht Name')"}
 
-        Write-Debug -Message "End Func FOS_BasicSwitchInfo |$(Get-Date)`n "
         Close-ProgressBar -ProgressBar $ProgressBar
         <# export y or n #>
         if($TD_Export -eq "yes"){

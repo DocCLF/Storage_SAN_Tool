@@ -36,6 +36,16 @@ function FOS_SensorShow {
     }
     
     end {
+
+        if($TD_Line_ID -eq 1){$TD_LB_SensorInfoOne.Visibility = "Visible";     $TD_LB_SensorInfoOne.Content = "$TD_Device_DeviceName" }
+        if($TD_Line_ID -eq 2){$TD_LB_SensorInfoTwo.Visibility = "Visible";     $TD_LB_SensorInfoTwo.Content = "$TD_Device_DeviceName" }
+        if($TD_Line_ID -eq 3){$TD_LB_SensorInfoThree.Visibility = "Visible";   $TD_LB_SensorInfoThree.Content = "$TD_Device_DeviceName" }
+        if($TD_Line_ID -eq 4){$TD_LB_SensorInfoFour.Visibility = "Visible";    $TD_LB_SensorInfoFour.Content = "$TD_Device_DeviceName" }
+        if($TD_Line_ID -eq 5){$TD_LB_SensorInfoFive.Visibility = "Visible";    $TD_LB_SensorInfoFive.Content = "$TD_Device_DeviceName" }
+        if($TD_Line_ID -eq 6){$TD_LB_SensorInfoSix.Visibility = "Visible";     $TD_LB_SensorInfoSix.Content = "$TD_Device_DeviceName" }
+        if($TD_Line_ID -eq 7){$TD_LB_SensorInfoSeven.Visibility = "Visible";   $TD_LB_SensorInfoSeven.Content = "$TD_Device_DeviceName" }
+        if($TD_Line_ID -eq 8){$TD_LB_SensorInfoEight.Visibility = "Visible";   $TD_LB_SensorInfoEight.Content = "$TD_Device_DeviceName" }
+
         <# export y or n #>
         if($TD_Export -eq "yes"){
             if([string]$TD_Exportpath -ne "$PSRootPath\ToolLog\"){
