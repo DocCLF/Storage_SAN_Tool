@@ -100,7 +100,7 @@ function FOS_PortbufferShowInfo {
 
             <# Progressbar  #>
             $ProgCounter++
-            Write-ProgressBar -ProgressBar $ProgressBar -Activity "Collect data for Device $($TD_Line_ID)" -PercentComplete (($ProgCounter/$FOS_Temp_var.Count) * 100)
+            Write-ProgressBar -ProgressBar $ProgressBar -Activity "Collect data for Device $($TD_Line_ID) $($TD_Device_DeviceName)" -PercentComplete (($ProgCounter/$FOS_Temp_var.Count) * 100)
         }
     }
 

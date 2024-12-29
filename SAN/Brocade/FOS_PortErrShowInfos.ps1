@@ -117,7 +117,7 @@ function FOS_PortErrShowInfos {
             #}
             <# Progressbar  #>
             $ProgCounter++
-            Write-ProgressBar -ProgressBar $ProgressBar -Activity "Collect data for Device $($TD_Line_ID)" -PercentComplete (($ProgCounter/$FOS_perrsh_temp.Count) * 100)
+            Write-ProgressBar -ProgressBar $ProgressBar -Activity "Collect data for Device $($TD_Line_ID) $($TD_Device_DeviceName)" -PercentComplete (($ProgCounter/$FOS_perrsh_temp.Count) * 100)
         }
         
     }
@@ -132,7 +132,6 @@ function FOS_PortErrShowInfos {
         if($TD_Line_ID -eq 6){$TD_LB_PortErrorShowSix.Visibility = "Visible";     $TD_LB_PortErrorShowSix.Content = "$TD_Device_DeviceName" }
         if($TD_Line_ID -eq 7){$TD_LB_PortErrorShowSeven.Visibility = "Visible";   $TD_LB_PortErrorShowSeven.Content = "$TD_Device_DeviceName" }
         if($TD_Line_ID -eq 8){$TD_LB_PortErrorShowEight.Visibility = "Visible";   $TD_LB_PortErrorShowEight.Content = "$TD_Device_DeviceName" }
-
 
         Close-ProgressBar -ProgressBar $ProgressBar
         <# returns the hashtable for further processing, not mandatory but the safe way #>

@@ -58,6 +58,15 @@ function IBM_CatAuditLog {
     }
     end {
 
+        if($TD_Line_ID -eq 1){$TD_lb_StorageAuditLogOne.Visibility="visible"  ;$TD_lb_StorageAuditLogOne.Content=$TD_Device_DeviceName }
+        if($TD_Line_ID -eq 2){$TD_lb_StorageAuditLogTwo.Visibility="visible"  ;$TD_lb_StorageAuditLogTwo.Content=$TD_Device_DeviceName }
+        if($TD_Line_ID -eq 3){$TD_lb_StorageAuditLogThree.Visibility="visible";$TD_lb_StorageAuditLogThree.Content=$TD_Device_DeviceName}
+        if($TD_Line_ID -eq 4){$TD_lb_StorageAuditLogFour.Visibility="visible" ;$TD_lb_StorageAuditLogFour.Content=$TD_Device_DeviceName}
+        if($TD_Line_ID -eq 5){$TD_lb_StorageAuditLogFive.Visibility="visible" ;$TD_lb_StorageAuditLogFive.Content=$TD_Device_DeviceName}  
+        if($TD_Line_ID -eq 6){$TD_lb_StorageAuditLogSix.Visibility="visible"  ;$TD_lb_StorageAuditLogSix.Content=$TD_Device_DeviceName }  
+        if($TD_Line_ID -eq 7){$TD_lb_StorageAuditLogSeven.Visibility="visible";$TD_lb_StorageAuditLogSeven.Content=$TD_Device_DeviceName}
+        if($TD_Line_ID -eq 8){$TD_lb_StorageAuditLogEight.Visibility="visible";$TD_lb_StorageAuditLogEight.Content=$TD_Device_DeviceName}
+
         Close-ProgressBar -ProgressBar $ProgressBar
 
         if($TD_Export -eq "yes"){

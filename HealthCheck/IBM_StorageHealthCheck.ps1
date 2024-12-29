@@ -21,6 +21,7 @@ function IBM_StorageHealthCheck {
         [string]$TD_Device_ConnectionTyp,
         [Parameter(Mandatory)]
         [string]$TD_Device_UserName,
+        [string]$TD_Device_DeviceName,
         [Parameter(Mandatory)]
         [string]$TD_Device_DeviceIP,
         [string]$TD_Device_PW,
@@ -43,7 +44,7 @@ function IBM_StorageHealthCheck {
         <# next line one for testing #>
         #$TD_CollectInfo = Get-Content -Path "C:\Users\mailt\Documents\mimixexport.txt" #C:\Users\mailt\Documents\mimixexport.txt hyperswap
         #$TD_CollectInfo = Get-Content -Path "C:\Users\mailt\Desktop\FS5200_W.txt"
-        $PSPath = ((([IO.DirectoryInfo] $PSScriptRoot).Parent).Parent).FullName
+        $PSRootPath = Split-Path -Path $PSScriptRoot -Parent
         #Write-Host $PSPath
         #$TD_dg_HostStatusInfoText.Add_SelectionChanged({
         #    $TD_dg_HostStatusInfoText | ForEach-Object {
@@ -126,7 +127,7 @@ function IBM_StorageHealthCheck {
         $TD_UserControl3_1.Dispatcher.Invoke([System.Action]{},"Render")
 
         
-        $TD_EventCollection = IBM_EventLog -TD_Line_ID $TD_Line_ID -TD_Device_ConnectionTyp $TD_Device_ConnectionTyp -TD_Device_UserName $TD_Device_UserName -TD_Device_DeviceIP $TD_Device_DeviceIP -TD_Device_PW $TD_Device_PW -TD_Export yes -TD_Exportpath $TD_Exportpath
+        $TD_EventCollection = IBM_EventLog -TD_Line_ID $TD_Line_ID -TD_Device_ConnectionTyp $TD_Device_ConnectionTyp -TD_Device_UserName $TD_Device_UserName -TD_Device_DeviceName TD_Device_DeviceName -TD_Device_DeviceIP $TD_Device_DeviceIP -TD_Device_PW $TD_Device_PW -TD_Export yes -TD_Exportpath $TD_Exportpath
         $TD_dg_EventlogStatusInfoText.ItemsSource=$EmptyVar
         if($TD_EventCollection.Status -eq "alert"){
             $TD_lb_EventlogLight.Background="red"
@@ -150,7 +151,7 @@ function IBM_StorageHealthCheck {
 
 
         <# check if there are old files of that device and collect them into array #>
-        $TD_HostLogHistoryFiles = Get-ChildItem -Path $PSPath\ToolLog\ -Filter "*_$($TD_DeviceName)_HostLog.csv"
+        $TD_HostLogHistoryFiles = Get-ChildItem -Path $PSRootPath\ToolLog\ToolTEMP\ -Filter "*_$($TD_DeviceName)_HostLog.csv"
         #Write-Host $TD_HostLogHistoryFiles / $TD_HostLogHistoryFiles.Count
 
         <# create a array of newest data from the device #>
@@ -224,7 +225,7 @@ function IBM_StorageHealthCheck {
                                     if($_.Status -ne $TD_HostResaultSplit.Status){
                                         $_.Status = $TD_HostResaultSplit.Status
                                         <# update the file if the status change to offline #>
-                                        $TD_HostLogHistoryEntrys | Export-Csv -Path $PSPath\ToolLog\$(Get-Date -Format "yyyy-MM-dd")_$($TD_DeviceName)_HostLog.csv -Delimiter ';'
+                                        $TD_HostLogHistoryEntrys | Export-Csv -Path $PSRootPath\ToolLog\ToolTEMP\$(Get-Date -Format "yyyy-MM-dd")_$($TD_DeviceName)_HostLog.csv -Delimiter ';'
                                     }
 
                                     if(!($_.ACKHosts -eq $false)){ break }
@@ -254,7 +255,7 @@ function IBM_StorageHealthCheck {
                                     $_.HostClusterName = $null
                                     $_.DeviceName = $null
                                     <# needs a clean up of the empty obj #>
-                                    $TD_HostLogHistoryEntrys | Export-Csv -Path $PSPath\ToolLog\$(Get-Date -Format "yyyy-MM-dd")_$($TD_DeviceName)_HostLog.csv -Delimiter ';'
+                                    $TD_HostLogHistoryEntrys | Export-Csv -Path $PSRootPath\ToolLog\ToolTEMP\$(Get-Date -Format "yyyy-MM-dd")_$($TD_DeviceName)_HostLog.csv -Delimiter ';'
                                     
                                 }
                             }
@@ -264,7 +265,7 @@ function IBM_StorageHealthCheck {
             }
         }else{
             $TD_HostChostClusterResault = $TD_HostChostClusterResaultTemp
-            $TD_HostChostClusterResaultTemp | Export-Csv -Path $PSPath\ToolLog\$(Get-Date -Format "yyyy-MM-dd")_$($TD_DeviceName)_HostLog.csv -Delimiter ';'
+            $TD_HostChostClusterResaultTemp | Export-Csv -Path $PSRootPath\ToolLog\ToolTEMP\$(Get-Date -Format "yyyy-MM-dd")_$($TD_DeviceName)_HostLog.csv -Delimiter ';'
         }
         <# Save the DG View as new logfile #> 
         $TD_btn_SaveHostStatus.add_click({
@@ -327,7 +328,7 @@ function IBM_StorageHealthCheck {
             }
 
             #Write-Host $TD_HostChostClusterResaultTemp.count -ForegroundColor Red
-            $TD_HostChostClusterResaultTemp | Export-Csv -Path $PSPath\ToolLog\$(Get-Date -Format "yyyy-MM-dd")_$($TD_DeviceName)_HostLog.csv -Delimiter ';'
+            $TD_HostChostClusterResaultTemp | Export-Csv -Path $PSRootPath\ToolLog\ToolTEMP\$(Get-Date -Format "yyyy-MM-dd")_$($TD_DeviceName)_HostLog.csv -Delimiter ';'
         })
 
         #Write-Host $TD_HostChostClusterResault
@@ -347,11 +348,11 @@ function IBM_StorageHealthCheck {
             $TD_lb_HostStatusLight.Background = "green"
             $TD_UserControl3_1.Dispatcher.Invoke([System.Action]{},"Render")
             if($TD_HostLogHistoryFiles.Count -lt 1){
-                $TD_HostChostClusterResaultTemp | Export-Csv -Path $PSPath\ToolLog\$(Get-Date -Format "yyyy-MM-dd")_$($TD_DeviceName)_HostLog.csv -Delimiter ';' 
+                $TD_HostChostClusterResaultTemp | Export-Csv -Path $PSRootPath\ToolLog\ToolTEMP\$(Get-Date -Format "yyyy-MM-dd")_$($TD_DeviceName)_HostLog.csv -Delimiter ';' 
             }
         }
         
-        [array]$TD_MDiskResault = IBM_MDiskInfo -TD_Line_ID $TD_Line_ID -TD_Device_ConnectionTyp $TD_Device_ConnectionTyp -TD_Device_UserName $TD_Device_UserName -TD_Device_DeviceIP $TD_Device_DeviceIP -TD_Device_PW $TD_Device_PW -TD_Export yes -TD_Exportpath $TD_Exportpath
+        [array]$TD_MDiskResault = IBM_MDiskInfo -TD_Line_ID $TD_Line_ID -TD_Device_ConnectionTyp $TD_Device_ConnectionTyp -TD_Device_UserName $TD_Device_UserName -TD_Device_DeviceName TD_Device_DeviceName -TD_Device_DeviceIP $TD_Device_DeviceIP -TD_Device_PW $TD_Device_PW -TD_Export yes -TD_Exportpath $TD_Exportpath
         $TD_dg_MdiskStatusInfoText.ItemsSource=$EmptyVar
         if(($TD_MDiskResault.Status -eq "offline")-or($TD_MDiskResault.Status -eq "excluded")){
             $TD_lb_MdiskStatusLight.Background ="red"
@@ -366,7 +367,7 @@ function IBM_StorageHealthCheck {
             $TD_UserControl3_1.Dispatcher.Invoke([System.Action]{},"Render")
         }
 
-        [array]$TD_VdiskResault = IBM_VolumeInfo -TD_Line_ID $TD_Line_ID -TD_Device_ConnectionTyp $TD_Device_ConnectionTyp -TD_Device_UserName $TD_Device_UserName -TD_Device_DeviceIP $TD_Device_DeviceIP -TD_Device_PW $TD_Device_PW -TD_Export yes -TD_Exportpath $TD_Exportpath
+        [array]$TD_VdiskResault = IBM_VolumeInfo -TD_Line_ID $TD_Line_ID -TD_Device_ConnectionTyp $TD_Device_ConnectionTyp -TD_Device_UserName $TD_Device_UserName -TD_Device_DeviceName TD_Device_DeviceName -TD_Device_DeviceIP $TD_Device_DeviceIP -TD_Device_PW $TD_Device_PW -TD_Export yes -TD_Exportpath $TD_Exportpath
         $TD_VdiskResault = foreach($TD_VdiskFunc in $TD_VdiskResaultTemp){
             if(($TD_VdiskFunc.VolFunc -eq 'master')-or($TD_VdiskFunc.VolFunc -eq 'none')){
                 #Write-Host $_
@@ -397,7 +398,7 @@ function IBM_StorageHealthCheck {
             $TD_UserControl3_1.Dispatcher.Invoke([System.Action]{},"Render")
         }
         
-        $TD_QuorumResult = IBM_IPQuorum -TD_Line_ID $TD_Line_ID -TD_Device_ConnectionTyp $TD_Device_ConnectionTyp -TD_Device_UserName $TD_Device_UserName -TD_Device_DeviceIP $TD_Device_DeviceIP -TD_Device_PW $TD_Device_PW -TD_Export yes -TD_Exportpath $TD_Exportpath
+        $TD_QuorumResult = IBM_IPQuorum -TD_Line_ID $TD_Line_ID -TD_Device_ConnectionTyp $TD_Device_ConnectionTyp -TD_Device_UserName $TD_Device_UserName -TD_Device_DeviceName TD_Device_DeviceName -TD_Device_DeviceIP $TD_Device_DeviceIP -TD_Device_PW $TD_Device_PW -TD_Export yes -TD_Exportpath $TD_Exportpath
         if(!([String]::IsNullOrEmpty($TD_QuorumResult))){
             $TD_lb_QuorumStatusLight.Background ="green"
             $TD_dg_QuorumStatusInfo.ItemsSource = $TD_QuorumResult
@@ -410,7 +411,7 @@ function IBM_StorageHealthCheck {
         }
 
 
-        $TD_UserResault = IBM_UserInfo -TD_Line_ID $TD_Line_ID -TD_Device_ConnectionTyp $TD_Device_ConnectionTyp -TD_Device_UserName $TD_Device_UserName -TD_Device_DeviceIP $TD_Device_DeviceIP -TD_Device_PW $TD_Device_PW -TD_Export yes -TD_Exportpath $TD_Exportpath
+        $TD_UserResault = IBM_UserInfo -TD_Line_ID $TD_Line_ID -TD_Device_ConnectionTyp $TD_Device_ConnectionTyp -TD_Device_UserName $TD_Device_UserName -TD_Device_DeviceName TD_Device_DeviceName -TD_Device_DeviceIP $TD_Device_DeviceIP -TD_Device_PW $TD_Device_PW -TD_Export yes -TD_Exportpath $TD_Exportpath
         $TD_dg_UserStatusInfoText.ItemsSource=$EmptyVar
         if(($TD_UserResault.PW_Change_required -eq "yes")){
             $TD_lb_UserStatusLight.Background ="red"
@@ -425,7 +426,7 @@ function IBM_StorageHealthCheck {
             $TD_UserControl3_1.Dispatcher.Invoke([System.Action]{},"Render")
         }
 
-        $TD_StorageSecurityResult = IBM_StorageSecurity -TD_Line_ID $TD_Line_ID -TD_Device_ConnectionTyp $TD_Device_ConnectionTyp -TD_Device_UserName $TD_Device_UserName -TD_Device_DeviceIP $TD_Device_DeviceIP -TD_Device_PW $TD_Device_PW -TD_Export yes -TD_Exportpath $TD_Exportpath
+        $TD_StorageSecurityResult = IBM_StorageSecurity -TD_Line_ID $TD_Line_ID -TD_Device_ConnectionTyp $TD_Device_ConnectionTyp -TD_Device_UserName $TD_Device_UserName -TD_Device_DeviceName TD_Device_DeviceName -TD_Device_DeviceIP $TD_Device_DeviceIP -TD_Device_PW $TD_Device_PW -TD_Export yes -TD_Exportpath $TD_Exportpath
         if(!([String]::IsNullOrEmpty($TD_StorageSecurityResult))){
             $TD_lb_SecurityStatusLight.Background ="green"
             $TD_dg_SecurityStatusInfoText.ItemsSource = $TD_StorageSecurityResult

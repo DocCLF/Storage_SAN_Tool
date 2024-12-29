@@ -147,7 +147,7 @@
             <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" >
                 <Grid>
                 <StackPanel x:Name="stp_StorageEventLog" Orientation="Vertical" Margin="2" Visibility="{Binding ElementName=btn_IBM_Eventlog, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
-                    <Label x:Name="lb_StoEventLogOne" Content="Device 1" Visibility="Collapsed" FontSize="10" Style="{StaticResource MainLabelStyle}" Margin="2,5,0,5" />   
+                    <Label x:Name="lb_StoEventLogOne" Content="Device 1" Visibility="Collapsed" FontSize="12" Style="{StaticResource MainLabelStyle}" Margin="2,5,0,5" />   
                     <DataGrid x:Name="lb_StorageEventLogOne" AutoGenerateColumns="False" Margin="5,0,5,5" MaxHeight="420">
                             <DataGrid.Style>
                                 <Style TargetType="DataGrid">
@@ -222,7 +222,7 @@
                                 </DataGridTextColumn>
                             </DataGrid.Columns>
                     </DataGrid>
-                    <Label x:Name="lb_StoEventLogTwo" Content="Device 2" Visibility="Collapsed" FontSize="10" Style="{StaticResource MainLabelStyle}" Margin="2,5,0,5" />
+                    <Label x:Name="lb_StoEventLogTwo" Content="Device 2" Visibility="Collapsed" FontSize="12" Style="{StaticResource MainLabelStyle}" Margin="2,5,0,5" />
                     <DataGrid x:Name="lb_StorageEventLogTwo" AutoGenerateColumns="False" Margin="5,0,5,5" MaxHeight="420">
                             <DataGrid.Style>
                                 <Style TargetType="DataGrid">
@@ -297,7 +297,7 @@
                                 </DataGridTextColumn>
                             </DataGrid.Columns>
                     </DataGrid>
-                    <Label x:Name="lb_StoEventLogThree" Content="Device 3" Visibility="Collapsed" FontSize="10" Style="{StaticResource MainLabelStyle}" Margin="2,5,0,5" />
+                    <Label x:Name="lb_StoEventLogThree" Content="Device 3" Visibility="Collapsed" FontSize="12" Style="{StaticResource MainLabelStyle}" Margin="2,5,0,5" />
                     <DataGrid x:Name="lb_StorageEventLogThree" AutoGenerateColumns="False" Margin="5,0,5,5" MaxHeight="420">
                             <DataGrid.Style>
                                 <Style TargetType="DataGrid">
@@ -372,7 +372,7 @@
                                 </DataGridTextColumn>
                             </DataGrid.Columns>
                     </DataGrid>
-                    <Label x:Name="lb_StoEventLogFour" Content="Device 4" Visibility="Collapsed" FontSize="10" Style="{StaticResource MainLabelStyle}" Margin="2,5,0,5" />
+                    <Label x:Name="lb_StoEventLogFour" Content="Device 4" Visibility="Collapsed" FontSize="12" Style="{StaticResource MainLabelStyle}" Margin="2,5,0,5" />
                     <DataGrid x:Name="lb_StorageEventLogFour" AutoGenerateColumns="False" Margin="5,0,5,5" MaxHeight="420">
                             <DataGrid.Style>
                                 <Style TargetType="DataGrid">
@@ -447,7 +447,7 @@
                                 </DataGridTextColumn>
                             </DataGrid.Columns>
                     </DataGrid>
-                    <Label x:Name="lb_StoEventLogFive" Content="Device 5" Visibility="Collapsed" FontSize="10" Style="{StaticResource MainLabelStyle}" Margin="2,5,0,5" />
+                    <Label x:Name="lb_StoEventLogFive" Content="Device 5" Visibility="Collapsed" FontSize="12" Style="{StaticResource MainLabelStyle}" Margin="2,5,0,5" />
                     <DataGrid x:Name="lb_StorageEventLogFive" AutoGenerateColumns="False" Margin="5,0,5,5" MaxHeight="420">
                             <DataGrid.Style>
                                 <Style TargetType="DataGrid">
@@ -522,7 +522,7 @@
                                 </DataGridTextColumn>
                             </DataGrid.Columns>
                     </DataGrid>
-                    <Label x:Name="lb_StoEventLogSix" Content="Device 6" Visibility="Collapsed" FontSize="10" Style="{StaticResource MainLabelStyle}" Margin="2,5,0,5" />
+                    <Label x:Name="lb_StoEventLogSix" Content="Device 6" Visibility="Collapsed" FontSize="12" Style="{StaticResource MainLabelStyle}" Margin="2,5,0,5" />
                     <DataGrid x:Name="lb_StorageEventLogSix" AutoGenerateColumns="False" Margin="5,0,5,5" MaxHeight="420">
                             <DataGrid.Style>
                                 <Style TargetType="DataGrid">
@@ -597,7 +597,7 @@
                                 </DataGridTextColumn>
                             </DataGrid.Columns>
                     </DataGrid>
-                    <Label x:Name="lb_StoEventLogSeven" Content="Device 7" Visibility="Collapsed" FontSize="10" Style="{StaticResource MainLabelStyle}" Margin="2,5,0,5" />
+                    <Label x:Name="lb_StoEventLogSeven" Content="Device 7" Visibility="Collapsed" FontSize="12" Style="{StaticResource MainLabelStyle}" Margin="2,5,0,5" />
                     <DataGrid x:Name="lb_StorageEventLogSeven" AutoGenerateColumns="False" Margin="5,0,5,5" MaxHeight="420">
                             <DataGrid.Style>
                                 <Style TargetType="DataGrid">
@@ -672,7 +672,7 @@
                                 </DataGridTextColumn>
                             </DataGrid.Columns>
                     </DataGrid>
-                    <Label x:Name="lb_StoEventLogEight" Content="Device 8" Visibility="Collapsed" FontSize="10" Style="{StaticResource MainLabelStyle}" Margin="2,5,0,5" />
+                    <Label x:Name="lb_StoEventLogEight" Content="Device 8" Visibility="Collapsed" FontSize="12" Style="{StaticResource MainLabelStyle}" Margin="2,5,0,5" />
                     <DataGrid x:Name="lb_StorageEventLogEight" AutoGenerateColumns="False" Margin="5,0,5,5" MaxHeight="420">
                             <DataGrid.Style>
                                 <Style TargetType="DataGrid">
@@ -749,7 +749,7 @@
                     </DataGrid>
                 </StackPanel>
                 <StackPanel x:Name="stp_StorageAuditLog" Orientation="Vertical" Margin="2" Visibility="{Binding ElementName=btn_IBM_CatAuditLog, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
-                    <Label x:Name="lb_StorageAuditLogOne" Content="Device 1" Visibility="Collapsed" FontSize="10" Style="{StaticResource MainLabelStyle}" Margin="2,5,0,5" />
+                    <Label x:Name="lb_StorageAuditLogOne" Content="Device 1" Visibility="Collapsed" FontSize="12" Style="{StaticResource MainLabelStyle}" Margin="2,5,0,5" />
                     <DataGrid Name="dg_StorageAuditLogOne" AutoGenerateColumns="False" Margin="5,5,5,5" MaxHeight="400" >
                         <DataGrid.Style>
                              <Style TargetType="DataGrid">
@@ -774,7 +774,7 @@
                              </DataGridTextColumn>
                          </DataGrid.Columns>
                     </DataGrid>
-                    <Label x:Name="lb_StorageAuditLogTwo" Content="Device 2" Visibility="Collapsed" FontSize="10" Style="{StaticResource MainLabelStyle}" Margin="2,5,0,5" />
+                    <Label x:Name="lb_StorageAuditLogTwo" Content="Device 2" Visibility="Collapsed" FontSize="12" Style="{StaticResource MainLabelStyle}" Margin="2,5,0,5" />
                     <DataGrid Name="dg_StorageAuditLogTwo" AutoGenerateColumns="False" Margin="5,5,5,5" MaxHeight="400" >
                         <DataGrid.Style>
                              <Style TargetType="DataGrid">
@@ -799,7 +799,7 @@
                              </DataGridTextColumn>
                         </DataGrid.Columns>
                     </DataGrid>
-                    <Label x:Name="lb_StorageAuditLogThree" Content="Device 3" Visibility="Collapsed" FontSize="10" Style="{StaticResource MainLabelStyle}" Margin="2,5,0,5" />
+                    <Label x:Name="lb_StorageAuditLogThree" Content="Device 3" Visibility="Collapsed" FontSize="12" Style="{StaticResource MainLabelStyle}" Margin="2,5,0,5" />
                     <DataGrid Name="dg_StorageAuditLogThree" AutoGenerateColumns="False" Margin="5,5,5,5" MaxHeight="400" >
                         <DataGrid.Style>
                             <Style TargetType="DataGrid">
@@ -824,7 +824,7 @@
                             </DataGridTextColumn>
                         </DataGrid.Columns>
                     </DataGrid>
-                    <Label x:Name="lb_StorageAuditLogFour" Content="Device 4" Visibility="Collapsed" FontSize="10" Style="{StaticResource MainLabelStyle}" Margin="2,5,0,5" />
+                    <Label x:Name="lb_StorageAuditLogFour" Content="Device 4" Visibility="Collapsed" FontSize="12" Style="{StaticResource MainLabelStyle}" Margin="2,5,0,5" />
                     <DataGrid Name="dg_StorageAuditLogFour" AutoGenerateColumns="False" Margin="5,5,5,5" MaxHeight="400" >
                         <DataGrid.Style>
                             <Style TargetType="DataGrid">
@@ -849,7 +849,7 @@
                             </DataGridTextColumn>
                         </DataGrid.Columns>
                     </DataGrid>
-                    <Label x:Name="lb_StorageAuditLogFive" Content="Device 5" Visibility="Collapsed" FontSize="10" Style="{StaticResource MainLabelStyle}" Margin="2,5,0,5" />
+                    <Label x:Name="lb_StorageAuditLogFive" Content="Device 5" Visibility="Collapsed" FontSize="12" Style="{StaticResource MainLabelStyle}" Margin="2,5,0,5" />
                     <DataGrid Name="dg_StorageAuditLogFive" AutoGenerateColumns="False" Margin="5,5,5,5" MaxHeight="400" >
                         <DataGrid.Style>
                             <Style TargetType="DataGrid">
@@ -874,7 +874,7 @@
                             </DataGridTextColumn>
                         </DataGrid.Columns>
                     </DataGrid>
-                    <Label x:Name="lb_StorageAuditLogSix" Content="Device 6" Visibility="Collapsed" FontSize="10" Style="{StaticResource MainLabelStyle}" Margin="2,5,0,5" />
+                    <Label x:Name="lb_StorageAuditLogSix" Content="Device 6" Visibility="Collapsed" FontSize="12" Style="{StaticResource MainLabelStyle}" Margin="2,5,0,5" />
                     <DataGrid Name="dg_StorageAuditLogSix" AutoGenerateColumns="False" Margin="5,5,5,5" MaxHeight="400" >
                         <DataGrid.Style>
                             <Style TargetType="DataGrid">
@@ -899,7 +899,7 @@
                             </DataGridTextColumn>
                         </DataGrid.Columns>
                     </DataGrid>
-                    <Label x:Name="lb_StorageAuditLogSeven" Content="Device 7" Visibility="Collapsed" FontSize="10" Style="{StaticResource MainLabelStyle}" Margin="2,5,0,5" />
+                    <Label x:Name="lb_StorageAuditLogSeven" Content="Device 7" Visibility="Collapsed" FontSize="12" Style="{StaticResource MainLabelStyle}" Margin="2,5,0,5" />
                     <DataGrid Name="dg_StorageAuditLogSeven" AutoGenerateColumns="False" Margin="5,5,5,5" MaxHeight="400" >
                         <DataGrid.Style>
                             <Style TargetType="DataGrid">
@@ -924,7 +924,7 @@
                             </DataGridTextColumn>
                         </DataGrid.Columns>
                     </DataGrid>
-                    <Label x:Name="lb_StorageAuditLogEight" Content="Device 8" Visibility="Collapsed" FontSize="10" Style="{StaticResource MainLabelStyle}" Margin="2,5,0,5" />
+                    <Label x:Name="lb_StorageAuditLogEight" Content="Device 8" Visibility="Collapsed" FontSize="12" Style="{StaticResource MainLabelStyle}" Margin="2,5,0,5" />
                     <DataGrid Name="dg_StorageAuditLogEight" AutoGenerateColumns="False" Margin="5,5,5,5" MaxHeight="400" >
                         <DataGrid.Style>
                             <Style TargetType="DataGrid">
@@ -984,8 +984,8 @@
                             <Button x:Name="btn_ClearFilterHVM" Style="{StaticResource MainBtnStyle}" Content="Clear Filter" Visibility="Collapsed" Background="LightPink"/>
                         </StackPanel>
                         <StackPanel Grid.Row="1" Orientation="Vertical" >
-                        <Label x:Name="lb_ErrorMsgHVM" Foreground="Red" Content="" Style="{StaticResource MainLabelStyle}" Padding="2" Margin="25,5,0,5"/>
-                        <Label x:Name="lb_HostVolInfoOne" Content="Device 1" Visibility="Collapsed" FontSize="10" Style="{StaticResource MainLabelStyle}" Margin="2,5,0,5" />
+                        <Label x:Name="lb_ErrorMsgHVM" Visibility="Collapsed" Foreground="Red" Content="" Style="{StaticResource MainLabelStyle}" Padding="2" Margin="25,5,0,5"/>
+                        <Label x:Name="lb_HostVolInfoOne" Content="Device 1" Visibility="Collapsed" FontSize="12" Style="{StaticResource MainLabelStyle}" Margin="2,5,0,5" />
                         <DataGrid x:Name="dg_HostVolInfoOne" AutoGenerateColumns="False" Margin="5,5,5,5" MaxHeight="400">
                             <DataGrid.Style>
                                 <Style TargetType="DataGrid">
@@ -1007,7 +1007,7 @@
                                 <DataGridTextColumn Width="auto" Header="Capacity" Binding="{Binding Capacity}" IsReadOnly="True"/>
                             </DataGrid.Columns>
                         </DataGrid>
-                        <Label x:Name="lb_HostVolInfoTwo" Content="Device 2" Visibility="Collapsed" FontSize="10" Style="{StaticResource MainLabelStyle}" Margin="2,5,0,5" />
+                        <Label x:Name="lb_HostVolInfoTwo" Content="Device 2" Visibility="Collapsed" FontSize="12" Style="{StaticResource MainLabelStyle}" Margin="2,5,0,5" />
                         <DataGrid x:Name="dg_HostVolInfoTwo" AutoGenerateColumns="False" Margin="5,25,5,5" MaxHeight="400">
                             <DataGrid.Style>
                                 <Style TargetType="DataGrid">
@@ -1029,7 +1029,7 @@
                                 <DataGridTextColumn Width="auto" Header="Capacity" Binding="{Binding Capacity}" IsReadOnly="True"/>
                             </DataGrid.Columns>
                         </DataGrid>
-                        <Label x:Name="lb_HostVolInfoThree" Content="Device 3" Visibility="Collapsed" FontSize="10" Style="{StaticResource MainLabelStyle}" Margin="2,5,0,5" />
+                        <Label x:Name="lb_HostVolInfoThree" Content="Device 3" Visibility="Collapsed" FontSize="12" Style="{StaticResource MainLabelStyle}" Margin="2,5,0,5" />
                         <DataGrid x:Name="dg_HostVolInfoThree" AutoGenerateColumns="False" Margin="5,25,5,5" MaxHeight="400">
                             <DataGrid.Style>
                                 <Style TargetType="DataGrid">
@@ -1051,7 +1051,7 @@
                                 <DataGridTextColumn Width="auto" Header="Capacity" Binding="{Binding Capacity}" IsReadOnly="True"/>
                             </DataGrid.Columns>
                         </DataGrid>
-                        <Label x:Name="lb_HostVolInfoFour" Content="Device 4" Visibility="Collapsed" FontSize="10" Style="{StaticResource MainLabelStyle}" Margin="2,5,0,5" />
+                        <Label x:Name="lb_HostVolInfoFour" Content="Device 4" Visibility="Collapsed" FontSize="12" Style="{StaticResource MainLabelStyle}" Margin="2,5,0,5" />
                         <DataGrid x:Name="dg_HostVolInfoFour" AutoGenerateColumns="False" Margin="5,25,5,5" MaxHeight="400">
                             <DataGrid.Style>
                                 <Style TargetType="DataGrid">
@@ -1073,7 +1073,7 @@
                                 <DataGridTextColumn Width="auto" Header="Capacity" Binding="{Binding Capacity}" IsReadOnly="True"/>
                             </DataGrid.Columns>
                         </DataGrid>
-                        <Label x:Name="lb_HostVolInfoFive" Content="Device 5" Visibility="Collapsed" FontSize="10" Style="{StaticResource MainLabelStyle}" Margin="2,5,0,5" />
+                        <Label x:Name="lb_HostVolInfoFive" Content="Device 5" Visibility="Collapsed" FontSize="12" Style="{StaticResource MainLabelStyle}" Margin="2,5,0,5" />
                         <DataGrid x:Name="dg_HostVolInfoFive" AutoGenerateColumns="False" Margin="5,25,5,5" MaxHeight="400">
                             <DataGrid.Style>
                                 <Style TargetType="DataGrid">
@@ -1095,7 +1095,7 @@
                                 <DataGridTextColumn Width="auto" Header="Capacity" Binding="{Binding Capacity}" IsReadOnly="True"/>
                             </DataGrid.Columns>
                         </DataGrid>
-                        <Label x:Name="lb_HostVolInfoSix" Content="Device 6" Visibility="Collapsed" FontSize="10" Style="{StaticResource MainLabelStyle}" Margin="2,5,0,5" />
+                        <Label x:Name="lb_HostVolInfoSix" Content="Device 6" Visibility="Collapsed" FontSize="12" Style="{StaticResource MainLabelStyle}" Margin="2,5,0,5" />
                         <DataGrid x:Name="dg_HostVolInfoSix" AutoGenerateColumns="False" Margin="5,25,5,5" MaxHeight="400">
                             <DataGrid.Style>
                                 <Style TargetType="DataGrid">
@@ -1117,7 +1117,7 @@
                                 <DataGridTextColumn Width="auto" Header="Capacity" Binding="{Binding Capacity}" IsReadOnly="True"/>
                             </DataGrid.Columns>
                         </DataGrid>
-                        <Label x:Name="lb_HostVolInfoSeven" Content="Device 7" Visibility="Collapsed" FontSize="10" Style="{StaticResource MainLabelStyle}" Margin="2,5,0,5" />
+                        <Label x:Name="lb_HostVolInfoSeven" Content="Device 7" Visibility="Collapsed" FontSize="12" Style="{StaticResource MainLabelStyle}" Margin="2,5,0,5" />
                         <DataGrid x:Name="dg_HostVolInfoSeven" AutoGenerateColumns="False" Margin="5,25,5,5" MaxHeight="400">
                             <DataGrid.Style>
                                 <Style TargetType="DataGrid">
@@ -1139,7 +1139,7 @@
                                 <DataGridTextColumn Width="auto" Header="Capacity" Binding="{Binding Capacity}" IsReadOnly="True"/>
                             </DataGrid.Columns>
                         </DataGrid>
-                        <Label x:Name="lb_HostVolInfoEight" Content="Device 8" Visibility="Collapsed" FontSize="10" Style="{StaticResource MainLabelStyle}" Margin="2,5,0,5" />
+                        <Label x:Name="lb_HostVolInfoEight" Content="Device 8" Visibility="Collapsed" FontSize="12" Style="{StaticResource MainLabelStyle}" Margin="2,5,0,5" />
                         <DataGrid x:Name="dg_HostVolInfoEight" AutoGenerateColumns="False" Margin="5,25,5,5" MaxHeight="400">
                             <DataGrid.Style>
                                 <Style TargetType="DataGrid">
@@ -1182,15 +1182,18 @@
                                     </Style.Triggers>
                                 </Style>
                             </DataGrid.Style>
-                            <DataGrid.CellStyle>
-                                <Style TargetType="DataGridCell">
+                            <DataGrid.RowStyle>
+                                <Style TargetType="DataGridRow">
                                     <Style.Triggers>
+                                        <DataTrigger Binding="{Binding Status}" Value="degraded">
+                                            <Setter Property="Background" Value="yellow" />
+                                        </DataTrigger>
                                         <DataTrigger Binding="{Binding Status}" Value="offline">
-                                            <Setter Property="Background" Value="Red" />
+                                            <Setter Property="Background" Value="red" />
                                         </DataTrigger>
                                     </Style.Triggers>
                                 </Style>
-                            </DataGrid.CellStyle>
+                            </DataGrid.RowStyle>
                             <DataGrid.Columns> 
                                 <DataGridTextColumn Width="auto" Header="Host ID" Binding="{Binding HostID}" IsReadOnly="True"/>
                                 <DataGridTextColumn Width="auto" Header="Host Name" Binding="{Binding HostName}" IsReadOnly="True"/>
@@ -1280,15 +1283,18 @@
                                     </Style.Triggers>
                                 </Style>
                             </DataGrid.Style>
-                            <DataGrid.CellStyle>
-                                <Style TargetType="DataGridCell">
+                            <DataGrid.RowStyle>
+                                <Style TargetType="DataGridRow">
                                     <Style.Triggers>
+                                        <DataTrigger Binding="{Binding Status}" Value="degraded">
+                                            <Setter Property="Background" Value="yellow" />
+                                        </DataTrigger>
                                         <DataTrigger Binding="{Binding Status}" Value="offline">
-                                            <Setter Property="Background" Value="Red" />
+                                            <Setter Property="Background" Value="red" />
                                         </DataTrigger>
                                     </Style.Triggers>
                                 </Style>
-                            </DataGrid.CellStyle>
+                            </DataGrid.RowStyle>
                             <DataGrid.Columns> 
                                 <DataGridTextColumn Width="auto" Header="Host ID" Binding="{Binding HostID}" IsReadOnly="True"/>
                                 <DataGridTextColumn Width="auto" Header="Host Name" Binding="{Binding HostName}" IsReadOnly="True"/>
@@ -1378,15 +1384,18 @@
                                     </Style.Triggers>
                                 </Style>
                             </DataGrid.Style>
-                            <DataGrid.CellStyle>
-                                <Style TargetType="DataGridCell">
+                            <DataGrid.RowStyle>
+                                <Style TargetType="DataGridRow">
                                     <Style.Triggers>
+                                        <DataTrigger Binding="{Binding Status}" Value="degraded">
+                                            <Setter Property="Background" Value="yellow" />
+                                        </DataTrigger>
                                         <DataTrigger Binding="{Binding Status}" Value="offline">
-                                            <Setter Property="Background" Value="Red" />
+                                            <Setter Property="Background" Value="red" />
                                         </DataTrigger>
                                     </Style.Triggers>
                                 </Style>
-                            </DataGrid.CellStyle>
+                            </DataGrid.RowStyle>
                             <DataGrid.Columns> 
                                 <DataGridTextColumn Width="auto" Header="Host ID" Binding="{Binding HostID}" IsReadOnly="True"/>
                                 <DataGridTextColumn Width="auto" Header="Host Name" Binding="{Binding HostName}" IsReadOnly="True"/>
@@ -1476,15 +1485,18 @@
                                     </Style.Triggers>
                                 </Style>
                             </DataGrid.Style>
-                            <DataGrid.CellStyle>
-                                <Style TargetType="DataGridCell">
+                            <DataGrid.RowStyle>
+                                <Style TargetType="DataGridRow">
                                     <Style.Triggers>
+                                        <DataTrigger Binding="{Binding Status}" Value="degraded">
+                                            <Setter Property="Background" Value="yellow" />
+                                        </DataTrigger>
                                         <DataTrigger Binding="{Binding Status}" Value="offline">
-                                            <Setter Property="Background" Value="Red" />
+                                            <Setter Property="Background" Value="red" />
                                         </DataTrigger>
                                     </Style.Triggers>
                                 </Style>
-                            </DataGrid.CellStyle>
+                            </DataGrid.RowStyle>
                             <DataGrid.Columns> 
                                 <DataGridTextColumn Width="auto" Header="Host ID" Binding="{Binding HostID}" IsReadOnly="True"/>
                                 <DataGridTextColumn Width="auto" Header="Host Name" Binding="{Binding HostName}" IsReadOnly="True"/>
@@ -1574,15 +1586,18 @@
                                     </Style.Triggers>
                                 </Style>
                             </DataGrid.Style>
-                            <DataGrid.CellStyle>
-                                <Style TargetType="DataGridCell">
+                            <DataGrid.RowStyle>
+                                <Style TargetType="DataGridRow">
                                     <Style.Triggers>
+                                        <DataTrigger Binding="{Binding Status}" Value="degraded">
+                                            <Setter Property="Background" Value="yellow" />
+                                        </DataTrigger>
                                         <DataTrigger Binding="{Binding Status}" Value="offline">
-                                            <Setter Property="Background" Value="Red" />
+                                            <Setter Property="Background" Value="red" />
                                         </DataTrigger>
                                     </Style.Triggers>
                                 </Style>
-                            </DataGrid.CellStyle>
+                            </DataGrid.RowStyle>
                             <DataGrid.Columns> 
                                 <DataGridTextColumn Width="auto" Header="Host ID" Binding="{Binding HostID}" IsReadOnly="True"/>
                                 <DataGridTextColumn Width="auto" Header="Host Name" Binding="{Binding HostName}" IsReadOnly="True"/>
@@ -1672,15 +1687,18 @@
                                     </Style.Triggers>
                                 </Style>
                             </DataGrid.Style>
-                            <DataGrid.CellStyle>
-                                <Style TargetType="DataGridCell">
+                            <DataGrid.RowStyle>
+                                <Style TargetType="DataGridRow">
                                     <Style.Triggers>
+                                        <DataTrigger Binding="{Binding Status}" Value="degraded">
+                                            <Setter Property="Background" Value="yellow" />
+                                        </DataTrigger>
                                         <DataTrigger Binding="{Binding Status}" Value="offline">
-                                            <Setter Property="Background" Value="Red" />
+                                            <Setter Property="Background" Value="red" />
                                         </DataTrigger>
                                     </Style.Triggers>
                                 </Style>
-                            </DataGrid.CellStyle>
+                            </DataGrid.RowStyle>
                             <DataGrid.Columns> 
                                 <DataGridTextColumn Width="auto" Header="Host ID" Binding="{Binding HostID}" IsReadOnly="True"/>
                                 <DataGridTextColumn Width="auto" Header="Host Name" Binding="{Binding HostName}" IsReadOnly="True"/>
@@ -1770,15 +1788,18 @@
                                     </Style.Triggers>
                                 </Style>
                             </DataGrid.Style>
-                            <DataGrid.CellStyle>
-                                <Style TargetType="DataGridCell">
+                            <DataGrid.RowStyle>
+                                <Style TargetType="DataGridRow">
                                     <Style.Triggers>
+                                        <DataTrigger Binding="{Binding Status}" Value="degraded">
+                                            <Setter Property="Background" Value="yellow" />
+                                        </DataTrigger>
                                         <DataTrigger Binding="{Binding Status}" Value="offline">
-                                            <Setter Property="Background" Value="Red" />
+                                            <Setter Property="Background" Value="red" />
                                         </DataTrigger>
                                     </Style.Triggers>
                                 </Style>
-                            </DataGrid.CellStyle>
+                            </DataGrid.RowStyle>
                             <DataGrid.Columns> 
                                 <DataGridTextColumn Width="auto" Header="Host ID" Binding="{Binding HostID}" IsReadOnly="True"/>
                                 <DataGridTextColumn Width="auto" Header="Host Name" Binding="{Binding HostName}" IsReadOnly="True"/>
@@ -1868,15 +1889,18 @@
                                     </Style.Triggers>
                                 </Style>
                             </DataGrid.Style>
-                            <DataGrid.CellStyle>
-                                <Style TargetType="DataGridCell">
+                            <DataGrid.RowStyle>
+                                <Style TargetType="DataGridRow">
                                     <Style.Triggers>
+                                        <DataTrigger Binding="{Binding Status}" Value="degraded">
+                                            <Setter Property="Background" Value="yellow" />
+                                        </DataTrigger>
                                         <DataTrigger Binding="{Binding Status}" Value="offline">
-                                            <Setter Property="Background" Value="Red" />
+                                            <Setter Property="Background" Value="red" />
                                         </DataTrigger>
                                     </Style.Triggers>
                                 </Style>
-                            </DataGrid.CellStyle>
+                            </DataGrid.RowStyle>
                             <DataGrid.Columns> 
                                 <DataGridTextColumn Width="auto" Header="Host ID" Binding="{Binding HostID}" IsReadOnly="True"/>
                                 <DataGridTextColumn Width="auto" Header="Host Name" Binding="{Binding HostName}" IsReadOnly="True"/>
@@ -1974,7 +1998,7 @@
                         </Grid.ColumnDefinitions>
                         <Label Grid.Row="0" Grid.ColumnSpan="2" x:Name="lb_DriveErrorInfo" Content="" Visibility="Collapsed" Style="{StaticResource MainLabelStyle}" Margin="0,5"/> 
                         <StackPanel Grid.Row="1" Grid.Column="0" Orientation="Vertical">
-                        <Label x:Name="lb_DriveInfoOne" Content="No Device Info" Padding="2" Margin="0,5"/>
+                        <Label x:Name="lb_DriveInfoOne" Content="No Device Info" Margin="0,5" FontSize="14" Height="26"/>
                         <DataGrid x:Name="dg_DriveInfoOne" AutoGenerateColumns="False" Margin="5" MaxHeight="400">
                             <DataGrid.Style>
                                 <Style TargetType="DataGrid">
@@ -3734,8 +3758,8 @@
                                     </Style.Triggers>
                                 </Style>
                             </DataGrid.Style>
-                            <DataGrid.CellStyle>
-                                <Style TargetType="DataGridCell">
+                            <DataGrid.RowStyle>
+                                <Style TargetType="DataGridRow">
                                     <Style.Triggers>
                                         <DataTrigger Binding="{Binding Status}" Value="online">
                                             <Setter Property="Background" Value="LightGreen" />
@@ -3748,7 +3772,7 @@
                                         </DataTrigger>
                                     </Style.Triggers>
                                 </Style>
-                            </DataGrid.CellStyle>
+                            </DataGrid.RowStyle>
                             <DataGrid.Columns>
                                 <DataGridTextColumn Width="auto" Header="NodeID"  Binding ="{Binding ID}" IsReadOnly="True"/>
                                 <DataGridTextColumn Width="auto" Header="NodeName" Binding ="{Binding Name}" IsReadOnly="True"/>
@@ -3826,8 +3850,8 @@
                                     </Style.Triggers>
                                 </Style>
                             </DataGrid.Style>
-                            <DataGrid.CellStyle>
-                                <Style TargetType="DataGridCell">
+                            <DataGrid.RowStyle>
+                                <Style TargetType="DataGridRow">
                                     <Style.Triggers>
                                         <DataTrigger Binding="{Binding Status}" Value="online">
                                             <Setter Property="Background" Value="LightGreen" />
@@ -3840,7 +3864,7 @@
                                         </DataTrigger>
                                     </Style.Triggers>
                                 </Style>
-                            </DataGrid.CellStyle>
+                            </DataGrid.RowStyle>
                             <DataGrid.Columns>
                                 <DataGridTextColumn Width="auto" Header="NodeID"  Binding ="{Binding ID}" IsReadOnly="True"/>
                                 <DataGridTextColumn Width="auto" Header="NodeName" Binding ="{Binding Name}" IsReadOnly="True"/>
@@ -3918,8 +3942,8 @@
                                     </Style.Triggers>
                                 </Style>
                             </DataGrid.Style>
-                            <DataGrid.CellStyle>
-                                <Style TargetType="DataGridCell">
+                            <DataGrid.RowStyle>
+                                <Style TargetType="DataGridRow">
                                     <Style.Triggers>
                                         <DataTrigger Binding="{Binding Status}" Value="online">
                                             <Setter Property="Background" Value="LightGreen" />
@@ -3932,7 +3956,7 @@
                                         </DataTrigger>
                                     </Style.Triggers>
                                 </Style>
-                            </DataGrid.CellStyle>
+                            </DataGrid.RowStyle>
                             <DataGrid.Columns>
                                 <DataGridTextColumn Width="auto" Header="NodeID"  Binding ="{Binding ID}" IsReadOnly="True"/>
                                 <DataGridTextColumn Width="auto" Header="NodeName" Binding ="{Binding Name}" IsReadOnly="True"/>
@@ -4010,8 +4034,8 @@
                                     </Style.Triggers>
                                 </Style>
                             </DataGrid.Style>
-                            <DataGrid.CellStyle>
-                                <Style TargetType="DataGridCell">
+                            <DataGrid.RowStyle>
+                                <Style TargetType="DataGridRow">
                                     <Style.Triggers>
                                         <DataTrigger Binding="{Binding Status}" Value="online">
                                             <Setter Property="Background" Value="LightGreen" />
@@ -4024,7 +4048,7 @@
                                         </DataTrigger>
                                     </Style.Triggers>
                                 </Style>
-                            </DataGrid.CellStyle>
+                            </DataGrid.RowStyle>
                             <DataGrid.Columns>
                                 <DataGridTextColumn Width="auto" Header="NodeID"  Binding ="{Binding ID}" IsReadOnly="True"/>
                                 <DataGridTextColumn Width="auto" Header="NodeName" Binding ="{Binding Name}" IsReadOnly="True"/>
@@ -4102,8 +4126,8 @@
                                     </Style.Triggers>
                                 </Style>
                             </DataGrid.Style>
-                            <DataGrid.CellStyle>
-                                <Style TargetType="DataGridCell">
+                            <DataGrid.RowStyle>
+                                <Style TargetType="DataGridRow">
                                     <Style.Triggers>
                                         <DataTrigger Binding="{Binding Status}" Value="online">
                                             <Setter Property="Background" Value="LightGreen" />
@@ -4116,7 +4140,7 @@
                                         </DataTrigger>
                                     </Style.Triggers>
                                 </Style>
-                            </DataGrid.CellStyle>
+                            </DataGrid.RowStyle>
                             <DataGrid.Columns>
                                 <DataGridTextColumn Width="auto" Header="NodeID"  Binding ="{Binding ID}" IsReadOnly="True"/>
                                 <DataGridTextColumn Width="auto" Header="NodeName" Binding ="{Binding Name}" IsReadOnly="True"/>
@@ -4194,8 +4218,8 @@
                                     </Style.Triggers>
                                 </Style>
                             </DataGrid.Style>
-                            <DataGrid.CellStyle>
-                                <Style TargetType="DataGridCell">
+                            <DataGrid.RowStyle>
+                                <Style TargetType="DataGridRow">
                                     <Style.Triggers>
                                         <DataTrigger Binding="{Binding Status}" Value="online">
                                             <Setter Property="Background" Value="LightGreen" />
@@ -4208,7 +4232,7 @@
                                         </DataTrigger>
                                     </Style.Triggers>
                                 </Style>
-                            </DataGrid.CellStyle>
+                            </DataGrid.RowStyle>
                             <DataGrid.Columns>
                                 <DataGridTextColumn Width="auto" Header="NodeID"  Binding ="{Binding ID}" IsReadOnly="True"/>
                                 <DataGridTextColumn Width="auto" Header="NodeName" Binding ="{Binding Name}" IsReadOnly="True"/>
@@ -4286,8 +4310,8 @@
                                     </Style.Triggers>
                                 </Style>
                             </DataGrid.Style>
-                            <DataGrid.CellStyle>
-                                <Style TargetType="DataGridCell">
+                            <DataGrid.RowStyle>
+                                <Style TargetType="DataGridRow">
                                     <Style.Triggers>
                                         <DataTrigger Binding="{Binding Status}" Value="online">
                                             <Setter Property="Background" Value="LightGreen" />
@@ -4300,7 +4324,7 @@
                                         </DataTrigger>
                                     </Style.Triggers>
                                 </Style>
-                            </DataGrid.CellStyle>
+                            </DataGrid.RowStyle>
                             <DataGrid.Columns>
                                 <DataGridTextColumn Width="auto" Header="NodeID"  Binding ="{Binding ID}" IsReadOnly="True"/>
                                 <DataGridTextColumn Width="auto" Header="NodeName" Binding ="{Binding Name}" IsReadOnly="True"/>
@@ -4378,8 +4402,8 @@
                                     </Style.Triggers>
                                 </Style>
                             </DataGrid.Style>
-                            <DataGrid.CellStyle>
-                                <Style TargetType="DataGridCell">
+                            <DataGrid.RowStyle>
+                                <Style TargetType="DataGridRow">
                                     <Style.Triggers>
                                         <DataTrigger Binding="{Binding Status}" Value="online">
                                             <Setter Property="Background" Value="LightGreen" />
@@ -4392,7 +4416,7 @@
                                         </DataTrigger>
                                     </Style.Triggers>
                                 </Style>
-                            </DataGrid.CellStyle>
+                            </DataGrid.RowStyle>
                             <DataGrid.Columns>
                                 <DataGridTextColumn Width="auto" Header="NodeID"  Binding ="{Binding ID}" IsReadOnly="True"/>
                                 <DataGridTextColumn Width="auto" Header="NodeName" Binding ="{Binding Name}" IsReadOnly="True"/>
@@ -5552,6 +5576,7 @@
                                 <DataGridTextColumn Width="auto" Header="IO Group" Binding ="{Binding IO_Group}" IsReadOnly="True"/>
                                 <DataGridTextColumn Width="auto" Header="Status"  Binding ="{Binding Status}" IsReadOnly="True"/>  
                                 <DataGridTextColumn Width="auto" Header="Pool" Binding ="{Binding Pool}" IsReadOnly="True"/>  
+                                <DataGridTextColumn Width="auto" Header="Capacity" Binding ="{Binding Capacity}" IsReadOnly="True"/>
                                 <DataGridTextColumn Width="auto" Header="Volume_UID" Binding ="{Binding Volume_UID}" IsReadOnly="True"/> 
                                 <DataGridTextColumn Width="auto" Header="Preferred NodeID" Binding ="{Binding PreferredNodeID}" IsReadOnly="True"/>
                                 <DataGridTextColumn Width="auto" Header="Preferred NodeName" Binding ="{Binding PreferredNodeName}" IsReadOnly="True"/> 
@@ -5606,6 +5631,7 @@
                                 <DataGridTextColumn Width="auto" Header="IO Group" Binding ="{Binding IO_Group}" IsReadOnly="True"/>
                                 <DataGridTextColumn Width="auto" Header="Status"  Binding ="{Binding Status}" IsReadOnly="True"/>  
                                 <DataGridTextColumn Width="auto" Header="Pool" Binding ="{Binding Pool}" IsReadOnly="True"/>  
+                                <DataGridTextColumn Width="auto" Header="Capacity" Binding ="{Binding Capacity}" IsReadOnly="True"/>
                                 <DataGridTextColumn Width="auto" Header="Volume_UID" Binding ="{Binding Volume_UID}" IsReadOnly="True"/> 
                                 <DataGridTextColumn Width="auto" Header="Preferred NodeID" Binding ="{Binding PreferredNodeID}" IsReadOnly="True"/>
                                 <DataGridTextColumn Width="auto" Header="Preferred NodeName" Binding ="{Binding PreferredNodeName}" IsReadOnly="True"/> 
@@ -5660,6 +5686,7 @@
                                 <DataGridTextColumn Width="auto" Header="IO Group" Binding ="{Binding IO_Group}" IsReadOnly="True"/>
                                 <DataGridTextColumn Width="auto" Header="Status"  Binding ="{Binding Status}" IsReadOnly="True"/>  
                                 <DataGridTextColumn Width="auto" Header="Pool" Binding ="{Binding Pool}" IsReadOnly="True"/>  
+                                <DataGridTextColumn Width="auto" Header="Capacity" Binding ="{Binding Capacity}" IsReadOnly="True"/>
                                 <DataGridTextColumn Width="auto" Header="Volume_UID" Binding ="{Binding Volume_UID}" IsReadOnly="True"/> 
                                 <DataGridTextColumn Width="auto" Header="Preferred NodeID" Binding ="{Binding PreferredNodeID}" IsReadOnly="True"/>
                                 <DataGridTextColumn Width="auto" Header="Preferred NodeName" Binding ="{Binding PreferredNodeName}" IsReadOnly="True"/> 
@@ -5714,6 +5741,7 @@
                                 <DataGridTextColumn Width="auto" Header="IO Group" Binding ="{Binding IO_Group}" IsReadOnly="True"/>
                                 <DataGridTextColumn Width="auto" Header="Status"  Binding ="{Binding Status}" IsReadOnly="True"/>  
                                 <DataGridTextColumn Width="auto" Header="Pool" Binding ="{Binding Pool}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Capacity" Binding ="{Binding Capacity}" IsReadOnly="True"/>
                                 <DataGridTextColumn Width="auto" Header="Capacity" Binding ="{Binding Capacity}" IsReadOnly="True"/>  
                                 <DataGridTextColumn Width="auto" Header="Volume_UID" Binding ="{Binding Volume_UID}" IsReadOnly="True"/> 
                                 <DataGridTextColumn Width="auto" Header="Preferred NodeID" Binding ="{Binding PreferredNodeID}" IsReadOnly="True"/>
@@ -5768,7 +5796,8 @@
                                 <DataGridTextColumn Width="auto" Header="Volume Name"  Binding ="{Binding Volume_Name}" IsReadOnly="True"/>
                                 <DataGridTextColumn Width="auto" Header="IO Group" Binding ="{Binding IO_Group}" IsReadOnly="True"/>
                                 <DataGridTextColumn Width="auto" Header="Status"  Binding ="{Binding Status}" IsReadOnly="True"/>  
-                                <DataGridTextColumn Width="auto" Header="Pool" Binding ="{Binding Pool}" IsReadOnly="True"/>  
+                                <DataGridTextColumn Width="auto" Header="Pool" Binding ="{Binding Pool}" IsReadOnly="True"/> 
+                                <DataGridTextColumn Width="auto" Header="Capacity" Binding ="{Binding Capacity}" IsReadOnly="True"/> 
                                 <DataGridTextColumn Width="auto" Header="Volume_UID" Binding ="{Binding Volume_UID}" IsReadOnly="True"/> 
                                 <DataGridTextColumn Width="auto" Header="Preferred NodeID" Binding ="{Binding PreferredNodeID}" IsReadOnly="True"/>
                                 <DataGridTextColumn Width="auto" Header="Preferred NodeName" Binding ="{Binding PreferredNodeName}" IsReadOnly="True"/> 
@@ -5823,6 +5852,7 @@
                                 <DataGridTextColumn Width="auto" Header="IO Group" Binding ="{Binding IO_Group}" IsReadOnly="True"/>
                                 <DataGridTextColumn Width="auto" Header="Status"  Binding ="{Binding Status}" IsReadOnly="True"/>  
                                 <DataGridTextColumn Width="auto" Header="Pool" Binding ="{Binding Pool}" IsReadOnly="True"/>  
+                                <DataGridTextColumn Width="auto" Header="Capacity" Binding ="{Binding Capacity}" IsReadOnly="True"/>
                                 <DataGridTextColumn Width="auto" Header="Volume_UID" Binding ="{Binding Volume_UID}" IsReadOnly="True"/> 
                                 <DataGridTextColumn Width="auto" Header="Preferred NodeID" Binding ="{Binding PreferredNodeID}" IsReadOnly="True"/>
                                 <DataGridTextColumn Width="auto" Header="Preferred NodeName" Binding ="{Binding PreferredNodeName}" IsReadOnly="True"/> 
@@ -5877,6 +5907,7 @@
                                 <DataGridTextColumn Width="auto" Header="IO Group" Binding ="{Binding IO_Group}" IsReadOnly="True"/>
                                 <DataGridTextColumn Width="auto" Header="Status"  Binding ="{Binding Status}" IsReadOnly="True"/>  
                                 <DataGridTextColumn Width="auto" Header="Pool" Binding ="{Binding Pool}" IsReadOnly="True"/>  
+                                <DataGridTextColumn Width="auto" Header="Capacity" Binding ="{Binding Capacity}" IsReadOnly="True"/>
                                 <DataGridTextColumn Width="auto" Header="Volume_UID" Binding ="{Binding Volume_UID}" IsReadOnly="True"/> 
                                 <DataGridTextColumn Width="auto" Header="Preferred NodeID" Binding ="{Binding PreferredNodeID}" IsReadOnly="True"/>
                                 <DataGridTextColumn Width="auto" Header="Preferred NodeName" Binding ="{Binding PreferredNodeName}" IsReadOnly="True"/> 

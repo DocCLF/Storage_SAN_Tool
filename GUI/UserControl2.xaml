@@ -360,8 +360,8 @@
                         </DataGrid>
                     </StackPanel>
                     <StackPanel Grid.Row="3" Grid.Column="0"  >
-                        <Label x:Name="LB_sanBasicSwitchInfoTSeven" Content="Switch 7" />
-                        <DataGrid Name="dg_sanBasicSwitchInfoTSeven" CanUserSortColumns="False" AutoGenerateColumns="False" Height="Auto" Width="Auto" Margin="5,0,5,5" >
+                        <Label x:Name="LB_sanBasicSwitchInfoSeven" Content="Switch 7" />
+                        <DataGrid Name="dg_sanBasicSwitchInfoSeven" CanUserSortColumns="False" AutoGenerateColumns="False" Height="Auto" Width="Auto" Margin="5,0,5,5" >
                             <DataGrid.Style>
                                 <Style TargetType="DataGrid">
                                     <Style.Triggers>
@@ -409,19 +409,19 @@
                         <RowDefinition Height="auto" />
                         <RowDefinition Height="auto" />
                     </Grid.RowDefinitions>
-                    <StackPanel Grid.Row="0" Grid.Column="0" >
+                    <StackPanel Grid.Row="0" Grid.Column="0" Orientation="vertical" >
                         <Label x:Name="LB_SANInfoOne" Content="Switch 1" Visibility="Collapsed"/>
                         <TextBox HorizontalAlignment="Left" TextWrapping="WrapWithOverflow" x:Name="TB_SANInfoOne" Margin="5,0,5,5" IsReadOnly="True" Visibility="Collapsed"/>
                     </StackPanel>
-                    <StackPanel Grid.Row="0" Grid.Column="1"  >
+                    <StackPanel Grid.Row="0" Grid.Column="1" Orientation="vertical" >
                         <Label x:Name="LB_SANInfoTwo" Content="Switch 2" Visibility="Collapsed"/>
                         <TextBox HorizontalAlignment="Left" TextWrapping="WrapWithOverflow" x:Name="TB_SANInfoTwo" Margin="5,0,5,5" IsReadOnly="True" Visibility="Collapsed"/>
                     </StackPanel>
-                    <StackPanel Grid.Row="1" Grid.Column="0"  >
+                    <StackPanel Grid.Row="1" Grid.Column="0" Orientation="vertical" >
                         <Label x:Name="LB_SANInfoThree" Content="Switch 3" Visibility="Collapsed" />
                         <TextBox HorizontalAlignment="Left" TextWrapping="WrapWithOverflow" x:Name="TB_SANInfoThree" Margin="5,0,5,5" IsReadOnly="True" Visibility="Collapsed"/>
                     </StackPanel>
-                    <StackPanel Grid.Row="1" Grid.Column="1" >
+                    <StackPanel Grid.Row="1" Grid.Column="1" Orientation="vertical" >
                         <Label x:Name="LB_SANInfoFour" Content="Switch 4" Visibility="Collapsed"/>
                         <TextBox HorizontalAlignment="Left" TextWrapping="WrapWithOverflow" x:Name="TB_SANInfoFour" Margin="5,0,5,5" IsReadOnly="True" Visibility="Collapsed">
                             <TextBox.ToolTip>
@@ -432,19 +432,19 @@
                             </TextBox.ToolTip>
                         </TextBox>
                     </StackPanel>
-                    <StackPanel Grid.Row="2" Grid.Column="0" >
+                    <StackPanel Grid.Row="2" Grid.Column="0" Orientation="vertical" >
                         <Label x:Name="LB_SANInfoFive" Content="Switch 5" Visibility="Collapsed"/>
                         <TextBox HorizontalAlignment="Left" TextWrapping="WrapWithOverflow" x:Name="TB_SANInfoFive" Margin="5,0,5,5" IsReadOnly="True" Visibility="Collapsed"/>
                     </StackPanel>
-                    <StackPanel Grid.Row="2" Grid.Column="1"  >
+                    <StackPanel Grid.Row="2" Grid.Column="1" Orientation="vertical" >
                         <Label x:Name="LB_SANInfoSix" Content="Switch 6" Visibility="Collapsed"/>
                         <TextBox HorizontalAlignment="Left" TextWrapping="WrapWithOverflow" x:Name="TB_SANInfoSix" Margin="5,0,5,5" IsReadOnly="True" Visibility="Collapsed"/>
                     </StackPanel>
-                    <StackPanel Grid.Row="3" Grid.Column="0" >
+                    <StackPanel Grid.Row="3" Grid.Column="0" Orientation="vertical" >
                         <Label x:Name="LB_SANInfoSeven" Content="Switch 7" Visibility="Collapsed" />
                         <TextBox HorizontalAlignment="Left" TextWrapping="WrapWithOverflow" x:Name="TB_SANInfoSeven" Margin="5,0,5,5" IsReadOnly="True" Visibility="Collapsed"/>
                     </StackPanel>
-                    <StackPanel Grid.Row="3" Grid.Column="1" >
+                    <StackPanel Grid.Row="3" Grid.Column="1" Orientation="vertical" >
                         <Label x:Name="LB_SANInfoEight" Content="Switch 8" Visibility="Collapsed"/>
                         <TextBox HorizontalAlignment="Left" TextWrapping="WrapWithOverflow" x:Name="TB_SANInfoEight" Margin="5,0,5,5" IsReadOnly="True" Visibility="Collapsed"/>
                     </StackPanel>
@@ -462,35 +462,35 @@
                         <RowDefinition Height="auto" />
                         <RowDefinition Height="auto" />
                     </Grid.RowDefinitions>
-                    <StackPanel Grid.Row="0" Grid.Column="0" >
+                    <StackPanel Grid.Row="0" Grid.Column="0" Orientation="vertical" >
                         <Label x:Name="LB_SensorInfoOne" Content="Switch 1" Visibility="Collapsed"/>
                         <TextBox HorizontalAlignment="Left" TextWrapping="WrapWithOverflow" x:Name="tb_SensorInfoOne" Margin="5,0,5,5" IsReadOnly="True" Visibility="Collapsed"/>
                     </StackPanel>
-                    <StackPanel Grid.Row="0" Grid.Column="1"  >
+                    <StackPanel Grid.Row="0" Grid.Column="1" Orientation="vertical"  >
                         <Label x:Name="LB_SensorInfoTwo" Content="Switch 2" Visibility="Collapsed"/>
                         <TextBox HorizontalAlignment="Left" TextWrapping="WrapWithOverflow" x:Name="tb_SensorInfoTwo" Margin="5,0,5,5" IsReadOnly="True" Visibility="Collapsed"/>
                     </StackPanel>
-                    <StackPanel Grid.Row="1" Grid.Column="0"  >
+                    <StackPanel Grid.Row="1" Grid.Column="0" Orientation="vertical"  >
                         <Label x:Name="LB_SensorInfoThree" Content="Switch 3" Visibility="Collapsed"/>
                         <TextBox HorizontalAlignment="Left" TextWrapping="WrapWithOverflow" x:Name="tb_SensorInfoThree" Margin="5,0,5,5" IsReadOnly="True" Visibility="Collapsed"/>
                     </StackPanel>
-                    <StackPanel Grid.Row="1" Grid.Column="1" >
+                    <StackPanel Grid.Row="1" Grid.Column="1" Orientation="vertical" >
                         <Label x:Name="LB_SensorInfoFour" Content="Switch 4" Visibility="Collapsed"/>
                         <TextBox HorizontalAlignment="Left" TextWrapping="WrapWithOverflow" x:Name="tb_SensorInfoFour" Margin="5,0,5,5" IsReadOnly="True" Visibility="Collapsed" />
                     </StackPanel>
-                    <StackPanel Grid.Row="2" Grid.Column="0" >
+                    <StackPanel Grid.Row="2" Grid.Column="0" Orientation="vertical" >
                         <Label x:Name="LB_SensorInfoFive" Content="Switch 5" Visibility="Collapsed"/>
                         <TextBox HorizontalAlignment="Left" TextWrapping="WrapWithOverflow" x:Name="tb_SensorInfoFive" Margin="5,0,5,5" IsReadOnly="True" Visibility="Collapsed"/>
                     </StackPanel>
-                    <StackPanel Grid.Row="2" Grid.Column="1"  >
+                    <StackPanel Grid.Row="2" Grid.Column="1" Orientation="vertical"  >
                         <Label x:Name="LB_SensorInfoSix" Content="Switch 6" Visibility="Collapsed"/>
                         <TextBox HorizontalAlignment="Left" TextWrapping="WrapWithOverflow" x:Name="tb_SensorInfoSix" Margin="5,0,5,5" IsReadOnly="True" Visibility="Collapsed"/>
                     </StackPanel>
-                    <StackPanel Grid.Row="3" Grid.Column="0"  >
+                    <StackPanel Grid.Row="3" Grid.Column="0" Orientation="vertical"  >
                         <Label x:Name="LB_SensorInfoSeven" Content="Switch 7" Visibility="Collapsed"/>
                         <TextBox HorizontalAlignment="Left" TextWrapping="WrapWithOverflow" x:Name="tb_SensorInfoSeven" Margin="5,0,5,5" IsReadOnly="True" Visibility="Collapsed"/>
                     </StackPanel>
-                    <StackPanel Grid.Row="3" Grid.Column="1" >
+                    <StackPanel Grid.Row="3" Grid.Column="1" Orientation="vertical" >
                         <Label x:Name="LB_SensorInfoEight" Content="Switch 8" Visibility="Collapsed"/>
                         <TextBox HorizontalAlignment="Left" TextWrapping="WrapWithOverflow" x:Name="tb_SensorInfoEight" Margin="5,0,5,5" IsReadOnly="True" Visibility="Collapsed" />
                     </StackPanel>
@@ -508,9 +508,9 @@
                         <RowDefinition Height="auto" />
                         <RowDefinition Height="auto" />
                     </Grid.RowDefinitions>
-                    <StackPanel Grid.Row="0" Grid.Column="0" >
+                    <StackPanel Grid.Row="0" Grid.Column="0" Orientation="vertical" >
                         <Label x:Name="LB_PortBufferShowOne" Content="Switch 1" Visibility="Collapsed"/>
-                        <DataGrid x:Name="lb_PortBufferShowOne" CanUserSortColumns="False" AutoGenerateColumns="False" Margin="5" MinWidth="600" Height="400">
+                        <DataGrid x:Name="DG_PortBufferShowOne" CanUserSortColumns="False" AutoGenerateColumns="False" Margin="5" MinWidth="600" Height="400">
                             <DataGrid.Style>
                                 <Style TargetType="DataGrid">
                                     <Style.Triggers>
@@ -570,9 +570,9 @@
                                 </DataGrid.Columns>
                         </DataGrid >
                     </StackPanel>
-                    <StackPanel Grid.Row="0" Grid.Column="1"  >
+                    <StackPanel Grid.Row="0" Grid.Column="1" Orientation="vertical" >
                         <Label x:Name="LB_PortBufferShowTwo" Content="Switch 2" Visibility="Collapsed"/>
-                        <DataGrid x:Name="lb_PortBufferShowTwo" CanUserSortColumns="False" AutoGenerateColumns="False" Margin="5" MinWidth="600" Height="400">
+                        <DataGrid x:Name="DG_PortBufferShowTwo" CanUserSortColumns="False" AutoGenerateColumns="False" Margin="5" MinWidth="600" Height="400">
                             <DataGrid.Style>
                                 <Style TargetType="DataGrid">
                                     <Style.Triggers>
@@ -632,9 +632,9 @@
                                 </DataGrid.Columns>
                         </DataGrid >
                     </StackPanel>
-                    <StackPanel Grid.Row="1" Grid.Column="0"  >
+                    <StackPanel Grid.Row="1" Grid.Column="0"  Orientation="vertical" >
                         <Label x:Name="LB_PortBufferShowThree" Content="Switch 3" Visibility="Collapsed"/>
-                        <DataGrid x:Name="lb_PortBufferShowThree" CanUserSortColumns="False" AutoGenerateColumns="False" Margin="5" MinWidth="600" Height="400">
+                        <DataGrid x:Name="DG_PortBufferShowThree" CanUserSortColumns="False" AutoGenerateColumns="False" Margin="5" MinWidth="600" Height="400">
                             <DataGrid.Style>
                                 <Style TargetType="DataGrid">
                                     <Style.Triggers>
@@ -694,9 +694,9 @@
                                 </DataGrid.Columns>
                         </DataGrid >
                     </StackPanel>
-                    <StackPanel Grid.Row="1" Grid.Column="1" >
+                    <StackPanel Grid.Row="1" Grid.Column="1" Orientation="vertical" >
                         <Label x:Name="LB_PortBufferShowFour" Content="Switch 4" Visibility="Collapsed"/>
-                        <DataGrid x:Name="lb_PortBufferShowFour" CanUserSortColumns="False" AutoGenerateColumns="False" Margin="5" MinWidth="600" Height="400">
+                        <DataGrid x:Name="DG_PortBufferShowFour" CanUserSortColumns="False" AutoGenerateColumns="False" Margin="5" MinWidth="600" Height="400">
                             <DataGrid.Style>
                                 <Style TargetType="DataGrid">
                                     <Style.Triggers>
@@ -756,9 +756,9 @@
                                 </DataGrid.Columns>
                         </DataGrid >
                     </StackPanel>
-                    <StackPanel Grid.Row="2" Grid.Column="0" >
+                    <StackPanel Grid.Row="2" Grid.Column="0" Orientation="vertical" >
                         <Label x:Name="LB_PortBufferShowFive" Content="Switch 5" Visibility="Collapsed"/>
-                        <DataGrid x:Name="lb_PortBufferShowFive" CanUserSortColumns="False" AutoGenerateColumns="False" Margin="5" MinWidth="600" Height="400">
+                        <DataGrid x:Name="DG_PortBufferShowFive" CanUserSortColumns="False" AutoGenerateColumns="False" Margin="5" MinWidth="600" Height="400">
                             <DataGrid.Style>
                                 <Style TargetType="DataGrid">
                                     <Style.Triggers>
@@ -818,9 +818,9 @@
                                 </DataGrid.Columns>
                         </DataGrid >
                     </StackPanel>
-                    <StackPanel Grid.Row="2" Grid.Column="1"  >
+                    <StackPanel Grid.Row="2" Grid.Column="1"  Orientation="vertical" >
                         <Label x:Name="LB_PortBufferShowSix" Content="Switch 6" Visibility="Collapsed"/>
-                        <DataGrid x:Name="lb_PortBufferShowSix" CanUserSortColumns="False" AutoGenerateColumns="False" Margin="5" MinWidth="600" Height="400">
+                        <DataGrid x:Name="DG_PortBufferShowSix" CanUserSortColumns="False" AutoGenerateColumns="False" Margin="5" MinWidth="600" Height="400">
                             <DataGrid.Style>
                                 <Style TargetType="DataGrid">
                                     <Style.Triggers>
@@ -880,9 +880,9 @@
                                 </DataGrid.Columns>
                         </DataGrid >
                     </StackPanel>
-                    <StackPanel Grid.Row="3" Grid.Column="0"  >
+                    <StackPanel Grid.Row="3" Grid.Column="0"  Orientation="vertical" >
                         <Label x:Name="LB_PortBufferShowSeven" Content="Switch 7" Visibility="Collapsed"/>
-                        <DataGrid x:Name="lb_PortBufferShowSeven" CanUserSortColumns="False" AutoGenerateColumns="False" Margin="5" MinWidth="600" Height="400">
+                        <DataGrid x:Name="DG_PortBufferShowSeven" CanUserSortColumns="False" AutoGenerateColumns="False" Margin="5" MinWidth="600" Height="400">
                             <DataGrid.Style>
                                 <Style TargetType="DataGrid">
                                     <Style.Triggers>
@@ -942,9 +942,9 @@
                                 </DataGrid.Columns>
                         </DataGrid >
                     </StackPanel>
-                    <StackPanel Grid.Row="3" Grid.Column="1" >
+                    <StackPanel Grid.Row="3" Grid.Column="1" Orientation="vertical" >
                         <Label x:Name="LB_PortBufferShowEight" Content="Switch 8" Visibility="Collapsed"/>
-                        <DataGrid x:Name="lb_PortBufferShowEight" CanUserSortColumns="False" AutoGenerateColumns="False" Margin="5" MinWidth="600" Height="400">
+                        <DataGrid x:Name="DG_PortBufferShowEight" CanUserSortColumns="False" AutoGenerateColumns="False" Margin="5" MinWidth="600" Height="400">
                             <DataGrid.Style>
                                 <Style TargetType="DataGrid">
                                     <Style.Triggers>
@@ -1009,6 +1009,7 @@
             <StackPanel x:Name="stp_sanPortErrorShow" Margin="2" Visibility="{Binding ElementName=btn_FOS_PortErrorShow, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
                 <Grid>
                     <Grid.RowDefinitions>
+                        <RowDefinition Height="auto" />
                         <RowDefinition Height="auto" />
                         <RowDefinition Height="auto" />
                     </Grid.RowDefinitions>
@@ -2148,9 +2149,10 @@
                             </ComboBox>
                             <TextBox x:Name="tb_FilterWordSANSwShow" HorizontalAlignment="Left" MinWidth="100" MaxWidth="250" Margin="5" Text="Filter" TextWrapping="Wrap" FontSize="14" VerticalContentAlignment="Center"/>
                             <Button x:Name="btn_FilterSANSwShow" Style="{StaticResource MainBtnStyle}" Content="Apply Filter" />
-                            <Label x:Name="lb_ErrorMsgSANSwShow" Foreground="Red" Content="" Style="{StaticResource MainLabelStyle}" Padding="2" Margin="25,5,0,5"/>
+                            <Button x:Name="btn_ClearFilterSANSwShow" Style="{StaticResource MainBtnStyle}" Content="Clear Filter" Background="LightPink"/>
+                            <Label x:Name="lb_ErrorMsgSANSwShow"  Visibility="Collapsed" Foreground="Red" Content="" Style="{StaticResource MainLabelStyle}" Padding="2" Margin="25,5,0,5"/>
                         </StackPanel>
-                    <StackPanel Grid.Row="1" Grid.Column="0" >
+                    <StackPanel Grid.Row="1" Grid.Column="0" Orientation="vertical"  >
                         <Label x:Name="LB_SwitchShowOne" Content="Switch 1" Visibility="Collapsed"/>
                         <DataGrid x:Name="DG_SwitchShowOne" CanUserSortColumns="False" AutoGenerateColumns="False" Margin="5" MinWidth="600" Height="400">
                             <DataGrid.Style>
@@ -2186,7 +2188,7 @@
                             </DataGrid.Columns>
                         </DataGrid>
                     </StackPanel>
-                    <StackPanel Grid.Row="1" Grid.Column="1"  >
+                    <StackPanel Grid.Row="1" Grid.Column="1" Orientation="vertical"  >
                         <Label x:Name="LB_SwitchShowTwo" Content="Switch 2" Visibility="Collapsed"/>
                         <DataGrid x:Name="DG_SwitchShowTwo" CanUserSortColumns="False" AutoGenerateColumns="False" Margin="5" MinWidth="600" Height="400">
                             <DataGrid.Style>
@@ -2222,7 +2224,7 @@
                             </DataGrid.Columns>
                         </DataGrid>
                     </StackPanel>
-                    <StackPanel Grid.Row="2" Grid.Column="0"  >
+                    <StackPanel Grid.Row="2" Grid.Column="0" Orientation="vertical"  >
                         <Label x:Name="LB_SwitchShowThree" Content="Switch 3" Visibility="Collapsed"/>
                         <DataGrid x:Name="DG_SwitchShowThree" CanUserSortColumns="False" AutoGenerateColumns="False" Margin="5" MinWidth="600" Height="400">
                             <DataGrid.Style>
@@ -2258,7 +2260,7 @@
                             </DataGrid.Columns>
                         </DataGrid>
                     </StackPanel>
-                    <StackPanel Grid.Row="2" Grid.Column="1" >
+                    <StackPanel Grid.Row="2" Grid.Column="1" Orientation="vertical" >
                         <Label x:Name="LB_SwitchShowFour" Content="Switch 4" Visibility="Collapsed"/>
                         <DataGrid x:Name="DG_SwitchShowFour" CanUserSortColumns="False" AutoGenerateColumns="False" Margin="5" MinWidth="600" Height="400">
                             <DataGrid.Style>
@@ -2294,7 +2296,7 @@
                             </DataGrid.Columns>
                         </DataGrid>
                     </StackPanel>
-                    <StackPanel Grid.Row="3" Grid.Column="0" >
+                    <StackPanel Grid.Row="3" Grid.Column="0" Orientation="vertical"  >
                         <Label x:Name="LB_SwitchShowFive" Content="Switch 6" Visibility="Collapsed"/>
                         <DataGrid x:Name="DG_SwitchShowFive" CanUserSortColumns="False" AutoGenerateColumns="False" Margin="5" MinWidth="600" Height="400">
                             <DataGrid.Style>
@@ -2330,7 +2332,7 @@
                             </DataGrid.Columns>
                         </DataGrid>
                     </StackPanel>
-                    <StackPanel Grid.Row="3" Grid.Column="1"  >
+                    <StackPanel Grid.Row="3" Grid.Column="1" Orientation="vertical"  >
                         <Label x:Name="LB_SwitchShowSix" Content="Switch 6" Visibility="Collapsed"/>
                         <DataGrid x:Name="DG_SwitchShowSix" CanUserSortColumns="False" AutoGenerateColumns="False" Margin="5" MinWidth="600" Height="400">
                             <DataGrid.Style>
@@ -2366,7 +2368,7 @@
                             </DataGrid.Columns>
                         </DataGrid>
                     </StackPanel>
-                    <StackPanel Grid.Row="4" Grid.Column="0"  >
+                    <StackPanel Grid.Row="4" Grid.Column="0" Orientation="vertical"  >
                         <Label x:Name="LB_SwitchShowSeven" Content="Switch 7" Visibility="Collapsed"/>
                         <DataGrid x:Name="DG_SwitchShowSeven" CanUserSortColumns="False" AutoGenerateColumns="False" Margin="5" MinWidth="600" Height="400">
                             <DataGrid.Style>
@@ -2402,7 +2404,7 @@
                             </DataGrid.Columns>
                         </DataGrid>
                     </StackPanel>
-                    <StackPanel Grid.Row="4" Grid.Column="1" >
+                    <StackPanel Grid.Row="4" Grid.Column="1" Orientation="vertical"  >
                         <Label x:Name="LB_SwitchShowEight" Content="Switch 8" Visibility="Collapsed"/>
                         <DataGrid x:Name="DG_SwitchShowEight" CanUserSortColumns="False" AutoGenerateColumns="False" Margin="5" MinWidth="600" Height="400">
                             <DataGrid.Style>
@@ -2492,7 +2494,7 @@
                             </DataGrid.Columns>
                         </DataGrid>
                     </StackPanel>
-                    <StackPanel Grid.Row="0" Grid.Column="1"  >
+                    <StackPanel Grid.Row="0" Grid.Column="1" Orientation="vertical"  >
                         <Label x:Name="LB_SFPShowTwo" Content="Switch 2" Visibility="Collapsed"/>
                         <DataGrid x:Name="dg_SFPShowTwo" CanUserSortColumns="False" AutoGenerateColumns="False" Margin="5" MinWidth="600" Height="400">
                             <DataGrid.Style>
@@ -2532,7 +2534,7 @@
                             </DataGrid.Columns>
                         </DataGrid>
                     </StackPanel>
-                    <StackPanel Grid.Row="1" Grid.Column="0"  >
+                    <StackPanel Grid.Row="1" Grid.Column="0" Orientation="vertical"  >
                         <Label x:Name="LB_SFPShowThree" Content="Switch 3" Visibility="Collapsed"/>
                         <DataGrid x:Name="dg_SFPShowThree" CanUserSortColumns="False" AutoGenerateColumns="False" Margin="5" MinWidth="600" Height="400">
                             <DataGrid.Style>
@@ -2572,7 +2574,7 @@
                             </DataGrid.Columns>
                         </DataGrid>
                     </StackPanel>
-                    <StackPanel Grid.Row="1" Grid.Column="1" >
+                    <StackPanel Grid.Row="1" Grid.Column="1" Orientation="vertical"  >
                         <Label x:Name="LB_SFPShowFour" Content="Switch 4" Visibility="Collapsed"/>
                         <DataGrid x:Name="dg_SFPShowFour" CanUserSortColumns="False" AutoGenerateColumns="False" Margin="5" MinWidth="600" Height="400">
                             <DataGrid.Style>
@@ -2612,7 +2614,7 @@
                             </DataGrid.Columns>
                         </DataGrid>
                     </StackPanel>
-                    <StackPanel Grid.Row="2" Grid.Column="0" >
+                    <StackPanel Grid.Row="2" Grid.Column="0" Orientation="vertical"  >
                         <Label x:Name="LB_SFPShowFive" Content="Switch 5" Visibility="Collapsed"/>
                         <DataGrid x:Name="dg_SFPShowFive" CanUserSortColumns="False" AutoGenerateColumns="False" Margin="5" MinWidth="600" Height="400">
                             <DataGrid.Style>
@@ -2652,7 +2654,7 @@
                             </DataGrid.Columns>
                         </DataGrid>
                     </StackPanel>
-                    <StackPanel Grid.Row="2" Grid.Column="1"  >
+                    <StackPanel Grid.Row="2" Grid.Column="1" Orientation="vertical"  >
                         <Label x:Name="LB_SFPShowSix" Content="Switch 6" Visibility="Collapsed"/>
                         <DataGrid x:Name="dg_SFPShowSix" CanUserSortColumns="False" AutoGenerateColumns="False" Margin="5" MinWidth="600" Height="400">
                             <DataGrid.Style>
@@ -2692,7 +2694,7 @@
                             </DataGrid.Columns>
                         </DataGrid>
                     </StackPanel>
-                    <StackPanel Grid.Row="3" Grid.Column="0"  >
+                    <StackPanel Grid.Row="3" Grid.Column="0" Orientation="vertical"  >
                         <Label x:Name="LB_SFPShowSeven" Content="Switch 7" Visibility="Collapsed"/>
                         <DataGrid x:Name="dg_SFPShowSeven" CanUserSortColumns="False" AutoGenerateColumns="False" Margin="5" MinWidth="600" Height="400">
                             <DataGrid.Style>
@@ -2732,7 +2734,7 @@
                             </DataGrid.Columns>
                         </DataGrid>
                     </StackPanel>
-                    <StackPanel Grid.Row="3" Grid.Column="1" >
+                    <StackPanel Grid.Row="3" Grid.Column="1" Orientation="vertical"  >
                         <Label x:Name="LB_SFPShowEight" Content="Switch 8" Visibility="Collapsed"/>
                         <DataGrid x:Name="dg_SFPShowEight" CanUserSortColumns="False" AutoGenerateColumns="False" Margin="5" MinWidth="600" Height="400">
                             <DataGrid.Style>

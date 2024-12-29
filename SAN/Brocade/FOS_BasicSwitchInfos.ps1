@@ -117,7 +117,7 @@ function FOS_BasicSwitchInfos {
         if($TD_Line_ID -eq 6){$TD_LB_sanBasicSwitchInfoSix.Visibility = "Visible";     $TD_LB_sanBasicSwitchInfoSix.Content = "$($FOS_SwGeneralInfos.'Swicht Name')" }
         if($TD_Line_ID -eq 7){$TD_LB_sanBasicSwitchInfoSeven.Visibility = "Visible";   $TD_LB_sanBasicSwitchInfoSeven.Content = "$($FOS_SwGeneralInfos.'Swicht Name')"}
         if($TD_Line_ID -eq 8){$TD_LB_sanBasicSwitchInfoEight.Visibility = "Visible";   $TD_LB_sanBasicSwitchInfoEight.Content = "$($FOS_SwGeneralInfos.'Swicht Name')"}
-
+        if([string]::IsNullOrEmpty($TD_Device_DeviceName)){$TD_Device_DeviceName = $($FOS_SwGeneralInfos.'Swicht Name')}
         Close-ProgressBar -ProgressBar $ProgressBar
         <# export y or n #>
         if($TD_Export -eq "yes"){

@@ -25,7 +25,7 @@ function FOS_PortLicenseShowInfo {
         [string]$TD_Export = "yes",
         [string]$TD_Exportpath,
         [string]$TD_RefreshView,
-        [string]$TD_FOSVersion
+        [string]$TD_FOSVersion = $TD_cb_FOS_Version.Text
     )
     
     begin{

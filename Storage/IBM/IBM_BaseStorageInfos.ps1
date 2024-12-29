@@ -84,6 +84,7 @@ function IBM_BaseStorageInfos {
     
     end {
         Close-ProgressBar -ProgressBar $ProgressBar
+        if([string]::IsNullOrEmpty($TD_Device_DeviceName)){$TD_Device_DeviceName = $TD_StorageInfo.Name[0]}
         <# export y or n #>
         if($TD_export -eq "yes"){
             if([string]$TD_Exportpath -ne "$PSRootPath\ToolLog\"){

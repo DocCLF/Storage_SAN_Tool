@@ -87,6 +87,16 @@ function IBM_EventLog {
     }
     
     end {
+
+        if($TD_Line_ID -eq 1){$TD_lb_StoEventLogOne.Visibility="visible"  ;$TD_lb_StoEventLogOne.Content= $TD_Device_DeviceName }
+        if($TD_Line_ID -eq 2){$TD_lb_StoEventLogTwo.Visibility="visible"  ;$TD_lb_StoEventLogTwo.Content=$TD_Device_DeviceName }
+        if($TD_Line_ID -eq 3){$TD_lb_StoEventLogThree.Visibility="visible";$TD_lb_StoEventLogThree.Content=$TD_Device_DeviceName}
+        if($TD_Line_ID -eq 4){$TD_lb_StoEventLogFour.Visibility="visible" ;$TD_lb_StoEventLogFour.Content=$TD_Device_DeviceName}
+        if($TD_Line_ID -eq 5){$TD_lb_StoEventLogFive.Visibility="visible" ;$TD_lb_StoEventLogFive.Content=$TD_Device_DeviceName}  
+        if($TD_Line_ID -eq 6){$TD_lb_StoEventLogSix.Visibility="visible"  ;$TD_lb_StoEventLogSix.Content=$TD_Device_DeviceName }  
+        if($TD_Line_ID -eq 7){$TD_lb_StoEventLogSeven.Visibility="visible";$TD_lb_StoEventLogSeven.Content=$TD_Device_DeviceName}
+        if($TD_Line_ID -eq 8){$TD_lb_StoEventLogEight.Visibility="visible";$TD_lb_StoEventLogEight.Content=$TD_Device_DeviceName}
+        
         Close-ProgressBar -ProgressBar $ProgressBar
         <# returns the hashtable for further processing, not mandatory but the safe way #>
         Write-Debug -Message "IBM_EventLog End block |$(Get-Date) `n"

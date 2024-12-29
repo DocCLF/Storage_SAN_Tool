@@ -46,7 +46,7 @@ function SST_GetCredfGUI {
 
         if($TD_CB_DeviceConnectionType.Text -like "Classic*"){$TD_CB_DeviceConnectionTypeText="plink"}else{$TD_CB_DeviceConnectionTypeText="ssh"}
         <# Create the Main_CredObj #>
-        $TD_UserInputCred = "" | Select-Object ID,DeviceTyp,ConnectionTyp,IPAddress,Name,UserName,Password,SSHKeyPath,SVCorVF,MTMCode,ProductDescr,CurrentFirmware,Exportpath
+        $TD_UserInputCred = "" | Select-Object ID,DeviceTyp,ConnectionTyp,IPAddress,DeviceName,UserName,Password,SSHKeyPath,SVCorVF,MTMCode,ProductDescr,CurrentFirmware,Exportpath
         $TD_UserInputCred.ID               =   $TD_CredentialsCount;
         $TD_UserInputCred.DeviceTyp        =   $TD_CB_DeviceType.Text;
         $TD_UserInputCred.ConnectionTyp    =   $TD_CB_DeviceConnectionTypeText;
