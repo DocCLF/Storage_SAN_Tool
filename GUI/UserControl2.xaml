@@ -402,6 +402,7 @@
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />
                         <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="auto" />
@@ -417,11 +418,11 @@
                         <Label x:Name="LB_SANInfoTwo" Content="Switch 2" Visibility="Collapsed"/>
                         <TextBox HorizontalAlignment="Left" TextWrapping="WrapWithOverflow" x:Name="TB_SANInfoTwo" Margin="5,0,5,5" IsReadOnly="True" Visibility="Collapsed"/>
                     </StackPanel>
-                    <StackPanel Grid.Row="1" Grid.Column="0" Orientation="vertical" >
+                    <StackPanel Grid.Row="0" Grid.Column="2" Orientation="vertical" >
                         <Label x:Name="LB_SANInfoThree" Content="Switch 3" Visibility="Collapsed" />
                         <TextBox HorizontalAlignment="Left" TextWrapping="WrapWithOverflow" x:Name="TB_SANInfoThree" Margin="5,0,5,5" IsReadOnly="True" Visibility="Collapsed"/>
                     </StackPanel>
-                    <StackPanel Grid.Row="1" Grid.Column="1" Orientation="vertical" >
+                    <StackPanel Grid.Row="1" Grid.Column="0" Orientation="vertical" >
                         <Label x:Name="LB_SANInfoFour" Content="Switch 4" Visibility="Collapsed"/>
                         <TextBox HorizontalAlignment="Left" TextWrapping="WrapWithOverflow" x:Name="TB_SANInfoFour" Margin="5,0,5,5" IsReadOnly="True" Visibility="Collapsed">
                             <TextBox.ToolTip>
@@ -432,19 +433,19 @@
                             </TextBox.ToolTip>
                         </TextBox>
                     </StackPanel>
-                    <StackPanel Grid.Row="2" Grid.Column="0" Orientation="vertical" >
+                    <StackPanel Grid.Row="1" Grid.Column="1" Orientation="vertical" >
                         <Label x:Name="LB_SANInfoFive" Content="Switch 5" Visibility="Collapsed"/>
                         <TextBox HorizontalAlignment="Left" TextWrapping="WrapWithOverflow" x:Name="TB_SANInfoFive" Margin="5,0,5,5" IsReadOnly="True" Visibility="Collapsed"/>
                     </StackPanel>
-                    <StackPanel Grid.Row="2" Grid.Column="1" Orientation="vertical" >
+                    <StackPanel Grid.Row="1" Grid.Column="2" Orientation="vertical" >
                         <Label x:Name="LB_SANInfoSix" Content="Switch 6" Visibility="Collapsed"/>
                         <TextBox HorizontalAlignment="Left" TextWrapping="WrapWithOverflow" x:Name="TB_SANInfoSix" Margin="5,0,5,5" IsReadOnly="True" Visibility="Collapsed"/>
                     </StackPanel>
-                    <StackPanel Grid.Row="3" Grid.Column="0" Orientation="vertical" >
+                    <StackPanel Grid.Row="2" Grid.Column="0" Orientation="vertical" >
                         <Label x:Name="LB_SANInfoSeven" Content="Switch 7" Visibility="Collapsed" />
                         <TextBox HorizontalAlignment="Left" TextWrapping="WrapWithOverflow" x:Name="TB_SANInfoSeven" Margin="5,0,5,5" IsReadOnly="True" Visibility="Collapsed"/>
                     </StackPanel>
-                    <StackPanel Grid.Row="3" Grid.Column="1" Orientation="vertical" >
+                    <StackPanel Grid.Row="2" Grid.Column="1" Orientation="vertical" >
                         <Label x:Name="LB_SANInfoEight" Content="Switch 8" Visibility="Collapsed"/>
                         <TextBox HorizontalAlignment="Left" TextWrapping="WrapWithOverflow" x:Name="TB_SANInfoEight" Margin="5,0,5,5" IsReadOnly="True" Visibility="Collapsed"/>
                     </StackPanel>
@@ -2143,6 +2144,7 @@
                                 </ComboBox>
                             <ComboBox x:Name="cb_FilterColumSANSwShow" ToolTip="Selcet your Filter" SelectedIndex="0" SelectedValuePath="Content" Style="{StaticResource MainComboBoxStyle}">
                                 <ComboBoxItem>Port</ComboBoxItem>
+                                <ComboBoxItem>Address</ComboBoxItem>
                                 <ComboBoxItem>Speed</ComboBoxItem>
                                 <ComboBoxItem>State</ComboBoxItem>
                                 <ComboBoxItem>PortConnect</ComboBoxItem>
@@ -2164,6 +2166,15 @@
                                     </Style.Triggers>
                                 </Style>
                             </DataGrid.Style>
+                            <DataGrid.RowStyle>
+                                <Style TargetType="DataGridRow">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding Address}" Value="virtuell">
+                                            <Setter Property="Background" Value="LightGray" />
+                                        </DataTrigger>
+                                    </Style.Triggers>    
+                                </Style>
+                            </DataGrid.RowStyle>
                             <DataGrid.Columns>
                                 <DataGridTextColumn Width="auto" Header="Index"  Binding ="{Binding Index}" IsReadOnly="True">
                                     <DataGridTextColumn.CellStyle>
@@ -2173,7 +2184,7 @@
                                     </DataGridTextColumn.CellStyle>
                                 </DataGridTextColumn>
                                 <DataGridTextColumn Width="auto" Header="Port" Binding ="{Binding Port}" IsReadOnly="True"/>
-                                <DataGridTextColumn Width="auto" Header="Address"  Binding ="{Binding Address}" IsReadOnly="True">  
+                                <DataGridTextColumn Width="auto" Header="Address" Binding ="{Binding Address}" IsReadOnly="True">  
                                     <DataGridTextColumn.CellStyle>
                                         <Style TargetType="DataGridCell">
                                             <Setter Property="ToolTip" Value="The 24-bit Address Identifier." />
@@ -2200,8 +2211,17 @@
                                     </Style.Triggers>
                                 </Style>
                             </DataGrid.Style>
+                            <DataGrid.RowStyle>
+                                <Style TargetType="DataGridRow">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding Address}" Value="virtuell">
+                                            <Setter Property="Background" Value="LightGray" />
+                                        </DataTrigger>
+                                    </Style.Triggers>    
+                                </Style>
+                            </DataGrid.RowStyle>
                             <DataGrid.Columns>
-                                <DataGridTextColumn Width="auto" Header="Index"  Binding ="{Binding Index}" IsReadOnly="True">
+                                <DataGridTextColumn Width="auto" Header="Index" Binding ="{Binding Index}" IsReadOnly="True">
                                     <DataGridTextColumn.CellStyle>
                                         <Style TargetType="DataGridCell">
                                             <Setter Property="ToolTip" Value="The port index identifies the port number relative to the switch." />
@@ -2209,7 +2229,7 @@
                                     </DataGridTextColumn.CellStyle>
                                 </DataGridTextColumn>
                                 <DataGridTextColumn Width="auto" Header="Port" Binding ="{Binding Port}" IsReadOnly="True"/>
-                                <DataGridTextColumn Width="auto" Header="Address"  Binding ="{Binding Address}" IsReadOnly="True">  
+                                <DataGridTextColumn Width="auto" Header="Address" Binding ="{Binding Address}" IsReadOnly="True">  
                                     <DataGridTextColumn.CellStyle>
                                         <Style TargetType="DataGridCell">
                                             <Setter Property="ToolTip" Value="The 24-bit Address Identifier." />
@@ -2236,8 +2256,17 @@
                                     </Style.Triggers>
                                 </Style>
                             </DataGrid.Style>
+                            <DataGrid.RowStyle>
+                                <Style TargetType="DataGridRow">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding Address}" Value="virtuell">
+                                            <Setter Property="Background" Value="LightGray" />
+                                        </DataTrigger>
+                                    </Style.Triggers>    
+                                </Style>
+                            </DataGrid.RowStyle>
                             <DataGrid.Columns>
-                                <DataGridTextColumn Width="auto" Header="Index"  Binding ="{Binding Index}" IsReadOnly="True">
+                                <DataGridTextColumn Width="auto" Header="Index" Binding ="{Binding Index}" IsReadOnly="True">
                                     <DataGridTextColumn.CellStyle>
                                         <Style TargetType="DataGridCell">
                                             <Setter Property="ToolTip" Value="The port index identifies the port number relative to the switch." />
@@ -2245,7 +2274,7 @@
                                     </DataGridTextColumn.CellStyle>
                                 </DataGridTextColumn>
                                 <DataGridTextColumn Width="auto" Header="Port" Binding ="{Binding Port}" IsReadOnly="True"/>
-                                <DataGridTextColumn Width="auto" Header="Address"  Binding ="{Binding Address}" IsReadOnly="True">  
+                                <DataGridTextColumn Width="auto" Header="Address" Binding ="{Binding Address}" IsReadOnly="True">  
                                     <DataGridTextColumn.CellStyle>
                                         <Style TargetType="DataGridCell">
                                             <Setter Property="ToolTip" Value="The 24-bit Address Identifier." />
@@ -2272,8 +2301,17 @@
                                     </Style.Triggers>
                                 </Style>
                             </DataGrid.Style>
+                            <DataGrid.RowStyle>
+                                <Style TargetType="DataGridRow">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding Address}" Value="virtuell">
+                                            <Setter Property="Background" Value="LightGray" />
+                                        </DataTrigger>
+                                    </Style.Triggers>    
+                                </Style>
+                            </DataGrid.RowStyle>
                             <DataGrid.Columns>
-                                <DataGridTextColumn Width="auto" Header="Index"  Binding ="{Binding Index}" IsReadOnly="True">
+                                <DataGridTextColumn Width="auto" Header="Index" Binding ="{Binding Index}" IsReadOnly="True">
                                     <DataGridTextColumn.CellStyle>
                                         <Style TargetType="DataGridCell">
                                             <Setter Property="ToolTip" Value="The port index identifies the port number relative to the switch." />
@@ -2281,7 +2319,7 @@
                                     </DataGridTextColumn.CellStyle>
                                 </DataGridTextColumn>
                                 <DataGridTextColumn Width="auto" Header="Port" Binding ="{Binding Port}" IsReadOnly="True"/>
-                                <DataGridTextColumn Width="auto" Header="Address"  Binding ="{Binding Address}" IsReadOnly="True">  
+                                <DataGridTextColumn Width="auto" Header="Address" Binding ="{Binding Address}" IsReadOnly="True">  
                                     <DataGridTextColumn.CellStyle>
                                         <Style TargetType="DataGridCell">
                                             <Setter Property="ToolTip" Value="The 24-bit Address Identifier." />
@@ -2308,8 +2346,17 @@
                                     </Style.Triggers>
                                 </Style>
                             </DataGrid.Style>
+                            <DataGrid.RowStyle>
+                                <Style TargetType="DataGridRow">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding Address}" Value="virtuell">
+                                            <Setter Property="Background" Value="LightGray" />
+                                        </DataTrigger>
+                                    </Style.Triggers>    
+                                </Style>
+                            </DataGrid.RowStyle>
                             <DataGrid.Columns>
-                                <DataGridTextColumn Width="auto" Header="Index"  Binding ="{Binding Index}" IsReadOnly="True">
+                                <DataGridTextColumn Width="auto" Header="Index" Binding ="{Binding Index}" IsReadOnly="True">
                                     <DataGridTextColumn.CellStyle>
                                         <Style TargetType="DataGridCell">
                                             <Setter Property="ToolTip" Value="The port index identifies the port number relative to the switch." />
@@ -2317,7 +2364,7 @@
                                     </DataGridTextColumn.CellStyle>
                                 </DataGridTextColumn>
                                 <DataGridTextColumn Width="auto" Header="Port" Binding ="{Binding Port}" IsReadOnly="True"/>
-                                <DataGridTextColumn Width="auto" Header="Address"  Binding ="{Binding Address}" IsReadOnly="True">  
+                                <DataGridTextColumn Width="auto" Header="Address" Binding ="{Binding Address}" IsReadOnly="True">  
                                     <DataGridTextColumn.CellStyle>
                                         <Style TargetType="DataGridCell">
                                             <Setter Property="ToolTip" Value="The 24-bit Address Identifier." />
@@ -2344,8 +2391,17 @@
                                     </Style.Triggers>
                                 </Style>
                             </DataGrid.Style>
+                            <DataGrid.RowStyle>
+                                <Style TargetType="DataGridRow">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding Address}" Value="virtuell">
+                                            <Setter Property="Background" Value="LightGray" />
+                                        </DataTrigger>
+                                    </Style.Triggers>    
+                                </Style>
+                            </DataGrid.RowStyle>
                             <DataGrid.Columns>
-                                <DataGridTextColumn Width="auto" Header="Index"  Binding ="{Binding Index}" IsReadOnly="True">
+                                <DataGridTextColumn Width="auto" Header="Index" Binding ="{Binding Index}" IsReadOnly="True">
                                     <DataGridTextColumn.CellStyle>
                                         <Style TargetType="DataGridCell">
                                             <Setter Property="ToolTip" Value="The port index identifies the port number relative to the switch." />
@@ -2353,7 +2409,7 @@
                                     </DataGridTextColumn.CellStyle>
                                 </DataGridTextColumn>
                                 <DataGridTextColumn Width="auto" Header="Port" Binding ="{Binding Port}" IsReadOnly="True"/>
-                                <DataGridTextColumn Width="auto" Header="Address"  Binding ="{Binding Address}" IsReadOnly="True">  
+                                <DataGridTextColumn Width="auto" Header="Address" Binding ="{Binding Address}" IsReadOnly="True">  
                                     <DataGridTextColumn.CellStyle>
                                         <Style TargetType="DataGridCell">
                                             <Setter Property="ToolTip" Value="The 24-bit Address Identifier." />
@@ -2380,8 +2436,17 @@
                                     </Style.Triggers>
                                 </Style>
                             </DataGrid.Style>
+                            <DataGrid.RowStyle>
+                                <Style TargetType="DataGridRow">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding Address}" Value="virtuell">
+                                            <Setter Property="Background" Value="LightGray" />
+                                        </DataTrigger>
+                                    </Style.Triggers>    
+                                </Style>
+                            </DataGrid.RowStyle>
                             <DataGrid.Columns>
-                                <DataGridTextColumn Width="auto" Header="Index"  Binding ="{Binding Index}" IsReadOnly="True">
+                                <DataGridTextColumn Width="auto" Header="Index" Binding ="{Binding Index}" IsReadOnly="True">
                                     <DataGridTextColumn.CellStyle>
                                         <Style TargetType="DataGridCell">
                                             <Setter Property="ToolTip" Value="The port index identifies the port number relative to the switch." />
@@ -2389,7 +2454,7 @@
                                     </DataGridTextColumn.CellStyle>
                                 </DataGridTextColumn>
                                 <DataGridTextColumn Width="auto" Header="Port" Binding ="{Binding Port}" IsReadOnly="True"/>
-                                <DataGridTextColumn Width="auto" Header="Address"  Binding ="{Binding Address}" IsReadOnly="True">  
+                                <DataGridTextColumn Width="auto" Header="Address" Binding ="{Binding Address}" IsReadOnly="True">  
                                     <DataGridTextColumn.CellStyle>
                                         <Style TargetType="DataGridCell">
                                             <Setter Property="ToolTip" Value="The 24-bit Address Identifier." />
@@ -2416,8 +2481,17 @@
                                     </Style.Triggers>
                                 </Style>
                             </DataGrid.Style>
+                            <DataGrid.RowStyle>
+                                <Style TargetType="DataGridRow">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding Address}" Value="virtuell">
+                                            <Setter Property="Background" Value="LightGray" />
+                                        </DataTrigger>
+                                    </Style.Triggers>    
+                                </Style>
+                            </DataGrid.RowStyle>
                             <DataGrid.Columns>
-                                <DataGridTextColumn Width="auto" Header="Index"  Binding ="{Binding Index}" IsReadOnly="True">
+                                <DataGridTextColumn Width="auto" Header="Index" Binding ="{Binding Index}" IsReadOnly="True">
                                     <DataGridTextColumn.CellStyle>
                                         <Style TargetType="DataGridCell">
                                             <Setter Property="ToolTip" Value="The port index identifies the port number relative to the switch." />
@@ -2425,7 +2499,7 @@
                                     </DataGridTextColumn.CellStyle>
                                 </DataGridTextColumn>
                                 <DataGridTextColumn Width="auto" Header="Port" Binding ="{Binding Port}" IsReadOnly="True"/>
-                                <DataGridTextColumn Width="auto" Header="Address"  Binding ="{Binding Address}" IsReadOnly="True">  
+                                <DataGridTextColumn Width="auto" Header="Address" Binding ="{Binding Address}" IsReadOnly="True">  
                                     <DataGridTextColumn.CellStyle>
                                         <Style TargetType="DataGridCell">
                                             <Setter Property="ToolTip" Value="The 24-bit Address Identifier." />

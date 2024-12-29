@@ -78,8 +78,10 @@ function FOS_SwitchShowInfo {
                 $FOS_SWsh = "" | Select-Object Index,Port,Address,Media,Speed,State,Proto,PortConnect
                 <# Port index is a number between 0 and the maximum number of supported ports on the platform. The port index identifies the port number relative to the switch. #>
                 $FOS_SWsh.Index = ($FOS_linebyLine |Select-String -Pattern '^\s+(\d+)' -AllMatches).Matches.Groups.Value[1]
+                $FOS_SWshIndex = $FOS_SWsh.Index
                 <# Port number; 0-15, 0-31, or 0-63. #>
                 $FOS_SWsh.Port = ($FOS_linebyLine |Select-String -Pattern '^\s+\d+\s+(\d+)' -AllMatches).Matches.Groups.Value[1]
+                $FOS_SWshPort = $FOS_SWsh.Port
                 <# The 24-bit Address Identifier. #>
                 $FOS_SWsh.Address = ($FOS_linebyLine |Select-String -Pattern '([0-9a-z]+)\s+(id|--|cu)\s+' -AllMatches).Matches.Groups.Value[1]
                 <# Media types means module types #>
@@ -88,6 +90,7 @@ function FOS_SwitchShowInfo {
                 $FOS_SWsh.Speed = ($FOS_linebyLine |Select-String -Pattern '\s+(id|--|cu)\s+(N\d+|\d+G|AN|UN)' -AllMatches).Matches.Groups.Value[2]
                 <# Port state information #>
                 $FOS_SWsh.State = ($FOS_linebyLine |Select-String -Pattern '(\w+_\w+|\w+)\s+(FC)' -AllMatches).Matches.Groups.Value[1]
+                $FOS_SWshState = $FOS_SWsh.State
                 <# Protocol support by GbE port. #>
                 $FOS_SWsh.Proto = ($FOS_linebyLine |Select-String -Pattern '(\w+_\w+|\w+)\s+(FC)' -AllMatches).Matches.Groups.Value[2]
                 <# WWPN or other Infos #>
@@ -108,6 +111,10 @@ function FOS_SwitchShowInfo {
                             if($FOS_NPIV_Info -ne $FOS_NPIV_Info_temp){
                                 $FOS_SwBasicPortDetails += $FOS_SWsh
                                 $FOS_SWsh = "" | Select-Object Index,Port,Address,Media,Speed,State,Proto,PortConnect
+                                $FOS_SWsh.Index = $FOS_SWshIndex
+                                $FOS_SWsh.Port = $FOS_SWshPort
+                                $FOS_SWsh.Address = "virtuell"
+                                $FOS_SWsh.State = $FOS_SWshState
                                 $FOS_SWsh.PortConnect = $FOS_NPIV_Info
                                 $FOS_NPIV_Info_temp = $FOS_NPIV_Info
                                 }
@@ -119,6 +126,10 @@ function FOS_SwitchShowInfo {
                             if($FOS_NPIV_Info -ne $FOS_NPIV_Info_temp){
                                 $FOS_SwBasicPortDetails += $FOS_SWsh
                                 $FOS_SWsh = "" | Select-Object Index,Port,Address,Media,Speed,State,Proto,PortConnect
+                                $FOS_SWsh.Index = $FOS_SWshIndex
+                                $FOS_SWsh.Port = $FOS_SWshPort
+                                $FOS_SWsh.Address = "virtuell"
+                                $FOS_SWsh.State = $FOS_SWshState
                                 $FOS_SWsh.PortConnect = $FOS_NPIV_Info
                                 $FOS_NPIV_Info_temp = $FOS_NPIV_Info
                                 }

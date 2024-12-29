@@ -143,7 +143,7 @@
             </StackPanel>
         </GroupBox>   
         </StackPanel> 
-        <GroupBox Grid.Column="1" Grid.Row="1" Header="Results" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,10,0,0" >
+        <GroupBox Grid.Column="1" Grid.Row="1" Header="Results" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="5,5,10,10" >
             <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" >
                 <Grid>
                 <StackPanel x:Name="stp_StorageEventLog" Orientation="Vertical" Margin="2" Visibility="{Binding ElementName=btn_IBM_Eventlog, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
@@ -983,6 +983,8 @@
                             <Button x:Name="btn_FilterHVM" Style="{StaticResource MainBtnStyle}" Content="Apply Filter" />
                             <Button x:Name="btn_ClearFilterHVM" Style="{StaticResource MainBtnStyle}" Content="Clear Filter" Visibility="Collapsed" Background="LightPink"/>
                         </StackPanel>
+                        <GroupBox Grid.Row="1" Header="Host Volume List" HorizontalAlignment="Left" VerticalAlignment="Top" >
+                        <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" >
                         <StackPanel Grid.Row="1" Orientation="Vertical" >
                         <Label x:Name="lb_ErrorMsgHVM" Visibility="Collapsed" Foreground="Red" Content="" Style="{StaticResource MainLabelStyle}" Padding="2" Margin="25,5,0,5"/>
                         <Label x:Name="lb_HostVolInfoOne" Content="Device 1" Visibility="Collapsed" FontSize="12" Style="{StaticResource MainLabelStyle}" Margin="2,5,0,5" />
@@ -1162,6 +1164,8 @@
                             </DataGrid.Columns>
                         </DataGrid>
                         </StackPanel>
+                        </ScrollViewer>
+                        </GroupBox>
                     </Grid>
                 </StackPanel>
                 <StackPanel  x:Name="stp_IBM_HostInfo" Orientation="Horizontal" Margin="2" Visibility="{Binding ElementName=btn_IBM_HostInfo, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">

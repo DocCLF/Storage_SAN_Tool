@@ -81,7 +81,7 @@
                         <ComboBoxItem>Storage</ComboBoxItem>
                         <ComboBoxItem>SAN</ComboBoxItem>
                     </ComboBox>
-                    <ComboBox x:Name="CB_DeviceConnectionType" SelectedIndex="0" SelectedValuePath="Content" Style="{StaticResource MainComboBoxStyle}" >
+                    <ComboBox x:Name="CB_DeviceConnectionType" SelectedIndex="1" SelectedValuePath="Content" Style="{StaticResource MainComboBoxStyle}" >
                         <ComboBoxItem>Secure Shell (SSH)</ComboBoxItem>
                         <ComboBoxItem>Classic (UN/PW)</ComboBoxItem>
                     </ComboBox>

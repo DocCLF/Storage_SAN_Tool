@@ -35,7 +35,7 @@ function SST_ToolMessageCollector {
     $TD_MSGpresenter.Type = $TD_ToolMSGType
     $TD_MSGpresenter.Message = $TD_ToolMSGCollector
 
-    [array]$TD_MSG_GUIpresenter += $TD_MSGpresenter
+    [array]$TD_MSG_GUIpresenter += $TD_MSGpresenter |Sort-Object
     <#present all msg #>
     switch ($TD_NotShown) {
         "yes" { Write-Debug -Message $TD_ToolMSGCollector `n$TD_ToolMSGType }
