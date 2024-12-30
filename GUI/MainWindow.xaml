@@ -23,6 +23,7 @@
                 <Setter Property="FontSize" Value="13" />
                 <Setter Property="FontWeight" Value="Bold" />
             </Style>
+            <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
         </ResourceDictionary>
     </Window.Resources>
     <Grid>
@@ -30,6 +31,7 @@
             <RowDefinition Height="auto" MinHeight="80"/>
             <RowDefinition Height="*" />
             <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" MinHeight="40"/>
         </Grid.RowDefinitions>
         <StackPanel Orientation="Horizontal" Margin="5" >
             <!--Storage FS & SVC-->
@@ -50,8 +52,42 @@
                 <Image x:Name="LogoImage" Margin="30,0,30,0" /> 
             </StackPanel>
         </Grid>
-        <Label Grid.Row="2" Content="v1.2.0" Margin="10,0" VerticalAlignment="Bottom" HorizontalAlignment="Right" />
-        <Label Grid.Row="2" Content="Tool-Support: r.glanz@profi-ag.de [or] GitHub: https://github.com/DocCLF/Storage_SAN_Tool" Margin="10,0" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="16" />
-        <Image Grid.Row="2" x:Name="LogoImageSmall" Margin="10,10" VerticalAlignment="Bottom" HorizontalAlignment="Left" MaxHeight="30"/>
+        <GroupBox Grid.Row="2" Grid.ColumnSpan="2" Header="Tool Window for Debug and Message" Margin="10" Background="WhiteSmoke" Visibility="{Binding ElementName=cb_DebugModOnOff, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
+            <DataGrid x:Name="dg_ToolWindowForDebug" AutoGenerateColumns="False" Margin="2" MaxHeight="150">
+                <DataGrid.Style>
+                    <Style TargetType="DataGrid">
+                        <Style.Triggers>
+                            <Trigger Property="HasItems" Value="False">
+                                <Setter Property="Visibility" Value="Collapsed"></Setter>
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </DataGrid.Style>
+                <DataGrid.RowStyle>
+                    <Style TargetType="DataGridRow">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding Type}" Value="Error">
+                                <Setter Property="Background" Value="OrangeRed" />
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding Type}" Value="Warning">
+                                <Setter Property="Background" Value="LightYellow" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </DataGrid.RowStyle>
+                <DataGrid.Columns>
+                    <DataGridTextColumn Width="auto" Header="DateTime"  Binding ="{Binding TimeStamp}" IsReadOnly="True"/>
+                    <DataGridTextColumn Width="auto" Header="Type" Binding ="{Binding Type}" IsReadOnly="True"/>
+                    <DataGridTextColumn Width="auto" Header="Message"  Binding ="{Binding Message}" IsReadOnly="True"/>
+                </DataGrid.Columns>
+            </DataGrid>
+        </GroupBox>
+        <StackPanel Grid.Row="3" Orientation="Horizontal" VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="0,0,20,0" Height="34">
+            <Label Content="Debug Modus?" FontSize="12" FontWeight="Bold" VerticalContentAlignment="Center"/>
+            <CheckBox x:Name="cb_DebugModOnOff" VerticalAlignment="Center" Margin="2"/>
+            <Label Grid.Row="3" Content="v1.2.0" FontSize="12" FontWeight="Bold" VerticalContentAlignment="Center" />
+        </StackPanel>
+        <Label Grid.Row="3" Content="Tool-Support: r.glanz@profi-ag.de [or] GitHub: https://github.com/DocCLF/Storage_SAN_Tool" Margin="10,0" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="16" />
+        <Image Grid.Row="3" x:Name="LogoImageSmall" Margin="10,10" VerticalAlignment="Bottom" HorizontalAlignment="Left" MaxHeight="30"/>
     </Grid>
 </Window>

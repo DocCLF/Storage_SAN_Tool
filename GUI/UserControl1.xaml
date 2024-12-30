@@ -5282,7 +5282,7 @@
                         </StackPanel>
                         <StackPanel Orientation="Vertical" Grid.Row="1">
                                 <StackPanel Orientation="Horizontal" Grid.Row="0">
-                                    <DataGrid x:Name="dg_IPPortInfoOne" AutoGenerateColumns="False" Margin="5" MaxHeight="400">
+                                    <DataGrid Grid.Row="0" Grid.Column="0" x:Name="dg_IPPortInfoOne" AutoGenerateColumns="False" Margin="5,20,5,5" MaxHeight="400">
                                         <DataGrid.Style>
                                             <Style TargetType="DataGrid">
                                                 <Style.Triggers>
@@ -5374,7 +5374,7 @@
                                     </DataGrid>
                                 </StackPanel>    
                                 <StackPanel Orientation="Horizontal" Grid.Row="2">
-                                    <DataGrid Grid.Row="2" Grid.Column="0" x:Name="dg_IPPortInfoFive" AutoGenerateColumns="False" Margin="5" MaxHeight="400">
+                                    <DataGrid Grid.Row="2" Grid.Column="0" x:Name="dg_IPPortInfoFive" AutoGenerateColumns="False" Margin="5,20,5,5" MaxHeight="400">
                                         <DataGrid.Style>
                                             <Style TargetType="DataGrid">
                                                 <Style.Triggers>
