@@ -20,6 +20,7 @@ function FOS_PortLicenseShowInfo {
         [string]$TD_Device_DeviceIP,
         [string]$TD_Device_DeviceName,
         [string]$TD_Device_PW,
+        [string]$TD_Device_SSHKeyPath,
         [Parameter(ValueFromPipeline)]
         [ValidateSet("yes","no")]
         [string]$TD_Export = "yes",
@@ -40,9 +41,9 @@ function FOS_PortLicenseShowInfo {
            Write-Debug -Message "ssh |$(Get-Date)"
            if($TD_FOSVersion -like "FOS 9*"){
                 <# Improved Command for more details #>
-              $FOS_PortLicenseInfo = ssh -i $($TD_tb_pathtokey.Text) $TD_Device_UserName@$TD_Device_DeviceIP "license --show && license --show -port"
+              $FOS_PortLicenseInfo = ssh -i $($TD_Device_SSHKeyPath) $TD_Device_UserName@$TD_Device_DeviceIP "license --show && license --show -port"
            }else {
-              $FOS_PortLicenseInfo = ssh -i $($TD_tb_pathtokey.Text) $TD_Device_UserName@$TD_Device_DeviceIP "licenseShow"
+              $FOS_PortLicenseInfo = ssh -i $($TD_Device_SSHKeyPath) $TD_Device_UserName@$TD_Device_DeviceIP "licenseShow"
            }
         }else {
             Write-Debug -Message "plink |$(Get-Date)"

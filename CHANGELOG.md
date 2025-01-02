@@ -7,6 +7,8 @@ All notable changes to this project will be documented in this file.
 - Storage RC and FC 
 - Support for Virtual Fabrics
 - Small SAN Healthcheck
+- Small improvements at Storage Healthcheck
+- improvements at SSH-Client using
 
 # [v1.2.0] - 2025-tbd
 ### Added

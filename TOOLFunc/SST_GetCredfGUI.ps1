@@ -10,11 +10,21 @@ function SST_GetCredfGUI {
         switch ($TD_CB_DeviceType.Text) {
             "Storage" { 
                 $TD_BasicDeviceInfo = SST_DeviceConnecCheck -TD_Selected_Items "no"
-                if([string]::IsNullOrEmpty($TD_BasicDeviceInfo)){$TD_ErrorCode = 1;break}
+                if([string]::IsNullOrEmpty($TD_BasicDeviceInfo)){
+                    $TD_ErrorCode = 1
+                    $TD_BTN_AddSSHKey.Background="#FFDDDDDD"
+                    $TD_BTN_AddSSHKey.Content="Add SSH-Key"
+                    break
+                }
             }
             "SAN" { 
                 $TD_BasicDeviceInfo = SST_DeviceConnecCheck -TD_Selected_Items "no"
-                if([string]::IsNullOrEmpty($TD_BasicDeviceInfo)){$TD_ErrorCode = 1;break}
+                if([string]::IsNullOrEmpty($TD_BasicDeviceInfo)){
+                    $TD_ErrorCode = 1
+                    $TD_BTN_AddSSHKey.Background="#FFDDDDDD"
+                    $TD_BTN_AddSSHKey.Content="Add SSH-Key"
+                    break
+                }
             }
             Default {SST_ToolMessageCollector -TD_ToolMSGCollector "Something went wrong at SST_GetCredfGUI Func or no Device Type was found, please check the promt." -TD_ToolMSGType Warning}
         }
@@ -66,6 +76,11 @@ function SST_GetCredfGUI {
         $TD_Credentials += $TD_UserInputCred
 
         $TD_DG_KnownDeviceList.ItemsSource = $TD_Credentials
+
+        if(($TD_DG_KnownDeviceList.ItemsSource.count -gt 0)-and($TD_CB_DeviceConnectionType.Text -like "Secure*")){
+            $TD_BTN_AddSSHKey.Background="#FFDDDDDD"
+            $TD_BTN_AddSSHKey.Content="Add SSH-Key"
+        }
     }
 
     return $TD_Credentials

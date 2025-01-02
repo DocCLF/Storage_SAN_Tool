@@ -21,6 +21,7 @@ function FOS_SwitchShowInfo {
         [string]$TD_Device_DeviceName,
         [string]$TD_Device_DeviceIP,
         [string]$TD_Device_PW,
+        [string]$TD_Device_SSHKeyPath,
         [Parameter(ValueFromPipeline)]
         [ValidateSet("yes","no")]
         [string]$TD_Export = "yes",
@@ -42,7 +43,7 @@ function FOS_SwitchShowInfo {
         <# Connection to the system via ssh and filtering and provision of data #>
         <# Action when all if and elseif conditions are false #>
         if($TD_Device_ConnectionTyp -eq "ssh"){
-            $FOS_MainInformation = ssh -i $($TD_tb_pathtokey.Text) $TD_Device_UserName@$TD_Device_DeviceIP "switchshow"
+            $FOS_MainInformation = ssh -i $($TD_Device_SSHKeyPath) $TD_Device_UserName@$TD_Device_DeviceIP "switchshow"
         }else {
             $FOS_MainInformation = plink $TD_Device_UserName@$TD_Device_DeviceIP -pw $TD_Device_PW -batch "switchshow"
         }
@@ -105,7 +106,7 @@ function FOS_SwitchShowInfo {
                 if($FOS_SWsh.PortConnect -like "*NPIV*"){
                     <# need a better way to connect #>
                     if($TD_Device_ConnectionTyp -eq "ssh"){
-                        $FOS_MainInformation = ssh $TD_Device_UserName@$TD_Device_DeviceIP "portshow $($FOS_SWsh.Port)"
+                        $FOS_MainInformation = ssh -i $($TD_Device_SSHKeyPath) $TD_Device_UserName@$TD_Device_DeviceIP "portshow $($FOS_SWsh.Port)"
                         foreach($FOS_PortConnect_Info in $FOS_PortConnect_Infos){
                             $FOS_NPIV_Info = ($FOS_PortConnect_Info |Select-String -Pattern '^\s+(([0-9a-f]{2}:){7}[0-9a-f]{2})' -AllMatches).Matches.Groups.Value[1]
                             if($FOS_NPIV_Info -ne $FOS_NPIV_Info_temp){

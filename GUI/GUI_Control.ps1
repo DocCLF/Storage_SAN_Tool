@@ -217,11 +217,12 @@ $TD_btn_Start_sshAgent.add_click({
 })
 
 $TD_BTN_AddSSHKey.add_click({
-    $TD_ButtonColorSSH=$TD_btn_addsshkeyone.Background
-    if($TD_ButtonColorSSH -like "*90EE90"){
-        RemoveSSHKeyfromLine -TD_SSHKeyForLine 1 -TD_Storage "yes"
+    #$TD_ButtonColorSSH=$TD_btn_addsshkeyone.Background
+    $IsKeyIn = $TD_TB_PathtoSSHKeyNotVisibil.Text
+    if([string]::IsNullOrWhiteSpace($IsKeyIn)){
+        RemoveSSHKeyfromLine -TD_Storage "yes"
     }else {
-        AddSSHKeytoLine -TD_SSHKeyForLine 1 -TD_Storage "yes"
+        AddSSHKeytoLine -TD_Storage "yes"
     }
 })
 #endregion
