@@ -11,6 +11,7 @@ function IBM_CleanUpDumps {
         [Parameter(Mandatory)]
         [string]$TD_Device_DeviceIP,
         [string]$TD_Device_PW,
+        [string]$TD_Device_SSHKeyPath,
         [string]$TD_Storage,
         [string]$TD_Exportpath
     )
@@ -33,7 +34,7 @@ function IBM_CleanUpDumps {
         Write-Debug -Message "IBM_CleanUpDumps Process block |$(Get-Date)"
         <# Action when all if and elseif conditions are false #>
         if($TD_Device_ConnectionTyp -eq "ssh"){
-            $TD_CleanUpDumps = ssh -i $($TD_tb_pathtokey.Text) $TD_Device_UserName@$TD_Device_DeviceIP "cleardumps -prefix /dumps && cleardumps -prefix /home/admin/upgrade "
+            $TD_CleanUpDumps = ssh -i $($TD_Device_SSHKeyPath) $TD_Device_UserName@$TD_Device_DeviceIP "cleardumps -prefix /dumps && cleardumps -prefix /home/admin/upgrade "
         }else {
             $TD_CleanUpDumps = plink $TD_Device_UserName@$TD_Device_DeviceIP -pw $TD_Device_PW -batch "cleardumps -prefix /dumps && cleardumps -prefix /home/admin/upgrade "
         }

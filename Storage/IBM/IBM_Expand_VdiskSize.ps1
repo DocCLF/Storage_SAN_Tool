@@ -57,7 +57,7 @@ function IBM_Expand_VdiskSize {
 
     <# count to split into 10-liner #>
     [Int16]$i=0
-    $TD_CollectVolInfo = ssh -i $($TD_tb_pathtokey.Text) $UserName@$DeviceIP "lsvdisk -delim :"
+    $TD_CollectVolInfo = ssh $UserName@$DeviceIP "lsvdisk -delim :"
     Start-Sleep -Seconds 2
     foreach($TD_info in $TD_CollectVolInfo) {
         $TD_Vol_Info = ($TD_info | Select-String -Pattern '^\d+:([a-zA-Z0-9_-]*)' -AllMatches).Matches.Groups.Value[1]

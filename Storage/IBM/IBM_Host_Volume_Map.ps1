@@ -34,6 +34,7 @@ function IBM_Host_Volume_Map {
         [string]$TD_Device_DeviceIP,
         [string]$TD_Device_DeviceName,
         [string]$TD_Device_PW,
+        [string]$TD_Device_SSHKeyPath,
         [Parameter(ValueFromPipeline)]
         [ValidateSet("yes","no")]
         [string]$TD_Export = "yes",
@@ -49,7 +50,7 @@ function IBM_Host_Volume_Map {
         [int]$ProgCounter=0
         <# Connection to the system via ssh and filtering and provision of data #>
         if($TD_Device_ConnectionTyp -eq "ssh"){
-            $TD_CollectVolInfo = ssh -i $($TD_tb_pathtokey.Text) $TD_Device_UserName@$TD_Device_DeviceIP "lshostvdiskmap -delim : && lsvdisk -delim :"
+            $TD_CollectVolInfo = ssh -i $($TD_Device_SSHKeyPath) $TD_Device_UserName@$TD_Device_DeviceIP "lshostvdiskmap -delim : && lsvdisk -delim :"
         }else {
             $TD_CollectVolInfo = plink $TD_Device_UserName@$TD_Device_DeviceIP -pw $TD_Device_PW -batch "lshostvdiskmap -delim : && lsvdisk -delim :"
         }

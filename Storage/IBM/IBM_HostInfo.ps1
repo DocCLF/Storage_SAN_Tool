@@ -21,6 +21,7 @@ function IBM_HostInfo {
         [string]$TD_Device_DeviceIP,
         [string]$TD_Device_DeviceName,
         [string]$TD_Device_PW,
+        [string]$TD_Device_SSHKeyPath,
         [Parameter(ValueFromPipeline)]
         [ValidateSet("yes","no")]
         [string]$TD_Export = "yes",
@@ -36,7 +37,7 @@ function IBM_HostInfo {
         $ProgressBar = New-ProgressBar
         
         if($TD_Device_ConnectionTyp -eq "ssh"){
-            $TD_CollectInfos = ssh -i $($TD_tb_pathtokey.Text) $TD_Device_UserName@$TD_Device_DeviceIP 'lshost -nohdr |while read id name IO_group_id;do lshost -delim : $id ;echo;done'
+            $TD_CollectInfos = ssh -i $($TD_Device_SSHKeyPath) $TD_Device_UserName@$TD_Device_DeviceIP 'lshost -nohdr |while read id name IO_group_id;do lshost -delim : $id ;echo;done'
         }else{
             $TD_CollectInfos = plink $TD_Device_UserName@$TD_Device_DeviceIP -pw $TD_Device_PW -batch 'lshost -nohdr |while read id name IO_group_id;do lshost -delim : $id ;echo;done'
         }

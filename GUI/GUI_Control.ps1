@@ -294,7 +294,7 @@ $TD_btn_IBM_Eventlog.add_click({
     }
 
     $TD_Credentials | ForEach-Object {
-        [array]$TD_IBM_EventLogShow = IBM_EventLog -TD_Line_ID $_.ID -TD_Device_ConnectionTyp $_.ConnectionTyp -TD_Device_UserName $_.UserName -TD_Device_DeviceName $_.DeviceName -TD_Device_DeviceIP $_.IPAddress -TD_Device_PW $([Net.NetworkCredential]::new('', $_.Password).Password) -TD_Exportpath $TD_tb_ExportPath.Text
+        [array]$TD_IBM_EventLogShow = IBM_EventLog -TD_Line_ID $_.ID -TD_Device_ConnectionTyp $_.ConnectionTyp -TD_Device_UserName $_.UserName -TD_Device_DeviceName $_.DeviceName -TD_Device_DeviceIP $_.IPAddress -TD_Device_PW $([Net.NetworkCredential]::new('', $_.Password).Password) -TD_Device_SSHKeyPath $_.SSHKeyPath -TD_Exportpath $TD_tb_ExportPath.Text
         switch ($_.ID) {
             {($_ -eq 1)} { $TD_lb_StorageEventLogOne.ItemsSource = $TD_IBM_EventLogShow }
             {($_ -eq 2)} { $TD_lb_StorageEventLogTwo.ItemsSource = $TD_IBM_EventLogShow }  
@@ -325,7 +325,7 @@ $TD_btn_IBM_CatAuditLog.add_click({
     }
 
     $TD_Credentials | ForEach-Object {
-        [array]$TD_CatAuditLog = IBM_CatAuditLog -TD_Line_ID $_.ID -TD_Device_ConnectionTyp $_.ConnectionTyp -TD_Device_UserName $_.UserName -TD_Device_DeviceName $_.DeviceName -TD_Device_DeviceIP $_.IPAddress -TD_Device_PW $([Net.NetworkCredential]::new('', $_.Password).Password) -TD_Exportpath $TD_tb_ExportPath.Text
+        [array]$TD_CatAuditLog = IBM_CatAuditLog -TD_Line_ID $_.ID -TD_Device_ConnectionTyp $_.ConnectionTyp -TD_Device_UserName $_.UserName -TD_Device_DeviceName $_.DeviceName -TD_Device_DeviceIP $_.IPAddress -TD_Device_PW $([Net.NetworkCredential]::new('', $_.Password).Password) -TD_Device_SSHKeyPath $_.SSHKeyPath -TD_Exportpath $TD_tb_ExportPath.Text
         switch ($_.ID) {
             {($_ -eq 1)} { $TD_dg_StorageAuditLogOne.ItemsSource = $TD_CatAuditLog  }
             {($_ -eq 2)} { $TD_dg_StorageAuditLogTwo.ItemsSource = $TD_CatAuditLog  }
@@ -357,7 +357,7 @@ $TD_btn_IBM_HostVolumeMap.add_click({
     }
 
     $TD_Credentials | ForEach-Object {  
-        [array]$TD_Host_Volume_Map = IBM_Host_Volume_Map -TD_Line_ID $_.ID -TD_Device_ConnectionTyp $_.ConnectionTyp -TD_Device_UserName $_.UserName -TD_Device_DeviceName $_.DeviceName -TD_Device_DeviceIP $_.IPAddress -TD_Device_PW $([Net.NetworkCredential]::new('', $_.Password).Password) -TD_Exportpath $TD_tb_ExportPath.Text
+        [array]$TD_Host_Volume_Map = IBM_Host_Volume_Map -TD_Line_ID $_.ID -TD_Device_ConnectionTyp $_.ConnectionTyp -TD_Device_UserName $_.UserName -TD_Device_DeviceName $_.DeviceName -TD_Device_DeviceIP $_.IPAddress -TD_Device_PW $([Net.NetworkCredential]::new('', $_.Password).Password) -TD_Device_SSHKeyPath $_.SSHKeyPath -TD_Exportpath $TD_tb_ExportPath.Text
         switch ($_.ID) {
             {($_ -eq 1)} { $TD_dg_HostVolInfoOne.ItemsSource = $TD_Host_Volume_Map  }
             {($_ -eq 2)} { $TD_dg_HostVolInfoTwo.ItemsSource = $TD_Host_Volume_Map  }
@@ -475,7 +475,7 @@ $TD_btn_IBM_DriveInfo.add_click({
     }
     
     $TD_Credentials | ForEach-Object {
-        [array]$TD_DriveInfo = IBM_DriveInfo -TD_Line_ID $_.ID -TD_Device_ConnectionTyp $_.ConnectionTyp -TD_Device_UserName $_.UserName -TD_Device_DeviceName $_.DeviceName -TD_Device_DeviceIP $_.IPAddress -TD_Device_PW $([Net.NetworkCredential]::new('', $_.Password).Password) -TD_Storage $_.SVCorVF -TD_Exportpath $TD_tb_ExportPath.Text
+        [array]$TD_DriveInfo = IBM_DriveInfo -TD_Line_ID $_.ID -TD_Device_ConnectionTyp $_.ConnectionTyp -TD_Device_UserName $_.UserName -TD_Device_DeviceName $_.DeviceName -TD_Device_DeviceIP $_.IPAddress -TD_Device_PW $([Net.NetworkCredential]::new('', $_.Password).Password) -TD_Device_SSHKeyPath $_.SSHKeyPath -TD_Storage $_.SVCorVF -TD_Exportpath $TD_tb_ExportPath.Text
         switch ($_.ID) {
             {($_ -eq 1)} { $TD_dg_DriveInfoOne.ItemsSource = $TD_DriveInfo }
             {($_ -eq 2)} { $TD_dg_DriveInfoTwo.ItemsSource = $TD_DriveInfo }
@@ -507,7 +507,7 @@ $TD_btn_IBM_FCPortStats.add_click({
     }
 
     $TD_Credentials | ForEach-Object {
-        [array]$TD_FCPortStats = IBM_FCPortStats -TD_Line_ID $_.ID -TD_Device_ConnectionTyp $_.ConnectionTyp -TD_Device_UserName $_.UserName -TD_Device_DeviceName $_.DeviceName -TD_Device_DeviceIP $_.IPAddress -TD_Device_PW $([Net.NetworkCredential]::new('', $_.Password).Password) -TD_Storage $_.SVCorVF -TD_Exportpath $TD_tb_ExportPath.Text
+        [array]$TD_FCPortStats = IBM_FCPortStats -TD_Line_ID $_.ID -TD_Device_ConnectionTyp $_.ConnectionTyp -TD_Device_UserName $_.UserName -TD_Device_DeviceName $_.DeviceName -TD_Device_DeviceIP $_.IPAddress -TD_Device_PW $([Net.NetworkCredential]::new('', $_.Password).Password) -TD_Device_SSHKeyPath $_.SSHKeyPath -TD_Storage $_.SVCorVF -TD_Exportpath $TD_tb_ExportPath.Text
         switch ($_.ID) {
             {($_ -eq 1)} { $TD_dg_FCPortStatsOne.ItemsSource = $TD_FCPortStats }
             {($_ -eq 2)} { $TD_dg_FCPortStatsTwo.ItemsSource = $TD_FCPortStats }
@@ -539,7 +539,7 @@ $TD_btn_IBM_FCPortInfo.add_click({
     }
 
     $TD_Credentials | ForEach-Object {
-        [array]$TD_FCPortInfo = IBM_FCPortInfo -TD_Line_ID $_.ID -TD_Device_ConnectionTyp $_.ConnectionTyp -TD_Device_UserName $_.UserName -TD_Device_DeviceName $_.DeviceName -TD_Device_DeviceIP $_.IPAddress -TD_Device_PW $([Net.NetworkCredential]::new('', $_.Password).Password) -TD_Storage $_.SVCorVF -TD_Exportpath $TD_tb_ExportPath.Text
+        [array]$TD_FCPortInfo = IBM_FCPortInfo -TD_Line_ID $_.ID -TD_Device_ConnectionTyp $_.ConnectionTyp -TD_Device_UserName $_.UserName -TD_Device_DeviceName $_.DeviceName -TD_Device_DeviceIP $_.IPAddress -TD_Device_PW $([Net.NetworkCredential]::new('', $_.Password).Password) -TD_Device_SSHKeyPath $_.SSHKeyPath -TD_Storage $_.SVCorVF -TD_Exportpath $TD_tb_ExportPath.Text
         switch ($_.ID) {
             {($_ -eq 1)} { $TD_dg_FCPortInfoOne.ItemsSource = $TD_FCPortInfo }
             {($_ -eq 2)} { $TD_dg_FCPortInfoTwo.ItemsSource = $TD_FCPortInfo }
@@ -582,7 +582,7 @@ $TD_btn_FilterPBR.add_click({
             }
 
             $TD_Credentials | ForEach-Object {
-                [array]$TD_PolicyBased_Rep = IBM_PolicyBased_Rep -TD_Line_ID $_.ID -TD_Device_ConnectionTyp $_.ConnectionTyp -TD_Device_UserName $_.UserName -TD_Device_DeviceIP $_.IPAddress -TD_Device_PW $([Net.NetworkCredential]::new('', $_.Password).Password) -TD_Storage $_.SVCorVF -TD_RepInfoChose $TD_RepInfoChose -TD_Exportpath $TD_tb_ExportPath.Text
+                [array]$TD_PolicyBased_Rep = IBM_PolicyBased_Rep -TD_Line_ID $_.ID -TD_Device_ConnectionTyp $_.ConnectionTyp -TD_Device_UserName $_.UserName -TD_Device_DeviceIP $_.IPAddress -TD_Device_PW $([Net.NetworkCredential]::new('', $_.Password).Password) -TD_Device_SSHKeyPath $_.SSHKeyPath -TD_Storage $_.SVCorVF -TD_RepInfoChose $TD_RepInfoChose -TD_Exportpath $TD_tb_ExportPath.Text
                 switch ($_.ID) {
                     {($_ -eq 1)} { $TD_dg_ReplicationPolicyOne.ItemsSource = $TD_PolicyBased_Rep }
                     {($_ -eq 2)} { $TD_dg_ReplicationPolicyTwo.ItemsSource = $TD_PolicyBased_Rep }
@@ -603,7 +603,7 @@ $TD_btn_FilterPBR.add_click({
             }
 
             $TD_Credentials | ForEach-Object {
-                [array]$TD_VolumeGroupRep = IBM_PolicyBased_Rep -TD_Line_ID $_.ID -TD_Device_ConnectionTyp $_.ConnectionTyp -TD_Device_UserName $_.UserName -TD_Device_DeviceIP $_.IPAddress -TD_Device_PW $([Net.NetworkCredential]::new('', $_.Password).Password) -TD_Storage $_.SVCorVF -TD_RepInfoChose $TD_RepInfoChose -TD_Exportpath $TD_tb_ExportPath.Text
+                [array]$TD_VolumeGroupRep = IBM_PolicyBased_Rep -TD_Line_ID $_.ID -TD_Device_ConnectionTyp $_.ConnectionTyp -TD_Device_UserName $_.UserName -TD_Device_DeviceIP $_.IPAddress -TD_Device_PW $([Net.NetworkCredential]::new('', $_.Password).Password) -TD_Device_SSHKeyPath $_.SSHKeyPath -TD_Storage $_.SVCorVF -TD_RepInfoChose $TD_RepInfoChose -TD_Exportpath $TD_tb_ExportPath.Text
                 switch ($_.ID) {
                     {($_ -eq 1)} { $TD_dg_VolumeGrpReplicationOne.ItemsSource = $TD_VolumeGroupRep }
                     {($_ -eq 2)} { $TD_dg_VolumeGrpReplicationTwo.ItemsSource = $TD_VolumeGroupRep }
@@ -631,7 +631,7 @@ $TD_btn_IBM_BaseStorageInfo.add_click({
     }
 
     $TD_Credentials | ForEach-Object {
-        [array]$TD_BaseStorageInfo = IBM_BaseStorageInfos -TD_Line_ID $_.ID -TD_Device_ConnectionTyp $_.ConnectionTyp -TD_Device_UserName $_.UserName -TD_Device_DeviceIP $_.IPAddress -TD_Device_DeviceName $_.DeviceName -TD_Device_PW $([Net.NetworkCredential]::new('', $_.Password).Password) -TD_Storage $TD_Credential.SVCorVF -TD_Exportpath $TD_tb_ExportPath.Text
+        [array]$TD_BaseStorageInfo = IBM_BaseStorageInfos -TD_Line_ID $_.ID -TD_Device_ConnectionTyp $_.ConnectionTyp -TD_Device_UserName $_.UserName -TD_Device_DeviceIP $_.IPAddress -TD_Device_DeviceName $_.DeviceName -TD_Device_PW $([Net.NetworkCredential]::new('', $_.Password).Password) -TD_Device_SSHKeyPath $_.SSHKeyPath -TD_Storage $TD_Credential.SVCorVF -TD_Exportpath $TD_tb_ExportPath.Text
         switch ($_.ID) {
             {($_ -eq 1)} { $TD_dg_BaseStorageInfoOne.ItemsSource = $TD_BaseStorageInfo }
             {($_ -eq 2)} { $TD_dg_BaseStorageInfoTwo.ItemsSource = $TD_BaseStorageInfo }
@@ -650,7 +650,7 @@ $TD_btn_IBM_BaseStorageInfo.add_click({
     }
 
     $TD_Credentials | ForEach-Object {
-        [array]$TD_IPQuorumInfo = IBM_IPQuorum -TD_Line_ID $_.ID -TD_Device_ConnectionTyp $_.ConnectionTyp -TD_Device_UserName $_.UserName -TD_Device_DeviceIP $_.IPAddress -TD_Device_DeviceName $_.DeviceName -TD_Device_PW $([Net.NetworkCredential]::new('', $_.Password).Password) -TD_Storage $TD_Credential.SVCorVF -TD_Exportpath $TD_tb_ExportPath.Text
+        [array]$TD_IPQuorumInfo = IBM_IPQuorum -TD_Line_ID $_.ID -TD_Device_ConnectionTyp $_.ConnectionTyp -TD_Device_UserName $_.UserName -TD_Device_DeviceIP $_.IPAddress -TD_Device_DeviceName $_.DeviceName -TD_Device_PW $([Net.NetworkCredential]::new('', $_.Password).Password) -TD_Device_SSHKeyPath $_.SSHKeyPath -TD_Storage $TD_Credential.SVCorVF -TD_Exportpath $TD_tb_ExportPath.Text
         switch ($_.ID) {
             {($_ -eq 1)} { $TD_dg_IPQuorumInfoOne.ItemsSource = $TD_IPQuorumInfo; $TD_lb_QuorumInfoOne.Visibility="visible" }
             {($_ -eq 2)} { $TD_dg_IPQuorumInfoTwo.ItemsSource = $TD_IPQuorumInfo ; $TD_lb_QuorumInfoTwo.Visibility="Visible"}
@@ -681,7 +681,7 @@ $TD_btn_IBM_PoolVolumeInfo.add_click({
     }
 
     $TD_Credentials | ForEach-Object {
-        [array]$TD_ExpandMDiskInfo = IBM_MDiskInfo -TD_Line_ID $_.ID -TD_Device_ConnectionTyp $_.ConnectionTyp -TD_Device_UserName $_.UserName -TD_Device_DeviceIP $_.IPAddress -TD_Device_DeviceName $_.DeviceName -TD_Device_PW $([Net.NetworkCredential]::new('', $_.Password).Password) -TD_Storage $TD_Credential.SVCorVF -TD_Exportpath $TD_tb_ExportPath.Text
+        [array]$TD_ExpandMDiskInfo = IBM_MDiskInfo -TD_Line_ID $_.ID -TD_Device_ConnectionTyp $_.ConnectionTyp -TD_Device_UserName $_.UserName -TD_Device_DeviceIP $_.IPAddress -TD_Device_DeviceName $_.DeviceName -TD_Device_PW $([Net.NetworkCredential]::new('', $_.Password).Password) -TD_Device_SSHKeyPath $_.SSHKeyPath -TD_Storage $TD_Credential.SVCorVF -TD_Exportpath $TD_tb_ExportPath.Text
         switch ($_.ID) {
             {($_ -eq 1)} { $TD_dg_ExpandMDiskInfoOne.ItemsSource = $TD_ExpandMDiskInfo }
             {($_ -eq 2)} { $TD_dg_ExpandMDiskInfoTwo.ItemsSource = $TD_ExpandMDiskInfo }
@@ -699,7 +699,7 @@ $TD_btn_IBM_PoolVolumeInfo.add_click({
         if($_.items.count -gt 0){$_.ItemsSource = $EmptyVar; $TD_UCRefresh = $true}
     }
     $TD_Credentials | ForEach-Object {
-        [array]$TD_ExpandVolumeInfo = IBM_VolumeInfo -TD_Line_ID $_.ID -TD_Device_ConnectionTyp $_.ConnectionTyp -TD_Device_UserName $_.UserName -TD_Device_DeviceIP $_.IPAddress -TD_Device_DeviceName $_.DeviceName -TD_Device_PW $([Net.NetworkCredential]::new('', $_.Password).Password) -TD_Storage $TD_Credential.SVCorVF -TD_Exportpath $TD_tb_ExportPath.Text
+        [array]$TD_ExpandVolumeInfo = IBM_VolumeInfo -TD_Line_ID $_.ID -TD_Device_ConnectionTyp $_.ConnectionTyp -TD_Device_UserName $_.UserName -TD_Device_DeviceIP $_.IPAddress -TD_Device_DeviceName $_.DeviceName -TD_Device_PW $([Net.NetworkCredential]::new('', $_.Password).Password) -TD_Device_SSHKeyPath $_.SSHKeyPath -TD_Storage $TD_Credential.SVCorVF -TD_Exportpath $TD_tb_ExportPath.Text
         switch ($_.ID) {
             {($_ -eq 1)} { $TD_dg_ExpandVolumeInfoOne.ItemsSource = $TD_ExpandVolumeInfo }
             {($_ -eq 2)} { $TD_dg_ExpandVolumeInfoTwo.ItemsSource = $TD_ExpandVolumeInfo }
@@ -728,7 +728,7 @@ $TD_btn_IBM_CleanUpDumps.add_click({
 
     $TD_Credentials | ForEach-Object {
         $TD_CleanUpDumpInfo = $null
-        $TD_CleanUpDumpInfo = IBM_CleanUpDumps -TD_Line_ID $_.ID -TD_Device_ConnectionTyp $_.ConnectionTyp -TD_Device_UserName $_.UserName -TD_DeviceName $_.DeviceName -TD_Device_DeviceIP $_.IPAddress -TD_Device_PW $([Net.NetworkCredential]::new('', $_.Password).Password) -TD_Storage $_.SVCorVF -TD_Exportpath $TD_tb_ExportPath.Text
+        $TD_CleanUpDumpInfo = IBM_CleanUpDumps -TD_Line_ID $_.ID -TD_Device_ConnectionTyp $_.ConnectionTyp -TD_Device_UserName $_.UserName -TD_DeviceName $_.DeviceName -TD_Device_DeviceIP $_.IPAddress -TD_Device_PW $([Net.NetworkCredential]::new('', $_.Password).Password) -TD_Device_SSHKeyPath $_.SSHKeyPath -TD_Storage $_.SVCorVF -TD_Exportpath $TD_tb_ExportPath.Text
         switch ($_.ID) {
             {($_ -eq 1)} { $TD_tb_CleanUpDumpInfoOne.Text = $TD_CleanUpDumpInfo }
             {($_ -eq 2)} { $TD_tb_CleanUpDumpInfoTwo.Text = $TD_CleanUpDumpInfo }
@@ -753,7 +753,7 @@ $TD_btn_IBM_BackUpConfig.add_click({
 
     $TD_Credentials | ForEach-Object {
         $TD_StorageBackUpInfo = $null
-        $TD_StorageBackUpInfo = IBM_BackUpConfig -TD_Line_ID $_.ID -TD_Device_ConnectionTyp $_.ConnectionTyp -TD_Device_UserName $_.UserName -TD_Device_DeviceName $_.DeviceName -TD_Device_DeviceIP $_.IPAddress -TD_Device_PW $([Net.NetworkCredential]::new('', $_.Password).Password) -TD_Storage $_.SVCorVF -TD_Exportpath $TD_tb_ExportPath.Text
+        $TD_StorageBackUpInfo = IBM_BackUpConfig -TD_Line_ID $_.ID -TD_Device_ConnectionTyp $_.ConnectionTyp -TD_Device_UserName $_.UserName -TD_Device_DeviceName $_.DeviceName -TD_Device_DeviceIP $_.IPAddress -TD_Device_PW $([Net.NetworkCredential]::new('', $_.Password).Password) -TD_Device_SSHKeyPath $_.SSHKeyPath -TD_Storage $_.SVCorVF -TD_Exportpath $TD_tb_ExportPath.Text
         switch ($_.ID) {
             {($_ -eq 1)} { $TD_tb_BackUpInfoDeviceOne.Text = $TD_StorageBackUpInfo }
             {($_ -eq 2)} { $TD_tb_BackUpInfoDeviceTwo.Text = $TD_StorageBackUpInfo }
@@ -796,7 +796,7 @@ $TD_btn_IBM_HostInfo.add_click({
     }
 
     $TD_Credentials | ForEach-Object {
-        [array]$TD_Collected_HostInfoResult = IBM_HostInfo -TD_Line_ID $_.ID -TD_Device_ConnectionTyp $_.ConnectionTyp -TD_Device_UserName $_.UserName -TD_Device_DeviceIP $_.IPAddress -TD_Device_DeviceName $_.DeviceName -TD_Device_PW $([Net.NetworkCredential]::new('', $_.Password).Password) -TD_Exportpath $TD_tb_ExportPath.Text
+        [array]$TD_Collected_HostInfoResult = IBM_HostInfo -TD_Line_ID $_.ID -TD_Device_ConnectionTyp $_.ConnectionTyp -TD_Device_UserName $_.UserName -TD_Device_DeviceIP $_.IPAddress -TD_Device_DeviceName $_.DeviceName -TD_Device_PW $([Net.NetworkCredential]::new('', $_.Password).Password) -TD_Device_SSHKeyPath $_.SSHKeyPath -TD_Exportpath $TD_tb_ExportPath.Text
         switch ($_.ID) {
             {($_ -eq 1)} { $TD_dg_CollectedHostInfoOne.ItemsSource = $TD_Collected_HostInfoResult }
             {($_ -eq 2)} { $TD_dg_CollectedHostInfoTwo.ItemsSource = $TD_Collected_HostInfoResult }
@@ -828,7 +828,7 @@ $TD_btn_IBM_IPPortInfo.add_click({
     }
     
     $TD_Credentials | ForEach-Object {
-        [array]$TD_IPPortInfo = IBM_IPPortInfo -TD_Line_ID $_.ID -TD_Device_ConnectionTyp $_.ConnectionTyp -TD_Device_UserName $_.UserName -TD_Device_DeviceIP $_.IPAddress -TD_Device_DeviceName $_.DeviceName -TD_Device_PW $([Net.NetworkCredential]::new('', $_.Password).Password) -TD_Storage $_.SVCorVF -TD_Exportpath $TD_tb_ExportPath.Text
+        [array]$TD_IPPortInfo = IBM_IPPortInfo -TD_Line_ID $_.ID -TD_Device_ConnectionTyp $_.ConnectionTyp -TD_Device_UserName $_.UserName -TD_Device_DeviceIP $_.IPAddress -TD_Device_DeviceName $_.DeviceName -TD_Device_PW $([Net.NetworkCredential]::new('', $_.Password).Password) -TD_Device_SSHKeyPath $_.SSHKeyPath -TD_Storage $_.SVCorVF -TD_Exportpath $TD_tb_ExportPath.Text
         switch ($_.ID) {
             {($_ -eq 1)} { $TD_dg_IPPortInfoOne.ItemsSource = $TD_IPPortInfo }
             {($_ -eq 2)} { $TD_dg_IPPortInfoTwo.ItemsSource = $TD_IPPortInfo }
@@ -866,7 +866,7 @@ $TD_btn_FOS_BasicSwitchInfo.add_click({
 
     $TD_Credentials | ForEach-Object {
         $FOS_BasicSwitch = $null
-        $FOS_BasicSwitch = FOS_BasicSwitchInfos -TD_Line_ID $_.ID -TD_Device_ConnectionTyp $_.ConnectionTyp -TD_Device_UserName $_.UserName -TD_Device_DeviceName $_.DeviceName -TD_Device_DeviceIP $_.IPAddress -TD_Device_PW $([Net.NetworkCredential]::new('', $_.Password).Password) -TD_Exportpath $TD_tb_ExportPath.Text
+        $FOS_BasicSwitch = FOS_BasicSwitchInfos -TD_Line_ID $_.ID -TD_Device_ConnectionTyp $_.ConnectionTyp -TD_Device_UserName $_.UserName -TD_Device_DeviceName $_.DeviceName -TD_Device_DeviceIP $_.IPAddress -TD_Device_PW $([Net.NetworkCredential]::new('', $_.Password).Password) -TD_Device_SSHKeyPath $_.SSHKeyPath -TD_Exportpath $TD_tb_ExportPath.Text
         switch ($_.ID) {
             {($_ -eq 1)} { $TD_dg_sanBasicSwitchInfoOne.ItemsSource = $FOS_BasicSwitch }
             {($_ -eq 2)} { $TD_dg_sanBasicSwitchInfoTwo.ItemsSource = $FOS_BasicSwitch }
@@ -901,7 +901,7 @@ $TD_btn_FOS_SwitchShow.add_click({
     }
 
     $TD_Credentials | ForEach-Object {
-        [array]$FOS_SwitchShow = FOS_SwitchShowInfo -TD_Line_ID $_.ID -TD_Device_ConnectionTyp $_.ConnectionTyp -TD_Device_UserName $_.UserName -TD_Device_DeviceName $_.DeviceName -TD_Device_DeviceIP $_.IPAddress -TD_Device_PW $([Net.NetworkCredential]::new('', $_.Password).Password) -TD_Exportpath $TD_tb_ExportPath.Text
+        [array]$FOS_SwitchShow = FOS_SwitchShowInfo -TD_Line_ID $_.ID -TD_Device_ConnectionTyp $_.ConnectionTyp -TD_Device_UserName $_.UserName -TD_Device_DeviceName $_.DeviceName -TD_Device_DeviceIP $_.IPAddress -TD_Device_PW $([Net.NetworkCredential]::new('', $_.Password).Password) -TD_Device_SSHKeyPath $_.SSHKeyPath -TD_Exportpath $TD_tb_ExportPath.Text
         switch ($_.ID) {
             {($_ -eq 1)} { $TD_DG_SwitchShowOne.ItemsSource = $FOS_SwitchShow }
             {($_ -eq 2)} { $TD_DG_SwitchShowTwo.ItemsSource = $FOS_SwitchShow }
@@ -1024,7 +1024,7 @@ $TD_btn_FOS_ZoneDetailsShow.add_click({
         switch ($TD_Credential.ID) {
             {($_ -eq 1)} 
             {   
-                $TD_FOS_ZoneShow, $FOS_EffeZoneNameOne = FOS_ZoneDetails -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.UserName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $([Net.NetworkCredential]::new('', $TD_Credential.Password).Password) -TD_Exportpath $TD_tb_ExportPath.Text
+                $TD_FOS_ZoneShow, $FOS_EffeZoneNameOne = FOS_ZoneDetails -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.UserName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $([Net.NetworkCredential]::new('', $TD_Credential.Password).Password) -TD_Device_SSHKeyPath $TD_Credential.SSHKeyPath -TD_Exportpath $TD_tb_ExportPath.Text
                 Start-Sleep -Seconds 0.5
                 $TD_dg_ZoneDetailsOne.ItemsSource =$TD_FOS_ZoneShow
                 $TD_lb_FabricOne.Visibility = "Visible";
@@ -1034,7 +1034,7 @@ $TD_btn_FOS_ZoneDetailsShow.add_click({
             }
             {($_ -eq 2) } <# -or ($_ -eq 3) -or ($_ -eq 4)}  for later use maybe #>
             {            
-                $TD_FOS_ZoneShow, $FOS_EffeZoneNameTwo = FOS_ZoneDetails -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.UserName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $([Net.NetworkCredential]::new('', $TD_Credential.Password).Password) -TD_Exportpath $TD_tb_ExportPath.Text
+                $TD_FOS_ZoneShow, $FOS_EffeZoneNameTwo = FOS_ZoneDetails -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.UserName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $([Net.NetworkCredential]::new('', $TD_Credential.Password).Password) -TD_Device_SSHKeyPath $TD_Credential.SSHKeyPath -TD_Exportpath $TD_tb_ExportPath.Text
                 if($FOS_EffeZoneNameOne -ne $FOS_EffeZoneNameTwo){
                 Start-Sleep -Seconds 0.5
                 $TD_dg_ZoneDetailsTwo.ItemsSource =$TD_FOS_ZoneShow
@@ -1046,7 +1046,7 @@ $TD_btn_FOS_ZoneDetailsShow.add_click({
             }
             {($_ -eq 3) } <# -or ($_ -eq 3) -or ($_ -eq 4)}  for later use maybe #>
             {            
-                $TD_FOS_ZoneShow, $FOS_EffeZoneNameThree = FOS_ZoneDetails  -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.UserName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $([Net.NetworkCredential]::new('', $TD_Credential.Password).Password) -TD_Exportpath $TD_tb_ExportPath.Text
+                $TD_FOS_ZoneShow, $FOS_EffeZoneNameThree = FOS_ZoneDetails  -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.UserName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $([Net.NetworkCredential]::new('', $TD_Credential.Password).Password) -TD_Device_SSHKeyPath $TD_Credential.SSHKeyPath -TD_Exportpath $TD_tb_ExportPath.Text
                 Start-Sleep -Seconds 0.5
                 if($FOS_EffeZoneNameOne -ne $FOS_EffeZoneNameThree){
                     if($FOS_EffeZoneNameThree -ne $FOS_EffeZoneNameTwo){
@@ -1136,7 +1136,7 @@ $TD_btn_FOS_PortLicenseShow.add_click({
     }
 
     $TD_Credentials | ForEach-Object {
-        [array]$TD_FOS_PortLicenseShow = FOS_PortLicenseShowInfo -TD_Line_ID $_.ID -TD_Device_ConnectionTyp $_.ConnectionTyp -TD_Device_UserName $_.UserName -TD_Device_DeviceName $_.DeviceName -TD_Device_DeviceIP $_.IPAddress -TD_Device_PW $([Net.NetworkCredential]::new('', $_.Password).Password) -TD_Exportpath $TD_tb_ExportPath.Text
+        [array]$TD_FOS_PortLicenseShow = FOS_PortLicenseShowInfo -TD_Line_ID $_.ID -TD_Device_ConnectionTyp $_.ConnectionTyp -TD_Device_UserName $_.UserName -TD_Device_DeviceName $_.DeviceName -TD_Device_DeviceIP $_.IPAddress -TD_Device_PW $([Net.NetworkCredential]::new('', $_.Password).Password) -TD_Device_SSHKeyPath $_.SSHKeyPath -TD_Exportpath $TD_tb_ExportPath.Text
         switch ($_.ID) {
             {($_ -eq 1)} {$TD_TB_SANInfoOne.Visibility="Visible"; $TD_TB_SANInfoOne.Text = (Out-String -InputObject $TD_FOS_PortLicenseShow)}
             {($_ -eq 2)} {$TD_TB_SANInfoTwo.Visibility="Visible"; $TD_TB_SANInfoTwo.Text = (Out-String -InputObject $TD_FOS_PortLicenseShow)}
@@ -1171,7 +1171,7 @@ $TD_btn_FOS_SensorShow.add_click({
     }
 
     $TD_Credentials | ForEach-Object {
-        [array]$TD_FOS_SensorShow = FOS_SensorShow -TD_Line_ID $_.ID -TD_Device_ConnectionTyp $_.ConnectionTyp -TD_Device_UserName $_.UserName -TD_Device_DeviceName $_.DeviceName -TD_Device_DeviceIP $_.IPAddress -TD_Device_PW $([Net.NetworkCredential]::new('', $_.Password).Password) -TD_Exportpath $TD_tb_ExportPath.Text
+        [array]$TD_FOS_SensorShow = FOS_SensorShow -TD_Line_ID $_.ID -TD_Device_ConnectionTyp $_.ConnectionTyp -TD_Device_UserName $_.UserName -TD_Device_DeviceName $_.DeviceName -TD_Device_DeviceIP $_.IPAddress -TD_Device_PW $([Net.NetworkCredential]::new('', $_.Password).Password) -TD_Device_SSHKeyPath $_.SSHKeyPath -TD_Exportpath $TD_tb_ExportPath.Text
         switch ($_.ID) {
             {($_ -eq 1)} { $TD_tb_SensorInfoOne.Visibility="Visible"; $TD_tb_SensorInfoOne.Text = (Out-String -InputObject $TD_FOS_SensorShow) }
             {($_ -eq 2)} { $TD_tb_SensorInfoTwo.Visibility="Visible"; $TD_tb_SensorInfoTwo.Text = (Out-String -InputObject $TD_FOS_SensorShow) }
@@ -1208,7 +1208,7 @@ $TD_btn_FOS_PortErrorShow.add_click({
     }
 
     $TD_Credentials | ForEach-Object {
-        [array]$TD_FOS_PortErrShow = FOS_PortErrShowInfos -TD_Line_ID $_.ID -TD_Device_ConnectionTyp $_.ConnectionTyp -TD_Device_UserName $_.UserName -TD_Device_DeviceName $_.DeviceName -TD_Device_DeviceIP $_.IPAddress -TD_Device_PW $([Net.NetworkCredential]::new('', $_.Password).Password) -TD_Exportpath $TD_tb_ExportPath.Text
+        [array]$TD_FOS_PortErrShow = FOS_PortErrShowInfos -TD_Line_ID $_.ID -TD_Device_ConnectionTyp $_.ConnectionTyp -TD_Device_UserName $_.UserName -TD_Device_DeviceName $_.DeviceName -TD_Device_DeviceIP $_.IPAddress -TD_Device_PW $([Net.NetworkCredential]::new('', $_.Password).Password) -TD_Device_SSHKeyPath $_.SSHKeyPath -TD_Exportpath $TD_tb_ExportPath.Text
         switch ($_.ID) {
             {($_ -eq 1)} { $TD_DG_PortErrorShowOne.ItemsSource = $TD_FOS_PortErrShow }
             {($_ -eq 2)} { $TD_DG_PortErrorShowTwo.ItemsSource = $TD_FOS_PortErrShow }
@@ -1243,7 +1243,7 @@ $TD_btn_FOS_SFPHealthShow.add_click({
     }
     
     $TD_Credentials | ForEach-Object {
-        [array]$TD_FOS_SFPDetailsShow = FOS_SFPDetails -TD_Line_ID $_.ID -TD_Device_ConnectionTyp $_.ConnectionTyp -TD_Device_UserName $_.UserName -TD_Device_DeviceName $_.DeviceName -TD_Device_DeviceIP $_.IPAddress -TD_Device_PW $([Net.NetworkCredential]::new('', $_.Password).Password) -TD_Exportpath $TD_tb_ExportPath.Text
+        [array]$TD_FOS_SFPDetailsShow = FOS_SFPDetails -TD_Line_ID $_.ID -TD_Device_ConnectionTyp $_.ConnectionTyp -TD_Device_UserName $_.UserName -TD_Device_DeviceName $_.DeviceName -TD_Device_DeviceIP $_.IPAddress -TD_Device_PW $([Net.NetworkCredential]::new('', $_.Password).Password) -TD_Device_SSHKeyPath $_.SSHKeyPath -TD_Exportpath $TD_tb_ExportPath.Text
         switch ($_.ID) {
             {($_ -eq 1)} { $TD_dg_SFPShowOne.ItemsSource = $TD_FOS_SFPDetailsShow }
             {($_ -eq 2)} { $TD_dg_SFPShowTwo.ItemsSource = $TD_FOS_SFPDetailsShow }
@@ -1280,7 +1280,7 @@ $TD_btn_StatsClear.add_click({
                 $SANUserName = $TD_Credential.UserName; $Device_IP = $TD_Credential.IPAddress
                 if($TD_Credential.ConnectionTyp -eq "ssh"){
                     try {
-                        $TD_FOS_StatsClear = ssh -i $($TD_tb_pathtokey.Text) $SANUserName@$Device_IP "statsClear" 2>&1
+                        $TD_FOS_StatsClear = ssh -i $($TD_Credential.SSHKeyPath) $SANUserName@$Device_IP "statsClear" 2>&1
                         $TD_FOS_StatsClearDone = $true
                     }
                     catch {
@@ -1306,7 +1306,7 @@ $TD_btn_StatsClear.add_click({
                     $TD_lb_OneClear.Visibility = "Visible"
                     <# next line is a test, because performance#>
                     $TD_UserControl2.Dispatcher.Invoke([System.Action]{},"Render")
-                    $TD_FOS_PortErrShow += FOS_PortErrShowInfos -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.UserName -TD_Device_DeviceName $TD_Credential.DeviceName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $([Net.NetworkCredential]::new('', $TD_Credential.Password).Password) -TD_Exportpath $TD_tb_ExportPath.Text
+                    $TD_FOS_PortErrShow += FOS_PortErrShowInfos -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.UserName -TD_Device_DeviceName $TD_Credential.DeviceName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $([Net.NetworkCredential]::new('', $TD_Credential.Password).Password) -TD_Device_SSHKeyPath $TD_Selected_DeviceSSHFile -TD_Exportpath $TD_tb_ExportPath.Text
                     Start-Sleep -Seconds 0.5
                     $TD_DG_PortErrorShowOne.ItemsSource =$TD_FOS_PortErrShow
                     $TD_FOS_StatsClearDone = $false
@@ -1317,7 +1317,7 @@ $TD_btn_StatsClear.add_click({
                 $SANUserName = $TD_Credential.UserName; $Device_IP = $TD_Credential.IPAddress
                 if($TD_Credential.ConnectionTyp -eq "ssh"){
                     try {
-                        $TD_FOS_StatsClear = ssh -i $($TD_tb_pathtokey.Text) $SANUserName@$Device_IP "statsClear" 2>&1
+                        $TD_FOS_StatsClear = ssh -i $($TD_Credential.SSHKeyPath) $SANUserName@$Device_IP "statsClear" 2>&1
                         $TD_FOS_StatsClearDone = $true
                     }
                     catch {
@@ -1343,7 +1343,7 @@ $TD_btn_StatsClear.add_click({
                     $TD_lb_TwoClear.Visibility = "Visible"
                     <# next line is a test, because performance#>
                     $TD_UserControl2.Dispatcher.Invoke([System.Action]{},"Render")
-                    $TD_FOS_PortErrShow += FOS_PortErrShowInfos -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.UserName -TD_Device_DeviceName $TD_Credential.DeviceName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $([Net.NetworkCredential]::new('', $TD_Credential.Password).Password) -TD_Exportpath $TD_tb_ExportPath.Text
+                    $TD_FOS_PortErrShow += FOS_PortErrShowInfos -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.UserName -TD_Device_DeviceName $TD_Credential.DeviceName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $([Net.NetworkCredential]::new('', $TD_Credential.Password).Password) -TD_Device_SSHKeyPath $TD_Selected_DeviceSSHFile -TD_Exportpath $TD_tb_ExportPath.Text
                     Start-Sleep -Seconds 0.5
                     $TD_DG_PortErrorShowTwo.ItemsSource =$TD_FOS_PortErrShow
                     $TD_FOS_StatsClearDone = $false
@@ -1354,7 +1354,7 @@ $TD_btn_StatsClear.add_click({
                 $SANUserName = $TD_Credential.UserName; $Device_IP = $TD_Credential.IPAddress
                 if($TD_Credential.ConnectionTyp -eq "ssh"){
                     try {
-                        $TD_FOS_StatsClear = ssh -i $($TD_tb_pathtokey.Text) $SANUserName@$Device_IP "statsClear" 2>&1
+                        $TD_FOS_StatsClear = ssh -i $($TD_Credential.SSHKeyPath) $SANUserName@$Device_IP "statsClear" 2>&1
                         $TD_FOS_StatsClearDone = $true
                     }
                     catch {
@@ -1380,7 +1380,7 @@ $TD_btn_StatsClear.add_click({
                     $TD_lb_ThreeClear.Visibility = "Visible"
                     <# next line is a test, because performance#>
                     $TD_UserControl2.Dispatcher.Invoke([System.Action]{},"Render")
-                    $TD_FOS_PortErrShow += FOS_PortErrShowInfos -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.UserName -TD_Device_DeviceName $TD_Credential.DeviceName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $([Net.NetworkCredential]::new('', $TD_Credential.Password).Password) -TD_Exportpath $TD_tb_ExportPath.Text
+                    $TD_FOS_PortErrShow += FOS_PortErrShowInfos -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.UserName -TD_Device_DeviceName $TD_Credential.DeviceName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $([Net.NetworkCredential]::new('', $TD_Credential.Password).Password) -TD_Device_SSHKeyPath $TD_Selected_DeviceSSHFile -TD_Exportpath $TD_tb_ExportPath.Text
                     Start-Sleep -Seconds 0.5
                     $TD_DG_PortErrorShowThree.ItemsSource =$TD_FOS_PortErrShow
                     $TD_FOS_StatsClearDone = $false
@@ -1391,7 +1391,7 @@ $TD_btn_StatsClear.add_click({
                 $SANUserName = $TD_Credential.UserName; $Device_IP = $TD_Credential.IPAddress
                 if($TD_Credential.ConnectionTyp -eq "ssh"){
                     try {
-                        $TD_FOS_StatsClear = ssh -i $($TD_tb_pathtokey.Text) $SANUserName@$Device_IP "statsClear" 2>&1
+                        $TD_FOS_StatsClear = ssh -i $($TD_Credential.SSHKeyPath) $SANUserName@$Device_IP "statsClear" 2>&1
                         $TD_FOS_StatsClearDone = $true
                     }
                     catch {
@@ -1417,7 +1417,7 @@ $TD_btn_StatsClear.add_click({
                     $TD_lb_FourClear.Visibility = "Visible"
                     <# next line is a test, because performance#>
                     $TD_UserControl2.Dispatcher.Invoke([System.Action]{},"Render")
-                    $TD_FOS_PortErrShow += FOS_PortErrShowInfos -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.UserName -TD_Device_DeviceName $TD_Credential.DeviceName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $([Net.NetworkCredential]::new('', $TD_Credential.Password).Password) -TD_Exportpath $TD_tb_ExportPath.Text
+                    $TD_FOS_PortErrShow += FOS_PortErrShowInfos -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.UserName -TD_Device_DeviceName $TD_Credential.DeviceName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $([Net.NetworkCredential]::new('', $TD_Credential.Password).Password) -TD_Device_SSHKeyPath $TD_Selected_DeviceSSHFile -TD_Exportpath $TD_tb_ExportPath.Text
                     Start-Sleep -Seconds 0.5
                     $TD_DG_PortErrorShowFour.ItemsSource =$TD_FOS_PortErrShow
                     $TD_FOS_StatsClearDone = $false
@@ -1428,7 +1428,7 @@ $TD_btn_StatsClear.add_click({
                 $SANUserName = $TD_Credential.UserName; $Device_IP = $TD_Credential.IPAddress
                 if($TD_Credential.ConnectionTyp -eq "ssh"){
                     try {
-                        $TD_FOS_StatsClear = ssh -i $($TD_tb_pathtokey.Text) $SANUserName@$Device_IP "statsClear" 2>&1
+                        $TD_FOS_StatsClear = ssh -i $($TD_Credential.SSHKeyPath) $SANUserName@$Device_IP "statsClear" 2>&1
                         $TD_FOS_StatsClearDone = $true
                     }
                     catch {
@@ -1454,7 +1454,7 @@ $TD_btn_StatsClear.add_click({
                     $TD_lb_FiveClear.Visibility = "Visible"
                     <# next line is a test, because performance#>
                     $TD_UserControl2.Dispatcher.Invoke([System.Action]{},"Render")
-                    $TD_FOS_PortErrShow += FOS_PortErrShowInfos -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.UserName -TD_Device_DeviceName $TD_Credential.DeviceName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $([Net.NetworkCredential]::new('', $TD_Credential.Password).Password) -TD_Exportpath $TD_tb_ExportPath.Text
+                    $TD_FOS_PortErrShow += FOS_PortErrShowInfos -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.UserName -TD_Device_DeviceName $TD_Credential.DeviceName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $([Net.NetworkCredential]::new('', $TD_Credential.Password).Password) -TD_Device_SSHKeyPath $TD_Selected_DeviceSSHFile -TD_Exportpath $TD_tb_ExportPath.Text
                     Start-Sleep -Seconds 0.5
                     $TD_DG_PortErrorShowFive.ItemsSource =$TD_FOS_PortErrShow
                     $TD_FOS_StatsClearDone = $false
@@ -1465,7 +1465,7 @@ $TD_btn_StatsClear.add_click({
                 $SANUserName = $TD_Credential.UserName; $Device_IP = $TD_Credential.IPAddress
                 if($TD_Credential.ConnectionTyp -eq "ssh"){
                     try {
-                        $TD_FOS_StatsClear = ssh -i $($TD_tb_pathtokey.Text) $SANUserName@$Device_IP "statsClear" 2>&1
+                        $TD_FOS_StatsClear = ssh -i $($TD_Credential.SSHKeyPath) $SANUserName@$Device_IP "statsClear" 2>&1
                         $TD_FOS_StatsClearDone = $true
                     }
                     catch {
@@ -1491,7 +1491,7 @@ $TD_btn_StatsClear.add_click({
                     $TD_lb_SixClear.Visibility = "Visible"
                     <# next line is a test, because performance#>
                     $TD_UserControl2.Dispatcher.Invoke([System.Action]{},"Render")
-                    $TD_FOS_PortErrShow += FOS_PortErrShowInfos -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.UserName -TD_Device_DeviceName $TD_Credential.DeviceName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $([Net.NetworkCredential]::new('', $TD_Credential.Password).Password) -TD_Exportpath $TD_tb_ExportPath.Text
+                    $TD_FOS_PortErrShow += FOS_PortErrShowInfos -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.UserName -TD_Device_DeviceName $TD_Credential.DeviceName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $([Net.NetworkCredential]::new('', $TD_Credential.Password).Password) -TD_Device_SSHKeyPath $TD_Selected_DeviceSSHFile -TD_Exportpath $TD_tb_ExportPath.Text
                     Start-Sleep -Seconds 0.5
                     $TD_DG_PortErrorShowSix.ItemsSource =$TD_FOS_PortErrShow
                     $TD_FOS_StatsClearDone = $false
@@ -1502,7 +1502,7 @@ $TD_btn_StatsClear.add_click({
                 $SANUserName = $TD_Credential.UserName; $Device_IP = $TD_Credential.IPAddress
                 if($TD_Credential.ConnectionTyp -eq "ssh"){
                     try {
-                        $TD_FOS_StatsClear = ssh -i $($TD_tb_pathtokey.Text) $SANUserName@$Device_IP "statsClear" 2>&1
+                        $TD_FOS_StatsClear = ssh -i $($TD_Credential.SSHKeyPath) $SANUserName@$Device_IP "statsClear" 2>&1
                         $TD_FOS_StatsClearDone = $true
                     }
                     catch {
@@ -1528,7 +1528,7 @@ $TD_btn_StatsClear.add_click({
                     $TD_lb_SevenClear.Visibility = "Visible"
                     <# next line is a test, because performance#>
                     $TD_UserControl2.Dispatcher.Invoke([System.Action]{},"Render")
-                    $TD_FOS_PortErrShow += FOS_PortErrShowInfos -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.UserName -TD_Device_DeviceName $TD_Credential.DeviceName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $([Net.NetworkCredential]::new('', $TD_Credential.Password).Password) -TD_Exportpath $TD_tb_ExportPath.Text
+                    $TD_FOS_PortErrShow += FOS_PortErrShowInfos -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.UserName -TD_Device_DeviceName $TD_Credential.DeviceName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $([Net.NetworkCredential]::new('', $TD_Credential.Password).Password) -TD_Device_SSHKeyPath $TD_Selected_DeviceSSHFile -TD_Exportpath $TD_tb_ExportPath.Text
                     Start-Sleep -Seconds 0.5
                     $TD_DG_PortErrorShowSeven.ItemsSource =$TD_FOS_PortErrShow
                     $TD_FOS_StatsClearDone = $false
@@ -1539,7 +1539,7 @@ $TD_btn_StatsClear.add_click({
                 $SANUserName = $TD_Credential.UserName; $Device_IP = $TD_Credential.IPAddress
                 if($TD_Credential.ConnectionTyp -eq "ssh"){
                     try {
-                        $TD_FOS_StatsClear = ssh -i $($TD_tb_pathtokey.Text) $SANUserName@$Device_IP "statsClear" 2>&1
+                        $TD_FOS_StatsClear = ssh -i $($TD_Credential.SSHKeyPath) $SANUserName@$Device_IP "statsClear" 2>&1
                         $TD_FOS_StatsClearDone = $true
                     }
                     catch {
@@ -1565,7 +1565,7 @@ $TD_btn_StatsClear.add_click({
                     $TD_lb_EightClear.Visibility = "Visible"
                     <# next line is a test, because performance#>
                     $TD_UserControl2.Dispatcher.Invoke([System.Action]{},"Render")
-                    $TD_FOS_PortErrShow += FOS_PortErrShowInfos -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.UserName -TD_Device_DeviceName $TD_Credential.DeviceName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $([Net.NetworkCredential]::new('', $TD_Credential.Password).Password) -TD_Exportpath $TD_tb_ExportPath.Text
+                    $TD_FOS_PortErrShow += FOS_PortErrShowInfos -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.UserName -TD_Device_DeviceName $TD_Credential.DeviceName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $([Net.NetworkCredential]::new('', $TD_Credential.Password).Password) -TD_Device_SSHKeyPath $TD_Selected_DeviceSSHFile -TD_Exportpath $TD_tb_ExportPath.Text
                     Start-Sleep -Seconds 0.5
                     $TD_DG_PortErrorShowEight.ItemsSource =$TD_FOS_PortErrShow
                     $TD_FOS_StatsClearDone = $false
@@ -1589,7 +1589,7 @@ $TD_btn_FOS_PortBufferShow.add_click({
     }
 
     $TD_Credentials | ForEach-Object {
-        [array]$TD_FOS_PortbufferShow = FOS_PortbufferShowInfo -TD_Line_ID $_.ID -TD_Device_ConnectionTyp $_.ConnectionTyp -TD_Device_UserName $_.UserName -TD_Device_DeviceName $_.DeviceName -TD_Device_DeviceIP $_.IPAddress -TD_Device_PW $([Net.NetworkCredential]::new('', $_.Password).Password) -TD_Exportpath $TD_tb_ExportPath.Text
+        [array]$TD_FOS_PortbufferShow = FOS_PortbufferShowInfo -TD_Line_ID $_.ID -TD_Device_ConnectionTyp $_.ConnectionTyp -TD_Device_UserName $_.UserName -TD_Device_DeviceName $_.DeviceName -TD_Device_DeviceIP $_.IPAddress -TD_Device_PW $([Net.NetworkCredential]::new('', $_.Password).Password) -TD_Device_SSHKeyPath $_.SSHKeyPath -TD_Exportpath $TD_tb_ExportPath.Text
         switch ($_.ID) {
             {($_ -eq 1)} { $TD_DG_PortBufferShowOne.ItemsSource = $TD_FOS_PortbufferShow }
             {($_ -eq 2)} { $TD_DG_PortBufferShowTwo.ItemsSource = $TD_FOS_PortbufferShow }
@@ -1624,19 +1624,19 @@ $TD_btn_Storage_SysCheck.add_click({
         switch ($TD_Credential.ID) {
             {(($_ -eq 1) -and ($TD_SystemCheck-eq "Check the First"))} 
             {
-                IBM_StorageHealthCheck -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.UserName -TD_Device_DeviceName $TD_Credentials.DeviceName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $([Net.NetworkCredential]::new('', $TD_Credential.Password).Password) -TD_Exportpath $TD_tb_ExportPath.Text
+                IBM_StorageHealthCheck -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.UserName -TD_Device_DeviceName $TD_Credentials.DeviceName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $([Net.NetworkCredential]::new('', $TD_Credential.Password).Password) -TD_Device_SSHKeyPath $_.SSHKeyPath -TD_Exportpath $TD_tb_ExportPath.Text
             }
             {(($_ -eq 2) -and ($TD_SystemCheck-eq "Check the Second"))} 
             {
-                IBM_StorageHealthCheck -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.UserName -TD_Device_DeviceName $TD_Credentials.DeviceName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $([Net.NetworkCredential]::new('', $TD_Credential.Password).Password) -TD_Exportpath $TD_tb_ExportPath.Text
+                IBM_StorageHealthCheck -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.UserName -TD_Device_DeviceName $TD_Credentials.DeviceName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $([Net.NetworkCredential]::new('', $TD_Credential.Password).Password) -TD_Device_SSHKeyPath $_.SSHKeyPath -TD_Exportpath $TD_tb_ExportPath.Text
             }
             {(($_ -eq 3) -and ($TD_SystemCheck-eq "Check the Third"))}  
             {
-                IBM_StorageHealthCheck -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.UserName -TD_Device_DeviceName $TD_Credentials.DeviceName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $([Net.NetworkCredential]::new('', $TD_Credential.Password).Password) -TD_Exportpath $TD_tb_ExportPath.Text
+                IBM_StorageHealthCheck -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.UserName -TD_Device_DeviceName $TD_Credentials.DeviceName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $([Net.NetworkCredential]::new('', $TD_Credential.Password).Password) -TD_Device_SSHKeyPath $_.SSHKeyPath -TD_Exportpath $TD_tb_ExportPath.Text
             }
             {(($_ -eq 4) -and ($TD_SystemCheck-eq "Check the Fourth"))}  
             {
-                IBM_StorageHealthCheck -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.UserName -TD_Device_DeviceName $TD_Credentials.DeviceName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $([Net.NetworkCredential]::new('', $TD_Credential.Password).Password) -TD_Exportpath $TD_tb_ExportPath.Text
+                IBM_StorageHealthCheck -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.UserName -TD_Device_DeviceName $TD_Credentials.DeviceName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $([Net.NetworkCredential]::new('', $TD_Credential.Password).Password) -TD_Device_SSHKeyPath $_.SSHKeyPath -TD_Exportpath $TD_tb_ExportPath.Text
             }
             Default {SST_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong, please check the prompt output first and then the log files.") -TD_ToolMSGType Error}
         }

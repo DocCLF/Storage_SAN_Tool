@@ -46,6 +46,7 @@ function IBM_DriveInfo {
         [Parameter(Mandatory)]
         [string]$TD_Device_DeviceIP,
         [string]$TD_Device_PW,
+        [string]$TD_Device_SSHKeyPath,
         [Parameter(ValueFromPipeline)]
         [ValidateSet("FSystem","SVC")]
         [string]$TD_Storage = "FSystem",
@@ -64,7 +65,7 @@ function IBM_DriveInfo {
         <# Connect to Device and get all needed Data #>
         if($TD_Storage -eq "FSystem"){
             if($TD_Device_ConnectionTyp -eq "ssh"){
-                $TD_CollectInfos = ssh -i $($TD_tb_pathtokey.Text) $TD_Device_UserName@$TD_Device_DeviceIP 'lsnodecanister -nohdr |while read id name IO_group_id;do lsnodecanister $id;echo;done && lsdrive -nohdr |while read id name IO_group_id;do lsdrive $id ;echo;done'
+                $TD_CollectInfos = ssh -i $($TD_Device_SSHKeyPath) $TD_Device_UserName@$TD_Device_DeviceIP 'lsnodecanister -nohdr |while read id name IO_group_id;do lsnodecanister $id;echo;done && lsdrive -nohdr |while read id name IO_group_id;do lsdrive $id ;echo;done'
             }else {
                 $TD_CollectInfos = plink $TD_Device_UserName@$TD_Device_DeviceIP -pw $TD_Device_PW -batch 'lsnodecanister -nohdr |while read id name IO_group_id;do lsnodecanister $id;echo;done && lsdrive -nohdr |while read id name IO_group_id;do lsdrive $id ;echo;done'
             }

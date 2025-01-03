@@ -7,6 +7,7 @@ function IBM_UserInfo {
         [string]$TD_Device_DeviceIP,
         [string]$TD_Device_DeviceName,
         [string]$TD_Device_PW,
+        [string]$TD_Device_SSHKeyPath,
         [Parameter(ValueFromPipeline)]
         [ValidateSet("yes","no")]
         [string]$TD_Export = "yes",
@@ -20,7 +21,7 @@ function IBM_UserInfo {
         $ProgressBar = New-ProgressBar
         <# Connect to Device and get all needed Data #>
         if($TD_Device_ConnectionTyp -eq "ssh"){
-            $TD_UserInformation = ssh -i $($TD_tb_pathtokey.Text) $TD_Device_UserName@$TD_Device_DeviceIP 'lsuser -delim :'
+            $TD_UserInformation = ssh -i $($TD_Device_SSHKeyPath) $TD_Device_UserName@$TD_Device_DeviceIP 'lsuser -delim :'
         }else {
             $TD_UserInformation = plink $TD_Device_UserName@$TD_Device_DeviceIP -pw $TD_Device_PW -batch 'lsuser -delim :'
         }

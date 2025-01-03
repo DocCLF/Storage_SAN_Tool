@@ -25,6 +25,7 @@ function IBM_StorageHealthCheck {
         [Parameter(Mandatory)]
         [string]$TD_Device_DeviceIP,
         [string]$TD_Device_PW,
+        [string]$TD_Device_SSHKeyPath,
         [Parameter(ValueFromPipeline)]
         [ValidateSet("yes","no")]
         [string]$TD_Export = "yes",
@@ -37,7 +38,7 @@ function IBM_StorageHealthCheck {
 
         $TD_btn_SaveHostStatus.Visibility="Collapsed"
         if($TD_Device_ConnectionTyp -eq "ssh"){
-            $TD_CollectInfo = ssh -i $($TD_tb_pathtokey.Text) $TD_Device_UserName@$TD_Device_DeviceIP "lssystem |grep code_level && lshost && lshostcluster && lspartnership"
+            $TD_CollectInfo = ssh -i $($TD_Device_SSHKeyPath) $TD_Device_UserName@$TD_Device_DeviceIP "lssystem |grep code_level && lshost && lshostcluster && lspartnership"
         }else {
             $TD_CollectInfo = plink $TD_Device_UserName@$TD_Device_DeviceIP -pw $TD_Device_PW -batch "lssystem |grep code_level && lshost && lshostcluster && lspartnership"
         }
@@ -127,7 +128,7 @@ function IBM_StorageHealthCheck {
         $TD_UserControl3_1.Dispatcher.Invoke([System.Action]{},"Render")
 
         
-        $TD_EventCollection = IBM_EventLog -TD_Line_ID $TD_Line_ID -TD_Device_ConnectionTyp $TD_Device_ConnectionTyp -TD_Device_UserName $TD_Device_UserName -TD_Device_DeviceName TD_Device_DeviceName -TD_Device_DeviceIP $TD_Device_DeviceIP -TD_Device_PW $TD_Device_PW -TD_Export yes -TD_Exportpath $TD_Exportpath
+        $TD_EventCollection = IBM_EventLog -TD_Line_ID $TD_Line_ID -TD_Device_ConnectionTyp $TD_Device_ConnectionTyp -TD_Device_UserName $TD_Device_UserName -TD_Device_DeviceName TD_Device_DeviceName -TD_Device_DeviceIP $TD_Device_DeviceIP -TD_Device_PW $TD_Device_PW -TD_Device_DeviceIP $TD_Device_DeviceIP -TD_Export yes -TD_Exportpath $TD_Exportpath
         $TD_dg_EventlogStatusInfoText.ItemsSource=$EmptyVar
         if($TD_EventCollection.Status -eq "alert"){
             $TD_lb_EventlogLight.Background="red"
@@ -352,7 +353,7 @@ function IBM_StorageHealthCheck {
             }
         }
         
-        [array]$TD_MDiskResault = IBM_MDiskInfo -TD_Line_ID $TD_Line_ID -TD_Device_ConnectionTyp $TD_Device_ConnectionTyp -TD_Device_UserName $TD_Device_UserName -TD_Device_DeviceName TD_Device_DeviceName -TD_Device_DeviceIP $TD_Device_DeviceIP -TD_Device_PW $TD_Device_PW -TD_Export yes -TD_Exportpath $TD_Exportpath
+        [array]$TD_MDiskResault = IBM_MDiskInfo -TD_Line_ID $TD_Line_ID -TD_Device_ConnectionTyp $TD_Device_ConnectionTyp -TD_Device_UserName $TD_Device_UserName -TD_Device_DeviceName TD_Device_DeviceName -TD_Device_DeviceIP $TD_Device_DeviceIP -TD_Device_PW $TD_Device_PW -TD_Device_DeviceIP $TD_Device_DeviceIP -TD_Export yes -TD_Exportpath $TD_Exportpath
         $TD_dg_MdiskStatusInfoText.ItemsSource=$EmptyVar
         if(($TD_MDiskResault.Status -eq "offline")-or($TD_MDiskResault.Status -eq "excluded")){
             $TD_lb_MdiskStatusLight.Background ="red"
@@ -367,7 +368,7 @@ function IBM_StorageHealthCheck {
             $TD_UserControl3_1.Dispatcher.Invoke([System.Action]{},"Render")
         }
 
-        [array]$TD_VdiskResault = IBM_VolumeInfo -TD_Line_ID $TD_Line_ID -TD_Device_ConnectionTyp $TD_Device_ConnectionTyp -TD_Device_UserName $TD_Device_UserName -TD_Device_DeviceName TD_Device_DeviceName -TD_Device_DeviceIP $TD_Device_DeviceIP -TD_Device_PW $TD_Device_PW -TD_Export yes -TD_Exportpath $TD_Exportpath
+        [array]$TD_VdiskResault = IBM_VolumeInfo -TD_Line_ID $TD_Line_ID -TD_Device_ConnectionTyp $TD_Device_ConnectionTyp -TD_Device_UserName $TD_Device_UserName -TD_Device_DeviceName TD_Device_DeviceName -TD_Device_DeviceIP $TD_Device_DeviceIP -TD_Device_PW $TD_Device_PW -TD_Device_DeviceIP $TD_Device_DeviceIP -TD_Export yes -TD_Exportpath $TD_Exportpath
         $TD_VdiskResault = foreach($TD_VdiskFunc in $TD_VdiskResaultTemp){
             if(($TD_VdiskFunc.VolFunc -eq 'master')-or($TD_VdiskFunc.VolFunc -eq 'none')){
                 #Write-Host $_
@@ -398,7 +399,7 @@ function IBM_StorageHealthCheck {
             $TD_UserControl3_1.Dispatcher.Invoke([System.Action]{},"Render")
         }
         
-        $TD_QuorumResult = IBM_IPQuorum -TD_Line_ID $TD_Line_ID -TD_Device_ConnectionTyp $TD_Device_ConnectionTyp -TD_Device_UserName $TD_Device_UserName -TD_Device_DeviceName TD_Device_DeviceName -TD_Device_DeviceIP $TD_Device_DeviceIP -TD_Device_PW $TD_Device_PW -TD_Export yes -TD_Exportpath $TD_Exportpath
+        $TD_QuorumResult = IBM_IPQuorum -TD_Line_ID $TD_Line_ID -TD_Device_ConnectionTyp $TD_Device_ConnectionTyp -TD_Device_UserName $TD_Device_UserName -TD_Device_DeviceName TD_Device_DeviceName -TD_Device_DeviceIP $TD_Device_DeviceIP -TD_Device_PW $TD_Device_PW -TD_Device_DeviceIP $TD_Device_DeviceIP -TD_Export yes -TD_Exportpath $TD_Exportpath
         if(!([String]::IsNullOrEmpty($TD_QuorumResult))){
             $TD_lb_QuorumStatusLight.Background ="green"
             $TD_dg_QuorumStatusInfo.ItemsSource = $TD_QuorumResult
@@ -411,7 +412,7 @@ function IBM_StorageHealthCheck {
         }
 
 
-        $TD_UserResault = IBM_UserInfo -TD_Line_ID $TD_Line_ID -TD_Device_ConnectionTyp $TD_Device_ConnectionTyp -TD_Device_UserName $TD_Device_UserName -TD_Device_DeviceName TD_Device_DeviceName -TD_Device_DeviceIP $TD_Device_DeviceIP -TD_Device_PW $TD_Device_PW -TD_Export yes -TD_Exportpath $TD_Exportpath
+        $TD_UserResault = IBM_UserInfo -TD_Line_ID $TD_Line_ID -TD_Device_ConnectionTyp $TD_Device_ConnectionTyp -TD_Device_UserName $TD_Device_UserName -TD_Device_DeviceName TD_Device_DeviceName -TD_Device_DeviceIP $TD_Device_DeviceIP -TD_Device_PW $TD_Device_PW -TD_Device_DeviceIP $TD_Device_DeviceIP -TD_Export yes -TD_Exportpath $TD_Exportpath
         $TD_dg_UserStatusInfoText.ItemsSource=$EmptyVar
         if(($TD_UserResault.PW_Change_required -eq "yes")){
             $TD_lb_UserStatusLight.Background ="red"
@@ -426,7 +427,7 @@ function IBM_StorageHealthCheck {
             $TD_UserControl3_1.Dispatcher.Invoke([System.Action]{},"Render")
         }
 
-        $TD_StorageSecurityResult = IBM_StorageSecurity -TD_Line_ID $TD_Line_ID -TD_Device_ConnectionTyp $TD_Device_ConnectionTyp -TD_Device_UserName $TD_Device_UserName -TD_Device_DeviceName TD_Device_DeviceName -TD_Device_DeviceIP $TD_Device_DeviceIP -TD_Device_PW $TD_Device_PW -TD_Export yes -TD_Exportpath $TD_Exportpath
+        $TD_StorageSecurityResult = IBM_StorageSecurity -TD_Line_ID $TD_Line_ID -TD_Device_ConnectionTyp $TD_Device_ConnectionTyp -TD_Device_UserName $TD_Device_UserName -TD_Device_DeviceName TD_Device_DeviceName -TD_Device_DeviceIP $TD_Device_DeviceIP -TD_Device_PW $TD_Device_PW -TD_Device_DeviceIP $TD_Device_DeviceIP -TD_Export yes -TD_Exportpath $TD_Exportpath
         if(!([String]::IsNullOrEmpty($TD_StorageSecurityResult))){
             $TD_lb_SecurityStatusLight.Background ="green"
             $TD_dg_SecurityStatusInfoText.ItemsSource = $TD_StorageSecurityResult
