@@ -288,9 +288,7 @@ $TD_DG_KnownDeviceList.add_SelectionChanged({
 $TD_btn_IBM_Eventlog.add_click({
 
     $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_.DeviceTyp -eq "Storage"}
-    $TD_CB_STO_DG1;$TD_LB_STO_DG1;$TD_CB_STO_DG2;$TD_LB_STO_DG2;$TD_CB_STO_DG3;$TD_LB_STO_DG3;$TD_CB_STO_DG4;$TD_LB_STO_DG4;$TD_CB_STO_DG5;$TD_LB_STO_DG5;$TD_CB_STO_DG6;$TD_LB_STO_DG6;$TD_CB_STO_DG7;$TD_LB_STO_DG7;$TD_CB_STO_DG8;$TD_LB_STO_DG8 |ForEach-Object {
-        $_.Visibility="Collapsed"
-    }
+
     $TD_lb_StorageEventLogOne,$TD_lb_StorageEventLogTwo,$TD_lb_StorageEventLogThree,$TD_lb_StorageEventLogFour,$TD_lb_StorageEventLogFive,$TD_lb_StorageEventLogSix,$TD_lb_StorageEventLogSeven,$TD_lb_StorageEventLogEight |ForEach-Object {
         if($_.items.count -gt 0){$TD_UCRefresh = $true}; $_.ItemsSource = $EmptyVar
     }
@@ -321,9 +319,7 @@ $TD_btn_IBM_Eventlog.add_click({
 $TD_btn_IBM_CatAuditLog.add_click({
 
     $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_.DeviceTyp -eq "Storage"}
-    $TD_CB_STO_DG1;$TD_LB_STO_DG1;$TD_CB_STO_DG2;$TD_LB_STO_DG2;$TD_CB_STO_DG3;$TD_LB_STO_DG3;$TD_CB_STO_DG4;$TD_LB_STO_DG4;$TD_CB_STO_DG5;$TD_LB_STO_DG5;$TD_CB_STO_DG6;$TD_LB_STO_DG6;$TD_CB_STO_DG7;$TD_LB_STO_DG7;$TD_CB_STO_DG8;$TD_LB_STO_DG8 |ForEach-Object {
-        $_.Visibility="Collapsed"
-    }
+
     $TD_dg_StorageAuditLogOne,$TD_dg_StorageAuditLogTwo,$TD_dg_StorageAuditLogThree,$TD_dg_StorageAuditLogFour,$TD_dg_StorageAuditLogFive,$TD_dg_StorageAuditLogSix,$TD_dg_StorageAuditLogSeven,$TD_dg_StorageAuditLogEight |ForEach-Object {
         if($_.items.count -gt 0){$TD_UCRefresh = $true}; $_.ItemsSource = $EmptyVar
     }
@@ -355,9 +351,7 @@ $TD_btn_IBM_CatAuditLog.add_click({
 $TD_btn_IBM_HostVolumeMap.add_click({
 
     $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_.DeviceTyp -eq "Storage"}
-    $TD_CB_STO_DG1;$TD_LB_STO_DG1;$TD_CB_STO_DG2;$TD_LB_STO_DG2;$TD_CB_STO_DG3;$TD_LB_STO_DG3;$TD_CB_STO_DG4;$TD_LB_STO_DG4;$TD_CB_STO_DG5;$TD_LB_STO_DG5;$TD_CB_STO_DG6;$TD_LB_STO_DG6;$TD_CB_STO_DG7;$TD_LB_STO_DG7;$TD_CB_STO_DG8;$TD_LB_STO_DG8 |ForEach-Object {
-        $_.Visibility="Collapsed"
-    }
+
     $TD_dg_HostVolInfoOne,$TD_dg_HostVolInfoTwo,$TD_dg_HostVolInfoThree,$TD_dg_HostVolInfoFour,$TD_dg_HostVolInfoFive,$TD_dg_HostVolInfoSix,$TD_dg_HostVolInfoSeven,$TD_dg_HostVolInfoEight |ForEach-Object {
         if($_.items.count -gt 0){$_.ItemsSource = $EmptyVar; $TD_UCRefresh = $true };
     }
@@ -473,9 +467,7 @@ $TD_btn_ClearFilterHVM.Add_Click({
 $TD_btn_IBM_DriveInfo.add_click({
     $TD_lb_DriveInfoOne.Visibility = "Hidden"; $TD_lb_DriveInfoTwo.Visibility = "Hidden"; $TD_lb_DriveInfoThree.Visibility = "Hidden"; $TD_lb_DriveInfoFour.Visibility = "Hidden"; 
     $TD_lb_DriveInfoFive.Visibility = "Hidden"; $TD_lb_DriveInfoSix.Visibility = "Hidden"; $TD_lb_DriveInfoSeven.Visibility = "Hidden"; $TD_lb_DriveInfoEight.Visibility = "Hidden";
-    $TD_CB_STO_DG1;$TD_LB_STO_DG1;$TD_CB_STO_DG2;$TD_LB_STO_DG2;$TD_CB_STO_DG3;$TD_LB_STO_DG3;$TD_CB_STO_DG4;$TD_LB_STO_DG4;$TD_CB_STO_DG5;$TD_LB_STO_DG5;$TD_CB_STO_DG6;$TD_LB_STO_DG6;$TD_CB_STO_DG7;$TD_LB_STO_DG7;$TD_CB_STO_DG8;$TD_LB_STO_DG8 |ForEach-Object {
-        $_.Visibility="Collapsed"
-    }
+
     $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_.DeviceTyp -eq "Storage"}
 
     $TD_dg_DriveInfo,$TD_dg_DriveInfoTwo,$TD_dg_DriveInfoThree,$TD_dg_DriveInfoFour,$TD_dg_DriveInfoFive,$TD_dg_DriveInfoSix,$TD_dg_DriveInfoSeven,$TD_dg_DriveInfoEight |ForEach-Object {
@@ -509,9 +501,7 @@ $TD_btn_IBM_DriveInfo.add_click({
 $TD_btn_IBM_FCPortStats.add_click({
 
     $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_.DeviceTyp -eq "Storage"}
-    $TD_CB_STO_DG1;$TD_LB_STO_DG1;$TD_CB_STO_DG2;$TD_LB_STO_DG2;$TD_CB_STO_DG3;$TD_LB_STO_DG3;$TD_CB_STO_DG4;$TD_LB_STO_DG4;$TD_CB_STO_DG5;$TD_LB_STO_DG5;$TD_CB_STO_DG6;$TD_LB_STO_DG6;$TD_CB_STO_DG7;$TD_LB_STO_DG7;$TD_CB_STO_DG8;$TD_LB_STO_DG8 |ForEach-Object {
-        $_.Visibility="Collapsed"
-    }
+
     $TD_dg_FCPortStatsOne,$TD_dg_FCPortStatsTwo,$TD_dg_FCPortStatsThree,$TD_dg_FCPortStatsFour,$TD_dg_FCPortStatsFive,$TD_dg_FCPortStatsSix,$TD_dg_FCPortStatsSeven,$TD_dg_FCPortStatsEight |ForEach-Object {
         if($_.items.count -gt 0){$_.ItemsSource = $EmptyVar; $TD_UCRefresh = $true}
     }
@@ -543,9 +533,7 @@ $TD_btn_IBM_FCPortStats.add_click({
 $TD_btn_IBM_FCPortInfo.add_click({
 
     $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_.DeviceTyp -eq "Storage"}
-    $TD_CB_STO_DG1;$TD_LB_STO_DG1;$TD_CB_STO_DG2;$TD_LB_STO_DG2;$TD_CB_STO_DG3;$TD_LB_STO_DG3;$TD_CB_STO_DG4;$TD_LB_STO_DG4;$TD_CB_STO_DG5;$TD_LB_STO_DG5;$TD_CB_STO_DG6;$TD_LB_STO_DG6;$TD_CB_STO_DG7;$TD_LB_STO_DG7;$TD_CB_STO_DG8;$TD_LB_STO_DG8 |ForEach-Object {
-        $_.Visibility="Collapsed"
-    }
+
     $TD_dg_FCPortInfoOne,$TD_dg_FCPortInfoTwo,$TD_dg_FCPortInfoThree,$TD_dg_FCPortInfoFour,$TD_dg_FCPortInfoFive,$TD_dg_FCPortInfoSix,$TD_dg_FCPortInfoSeven,$TD_dg_FCPortInfoEight |ForEach-Object {
         if($_.items.count -gt 0){$_.ItemsSource = $EmptyVar; $TD_UCRefresh = $true}
     }
@@ -637,9 +625,7 @@ $TD_btn_FilterPBR.add_click({
 $TD_btn_IBM_BaseStorageInfo.add_click({
 
     $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_.DeviceTyp -eq "Storage"}
-    $TD_CB_STO_DG1;$TD_LB_STO_DG1;$TD_CB_STO_DG2;$TD_LB_STO_DG2;$TD_CB_STO_DG3;$TD_LB_STO_DG3;$TD_CB_STO_DG4;$TD_LB_STO_DG4;$TD_CB_STO_DG5;$TD_LB_STO_DG5;$TD_CB_STO_DG6;$TD_LB_STO_DG6;$TD_CB_STO_DG7;$TD_LB_STO_DG7;$TD_CB_STO_DG8;$TD_LB_STO_DG8 |ForEach-Object {
-        $_.Visibility="Collapsed"
-    }
+
     $TD_dg_BaseStorageInfoOne,$TD_dg_BaseStorageInfoTwo,$TD_dg_BaseStorageInfoThree,$TD_dg_BaseStorageInfoFour,$TD_dg_BaseStorageInfoFive,$TD_dg_BaseStorageInfoSix,$TD_dg_BaseStorageInfoSeven,$TD_dg_BaseStorageInfoEight |ForEach-Object {
         if($_.items.count -gt 0){$_.ItemsSource = $EmptyVar; $TD_UCRefresh = $true}
     }
@@ -666,14 +652,14 @@ $TD_btn_IBM_BaseStorageInfo.add_click({
     $TD_Credentials | ForEach-Object {
         [array]$TD_IPQuorumInfo = IBM_IPQuorum -TD_Line_ID $_.ID -TD_Device_ConnectionTyp $_.ConnectionTyp -TD_Device_UserName $_.UserName -TD_Device_DeviceIP $_.IPAddress -TD_Device_DeviceName $_.DeviceName -TD_Device_PW $([Net.NetworkCredential]::new('', $_.Password).Password) -TD_Device_SSHKeyPath $_.SSHKeyPath -TD_Storage $TD_Credential.SVCorVF -TD_Exportpath $TD_tb_ExportPath.Text
         switch ($_.ID) {
-            {($_ -eq 1)} { $TD_dg_IPQuorumInfoOne.ItemsSource = $TD_IPQuorumInfo; $TD_lb_QuorumInfoOne.Visibility="visible" }
-            {($_ -eq 2)} { $TD_dg_IPQuorumInfoTwo.ItemsSource = $TD_IPQuorumInfo ; $TD_lb_QuorumInfoTwo.Visibility="Visible"}
-            {($_ -eq 3)} { $TD_dg_IPQuorumInfoThree.ItemsSource = $TD_IPQuorumInfo ; $TD_lb_QuorumInfoThree.Visibility="Visible"}
-            {($_ -eq 4)} { $TD_dg_IPQuorumInfoFour.ItemsSource = $TD_IPQuorumInfo ; $TD_lb_QuorumInfoFour.Visibility="Visible"}
-            {($_ -eq 5)} { $TD_dg_IPQuorumInfoFive.ItemsSource = $TD_IPQuorumInfo ; $TD_lb_QuorumInfoFive.Visibility="Visible"}
-            {($_ -eq 6)} { $TD_dg_IPQuorumInfoSix.ItemsSource = $TD_IPQuorumInfo ; $TD_lb_QuorumInfoSix.Visibility="Visible"}
-            {($_ -eq 7)} { $TD_dg_IPQuorumInfoSeven.ItemsSource = $TD_IPQuorumInfo ; $TD_lb_QuorumInfoSeven.Visibility="Visible"}
-            {($_ -eq 8)} { $TD_dg_IPQuorumInfoEight.ItemsSource = $TD_IPQuorumInfo ; $TD_lb_QuorumInfoEight.Visibility="Visible"}
+            {($_ -eq 1)} { $TD_dg_IPQuorumInfoOne.ItemsSource = $TD_IPQuorumInfo;   }
+            {($_ -eq 2)} { $TD_dg_IPQuorumInfoTwo.ItemsSource = $TD_IPQuorumInfo ;  }
+            {($_ -eq 3)} { $TD_dg_IPQuorumInfoThree.ItemsSource = $TD_IPQuorumInfo; }
+            {($_ -eq 4)} { $TD_dg_IPQuorumInfoFour.ItemsSource = $TD_IPQuorumInfo ; }
+            {($_ -eq 5)} { $TD_dg_IPQuorumInfoFive.ItemsSource = $TD_IPQuorumInfo ; }
+            {($_ -eq 6)} { $TD_dg_IPQuorumInfoSix.ItemsSource = $TD_IPQuorumInfo ;  }
+            {($_ -eq 7)} { $TD_dg_IPQuorumInfoSeven.ItemsSource = $TD_IPQuorumInfo; }
+            {($_ -eq 8)} { $TD_dg_IPQuorumInfoEight.ItemsSource = $TD_IPQuorumInfo; }
             Default { SST_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong, please check the prompt output first and then the log files.") -TD_ToolMSGType Error }
         }
         $TD_IPQuorumInfo | Export-Csv -Path $PSRootPath\ToolLog\ToolTEMP\$($_.ID)_$($_.DeviceName)_IPQuorumInfo_$(Get-Date -Format "yyyy-MM-dd")_Temp.csv
@@ -689,9 +675,7 @@ $TD_btn_IBM_BaseStorageInfo.add_click({
 $TD_btn_IBM_PoolVolumeInfo.add_click({
 
     $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_.DeviceTyp -eq "Storage"}
-    $TD_CB_STO_DG1;$TD_LB_STO_DG1;$TD_CB_STO_DG2;$TD_LB_STO_DG2;$TD_CB_STO_DG3;$TD_LB_STO_DG3;$TD_CB_STO_DG4;$TD_LB_STO_DG4;$TD_CB_STO_DG5;$TD_LB_STO_DG5;$TD_CB_STO_DG6;$TD_LB_STO_DG6;$TD_CB_STO_DG7;$TD_LB_STO_DG7;$TD_CB_STO_DG8;$TD_LB_STO_DG8 |ForEach-Object {
-        $_.Visibility="Collapsed"
-    }
+
     $TD_dg_ExpandMDiskInfoOne,$TD_dg_ExpandMDiskInfoTwo,$TD_dg_ExpandMDiskInfoThree,$TD_dg_ExpandMDiskInfoFour,$TD_dg_ExpandMDiskInfoFive,$TD_dg_ExpandMDiskInfoSix,$TD_dg_ExpandMDiskInfoSeven,$TD_dg_ExpandMDiskInfoEight |ForEach-Object {
         if($_.items.count -gt 0){$_.ItemsSource = $EmptyVar; $TD_UCRefresh = $true}
     }
@@ -806,9 +790,8 @@ $TD_btn_IBM_BackUpConfig.add_click({
 $TD_btn_IBM_HostInfo.add_click({
 
     $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_.DeviceTyp -eq "Storage"}
-    $TD_CB_STO_DG1;$TD_LB_STO_DG1;$TD_CB_STO_DG2;$TD_LB_STO_DG2;$TD_CB_STO_DG3;$TD_LB_STO_DG3;$TD_CB_STO_DG4;$TD_LB_STO_DG4;$TD_CB_STO_DG5;$TD_LB_STO_DG5;$TD_CB_STO_DG6;$TD_LB_STO_DG6;$TD_CB_STO_DG7;$TD_LB_STO_DG7;$TD_CB_STO_DG8;$TD_LB_STO_DG8 |ForEach-Object {
-        $_.Visibility="Collapsed"
-    }
+
+
     $TD_dg_CollectedHostInfoOne,$TD_dg_CollectedHostInfoTwo,$TD_dg_CollectedHostInfoThree,$TD_dg_CollectedHostInfoFour,$TD_dg_CollectedHostInfoFive,$TD_dg_CollectedHostInfoSix,$TD_dg_CollectedHostInfoSeven,$TD_dg_CollectedHostInfoEight |ForEach-Object {
         if($_.items.count -gt 0){$_.ItemsSource = $EmptyVar; $TD_UCRefresh = $true }
     }
@@ -816,12 +799,12 @@ $TD_btn_IBM_HostInfo.add_click({
     $TD_Credentials | ForEach-Object {
         [array]$TD_Collected_HostInfoResult = IBM_HostInfo -TD_Line_ID $_.ID -TD_Device_ConnectionTyp $_.ConnectionTyp -TD_Device_UserName $_.UserName -TD_Device_DeviceIP $_.IPAddress -TD_Device_DeviceName $_.DeviceName -TD_Device_PW $([Net.NetworkCredential]::new('', $_.Password).Password) -TD_Device_SSHKeyPath $_.SSHKeyPath -TD_Exportpath $TD_tb_ExportPath.Text
         switch ($_.ID) {
-            {($_ -eq 1)} { $TD_dg_CollectedHostInfoOne.ItemsSource = $TD_Collected_HostInfoResult }
-            {($_ -eq 2)} { $TD_dg_CollectedHostInfoTwo.ItemsSource = $TD_Collected_HostInfoResult }
+            {($_ -eq 1)} { $TD_dg_CollectedHostInfoOne.ItemsSource = $TD_Collected_HostInfoResult   }
+            {($_ -eq 2)} { $TD_dg_CollectedHostInfoTwo.ItemsSource = $TD_Collected_HostInfoResult   }
             {($_ -eq 3)} { $TD_dg_CollectedHostInfoThree.ItemsSource = $TD_Collected_HostInfoResult }
-            {($_ -eq 4)} { $TD_dg_CollectedHostInfoFour.ItemsSource = $TD_Collected_HostInfoResult }
-            {($_ -eq 5)} { $TD_dg_CollectedHostInfoFive.ItemsSource = $TD_Collected_HostInfoResult }
-            {($_ -eq 6)} { $TD_dg_CollectedHostInfoSix.ItemsSource = $TD_Collected_HostInfoResult }
+            {($_ -eq 4)} { $TD_dg_CollectedHostInfoFour.ItemsSource = $TD_Collected_HostInfoResult  }
+            {($_ -eq 5)} { $TD_dg_CollectedHostInfoFive.ItemsSource = $TD_Collected_HostInfoResult  }
+            {($_ -eq 6)} { $TD_dg_CollectedHostInfoSix.ItemsSource = $TD_Collected_HostInfoResult   }
             {($_ -eq 7)} { $TD_dg_CollectedHostInfoSeven.ItemsSource = $TD_Collected_HostInfoResult }
             {($_ -eq 8)} { $TD_dg_CollectedHostInfoEight.ItemsSource = $TD_Collected_HostInfoResult }
             Default { SST_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong, please check the prompt output first and then the log files.") -TD_ToolMSGType Error }
@@ -915,9 +898,7 @@ $TD_btn_FOS_SwitchShow.add_click({
     $TD_LB_SwitchShowOne,$TD_LB_SwitchShowTwo,$TD_LB_SwitchShowThree,$TD_LB_SwitchShowFour,$TD_LB_SwitchShowFive,$TD_LB_SwitchShowSix,$TD_LB_SwitchShowSeven,$TD_LB_SwitchShowEight |ForEach-Object {
         $_.Visibility="Collapsed"
     }
-    $TD_CB_SAN_DG1;$TD_LB_SAN_DG1;$TD_CB_SAN_DG2;$TD_LB_SAN_DG2;$TD_CB_SAN_DG3;$TD_LB_SAN_DG3;$TD_CB_SAN_DG4;$TD_LB_SAN_DG4;$TD_CB_SAN_DG5;$TD_LB_SAN_DG5;$TD_CB_SAN_DG6;$TD_LB_SAN_DG6;$TD_CB_SAN_DG7;$TD_LB_SAN_DG7;$TD_CB_SAN_DG8;$TD_LB_SAN_DG8 |ForEach-Object {
-        $_.Visibility="Collapsed"
-    }
+
     $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_.DeviceTyp -eq "SAN"}
 
     $TD_DG_SwitchShowOne,$TD_DG_SwitchShowTwo,$TD_DG_SwitchShowThree,$TD_DG_SwitchShowFour,$TD_DG_SwitchShowFive,$TD_DG_SwitchShowSix,$TD_DG_SwitchShowSeven,$TD_DG_SwitchShowEight |ForEach-Object {
@@ -1230,15 +1211,13 @@ $TD_btn_FOS_PortErrorShow.add_click({
     $TD_LB_PortErrorShowOne,$TD_LB_PortErrorShowTwo,$TD_LB_PortErrorShowThree,$TD_LB_PortErrorShowFour,$TD_LB_PortErrorShowFive,$TD_LB_PortErrorShowSix,$TD_LB_PortErrorShowSeven,$TD_LB_PortErrorShowEight |ForEach-Object {
         $_.Visibility="Collapsed"
     }
-    $TD_CB_SAN_DG1;$TD_LB_SAN_DG1;$TD_CB_SAN_DG2;$TD_LB_SAN_DG2;$TD_CB_SAN_DG3;$TD_LB_SAN_DG3;$TD_CB_SAN_DG4;$TD_LB_SAN_DG4;$TD_CB_SAN_DG5;$TD_LB_SAN_DG5;$TD_CB_SAN_DG6;$TD_LB_SAN_DG6;$TD_CB_SAN_DG7;$TD_LB_SAN_DG7;$TD_CB_SAN_DG8;$TD_LB_SAN_DG8 |ForEach-Object {
-        $_.Visibility="Collapsed"
-    }
+
     $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_.DeviceTyp -eq "SAN"}
 
     $TD_DG_PortErrorShowOne,$TD_DG_PortErrorShowTwo,$TD_DG_PortErrorShowThree,$TD_DG_PortErrorShowFour,$TD_DG_PortErrorShowFive,$TD_DG_PortErrorShowSix,$TD_DG_PortErrorShowSeven,$TD_DG_PortErrorShowEight |ForEach-Object {
         if($_.items.count -gt 0){$_.ItemsSource = $EmptyVar; $TD_UCRefresh = $true}
     }
-
+    
     $TD_Credentials | ForEach-Object {
         [array]$TD_FOS_PortErrShow = FOS_PortErrShowInfos -TD_Line_ID $_.ID -TD_Device_ConnectionTyp $_.ConnectionTyp -TD_Device_UserName $_.UserName -TD_Device_DeviceName $_.DeviceName -TD_Device_DeviceIP $_.IPAddress -TD_Device_PW $([Net.NetworkCredential]::new('', $_.Password).Password) -TD_Device_SSHKeyPath $_.SSHKeyPath -TD_Exportpath $TD_tb_ExportPath.Text
         switch ($_.ID) {
@@ -1268,9 +1247,7 @@ $TD_btn_FOS_SFPHealthShow.add_click({
     $TD_LB_SFPShowOne,$TD_LB_SFPShowTwo,$TD_LB_SFPShowThree,$TD_LB_SFPShowFour,$TD_LB_SFPShowFive,$TD_LB_SFPShowSix,$TD_LB_SFPShowSeven,$TD_LB_SFPShowEight |ForEach-Object {
         $_.Visibility="Collapsed"
     }
-    $TD_CB_SAN_DG1;$TD_LB_SAN_DG1;$TD_CB_SAN_DG2;$TD_LB_SAN_DG2;$TD_CB_SAN_DG3;$TD_LB_SAN_DG3;$TD_CB_SAN_DG4;$TD_LB_SAN_DG4;$TD_CB_SAN_DG5;$TD_LB_SAN_DG5;$TD_CB_SAN_DG6;$TD_LB_SAN_DG6;$TD_CB_SAN_DG7;$TD_LB_SAN_DG7;$TD_CB_SAN_DG8;$TD_LB_SAN_DG8 |ForEach-Object {
-        $_.Visibility="Collapsed"
-    }
+
     $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_.DeviceTyp -eq "SAN"}
 
     $TD_dg_SFPShowOne,$TD_dg_SFPShowTwo,$TD_dg_SFPShowThree,$TD_dg_SFPShowFour,$TD_dg_SFPShowFive,$TD_dg_SFPShowSix,$TD_dg_SFPShowSeven,$TD_dg_SFPShowEight |ForEach-Object {
@@ -1616,9 +1593,7 @@ $TD_btn_FOS_PortBufferShow.add_click({
     $TD_LB_PortBufferShowOne,$TD_LB_PortBufferShowTwo,$TD_LB_PortBufferShowThree,$TD_LB_PortBufferShowFour,$TD_LB_PortBufferShowFive,$TD_LB_PortBufferShowSix,$TD_LB_PortBufferShowSeven,$TD_LB_PortBufferShowEight |ForEach-Object {
         $_.Visibility="Collapsed"
     }
-    $TD_CB_SAN_DG1;$TD_LB_SAN_DG1;$TD_CB_SAN_DG2;$TD_LB_SAN_DG2;$TD_CB_SAN_DG3;$TD_LB_SAN_DG3;$TD_CB_SAN_DG4;$TD_LB_SAN_DG4;$TD_CB_SAN_DG5;$TD_LB_SAN_DG5;$TD_CB_SAN_DG6;$TD_LB_SAN_DG6;$TD_CB_SAN_DG7;$TD_LB_SAN_DG7;$TD_CB_SAN_DG8;$TD_LB_SAN_DG8 |ForEach-Object {
-        $_.Visibility="Collapsed"
-    }
+
     $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_.DeviceTyp -eq "SAN"}
 
     $TD_lb_PortBufferShowOne,$TD_lb_PortBufferShowTwo,$TD_lb_PortBufferShowThree,$TD_lb_PortBufferShowFour,$TD_lb_PortBufferShowFive,$TD_lb_PortBufferShowSix,$TD_lb_PortBufferShowSeven,$TD_lb_PortBufferShowEight |ForEach-Object {

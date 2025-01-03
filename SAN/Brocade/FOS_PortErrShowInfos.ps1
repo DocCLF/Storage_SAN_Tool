@@ -125,14 +125,14 @@ function FOS_PortErrShowInfos {
 
     end {
 
-        if($TD_Line_ID -eq 1){ $TD_LB_PortErrorShowOne.Content = "$TD_Device_DeviceName"  ;$TD_CB_SAN_DG1.Visibility="visible";$TD_LB_SAN_DG1.Visibility="visible"; $TD_LB_SAN_DG1.Content=$TD_Device_DeviceName}
-        if($TD_Line_ID -eq 2){ $TD_LB_PortErrorShowTwo.Content = "$TD_Device_DeviceName"  ;$TD_CB_SAN_DG2.Visibility="visible";$TD_LB_SAN_DG2.Visibility="visible"; $TD_LB_SAN_DG2.Content=$TD_Device_DeviceName}
-        if($TD_Line_ID -eq 3){ $TD_LB_PortErrorShowThree.Content = "$TD_Device_DeviceName";$TD_CB_SAN_DG3.Visibility="visible";$TD_LB_SAN_DG3.Visibility="visible"; $TD_LB_SAN_DG3.Content=$TD_Device_DeviceName}
-        if($TD_Line_ID -eq 4){ $TD_LB_PortErrorShowFour.Content = "$TD_Device_DeviceName" ;$TD_CB_SAN_DG4.Visibility="visible";$TD_LB_SAN_DG4.Visibility="visible"; $TD_LB_SAN_DG4.Content=$TD_Device_DeviceName}
-        if($TD_Line_ID -eq 5){ $TD_LB_PortErrorShowFive.Content = "$TD_Device_DeviceName" ;$TD_CB_SAN_DG5.Visibility="visible";$TD_LB_SAN_DG5.Visibility="visible"; $TD_LB_SAN_DG5.Content=$TD_Device_DeviceName}
-        if($TD_Line_ID -eq 6){ $TD_LB_PortErrorShowSix.Content = "$TD_Device_DeviceName"  ;$TD_CB_SAN_DG6.Visibility="visible";$TD_LB_SAN_DG6.Visibility="visible"; $TD_LB_SAN_DG6.Content=$TD_Device_DeviceName}
-        if($TD_Line_ID -eq 7){ $TD_LB_PortErrorShowSeven.Content = "$TD_Device_DeviceName";$TD_CB_SAN_DG7.Visibility="visible";$TD_LB_SAN_DG7.Visibility="visible"; $TD_LB_SAN_DG7.Content=$TD_Device_DeviceName}
-        if($TD_Line_ID -eq 8){ $TD_LB_PortErrorShowEight.Content = "$TD_Device_DeviceName";$TD_CB_SAN_DG8.Visibility="visible";$TD_LB_SAN_DG8.Visibility="visible"; $TD_LB_SAN_DG8.Content=$TD_Device_DeviceName}
+        if($TD_Line_ID -eq 1){ $TD_LB_PortErrorShowOne.Content = "$TD_Device_DeviceName"  ;$TD_CB_SAN_DG1.IsChecked="true";$TD_CB_SAN_DG1.Visibility="visible";$TD_LB_SAN_DG1.Visibility="visible"; $TD_LB_SAN_DG1.Content=$TD_Device_DeviceName}
+        if($TD_Line_ID -eq 2){ $TD_LB_PortErrorShowTwo.Content = "$TD_Device_DeviceName"  ;$TD_CB_SAN_DG2.IsChecked="true";$TD_CB_SAN_DG2.Visibility="visible";$TD_LB_SAN_DG2.Visibility="visible"; $TD_LB_SAN_DG2.Content=$TD_Device_DeviceName}
+        if($TD_Line_ID -eq 3){ $TD_LB_PortErrorShowThree.Content = "$TD_Device_DeviceName";$TD_CB_SAN_DG3.IsChecked="true";$TD_CB_SAN_DG3.Visibility="visible";$TD_LB_SAN_DG3.Visibility="visible"; $TD_LB_SAN_DG3.Content=$TD_Device_DeviceName}
+        if($TD_Line_ID -eq 4){ $TD_LB_PortErrorShowFour.Content = "$TD_Device_DeviceName" ;$TD_CB_SAN_DG4.IsChecked="true";$TD_CB_SAN_DG4.Visibility="visible";$TD_LB_SAN_DG4.Visibility="visible"; $TD_LB_SAN_DG4.Content=$TD_Device_DeviceName}
+        if($TD_Line_ID -eq 5){ $TD_LB_PortErrorShowFive.Content = "$TD_Device_DeviceName" ;$TD_CB_SAN_DG5.IsChecked="true";$TD_CB_SAN_DG5.Visibility="visible";$TD_LB_SAN_DG5.Visibility="visible"; $TD_LB_SAN_DG5.Content=$TD_Device_DeviceName}
+        if($TD_Line_ID -eq 6){ $TD_LB_PortErrorShowSix.Content = "$TD_Device_DeviceName"  ;$TD_CB_SAN_DG6.IsChecked="true";$TD_CB_SAN_DG6.Visibility="visible";$TD_LB_SAN_DG6.Visibility="visible"; $TD_LB_SAN_DG6.Content=$TD_Device_DeviceName}
+        if($TD_Line_ID -eq 7){ $TD_LB_PortErrorShowSeven.Content = "$TD_Device_DeviceName";$TD_CB_SAN_DG7.IsChecked="true";$TD_CB_SAN_DG7.Visibility="visible";$TD_LB_SAN_DG7.Visibility="visible"; $TD_LB_SAN_DG7.Content=$TD_Device_DeviceName}
+        if($TD_Line_ID -eq 8){ $TD_LB_PortErrorShowEight.Content = "$TD_Device_DeviceName";$TD_CB_SAN_DG8.IsChecked="true";$TD_CB_SAN_DG8.Visibility="visible";$TD_LB_SAN_DG8.Visibility="visible"; $TD_LB_SAN_DG8.Content=$TD_Device_DeviceName}
 
         Close-ProgressBar -ProgressBar $ProgressBar
         <# returns the hashtable for further processing, not mandatory but the safe way #>
