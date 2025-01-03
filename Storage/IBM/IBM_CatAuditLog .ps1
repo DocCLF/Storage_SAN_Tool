@@ -59,14 +59,14 @@ function IBM_CatAuditLog {
     }
     end {
 
-        if($TD_Line_ID -eq 1){$TD_lb_StorageAuditLogOne.Visibility="visible"  ;$TD_lb_StorageAuditLogOne.Content=$TD_Device_DeviceName }
-        if($TD_Line_ID -eq 2){$TD_lb_StorageAuditLogTwo.Visibility="visible"  ;$TD_lb_StorageAuditLogTwo.Content=$TD_Device_DeviceName }
-        if($TD_Line_ID -eq 3){$TD_lb_StorageAuditLogThree.Visibility="visible";$TD_lb_StorageAuditLogThree.Content=$TD_Device_DeviceName}
-        if($TD_Line_ID -eq 4){$TD_lb_StorageAuditLogFour.Visibility="visible" ;$TD_lb_StorageAuditLogFour.Content=$TD_Device_DeviceName}
-        if($TD_Line_ID -eq 5){$TD_lb_StorageAuditLogFive.Visibility="visible" ;$TD_lb_StorageAuditLogFive.Content=$TD_Device_DeviceName}  
-        if($TD_Line_ID -eq 6){$TD_lb_StorageAuditLogSix.Visibility="visible"  ;$TD_lb_StorageAuditLogSix.Content=$TD_Device_DeviceName }  
-        if($TD_Line_ID -eq 7){$TD_lb_StorageAuditLogSeven.Visibility="visible";$TD_lb_StorageAuditLogSeven.Content=$TD_Device_DeviceName}
-        if($TD_Line_ID -eq 8){$TD_lb_StorageAuditLogEight.Visibility="visible";$TD_lb_StorageAuditLogEight.Content=$TD_Device_DeviceName}
+        if($TD_Line_ID -eq 1){$TD_lb_StorageAuditLogOne.Visibility="visible"  ;$TD_lb_StorageAuditLogOne.Content=$TD_Device_DeviceName  ;$TD_CB_STO_DG1.Visibility="visible";$TD_LB_STO_DG1.Visibility="visible"; $TD_LB_STO_DG1.Content=$TD_Device_DeviceName}
+        if($TD_Line_ID -eq 2){$TD_lb_StorageAuditLogTwo.Visibility="visible"  ;$TD_lb_StorageAuditLogTwo.Content=$TD_Device_DeviceName  ;$TD_CB_STO_DG2.Visibility="visible";$TD_LB_STO_DG2.Visibility="visible"; $TD_LB_STO_DG2.Content=$TD_Device_DeviceName}
+        if($TD_Line_ID -eq 3){$TD_lb_StorageAuditLogThree.Visibility="visible";$TD_lb_StorageAuditLogThree.Content=$TD_Device_DeviceName;$TD_CB_STO_DG3.Visibility="visible";$TD_LB_STO_DG3.Visibility="visible"; $TD_LB_STO_DG3.Content=$TD_Device_DeviceName}
+        if($TD_Line_ID -eq 4){$TD_lb_StorageAuditLogFour.Visibility="visible" ;$TD_lb_StorageAuditLogFour.Content=$TD_Device_DeviceName ;$TD_CB_STO_DG4.Visibility="visible";$TD_LB_STO_DG4.Visibility="visible"; $TD_LB_STO_DG4.Content=$TD_Device_DeviceName}
+        if($TD_Line_ID -eq 5){$TD_lb_StorageAuditLogFive.Visibility="visible" ;$TD_lb_StorageAuditLogFive.Content=$TD_Device_DeviceName ;$TD_CB_STO_DG5.Visibility="visible";$TD_LB_STO_DG5.Visibility="visible"; $TD_LB_STO_DG5.Content=$TD_Device_DeviceName}  
+        if($TD_Line_ID -eq 6){$TD_lb_StorageAuditLogSix.Visibility="visible"  ;$TD_lb_StorageAuditLogSix.Content=$TD_Device_DeviceName  ;$TD_CB_STO_DG6.Visibility="visible";$TD_LB_STO_DG6.Visibility="visible"; $TD_LB_STO_DG6.Content=$TD_Device_DeviceName}  
+        if($TD_Line_ID -eq 7){$TD_lb_StorageAuditLogSeven.Visibility="visible";$TD_lb_StorageAuditLogSeven.Content=$TD_Device_DeviceName;$TD_CB_STO_DG7.Visibility="visible";$TD_LB_STO_DG7.Visibility="visible"; $TD_LB_STO_DG7.Content=$TD_Device_DeviceName}
+        if($TD_Line_ID -eq 8){$TD_lb_StorageAuditLogEight.Visibility="visible";$TD_lb_StorageAuditLogEight.Content=$TD_Device_DeviceName;$TD_CB_STO_DG8.Visibility="visible";$TD_LB_STO_DG8.Visibility="visible"; $TD_LB_STO_DG8.Content=$TD_Device_DeviceName}
 
         Close-ProgressBar -ProgressBar $ProgressBar
 

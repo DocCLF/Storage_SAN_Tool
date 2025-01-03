@@ -103,14 +103,14 @@ function IBM_Host_Volume_Map {
         
     end{
 
-        if($TD_Line_ID -eq 1){$TD_lb_HostVolInfoOne.Visibility="visible"  ;$TD_lb_HostVolInfoOne.Content=$TD_Device_DeviceName }
-        if($TD_Line_ID -eq 2){$TD_lb_HostVolInfoTwo.Visibility="visible"  ;$TD_lb_HostVolInfoTwo.Content=$TD_Device_DeviceName }
-        if($TD_Line_ID -eq 3){$TD_lb_HostVolInfoThree.Visibility="visible";$TD_lb_HostVolInfoThree.Content=$TD_Device_DeviceName}
-        if($TD_Line_ID -eq 4){$TD_lb_HostVolInfoFour.Visibility="visible" ;$TD_lb_HostVolInfoFour.Content=$TD_Device_DeviceName}
-        if($TD_Line_ID -eq 5){$TD_lb_HostVolInfoFive.Visibility="visible" ;$TD_lb_HostVolInfoFive.Content=$TD_Device_DeviceName}  
-        if($TD_Line_ID -eq 6){$TD_lb_HostVolInfoSix.Visibility="visible"  ;$TD_lb_HostVolInfoSix.Content=$TD_Device_DeviceName }  
-        if($TD_Line_ID -eq 7){$TD_lb_HostVolInfoSeven.Visibility="visible";$TD_lb_HostVolInfoSeven.Content=$TD_Device_DeviceName}
-        if($TD_Line_ID -eq 8){$TD_lb_HostVolInfoEight.Visibility="visible";$TD_lb_HostVolInfoEight.Content=$TD_Device_DeviceName}
+        if($TD_Line_ID -eq 1){$TD_lb_HostVolInfoOne.Visibility="visible"  ;$TD_lb_HostVolInfoOne.Content=$TD_Device_DeviceName  ;$TD_CB_STO_DG1.Visibility="visible";$TD_LB_STO_DG1.Visibility="visible"; $TD_LB_STO_DG1.Content=$TD_Device_DeviceName}
+        if($TD_Line_ID -eq 2){$TD_lb_HostVolInfoTwo.Visibility="visible"  ;$TD_lb_HostVolInfoTwo.Content=$TD_Device_DeviceName  ;$TD_CB_STO_DG2.Visibility="visible";$TD_LB_STO_DG2.Visibility="visible"; $TD_LB_STO_DG2.Content=$TD_Device_DeviceName}
+        if($TD_Line_ID -eq 3){$TD_lb_HostVolInfoThree.Visibility="visible";$TD_lb_HostVolInfoThree.Content=$TD_Device_DeviceName;$TD_CB_STO_DG3.Visibility="visible";$TD_LB_STO_DG3.Visibility="visible"; $TD_LB_STO_DG3.Content=$TD_Device_DeviceName}
+        if($TD_Line_ID -eq 4){$TD_lb_HostVolInfoFour.Visibility="visible" ;$TD_lb_HostVolInfoFour.Content=$TD_Device_DeviceName ;$TD_CB_STO_DG4.Visibility="visible";$TD_LB_STO_DG4.Visibility="visible"; $TD_LB_STO_DG4.Content=$TD_Device_DeviceName}
+        if($TD_Line_ID -eq 5){$TD_lb_HostVolInfoFive.Visibility="visible" ;$TD_lb_HostVolInfoFive.Content=$TD_Device_DeviceName ;$TD_CB_STO_DG5.Visibility="visible";$TD_LB_STO_DG5.Visibility="visible"; $TD_LB_STO_DG5.Content=$TD_Device_DeviceName}  
+        if($TD_Line_ID -eq 6){$TD_lb_HostVolInfoSix.Visibility="visible"  ;$TD_lb_HostVolInfoSix.Content=$TD_Device_DeviceName  ;$TD_CB_STO_DG6.Visibility="visible";$TD_LB_STO_DG6.Visibility="visible"; $TD_LB_STO_DG6.Content=$TD_Device_DeviceName}  
+        if($TD_Line_ID -eq 7){$TD_lb_HostVolInfoSeven.Visibility="visible";$TD_lb_HostVolInfoSeven.Content=$TD_Device_DeviceName;$TD_CB_STO_DG7.Visibility="visible";$TD_LB_STO_DG7.Visibility="visible"; $TD_LB_STO_DG7.Content=$TD_Device_DeviceName}
+        if($TD_Line_ID -eq 8){$TD_lb_HostVolInfoEight.Visibility="visible";$TD_lb_HostVolInfoEight.Content=$TD_Device_DeviceName;$TD_CB_STO_DG8.Visibility="visible";$TD_LB_STO_DG8.Visibility="visible"; $TD_LB_STO_DG8.Content=$TD_Device_DeviceName}
 
         <# if update is clicked update the right list #>
         if($TD_RefreshView -eq "Update"){
