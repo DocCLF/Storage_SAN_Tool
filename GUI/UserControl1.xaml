@@ -147,21 +147,21 @@
         <GroupBox Grid.Column="1" Grid.Row="0" Header="Visibility" Margin="10,10,10,10" >
             <StackPanel Orientation="Horizontal" ToolTip="klick for visibility">
                 <Label x:Name="LB_STO_DG1" Content="devicename1" FontSize="14" VerticalContentAlignment="Center" Visibility="Collapsed"/>
-                <CheckBox x:Name="CB_STO_DG1" VerticalContentAlignment="Center" IsChecked="False" Margin="0,7,0,5" Visibility="Collapsed"/>
+                <CheckBox x:Name="CB_STO_DG1" VerticalContentAlignment="Center" IsChecked="False" Margin="0,7,10,5" Visibility="Collapsed"/>
                 <Label x:Name="LB_STO_DG2" Content="devicename2" FontSize="14" VerticalContentAlignment="Center" Visibility="Collapsed"/>
-                <CheckBox x:Name="CB_STO_DG2" VerticalContentAlignment="Center" IsChecked="False" Margin="0,7,0,5" Visibility="Collapsed"/>
+                <CheckBox x:Name="CB_STO_DG2" VerticalContentAlignment="Center" IsChecked="False" Margin="0,7,10,5" Visibility="Collapsed"/>
                 <Label x:Name="LB_STO_DG3" Content="devicename3" FontSize="14" VerticalContentAlignment="Center" Visibility="Collapsed"/>
-                <CheckBox x:Name="CB_STO_DG3" VerticalContentAlignment="Center" IsChecked="False" Margin="0,7,0,5" Visibility="Collapsed"/>
+                <CheckBox x:Name="CB_STO_DG3" VerticalContentAlignment="Center" IsChecked="False" Margin="0,7,10,5" Visibility="Collapsed"/>
                 <Label x:Name="LB_STO_DG4" Content="devicename4" FontSize="14" VerticalContentAlignment="Center" Visibility="Collapsed"/>
-                <CheckBox x:Name="CB_STO_DG4" VerticalContentAlignment="Center" IsChecked="False" Margin="0,7,0,5" Visibility="Collapsed"/>
+                <CheckBox x:Name="CB_STO_DG4" VerticalContentAlignment="Center" IsChecked="False" Margin="0,7,10,5" Visibility="Collapsed"/>
                 <Label x:Name="LB_STO_DG5" Content="devicename5" FontSize="14" VerticalContentAlignment="Center" Visibility="Collapsed"/>
-                <CheckBox x:Name="CB_STO_DG5" VerticalContentAlignment="Center" IsChecked="False" Margin="0,7,0,5" Visibility="Collapsed"/>
+                <CheckBox x:Name="CB_STO_DG5" VerticalContentAlignment="Center" IsChecked="False" Margin="0,7,10,5" Visibility="Collapsed"/>
                 <Label x:Name="LB_STO_DG6" Content="devicename6" FontSize="14" VerticalContentAlignment="Center" Visibility="Collapsed"/>
-                <CheckBox x:Name="CB_STO_DG6" VerticalContentAlignment="Center" IsChecked="False" Margin="0,7,0,5" Visibility="Collapsed"/>
+                <CheckBox x:Name="CB_STO_DG6" VerticalContentAlignment="Center" IsChecked="False" Margin="0,7,10,5" Visibility="Collapsed"/>
                 <Label x:Name="LB_STO_DG7" Content="devicename7" FontSize="14" VerticalContentAlignment="Center" Visibility="Collapsed"/>
-                <CheckBox x:Name="CB_STO_DG7" VerticalContentAlignment="Center" IsChecked="False" Margin="0,7,0,5" Visibility="Collapsed"/>
+                <CheckBox x:Name="CB_STO_DG7" VerticalContentAlignment="Center" IsChecked="False" Margin="0,7,10,5" Visibility="Collapsed"/>
                 <Label x:Name="LB_STO_DG8" Content="devicename8" FontSize="14" VerticalContentAlignment="Center" Visibility="Collapsed"/>
-                <CheckBox x:Name="CB_STO_DG8" VerticalContentAlignment="Center" IsChecked="False" Margin="0,7,0,5" Visibility="Collapsed"/>
+                <CheckBox x:Name="CB_STO_DG8" VerticalContentAlignment="Center" IsChecked="False" Margin="0,7,10,5" Visibility="Collapsed"/>
             </StackPanel>
         </GroupBox>
         <GroupBox Grid.Column="1" Grid.Row="1" Header="Results" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,10,10,10" >
@@ -169,7 +169,7 @@
                 <Grid>
                 <StackPanel x:Name="stp_StorageEventLog" Orientation="Vertical" Margin="2" Visibility="{Binding ElementName=btn_IBM_Eventlog, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
                     <Label x:Name="lb_StoEventLogOne" Content="Device 1" Visibility="{Binding ElementName=CB_STO_DG1, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}" FontSize="12" Style="{StaticResource MainLabelStyle}" Margin="2,5,0,5" />   
-                    <DataGrid x:Name="lb_StorageEventLogOne" AutoGenerateColumns="False" Margin="5,0,5,5" MaxHeight="420" Visibility="{Binding ElementName=CB_STO_DG1, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
+                    <DataGrid x:Name="lb_StorageEventLogOne" AutoGenerateColumns="False" Margin="5,0,5,5" MaxHeight="480" Visibility="{Binding ElementName=CB_STO_DG1, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
                             <DataGrid.Style>
                                 <Style TargetType="DataGrid">
                                     <Style.Triggers>
@@ -244,7 +244,7 @@
                             </DataGrid.Columns>
                     </DataGrid>
                     <Label x:Name="lb_StoEventLogTwo" Content="Device 2" Visibility="{Binding ElementName=CB_STO_DG2, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}" FontSize="12" Style="{StaticResource MainLabelStyle}" Margin="2,5,0,5" />
-                    <DataGrid x:Name="lb_StorageEventLogTwo" AutoGenerateColumns="False" Margin="5,0,5,5" MaxHeight="420" Visibility="{Binding ElementName=CB_STO_DG2, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
+                    <DataGrid x:Name="lb_StorageEventLogTwo" AutoGenerateColumns="False" Margin="5,0,5,5" MaxHeight="480" Visibility="{Binding ElementName=CB_STO_DG2, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
                             <DataGrid.Style>
                                 <Style TargetType="DataGrid">
                                     <Style.Triggers>
@@ -319,7 +319,7 @@
                             </DataGrid.Columns>
                     </DataGrid>
                     <Label x:Name="lb_StoEventLogThree" Content="Device 3" Visibility="{Binding ElementName=CB_STO_DG3, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}" FontSize="12" Style="{StaticResource MainLabelStyle}" Margin="2,5,0,5" />
-                    <DataGrid x:Name="lb_StorageEventLogThree" AutoGenerateColumns="False" Margin="5,0,5,5" MaxHeight="420" Visibility="{Binding ElementName=CB_STO_DG3, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
+                    <DataGrid x:Name="lb_StorageEventLogThree" AutoGenerateColumns="False" Margin="5,0,5,5" MaxHeight="480" Visibility="{Binding ElementName=CB_STO_DG3, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
                             <DataGrid.Style>
                                 <Style TargetType="DataGrid">
                                     <Style.Triggers>
@@ -394,7 +394,7 @@
                             </DataGrid.Columns>
                     </DataGrid>
                     <Label x:Name="lb_StoEventLogFour" Content="Device 4" Visibility="{Binding ElementName=CB_STO_DG4, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}" FontSize="12" Style="{StaticResource MainLabelStyle}" Margin="2,5,0,5" />
-                    <DataGrid x:Name="lb_StorageEventLogFour" AutoGenerateColumns="False" Margin="5,0,5,5" MaxHeight="420" Visibility="{Binding ElementName=CB_STO_DG4, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
+                    <DataGrid x:Name="lb_StorageEventLogFour" AutoGenerateColumns="False" Margin="5,0,5,5" MaxHeight="480" Visibility="{Binding ElementName=CB_STO_DG4, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
                             <DataGrid.Style>
                                 <Style TargetType="DataGrid">
                                     <Style.Triggers>
@@ -469,7 +469,7 @@
                             </DataGrid.Columns>
                     </DataGrid>
                     <Label x:Name="lb_StoEventLogFive" Content="Device 5" Visibility="{Binding ElementName=CB_STO_DG5, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}" FontSize="12" Style="{StaticResource MainLabelStyle}" Margin="2,5,0,5" />
-                    <DataGrid x:Name="lb_StorageEventLogFive" AutoGenerateColumns="False" Margin="5,0,5,5" MaxHeight="420" Visibility="{Binding ElementName=CB_STO_DG5, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
+                    <DataGrid x:Name="lb_StorageEventLogFive" AutoGenerateColumns="False" Margin="5,0,5,5" MaxHeight="480" Visibility="{Binding ElementName=CB_STO_DG5, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
                             <DataGrid.Style>
                                 <Style TargetType="DataGrid">
                                     <Style.Triggers>
@@ -544,7 +544,7 @@
                             </DataGrid.Columns>
                     </DataGrid>
                     <Label x:Name="lb_StoEventLogSix" Content="Device 6" Visibility="{Binding ElementName=CB_STO_DG6, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}" FontSize="12" Style="{StaticResource MainLabelStyle}" Margin="2,5,0,5" />
-                    <DataGrid x:Name="lb_StorageEventLogSix" AutoGenerateColumns="False" Margin="5,0,5,5" MaxHeight="420" Visibility="{Binding ElementName=CB_STO_DG6, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
+                    <DataGrid x:Name="lb_StorageEventLogSix" AutoGenerateColumns="False" Margin="5,0,5,5" MaxHeight="480" Visibility="{Binding ElementName=CB_STO_DG6, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
                             <DataGrid.Style>
                                 <Style TargetType="DataGrid">
                                     <Style.Triggers>
@@ -619,7 +619,7 @@
                             </DataGrid.Columns>
                     </DataGrid>
                     <Label x:Name="lb_StoEventLogSeven" Content="Device 7" Visibility="{Binding ElementName=CB_STO_DG7, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}" FontSize="12" Style="{StaticResource MainLabelStyle}" Margin="2,5,0,5" />
-                    <DataGrid x:Name="lb_StorageEventLogSeven" AutoGenerateColumns="False" Margin="5,0,5,5" MaxHeight="420" Visibility="{Binding ElementName=CB_STO_DG7, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
+                    <DataGrid x:Name="lb_StorageEventLogSeven" AutoGenerateColumns="False" Margin="5,0,5,5" MaxHeight="480" Visibility="{Binding ElementName=CB_STO_DG7, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
                             <DataGrid.Style>
                                 <Style TargetType="DataGrid">
                                     <Style.Triggers>
@@ -694,7 +694,7 @@
                             </DataGrid.Columns>
                     </DataGrid>
                     <Label x:Name="lb_StoEventLogEight" Content="Device 8" Visibility="{Binding ElementName=CB_STO_DG8, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}" FontSize="12" Style="{StaticResource MainLabelStyle}" Margin="2,5,0,5" />
-                    <DataGrid x:Name="lb_StorageEventLogEight" AutoGenerateColumns="False" Margin="5,0,5,5" MaxHeight="420" Visibility="{Binding ElementName=CB_STO_DG8, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
+                    <DataGrid x:Name="lb_StorageEventLogEight" AutoGenerateColumns="False" Margin="5,0,5,5" MaxHeight="480" Visibility="{Binding ElementName=CB_STO_DG8, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
                             <DataGrid.Style>
                                 <Style TargetType="DataGrid">
                                     <Style.Triggers>
@@ -771,7 +771,7 @@
                 </StackPanel>
                 <StackPanel x:Name="stp_StorageAuditLog" Orientation="Vertical" Margin="2" Visibility="{Binding ElementName=btn_IBM_CatAuditLog, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
                     <Label x:Name="lb_StorageAuditLogOne" Content="Device 1" Visibility="{Binding ElementName=CB_STO_DG1, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}" FontSize="12" Style="{StaticResource MainLabelStyle}" Margin="2,5,0,5" />
-                    <DataGrid Name="dg_StorageAuditLogOne" AutoGenerateColumns="False" Margin="5,5,5,5" MaxHeight="400" Visibility="{Binding ElementName=CB_STO_DG1, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
+                    <DataGrid Name="dg_StorageAuditLogOne" AutoGenerateColumns="False" Margin="5,5,5,5" MaxHeight="480" Visibility="{Binding ElementName=CB_STO_DG1, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
                         <DataGrid.Style>
                              <Style TargetType="DataGrid">
                                  <Style.Triggers>
@@ -796,7 +796,7 @@
                          </DataGrid.Columns>
                     </DataGrid>
                     <Label x:Name="lb_StorageAuditLogTwo" Content="Device 2" Visibility="{Binding ElementName=CB_STO_DG2, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}" FontSize="12" Style="{StaticResource MainLabelStyle}" Margin="2,5,0,5" />
-                    <DataGrid Name="dg_StorageAuditLogTwo" AutoGenerateColumns="False" Margin="5,5,5,5" MaxHeight="400" Visibility="{Binding ElementName=CB_STO_DG2, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
+                    <DataGrid Name="dg_StorageAuditLogTwo" AutoGenerateColumns="False" Margin="5,5,5,5" MaxHeight="480" Visibility="{Binding ElementName=CB_STO_DG2, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
                         <DataGrid.Style>
                              <Style TargetType="DataGrid">
                                  <Style.Triggers>
@@ -821,7 +821,7 @@
                         </DataGrid.Columns>
                     </DataGrid>
                     <Label x:Name="lb_StorageAuditLogThree" Content="Device 3" Visibility="{Binding ElementName=CB_STO_DG3, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}" FontSize="12" Style="{StaticResource MainLabelStyle}" Margin="2,5,0,5" />
-                    <DataGrid Name="dg_StorageAuditLogThree" AutoGenerateColumns="False" Margin="5,5,5,5" MaxHeight="400" Visibility="{Binding ElementName=CB_STO_DG3, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
+                    <DataGrid Name="dg_StorageAuditLogThree" AutoGenerateColumns="False" Margin="5,5,5,5" MaxHeight="480" Visibility="{Binding ElementName=CB_STO_DG3, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
                         <DataGrid.Style>
                             <Style TargetType="DataGrid">
                                 <Style.Triggers>
@@ -846,7 +846,7 @@
                         </DataGrid.Columns>
                     </DataGrid>
                     <Label x:Name="lb_StorageAuditLogFour" Content="Device 4" Visibility="{Binding ElementName=CB_STO_DG4, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}" FontSize="12" Style="{StaticResource MainLabelStyle}" Margin="2,5,0,5" />
-                    <DataGrid Name="dg_StorageAuditLogFour" AutoGenerateColumns="False" Margin="5,5,5,5" MaxHeight="400" Visibility="{Binding ElementName=CB_STO_DG4, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
+                    <DataGrid Name="dg_StorageAuditLogFour" AutoGenerateColumns="False" Margin="5,5,5,5" MaxHeight="480" Visibility="{Binding ElementName=CB_STO_DG4, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
                         <DataGrid.Style>
                             <Style TargetType="DataGrid">
                                 <Style.Triggers>
@@ -871,7 +871,7 @@
                         </DataGrid.Columns>
                     </DataGrid>
                     <Label x:Name="lb_StorageAuditLogFive" Content="Device 5" Visibility="{Binding ElementName=CB_STO_DG5, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}" FontSize="12" Style="{StaticResource MainLabelStyle}" Margin="2,5,0,5" />
-                    <DataGrid Name="dg_StorageAuditLogFive" AutoGenerateColumns="False" Margin="5,5,5,5" MaxHeight="400" Visibility="{Binding ElementName=CB_STO_DG5, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
+                    <DataGrid Name="dg_StorageAuditLogFive" AutoGenerateColumns="False" Margin="5,5,5,5" MaxHeight="480" Visibility="{Binding ElementName=CB_STO_DG5, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
                         <DataGrid.Style>
                             <Style TargetType="DataGrid">
                                 <Style.Triggers>
@@ -896,7 +896,7 @@
                         </DataGrid.Columns>
                     </DataGrid>
                     <Label x:Name="lb_StorageAuditLogSix" Content="Device 6" Visibility="{Binding ElementName=CB_STO_DG6, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}" FontSize="12" Style="{StaticResource MainLabelStyle}" Margin="2,5,0,5" />
-                    <DataGrid Name="dg_StorageAuditLogSix" AutoGenerateColumns="False" Margin="5,5,5,5" MaxHeight="400" Visibility="{Binding ElementName=CB_STO_DG6, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
+                    <DataGrid Name="dg_StorageAuditLogSix" AutoGenerateColumns="False" Margin="5,5,5,5" MaxHeight="480" Visibility="{Binding ElementName=CB_STO_DG6, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
                         <DataGrid.Style>
                             <Style TargetType="DataGrid">
                                 <Style.Triggers>
@@ -921,7 +921,7 @@
                         </DataGrid.Columns>
                     </DataGrid>
                     <Label x:Name="lb_StorageAuditLogSeven" Content="Device 7" Visibility="{Binding ElementName=CB_STO_DG7, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}" FontSize="12" Style="{StaticResource MainLabelStyle}" Margin="2,5,0,5" />
-                    <DataGrid Name="dg_StorageAuditLogSeven" AutoGenerateColumns="False" Margin="5,5,5,5" MaxHeight="400" Visibility="{Binding ElementName=CB_STO_DG7, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
+                    <DataGrid Name="dg_StorageAuditLogSeven" AutoGenerateColumns="False" Margin="5,5,5,5" MaxHeight="480" Visibility="{Binding ElementName=CB_STO_DG7, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
                         <DataGrid.Style>
                             <Style TargetType="DataGrid">
                                 <Style.Triggers>
@@ -946,7 +946,7 @@
                         </DataGrid.Columns>
                     </DataGrid>
                     <Label x:Name="lb_StorageAuditLogEight" Content="Device 8" Visibility="{Binding ElementName=CB_STO_DG8, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}" FontSize="12" Style="{StaticResource MainLabelStyle}" Margin="2,5,0,5" />
-                    <DataGrid Name="dg_StorageAuditLogEight" AutoGenerateColumns="False" Margin="5,5,5,5" MaxHeight="400" Visibility="{Binding ElementName=CB_STO_DG8, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
+                    <DataGrid Name="dg_StorageAuditLogEight" AutoGenerateColumns="False" Margin="5,5,5,5" MaxHeight="480" Visibility="{Binding ElementName=CB_STO_DG8, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
                         <DataGrid.Style>
                             <Style TargetType="DataGrid">
                                 <Style.Triggers>
@@ -1009,7 +1009,7 @@
                         <StackPanel Grid.Row="1" Orientation="Vertical" >
                         <Label x:Name="lb_ErrorMsgHVM" Visibility="Collapsed" Foreground="Red" Content="" Style="{StaticResource MainLabelStyle}" Padding="2" Margin="25,5,0,5"/>
                         <Label x:Name="lb_HostVolInfoOne" Content="Device 1" Visibility="{Binding ElementName=CB_STO_DG1, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}" FontSize="12" Style="{StaticResource MainLabelStyle}" Margin="2,5,0,5" />
-                        <DataGrid x:Name="dg_HostVolInfoOne" AutoGenerateColumns="False" Margin="5,5,5,5" MaxHeight="400" Visibility="{Binding ElementName=CB_STO_DG1, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
+                        <DataGrid x:Name="dg_HostVolInfoOne" AutoGenerateColumns="False" Margin="5,5,5,5" MaxWidth="960" MaxHeight="480" Visibility="{Binding ElementName=CB_STO_DG1, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
                             <DataGrid.Style>
                                 <Style TargetType="DataGrid">
                                     <Style.Triggers>
@@ -1031,7 +1031,7 @@
                             </DataGrid.Columns>
                         </DataGrid>
                         <Label x:Name="lb_HostVolInfoTwo" Content="Device 2" Visibility="{Binding ElementName=CB_STO_DG2, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}" FontSize="12" Style="{StaticResource MainLabelStyle}" Margin="2,5,0,5" />
-                        <DataGrid x:Name="dg_HostVolInfoTwo" AutoGenerateColumns="False" Margin="5,25,5,5" MaxHeight="400" Visibility="{Binding ElementName=CB_STO_DG2, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
+                        <DataGrid x:Name="dg_HostVolInfoTwo" AutoGenerateColumns="False" Margin="5,25,5,5" MaxWidth="960" MaxHeight="480" Visibility="{Binding ElementName=CB_STO_DG2, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
                             <DataGrid.Style>
                                 <Style TargetType="DataGrid">
                                     <Style.Triggers>
@@ -1053,7 +1053,7 @@
                             </DataGrid.Columns>
                         </DataGrid>
                         <Label x:Name="lb_HostVolInfoThree" Content="Device 3" Visibility="{Binding ElementName=CB_STO_DG3, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}" FontSize="12" Style="{StaticResource MainLabelStyle}" Margin="2,5,0,5" />
-                        <DataGrid x:Name="dg_HostVolInfoThree" AutoGenerateColumns="False" Margin="5,25,5,5" MaxHeight="400" Visibility="{Binding ElementName=CB_STO_DG3, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
+                        <DataGrid x:Name="dg_HostVolInfoThree" AutoGenerateColumns="False" Margin="5,25,5,5" MaxWidth="960" MaxHeight="480" Visibility="{Binding ElementName=CB_STO_DG3, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
                             <DataGrid.Style>
                                 <Style TargetType="DataGrid">
                                     <Style.Triggers>
@@ -1075,7 +1075,7 @@
                             </DataGrid.Columns>
                         </DataGrid>
                         <Label x:Name="lb_HostVolInfoFour" Content="Device 4" Visibility="{Binding ElementName=CB_STO_DG4, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}" FontSize="12" Style="{StaticResource MainLabelStyle}" Margin="2,5,0,5" />
-                        <DataGrid x:Name="dg_HostVolInfoFour" AutoGenerateColumns="False" Margin="5,25,5,5" MaxHeight="400" Visibility="{Binding ElementName=CB_STO_DG4, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
+                        <DataGrid x:Name="dg_HostVolInfoFour" AutoGenerateColumns="False" Margin="5,25,5,5" MaxWidth="960" MaxHeight="480" Visibility="{Binding ElementName=CB_STO_DG4, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
                             <DataGrid.Style>
                                 <Style TargetType="DataGrid">
                                     <Style.Triggers>
@@ -1097,7 +1097,7 @@
                             </DataGrid.Columns>
                         </DataGrid>
                         <Label x:Name="lb_HostVolInfoFive" Content="Device 5" Visibility="{Binding ElementName=CB_STO_DG5, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}" FontSize="12" Style="{StaticResource MainLabelStyle}" Margin="2,5,0,5" />
-                        <DataGrid x:Name="dg_HostVolInfoFive" AutoGenerateColumns="False" Margin="5,25,5,5" MaxHeight="400" Visibility="{Binding ElementName=CB_STO_DG5, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
+                        <DataGrid x:Name="dg_HostVolInfoFive" AutoGenerateColumns="False" Margin="5,25,5,5" MaxWidth="960" MaxHeight="480" Visibility="{Binding ElementName=CB_STO_DG5, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
                             <DataGrid.Style>
                                 <Style TargetType="DataGrid">
                                     <Style.Triggers>
@@ -1119,7 +1119,7 @@
                             </DataGrid.Columns>
                         </DataGrid>
                         <Label x:Name="lb_HostVolInfoSix" Content="Device 6" Visibility="{Binding ElementName=CB_STO_DG6, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}" FontSize="12" Style="{StaticResource MainLabelStyle}" Margin="2,5,0,5" />
-                        <DataGrid x:Name="dg_HostVolInfoSix" AutoGenerateColumns="False" Margin="5,25,5,5" MaxHeight="400" Visibility="{Binding ElementName=CB_STO_DG6, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
+                        <DataGrid x:Name="dg_HostVolInfoSix" AutoGenerateColumns="False" Margin="5,25,5,5" MaxWidth="960" MaxHeight="480" Visibility="{Binding ElementName=CB_STO_DG6, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
                             <DataGrid.Style>
                                 <Style TargetType="DataGrid">
                                     <Style.Triggers>
@@ -1141,7 +1141,7 @@
                             </DataGrid.Columns>
                         </DataGrid>
                         <Label x:Name="lb_HostVolInfoSeven" Content="Device 7" Visibility="{Binding ElementName=CB_STO_DG7, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}" FontSize="12" Style="{StaticResource MainLabelStyle}" Margin="2,5,0,5" />
-                        <DataGrid x:Name="dg_HostVolInfoSeven" AutoGenerateColumns="False" Margin="5,25,5,5" MaxHeight="400" Visibility="{Binding ElementName=CB_STO_DG7, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
+                        <DataGrid x:Name="dg_HostVolInfoSeven" AutoGenerateColumns="False" Margin="5,25,5,5" MaxWidth="960" MaxHeight="480" Visibility="{Binding ElementName=CB_STO_DG7, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
                             <DataGrid.Style>
                                 <Style TargetType="DataGrid">
                                     <Style.Triggers>
@@ -1163,7 +1163,7 @@
                             </DataGrid.Columns>
                         </DataGrid>
                         <Label x:Name="lb_HostVolInfoEight" Content="Device 8" Visibility="{Binding ElementName=CB_STO_DG8, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}" FontSize="12" Style="{StaticResource MainLabelStyle}" Margin="2,5,0,5" />
-                        <DataGrid x:Name="dg_HostVolInfoEight" AutoGenerateColumns="False" Margin="5,25,5,5" MaxHeight="400" Visibility="{Binding ElementName=CB_STO_DG8, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
+                        <DataGrid x:Name="dg_HostVolInfoEight" AutoGenerateColumns="False" Margin="5,25,5,5" MaxWidth="960" MaxHeight="480" Visibility="{Binding ElementName=CB_STO_DG8, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
                             <DataGrid.Style>
                                 <Style TargetType="DataGrid">
                                     <Style.Triggers>
@@ -1197,7 +1197,7 @@
                             <RowDefinition Height="*" />
                         </Grid.RowDefinitions>
                         <StackPanel Grid.Row="1" Orientation="Vertical" >
-                        <DataGrid x:Name="dg_CollectedHostInfoOne" AutoGenerateColumns="False" Margin="5,5,5,5" MaxHeight="400" Visibility="{Binding ElementName=CB_STO_DG1, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
+                        <DataGrid x:Name="dg_CollectedHostInfoOne" AutoGenerateColumns="False" Margin="5,5,5,5" MaxWidth="960" MaxHeight="460" Visibility="{Binding ElementName=CB_STO_DG1, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
                             <DataGrid.Style>
                                 <Style TargetType="DataGrid">
                                     <Style.Triggers>
@@ -1298,7 +1298,7 @@
                                 </DataGridTextColumn>
                             </DataGrid.Columns>
                         </DataGrid>
-                        <DataGrid x:Name="dg_CollectedHostInfoTwo" AutoGenerateColumns="False" Margin="5,25,5,5" MaxHeight="400" Visibility="{Binding ElementName=CB_STO_DG2, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
+                        <DataGrid x:Name="dg_CollectedHostInfoTwo" AutoGenerateColumns="False" Margin="5,25,5,5" MaxWidth="960" MaxHeight="460" Visibility="{Binding ElementName=CB_STO_DG2, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
                             <DataGrid.Style>
                                 <Style TargetType="DataGrid">
                                     <Style.Triggers>
@@ -1399,7 +1399,7 @@
                                 </DataGridTextColumn>
                             </DataGrid.Columns>
                         </DataGrid>
-                        <DataGrid x:Name="dg_CollectedHostInfoThree" AutoGenerateColumns="False" Margin="5,25,5,5" MaxHeight="400" Visibility="{Binding ElementName=CB_STO_DG3, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
+                        <DataGrid x:Name="dg_CollectedHostInfoThree" AutoGenerateColumns="False" Margin="5,25,5,5" MaxWidth="960" MaxHeight="460" Visibility="{Binding ElementName=CB_STO_DG3, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
                             <DataGrid.Style>
                                 <Style TargetType="DataGrid">
                                     <Style.Triggers>
@@ -1500,7 +1500,7 @@
                                 </DataGridTextColumn>
                             </DataGrid.Columns>
                         </DataGrid>
-                        <DataGrid x:Name="dg_CollectedHostInfoFour" AutoGenerateColumns="False" Margin="5,25,5,5" MaxHeight="400" Visibility="{Binding ElementName=CB_STO_DG4, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
+                        <DataGrid x:Name="dg_CollectedHostInfoFour" AutoGenerateColumns="False" Margin="5,25,5,5" MaxWidth="960" MaxHeight="460" Visibility="{Binding ElementName=CB_STO_DG4, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
                             <DataGrid.Style>
                                 <Style TargetType="DataGrid">
                                     <Style.Triggers>
@@ -1601,7 +1601,7 @@
                                 </DataGridTextColumn>
                             </DataGrid.Columns>
                         </DataGrid>
-                        <DataGrid x:Name="dg_CollectedHostInfoFive" AutoGenerateColumns="False" Margin="5,25,5,5" MaxHeight="400" Visibility="{Binding ElementName=CB_STO_DG5, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
+                        <DataGrid x:Name="dg_CollectedHostInfoFive" AutoGenerateColumns="False" Margin="5,25,5,5" MaxWidth="960" MaxHeight="460" Visibility="{Binding ElementName=CB_STO_DG5, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
                             <DataGrid.Style>
                                 <Style TargetType="DataGrid">
                                     <Style.Triggers>
@@ -1702,7 +1702,7 @@
                                 </DataGridTextColumn>
                             </DataGrid.Columns>
                         </DataGrid>
-                        <DataGrid x:Name="dg_CollectedHostInfoSix" AutoGenerateColumns="False" Margin="5,25,5,5" MaxHeight="400" Visibility="{Binding ElementName=CB_STO_DG6, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
+                        <DataGrid x:Name="dg_CollectedHostInfoSix" AutoGenerateColumns="False" Margin="5,25,5,5" MaxWidth="960" MaxHeight="460" Visibility="{Binding ElementName=CB_STO_DG6, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
                             <DataGrid.Style>
                                 <Style TargetType="DataGrid">
                                     <Style.Triggers>
@@ -1803,7 +1803,7 @@
                                 </DataGridTextColumn>
                             </DataGrid.Columns>
                         </DataGrid>
-                        <DataGrid x:Name="dg_CollectedHostInfoSeven" AutoGenerateColumns="False" Margin="5,25,5,5" MaxHeight="400" Visibility="{Binding ElementName=CB_STO_DG7, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
+                        <DataGrid x:Name="dg_CollectedHostInfoSeven" AutoGenerateColumns="False" Margin="5,25,5,5" MaxWidth="960" MaxHeight="460" Visibility="{Binding ElementName=CB_STO_DG7, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
                             <DataGrid.Style>
                                 <Style TargetType="DataGrid">
                                     <Style.Triggers>
@@ -1904,7 +1904,7 @@
                                 </DataGridTextColumn>
                             </DataGrid.Columns>
                         </DataGrid>
-                        <DataGrid x:Name="dg_CollectedHostInfoEight" AutoGenerateColumns="False" Margin="5,25,5,5" MaxHeight="400" Visibility="{Binding ElementName=CB_STO_DG8, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
+                        <DataGrid x:Name="dg_CollectedHostInfoEight" AutoGenerateColumns="False" Margin="5,25,5,5" MaxWidth="960" MaxHeight="460" Visibility="{Binding ElementName=CB_STO_DG8, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
                             <DataGrid.Style>
                                 <Style TargetType="DataGrid">
                                     <Style.Triggers>
@@ -2024,7 +2024,7 @@
                         <Label Grid.Row="0" Grid.ColumnSpan="2" x:Name="lb_DriveErrorInfo" Content="" Visibility="Collapsed" Style="{StaticResource MainLabelStyle}" Margin="0,5"/> 
                         <StackPanel Grid.Row="1" Grid.Column="0" Orientation="Vertical" Visibility="{Binding ElementName=CB_STO_DG1, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
                         <Label x:Name="lb_DriveInfoOne" Content="No Device Info" Margin="0,5" FontSize="14" Height="26"/>
-                        <DataGrid x:Name="dg_DriveInfoOne" AutoGenerateColumns="False" Margin="5" MaxHeight="400" >
+                        <DataGrid x:Name="dg_DriveInfoOne" AutoGenerateColumns="False" Margin="5" MaxHeight="480" >
                             <DataGrid.Style>
                                 <Style TargetType="DataGrid">
                                     <Style.Triggers>
@@ -2090,7 +2090,7 @@
                         </StackPanel>
                         <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Vertical" Visibility="{Binding ElementName=CB_STO_DG2, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
                         <Label x:Name="lb_DriveInfoTwo" Content="No Device Info" Margin="0,5" FontSize="14" Height="26"/>
-                        <DataGrid x:Name="dg_DriveInfoTwo" AutoGenerateColumns="False" Margin="5" MaxHeight="400" >
+                        <DataGrid x:Name="dg_DriveInfoTwo" AutoGenerateColumns="False" Margin="5" MaxHeight="480" >
                             <DataGrid.Style>
                                 <Style TargetType="DataGrid">
                                     <Style.Triggers>
@@ -2156,7 +2156,7 @@
                         </StackPanel>
                         <StackPanel Grid.Row="2" Grid.Column="0" Orientation="Vertical" Visibility="{Binding ElementName=CB_STO_DG3, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
                         <Label x:Name="lb_DriveInfoThree" Content="No Device Info" Margin="0,5" FontSize="14" Height="26"/>
-                        <DataGrid x:Name="dg_DriveInfoThree" AutoGenerateColumns="False" Margin="5" MaxHeight="400" >
+                        <DataGrid x:Name="dg_DriveInfoThree" AutoGenerateColumns="False" Margin="5" MaxHeight="480" >
                             <DataGrid.Style>
                                 <Style TargetType="DataGrid">
                                     <Style.Triggers>
@@ -2222,7 +2222,7 @@
                         </StackPanel>
                         <StackPanel Grid.Row="2" Grid.Column="1" Orientation="Vertical" Visibility="{Binding ElementName=CB_STO_DG4, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
                         <Label x:Name="lb_DriveInfoFour" Content="No Device Info" Margin="0,5" FontSize="14" Height="26"/>
-                        <DataGrid x:Name="dg_DriveInfoFour" AutoGenerateColumns="False" Margin="5" MaxHeight="400" >
+                        <DataGrid x:Name="dg_DriveInfoFour" AutoGenerateColumns="False" Margin="5" MaxHeight="480" >
                             <DataGrid.Style>
                                 <Style TargetType="DataGrid">
                                     <Style.Triggers>
@@ -2288,7 +2288,7 @@
                         </StackPanel>
                         <StackPanel Grid.Row="3" Grid.Column="0" Orientation="Vertical" Visibility="{Binding ElementName=CB_STO_DG5, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
                         <Label x:Name="lb_DriveInfoFive" Content="No Device Info" Margin="0,5" FontSize="14" Height="26"/>
-                        <DataGrid x:Name="dg_DriveInfoFive" AutoGenerateColumns="False" Margin="5" MaxHeight="400" >
+                        <DataGrid x:Name="dg_DriveInfoFive" AutoGenerateColumns="False" Margin="5" MaxHeight="480" >
                             <DataGrid.Style>
                                 <Style TargetType="DataGrid">
                                     <Style.Triggers>
@@ -2354,7 +2354,7 @@
                         </StackPanel>
                         <StackPanel Grid.Row="3" Grid.Column="1" Orientation="Vertical" Visibility="{Binding ElementName=CB_STO_DG6, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
                         <Label x:Name="lb_DriveInfoSix" Content="No Device Info" Margin="0,5" FontSize="14" Height="26"/>
-                        <DataGrid x:Name="dg_DriveInfoSix" AutoGenerateColumns="False" Margin="5" MaxHeight="400" >
+                        <DataGrid x:Name="dg_DriveInfoSix" AutoGenerateColumns="False" Margin="5" MaxHeight="480" >
                             <DataGrid.Style>
                                 <Style TargetType="DataGrid">
                                     <Style.Triggers>
@@ -2420,7 +2420,7 @@
                         </StackPanel>
                         <StackPanel Grid.Row="4" Grid.Column="0" Orientation="Vertical" Visibility="{Binding ElementName=CB_STO_DG7, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
                         <Label x:Name="lb_DriveInfoSeven" Content="No Device Info" Margin="0,5" FontSize="14" Height="26"/>
-                        <DataGrid x:Name="dg_DriveInfoSeven" AutoGenerateColumns="False" Margin="5" MaxHeight="400" >
+                        <DataGrid x:Name="dg_DriveInfoSeven" AutoGenerateColumns="False" Margin="5" MaxHeight="480" >
                             <DataGrid.Style>
                                 <Style TargetType="DataGrid">
                                     <Style.Triggers>
@@ -2486,7 +2486,7 @@
                         </StackPanel>
                         <StackPanel Grid.Row="4" Grid.Column="1" Orientation="Vertical" Visibility="{Binding ElementName=CB_STO_DG8, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
                         <Label x:Name="lb_DriveInfoEight" Content="No Device Info" Margin="0,5" FontSize="14" Height="26"/>
-                        <DataGrid x:Name="dg_DriveInfoEight" AutoGenerateColumns="False" Margin="5" MaxHeight="400" >
+                        <DataGrid x:Name="dg_DriveInfoEight" AutoGenerateColumns="False" Margin="5" MaxHeight="480" >
                             <DataGrid.Style>
                                 <Style TargetType="DataGrid">
                                     <Style.Triggers>
@@ -2568,7 +2568,7 @@
                         <!-- <Label Content="You need admin rights to use this command." Style="{StaticResource MainLabelStyle}" Margin="10,5,0,5"/> -->
                         </StackPanel>
                         <StackPanel Orientation="Vertical" Grid.Row="1">
-                        <DataGrid x:Name="dg_FCPortStatsOne" AutoGenerateColumns="False" Margin="5" MaxHeight="400" Visibility="{Binding ElementName=CB_STO_DG1, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
+                        <DataGrid x:Name="dg_FCPortStatsOne" AutoGenerateColumns="False" Margin="5" MaxWidth="960" MaxHeight="480" Visibility="{Binding ElementName=CB_STO_DG1, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
                             <DataGrid.Style>
                                 <Style TargetType="DataGrid">
                                     <Style.Triggers>
@@ -2656,7 +2656,7 @@
                                 </DataGridTextColumn>
                             </DataGrid.Columns>
                         </DataGrid>
-                        <DataGrid x:Name="dg_FCPortStatsTwo" AutoGenerateColumns="False" Margin="5,20,5,5" MaxHeight="400" Visibility="{Binding ElementName=CB_STO_DG2, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
+                        <DataGrid x:Name="dg_FCPortStatsTwo" AutoGenerateColumns="False" Margin="5,20,5,5" MaxWidth="960" MaxHeight="480" Visibility="{Binding ElementName=CB_STO_DG2, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
                             <DataGrid.Style>
                                 <Style TargetType="DataGrid">
                                     <Style.Triggers>
@@ -2744,7 +2744,7 @@
                                 </DataGridTextColumn>
                             </DataGrid.Columns>
                         </DataGrid>
-                        <DataGrid x:Name="dg_FCPortStatsThree" AutoGenerateColumns="False" Margin="5,20,5,5" MaxHeight="400" Visibility="{Binding ElementName=CB_STO_DG3, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
+                        <DataGrid x:Name="dg_FCPortStatsThree" AutoGenerateColumns="False" Margin="5,20,5,5" MaxWidth="960" MaxHeight="480" Visibility="{Binding ElementName=CB_STO_DG3, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
                             <DataGrid.Style>
                                 <Style TargetType="DataGrid">
                                     <Style.Triggers>
@@ -2832,7 +2832,7 @@
                                 </DataGridTextColumn>
                             </DataGrid.Columns>
                         </DataGrid>
-                        <DataGrid x:Name="dg_FCPortStatsFour" AutoGenerateColumns="False" Margin="5,20,5,5" MaxHeight="400" Visibility="{Binding ElementName=CB_STO_DG4, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
+                        <DataGrid x:Name="dg_FCPortStatsFour" AutoGenerateColumns="False" Margin="5,20,5,5" MaxWidth="960" MaxHeight="480" Visibility="{Binding ElementName=CB_STO_DG4, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
                             <DataGrid.Style>
                                 <Style TargetType="DataGrid">
                                     <Style.Triggers>
@@ -2920,7 +2920,7 @@
                                 </DataGridTextColumn>
                             </DataGrid.Columns>
                         </DataGrid>
-                        <DataGrid x:Name="dg_FCPortStatsFive" AutoGenerateColumns="False" Margin="5,20,5,5" MaxHeight="400" Visibility="{Binding ElementName=CB_STO_DG5, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
+                        <DataGrid x:Name="dg_FCPortStatsFive" AutoGenerateColumns="False" Margin="5,20,5,5" MaxWidth="960" MaxHeight="480" Visibility="{Binding ElementName=CB_STO_DG5, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
                             <DataGrid.Style>
                                 <Style TargetType="DataGrid">
                                     <Style.Triggers>
@@ -3008,7 +3008,7 @@
                                 </DataGridTextColumn>
                             </DataGrid.Columns>
                         </DataGrid>
-                        <DataGrid x:Name="dg_FCPortStatsSix" AutoGenerateColumns="False" Margin="5,20,5,5" MaxHeight="400" Visibility="{Binding ElementName=CB_STO_DG6, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
+                        <DataGrid x:Name="dg_FCPortStatsSix" AutoGenerateColumns="False" Margin="5,20,5,5" MaxWidth="960" MaxHeight="480" Visibility="{Binding ElementName=CB_STO_DG6, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
                             <DataGrid.Style>
                                 <Style TargetType="DataGrid">
                                     <Style.Triggers>
@@ -3096,7 +3096,7 @@
                                 </DataGridTextColumn>
                             </DataGrid.Columns>
                         </DataGrid>
-                        <DataGrid x:Name="dg_FCPortStatsSeven" AutoGenerateColumns="False" Margin="5,20,5,5" MaxHeight="400" Visibility="{Binding ElementName=CB_STO_DG7, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
+                        <DataGrid x:Name="dg_FCPortStatsSeven" AutoGenerateColumns="False" Margin="5,20,5,5" MaxWidth="960" MaxHeight="480" Visibility="{Binding ElementName=CB_STO_DG7, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
                             <DataGrid.Style>
                                 <Style TargetType="DataGrid">
                                     <Style.Triggers>
@@ -3184,7 +3184,7 @@
                                 </DataGridTextColumn>
                             </DataGrid.Columns>
                         </DataGrid>
-                        <DataGrid x:Name="dg_FCPortStatsEight" AutoGenerateColumns="False" Margin="5,20,5,5" MaxHeight="400" Visibility="{Binding ElementName=CB_STO_DG8, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
+                        <DataGrid x:Name="dg_FCPortStatsEight" AutoGenerateColumns="False" Margin="5,20,5,5" MaxWidth="960" MaxHeight="480" Visibility="{Binding ElementName=CB_STO_DG8, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
                             <DataGrid.Style>
                                 <Style TargetType="DataGrid">
                                     <Style.Triggers>
@@ -3773,7 +3773,7 @@
                             <RowDefinition Height="*" />
                         </Grid.RowDefinitions>
                         <StackPanel Orientation="Vertical" Grid.Row="1">
-                        <DataGrid Grid.Row="1" x:Name="dg_BaseStorageInfoOne" AutoGenerateColumns="False" Margin="5" MaxHeight="400" Visibility="{Binding ElementName=CB_STO_DG1, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
+                        <DataGrid Grid.Row="1" x:Name="dg_BaseStorageInfoOne" AutoGenerateColumns="False" Margin="5" MaxWidth="960" MaxHeight="460" Visibility="{Binding ElementName=CB_STO_DG1, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
                             <DataGrid.Style>
                                 <Style TargetType="DataGrid">
                                     <Style.Triggers>
@@ -3832,7 +3832,7 @@
                             </DataGrid.Columns>
                         </DataGrid>
                         <Label Grid.Row="1" Grid.ColumnSpan="2" x:Name="lb_QuorumInfoOne" Content="Quorum Information" Visibility="{Binding ElementName=CB_STO_DG1, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}" Style="{StaticResource MainLabelStyle}" Margin="2,5,0,5"/>
-                        <DataGrid Grid.Row="1" x:Name="dg_IPQuorumInfoOne" AutoGenerateColumns="False" Margin="5" MaxHeight="400" Visibility="{Binding ElementName=CB_STO_DG1, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
+                        <DataGrid Grid.Row="1" x:Name="dg_IPQuorumInfoOne" AutoGenerateColumns="False" Margin="5" MaxWidth="960" MaxHeight="460" Visibility="{Binding ElementName=CB_STO_DG1, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
                             <DataGrid.Style>
                                 <Style TargetType="DataGrid">
                                     <Style.Triggers>
@@ -3865,7 +3865,7 @@
                                 <DataGridTextColumn Width="auto" Header="Site Name" Binding ="{Binding SiteName}" IsReadOnly="True"/>
                             </DataGrid.Columns> 
                         </DataGrid>
-                        <DataGrid Grid.Row="1" x:Name="dg_BaseStorageInfoTwo" AutoGenerateColumns="False" Margin="5,20,5,5" MaxHeight="400" Visibility="{Binding ElementName=CB_STO_DG2, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
+                        <DataGrid Grid.Row="1" x:Name="dg_BaseStorageInfoTwo" AutoGenerateColumns="False" Margin="5,20,5,5" MaxWidth="960" MaxHeight="460" Visibility="{Binding ElementName=CB_STO_DG2, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
                             <DataGrid.Style>
                                 <Style TargetType="DataGrid">
                                     <Style.Triggers>
@@ -3924,7 +3924,7 @@
                             </DataGrid.Columns>
                         </DataGrid>
                         <Label Grid.Row="1" Grid.ColumnSpan="2" x:Name="lb_QuorumInfoTwo" Content="Quorum Information" Visibility="{Binding ElementName=CB_STO_DG2, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}" Style="{StaticResource MainLabelStyle}" Margin="2,5,0,5"/>
-                        <DataGrid Grid.Row="1" x:Name="dg_IPQuorumInfoTwo" AutoGenerateColumns="False" Margin="5" MaxHeight="400" Visibility="{Binding ElementName=CB_STO_DG2, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
+                        <DataGrid Grid.Row="1" x:Name="dg_IPQuorumInfoTwo" AutoGenerateColumns="False" Margin="5" MaxWidth="960" MaxHeight="460" Visibility="{Binding ElementName=CB_STO_DG2, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
                             <DataGrid.Style>
                                 <Style TargetType="DataGrid">
                                     <Style.Triggers>
@@ -3957,7 +3957,7 @@
                                 <DataGridTextColumn Width="auto" Header="Site Name" Binding ="{Binding SiteName}" IsReadOnly="True"/>
                             </DataGrid.Columns> 
                         </DataGrid>
-                        <DataGrid Grid.Row="1" x:Name="dg_BaseStorageInfoThree" AutoGenerateColumns="False" Margin="5,20,5,5" MaxHeight="400" Visibility="{Binding ElementName=CB_STO_DG3, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
+                        <DataGrid Grid.Row="1" x:Name="dg_BaseStorageInfoThree" AutoGenerateColumns="False" Margin="5,20,5,5" MaxWidth="960" MaxHeight="460" Visibility="{Binding ElementName=CB_STO_DG3, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
                             <DataGrid.Style>
                                 <Style TargetType="DataGrid">
                                     <Style.Triggers>
@@ -4016,7 +4016,7 @@
                             </DataGrid.Columns>
                         </DataGrid>
                         <Label Grid.Row="1" Grid.ColumnSpan="2" x:Name="lb_QuorumInfoThree" Content="Quorum Information" Visibility="{Binding ElementName=CB_STO_DG3, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}" Style="{StaticResource MainLabelStyle}" Margin="2,5,0,5"/>
-                        <DataGrid Grid.Row="1" x:Name="dg_IPQuorumInfoThree" AutoGenerateColumns="False" Margin="5" MaxHeight="400" Visibility="{Binding ElementName=CB_STO_DG3, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
+                        <DataGrid Grid.Row="1" x:Name="dg_IPQuorumInfoThree" AutoGenerateColumns="False" Margin="5" MaxWidth="960" MaxHeight="460" Visibility="{Binding ElementName=CB_STO_DG3, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
                             <DataGrid.Style>
                                 <Style TargetType="DataGrid">
                                     <Style.Triggers>
@@ -4049,7 +4049,7 @@
                                 <DataGridTextColumn Width="auto" Header="Site Name" Binding ="{Binding SiteName}" IsReadOnly="True"/>
                             </DataGrid.Columns> 
                         </DataGrid>
-                        <DataGrid Grid.Row="1" x:Name="dg_BaseStorageInfoFour" AutoGenerateColumns="False" Margin="5,20,5,5" MaxHeight="400" Visibility="{Binding ElementName=CB_STO_DG4, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
+                        <DataGrid Grid.Row="1" x:Name="dg_BaseStorageInfoFour" AutoGenerateColumns="False" Margin="5,20,5,5" MaxHeight="460" Visibility="{Binding ElementName=CB_STO_DG4, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
                             <DataGrid.Style>
                                 <Style TargetType="DataGrid">
                                     <Style.Triggers>
@@ -4108,7 +4108,7 @@
                             </DataGrid.Columns>
                         </DataGrid>
                         <Label Grid.Row="1" Grid.ColumnSpan="2" x:Name="lb_QuorumInfoFour" Content="Quorum Information" Visibility="{Binding ElementName=CB_STO_DG4, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}" Style="{StaticResource MainLabelStyle}" Margin="2,5,0,5"/>
-                        <DataGrid Grid.Row="1" x:Name="dg_IPQuorumInfoFour" AutoGenerateColumns="False" Margin="5" MaxHeight="400" Visibility="{Binding ElementName=CB_STO_DG4, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
+                        <DataGrid Grid.Row="1" x:Name="dg_IPQuorumInfoFour" AutoGenerateColumns="False" Margin="5" MaxWidth="960" MaxHeight="460" Visibility="{Binding ElementName=CB_STO_DG4, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
                             <DataGrid.Style>
                                 <Style TargetType="DataGrid">
                                     <Style.Triggers>
@@ -4141,7 +4141,7 @@
                                 <DataGridTextColumn Width="auto" Header="Site Name" Binding ="{Binding SiteName}" IsReadOnly="True"/>
                             </DataGrid.Columns> 
                         </DataGrid>
-                        <DataGrid Grid.Row="1" x:Name="dg_BaseStorageInfoFive" AutoGenerateColumns="False" Margin="5,20,5,5" MaxHeight="400" Visibility="{Binding ElementName=CB_STO_DG5, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
+                        <DataGrid Grid.Row="1" x:Name="dg_BaseStorageInfoFive" AutoGenerateColumns="False" Margin="5,20,5,5" MaxWidth="960" MaxHeight="460" Visibility="{Binding ElementName=CB_STO_DG5, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
                             <DataGrid.Style>
                                 <Style TargetType="DataGrid">
                                     <Style.Triggers>
@@ -4200,7 +4200,7 @@
                             </DataGrid.Columns>
                         </DataGrid>
                         <Label Grid.Row="1" Grid.ColumnSpan="2" x:Name="lb_QuorumInfoFive" Content="Quorum Information" Visibility="{Binding ElementName=CB_STO_DG5, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}" Style="{StaticResource MainLabelStyle}" Margin="2,5,0,5"/>
-                        <DataGrid Grid.Row="1" x:Name="dg_IPQuorumInfoFive" AutoGenerateColumns="False" Margin="5" MaxHeight="400" Visibility="{Binding ElementName=CB_STO_DG5, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
+                        <DataGrid Grid.Row="1" x:Name="dg_IPQuorumInfoFive" AutoGenerateColumns="False" Margin="5" MaxWidth="960" MaxHeight="460" Visibility="{Binding ElementName=CB_STO_DG5, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
                             <DataGrid.Style>
                                 <Style TargetType="DataGrid">
                                     <Style.Triggers>
@@ -4233,7 +4233,7 @@
                                 <DataGridTextColumn Width="auto" Header="Site Name" Binding ="{Binding SiteName}" IsReadOnly="True"/>
                             </DataGrid.Columns> 
                         </DataGrid>
-                        <DataGrid Grid.Row="1" x:Name="dg_BaseStorageInfoSix" AutoGenerateColumns="False" Margin="5,20,5,5" MaxHeight="400" Visibility="{Binding ElementName=CB_STO_DG6, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
+                        <DataGrid Grid.Row="1" x:Name="dg_BaseStorageInfoSix" AutoGenerateColumns="False" Margin="5,20,5,5" MaxWidth="960" MaxHeight="460" Visibility="{Binding ElementName=CB_STO_DG6, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
                             <DataGrid.Style>
                                 <Style TargetType="DataGrid">
                                     <Style.Triggers>
@@ -4292,7 +4292,7 @@
                             </DataGrid.Columns>
                         </DataGrid>
                         <Label Grid.Row="1" Grid.ColumnSpan="2" x:Name="lb_QuorumInfoSix" Content="Quorum Information" Visibility="{Binding ElementName=CB_STO_DG6, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}" Style="{StaticResource MainLabelStyle}" Margin="2,5,0,5"/>
-                        <DataGrid Grid.Row="1" x:Name="dg_IPQuorumInfoSix" AutoGenerateColumns="False" Margin="5" MaxHeight="400" Visibility="{Binding ElementName=CB_STO_DG6, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
+                        <DataGrid Grid.Row="1" x:Name="dg_IPQuorumInfoSix" AutoGenerateColumns="False" Margin="5" MaxWidth="960" MaxHeight="460" Visibility="{Binding ElementName=CB_STO_DG6, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
                             <DataGrid.Style>
                                 <Style TargetType="DataGrid">
                                     <Style.Triggers>
@@ -4325,7 +4325,7 @@
                                 <DataGridTextColumn Width="auto" Header="Site Name" Binding ="{Binding SiteName}" IsReadOnly="True"/>
                             </DataGrid.Columns> 
                         </DataGrid>
-                        <DataGrid Grid.Row="1" x:Name="dg_BaseStorageInfoSeven" AutoGenerateColumns="False" Margin="5,20,5,5" MaxHeight="400" Visibility="{Binding ElementName=CB_STO_DG7, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
+                        <DataGrid Grid.Row="1" x:Name="dg_BaseStorageInfoSeven" AutoGenerateColumns="False" Margin="5,20,5,5" MaxWidth="960" MaxHeight="460" Visibility="{Binding ElementName=CB_STO_DG7, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
                             <DataGrid.Style>
                                 <Style TargetType="DataGrid">
                                     <Style.Triggers>
@@ -4384,7 +4384,7 @@
                             </DataGrid.Columns>
                         </DataGrid>
                         <Label Grid.Row="1" Grid.ColumnSpan="2" x:Name="lb_QuorumInfoSeven" Content="Quorum Information" Visibility="{Binding ElementName=CB_STO_DG7, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}" Style="{StaticResource MainLabelStyle}" Margin="2,5,0,5"/>
-                        <DataGrid Grid.Row="1" x:Name="dg_IPQuorumInfoSeven" AutoGenerateColumns="False" Margin="5" MaxHeight="400" Visibility="{Binding ElementName=CB_STO_DG7, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
+                        <DataGrid Grid.Row="1" x:Name="dg_IPQuorumInfoSeven" AutoGenerateColumns="False" Margin="5" MaxWidth="960" MaxHeight="460" Visibility="{Binding ElementName=CB_STO_DG7, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
                             <DataGrid.Style>
                                 <Style TargetType="DataGrid">
                                     <Style.Triggers>
@@ -4417,7 +4417,7 @@
                                 <DataGridTextColumn Width="auto" Header="Site Name" Binding ="{Binding SiteName}" IsReadOnly="True"/>
                             </DataGrid.Columns> 
                         </DataGrid>
-                        <DataGrid Grid.Row="1" x:Name="dg_BaseStorageInfoEight" AutoGenerateColumns="False" Margin="5,20,5,5" MaxHeight="400" Visibility="{Binding ElementName=CB_STO_DG8, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
+                        <DataGrid Grid.Row="1" x:Name="dg_BaseStorageInfoEight" AutoGenerateColumns="False" Margin="5,20,5,5" MaxWidth="960" MaxHeight="460" Visibility="{Binding ElementName=CB_STO_DG8, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
                             <DataGrid.Style>
                                 <Style TargetType="DataGrid">
                                     <Style.Triggers>
@@ -4476,7 +4476,7 @@
                             </DataGrid.Columns>
                         </DataGrid>
                         <Label Grid.Row="1" Grid.ColumnSpan="2" x:Name="lb_QuorumInfoEight" Content="Quorum Information" Visibility="{Binding ElementName=CB_STO_DG8, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}" Style="{StaticResource MainLabelStyle}" Margin="2,5,0,5"/>
-                        <DataGrid Grid.Row="1" x:Name="dg_IPQuorumInfoEight" AutoGenerateColumns="False" Margin="5" MaxHeight="400" Visibility="{Binding ElementName=CB_STO_DG8, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
+                        <DataGrid Grid.Row="1" x:Name="dg_IPQuorumInfoEight" AutoGenerateColumns="False" Margin="5" MaxWidth="960" MaxHeight="460" Visibility="{Binding ElementName=CB_STO_DG8, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
                             <DataGrid.Style>
                                 <Style TargetType="DataGrid">
                                     <Style.Triggers>
@@ -4522,7 +4522,7 @@
                         <Label Grid.Row="0" Grid.ColumnSpan="2" x:Name="lb_FCPortErrorInfo" Content="" Visibility="Collapsed" Style="{StaticResource MainLabelStyle}" Margin="2,5,0,5"/>
                         </StackPanel>
                         <StackPanel Orientation="Vertical" Grid.Row="1">
-                        <DataGrid Grid.Row="1" Grid.Column="1" x:Name="dg_FCPortInfoOne" AutoGenerateColumns="False" Margin="5" MaxHeight="400" Visibility="{Binding ElementName=CB_STO_DG1, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
+                        <DataGrid Grid.Row="1" Grid.Column="1" x:Name="dg_FCPortInfoOne" AutoGenerateColumns="False" Margin="5" MaxWidth="960" MaxHeight="480" Visibility="{Binding ElementName=CB_STO_DG1, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
                             <DataGrid.Style>
                                 <Style TargetType="DataGrid">
                                     <Style.Triggers>
@@ -4617,7 +4617,7 @@
                                 </DataGridTextColumn>
                             </DataGrid.Columns>
                         </DataGrid>
-                        <DataGrid Grid.Row="1" Grid.Column="1" x:Name="dg_FCPortInfoTwo" AutoGenerateColumns="False" Margin="5,20,5,5" MaxHeight="400" Visibility="{Binding ElementName=CB_STO_DG2, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
+                        <DataGrid Grid.Row="1" Grid.Column="1" x:Name="dg_FCPortInfoTwo" AutoGenerateColumns="False" Margin="5,20,5,5" MaxWidth="960" MaxHeight="480" Visibility="{Binding ElementName=CB_STO_DG2, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
                             <DataGrid.Style>
                                 <Style TargetType="DataGrid">
                                     <Style.Triggers>
@@ -4712,7 +4712,7 @@
                                 </DataGridTextColumn>
                             </DataGrid.Columns>
                         </DataGrid>
-                        <DataGrid Grid.Row="1" Grid.Column="1" x:Name="dg_FCPortInfoThree" AutoGenerateColumns="False" Margin="5,20,5,5" MaxHeight="400" Visibility="{Binding ElementName=CB_STO_DG3, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
+                        <DataGrid Grid.Row="1" Grid.Column="1" x:Name="dg_FCPortInfoThree" AutoGenerateColumns="False" Margin="5,20,5,5" MaxWidth="960" MaxHeight="480" Visibility="{Binding ElementName=CB_STO_DG3, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
                             <DataGrid.Style>
                                 <Style TargetType="DataGrid">
                                     <Style.Triggers>
@@ -4807,7 +4807,7 @@
                                 </DataGridTextColumn>
                             </DataGrid.Columns>
                         </DataGrid>
-                        <DataGrid Grid.Row="1" Grid.Column="1" x:Name="dg_FCPortInfoFour" AutoGenerateColumns="False" Margin="5,20,5,5" MaxHeight="400" Visibility="{Binding ElementName=CB_STO_DG4, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
+                        <DataGrid Grid.Row="1" Grid.Column="1" x:Name="dg_FCPortInfoFour" AutoGenerateColumns="False" Margin="5,20,5,5" MaxWidth="960" MaxHeight="480" Visibility="{Binding ElementName=CB_STO_DG4, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
                             <DataGrid.Style>
                                 <Style TargetType="DataGrid">
                                     <Style.Triggers>
@@ -4902,7 +4902,7 @@
                                 </DataGridTextColumn>
                             </DataGrid.Columns>
                         </DataGrid>
-                        <DataGrid Grid.Row="1" Grid.Column="1" x:Name="dg_FCPortInfoFive" AutoGenerateColumns="False" Margin="5,20,5,5" MaxHeight="400" Visibility="{Binding ElementName=CB_STO_DG5, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
+                        <DataGrid Grid.Row="1" Grid.Column="1" x:Name="dg_FCPortInfoFive" AutoGenerateColumns="False" Margin="5,20,5,5" MaxWidth="960" MaxHeight="480" Visibility="{Binding ElementName=CB_STO_DG5, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
                             <DataGrid.Style>
                                 <Style TargetType="DataGrid">
                                     <Style.Triggers>
@@ -4997,7 +4997,7 @@
                                 </DataGridTextColumn>
                             </DataGrid.Columns>
                         </DataGrid>
-                        <DataGrid Grid.Row="1" Grid.Column="1" x:Name="dg_FCPortInfoSix" AutoGenerateColumns="False" Margin="5,20,5,5" MaxHeight="400" Visibility="{Binding ElementName=CB_STO_DG6, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
+                        <DataGrid Grid.Row="1" Grid.Column="1" x:Name="dg_FCPortInfoSix" AutoGenerateColumns="False" Margin="5,20,5,5" MaxWidth="960" MaxHeight="480" Visibility="{Binding ElementName=CB_STO_DG6, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
                             <DataGrid.Style>
                                 <Style TargetType="DataGrid">
                                     <Style.Triggers>
@@ -5092,7 +5092,7 @@
                                 </DataGridTextColumn>
                             </DataGrid.Columns>
                         </DataGrid>
-                        <DataGrid Grid.Row="1" Grid.Column="1" x:Name="dg_FCPortInfoSeven" AutoGenerateColumns="False" Margin="5,20,5,5" MaxHeight="400" Visibility="{Binding ElementName=CB_STO_DG7, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
+                        <DataGrid Grid.Row="1" Grid.Column="1" x:Name="dg_FCPortInfoSeven" AutoGenerateColumns="False" Margin="5,20,5,5" MaxWidth="960" MaxHeight="480" Visibility="{Binding ElementName=CB_STO_DG7, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
                             <DataGrid.Style>
                                 <Style TargetType="DataGrid">
                                     <Style.Triggers>
@@ -5187,7 +5187,7 @@
                                 </DataGridTextColumn>
                             </DataGrid.Columns>
                         </DataGrid>
-                        <DataGrid Grid.Row="1" Grid.Column="1" x:Name="dg_FCPortInfoEight" AutoGenerateColumns="False" Margin="5,20,5,5" MaxHeight="400" Visibility="{Binding ElementName=CB_STO_DG8, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
+                        <DataGrid Grid.Row="1" Grid.Column="1" x:Name="dg_FCPortInfoEight" AutoGenerateColumns="False" Margin="5,20,5,5" MaxWidth="960" MaxHeight="480" Visibility="{Binding ElementName=CB_STO_DG8, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
                             <DataGrid.Style>
                                 <Style TargetType="DataGrid">
                                     <Style.Triggers>
@@ -5499,7 +5499,7 @@
                         <Label Grid.Row="0" Content="" Visibility="Collapsed" Style="{StaticResource MainLabelStyle}" Margin="2,5,0,5"/>
                         </StackPanel>
                         <StackPanel Orientation="Vertical" Grid.Row="1">
-                        <DataGrid Grid.Row="1" x:Name="dg_ExpandMDiskInfoOne" AutoGenerateColumns="False" Margin="5" MaxHeight="400" Visibility="{Binding ElementName=CB_STO_DG1, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
+                        <DataGrid Grid.Row="1" x:Name="dg_ExpandMDiskInfoOne" AutoGenerateColumns="False" Margin="5" MaxWidth="960" MaxHeight="480" Visibility="{Binding ElementName=CB_STO_DG1, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
                             <DataGrid.Style>
                                 <Style TargetType="DataGrid">
                                     <Style.Triggers>
@@ -5531,7 +5531,7 @@
                                 <DataGridTextColumn Width="auto" Header="UnMap" Binding ="{Binding unmap}" IsReadOnly="True"/> 
                             </DataGrid.Columns>
                         </DataGrid>
-                        <DataGrid Grid.Row="1" x:Name="dg_ExpandVolumeInfoOne" AutoGenerateColumns="False" Margin="5" MaxHeight="400" Visibility="{Binding ElementName=CB_STO_DG1, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
+                        <DataGrid Grid.Row="1" x:Name="dg_ExpandVolumeInfoOne" AutoGenerateColumns="False" Margin="5" MaxWidth="960" MaxHeight="480" Visibility="{Binding ElementName=CB_STO_DG1, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
                             <DataGrid.Style>
                                 <Style TargetType="DataGrid">
                                     <Style.Triggers>
@@ -5554,7 +5554,7 @@
                                 <DataGridTextColumn Width="auto" Header="Site HAType" Binding ="{Binding HAType}" IsReadOnly="True"/>
                             </DataGrid.Columns> 
                         </DataGrid>
-                        <DataGrid Grid.Row="1" x:Name="dg_ExpandMDiskInfoTwo" AutoGenerateColumns="False" Margin="5,20,5,5" MaxHeight="400" Visibility="{Binding ElementName=CB_STO_DG2, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
+                        <DataGrid Grid.Row="1" x:Name="dg_ExpandMDiskInfoTwo" AutoGenerateColumns="False" Margin="5,20,5,5" MaxWidth="960" MaxHeight="480" Visibility="{Binding ElementName=CB_STO_DG2, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
                             <DataGrid.Style>
                                 <Style TargetType="DataGrid">
                                     <Style.Triggers>
@@ -5586,7 +5586,7 @@
                                 <DataGridTextColumn Width="auto" Header="UnMap" Binding ="{Binding unmap}" IsReadOnly="True"/> 
                             </DataGrid.Columns>
                         </DataGrid>
-                        <DataGrid Grid.Row="1" x:Name="dg_ExpandVolumeInfoTwo" AutoGenerateColumns="False" Margin="5" MaxHeight="400" Visibility="{Binding ElementName=CB_STO_DG2, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
+                        <DataGrid Grid.Row="1" x:Name="dg_ExpandVolumeInfoTwo" AutoGenerateColumns="False" Margin="5" MaxWidth="960" MaxHeight="480" Visibility="{Binding ElementName=CB_STO_DG2, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
                             <DataGrid.Style>
                                 <Style TargetType="DataGrid">
                                     <Style.Triggers>
@@ -5609,7 +5609,7 @@
                                 <DataGridTextColumn Width="auto" Header="Site HAType" Binding ="{Binding HAType}" IsReadOnly="True"/>
                             </DataGrid.Columns> 
                         </DataGrid>
-                        <DataGrid Grid.Row="1" x:Name="dg_ExpandMDiskInfoThree" AutoGenerateColumns="False" Margin="5,20,5,5" MaxHeight="400" Visibility="{Binding ElementName=CB_STO_DG3, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
+                        <DataGrid Grid.Row="1" x:Name="dg_ExpandMDiskInfoThree" AutoGenerateColumns="False" Margin="5,20,5,5" MaxWidth="960" MaxHeight="480" Visibility="{Binding ElementName=CB_STO_DG3, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
                             <DataGrid.Style>
                                 <Style TargetType="DataGrid">
                                     <Style.Triggers>
@@ -5641,7 +5641,7 @@
                                 <DataGridTextColumn Width="auto" Header="UnMap" Binding ="{Binding unmap}" IsReadOnly="True"/> 
                             </DataGrid.Columns>
                         </DataGrid>
-                        <DataGrid Grid.Row="1" x:Name="dg_ExpandVolumeInfoThree" AutoGenerateColumns="False" Margin="5" MaxHeight="400" Visibility="{Binding ElementName=CB_STO_DG3, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
+                        <DataGrid Grid.Row="1" x:Name="dg_ExpandVolumeInfoThree" AutoGenerateColumns="False" Margin="5" MaxWidth="960" MaxHeight="480" Visibility="{Binding ElementName=CB_STO_DG3, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
                             <DataGrid.Style>
                                 <Style TargetType="DataGrid">
                                     <Style.Triggers>
@@ -5664,7 +5664,7 @@
                                 <DataGridTextColumn Width="auto" Header="Site HAType" Binding ="{Binding HAType}" IsReadOnly="True"/>
                             </DataGrid.Columns> 
                         </DataGrid>
-                        <DataGrid Grid.Row="1" x:Name="dg_ExpandMDiskInfoFour" AutoGenerateColumns="False" Margin="5,20,5,5" MaxHeight="400" Visibility="{Binding ElementName=CB_STO_DG4, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
+                        <DataGrid Grid.Row="1" x:Name="dg_ExpandMDiskInfoFour" AutoGenerateColumns="False" Margin="5,20,5,5" MaxWidth="960" MaxHeight="480" Visibility="{Binding ElementName=CB_STO_DG4, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
                             <DataGrid.Style>
                                 <Style TargetType="DataGrid">
                                     <Style.Triggers>
@@ -5696,7 +5696,7 @@
                                 <DataGridTextColumn Width="auto" Header="UnMap" Binding ="{Binding unmap}" IsReadOnly="True"/> 
                             </DataGrid.Columns>
                         </DataGrid>
-                        <DataGrid Grid.Row="1" x:Name="dg_ExpandVolumeInfoFour" AutoGenerateColumns="False" Margin="5" MaxHeight="400" Visibility="{Binding ElementName=CB_STO_DG4, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
+                        <DataGrid Grid.Row="1" x:Name="dg_ExpandVolumeInfoFour" AutoGenerateColumns="False" Margin="5" MaxWidth="960" MaxHeight="480" Visibility="{Binding ElementName=CB_STO_DG4, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
                             <DataGrid.Style>
                                 <Style TargetType="DataGrid">
                                     <Style.Triggers>
@@ -5719,7 +5719,7 @@
                                 <DataGridTextColumn Width="auto" Header="Site HAType" Binding ="{Binding HAType}" IsReadOnly="True"/>
                             </DataGrid.Columns> 
                         </DataGrid>
-                        <DataGrid Grid.Row="1" x:Name="dg_ExpandMDiskInfoFive" AutoGenerateColumns="False" Margin="5" MaxHeight="400" Visibility="{Binding ElementName=CB_STO_DG5, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
+                        <DataGrid Grid.Row="1" x:Name="dg_ExpandMDiskInfoFive" AutoGenerateColumns="False" Margin="5" MaxWidth="960" MaxHeight="480" Visibility="{Binding ElementName=CB_STO_DG5, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
                             <DataGrid.Style>
                                 <Style TargetType="DataGrid">
                                     <Style.Triggers>
@@ -5751,7 +5751,7 @@
                                 <DataGridTextColumn Width="auto" Header="UnMap" Binding ="{Binding unmap}" IsReadOnly="True"/> 
                             </DataGrid.Columns>
                         </DataGrid>
-                        <DataGrid Grid.Row="1" x:Name="dg_ExpandVolumeInfoFive" AutoGenerateColumns="False" Margin="5" MaxHeight="400" Visibility="{Binding ElementName=CB_STO_DG5, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
+                        <DataGrid Grid.Row="1" x:Name="dg_ExpandVolumeInfoFive" AutoGenerateColumns="False" Margin="5" MaxWidth="960" MaxHeight="480" Visibility="{Binding ElementName=CB_STO_DG5, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
                             <DataGrid.Style>
                                 <Style TargetType="DataGrid">
                                     <Style.Triggers>
@@ -5775,7 +5775,7 @@
                                 <DataGridTextColumn Width="auto" Header="Site HAType" Binding ="{Binding HAType}" IsReadOnly="True"/>
                             </DataGrid.Columns> 
                         </DataGrid>
-                        <DataGrid Grid.Row="1" x:Name="dg_ExpandMDiskInfoSix" AutoGenerateColumns="False" Margin="5,20,5,5" MaxHeight="400" Visibility="{Binding ElementName=CB_STO_DG6, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
+                        <DataGrid Grid.Row="1" x:Name="dg_ExpandMDiskInfoSix" AutoGenerateColumns="False" Margin="5,20,5,5" MaxWidth="960" MaxHeight="480" Visibility="{Binding ElementName=CB_STO_DG6, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
                             <DataGrid.Style>
                                 <Style TargetType="DataGrid">
                                     <Style.Triggers>
@@ -5807,7 +5807,7 @@
                                 <DataGridTextColumn Width="auto" Header="UnMap" Binding ="{Binding unmap}" IsReadOnly="True"/> 
                             </DataGrid.Columns>
                         </DataGrid>
-                        <DataGrid Grid.Row="1" x:Name="dg_ExpandVolumeInfoSix" AutoGenerateColumns="False" Margin="5" MaxHeight="400" Visibility="{Binding ElementName=CB_STO_DG6, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
+                        <DataGrid Grid.Row="1" x:Name="dg_ExpandVolumeInfoSix" AutoGenerateColumns="False" Margin="5" MaxWidth="960" MaxHeight="480" Visibility="{Binding ElementName=CB_STO_DG6, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
                             <DataGrid.Style>
                                 <Style TargetType="DataGrid">
                                     <Style.Triggers>
@@ -5830,7 +5830,7 @@
                                 <DataGridTextColumn Width="auto" Header="Site HAType" Binding ="{Binding HAType}" IsReadOnly="True"/>
                             </DataGrid.Columns> 
                         </DataGrid>
-                        <DataGrid Grid.Row="1" x:Name="dg_ExpandMDiskInfoSeven" AutoGenerateColumns="False" Margin="5,20,5,5" MaxHeight="400" Visibility="{Binding ElementName=CB_STO_DG7, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
+                        <DataGrid Grid.Row="1" x:Name="dg_ExpandMDiskInfoSeven" AutoGenerateColumns="False" Margin="5,20,5,5" MaxWidth="960" MaxHeight="480" Visibility="{Binding ElementName=CB_STO_DG7, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
                             <DataGrid.Style>
                                 <Style TargetType="DataGrid">
                                     <Style.Triggers>
@@ -5862,7 +5862,7 @@
                                 <DataGridTextColumn Width="auto" Header="UnMap" Binding ="{Binding unmap}" IsReadOnly="True"/> 
                             </DataGrid.Columns>
                         </DataGrid>
-                        <DataGrid Grid.Row="1" x:Name="dg_ExpandVolumeInfoSeven" AutoGenerateColumns="False" Margin="5" MaxHeight="400" Visibility="{Binding ElementName=CB_STO_DG7, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
+                        <DataGrid Grid.Row="1" x:Name="dg_ExpandVolumeInfoSeven" AutoGenerateColumns="False" Margin="5" MaxWidth="960" MaxHeight="480" Visibility="{Binding ElementName=CB_STO_DG7, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
                             <DataGrid.Style>
                                 <Style TargetType="DataGrid">
                                     <Style.Triggers>
@@ -5885,7 +5885,7 @@
                                 <DataGridTextColumn Width="auto" Header="Site HAType" Binding ="{Binding HAType}" IsReadOnly="True"/>
                             </DataGrid.Columns> 
                         </DataGrid>
-                        <DataGrid Grid.Row="1" x:Name="dg_ExpandMDiskInfoEight" AutoGenerateColumns="False" Margin="5,20,5,5" MaxHeight="400" Visibility="{Binding ElementName=CB_STO_DG8, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
+                        <DataGrid Grid.Row="1" x:Name="dg_ExpandMDiskInfoEight" AutoGenerateColumns="False" Margin="5,20,5,5" MaxWidth="960" MaxHeight="480" Visibility="{Binding ElementName=CB_STO_DG8, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
                             <DataGrid.Style>
                                 <Style TargetType="DataGrid">
                                     <Style.Triggers>
@@ -5917,7 +5917,7 @@
                                 <DataGridTextColumn Width="auto" Header="UnMap" Binding ="{Binding unmap}" IsReadOnly="True"/> 
                             </DataGrid.Columns>
                         </DataGrid>
-                        <DataGrid Grid.Row="1" x:Name="dg_ExpandVolumeInfoEight" AutoGenerateColumns="False" Margin="5" MaxHeight="400" Visibility="{Binding ElementName=CB_STO_DG8, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
+                        <DataGrid Grid.Row="1" x:Name="dg_ExpandVolumeInfoEight" AutoGenerateColumns="False" Margin="5" MaxWidth="960" MaxHeight="480" Visibility="{Binding ElementName=CB_STO_DG8, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
                             <DataGrid.Style>
                                 <Style TargetType="DataGrid">
                                     <Style.Triggers>
