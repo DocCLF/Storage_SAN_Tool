@@ -3,13 +3,68 @@
 All notable changes to this project will be documented in this file.
 
 ### Unreleased
-- Storage Host WWPN overview
+- Performance improved
 - Storage RC and FC 
-- Stoarge Auditlog
-- Storage Stats
-- Storage Revision of the Storagehealthcheck
 - Support for Virtual Fabrics
 - Small SAN Healthcheck
+- Small improvements at Storage Healthcheck
+- improvements at SSH-Client using
+
+# [v1.2.0] - 2025-tbd
+### Added
+- FOS Sensor BasicInfo
+- FOS SFP BasicDetails
+- FOS an info that admin rights are required for Statsclear
+- IBM Storage Security check
+- SSH-Agent and Key Support at Settings Panel
+- IBM FCPort Info with Storage WWPN and Host login overview
+- IBM AuditLog
+- IBM Clear Dumps
+- IBM Storage Base information (this function must be confirmed for a svc-cluster by the check in the first line of the settings panel, the default setting is FlashSystems)
+- IBM Storage replication policies information on the system (Important this is only possible with IBM Spectrum Virtualize software 8.6.x)
+- IBM Storage Volume replication information for a volume group (Important this is only possible with IBM Spectrum Virtualize software 8.5.x)
+- IBM MDiskInfo as an stand-alone function to remain flexible for further developments
+- IBM UserInfo as an stand-alone function to remain flexible for further developments
+- IBM VolumeInfo as an stand-alone function to remain flexible for further developments
+- IBM DriveFirmware Check (Phase One)
+- IBM Storage Virtualize Family of Products Software Check (currently only LTS, with start at 8.4.x)
+- Message Box for a short overview "whats goning on"
+- Clear Filter at IBM HostVolumeMap 
+- Tooltips for the tables and columns where it makes sense.
+- give some tables a color
+
+### Fixed
+- Regex error that was sometimes triggered when no host cluster is configured. 
+- DriveInfo the message that the SVC has no drives was not displayed
+- SVC IP CheckBox setting was not exported
+- FOS SFP BasicDetails Status View
+- Temp and Export File-Locations
+
+### Changed
+- GUI from Storage Healthcheck compl. redesigned 
+- Credentials Export from *.csv to *.xml
+- Number of possible devices increased from 4 to 8 for Storage and SAN
+- Tool structure completely redesigned to make it easier to add new functions
+- IBM GUI from IBM Spectrum Virtualize Panel, due to the new possibilities, a breakdown by software version has now been made.
+- FOS PortBufferShow from Listview to Datagrid
+- FOS Add a Information that shows a Info for StatsClear Func
+- The control function of the storage health checks has been completely revised to be more flexible for later developments.
+- Tooltips adjusted for most buttons.
+- DriveInfo shows a Information if the SVC Checkbox is checked
+- View of Host Volume Map Info
+- The Filter placement of Host Volume Map Info
+- Some Colors
+- Some other annoying GUI Bugs
+
+### Removed
+- try catch form DriveInfo Func
+- some unnecessary array creations
+- some unnecessary Write-Host creations
+- Code clean up
+
+### Known Bugs
+- Some Problems with special characters like *\~;#%?.:@/ in Password content
+
 
 # [v1.1.1] - 2024-09-27
 ### Added

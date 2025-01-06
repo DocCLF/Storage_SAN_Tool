@@ -1,0 +1,4 @@
+DeviceLog Folder here you will find all exports of the devices' Healtcheck files as default!
+Es ist nicht öglich immer in den logfolder hier zu speichern daher muss dies geprüft und dann ggf. eine alternative gesucht werden.
+es sollte hier verschiedenste Logs geben die über den SST_ToolMessageCollector abgeleitet werden könnten.
+bsp.: Storage, san, tool(settings), gui
