@@ -50,7 +50,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="auto" />
             <RowDefinition Height="*" />
-            <RowDefinition Height="*" />
+            
         </Grid.RowDefinitions>
         <StackPanel Grid.Column="0" Grid.RowSpan="4" >
         <GroupBox Header="For all Versions"  HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,10,0,0">
@@ -164,9 +164,8 @@
                 <CheckBox x:Name="CB_STO_DG8" VerticalContentAlignment="Center" IsChecked="False" Margin="0,7,10,5" Visibility="Collapsed"/>
             </StackPanel>
         </GroupBox>
-        <GroupBox Grid.Column="1" Grid.Row="1" Header="Results" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,10,10,10" >
-            <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" >
-                <Grid>
+        <ScrollViewer Grid.Column="1" Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
+            <Grid>
                 <StackPanel x:Name="stp_StorageEventLog" Orientation="Vertical" Margin="2" Visibility="{Binding ElementName=btn_IBM_Eventlog, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
                     <Label x:Name="lb_StoEventLogOne" Content="Device 1" Visibility="{Binding ElementName=CB_STO_DG1, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}" FontSize="12" Style="{StaticResource MainLabelStyle}" Margin="2,5,0,5" />   
                     <DataGrid x:Name="lb_StorageEventLogOne" AutoGenerateColumns="False" Margin="5,0,5,5" MaxHeight="480" Visibility="{Binding ElementName=CB_STO_DG1, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
@@ -5489,7 +5488,7 @@
                         </StackPanel>  
                     </Grid>
                 </StackPanel> 
-                <StackPanel  x:Name="stp_PoolVolumeInfo" Orientation="Horizontal" Margin="2" Visibility="{Binding ElementName=btn_IBM_PoolVolumeInfo, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
+                <StackPanel x:Name="stp_PoolVolumeInfo" Orientation="Horizontal" Margin="2" Visibility="{Binding ElementName=btn_IBM_PoolVolumeInfo, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="auto" />
@@ -5943,8 +5942,7 @@
                         </StackPanel>  
                     </Grid>
                 </StackPanel> 
-                </Grid> 
-            </ScrollViewer>
-        </GroupBox>
+            </Grid>
+        </ScrollViewer >
     </Grid>
 </UserControl>

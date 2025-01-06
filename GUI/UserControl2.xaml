@@ -50,7 +50,6 @@
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto" />
-            <RowDefinition Height="auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <GroupBox Grid.Column="0" Grid.RowSpan="4" Header="Actions"  HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,10,0,0">
@@ -137,8 +136,7 @@
                 <CheckBox x:Name="CB_SAN_DG8" VerticalContentAlignment="Center" IsChecked="False" Margin="0,7,10,5" Visibility="Collapsed"/>
             </StackPanel>
         </GroupBox>
-        <GroupBox Grid.Column="1" Grid.Row="1" Header="Resaults"  HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,10,0,0">
-            <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" >
+        <ScrollViewer Grid.Column="1" Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
             <Grid>
             <StackPanel x:Name="stp_sanBasicSwitchInfo" Margin="2" Visibility="{Binding ElementName=btn_FOS_BasicSwitchInfo, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
                 <Grid>
@@ -433,19 +431,19 @@
                     </Grid.RowDefinitions>
                     <StackPanel Grid.Row="0" Grid.Column="0" Orientation="vertical" Visibility="{Binding ElementName=CB_SAN_DG1, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
                         <Label x:Name="LB_SANInfoOne" Content="Switch 1" Visibility="Collapsed"/>
-                        <TextBox HorizontalAlignment="Left" TextWrapping="WrapWithOverflow" x:Name="TB_SANInfoOne" Margin="5,0,5,5" IsReadOnly="True" Visibility="Collapsed" MaxHeight="600" MaxWidth="300"/>
+                        <TextBox HorizontalAlignment="Left" TextWrapping="WrapWithOverflow" x:Name="TB_SANInfoOne" Margin="5,0,5,5" IsReadOnly="True" Visibility="Collapsed" MaxHeight="600" MaxWidth="400"/>
                     </StackPanel>
                     <StackPanel Grid.Row="0" Grid.Column="1" Orientation="vertical" Visibility="{Binding ElementName=CB_SAN_DG2, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
                         <Label x:Name="LB_SANInfoTwo" Content="Switch 2" Visibility="Collapsed"/>
-                        <TextBox HorizontalAlignment="Left" TextWrapping="WrapWithOverflow" x:Name="TB_SANInfoTwo" Margin="5,0,5,5" IsReadOnly="True" Visibility="Collapsed" MaxHeight="600" MaxWidth="300"/>
+                        <TextBox HorizontalAlignment="Left" TextWrapping="WrapWithOverflow" x:Name="TB_SANInfoTwo" Margin="5,0,5,5" IsReadOnly="True" Visibility="Collapsed" MaxHeight="600" MaxWidth="400"/>
                     </StackPanel>
                     <StackPanel Grid.Row="0" Grid.Column="2" Orientation="vertical" Visibility="{Binding ElementName=CB_SAN_DG3, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
                         <Label x:Name="LB_SANInfoThree" Content="Switch 3" Visibility="Collapsed" />
-                        <TextBox HorizontalAlignment="Left" TextWrapping="WrapWithOverflow" x:Name="TB_SANInfoThree" Margin="5,0,5,5" IsReadOnly="True" Visibility="Collapsed" MaxHeight="600" MaxWidth="300"/>
+                        <TextBox HorizontalAlignment="Left" TextWrapping="WrapWithOverflow" x:Name="TB_SANInfoThree" Margin="5,0,5,5" IsReadOnly="True" Visibility="Collapsed" MaxHeight="600" MaxWidth="400"/>
                     </StackPanel>
                     <StackPanel Grid.Row="1" Grid.Column="0" Orientation="vertical" Visibility="{Binding ElementName=CB_SAN_DG4, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
                         <Label x:Name="LB_SANInfoFour" Content="Switch 4" Visibility="Collapsed"/>
-                        <TextBox HorizontalAlignment="Left" TextWrapping="WrapWithOverflow" x:Name="TB_SANInfoFour" Margin="5,0,5,5" IsReadOnly="True" Visibility="Collapsed" MaxHeight="600" MaxWidth="300">
+                        <TextBox HorizontalAlignment="Left" TextWrapping="WrapWithOverflow" x:Name="TB_SANInfoFour" Margin="5,0,5,5" IsReadOnly="True" Visibility="Collapsed" MaxHeight="600" MaxWidth="400">
                             <TextBox.ToolTip>
                                 <StackPanel>
                                     <Image Source="data\flower.jpg"/>
@@ -456,19 +454,19 @@
                     </StackPanel>
                     <StackPanel Grid.Row="1" Grid.Column="1" Orientation="vertical" Visibility="{Binding ElementName=CB_SAN_DG5, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
                         <Label x:Name="LB_SANInfoFive" Content="Switch 5" Visibility="Collapsed"/>
-                        <TextBox HorizontalAlignment="Left" TextWrapping="WrapWithOverflow" x:Name="TB_SANInfoFive" Margin="5,0,5,5" IsReadOnly="True" Visibility="Collapsed" MaxHeight="600" MaxWidth="300"/>
+                        <TextBox HorizontalAlignment="Left" TextWrapping="WrapWithOverflow" x:Name="TB_SANInfoFive" Margin="5,0,5,5" IsReadOnly="True" Visibility="Collapsed" MaxHeight="600" MaxWidth="400"/>
                     </StackPanel>
                     <StackPanel Grid.Row="1" Grid.Column="2" Orientation="vertical" Visibility="{Binding ElementName=CB_SAN_DG6, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
                         <Label x:Name="LB_SANInfoSix" Content="Switch 6" Visibility="Collapsed"/>
-                        <TextBox HorizontalAlignment="Left" TextWrapping="WrapWithOverflow" x:Name="TB_SANInfoSix" Margin="5,0,5,5" IsReadOnly="True" Visibility="Collapsed" MaxHeight="600" MaxWidth="300"/>
+                        <TextBox HorizontalAlignment="Left" TextWrapping="WrapWithOverflow" x:Name="TB_SANInfoSix" Margin="5,0,5,5" IsReadOnly="True" Visibility="Collapsed" MaxHeight="600" MaxWidth="400"/>
                     </StackPanel>
                     <StackPanel Grid.Row="2" Grid.Column="0" Orientation="vertical" Visibility="{Binding ElementName=CB_SAN_DG7, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
                         <Label x:Name="LB_SANInfoSeven" Content="Switch 7" Visibility="Collapsed" />
-                        <TextBox HorizontalAlignment="Left" TextWrapping="WrapWithOverflow" x:Name="TB_SANInfoSeven" Margin="5,0,5,5" IsReadOnly="True" Visibility="Collapsed" MaxHeight="600" MaxWidth="300"/>
+                        <TextBox HorizontalAlignment="Left" TextWrapping="WrapWithOverflow" x:Name="TB_SANInfoSeven" Margin="5,0,5,5" IsReadOnly="True" Visibility="Collapsed" MaxHeight="600" MaxWidth="400"/>
                     </StackPanel>
                     <StackPanel Grid.Row="2" Grid.Column="1" Orientation="vertical" Visibility="{Binding ElementName=CB_SAN_DG8, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
                         <Label x:Name="LB_SANInfoEight" Content="Switch 8" Visibility="Collapsed"/>
-                        <TextBox HorizontalAlignment="Left" TextWrapping="WrapWithOverflow" x:Name="TB_SANInfoEight" Margin="5,0,5,5" IsReadOnly="True" Visibility="Collapsed" MaxHeight="600" MaxWidth="300"/>
+                        <TextBox HorizontalAlignment="Left" TextWrapping="WrapWithOverflow" x:Name="TB_SANInfoEight" Margin="5,0,5,5" IsReadOnly="True" Visibility="Collapsed" MaxHeight="600" MaxWidth="400"/>
                     </StackPanel>
                 </Grid>
             </StackPanel>
@@ -2940,7 +2938,6 @@
                 </Grid>
             </StackPanel>
             </Grid>
-            </ScrollViewer>
-        </GroupBox>
+        </ScrollViewer >
     </Grid>
 </UserControl>
