@@ -36,7 +36,7 @@ function IBM_StorageSWCheck {
         $PSRootPath = ((([IO.DirectoryInfo] $PSScriptRoot).Parent).Parent).FullName
 
         try {
-            $IBM_LocDateInfo=((((Get-Item -Path $PSRootPath\Resources\IBM_StorageSWCheck*).FullName).TrimStart('$PSScriptRoot\Resources\IBM_StorageSWCheck').TrimEnd('.txt')).Trim())  
+            $IBM_LocDateInfo=((((Get-Item -Path $PSRootPath\Resources\IBM_StorageSWCheck_*).FullName).TrimStart("$PSScriptRoot\Resources\IBM_StorageSWCheck_").TrimEnd('.txt')).Trim())  
         }
         catch {
             <#Do this if a terminating exception happens#>
@@ -58,7 +58,7 @@ function IBM_StorageSWCheck {
             SST_ToolMessageCollector -TD_ToolMSGCollector "There is a problem with the online check of the software status." -TD_ToolMSGType Error
             SST_ToolMessageCollector -TD_ToolMSGCollector "$($_.Exception.Message)" -TD_ToolMSGType Error
             Write-Debug -Message $_.Exception.Message
-            $IBM_WebSpecVirtSWInofs ="nothin in here"
+            $IBM_WebSpecVirtSWInofs ="nothing in here"
         }
         
         Write-Debug -Message "$($IBM_LocDateInfo) - $($IBM_WebDateInfo)"

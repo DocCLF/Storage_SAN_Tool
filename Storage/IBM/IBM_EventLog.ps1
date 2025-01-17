@@ -72,12 +72,12 @@ function IBM_EventLog {
             }
             $TD_EventSplitInfo.Status = ($EventLine|Select-String -Pattern ':(message|monitoring|expired|alert):' -AllMatches).Matches.Groups[1].Value
             $TD_EventSplitInfo.Fixed = ($EventLine|Select-String -Pattern ':(no|yes):' -AllMatches).Matches.Groups[1].Value
-            if(!([String]::IsNullOrEmpty(($EventLine|Select-String -Pattern ':(\d{3,4}|):([a-zA-Z0-9\s-_.,]+)$' -AllMatches).Matches.Groups[1].Value))){
-                $TD_EventSplitInfo.ErrorCode = ($EventLine|Select-String -Pattern ':(\d{3,4}|):([a-zA-Z0-9\s-_.,]+)$' -AllMatches).Matches.Groups[1].Value
+            if(!([String]::IsNullOrEmpty(($EventLine|Select-String -Pattern ':(\d{3,4}|):([a-zA-Z0-9\\-_.,\s]+)$' -AllMatches).Matches.Groups[1].Value))){
+                $TD_EventSplitInfo.ErrorCode = ($EventLine|Select-String -Pattern ':(\d{3,4}|):([a-zA-Z0-9\\-_.,\s]+)$' -AllMatches).Matches.Groups[1].Value
             }else {
                 $TD_EventSplitInfo.ErrorCode = "none"
             }
-            $TD_EventSplitInfo.Description = ($EventLine|Select-String -Pattern '([a-zA-Z0-9\s-_.,]+)$' -AllMatches).Matches.Groups[1].Value
+            $TD_EventSplitInfo.Description = ($EventLine|Select-String -Pattern '([a-zA-Z0-9\\-_.,\s]+)$' -AllMatches).Matches.Groups[1].Value
 
             $TD_EventSplitInfo
 
