@@ -39,114 +39,96 @@ function IBM_DriveFirmwareCheck {
         $PSRootPath = ((([IO.DirectoryInfo] $PSScriptRoot).Parent).Parent).FullName
     }
     
+
     process {
         Write-Debug -Message " $IBM_DriveProdID ------------------------- $IBM_DriveCurrentFW ------------------------ $IBM_ProdMTM "
-        switch ($IBM_ProdMTM) {
-            <# FlashSystem 5x00 Software Levels #>
-            {$_ -like "2077*" -or $_ -like "2078*" -or $_ -like "2072*" -or $_ -like "4680*" -or $_ -like "4662*"} { 
-                $IBM_WebFWInofs = Invoke-WebRequest https://download4.boulder.ibm.com/sar/CMA/SSA/0cm9c/0/
-                $IBM_WebRNName = ($IBM_WebFWInofs.Content| Select-String -Pattern 'IBM_(.*_release_note.txt)' -AllMatches).Matches.Groups[1].Value 
-                if((Get-Item -Path $PSRootPath\Resources\IBM_FlashSystem5x00_and_StorwizeV5000_DRIVES_*).Name -eq "IBM_$($IBM_WebRNName)"){
-                    Write-Debug -Message "$(Get-Item -Path $PSRootPath\Resources\IBM_FlashSystem5x00_and_StorwizeV5000_DRIVES_*) was used"
-                    $IBM_AllotherDrives = Get-Content -Path $PSRootPath\Resources\* -Filter IBM_FlashSystem5x00_and_StorwizeV5000_DRIVES_*
-                    
-                }else{
-                    Remove-Item -Path $PSRootPath\Resources\* -Filter 'IBM_FlashSystem5x00_and_StorwizeV5000_DRIVES_*' -Force
-                    $IBM_WebRNName = ($IBM_WebFWInofs.Content| Select-String -Pattern 'IBM_(.*_release_note.txt)' -AllMatches).Matches.Groups[1].Value
-                    $IBM_UpdateFWDriveFile = Invoke-WebRequest "https://download4.boulder.ibm.com/sar/CMA/SSA/0cm9c/0/IBM_$($IBM_WebRNName)"
-                    $IBM_UpdateFWDriveFile.Content | Out-File -FilePath $PSRootPath\Resources\IBM_$(($IBM_WebFWInofs.Content| Select-String -Pattern 'IBM_(.*)_release_note' -AllMatches).Matches.Groups[1].Value)_release_note.txt
-                    Write-Debug -Message "IBM_$(($IBM_WebFWInofs.Content| Select-String -Pattern 'IBM_(.*)_release_note' -AllMatches).Matches.Groups[1].Value)_release_note.txt was build"
-                    $IBM_AllotherDrives = Get-Content -Path $PSRootPath\Resources\* -Filter IBM_FlashSystem5x00_and_StorwizeV5000_DRIVES_*
-                    
-                }
-                
-            }
-            <# FlashSystem 7x00 Software Levels #>
-            {$_ -like "2076*" -or $_ -like "4664*" -or $_ -like "4657*"} { 
-                $IBM_WebFWInofs = Invoke-WebRequest https://download4.boulder.ibm.com/sar/CMA/SDA/0cm74/1/
-                $IBM_WebRNName = ($IBM_WebFWInofs.Content| Select-String -Pattern 'IBM_(.*_release_note.txt)' -AllMatches).Matches.Groups[1].Value 
-                if((Get-Item -Path $PSRootPath\Resources\IBM_FlashSystem7x00_and_StorwizeV7000_DRIVES_*).Name -eq "IBM_$($IBM_WebRNName)"){
-                    Write-Debug -Message "$(Get-Item -Path $PSRootPath\Resources\IBM_FlashSystem7x00_and_StorwizeV7000_DRIVES_*) was used"
-                    $IBM_AllotherDrives = Get-Content -Path $PSRootPath\Resources\* -Filter IBM_FlashSystem7x00_and_StorwizeV7000_DRIVES_*
-                    
-                }else{
-                    Remove-Item -Path $PSRootPath\Resources\* -Filter 'IBM_FlashSystem7x00_and_StorwizeV7000_DRIVES_*' -Force
-                    $IBM_WebRNName = ($IBM_WebFWInofs.Content| Select-String -Pattern 'IBM_(.*_release_note.txt)' -AllMatches).Matches.Groups[1].Value
-                    $IBM_UpdateFWDriveFile = Invoke-WebRequest "https://download4.boulder.ibm.com/sar/CMA/SDA/0cm74/1/IBM_$($IBM_WebRNName)"
-                    $IBM_UpdateFWDriveFile.Content | Out-File -FilePath $PSRootPath\Resources\IBM_$(($IBM_WebFWInofs.Content| Select-String -Pattern 'IBM_(.*)_release_note' -AllMatches).Matches.Groups[1].Value)_release_note.txt
-                    Write-Debug -Message "IBM_$(($IBM_WebFWInofs.Content| Select-String -Pattern 'IBM_(.*)_release_note' -AllMatches).Matches.Groups[1].Value)_release_note.txt was build"
-                    $IBM_AllotherDrives = Get-Content -Path $PSRootPath\Resources\* -Filter IBM_FlashSystem7x00_and_StorwizeV7000_DRIVES_*
-                    
-                }
-            }
-            <#  FlashSystem 9x00 Software Levels #>
-            {$_ -like "4666*" -or $_ -like "4983*" -or $_ -like "9846*" -or $_ -like "9848*"} { 
-                $IBM_WebFWInofs = Invoke-WebRequest https://download4.boulder.ibm.com/sar/CMA/SSA/0cm75/1/
-                $IBM_WebRNName = ($IBM_WebFWInofs.Content| Select-String -Pattern 'IBM_(.*_release_note.txt)' -AllMatches).Matches.Groups[1].Value 
-                if((Get-Item -Path $PSRootPath\Resources\IBM_FlashSystem9x00_DRIVES_*).Name -eq "IBM_$($IBM_WebRNName)"){
-                    Write-Debug -Message "$(Get-Item -Path $PSRootPath\Resources\IBM_FlashSystem9x00_DRIVES_*) was used"
-                    $IBM_AllotherDrives = Get-Content -Path $PSRootPath\Resources\* -Filter IBM_FlashSystem9x00_DRIVES_*
-                }else{
-                    Remove-Item -Path $PSRootPath\Resources\* -Filter 'IBM_FlashSystem9x00_DRIVES_*' -Force
-                    $IBM_WebRNName = ($IBM_WebFWInofs.Content| Select-String -Pattern 'IBM_(.*_release_note.txt)' -AllMatches).Matches.Groups[1].Value
-                    $IBM_UpdateFWDriveFile = Invoke-WebRequest "https://download4.boulder.ibm.com/sar/CMA/SSA//0cm75/1/IBM_$($IBM_WebRNName)"
-                    $IBM_UpdateFWDriveFile.Content | Out-File -FilePath $PSRootPath\Resources\IBM_$(($IBM_WebFWInofs.Content| Select-String -Pattern 'IBM_(.*)_release_note' -AllMatches).Matches.Groups[1].Value)_release_note.txt
-                    Write-Debug -Message "IBM_$(($IBM_WebFWInofs.Content| Select-String -Pattern 'IBM_(.*)_release_note' -AllMatches).Matches.Groups[1].Value)_release_note.txt was build"
-                    $IBM_AllotherDrives = Get-Content -Path $PSRootPath\Resources\* -Filter IBM_FlashSystem9x00_DRIVES_*
-                    
-                }
-            }
-            <#  FlashSystem 9x00 Software Levels #>
-            {$_ -like "2145*" -or $_ -like "2147*"} { 
-                $IBM_WebFWInofs = Invoke-WebRequest https://download4.boulder.ibm.com/sar/CMA/SSA/0cm78/1/
-                $IBM_WebRNName = ($IBM_WebFWInofs.Content| Select-String -Pattern 'IBM_(.*_release_note.txt)' -AllMatches).Matches.Groups[1].Value 
-                if((Get-Item -Path $PSScriptRoot\Resources\IBM_SVC_DRIVES_*).Name -eq "IBM_$($IBM_WebRNName)"){
-                    Write-Debug -Message "$(Get-Item -Path $PSRootPath\Resources\IBM_SVC_DRIVES_*) was used"
-                    $IBM_AllotherDrives = Get-Content -Path $PSRootPath\Resources\* -Filter IBM_SVC_DRIVES_*
-                    
-                }else{
-                    Remove-Item -Path $PSRootPath\Resources\* -Filter 'IBM_SVC_DRIVES_*' -Force
-                    $IBM_WebRNName = ($IBM_WebFWInofs.Content| Select-String -Pattern 'IBM_(.*_release_note.txt)' -AllMatches).Matches.Groups[1].Value
-                    $IBM_UpdateFWDriveFile = Invoke-WebRequest "https://download4.boulder.ibm.com/sar/CMA/SSA//0cm78/1/IBM_$($IBM_WebRNName)"
-                    $IBM_UpdateFWDriveFile.Content | Out-File -FilePath $PSRootPath\Resources\IBM_$(($IBM_WebFWInofs.Content| Select-String -Pattern 'IBM_(.*)_release_note' -AllMatches).Matches.Groups[1].Value)_release_note.txt
-                    Write-Debug -Message "IBM_$(($IBM_WebFWInofs.Content| Select-String -Pattern 'IBM_(.*)_release_note' -AllMatches).Matches.Groups[1].Value)_release_note.txt was build"
-                    $IBM_AllotherDrives = Get-Content -Path $PSRootPath\Resources\* -Filter IBM_SVC_DRIVES_*
-                   
-                }
-            }
-            Default {SST_ToolMessageCollector -TD_ToolMSGCollector "There is a problem with the online check of the drive software status for $IBM_ProdMTM" -TD_ToolMSGType Debug}
+
+        try {
+            $IBM_LocDateInfo=((((Get-Item -Path $PSRootPath\Resources\IBMFlashSystem_$($IBM_DriveProdID)_DRIVES_*).FullName).TrimStart("$PSScriptRoot\Resources\IBMFlashSystem_$($IBM_DriveProdID)_DRIVES_").TrimEnd('.txt')).Trim())  
         }
-        
-        $IBM_LatestDriveFW = $null
-        $IBM_LatestDriveFW = foreach($IBM_AllotherDrive in $IBM_AllotherDrives) {
-            if(($IBM_DriveProdID) -eq (($IBM_AllotherDrive | Select-String -Pattern '^(([a-zA-Z0-9]+){5,})\s+.*\s+Firmware\sLevel:\s+([a-zA-Z0-9_]+)' -AllMatches).Matches.Groups[1].Value)){
-                
-                $IBM_DriveFWFile = ($IBM_AllotherDrive|Select-String -Pattern '^(([a-zA-Z0-9]+){5,})\s+.*\s+Firmware\sLevel:\s+([a-zA-Z0-9_]+)' -AllMatches).Matches.Groups[3].Value
-                
-                $IBM_DriveFWFile
-                break
-            }
-            if (($IBM_DriveProdID) -eq (($IBM_AllotherDrive | Select-String -Pattern '^([0-9A-Z]+)\s+(\d+_\d+_\d+)' -AllMatches).Matches.Groups[1].Value)){
+        catch {
+            <#Do this if a terminating exception happens#>
+            Write-Debug -Message "Something went wrong"
+            Write-Debug -Message $_.Exception.Message
+            $IBM_LocDateInfo ="01 October 2024"
+        }
 
-                $IBM_DriveFWFile = ($IBM_AllotherDrive|Select-String -Pattern '^([0-9A-Z]+)\s+(\d+_\d+_\d+)' -AllMatches).Matches.Groups[2].Value
-                
-                $IBM_DriveFWFile
-                break
-            }
-            if (($IBM_DriveProdID) -eq (($IBM_AllotherDrive | Select-String -Pattern '^([0-9A-Z]+)\s+([0-9A-Z]+)$' -AllMatches).Matches.Groups[1].Value)){
+        try {
+            $IBM_WebStoDRIVESWInofs = Invoke-WebRequest https://www.ibm.com/support/pages/supported-drive-types-and-firmware-levels-ibm-storage-virtualize-family-products
+            $IBM_WebStoDRIVESWInofs.Content | Out-File -FilePath $PSRootPath\ToolLog\ToolTEMP\IBMFSDriveSWTemp.txt
+            $IBM_WebStoDRIVESWInofsTemp = Get-Content -Path $PSRootPath\ToolLog\ToolTEMP\IBMFSDriveSWTemp.txt
+            $IBM_WebDateInfo = ($IBM_WebStoDRIVESWInofsTemp|Select-String -Pattern '([1-9]+\s[A-Za-z]+\s[0-9]+)' -AllMatches).Matches.Groups[1].Value
+            Remove-Item -Path $PSRootPath\ToolLog\ToolTEMP\IBMFSDriveSWTemp.txt -Force
+        }
+        catch {
+            <#Do this if a terminating exception happens#>
+            Write-Debug -Message "Something went wrong"
+            SST_ToolMessageCollector -TD_ToolMSGCollector "There is a problem with the online check of the software status." -TD_ToolMSGType Error
+            SST_ToolMessageCollector -TD_ToolMSGCollector "$($_.Exception.Message)" -TD_ToolMSGType Error
+            Write-Debug -Message $_.Exception.Message
+            $IBM_WebStoDRIVESWInofs ="nothing in here"
+        }
 
-                $IBM_DriveFWFile = ($IBM_AllotherDrive|Select-String -Pattern '^([0-9A-Z]+)\s+([0-9A-Z]+)$' -AllMatches).Matches.Groups[2].Value
-                
-                $IBM_DriveFWFile
-                break
-            }
+        Write-Debug -Message "$($IBM_LocDateInfo) - $($IBM_WebDateInfo)"
+        if("$($IBM_LocDateInfo)" -ne "$($IBM_WebDateInfo)"){
             
+            0..$IBM_WebStoDRIVESWInofsTemp.count |ForEach-Object {
+                if($IBM_WebStoDRIVESWInofsTemp[$_] -match $IBM_DriveProdID){
+                    $IBM_LocStoDRIVESWInofs = $IBM_WebStoDRIVESWInofsTemp |Select-Object -Skip $_
+                }
+            }
+            $IBM_LocStoDRIVESWInofs = $IBM_LocStoDRIVESWInofs |Select-Object -SkipLast ($IBM_LocStoDRIVESWInofs.Count - 20)
+            $IBM_LocStoDRIVESWInofs | Out-File -FilePath $PSRootPath\Resources\IBMFlashSystem_$($IBM_DriveProdID)_DRIVES_$IBM_WebDateInfo.txt
+            
+        }else {
+            <# Action when all if and elseif conditions are false #>
+            $IBM_LocStoDRIVESWInofs = Get-Content -Path $PSRootPath\Resources\IBMFlashSystem_$($IBM_DriveProdID)_DRIVES_$IBM_WebDateInfo.txt
         }
-        Write-Debug -Message $IBM_LatestDriveFW
-        if([string]::IsNullOrEmpty($IBM_LatestDriveFW)){
-            $IBM_LatestDriveFW = "unknown"
+
+        $IBM_LocSpecVirtSW = $null
+        $IBM_LocSpecVirtSW = "" | Select-Object MinimumPTF,RecommendedPTF,LatestPTF
+        foreach($IBM_LocStoDRIVESWInof in $IBM_LocStoDRIVESWInofs) {
+
+            if(($IBM_LocStoDRIVESWInof|Select-String -Pattern '(\d+_\d+_\d+)' -AllMatches).Matches[0].Value){
+                $IBM_LocFSDriveFW = ($IBM_LocStoDRIVESWInof|Select-String -Pattern '(\d+_\d+_\d+)' -AllMatches).Matches[0].Value
+
+                if([string]::IsNullOrWhiteSpace($IBM_LocSpecVirtSW.MinimumPTF)){$IBM_LocSpecVirtSW.MinimumPTF = $IBM_LocFSDriveFW;continue}
+                if([string]::IsNullOrWhiteSpace($IBM_LocSpecVirtSW.RecommendedPTF)){$IBM_LocSpecVirtSW.RecommendedPTF = $IBM_LocFSDriveFW;continue}
+                if([string]::IsNullOrWhiteSpace($IBM_LocSpecVirtSW.LatestPTF)){$IBM_LocSpecVirtSW.LatestPTF = $IBM_LocFSDriveFW;continue}
+                if(!([string]::IsNullOrWhiteSpace($IBM_LocSpecVirtSW.LatestPTF))){
+                    $IBM_LocSpecVirtSW
+                    break
+                }
+            }
+            if(($IBM_LocStoDRIVESWInof|Select-String -Pattern '>([0-9A-Z]{3,5})<' -AllMatches).Matches.Groups[1].Value){
+                $IBM_LocFSDriveFW = ($IBM_LocStoDRIVESWInof|Select-String -Pattern '>([0-9A-Z]{3,5})<' -AllMatches).Matches.Groups[1].Value
+
+                if([string]::IsNullOrWhiteSpace($IBM_LocSpecVirtSW.MinimumPTF)){$IBM_LocSpecVirtSW.MinimumPTF = $IBM_LocFSDriveFW;continue}
+                if([string]::IsNullOrWhiteSpace($IBM_LocSpecVirtSW.RecommendedPTF)){$IBM_LocSpecVirtSW.RecommendedPTF = $IBM_LocFSDriveFW;continue}
+                #if([string]::IsNullOrWhiteSpace($IBM_LocSpecVirtSW.LatestPTF)){$IBM_LocSpecVirtSW.LatestPTF = $IBM_LocFSDriveFW;continue}
+                if(!([string]::IsNullOrWhiteSpace($IBM_LocSpecVirtSW.RecommendedPTF))){
+                    $IBM_LocSpecVirtSW
+                    break
+                }
+            }
+            if((($IBM_LocStoDRIVESWInof|Select-String -Pattern '>([0-9A-Z]{5,10})<' -AllMatches).Matches.Groups[1].Value)-ne($IBM_DriveProdID)){
+                $IBM_LocFSDriveFW = ($IBM_LocStoDRIVESWInof|Select-String -Pattern '>([0-9A-Z]{5,10})<' -AllMatches).Matches.Groups[1].Value
+
+                if([string]::IsNullOrWhiteSpace($IBM_LocSpecVirtSW.MinimumPTF)){$IBM_LocSpecVirtSW.MinimumPTF = $IBM_LocFSDriveFW;continue}
+                if([string]::IsNullOrWhiteSpace($IBM_LocSpecVirtSW.RecommendedPTF)){$IBM_LocSpecVirtSW.RecommendedPTF = $IBM_LocFSDriveFW;continue}
+                #if([string]::IsNullOrWhiteSpace($IBM_LocSpecVirtSW.LatestPTF)){$IBM_LocSpecVirtSW.LatestPTF = $IBM_LocFSDriveFW;continue}
+                if(!([string]::IsNullOrWhiteSpace($IBM_LocSpecVirtSW.RecommendedPTF))){
+                    $IBM_LocSpecVirtSW
+                    break
+                }
+            }
         }
-        $IBM_DriveFirmwareResult = $IBM_LatestDriveFW
+
+        Write-Debug -Message $IBM_LocSpecVirtSW
+        if([string]::IsNullOrEmpty($IBM_LocSpecVirtSW)){
+            $IBM_LocSpecVirtSW = "unknown"
+        }
+        $IBM_DriveFirmwareResult = $IBM_LocSpecVirtSW.RecommendedPTF
     }
     
     end {
