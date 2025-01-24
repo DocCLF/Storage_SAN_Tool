@@ -154,6 +154,8 @@ $TD_btn_Settings.add_click({
     $TD_UserControlLeftSide.Children.Remove($TD_UserControl3_1)
     $TD_UserContrArea.Children.Remove($TD_UserControl3)
     if($TD_LogoImageSmall.Visibility -eq "hidden"){$TD_LogoImageSmall.Visibility = "visible"}
+    <# Clean all LogFiles if there older than 90 Days #>
+    SST_FileCleanUp
 })
 <# Button Export Settings #>
 $TD_btn_ChangeExportPath.add_click({
@@ -946,7 +948,7 @@ $TD_btn_FilterSANSwShow.Add_Click({
             6 { $FOS_SwitchShow = $TD_DG_SwitchShowSix.ItemsSource }
             7 { $FOS_SwitchShow = $TD_DG_SwitchShowSeven.ItemsSource }
             8 { $FOS_SwitchShow = $TD_DG_SwitchShowEight.ItemsSource }
-            Default {SST_ToolMessageCollector -TD_ToolMSGCollector "Something went wrong at Switchshow" -TD_ToolMSGType Error -TD_NotShown no}
+            Default {SST_ToolMessageCollector -TD_ToolMSGCollector "Something went wrong at Switchshow" -TD_ToolMSGType Error -TD_Shown yes}
         }
         if($FOS_SwitchShow.Count -ne $TD_CollectVolInfo.Count){
             $FOS_SwitchShow = $TD_CollectVolInfo }
@@ -957,7 +959,7 @@ $TD_btn_FilterSANSwShow.Add_Click({
                 "Speed" { [array]$WPF_dataGrid = $FOS_SwitchShow | Where-Object { $_.Speed -Match $filter } }
                 "State" { [array]$WPF_dataGrid = $FOS_SwitchShow | Where-Object { $_.State -Match $filter } }
                 "PortConnect" { [array]$WPF_dataGrid = $FOS_SwitchShow | Where-Object { $_.PortConnect -Match $filter } }
-                Default {SST_ToolMessageCollector -TD_ToolMSGCollector "Something went wrong at Switchshow" -TD_ToolMSGType Error -TD_NotShown no}
+                Default {SST_ToolMessageCollector -TD_ToolMSGCollector "Something went wrong at Switchshow" -TD_ToolMSGType Error -TD_Shown yes}
             }
 
             switch ($TD_SANFilter_DG_Colum) {
@@ -969,12 +971,12 @@ $TD_btn_FilterSANSwShow.Add_Click({
                 6 { $TD_DG_SwitchShowSix.ItemsSource = $WPF_dataGrid }
                 7 { $TD_DG_SwitchShowSeven.ItemsSource = $WPF_dataGrid }
                 8 { $TD_DG_SwitchShowEight.ItemsSource = $WPF_dataGrid }
-                Default {SST_ToolMessageCollector -TD_ToolMSGCollector "Something went wrong at Switchshow" -TD_ToolMSGType Error -TD_NotShown no}
+                Default {SST_ToolMessageCollector -TD_ToolMSGCollector "Something went wrong at Switchshow" -TD_ToolMSGType Error -TD_Shown yes}
             }
         }
     catch {
         <#Do this if a terminating exception happens#>
-        SST_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong, please check the prompt output first and then the log files.") -TD_ToolMSGType Error -TD_NotShown no
+        SST_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong, please check the prompt output first and then the log files.") -TD_ToolMSGType Error -TD_Shown yes
         SST_ToolMessageCollector -TD_ToolMSGCollector $_.Exception.Message -TD_ToolMSGType Error
         $TD_lb_ErrorMsgSANSwShow.Content = $_.Exception.Message
     }

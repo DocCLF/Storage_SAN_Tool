@@ -34,7 +34,7 @@ function FOS_SFPDetails {
             
             $TD_SFPInfo.SFPUsed = ($TD_SFP|Select-String -Pattern '^Port\s+\d+:\s+(Media\snot\sinstalled)' -AllMatches).Matches.Groups[1].Value
             if($TD_SFPInfo.SFPUsed -eq "Media not installed"){
-                SST_ToolMessageCollector -TD_ToolMSGCollector "$TD_SFPInfo.SFPUsed" -TD_NotShown yes
+                SST_ToolMessageCollector -TD_ToolMSGCollector "$TD_SFPInfo.SFPUsed" -TD_Shown no
                 continue
             }
 

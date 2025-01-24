@@ -20,11 +20,11 @@ function SST_ToolMessageCollector {
         [ValidateSet("Error","Warning","Message","Debug")]
         $TD_ToolMSGType ="Message",
         [Parameter(ValueFromPipeline,HelpMessage="Some displays may be too complex to be displayed in a meaningful way.")]
-        [ValidateSet("yes","no","export")]
-        [string]$TD_NotShown 
+        [ValidateSet("yes","no")]
+        [string]$TD_Shown 
     )
     <# Create a DateTime for each entry #>
-    $TD_GetMSGDate = Get-Date -Format "dd.MM.yyy HH:mm:ss"
+    $TD_GetMSGDate = Get-Date -Format "dd/MM/yyy HH:mm:ss"
     $PSRootPath = Split-Path -Path $PSScriptRoot -Parent
     <# Get to "old MSG" in a Var #>
     $TD_OldMSG = $TD_dg_ToolWindowForDebug.ItemsSource
@@ -37,12 +37,15 @@ function SST_ToolMessageCollector {
 
     [array]$TD_MSG_GUIpresenter += $TD_MSGpresenter |Sort-Object
     <#present all msg #>
-    switch ($TD_NotShown) {
-        "yes" { Write-Debug -Message $TD_ToolMSGCollector `n$TD_ToolMSGType }
-        "no" { $TD_dg_ToolWindowForDebug.ItemsSource = $TD_MSG_GUIpresenter }
-        "export" { Out-File -FilePath $PSRootPath\ToolLog\$($TD_NotShown)_$($TD_GetMSGDate) -InputObject $TD_ToolMSGCollector -Append }
+    switch ($TD_Shown) {
+        "no" { Write-Debug -Message $TD_ToolMSGCollector `n$TD_ToolMSGType }
+        "yes" { $TD_dg_ToolWindowForDebug.ItemsSource = $TD_MSG_GUIpresenter }
+        #"export" { Out-File -FilePath $PSRootPath\ToolLog\SST_$($TD_GetMSGDate) -InputObject $TD_ToolMSGCollector -Append }
         Default {$TD_dg_ToolWindowForDebug.ItemsSource = $TD_MSG_GUIpresenter}
     }
+
+    <# Example: Get-Date -UFormat "%d%m%Y" - Res: 14012025 #>
+    Out-File -FilePath $PSRootPath\ToolLog\SST_$(Get-Date -UFormat "%d%m%Y") -InputObject $TD_MSGpresenter -Append
     
     #$TD_tb_ToolWindowForDebug.Text = $TD_MSG_GUIpresenter
     # the following line as switch case with the different options red,yellow etc.

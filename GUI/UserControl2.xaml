@@ -43,6 +43,7 @@
             <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
         </ResourceDictionary>
     </UserControl.Resources>
+    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" >
     <Grid >
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="auto" />
@@ -2629,7 +2630,7 @@
                     </StackPanel>
                     <StackPanel Grid.Row="1" Grid.Column="0" Orientation="vertical" Visibility="{Binding ElementName=CB_SAN_DG3, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}" >
                         <Label x:Name="LB_SFPShowThree" Content="Switch 3" Visibility="Collapsed"/>
-                        <DataGrid x:Name="dg_SFPShowThree" CanUserSortColumns="False" AutoGenerateColumns="False" Margin="5" MaxWidth="840" MaxHeight="420">
+                        <DataGrid x:Name="dg_SFPShowThree" CanUserSortColumns="False" AutoGenerateColumns="False" Margin="5" MaxHeight="420">
                             <DataGrid.Style>
                                 <Style TargetType="DataGrid">
                                     <Style.Triggers>
@@ -2940,4 +2941,5 @@
             </Grid>
         </ScrollViewer >
     </Grid>
+    </ScrollViewer>
 </UserControl>

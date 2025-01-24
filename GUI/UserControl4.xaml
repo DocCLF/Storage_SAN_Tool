@@ -54,6 +54,7 @@
             <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
         </ResourceDictionary>
     </UserControl.Resources>
+    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" >
     <Grid >
         <Grid.RowDefinitions>
             <RowDefinition Height="auto" />
@@ -229,6 +230,6 @@
                 </GroupBox>
             </StackPanel>
         </GroupBox>
-
     </Grid>
+    </ScrollViewer>
 </UserControl>

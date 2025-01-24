@@ -42,6 +42,7 @@
             <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
         </ResourceDictionary>
     </UserControl.Resources>
+    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" >
     <Grid >
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="auto" />
@@ -5945,4 +5946,5 @@
             </Grid>
         </ScrollViewer >
     </Grid>
+    </ScrollViewer>
 </UserControl>
