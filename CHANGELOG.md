@@ -10,7 +10,7 @@ All notable changes to this project will be documented in this file.
 - Small improvements at Storage Healthcheck
 - improvements at SSH-Client using
 
-# [v1.2.0] - 2025-tbd
+# [v1.2.0] - 2025-01-24
 ### Added
 - FOS Sensor BasicInfo
 - FOS SFP BasicDetails
