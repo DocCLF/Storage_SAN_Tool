@@ -154,6 +154,8 @@ $TD_btn_Settings.add_click({
     $TD_UserControlLeftSide.Children.Remove($TD_UserControl3_1)
     $TD_UserContrArea.Children.Remove($TD_UserControl3)
     if($TD_LogoImageSmall.Visibility -eq "hidden"){$TD_LogoImageSmall.Visibility = "visible"}
+    <# Clean all LogFiles if there older than 90 Days #>
+    SST_FileCleanUp
 })
 <# Button Export Settings #>
 $TD_btn_ChangeExportPath.add_click({
