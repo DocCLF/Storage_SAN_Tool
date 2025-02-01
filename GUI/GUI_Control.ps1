@@ -1629,35 +1629,9 @@ $TD_btn_FOS_PortBufferShow.add_click({
 
 #region Health Check
 $TD_btn_Storage_SysCheck.add_click({
-    
-    $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_.DeviceTyp -eq "Storage"}
-    <# need to be checked #>
-    foreach($TD_Credential in $TD_Credentials){
-        <# QaD needs a Codeupdate because Grouping dose not work #>
-        $TD_SystemCheck = $TD_cb_Device_HealthCheck.Text
-        switch ($TD_Credential.ID) {
-            {(($_ -eq 1) -and ($TD_SystemCheck-eq "Check the First"))} 
-            {   $TD_TB_storageIPAdrOne.Text ="$($TD_Credential.IPAddress)"
-                IBM_StorageHealthCheck -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.UserName -TD_Device_DeviceName $TD_Credential.DeviceName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $([Net.NetworkCredential]::new('', $TD_Credential.Password).Password) -TD_Device_SSHKeyPath $_.SSHKeyPath -TD_Exportpath $TD_tb_ExportPath.Text
-            }
-            {(($_ -eq 2) -and ($TD_SystemCheck-eq "Check the Second"))} 
-            {   $TD_TB_storageIPAdrTwo.Text ="$($TD_Credential.IPAddress)"
-                IBM_StorageHealthCheck -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.UserName -TD_Device_DeviceName $TD_Credential.DeviceName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $([Net.NetworkCredential]::new('', $TD_Credential.Password).Password) -TD_Device_SSHKeyPath $_.SSHKeyPath -TD_Exportpath $TD_tb_ExportPath.Text
-            }
-            {(($_ -eq 3) -and ($TD_SystemCheck-eq "Check the Third"))}  
-            {   $TD_TB_storageIPAdrThree.Text ="$($TD_Credential.IPAddress)"
-                IBM_StorageHealthCheck -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.UserName -TD_Device_DeviceName $TD_Credential.DeviceName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $([Net.NetworkCredential]::new('', $TD_Credential.Password).Password) -TD_Device_SSHKeyPath $_.SSHKeyPath -TD_Exportpath $TD_tb_ExportPath.Text
-            }
-            {(($_ -eq 4) -and ($TD_SystemCheck-eq "Check the Fourth"))}  
-            {   $TD_TB_storageIPAdrFour.Text ="$($TD_Credential.IPAddress)"
-                IBM_StorageHealthCheck -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.UserName -TD_Device_DeviceName $TD_Credential.DeviceName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $([Net.NetworkCredential]::new('', $TD_Credential.Password).Password) -TD_Device_SSHKeyPath $_.SSHKeyPath -TD_Exportpath $TD_tb_ExportPath.Text
-            }
-            Default {SST_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong, please check the prompt output first and then the log files.") -TD_ToolMSGType Error}
-        }
-    }
+    SST_MainHealthCheckFunc
 })
 $TD_btn_HC_OpenGUI_One.add_click({
-
     Start-Process "https://$($TD_TB_storageIPAdrOne.Text)"
 })
 $TD_btn_HC_OpenGUI_Two.add_click({

@@ -81,6 +81,7 @@ function IBM_StorageSWCheck {
     
     process {
         Write-Debug -Message " $IBM_CurrentSpectrVirtuFW ------------------------ $IBM_ProdMTM "
+        SST_ToolMessageCollector -TD_ToolMSGCollector " $IBM_CurrentSpectrVirtuFW ------------------------ $IBM_ProdMTM " -TD_ToolMSGType Debug -TD_Shown no
         $IBM_SpecVirtSWInfo = switch ($IBM_CurrentSpectrVirtuFW) {
             <# FlashSystem 5x00 Software Levels #>
             {$_ -like "8.7.0*"} { 
@@ -140,10 +141,11 @@ function IBM_StorageSWCheck {
             Default {
                 $IBM_LocSpecVirtSW = "" | Select-Object MinimumPTF
                 $IBM_LocSpecVirtSW.MinimumPTF = $null
-                SST_ToolMessageCollector -TD_ToolMSGCollector "Feedback Switch-Case of Storage FWCheck $IBM_CurrentSpectrVirtuFW" -TD_ToolMSGType Debug
-                Write-Debug -Message $IBM_CurrentSpectrVirtuFW}
+                SST_ToolMessageCollector -TD_ToolMSGCollector "Feedback Switch-Case of Storage FWCheck $IBM_CurrentSpectrVirtuFW" -TD_ToolMSGType Debug -TD_Shown no
+                Write-Debug -Message $IBM_CurrentSpectrVirtuFW
+            }
         }
-        SST_ToolMessageCollector -TD_ToolMSGCollector "Result Storage FWCheck $IBM_SpecVirtSWInfo" -TD_ToolMSGType Debug
+        SST_ToolMessageCollector -TD_ToolMSGCollector "Result Storage FWCheck $IBM_SpecVirtSWInfo" -TD_ToolMSGType Debug -TD_Shown no
         Write-Debug -Message $IBM_SpecVirtSWInfo
     }
     

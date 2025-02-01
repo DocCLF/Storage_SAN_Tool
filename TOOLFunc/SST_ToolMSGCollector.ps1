@@ -38,7 +38,7 @@ function SST_ToolMessageCollector {
     [array]$TD_MSG_GUIpresenter += $TD_MSGpresenter |Sort-Object
     <#present all msg #>
     switch ($TD_Shown) {
-        "no" { Write-Debug -Message $TD_ToolMSGCollector `n$TD_ToolMSGType }
+        "no" { Write-Debug -Message "$TD_ToolMSGCollector $TD_ToolMSGType" }
         "yes" { $TD_dg_ToolWindowForDebug.ItemsSource = $TD_MSG_GUIpresenter }
         #"export" { Out-File -FilePath $PSRootPath\ToolLog\SST_$($TD_GetMSGDate) -InputObject $TD_ToolMSGCollector -Append }
         Default {$TD_dg_ToolWindowForDebug.ItemsSource = $TD_MSG_GUIpresenter}
