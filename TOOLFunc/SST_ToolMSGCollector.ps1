@@ -45,7 +45,7 @@ function SST_ToolMessageCollector {
     }
 
     <# Example: Get-Date -UFormat "%d%m%Y" - Res: 14012025 #>
-    Out-File -FilePath $PSRootPath\ToolLog\SST_$(Get-Date -UFormat "%d%m%Y") -InputObject $TD_MSGpresenter -Append
+    Out-File -FilePath $PSRootPath\ToolLog\SST_$(Get-Date -UFormat "%d%m%Y") -InputObject $TD_MSGpresenter -Append -Width 800
     
     #$TD_tb_ToolWindowForDebug.Text = $TD_MSG_GUIpresenter
     # the following line as switch case with the different options red,yellow etc.

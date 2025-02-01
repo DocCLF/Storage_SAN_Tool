@@ -64,92 +64,9 @@ function IBM_StorageHealthCheck {
             }
         }
         
-        foreach ($TD_LineInfo in $TD_TD_DeviceNameTemp) {
-                [string]$TD_DeviceName = ($TD_LineInfo |Select-String -Pattern '([a-zA-Z0-9-_]+)\s+local|remote' -AllMatches).Matches.Groups[1].Value
-                #Write-Host $TD_DeviceName -ForegroundColor lightgreen
-                #$TD_btn_HC_OpenGUI_One.Content = $TD_DeviceName LightGreen
-                
-                switch ($TD_cb_Device_HealthCheck.Text) {
-                    {($_ -like "*First")} { $TD_btn_HC_OpenGUI_One.Content = $TD_DeviceName; $TD_btn_HC_OpenGUI_One.Background = "LightGreen" }
-                    {($_ -like "*Second")} { $TD_btn_HC_OpenGUI_Two.Content = $TD_DeviceName; $TD_btn_HC_OpenGUI_Two.Background = "LightGreen" }
-                    {($_ -like "*Third")} { $TD_btn_HC_OpenGUI_Three.Content = $TD_DeviceName; $TD_btn_HC_OpenGUI_Three.Background = "LightGreen" }
-                    {($_ -like "*Fourth")} { $TD_btn_HC_OpenGUI_Four.Content = $TD_DeviceName; $TD_btn_HC_OpenGUI_Four.Background = "LightGreen" }
-                    Default { <# Write a Message in the ToolLog #> Write-Host "nothing done"}
-                }
-                if(!([string]::IsNullOrEmpty($TD_DeviceName))){break}
-        }
     }
     
     process {
-        $TD_lb_CurrentSpectVirtFW.Visibility="Visible"
-        $TD_lb_CurrentSpectVirtFW.Content="No Info"
-        $TD_SpectVirtCode_Level = ($TD_CollectInfo|Select-String -Pattern '^code_level\s+(\d+.\d+.\d+.\d+)' -AllMatches).Matches.Groups[1].Value
-        
-        $TD_SpectrVirtuFWInfos = IBM_StorageSWCheck -IBM_CurrentSpectrVirtuFW $TD_SpectVirtCode_Level
-
-        #$TD_SpectrVirtuFWInfos.PSObject.Properties.Remove('IBM_ReleaseDate')
-        Write-Debug -Message $TD_SpectrVirtuFWInfos
-        $TD_lb_MinimumPTF.Content = $TD_SpectrVirtuFWInfos.MinimumPTF
-        $TD_lb_RecommendedPTF.Content = $TD_SpectrVirtuFWInfos.RecommendedPTF
-        $TD_lb_LatestPTF.Content = $TD_SpectrVirtuFWInfos.LatestPTF
-        $TD_lb_MinimumDate.Content = $TD_SpectrVirtuFWInfos.MinimumPTFDate
-        $TD_lb_RecommendedDate.Content = $TD_SpectrVirtuFWInfos.RecommendedPTFDate
-        $TD_lb_LatestDate.Content = $TD_SpectrVirtuFWInfos.LatestPTFDate
-        if($null -ne $TD_SpectrVirtuFWInfos.MinimumPTF){
-            
-            $TD_lb_MinimumHL.Visibility="Visible"
-			$TD_lb_RecommendedHL.Visibility="Visible"
-			$TD_lb_LatestHL.Visibility="Visible"
-			$TD_lb_MinimumPTF.Visibility="Visible"
-			$TD_lb_RecommendedPTF.Visibility="Visible"
-			$TD_lb_LatestPTF.Visibility="Visible"
-			$TD_lb_MinimumDate.Visibility="Visible"
-			$TD_lb_RecommendedDate.Visibility="Visible"
-			$TD_lb_LatestDate.Visibility="Visible"
-            $TD_lb_CurrentSpectVirtFW.Content = "Your current PTF is Version $TD_SpectVirtCode_Level"
-            $TD_lb_CurrentSpectVirtFW.Background="LightGreen"
-			$TD_lb_SpectVirtFWIfno.Background="green"
-        }else {
-            
-            $TD_lb_MinimumHL.Visibility="Collapsed"
-			$TD_lb_RecommendedHL.Visibility="Collapsed"
-			$TD_lb_LatestHL.Visibility="Collapsed"
-			$TD_lb_MinimumPTF.Visibility="Collapsed"
-			$TD_lb_RecommendedPTF.Visibility="Collapsed"
-			$TD_lb_LatestPTF.Visibility="Collapsed"
-			$TD_lb_MinimumDate.Visibility="Collapsed"
-			$TD_lb_RecommendedDate.Visibility="Collapsed"
-			$TD_lb_LatestDate.Visibility="Collapsed"
-            $TD_lb_CurrentSpectVirtFW.Content = "Your current PTF Version $TD_SpectVirtCode_Level is out of Service!!"
-            $TD_lb_CurrentSpectVirtFW.Background="LightCoral"
-            $TD_lb_SpectVirtFWIfno.Background="red"
-        }
-        Start-Sleep -Seconds 0.5
-        $TD_UserControl3_1.Dispatcher.Invoke([System.Action]{},"Render")
-
-        
-        $TD_EventCollection = IBM_EventLog -TD_Line_ID $TD_Line_ID -TD_Device_ConnectionTyp $TD_Device_ConnectionTyp -TD_Device_UserName $TD_Device_UserName -TD_Device_DeviceName $TD_Device_DeviceName -TD_Device_DeviceIP $TD_Device_DeviceIP -TD_Device_PW $TD_Device_PW -TD_Device_DeviceIP $TD_Device_DeviceIP -TD_Export yes -TD_Exportpath $TD_Exportpath
-        $TD_dg_EventlogStatusInfoText.ItemsSource=$EmptyVar
-        if($TD_EventCollection.Status -eq "alert"){
-            $TD_lb_EventlogLight.Background="red"
-            if(($TD_EventCollection | Where-Object {$_.Status -eq "alert"}).Count -ge 2){
-                $TD_dg_EventlogStatusInfoText.ItemsSource=$TD_EventCollection | Where-Object {(($_.Status -eq "alert")-and(($_.Fixed -eq "no")-or($_.Fixed -eq "yes")))} |Select-Object -Last 10
-
-            }else {
-                [array]$TD_OnlyOneEvent = $TD_EventCollection | Where-Object {(($_.Status -eq "alert")-and(($_.Fixed -eq "no")-or($_.Fixed -eq "yes")))}
-                
-                $TD_dg_EventlogStatusInfoText.ItemsSource=$TD_OnlyOneEvent
-            }
-            $TD_UserControl3_1.Dispatcher.Invoke([System.Action]{},"Render")
-        }elseif (($TD_EventCollection.Status -eq "monitoring")-or($TD_EventCollection.Status -eq "expired")) {
-            $TD_lb_EventlogLight.Background="yellow"
-            $TD_dg_EventlogStatusInfoText.ItemsSource=$TD_EventCollection | Where-Object {(($_.Status -ne "monitoring")-or($_.Status -eq "expired"))}
-            $TD_UserControl3_1.Dispatcher.Invoke([System.Action]{},"Render")
-        }else {
-            $TD_lb_EventlogLight.Background="green"
-            $TD_UserControl3_1.Dispatcher.Invoke([System.Action]{},"Render")
-        }
-
 
         <# check if there are old files of that device and collect them into array #>
         $TD_HostLogHistoryFiles = Get-ChildItem -Path $PSRootPath\ToolLog\ToolTEMP\ -Filter "*_$($TD_DeviceName)_HostLog.csv"
