@@ -260,10 +260,17 @@ $TD_btn_ExportCred.add_click({
 $TD_btn_ImportCred.add_click({
 
     $TD_ImportedCredentials = SST_ImportCredential
-    if($TD_ImportedCredentials -lt 1){
+
+    if($TD_ImportedCredentials.count -lt 1){
         SST_ToolMessageCollector -TD_ToolMSGCollector $("Import failed!") -TD_ToolMSGType Warning
     }else {
         SST_ToolMessageCollector -TD_ToolMSGCollector $("Credentials successfully Import") -TD_ToolMSGType Message
+        if($TD_CB_OnlineCheckbyImport.IsChecked){
+            $TD_ImportedCredentials | ForEach-Object {
+                SST_DeviceConnecCheck -TD_Selected_Items "yes" -TD_Selected_DeviceType $_.DeviceTyp -TD_Selected_DeviceConnectionType $_.ConnectionTyp -TD_Selected_DeviceIPAddr $_.IPAddress -TD_Selected_DeviceUserName $_.UserName -TD_Selected_DevicePassword $_.Password -TD_Selected_SVCorVF $_.SVCorVF
+                Start-Sleep -Seconds 0.5
+            }
+        }
     }
     
 })

@@ -84,6 +84,7 @@ function IBM_StorageHealthCheck {
                 Get-ChildItem $TD_HostLogHistoryFiles |Sort-Object Fullname -Desc|Select-Object -Skip 3 |Remove-Item
             }
         }
+        <# HostID,HostName,PortCount,Type,Status,SiteName,HostClusterName,Protocol,StatusPolicy,StatusSite #>
         $TD_HostChostClusterResaultTemp = @()
         foreach ($TD_HostHostClusterInfo in $TD_CollectInfo){
             if($TD_HostHostClusterInfo |Select-String -Pattern "event_log_sequence"){break}
@@ -93,7 +94,7 @@ function IBM_StorageHealthCheck {
             if($TD_HostChostClusterInfo.Status -eq "offline" -or $TD_HostChostClusterInfo.Status -eq "degraded"){
                 [bool]$TD_HostChostClusterInfo.ACKHosts = $false
             }else {
-                <# Action when all if and elseif conditions are false #>
+                
                 [bool]$TD_HostChostClusterInfo.ACKHosts = $true
             }
             $TD_HostChostClusterInfo.HostSiteName = ($TD_HostHostClusterInfo|Select-String -Pattern '\s+(online|offline|degraded)\s+\d+\s+(\w+)\s+\d+' -AllMatches).Matches.Groups[2].Value

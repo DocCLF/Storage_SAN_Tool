@@ -51,8 +51,8 @@ function SST_MainHealthCheckFunc {
                     $TD_lb_CurrentSpectVirtFW.Visibility="Visible"
                     $TD_lb_CurrentSpectVirtFW.Content="No Info"
                     try {
-                        $TD_SpectrVirtuFWInfos = IBM_StorageSWCheck -IBM_CurrentSpectrVirtuFW $Temp_Credentials.MTMCode
-                        SST_ToolMessageCollector -TD_ToolMSGCollector "Storage HealthCheck used this FW $($Temp_Credentials.MTMCode)" -TD_ToolMSGType Debug -TD_Shown no
+                        $TD_SpectrVirtuFWInfos = IBM_StorageSWCheck -IBM_CurrentSpectrVirtuFW $Temp_Credentials.CurrentFirmware
+                        SST_ToolMessageCollector -TD_ToolMSGCollector "Storage HealthCheck used this FW $($Temp_Credentials.CurrentFirmware)" -TD_ToolMSGType Debug -TD_Shown no
                         SST_ToolMessageCollector -TD_ToolMSGCollector "And this was Found`$($TD_SpectrVirtuFWInfos)" -TD_ToolMSGType Debug -TD_Shown no                        
                     }
                     catch {
@@ -75,7 +75,7 @@ function SST_MainHealthCheckFunc {
                         $TD_lb_MinimumDate.Visibility="Visible"
                         $TD_lb_RecommendedDate.Visibility="Visible"
                         $TD_lb_LatestDate.Visibility="Visible"
-                        $TD_lb_CurrentSpectVirtFW.Content = "Your current PTF is Version $TD_SpectVirtCode_Level"
+                        $TD_lb_CurrentSpectVirtFW.Content = "Your current PTF is Version $($Temp_Credentials.CurrentFirmware)"
                         $TD_lb_CurrentSpectVirtFW.Background="LightGreen"
                         $TD_lb_SpectVirtFWIfno.Background="green"
                     }else {
@@ -94,7 +94,6 @@ function SST_MainHealthCheckFunc {
                     }
                     $Temp_Credentials | ForEach-Object {
                         #region Storage_HS_Eventlog
-                        Write-Host "this is $($_)"
                         [array]$TD_IBM_EventLogCheck = IBM_EventLog -TD_Line_ID $_.ID -TD_Device_ConnectionTyp $_.ConnectionTyp -TD_Device_UserName $_.UserName -TD_Device_DeviceIP $_.IPAddress -TD_Device_DeviceName $_.DeviceName -TD_Device_PW $([Net.NetworkCredential]::new('', $_.Password).Password) -TD_Device_SSHKeyPath $_.SSHKeyPath -TD_Export "no"
                         SST_ToolMessageCollector -TD_ToolMSGCollector "Storage HS_Eventlog`n$TD_IBM_EventLogCheck" -TD_ToolMSGType Debug -TD_Shown no
                         $TD_dg_EventlogStatusInfoText.ItemsSource=$EmptyVar

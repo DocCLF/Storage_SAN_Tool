@@ -205,6 +205,8 @@
                         <StackPanel Orientation="Horizontal">
                             <Button x:Name="btn_ExportCred" Content="Export Credentials" HorizontalAlignment="Left" Style="{StaticResource MainBtnStyle}"/>
                             <Button x:Name="btn_ImportCred" Content="Import Credentials" HorizontalAlignment="Left" Style="{StaticResource MainBtnStyle}"/>
+                            <CheckBox x:Name="CB_OnlineCheckbyImport" VerticalAlignment="Center" Margin="22,2,2,2" />
+                            <Label Content="Device Online check by import" Style="{StaticResource MainLabelStyle}" />
                         </StackPanel>
                         <Label Grid.Row="1" x:Name="lb_CerdExportPath" Content="Save Path" Style="{StaticResource MainLabelStyle}" HorizontalAlignment="Left" />
                     </Grid>

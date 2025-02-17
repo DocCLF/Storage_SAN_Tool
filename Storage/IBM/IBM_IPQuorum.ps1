@@ -39,7 +39,7 @@ function IBM_IPQuorum {
                     $TD_QuorumInfo.Active =($TD_Line|Select-String -Pattern ':(yes|no|):(drive|device):(yes|no):(\d+|):(.*)$'-AllMatches).Matches.Groups[1].Value
                     $TD_QuorumInfo.ObjectType =($TD_Line|Select-String -Pattern ':(yes|no|):(drive|device):(yes|no):(\d+|):(.*)$'-AllMatches).Matches.Groups[2].Value
                     $TD_QuorumInfo.Override =($TD_Line|Select-String -Pattern ':(yes|no|):(drive|device):(yes|no):(\d+|):(.*)$'-AllMatches).Matches.Groups[3].Value
-                    $TD_QuorumInfo.SiteName = ($TD_Line|Select-String -Pattern ':(yes|no|):(drive|device):(yes|no):(\d+|):(.*)$'-AllMatches).Matches.Groups[5].Value
+                    $TD_QuorumInfo.SiteName = ($TD_Line|Select-String -Pattern ':(yes|no|):(drive|device):(yes|no):(\d+|):(.*)$'-AllMatches).Matches.Groups[5].Value <#here is a missmatch with 8.7.x in a PBHA setting#>
                     <# if SpVirtSoftware 8.7.x more in Field present there are new Infos to get.
                         application_type, metadata_backup, partner_system_name,... etc
                     #>
