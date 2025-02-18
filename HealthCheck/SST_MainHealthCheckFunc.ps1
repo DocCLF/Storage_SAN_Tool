@@ -53,7 +53,7 @@ function SST_MainHealthCheckFunc {
                     try {
                         $TD_SpectrVirtuFWInfos = IBM_StorageSWCheck -IBM_CurrentSpectrVirtuFW $Temp_Credentials.CurrentFirmware
                         SST_ToolMessageCollector -TD_ToolMSGCollector "Storage HealthCheck used this FW $($Temp_Credentials.CurrentFirmware)" -TD_ToolMSGType Debug -TD_Shown no
-                        SST_ToolMessageCollector -TD_ToolMSGCollector "And this was Found`$($TD_SpectrVirtuFWInfos)" -TD_ToolMSGType Debug -TD_Shown no                        
+                        SST_ToolMessageCollector -TD_ToolMSGCollector "And this was Found`n$($TD_SpectrVirtuFWInfos)" -TD_ToolMSGType Debug -TD_Shown no                        
                     }
                     catch {
                         SST_ToolMessageCollector $_.Exception.Message -TD_ToolMSGType Error -TD_Shown yes
@@ -115,8 +115,8 @@ function SST_MainHealthCheckFunc {
                         }
                         #endregion
                         #region Storage_HS_HostCheck
-                        [array]$TD_IBM_MDiskCheck = IBM_HostInfo -TD_Line_ID $_.ID -TD_Device_ConnectionTyp $_.ConnectionTyp -TD_Device_UserName $_.UserName -TD_Device_DeviceIP $_.IPAddress -TD_Device_DeviceName $_.DeviceName -TD_Device_PW $([Net.NetworkCredential]::new('', $_.Password).Password) -TD_Device_SSHKeyPath $_.SSHKeyPath -TD_Storage $TD_Credential.SVCorVF -TD_Export "no"
-
+                        [array]$TD_IBM_HostInfo = IBM_HostInfo -TD_Line_ID $_.ID -TD_Device_ConnectionTyp $_.ConnectionTyp -TD_Device_UserName $_.UserName -TD_Device_DeviceIP $_.IPAddress -TD_Device_DeviceName $_.DeviceName -TD_Device_PW $([Net.NetworkCredential]::new('', $_.Password).Password) -TD_Device_SSHKeyPath $_.SSHKeyPath -TD_Storage $TD_Credential.SVCorVF -TD_Export "no"
+                        IBM_StorageHostHealthCheck -TD_IBM_HostInfoCollection $TD_IBM_HostInfo -TD_Device_DeviceName $_.DeviceName
                         #endregion
                         #region Storage_HS_MDiskCheck
                         [array]$TD_IBM_MDiskCheck    = IBM_MDiskInfo -TD_Line_ID $_.ID -TD_Device_ConnectionTyp $_.ConnectionTyp -TD_Device_UserName $_.UserName -TD_Device_DeviceIP $_.IPAddress -TD_Device_DeviceName $_.DeviceName -TD_Device_PW $([Net.NetworkCredential]::new('', $_.Password).Password) -TD_Device_SSHKeyPath $_.SSHKeyPath -TD_Storage $TD_Credential.SVCorVF -TD_Export "no"

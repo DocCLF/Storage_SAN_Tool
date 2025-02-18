@@ -1,5 +1,5 @@
 
-function IBM_StorageHealthCheck {
+function IBM_StorageHostHealthCheck {
     <#
     .SYNOPSIS
         A short one-line action-based description, e.g. 'Tests if a function is valid'
@@ -16,20 +16,9 @@ function IBM_StorageHealthCheck {
     
     [CmdletBinding()]
     param (
-        [Int16]$TD_Line_ID,
         [Parameter(Mandatory)]
-        [string]$TD_Device_ConnectionTyp,
-        [Parameter(Mandatory)]
-        [string]$TD_Device_UserName,
-        [string]$TD_Device_DeviceName,
-        [Parameter(Mandatory)]
-        [string]$TD_Device_DeviceIP,
-        [string]$TD_Device_PW,
-        [string]$TD_Device_SSHKeyPath,
-        [Parameter(ValueFromPipeline)]
-        [ValidateSet("yes","no")]
-        [string]$TD_Export = "yes",
-        [string]$TD_Exportpath
+        $TD_IBM_HostInfoCollection,
+        [string]$TD_Device_DeviceName
     )
     
     begin {
@@ -37,11 +26,11 @@ function IBM_StorageHealthCheck {
         $ErrorActionPreference="SilentlyContinue"
 
         $TD_btn_SaveHostStatus.Visibility="Collapsed"
-        if($TD_Device_ConnectionTyp -eq "ssh"){
-            $TD_CollectInfo = ssh -i $($TD_Device_SSHKeyPath) $TD_Device_UserName@$TD_Device_DeviceIP "lssystem |grep code_level && lshost && lshostcluster && lspartnership"
-        }else {
-            $TD_CollectInfo = plink $TD_Device_UserName@$TD_Device_DeviceIP -pw $TD_Device_PW -batch "lssystem |grep code_level && lshost && lshostcluster && lspartnership"
-        }
+        #if($TD_Device_ConnectionTyp -eq "ssh"){
+        #    $TD_CollectInfo = ssh -i $($TD_Device_SSHKeyPath) $TD_Device_UserName@$TD_Device_DeviceIP "lssystem |grep code_level && lshost && lshostcluster && lspartnership"
+        #}else {
+        #    $TD_CollectInfo = plink $TD_Device_UserName@$TD_Device_DeviceIP -pw $TD_Device_PW -batch "lssystem |grep code_level && lshost && lshostcluster && lspartnership"
+        #}
         <# next line one for testing #>
         #$TD_CollectInfo = Get-Content -Path "C:\Users\mailt\Documents\mimixexport.txt" #C:\Users\mailt\Documents\mimixexport.txt hyperswap
         #$TD_CollectInfo = Get-Content -Path "C:\Users\mailt\Desktop\FS5200_W.txt"
@@ -49,76 +38,86 @@ function IBM_StorageHealthCheck {
         #Write-Host $PSPath
         #$TD_dg_HostStatusInfoText.Add_SelectionChanged({
         #    $TD_dg_HostStatusInfoText | ForEach-Object {
-        #        Write-Host $_.selecteditem[0]
+        #        Write-Hos
         #    }
         #    #$PSPath = Split-Path -Parent $PSCommandPath 
         #    Write-Host $PSPath -ForegroundColor Green
         #})
-        $TD_InfoCount = $TD_CollectInfo.count
-        0..$TD_InfoCount |ForEach-Object {
-            if($TD_CollectInfo[$_] -match 'location '){
-                $TD_TD_DeviceNameTemp = $TD_CollectInfo |Select-Object -Skip $_
-            }
-            if($TD_CollectInfo[$_] -match 'mapping_count'){
-                $TD_HostClusterTemp = $TD_CollectInfo |Select-Object -Skip $_
-            }
-        }
+        #$TD_InfoCount = $TD_CollectInfo.count
+        #0..$TD_InfoCount |ForEach-Object {
+        #    if($TD_CollectInfo[$_] -match 'location '){
+        #        $TD_TD_DeviceNameTemp = $TD_CollectInfo |Select-Object -Skip $_
+        #    }
+        #    if($TD_CollectInfo[$_] -match 'mapping_count'){
+        #        $TD_HostClusterTemp = $TD_CollectInfo |Select-Object -Skip $_
+        #    }
+        #}
         
     }
     
     process {
 
         <# check if there are old files of that device and collect them into array #>
-        $TD_HostLogHistoryFiles = Get-ChildItem -Path $PSRootPath\ToolLog\ToolTEMP\ -Filter "*_$($TD_DeviceName)_HostLog.csv"
+        try {
+            $TD_HostLogHistoryFile = Get-ChildItem -Path $PSRootPath\ToolLog\ToolTEMP\ -Filter "*_$($TD_Device_DeviceName)_StorageHostStatusLog.csv"
+            $TD_HostLogHistoryEntrys = Import-Csv -Path $TD_HostLogHistoryFile.FullName
+            SST_ToolMessageCollector -TD_ToolMSGCollector "Import $($TD_HostLogHistoryFile.FullName)" -TD_ToolMSGType Message -TD_Shown no
+        }
+        catch {
+            <#Do this if a terminating exception happens#>
+            SST_ToolMessageCollector -TD_ToolMSGCollector $_.Exception.Message -TD_ToolMSGType Error -TD_Shown no
+            SST_ToolMessageCollector -TD_ToolMSGCollector "No File to import at $($TD_HostLogHistoryFile)" -TD_ToolMSGType Error -TD_Shown yes
+        }
+        
         #Write-Host $TD_HostLogHistoryFiles / $TD_HostLogHistoryFiles.Count
 
         <# create a array of newest data from the device #>
-        if($TD_HostLogHistoryFiles.Count -ge 1){
-            $TD_HostLogHistoryFile = Get-ChildItem -Path $TD_HostLogHistoryFiles |Sort-Object Fullname -Desc |Select-Object -First 1
+        #if($TD_HostLogHistoryFiles.Count -ge 1){
+            #$TD_HostLogHistoryFile = Get-ChildItem -Path $TD_HostLogHistoryFiles |Sort-Object Fullname -Desc |Select-Object -First 1
             #Write-Host $TD_HostLogHistoryFile.FullName
-            $TD_HostLogHistoryEntrys = Import-Csv -Path $TD_HostLogHistoryFile.FullName -Delimiter ';'
+            #$TD_HostLogHistoryEntrys = Import-Csv -Path $TD_HostLogHistoryFile.FullName 
             #Write-Host $TD_HostLogHistoryEntrys
             #Write-Host $TD_HostLogHistoryEntrys.count -ForegroundColor Yellow
-            if($TD_HostLogHistoryFiles.Count -ge 4){
-                <# hold the last 3 and delete the rest #>
-                Get-ChildItem $TD_HostLogHistoryFiles |Sort-Object Fullname -Desc|Select-Object -Skip 3 |Remove-Item
-            }
-        }
+            #if($TD_HostLogHistoryFiles.Count -ge 4){
+            #    <# hold the last 3 and delete the rest #>
+            #    Get-ChildItem $TD_HostLogHistoryFiles |Sort-Object Fullname -Desc|Select-Object -Skip 3 |Remove-Item
+            #}
+        #}
         <# HostID,HostName,PortCount,Type,Status,SiteName,HostClusterName,Protocol,StatusPolicy,StatusSite #>
-        $TD_HostChostClusterResaultTemp = @()
-        foreach ($TD_HostHostClusterInfo in $TD_CollectInfo){
-            if($TD_HostHostClusterInfo |Select-String -Pattern "event_log_sequence"){break}
-            $TD_HostChostClusterInfo = "" | Select-Object ACKHosts,HostName,Status,HostSiteName,HostClusterName,DeviceName
-            $TD_HostChostClusterInfo.HostName = ($TD_HostHostClusterInfo|Select-String -Pattern '^\d+\s+([0-9a-zA-z-_]+)' -AllMatches).Matches.Groups[1].Value
-            $TD_HostChostClusterInfo.Status = ($TD_HostHostClusterInfo|Select-String -Pattern '\s+(online|offline|degraded)\s+' -AllMatches).Matches.Groups[1].Value
-            if($TD_HostChostClusterInfo.Status -eq "offline" -or $TD_HostChostClusterInfo.Status -eq "degraded"){
-                [bool]$TD_HostChostClusterInfo.ACKHosts = $false
-            }else {
-                
-                [bool]$TD_HostChostClusterInfo.ACKHosts = $true
-            }
-            $TD_HostChostClusterInfo.HostSiteName = ($TD_HostHostClusterInfo|Select-String -Pattern '\s+(online|offline|degraded)\s+\d+\s+(\w+)\s+\d+' -AllMatches).Matches.Groups[2].Value
-            $TD_HostChostClusterInfo.HostClusterName = ($TD_HostHostClusterInfo|Select-String -Pattern '\s+(online|offline|degraded)\s+(\d+|)\s+([a-zA-Z0-9-_]+|)\s+(\d+|)\s+([a-zA-Z0-9-_]+)\s+scsi|fcnvme' -AllMatches).Matches.Groups[5].Value
-            $TD_HostChostClusterInfo.DeviceName = $TD_DeviceName
-
-            if((![string]::IsNullOrEmpty($TD_HostChostClusterInfo.HostName))){
-                <# HostClusterStatus implement maybe later #>
-                #if(![string]::IsNullOrEmpty($TD_HostChostClusterInfo.HostClusterName)){
-                #    foreach ($TD_HostClusterStatus in $TD_HostClusterTemp){
-                #        if($TD_HostClusterStatus |Select-String -Pattern "supports_unmap"){break}
-                #        #if(![string]::IsNullOrEmpty($TD_HostChostClusterInfo.HostClusterStatus)){break}
-                #        $TD_HostChostClusterInfo.HostClusterStatus = ($TD_HostClusterStatus|Select-String -Pattern '\s+(online|offline|host_degraded|host_cluster_degraded)\s+' -AllMatches).Matches.Groups[1].Value
-                #    }
-                #}
-                $TD_HostChostClusterResaultTemp += $TD_HostChostClusterInfo
-            }
-            if(([string]::IsNullOrEmpty($TD_HostChostClusterInfo.HostClusterName))-and($TD_HostHostClusterInfo |Select-String -Pattern "mdisk_grp_name")){break}
-        }
-
+        #$TD_HostChostClusterResaultTemp = @()
+        #foreach ($TD_HostHostClusterInfo in $TD_CollectInfo){
+        #    if($TD_HostHostClusterInfo |Select-String -Pattern "event_log_sequence"){break}
+        #    $TD_HostChostClusterInfo = "" | Select-Object ACKHosts,HostName,Status,HostSiteName,HostClusterName,DeviceName
+        #    $TD_HostChostClusterInfo.HostName = ($TD_HostHostClusterInfo|Select-String -Pattern '^\d+\s+([0-9a-zA-z-_]+)' -AllMatches).Matches.Groups[1].Value
+        #    $TD_HostChostClusterInfo.Status = ($TD_HostHostClusterInfo|Select-String -Pattern '\s+(online|offline|degraded)\s+' -AllMatches).Matches.Groups[1].Value
+        #    if($TD_HostChostClusterInfo.Status -eq "offline" -or $TD_HostChostClusterInfo.Status -eq "degraded"){
+        #        [bool]$TD_HostChostClusterInfo.ACKHosts = $false
+        #    }else {
+        #        
+        #        [bool]$TD_HostChostClusterInfo.ACKHosts = $true
+        #    }
+        #    $TD_HostChostClusterInfo.HostSiteName = ($TD_HostHostClusterInfo|Select-String -Pattern '\s+(online|offline|degraded)\s+\d+\s+(\w+)\s+\d+' -AllMatches).Matches.Groups[2].Value
+        #    $TD_HostChostClusterInfo.HostClusterName = ($TD_HostHostClusterInfo|Select-String -Pattern '\s+(online|offline|degraded)\s+(\d+|)\s+([a-zA-Z0-9-_]+|)\s+(\d+|)\s+([a-zA-Z0-9-_]+)\s+scsi|fcnvme' -AllMatches).Matches.Groups[5].Value
+        #    $TD_HostChostClusterInfo.DeviceName = $TD_DeviceName
+        #    if((![string]::IsNullOrEmpty($TD_HostChostClusterInfo.HostName))){
+        #        <# HostClusterStatus implement maybe later #>
+        #        #if(![string]::IsNullOrEmpty($TD_HostChostClusterInfo.HostClusterName)){
+        #        #    foreach ($TD_HostClusterStatus in $TD_HostClusterTemp){
+        #        #        if($TD_HostClusterStatus |Select-String -Pattern "supports_unmap"){break}
+        #        #        #if(![string]::IsNullOrEmpty($TD_HostChostClusterInfo.HostClusterStatus)){break}
+        #        #        $TD_HostChostClusterInfo.HostClusterStatus = ($TD_HostClusterStatus|Select-String -Pattern '\s+(online|offline|host_degraded|host_cluster_degraded)\s+' -AllMatches).Matches.Groups[1].Value
+        #        #    }
+        #        #}
+        #        $TD_HostChostClusterResaultTemp += $TD_HostChostClusterInfo
+        #    }
+        #    if(([string]::IsNullOrEmpty($TD_HostChostClusterInfo.HostClusterName))-and($TD_HostHostClusterInfo |Select-String -Pattern "mdisk_grp_name")){break}
+        #}
+        #Write-Host $TD_IBM_HostInfoCollection -ForegroundColor Blue
+        #RZ1_ESXiDMZSRV1 RZ1_ESXiSRV1 RZ1_ESXiSRV2 RZ1_ESXiSRV3 RZ3_ESXiDMZSRV1 RZ3_ESXiSRV1 RZ4_ESXiDMZSRV1 RZ4_ESXiSRV1 RZ4_ESXiSRV2 RZ4_ESXiSRV3 CL-FILE-RZ1 CL-FILE-RZ4 RZ1-ESXiDMZSRV1_NVME vSQLCLN1_RZ1 vSQLCLN2_RZ4
         <# Match old vs current Data#>
         $TD_HostChostClusterResault = @()
-        if($TD_HostLogHistoryFiles.Count -ge 1){
-            foreach ($TD_HostResaultSplit in $TD_HostChostClusterResaultTemp) {
+        if($TD_HostLogHistoryFile.Count -ge 1){
+            foreach ($TD_HostResaultSplit in $TD_IBM_HostInfoCollection) {
                 <#ist der Host als online bekannt dann nächster durchlauf #>
                 if($TD_HostResaultSplit.Status -eq "offline" -or $TD_HostResaultSplit.Status -eq "degraded"){
                     foreach ($TD_HostLogHistoryEntry in $TD_HostLogHistoryEntrys) {
@@ -144,7 +143,7 @@ function IBM_StorageHealthCheck {
                                     if($_.Status -ne $TD_HostResaultSplit.Status){
                                         $_.Status = $TD_HostResaultSplit.Status
                                         <# update the file if the status change to offline #>
-                                        $TD_HostLogHistoryEntrys | Export-Csv -Path $PSRootPath\ToolLog\ToolTEMP\$(Get-Date -Format "yyyy-MM-dd")_$($TD_DeviceName)_HostLog.csv -Delimiter ';'
+                                        $TD_HostLogHistoryEntrys | Export-Csv -Path $PSRootPath\ToolLog\ToolTEMP\$(Get-Date -UFormat "%d%m%Y")_$($TD_DeviceName)_StorageHostStatusLog.csv -Delimiter ';'
                                     }
 
                                     if(!($_.ACKHosts -eq $false)){ break }
@@ -174,7 +173,7 @@ function IBM_StorageHealthCheck {
                                     $_.HostClusterName = $null
                                     $_.DeviceName = $null
                                     <# needs a clean up of the empty obj #>
-                                    $TD_HostLogHistoryEntrys | Export-Csv -Path $PSRootPath\ToolLog\ToolTEMP\$(Get-Date -Format "yyyy-MM-dd")_$($TD_DeviceName)_HostLog.csv -Delimiter ';'
+                                    $TD_HostLogHistoryEntrys | Export-Csv -Path $PSRootPath\ToolLog\ToolTEMP\$(Get-Date -UFormat "%d%m%Y")_$($TD_DeviceName)_StorageHostStatusLog.csv -Delimiter ';'
                                     
                                 }
                             }
@@ -183,15 +182,15 @@ function IBM_StorageHealthCheck {
                 }
             }
         }else{
-            $TD_HostChostClusterResault = $TD_HostChostClusterResaultTemp
-            $TD_HostChostClusterResaultTemp | Export-Csv -Path $PSRootPath\ToolLog\ToolTEMP\$(Get-Date -Format "yyyy-MM-dd")_$($TD_DeviceName)_HostLog.csv -Delimiter ';'
+            $TD_HostChostClusterResault = $TD_IBM_HostInfoCollection
+            $TD_IBM_HostInfoCollection | Export-Csv -Path $PSRootPath\ToolLog\ToolTEMP\$(Get-Date -UFormat "%d%m%Y")_$($TD_DeviceName)_StorageHostStatusLog.csv -Delimiter ';'
         }
         <# Save the DG View as new logfile #> 
         $TD_btn_SaveHostStatus.add_click({
             $ErrorActionPreference="SilentlyContinue"
             [int]$i = 0
             $TD_dgHostResaults=@()
-            $TD_HostChostClusterResaultTemp=@()
+            $TD_IBM_HostInfoCollection=@()
             $PSPath = Split-Path -Parent $PSCommandPath
             <# switch case for all buttons #>
             switch ($TD_cb_Device_HealthCheck.Text) {
@@ -202,7 +201,7 @@ function IBM_StorageHealthCheck {
                 Default { <# Write a Message in the ToolLog #> }
             }
             
-            $TD_HostLogHistoryFiles = Get-ChildItem -Path $PSPath\ToolLog\ -Filter "*_$($TD_DeviceName)_HostLog.csv"
+            $TD_HostLogHistoryFiles = Get-ChildItem -Path $PSPath\ToolLog\ -Filter "*_$($TD_DeviceName)_StorageHostStatusLog.csv"
             #Write-Host $TD_HostLogHistoryFiles -ForegroundColor Magenta
             $TD_HostLogHistoryFile = Get-ChildItem -Path $TD_HostLogHistoryFiles |Sort-Object Fullname -Desc |Select-Object -First 1
             #Write-Host $TD_HostLogHistoryFile.FullName -ForegroundColor Magenta
@@ -217,19 +216,19 @@ function IBM_StorageHealthCheck {
 
             $TD_InputInfos | ForEach-Object {
                 #Write-Host $_
-                $TD_HostChostClusterResaultTemp += $_
+                $TD_IBM_HostInfoCollection += $_
             }
             $TD_dgHostResaults | ForEach-Object {
                 #Write-Host $_.HostName $_.ACKHosts -ForegroundColor Cyan
 
-                if($_.HostName -notin $TD_HostChostClusterResaultTemp.HostName){
-                    $TD_HostChostClusterResaultTemp += $_
+                if($_.HostName -notin $TD_IBM_HostInfoCollection.HostName){
+                    $TD_IBM_HostInfoCollection += $_
                 }else{
-                    if($_.ACKHosts -eq $TD_HostChostClusterResaultTemp.ACKHosts){
+                    if($_.ACKHosts -eq $TD_IBM_HostInfoCollection.ACKHosts){
                        # Write-Host $_.HostName -ForegroundColor Green
                         $TD_TestHost = $_
                         #Write-Host $TD_HostChostClusterResaultTemp.HostName -ForegroundColor Green
-                        $TD_HostChostClusterResaultTemp |ForEach-Object { if($_.HostName -eq $TD_TestHost.HostName ){
+                        $TD_IBM_HostInfoCollection |ForEach-Object { if($_.HostName -eq $TD_TestHost.HostName ){
                             #Write-Host $_.HostName -ForegroundColor DarkGreen
                             #Write-Host $TD_TestHost -ForegroundColor DarkGreen
                             $_.ACKHosts = $TD_TestHost.ACKHosts
@@ -247,7 +246,7 @@ function IBM_StorageHealthCheck {
             }
 
             #Write-Host $TD_HostChostClusterResaultTemp.count -ForegroundColor Red
-            $TD_HostChostClusterResaultTemp | Export-Csv -Path $PSRootPath\ToolLog\ToolTEMP\$(Get-Date -Format "yyyy-MM-dd")_$($TD_DeviceName)_HostLog.csv -Delimiter ';'
+            $TD_IBM_HostInfoCollection | Export-Csv -Path $PSRootPath\ToolLog\ToolTEMP\$(Get-Date -UFormat "%d%m%Y")_$($TD_DeviceName)_StorageHostStatusLog.csv -Delimiter ';'
         })
 
         #Write-Host $TD_HostChostClusterResault
@@ -267,7 +266,7 @@ function IBM_StorageHealthCheck {
             $TD_lb_HostStatusLight.Background = "green"
             $TD_UserControl3_1.Dispatcher.Invoke([System.Action]{},"Render")
             if($TD_HostLogHistoryFiles.Count -lt 1){
-                $TD_HostChostClusterResaultTemp | Export-Csv -Path $PSRootPath\ToolLog\ToolTEMP\$(Get-Date -Format "yyyy-MM-dd")_$($TD_DeviceName)_HostLog.csv -Delimiter ';' 
+                $TD_IBM_HostInfoCollection | Export-Csv -Path $PSRootPath\ToolLog\ToolTEMP\$(Get-Date -UFormat "%d%m%Y")_$($TD_DeviceName)_StorageHostStatusLog.csv -Delimiter ';' 
             }
         }
 

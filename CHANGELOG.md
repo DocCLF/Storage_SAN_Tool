@@ -11,14 +11,19 @@ All notable changes to this project will be documented in this file.
 - improvements at SSH-Client using
 
 # [v1.2.1] - tbd
+### Added
+- auto Online Check of Devices by import the Creds and check the Box left from the Import Button
+
 ### Fixed
 - Bug with SN in StorageBaseFunc
 - Bug with named File with DeviceName in FCPortInfo
 - Bug ToolMSGCollector with long MSG
+- Bug where check for the currentFirmeware fails
 
 ### Changed
 - First cuts of the revision of the Storage Health Check
 - Revised of the StorageSWChecks, thx IBM -.-
+
 
 # [v1.2.0] - 2025-01-24
 ### Added

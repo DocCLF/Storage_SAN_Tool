@@ -156,7 +156,6 @@ $TD_btn_Settings.add_click({
     if($TD_LogoImageSmall.Visibility -eq "hidden"){$TD_LogoImageSmall.Visibility = "visible"}
     <# Clean all LogFiles if there older than 90 Days #>
     SST_FileCleanUp
-    SST_FileCleanUp -TD_UserInputPath $TD_tb_ExportPath.Text -TD_KeepFilesForDays 30
 })
 <# Button Export Settings #>
 $TD_btn_ChangeExportPath.add_click({
