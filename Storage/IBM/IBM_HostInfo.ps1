@@ -57,7 +57,7 @@ function IBM_HostInfo {
             $TD_HostBaseTemp.HostName = ($TD_CollectInfo|Select-String -Pattern '^name:([a-zA-Z0-9-_]+)' -AllMatches).Matches.Groups[1].Value
             $TD_HostBaseTemp.PortCount = ($TD_CollectInfo|Select-String -Pattern '^port_count:(\d+)' -AllMatches).Matches.Groups[1].Value
             $TD_HostBaseTemp.Type = ($TD_CollectInfo|Select-String -Pattern '^Type:(generic|openvms|adminlun|hpux)' -AllMatches).Matches.Groups[1].Value
-            $TD_HostBaseTemp.Status = ($TD_CollectInfo|Select-String -Pattern '^status:(online|offline)' -AllMatches).Matches.Groups[1].Value
+            $TD_HostBaseTemp.Status = ($TD_CollectInfo|Select-String -Pattern '^status:(online|offline|degraded)' -AllMatches).Matches.Groups[1].Value
             $TD_HostBaseTemp.SiteName = ($TD_CollectInfo|Select-String -Pattern '^site_name:([a-zA-Z0-9-_]+|)' -AllMatches).Matches.Groups[1].Value
             $TD_HostBaseTemp.HostClusterName = ($TD_CollectInfo|Select-String -Pattern '^host_cluster_name:([a-zA-Z0-9-_]+|)' -AllMatches).Matches.Groups[1].Value
             $TD_HostBaseTemp.Protocol = ($TD_CollectInfo|Select-String -Pattern '^protocol:(scsi|fcnvme|nvme|rdmanvme|fcscsi|sas|scsi)' -AllMatches).Matches.Groups[1].Value

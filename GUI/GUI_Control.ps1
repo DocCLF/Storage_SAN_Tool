@@ -392,6 +392,8 @@ $TD_btn_IBM_HostVolumeMap.add_click({
 <# to keep this file clean :D export the following lines to a func in one if the next Version #>
 $TD_btn_FilterHVM.Add_Click({
     $TD_btn_ClearFilterHVM.Visibility="Visible"
+    $TD_lb_ErrorMsgHVM.Content = ""
+    $TD_lb_ErrorMsgHVM.Visibility="Collapsed"
     [string]$filter= $TD_tb_filter.Text
     [int]$TD_Filter_DG = $TD_cb_ListFilterStorageHVM.Text
     [string]$TD_Filter_DG_Colum = $TD_cb_StorageHVM.Text
@@ -407,7 +409,7 @@ $TD_btn_FilterHVM.Add_Click({
             6 { $TD_Host_Volume_Map = $TD_dg_HostVolInfoSix.ItemsSource }
             7 { $TD_Host_Volume_Map = $TD_dg_HostVolInfoSeven.ItemsSource }
             8 { $TD_Host_Volume_Map = $TD_dg_HostVolInfoEight.ItemsSource }
-            Default {SST_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong, there are no or wrong Data in $($TD_CollectVolInfo.count) found.") -TD_ToolMSGType Error}
+            Default {SST_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong, there are no or wrong Data in $($TD_CollectVolInfo.count) found.") -TD_ToolMSGType Error -TD_Shown yes}
         }
         if($TD_Host_Volume_Map.Count -ne $TD_CollectVolInfo.Count){
             $TD_Host_Volume_Map = $TD_CollectVolInfo }
@@ -418,7 +420,7 @@ $TD_btn_FilterHVM.Add_Click({
                 "Volume" { [array]$WPF_dataGrid = $TD_Host_Volume_Map | Where-Object { $_.VolumeName -Match $filter } }
                 "UID" { [array]$WPF_dataGrid = $TD_Host_Volume_Map | Where-Object { $_.UID -Match $filter } }
                 "Capacity" { [array]$WPF_dataGrid = $TD_Host_Volume_Map | Where-Object { $_.Capacity -Match $filter } }
-                Default {SST_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong, there are no or wrong Data in CollectVolInfo found.") -TD_ToolMSGType Error}
+                Default {SST_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong, there are no or wrong Data in CollectVolInfo found.") -TD_ToolMSGType Error -TD_Shown yes}
             }
             switch ($TD_Filter_DG) {
                 1 { $TD_dg_HostVolInfoOne.ItemsSource = $WPF_dataGrid }
@@ -429,14 +431,14 @@ $TD_btn_FilterHVM.Add_Click({
                 6 { $TD_dg_HostVolInfoSix.ItemsSource = $WPF_dataGrid }
                 7 { $TD_dg_HostVolInfoSeven.ItemsSource = $WPF_dataGrid }
                 8 { $TD_dg_HostVolInfoEight.ItemsSource = $WPF_dataGrid }
-                Default {SST_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong, please check the the Filter or Datapath.") -TD_ToolMSGType Error}
+                Default {SST_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong, please check the the Filter or Datapath.") -TD_ToolMSGType Error -TD_Shown yes}
             }
             
         }
     catch {
         <#Do this if a terminating exception happens#>
-        SST_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong, please check the prompt output first and then the log files.") -TD_ToolMSGType Error
-        SST_ToolMessageCollector -TD_ToolMSGCollector $_.Exception.Message -TD_ToolMSGType Error
+        SST_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong, please check the prompt output first and then the log files.") -TD_ToolMSGType Error -TD_Shown yes
+        SST_ToolMessageCollector -TD_ToolMSGCollector $_.Exception.Message -TD_ToolMSGType Error -TD_Shown no
         $TD_lb_ErrorMsgHVM.Visibility="visible"
         $TD_lb_ErrorMsgHVM.Content = $_.Exception.Message
     }
@@ -447,6 +449,8 @@ $TD_btn_ClearFilterHVM.Add_Click({
 
     [int]$TD_Filter_DG = $TD_cb_ListFilterStorageHVM.Text
     $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {(($_.DeviceTyp -eq "Storage")-and($_.ID -eq $TD_Filter_DG))}
+    $TD_lb_ErrorMsgHVM.Content = ""
+    $TD_lb_ErrorMsgHVM.Visibility="Collapsed"
     
     $TD_tb_filter.Text = ""
     try {

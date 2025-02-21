@@ -42,6 +42,7 @@ function IBM_DriveFirmwareCheck {
 
     process {
         Write-Debug -Message " $IBM_DriveProdID ------------------------- $IBM_DriveCurrentFW ------------------------ $IBM_ProdMTM "
+        SST_ToolMessageCollector -TD_ToolMSGCollector "IBM_DriveFirmwareCheck: $IBM_DriveProdID -------- $IBM_DriveCurrentFW -------- $IBM_ProdMTM" -TD_ToolMSGType Debug -TD_Shown no
 
         try {
             $IBM_LocDateInfo=((((Get-Item -Path $PSRootPath\Resources\IBMFlashSystem_$($IBM_DriveProdID)_DRIVES_*).FullName).TrimStart("$PSScriptRoot\Resources\IBMFlashSystem_$($IBM_DriveProdID)_DRIVES_").TrimEnd('.txt')).Trim())  
@@ -123,7 +124,7 @@ function IBM_DriveFirmwareCheck {
                 }
             }
         }
-
+        SST_ToolMessageCollector -TD_ToolMSGCollector "$IBM_DriveProdID ------ $IBM_DriveCurrentFW ------ $IBM_LocSpecVirtSW" -TD_ToolMSGType Debug -TD_Shown no
         Write-Debug -Message $IBM_LocSpecVirtSW
         if([string]::IsNullOrEmpty($IBM_LocSpecVirtSW)){
             $IBM_LocSpecVirtSW = "unknown"

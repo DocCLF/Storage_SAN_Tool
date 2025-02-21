@@ -56,7 +56,8 @@ function SST_MainHealthCheckFunc {
                         SST_ToolMessageCollector -TD_ToolMSGCollector "And this was Found`n$($TD_SpectrVirtuFWInfos)" -TD_ToolMSGType Debug -TD_Shown no                        
                     }
                     catch {
-                        SST_ToolMessageCollector $_.Exception.Message -TD_ToolMSGType Error -TD_Shown yes
+                        SST_ToolMessageCollector -TD_ToolMSGCollector "There is no Device FW found" -TD_ToolMSGType Error -TD_Shown yes
+                        SST_ToolMessageCollector $($_.Exception.Message) -TD_ToolMSGType Error -TD_Shown no
                     }
 
                     $TD_lb_MinimumPTF.Content = $TD_SpectrVirtuFWInfos.MinimumPTF
@@ -95,7 +96,7 @@ function SST_MainHealthCheckFunc {
                     $Temp_Credentials | ForEach-Object {
                         #region Storage_HS_Eventlog
                         [array]$TD_IBM_EventLogCheck = IBM_EventLog -TD_Line_ID $_.ID -TD_Device_ConnectionTyp $_.ConnectionTyp -TD_Device_UserName $_.UserName -TD_Device_DeviceIP $_.IPAddress -TD_Device_DeviceName $_.DeviceName -TD_Device_PW $([Net.NetworkCredential]::new('', $_.Password).Password) -TD_Device_SSHKeyPath $_.SSHKeyPath -TD_Export "no"
-                        SST_ToolMessageCollector -TD_ToolMSGCollector "Storage HS_Eventlog`n$TD_IBM_EventLogCheck" -TD_ToolMSGType Debug -TD_Shown no
+                        SST_ToolMessageCollector -TD_ToolMSGCollector "Storage HS_Eventlog" -TD_ToolMSGType Debug -TD_Shown no
                         $TD_dg_EventlogStatusInfoText.ItemsSource=$EmptyVar
                         if($TD_IBM_EventLogCheck.Status -eq "alert"){
                             $TD_lb_EventlogLight.Background="red"
@@ -120,7 +121,7 @@ function SST_MainHealthCheckFunc {
                         #endregion
                         #region Storage_HS_MDiskCheck
                         [array]$TD_IBM_MDiskCheck    = IBM_MDiskInfo -TD_Line_ID $_.ID -TD_Device_ConnectionTyp $_.ConnectionTyp -TD_Device_UserName $_.UserName -TD_Device_DeviceIP $_.IPAddress -TD_Device_DeviceName $_.DeviceName -TD_Device_PW $([Net.NetworkCredential]::new('', $_.Password).Password) -TD_Device_SSHKeyPath $_.SSHKeyPath -TD_Storage $TD_Credential.SVCorVF -TD_Export "no"
-                        SST_ToolMessageCollector -TD_ToolMSGCollector "Storage HS_MDiskCheck`n$TD_IBM_MDiskCheck" -TD_ToolMSGType Debug -TD_Shown no
+                        SST_ToolMessageCollector -TD_ToolMSGCollector "Storage HS_MDiskCheck" -TD_ToolMSGType Debug -TD_Shown no
                         $TD_dg_MdiskStatusInfoText.ItemsSource=$EmptyVar
                         if(($TD_IBM_MDiskCheck.Status -eq "offline")-or($TD_IBM_MDiskCheck.Status -eq "excluded")){
                             $TD_lb_MdiskStatusLight.Background ="red"
@@ -134,7 +135,7 @@ function SST_MainHealthCheckFunc {
                         #endregion
                         #region Storage_HS_VolumeCheck
                         [array]$TD_IBM_VolumeCheck   = IBM_VolumeInfo -TD_Line_ID $_.ID -TD_Device_ConnectionTyp $_.ConnectionTyp -TD_Device_UserName $_.UserName -TD_Device_DeviceIP $_.IPAddress -TD_Device_DeviceName $_.DeviceName -TD_Device_PW $([Net.NetworkCredential]::new('', $_.Password).Password) -TD_Device_SSHKeyPath $_.SSHKeyPath -TD_Storage $TD_Credential.SVCorVF -TD_Export "no"
-                        SST_ToolMessageCollector -TD_ToolMSGCollector "Storage HS_VolumeCheck`n$TD_IBM_VolumeCheck" -TD_ToolMSGType Debug -TD_Shown no
+                        SST_ToolMessageCollector -TD_ToolMSGCollector "Storage HS_VolumeCheck" -TD_ToolMSGType Debug -TD_Shown no
                         $TD_VdiskResault = foreach($TD_VdiskFunc in $TD_IBM_VolumeCheck){
                             if(($TD_VdiskFunc.VolFunc -eq 'master')-or($TD_VdiskFunc.VolFunc -eq 'none')){
                                 #Write-Host $_
@@ -164,7 +165,7 @@ function SST_MainHealthCheckFunc {
                         #endregion
                         #region Storage_HS_IPQuorumCheck
                         [array]$TD_IBM_IPQuorumCheck = IBM_IPQuorum -TD_Line_ID $_.ID -TD_Device_ConnectionTyp $_.ConnectionTyp -TD_Device_UserName $_.UserName -TD_Device_DeviceIP $_.IPAddress -TD_Device_DeviceName $_.DeviceName -TD_Device_PW $([Net.NetworkCredential]::new('', $_.Password).Password) -TD_Device_SSHKeyPath $_.SSHKeyPath -TD_Storage $TD_Credential.SVCorVF -TD_Export "no"
-                        SST_ToolMessageCollector -TD_ToolMSGCollector "Storage HS_IPQuorumCheck`n$TD_IBM_IPQuorumCheck" -TD_ToolMSGType Debug -TD_Shown no
+                        SST_ToolMessageCollector -TD_ToolMSGCollector "Storage HS_IPQuorumCheck" -TD_ToolMSGType Debug -TD_Shown no
                         if(!([String]::IsNullOrEmpty($TD_IBM_IPQuorumCheck))){
                             $TD_lb_QuorumStatusLight.Background ="green"
                             $TD_dg_QuorumStatusInfo.ItemsSource = $TD_IBM_IPQuorumCheck
@@ -176,7 +177,7 @@ function SST_MainHealthCheckFunc {
                         #endregion
                         #region Storage_HS_UserCheck
                         [array]$TD_IBM_UserCheck = IBM_UserInfo -TD_Line_ID $_.ID -TD_Device_ConnectionTyp $_.ConnectionTyp -TD_Device_UserName $_.UserName -TD_Device_DeviceIP $_.IPAddress -TD_Device_DeviceName $_.DeviceName -TD_Device_PW $([Net.NetworkCredential]::new('', $_.Password).Password) -TD_Device_SSHKeyPath $_.SSHKeyPath -TD_Storage $TD_Credential.SVCorVF -TD_Export "no"
-                        SST_ToolMessageCollector -TD_ToolMSGCollector "Storage HS_UserCheck`n$TD_IBM_UserCheck" -TD_ToolMSGType Debug -TD_Shown no
+                        SST_ToolMessageCollector -TD_ToolMSGCollector "Storage HS_UserCheck" -TD_ToolMSGType Debug -TD_Shown no
                         $TD_dg_UserStatusInfoText.ItemsSource=$EmptyVar
                         if(($TD_IBM_UserCheck.PW_Change_required -eq "yes")){
                             $TD_lb_UserStatusLight.Background ="red"
@@ -191,7 +192,7 @@ function SST_MainHealthCheckFunc {
                         #endregion
                         #region Storage_HS_StorSecuCheck
                         $TD_IBM_StorSecuCheck = IBM_StorageSecurity -TD_Line_ID $_.ID -TD_Device_ConnectionTyp $_.ConnectionTyp -TD_Device_UserName $_.UserName -TD_Device_DeviceIP $_.IPAddress -TD_Device_DeviceName $_.DeviceName -TD_Device_PW $([Net.NetworkCredential]::new('', $_.Password).Password) -TD_Device_SSHKeyPath $_.SSHKeyPath -TD_Storage $TD_Credential.SVCorVF -TD_Export "no"
-                        SST_ToolMessageCollector -TD_ToolMSGCollector "Storage HS_UserCheck`n$TD_IBM_StorSecuCheck" -TD_ToolMSGType Debug -TD_Shown yes
+                        SST_ToolMessageCollector -TD_ToolMSGCollector "Storage HS_UserCheck" -TD_ToolMSGType Debug -TD_Shown yes
                         if(!([String]::IsNullOrEmpty($TD_IBM_StorSecuCheck))){
                             $TD_lb_SecurityStatusLight.Background ="green"
                             $TD_dg_SecurityStatusInfoText.ItemsSource = $TD_IBM_StorSecuCheck
@@ -205,6 +206,7 @@ function SST_MainHealthCheckFunc {
                         #endregion
                         $TD_UserControl3_1.Dispatcher.Invoke([System.Action]{},"Render")
                         $TD_UserControl3_2.Dispatcher.Invoke([System.Action]{},"Render")
+                        SST_ToolMessageCollector -TD_ToolMSGCollector "Storage Health Check Func End" -TD_ToolMSGType Debug -TD_Shown no
                     }
                 }
             "Brocade" 
@@ -216,6 +218,6 @@ function SST_MainHealthCheckFunc {
     }
     
     end {
-        
+        SST_ToolMessageCollector -TD_ToolMSGCollector "Main Health Check Func End" -TD_ToolMSGType Debug -TD_Shown no
     }
 }
