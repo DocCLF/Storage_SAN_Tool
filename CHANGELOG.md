@@ -18,10 +18,14 @@ All notable changes to this project will be documented in this file.
 - Bug with SN in StorageBaseFunc
 - Bug with named File with DeviceName in FCPortInfo
 - Bug ToolMSGCollector with long MSG
+- Bug where some log msg were not complete saved
 - Bug where check for the currentFirmeware fails
+- Bug in WPF where the site name of the host was not displayed
+- Bug where degraded Hosts not displayed
+- Bug where Usernames not displayed complete
 
 ### Changed
-- First cuts of the revision of the Storage Health Check
+- Completion of the revision of the Storage Health Check
 - Revised of the StorageSWChecks, thx IBM -.-
 
 
