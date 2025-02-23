@@ -82,10 +82,12 @@
                         <ComboBoxItem>Storage</ComboBoxItem>
                         <ComboBoxItem>SAN</ComboBoxItem>
                     </ComboBox>
+                    <!-- needs more tests to be able to use it safely
                     <ComboBox x:Name="CB_DeviceConnectionType" SelectedIndex="1" SelectedValuePath="Content" Style="{StaticResource MainComboBoxStyle}" >
                         <ComboBoxItem>Secure Shell (SSH)</ComboBoxItem>
                         <ComboBoxItem>Classic (UN/PW)</ComboBoxItem>
                     </ComboBox>
+                    -->
                     <Label  Content="Cluster IP:" Style="{StaticResource MainLabelStyle}"/>
                     <TextBox x:Name="TB_DeviceIPAddr" MinWidth="100" MaxLength="15" Style="{StaticResource MainTextBoxStyle}" />
                     <Label  Content="UserName :" Style="{StaticResource MainLabelStyle}"/>

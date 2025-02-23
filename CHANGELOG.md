@@ -28,6 +28,9 @@ All notable changes to this project will be documented in this file.
 - Completion of the revision of the Storage Health Check
 - Revised of the StorageSWChecks, thx IBM -.-
 
+### Removed
+- ssh key use by default (needs more tests to be able to use it safely)
+
 
 # [v1.2.0] - 2025-01-24
 ### Added
