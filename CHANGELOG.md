@@ -16,6 +16,7 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
 - Bug with SN in StorageBaseFunc
+- Bug in StorageBaseFunc where is SVC Nodes not displayed
 - Bug with named File with DeviceName in FCPortInfo
 - Bug ToolMSGCollector with long MSG
 - Bug where some log msg were not complete saved
@@ -26,6 +27,7 @@ All notable changes to this project will be documented in this file.
 
 ### Changed
 - Completion of the revision of the Storage Health Check
+- CleanUp some MSG and insert some more useful information
 - Revised of the StorageSWChecks, thx IBM -.-
 
 ### Removed

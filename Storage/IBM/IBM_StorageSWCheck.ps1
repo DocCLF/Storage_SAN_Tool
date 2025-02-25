@@ -40,7 +40,7 @@ function IBM_StorageSWCheck {
         }
         catch {
             <#Do this if a terminating exception happens#>
-            Write-Debug -Message "Something went wrong"
+            SST_ToolMessageCollector -TD_ToolMSGCollector "No File found, show MSG: $($_.Exception.Message)." -TD_ToolMSGType Error -TD_Shown no
             Write-Debug -Message $_.Exception.Message
             $IBM_LocDateInfo ="01 October 2024"
         }
@@ -54,9 +54,7 @@ function IBM_StorageSWCheck {
         }
         catch {
             <#Do this if a terminating exception happens#>
-            Write-Debug -Message "Something went wrong"
-            SST_ToolMessageCollector -TD_ToolMSGCollector "There is a problem with the online check of the software status." -TD_ToolMSGType Error
-            SST_ToolMessageCollector -TD_ToolMSGCollector "$($_.Exception.Message)" -TD_ToolMSGType Error
+            SST_ToolMessageCollector -TD_ToolMSGCollector "There is a problem with the online check of the software status $($_.Exception.Message)." -TD_ToolMSGType Error -TD_Shown no
             Write-Debug -Message $_.Exception.Message
             $IBM_WebSpecVirtSWInofs ="nothing in here"
         }
@@ -72,7 +70,9 @@ function IBM_StorageSWCheck {
 
             $IBM_LocSpecVirtSWInofs = $IBM_LocSpecVirtSWInofs |Select-Object -SkipLast ($IBM_LocSpecVirtSWInofs.Count - 80)
             $IBM_LocSpecVirtSWInofs | Out-File -FilePath $PSRootPath\Resources\IBM_StorageSWCheck_$IBM_WebDateInfo.txt
-            
+            Remove-Item -Path $PSRootPath\Resources\IBM_StorageSWCheck_$IBM_LocDateInfo.txt -Force
+            $IBM_LocDateInfo = $null
+            $IBM_LocDateInfo = $IBM_WebDateInfo
         }else {
             <# Action when all if and elseif conditions are false #>
             $IBM_LocSpecVirtSWInofs = Get-Content -Path $PSRootPath\Resources\IBM_StorageSWCheck_$IBM_WebDateInfo.txt
@@ -80,8 +80,8 @@ function IBM_StorageSWCheck {
     }
     
     process {
-        Write-Debug -Message " $IBM_CurrentSpectrVirtuFW ------------------------ $IBM_ProdMTM "
-        SST_ToolMessageCollector -TD_ToolMSGCollector " $IBM_CurrentSpectrVirtuFW ------------------------ $IBM_ProdMTM " -TD_ToolMSGType Debug -TD_Shown no
+        Write-Debug -Message " $IBM_CurrentSpectrVirtuFW ------- $IBM_ProdMTM "
+        SST_ToolMessageCollector -TD_ToolMSGCollector " $IBM_CurrentSpectrVirtuFW ------- $IBM_ProdMTM " -TD_ToolMSGType Debug -TD_Shown no
         $IBM_SpecVirtSWInfo = switch ($IBM_CurrentSpectrVirtuFW) {
             <# FlashSystem 5x00 Software Levels #>
             {$_ -like "8.7.0*"} { 
@@ -146,7 +146,7 @@ function IBM_StorageSWCheck {
             }
         }
         SST_ToolMessageCollector -TD_ToolMSGCollector "Result Storage FWCheck $IBM_SpecVirtSWInfo" -TD_ToolMSGType Debug -TD_Shown no
-        Write-Debug -Message $IBM_SpecVirtSWInfo
+        IBM_StorageFWCollector -FWRes $IBM_SpecVirtSWInfo -IBM_SpecVirtSWInfo $IBM_CurrentSpectrVirtuFW
     }
     
     end {

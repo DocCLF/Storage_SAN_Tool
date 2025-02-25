@@ -2,7 +2,7 @@ function IBM_BaseStorageInfos {
     [CmdletBinding()]
     param (
         [Int16]$TD_Line_ID,
-        [string]$TD_Device_ConnectionTyp,
+        [string]$TD_Device_ConnectionTyp = "plink",
         [string]$TD_Device_UserName,
         [string]$TD_Device_DeviceIP,
         [string]$TD_Device_DeviceName,
