@@ -28,6 +28,7 @@ function SST_FileCleanUp {
     )
     
     begin {
+        $ErrorActionPreference="SilentlyContinue"
         [string]$TD_PSRootPath = (Split-Path -Path $PSScriptRoot -Parent)
         [string]$TD_UsedLogPath = $null
 
@@ -44,7 +45,7 @@ function SST_FileCleanUp {
             break
         }else {
             try {
-                Get-ChildItem -Path $TD_UsedLogPath | Where-Object {$_.LastWriteTime -LT $(Get-Date).AddDays(-$TD_KeepFilesForDays)} | Remove-Item -Confirm $false -Force -ErrorAction Continue
+                Get-ChildItem -Path $TD_UsedLogPath | Where-Object {$_.LastWriteTime -LT $(Get-Date).AddDays(-$TD_KeepFilesForDays)} | Remove-Item -Confirm:$false -Force -ErrorAction Continue
                 SST_ToolMessageCollector -TD_ToolMSGCollector "All files older than $TD_KeepFilesForDays days have been deleted from the directory: $TD_UsedLogPath " -TD_ToolMSGType Message -TD_Shown yes
             }
             catch {

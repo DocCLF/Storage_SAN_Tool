@@ -24,6 +24,7 @@ All notable changes to this project will be documented in this file.
 - Bug in WPF where the site name of the host was not displayed
 - Bug where degraded Hosts not displayed
 - Bug where Usernames not displayed complete
+- Bug Remove-Item, did not work
 
 ### Changed
 - Completion of the revision of the Storage Health Check
