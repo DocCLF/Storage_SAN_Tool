@@ -293,7 +293,7 @@ $TD_DG_KnownDeviceList.add_SelectionChanged({
 })
 #endregion
 
-#region IBM Button
+#region IBM Storage Button
 $TD_btn_IBM_Eventlog.add_click({
 
     $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_.DeviceTyp -eq "Storage"}
@@ -1635,6 +1635,12 @@ $TD_btn_FOS_PortBufferShow.add_click({
 
     $TD_stp_sanPortBufferShow.Visibility="Visible"
 
+})
+#endregion
+
+#region IBM Power
+$TD_btn_IBM_Power.add_click({
+    IBM_PowerCollector
 })
 #endregion
 

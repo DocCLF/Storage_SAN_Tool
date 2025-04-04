@@ -24,13 +24,16 @@ function SST_FileCleanUp {
         [Parameter(ValueFromPipeline,HelpMessage="The default path goes to the ToolLog directory, if you want to change this then enter the full path here.")]
         [string]$TD_UserInputPath = $null,
         [Parameter(ValueFromPipeline,HelpMessage="The default value for deleting files is 90 days, a range between 7-360 is possible.")]
-        [Int16]$TD_KeepFilesForDays = 90
+        [Int16]$TD_KeepFilesForDays = 90,
+        [Parameter(ValueFromPipeline,HelpMessage="To delete files and/or folders with commonly used attributes, use the TD_DeleteWhat parameter. !Directory (delete files only (default)) or None (deletes all file and folders).")]
+        [string]$TD_DeleteWhat = "!Directory" 
     )
     
     begin {
         $ErrorActionPreference="SilentlyContinue"
         [string]$TD_PSRootPath = (Split-Path -Path $PSScriptRoot -Parent)
         [string]$TD_UsedLogPath = $null
+        [int]$TD_FilesToDelete = 0
 
         if([string]::IsNullOrWhiteSpace($TD_UserInputPath)){
             $TD_UsedLogPath = "$TD_PSRootPath\ToolLog\"
@@ -42,11 +45,11 @@ function SST_FileCleanUp {
     process {
         if((Get-ChildItem -Path $TD_UsedLogPath -File).Count -lt 2){
             SST_ToolMessageCollector -TD_ToolMSGCollector "There are no files in the specified directory: $TD_UsedLogPath" -TD_ToolMSGType Message -TD_Shown yes    
-            break
         }else {
             try {
-                Get-ChildItem -Path $TD_UsedLogPath | Where-Object {$_.LastWriteTime -LT $(Get-Date).AddDays(-$TD_KeepFilesForDays)} | Remove-Item -Confirm:$false -Force -ErrorAction Continue
-                SST_ToolMessageCollector -TD_ToolMSGCollector "All files older than $TD_KeepFilesForDays days have been deleted from the directory: $TD_UsedLogPath " -TD_ToolMSGType Message -TD_Shown yes
+                $TD_FilesToDelete = (Get-ChildItem -Path $TD_UsedLogPath -Attributes $TD_DeleteWhat | Where-Object {$_.LastWriteTime -LT $(Get-Date).AddDays(-90)}).Count
+                Get-ChildItem -Path $TD_UsedLogPath -Attributes $TD_DeleteWhat | Where-Object {$_.LastWriteTime -LT $(Get-Date).AddDays(-$TD_KeepFilesForDays)} | Remove-Item -Confirm:$false -Force -ErrorAction Continue
+                SST_ToolMessageCollector -TD_ToolMSGCollector "$TD_FilesToDelete files older than $TD_KeepFilesForDays days have been deleted from the directory: $TD_UsedLogPath " -TD_ToolMSGType Message -TD_Shown yes
             }
             catch {
                 SST_ToolMessageCollector -TD_ToolMSGCollector $_.Exception.Message -TD_ToolMSGType Warning -TD_Shown yes
@@ -55,6 +58,6 @@ function SST_FileCleanUp {
     }
     
     end {
-        
+        Clear-Variable TD* -Scope Global
     }
 }
