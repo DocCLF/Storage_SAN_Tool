@@ -36,6 +36,7 @@ function IBM_StorageSWCheck {
         $PSRootPath = ((([IO.DirectoryInfo] $PSScriptRoot).Parent).Parent).FullName
 
         try {
+            SST_FileCleanUp -TD_UserInputPath $PSRootPath\Resources\ -TD_KeepFilesForDays 24
             $IBM_LocDateInfo=((((Get-Item -Path $PSRootPath\Resources\IBM_StorageSWCheck_*).FullName).TrimStart("$PSScriptRoot\Resources\IBM_StorageSWCheck_").TrimEnd('.txt')).Trim())  
         }
         catch {

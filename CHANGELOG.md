@@ -25,6 +25,7 @@ All notable changes to this project will be documented in this file.
 - Bug where degraded Hosts not displayed
 - Bug where Usernames not displayed complete
 - Bug Remove-Item, did not work
+- Bug where StorageSWCheck failed in some situations
 
 ### Changed
 - Completion of the revision of the Storage Health Check
