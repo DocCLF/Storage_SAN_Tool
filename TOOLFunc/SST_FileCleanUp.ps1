@@ -48,7 +48,7 @@ function SST_FileCleanUp {
         }else {
             try {
                 $TD_FilesToDelete = (Get-ChildItem -Path $TD_UsedLogPath -Attributes $TD_DeleteWhat | Where-Object {$_.LastWriteTime -LT $(Get-Date).AddDays(-90)}).Count
-                Get-ChildItem -Path $TD_UsedLogPath -Attributes $TD_DeleteWhat | Where-Object {$_.LastWriteTime -LT $(Get-Date).AddDays(-$TD_KeepFilesForDays)} | Remove-Item -Confirm:$false -Force -ErrorAction Continue
+                Get-ChildItem -Path $TD_UsedLogPath -Attributes $TD_DeleteWhat | Where-Object {$_.LastWriteTime -LT $(Get-Date).AddDays(-$TD_KeepFilesForDays)} | Remove-Item -Confirm:$false -Force -ErrorAction SilentlyContinue
                 SST_ToolMessageCollector -TD_ToolMSGCollector "$TD_FilesToDelete files older than $TD_KeepFilesForDays days have been deleted from the directory: $TD_UsedLogPath " -TD_ToolMSGType Message -TD_Shown yes
             }
             catch {
