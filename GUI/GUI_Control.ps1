@@ -169,64 +169,67 @@ $TD_btn_ChangeExportPath.add_click({
 })
 #endregion
 
+<# The ssh settings are deactivated for the time being and a better implementation should be sought. #>
 #region SSH Setings
 <# ssh-agent Status check #>
-$TD_lb_SSHStatusMsg.Visibility ="Visible"
-$TD_lb_SSHStatusMsg.Content ="SSH-Agent Status is:`n$((Get-Service ssh-agent).Status)"
-if(((Get-Service ssh-agent).Status)-eq "Running"){
-    $TD_btn_Start_sshAgent.Content="Stop ssh-agent"
-    $TD_btn_Start_sshAgent.Background="coral"
-}else {
-    <# Action when all if and elseif conditions are false #>
-    $TD_btn_Start_sshAgent.Content="Start ssh-agent"
-    $TD_btn_Start_sshAgent.Background="#FFDDDDDD"
-}
+#$TD_lb_SSHStatusMsg.Visibility ="Visible"
+#$TD_lb_SSHStatusMsg.Content ="SSH-Agent Status is:`n$((Get-Service ssh-agent).Status)"
+#if(((Get-Service ssh-agent).Status)-eq "Running"){
+#    $TD_btn_Start_sshAgent.Content="Stop ssh-agent"
+#    $TD_btn_Start_sshAgent.Background="coral"
+#}else {
+#    <# Action when all if and elseif conditions are false #>
+#    $TD_btn_Start_sshAgent.Content="Start ssh-agent"
+#    $TD_btn_Start_sshAgent.Background="#FFDDDDDD"
+#}
 <# Try to start/stop the ssh-agent #>
-$TD_btn_Start_sshAgent.add_click({
-    $TD_btn_Text=$TD_btn_Start_sshAgent.Content
-    switch ($TD_btn_Text) {
-        {($_ -like "Start*")} { 
-                                try {
-                                    $TD_btn_Start_sshAgent.Content="Stop ssh-agent"
-                                    $TD_btn_Start_sshAgent.Background="coral"
-                                    Start-Service ssh-agent -ErrorAction Stop
-                                }
-                                catch {
-                                    <#Do this if a terminating exception happens#>
-                                    $TD_btn_Start_sshAgent.Content="Start ssh-agent"
-                                    $TD_btn_Start_sshAgent.Background="#FFDDDDDD"
-                                    SST_ToolMessageCollector -TD_ToolMSGCollector $_.Exception.Message -TD_ToolMSGType Warning
-                                }
-                                $TD_lb_SSHStatusMsg.Content ="SSH-Agent Status is:`n$((Get-Service ssh-agent).Status) "
-                            }
-        {($_ -like "Stop*")} {
-                                try {
-                                    $TD_btn_Start_sshAgent.Content="Start ssh-agent"
-                                    $TD_btn_Start_sshAgent.Background="#FFDDDDDD"
-                                    Stop-Service ssh-agent -ErrorAction Stop
-                                }
-                                catch {
-                                    <#Do this if a terminating exception happens#>
-                                    $TD_btn_Start_sshAgent.Content="Stop ssh-agent"
-                                    $TD_btn_Start_sshAgent.Background="coral"
-                                    SST_ToolMessageCollector -TD_ToolMSGCollector $_.Exception.Message -TD_ToolMSGType Warning
-                                }
-                                $TD_lb_SSHStatusMsg.Content ="SSH-Agent Status is:`n$((Get-Service ssh-agent).Status) "
-                            }
-        Default {SST_ToolMessageCollector -TD_ToolMSGCollector "Something went wrong by get informations about the ssh-agent." -TD_ToolMSGType Error}
-    }
-    $TD_UserControl4.Dispatcher.Invoke([System.Action]{},"Render")
-})
 
-$TD_BTN_AddSSHKey.add_click({
-    #$TD_ButtonColorSSH=$TD_btn_addsshkeyone.Background
-    $IsKeyIn = $TD_TB_PathtoSSHKeyNotVisibil.Text
-    if([string]::IsNullOrWhiteSpace($IsKeyIn)){
-        RemoveSSHKeyfromLine -TD_Storage "yes"
-    }else {
-        AddSSHKeytoLine -TD_Storage "yes"
-    }
-})
+#$TD_btn_Start_sshAgent.add_click({
+#    $TD_btn_Text=$TD_btn_Start_sshAgent.Content
+#    switch ($TD_btn_Text) {
+#        {($_ -like "Start*")} { 
+#                                try {
+#                                    $TD_btn_Start_sshAgent.Content="Stop ssh-agent"
+#                                    $TD_btn_Start_sshAgent.Background="coral"
+#                                    Start-Service ssh-agent -ErrorAction Stop
+#                                }
+#                                catch {
+#                                    <#Do this if a terminating exception happens#>
+#                                    $TD_btn_Start_sshAgent.Content="Start ssh-agent"
+#                                    $TD_btn_Start_sshAgent.Background="#FFDDDDDD"
+#                                    SST_ToolMessageCollector -TD_ToolMSGCollector $_.Exception.Message -TD_ToolMSGType Warning
+#                                }
+#                                $TD_lb_SSHStatusMsg.Content ="SSH-Agent Status is:`n$((Get-Service ssh-agent).Status) "
+#                            }
+#        {($_ -like "Stop*")} {
+#                                try {
+#                                    $TD_btn_Start_sshAgent.Content="Start ssh-agent"
+#                                    $TD_btn_Start_sshAgent.Background="#FFDDDDDD"
+#                                    Stop-Service ssh-agent -ErrorAction Stop
+#                                }
+#                                catch {
+#                                    <#Do this if a terminating exception happens#>
+#                                    $TD_btn_Start_sshAgent.Content="Stop ssh-agent"
+#                                    $TD_btn_Start_sshAgent.Background="coral"
+#                                    SST_ToolMessageCollector -TD_ToolMSGCollector $_.Exception.Message -TD_ToolMSGType Warning
+#                                }
+#                                $TD_lb_SSHStatusMsg.Content ="SSH-Agent Status is:`n$((Get-Service ssh-agent).Status) "
+#                            }
+#        Default {SST_ToolMessageCollector -TD_ToolMSGCollector "Something went wrong by get informations about the ssh-agent." -TD_ToolMSGType Error}
+#    }
+#    $TD_UserControl4.Dispatcher.Invoke([System.Action]{},"Render")
+#})
+#
+#$TD_BTN_AddSSHKey.add_click({
+#    #$TD_ButtonColorSSH=$TD_btn_addsshkeyone.Background
+#    $IsKeyIn = $TD_TB_PathtoSSHKeyNotVisibil.Text
+#    if([string]::IsNullOrWhiteSpace($IsKeyIn)){
+#        RemoveSSHKeyfromLine -TD_Storage "yes"
+#    }else {
+#        AddSSHKeytoLine -TD_Storage "yes"
+#    }
+#})
+#
 #endregion
 
 #region AddDeviceCred
