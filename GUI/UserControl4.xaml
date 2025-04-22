@@ -115,6 +115,7 @@
                         </PasswordBox.Style>
                     </PasswordBox>
                     <TextBox x:Name="TB_PathtoSSHKeyNotVisibil" Text="" Visibility="Collapsed"/>
+                    <!-- The ssh settings are deactivated for the time being and a better implementation should be sought.
                     <Button x:Name="BTN_AddSSHKey" Content="Add SSH-Key" Height="30" Margin="5" Padding="2" VerticalContentAlignment="Center" HorizontalContentAlignment="center" >
                         <Button.Style>
                             <Style TargetType="Button">
@@ -126,6 +127,7 @@
                             </Style>
                         </Button.Style>
                     </Button>
+                    -->
                     <Label x:Name="LB_SVCorVF" VerticalContentAlignment="Center" HorizontalContentAlignment="center" Margin="2" Height="30" >
                         <Label.Style>
                             <Style TargetType="Label">
@@ -225,6 +227,7 @@
                         <Button Grid.Column="2" x:Name="btn_ChangeExportPath" Content="Change Export Path" HorizontalAlignment="Left" Style="{StaticResource MainBtnStyle}"/>
                     </Grid>
                 </GroupBox>
+                <!-- The ssh settings are deactivated for the time being and a better implementation should be sought.
                 <GroupBox Header="SSH Settings" Margin="0,10">
                     <StackPanel>
                         <Label x:Name="lb_SSHStatusMsg" Content="" Height="40" Foreground="Coral" FontSize="12" FontWeight="Bold" Margin="2,0" HorizontalAlignment="Left" Style="{StaticResource MainLabelStyle}" />
@@ -232,6 +235,7 @@
                         <Button x:Name="btn_Start_sshAgent" Content="Start ssh-agent" HorizontalAlignment="Left" Style="{StaticResource MainBtnStyle}" />
                     </StackPanel>
                 </GroupBox>
+                -->
             </StackPanel>
         </GroupBox>
     </Grid>
