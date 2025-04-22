@@ -39,7 +39,6 @@
             <!--Brocade SAN-->
             <Button x:Name="btn_Broc_SAN"  Content="Brocade SAN" Style="{StaticResource MainBtnStyle}" />
             <!--Brocade SAN-->
-            <Button x:Name="btn_IBM_Power"  Content="IBM Power (Alpha)" Style="{StaticResource MainBtnStyle}" />
             <!-- Placeholder for later use -->
             <!--Health-->
             <Button x:Name="btn_Stor_San" Content="Health Check" Style="{StaticResource MainBtnStyle}" /> 

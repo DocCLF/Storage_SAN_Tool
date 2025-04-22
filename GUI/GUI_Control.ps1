@@ -1642,9 +1642,9 @@ $TD_btn_FOS_PortBufferShow.add_click({
 #endregion
 
 #region IBM Power
-$TD_btn_IBM_Power.add_click({
-    IBM_PowerCollector
-})
+#$TD_btn_IBM_Power.add_click({
+#    IBM_PowerCollector
+#})
 #endregion
 
 #region Health Check

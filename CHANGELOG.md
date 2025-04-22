@@ -2,15 +2,7 @@
 
 All notable changes to this project will be documented in this file.
 
-### Unreleased
-- Performance improved
-- Storage RC and FC 
-- Support for Virtual Fabrics
-- Small SAN Healthcheck
-- Small improvements at Storage Healthcheck
-- improvements at SSH-Client using
-
-# [v1.2.1] - tbd
+# [v1.2.1] - 2025-04-22
 ### Added
 - auto Online Check of Devices by import the Creds and check the Box left from the Import Button
 
