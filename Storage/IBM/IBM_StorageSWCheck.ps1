@@ -147,7 +147,7 @@ function IBM_StorageSWCheck {
             }
         }
         SST_ToolMessageCollector -TD_ToolMSGCollector "Result Storage FWCheck $IBM_SpecVirtSWInfo" -TD_ToolMSGType Debug -TD_Shown no
-        IBM_StorageFWCollector -FWRes $IBM_SpecVirtSWInfo -IBM_SpecVirtSWInfo $IBM_CurrentSpectrVirtuFW
+        #IBM_StorageFWCollector -FWRes $IBM_SpecVirtSWInfo -IBM_SpecVirtSWInfo $IBM_CurrentSpectrVirtuFW
     }
     
     end {
