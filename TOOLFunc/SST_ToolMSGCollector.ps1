@@ -38,14 +38,14 @@ function SST_ToolMessageCollector {
     [array]$TD_MSG_GUIpresenter += $TD_MSGpresenter |Sort-Object
     <#present all msg #>
     switch ($TD_Shown) {
-        "no" { Write-Debug -Message $TD_ToolMSGCollector `n$TD_ToolMSGType }
+        "no" { Write-Debug -Message "$TD_ToolMSGCollector $TD_ToolMSGType" }
         "yes" { $TD_dg_ToolWindowForDebug.ItemsSource = $TD_MSG_GUIpresenter }
         #"export" { Out-File -FilePath $PSRootPath\ToolLog\SST_$($TD_GetMSGDate) -InputObject $TD_ToolMSGCollector -Append }
         Default {$TD_dg_ToolWindowForDebug.ItemsSource = $TD_MSG_GUIpresenter}
     }
 
     <# Example: Get-Date -UFormat "%d%m%Y" - Res: 14012025 #>
-    Out-File -FilePath $PSRootPath\ToolLog\SST_$(Get-Date -UFormat "%d%m%Y") -InputObject $TD_MSGpresenter -Append
+    Out-File -FilePath $PSRootPath\ToolLog\SST_$(Get-Date -UFormat "%d%m%Y") -InputObject $TD_MSGpresenter -Append -Width 1000
     
     #$TD_tb_ToolWindowForDebug.Text = $TD_MSG_GUIpresenter
     # the following line as switch case with the different options red,yellow etc.

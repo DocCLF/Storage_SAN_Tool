@@ -53,8 +53,8 @@ function SST_GetCredfGUI {
             $TD_CredentialsCount= (($TD_Credentials |Where-Object {$_.DeviceTyp -eq "SAN"}).count + 1)
             SST_ToolMessageCollector -TD_ToolMSGCollector "SAN ID is $TD_CredentialsCount" -TD_ToolMSGType Debug
         }
-
-        if($TD_CB_DeviceConnectionType.Text -like "Classic*"){$TD_CB_DeviceConnectionTypeText="plink"}else{$TD_CB_DeviceConnectionTypeText="ssh"}
+        <# needs more tests to be able to use it safely thats why plink is plink and not plink and ssh #>
+        if($TD_CB_DeviceConnectionType.Text -like "Classic*"){$TD_CB_DeviceConnectionTypeText="plink"}else{$TD_CB_DeviceConnectionTypeText="plink"}
         <# Create the Main_CredObj #>
         $TD_UserInputCred = "" | Select-Object ID,DeviceTyp,ConnectionTyp,IPAddress,DeviceName,UserName,Password,SSHKeyPath,SVCorVF,MTMCode,ProductDescr,CurrentFirmware,Exportpath
         $TD_UserInputCred.ID               =   $TD_CredentialsCount;

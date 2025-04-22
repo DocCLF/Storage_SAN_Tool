@@ -95,11 +95,11 @@ function IBM_FCPortInfo {
         <# export y or n #>
         if($TD_export -eq "yes"){
             if([string]$TD_Exportpath -ne "$PSRootPath\ToolLog\"){
-                $TD_FCPortInfoResault | Export-Csv -Path $TD_Exportpath\$($TD_Line_ID)_$($_.DeviceName)_FCPortInfoOverview_$(Get-Date -Format "yyyy-MM-dd").csv -NoTypeInformation
-                SST_ToolMessageCollector -TD_ToolMSGCollector "$TD_Exportpath\$($TD_Line_ID)_$($_.DeviceName)_FCPortInfoOverview_$(Get-Date -Format "yyyy-MM-dd").csv" -TD_ToolMSGType Debug
+                $TD_FCPortInfoResault | Export-Csv -Path $TD_Exportpath\$($TD_Line_ID)_$($TD_Device_DeviceName)_FCPortInfoOverview_$(Get-Date -Format "yyyy-MM-dd").csv -NoTypeInformation
+                SST_ToolMessageCollector -TD_ToolMSGCollector "$TD_Exportpath\$($TD_Line_ID)_$($TD_Device_DeviceName)_FCPortInfoOverview_$(Get-Date -Format "yyyy-MM-dd").csv" -TD_ToolMSGType Debug
             }else {
-                $TD_FCPortInfoResault | Export-Csv -Path $PSScriptRoot\ToolLog\$($TD_Line_ID)_$($_.DeviceName)_FCPortInfoOverview_$(Get-Date -Format "yyyy-MM-dd").csv -NoTypeInformation
-                SST_ToolMessageCollector -TD_ToolMSGCollector "$PSScriptRoot\ToolLog\$($TD_Line_ID)_$($_.DeviceName)_FCPortInfoOverview_$(Get-Date -Format "yyyy-MM-dd").csv" -TD_ToolMSGType Debug
+                $TD_FCPortInfoResault | Export-Csv -Path $PSScriptRoot\ToolLog\$($TD_Line_ID)_$($TD_Device_DeviceName)_FCPortInfoOverview_$(Get-Date -Format "yyyy-MM-dd").csv -NoTypeInformation
+                SST_ToolMessageCollector -TD_ToolMSGCollector "$PSScriptRoot\ToolLog\$($TD_Line_ID)_$($TD_Device_DeviceName)_FCPortInfoOverview_$(Get-Date -Format "yyyy-MM-dd").csv" -TD_ToolMSGType Debug
             }
         }else {
             <# output on the promt #>

@@ -211,9 +211,10 @@
                             </DataGrid.RowStyle>
                             <DataGrid.Columns>
                                 <DataGridCheckBoxColumn Header="ACK?" Binding="{Binding ACKHosts, NotifyOnTargetUpdated=True, UpdateSourceTrigger=PropertyChanged}" />
+                                <DataGridTextColumn Header="ID" Width="Auto" Binding="{Binding HostID}" IsReadOnly="True"/>
                                 <DataGridTextColumn Header="Name" Width="Auto" Binding="{Binding HostName}" IsReadOnly="True"/>
                                 <DataGridTextColumn Header="Status" Width="Auto" Binding="{Binding Status}" IsReadOnly="True"/>
-                                <DataGridTextColumn Header="HostSite" Width="Auto"  Binding="{Binding HostSiteName}" IsReadOnly="True"/>
+                                <DataGridTextColumn Header="HostSite" Width="Auto"  Binding="{Binding SiteName}" IsReadOnly="True"/>
                                 <DataGridTextColumn Header="HostCluster" Width="Auto" Binding="{Binding HostClusterName}" IsReadOnly="True"/>
                             </DataGrid.Columns>
                         </DataGrid>

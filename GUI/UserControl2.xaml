@@ -183,7 +183,7 @@
                                 <RowDefinition Height="auto" />
                                 <RowDefinition Height="auto" />
                             </Grid.RowDefinitions>
-                            <TextBox Padding="2" Width="650" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Text="Latest Major Version (Supported): FOS v9.2.X " FontSize="20" FontWeight="Bold" Foreground="White" Background="DarkGreen" Margin="5,5,5,0" IsReadOnly="True"/>
+                            <TextBox Padding="2" Width="650" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Text="Latest Major Version (Supported): FOS v9.2.X " FontSize="20" FontWeight="Bold" Foreground="White" Background="Green" Margin="5,5,5,0" IsReadOnly="True"/>
                             <StackPanel Orientation="Horizontal" Grid.Row="1" Margin="5,0,0,0">
                                 <TextBox Width="150" Padding="2" Text="Version" FontSize="15" FontWeight="Bold" Background="LightGreen" IsReadOnly="True"/>
                                 <TextBox Width="100" Padding="2" Text="GA Date" FontSize="15" FontWeight="Bold" IsReadOnly="True"/>
@@ -208,7 +208,7 @@
                                 <TextBox Width="100" Padding="2" Text=" Yes" Background="LightGreen" IsReadOnly="True"/>
                                 <TextBox Width="300" Padding="2" Text="FOS v9.2.0c1 addresses TSB-2024-293-A. FOS v9.2.0c1 is FICON Qualified." IsReadOnly="True" TextWrapping="Wrap"/>
                             </StackPanel>
-                            <TextBox Grid.Row="8" Padding="2" Width="650" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Text="Latest Major Version (Supported): FOS v9.1.X " FontSize="20" FontWeight="Bold" Foreground="White" Background="DarkGreen" Margin="5,20,5,0" IsReadOnly="True"/>
+                            <TextBox Grid.Row="8" Padding="2" Width="650" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Text="Established Major Version (Supported): FOS v9.1.X " FontSize="20" FontWeight="Bold" Foreground="White" Background="DarkGreen" Margin="5,20,5,0" IsReadOnly="True"/>
                             <StackPanel Orientation="Horizontal" Grid.Row="9" Margin="5,0,0,0">
                                 <TextBox Width="150" Padding="2" Text="FOS v9.1.1d/d1/d2" Background="LightGreen" IsReadOnly="True"/>
                                 <TextBox Width="100" Padding="2" Text="January 11, 2024" IsReadOnly="True"/>
@@ -227,7 +227,7 @@
                                 <TextBox Width="100" Padding="2" Text="Retired" Background="LightGreen" IsReadOnly="True"/>
                                 <TextBox Width="300" Padding="2" Text="If possible, please perform an update!" Background="LightCoral" TextWrapping="Wrap" IsReadOnly="True"/>
                             </StackPanel>
-                            <TextBox Grid.Row="12" Padding="2" Width="650" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Text="Latest Major Version (Supported): FOS v9.0.X " FontSize="20" FontWeight="Bold" Foreground="White" Background="DarkGreen" Margin="5,20,5,0" IsReadOnly="True"/>
+                            <TextBox Grid.Row="12" Padding="2" Width="650" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Text="Minimum Major Version (Pending Unsupported): FOS v9.0.X " FontSize="20" FontWeight="Bold" Background="Yellow" Margin="5,20,5,0" IsReadOnly="True"/>
                             <StackPanel Orientation="Horizontal" Grid.Row="13" Margin="5,0,0,0">
                                 <TextBox Width="150" Padding="2" Text="FOS v9.0.1e/e1" Background="LightGreen" IsReadOnly="True"/>
                                 <TextBox Width="100" Padding="2" Text="August 19, 2022" IsReadOnly="True"/>

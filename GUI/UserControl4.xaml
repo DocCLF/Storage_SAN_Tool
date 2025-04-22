@@ -82,10 +82,12 @@
                         <ComboBoxItem>Storage</ComboBoxItem>
                         <ComboBoxItem>SAN</ComboBoxItem>
                     </ComboBox>
+                    <!-- needs more tests to be able to use it safely
                     <ComboBox x:Name="CB_DeviceConnectionType" SelectedIndex="1" SelectedValuePath="Content" Style="{StaticResource MainComboBoxStyle}" >
                         <ComboBoxItem>Secure Shell (SSH)</ComboBoxItem>
                         <ComboBoxItem>Classic (UN/PW)</ComboBoxItem>
                     </ComboBox>
+                    -->
                     <Label  Content="Cluster IP:" Style="{StaticResource MainLabelStyle}"/>
                     <TextBox x:Name="TB_DeviceIPAddr" MinWidth="100" MaxLength="15" Style="{StaticResource MainTextBoxStyle}" />
                     <Label  Content="UserName :" Style="{StaticResource MainLabelStyle}"/>
@@ -113,6 +115,7 @@
                         </PasswordBox.Style>
                     </PasswordBox>
                     <TextBox x:Name="TB_PathtoSSHKeyNotVisibil" Text="" Visibility="Collapsed"/>
+                    <!-- The ssh settings are deactivated for the time being and a better implementation should be sought.
                     <Button x:Name="BTN_AddSSHKey" Content="Add SSH-Key" Height="30" Margin="5" Padding="2" VerticalContentAlignment="Center" HorizontalContentAlignment="center" >
                         <Button.Style>
                             <Style TargetType="Button">
@@ -124,6 +127,7 @@
                             </Style>
                         </Button.Style>
                     </Button>
+                    -->
                     <Label x:Name="LB_SVCorVF" VerticalContentAlignment="Center" HorizontalContentAlignment="center" Margin="2" Height="30" >
                         <Label.Style>
                             <Style TargetType="Label">
@@ -205,6 +209,8 @@
                         <StackPanel Orientation="Horizontal">
                             <Button x:Name="btn_ExportCred" Content="Export Credentials" HorizontalAlignment="Left" Style="{StaticResource MainBtnStyle}"/>
                             <Button x:Name="btn_ImportCred" Content="Import Credentials" HorizontalAlignment="Left" Style="{StaticResource MainBtnStyle}"/>
+                            <CheckBox x:Name="CB_OnlineCheckbyImport" VerticalAlignment="Center" Margin="22,2,2,2" />
+                            <Label Content="Device Online check by import" Style="{StaticResource MainLabelStyle}" />
                         </StackPanel>
                         <Label Grid.Row="1" x:Name="lb_CerdExportPath" Content="Save Path" Style="{StaticResource MainLabelStyle}" HorizontalAlignment="Left" />
                     </Grid>
@@ -221,6 +227,7 @@
                         <Button Grid.Column="2" x:Name="btn_ChangeExportPath" Content="Change Export Path" HorizontalAlignment="Left" Style="{StaticResource MainBtnStyle}"/>
                     </Grid>
                 </GroupBox>
+                <!-- The ssh settings are deactivated for the time being and a better implementation should be sought.
                 <GroupBox Header="SSH Settings" Margin="0,10">
                     <StackPanel>
                         <Label x:Name="lb_SSHStatusMsg" Content="" Height="40" Foreground="Coral" FontSize="12" FontWeight="Bold" Margin="2,0" HorizontalAlignment="Left" Style="{StaticResource MainLabelStyle}" />
@@ -228,6 +235,7 @@
                         <Button x:Name="btn_Start_sshAgent" Content="Start ssh-agent" HorizontalAlignment="Left" Style="{StaticResource MainBtnStyle}" />
                     </StackPanel>
                 </GroupBox>
+                -->
             </StackPanel>
         </GroupBox>
     </Grid>

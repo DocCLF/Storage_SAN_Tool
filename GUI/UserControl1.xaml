@@ -140,7 +140,7 @@
                 <Button
                 x:Name="btn_IBM_PolicyBased_Rep"
                 Style="{StaticResource MainBtnStyle}"
-                Content="Policy Based Repl." 
+                Content="Policy Based (Beta)" 
                 ToolTip="Get some information about the replication policy and VolGrp replication, only if there in use!" />
             </StackPanel>
         </GroupBox>   
@@ -1009,7 +1009,7 @@
                         <StackPanel Grid.Row="1" Orientation="Vertical" >
                         <Label x:Name="lb_ErrorMsgHVM" Visibility="Collapsed" Foreground="Red" Content="" Style="{StaticResource MainLabelStyle}" Padding="2" Margin="25,5,0,5"/>
                         <Label x:Name="lb_HostVolInfoOne" Content="Device 1" Visibility="{Binding ElementName=CB_STO_DG1, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}" FontSize="12" Style="{StaticResource MainLabelStyle}" Margin="2,5,0,5" />
-                        <DataGrid x:Name="dg_HostVolInfoOne" AutoGenerateColumns="False" Margin="5,5,5,5" MaxWidth="1280"  Visibility="{Binding ElementName=CB_STO_DG1, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
+                        <DataGrid x:Name="dg_HostVolInfoOne" AutoGenerateColumns="False" Margin="5,5,5,5" MaxWidth="1280" MaxHeight="480" Visibility="{Binding ElementName=CB_STO_DG1, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
                             <DataGrid.Style>
                                 <Style TargetType="DataGrid">
                                     <Style.Triggers>

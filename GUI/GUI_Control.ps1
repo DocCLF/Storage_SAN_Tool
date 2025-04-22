@@ -169,64 +169,67 @@ $TD_btn_ChangeExportPath.add_click({
 })
 #endregion
 
+<# The ssh settings are deactivated for the time being and a better implementation should be sought. #>
 #region SSH Setings
 <# ssh-agent Status check #>
-$TD_lb_SSHStatusMsg.Visibility ="Visible"
-$TD_lb_SSHStatusMsg.Content ="SSH-Agent Status is:`n$((Get-Service ssh-agent).Status)"
-if(((Get-Service ssh-agent).Status)-eq "Running"){
-    $TD_btn_Start_sshAgent.Content="Stop ssh-agent"
-    $TD_btn_Start_sshAgent.Background="coral"
-}else {
-    <# Action when all if and elseif conditions are false #>
-    $TD_btn_Start_sshAgent.Content="Start ssh-agent"
-    $TD_btn_Start_sshAgent.Background="#FFDDDDDD"
-}
+#$TD_lb_SSHStatusMsg.Visibility ="Visible"
+#$TD_lb_SSHStatusMsg.Content ="SSH-Agent Status is:`n$((Get-Service ssh-agent).Status)"
+#if(((Get-Service ssh-agent).Status)-eq "Running"){
+#    $TD_btn_Start_sshAgent.Content="Stop ssh-agent"
+#    $TD_btn_Start_sshAgent.Background="coral"
+#}else {
+#    <# Action when all if and elseif conditions are false #>
+#    $TD_btn_Start_sshAgent.Content="Start ssh-agent"
+#    $TD_btn_Start_sshAgent.Background="#FFDDDDDD"
+#}
 <# Try to start/stop the ssh-agent #>
-$TD_btn_Start_sshAgent.add_click({
-    $TD_btn_Text=$TD_btn_Start_sshAgent.Content
-    switch ($TD_btn_Text) {
-        {($_ -like "Start*")} { 
-                                try {
-                                    $TD_btn_Start_sshAgent.Content="Stop ssh-agent"
-                                    $TD_btn_Start_sshAgent.Background="coral"
-                                    Start-Service ssh-agent -ErrorAction Stop
-                                }
-                                catch {
-                                    <#Do this if a terminating exception happens#>
-                                    $TD_btn_Start_sshAgent.Content="Start ssh-agent"
-                                    $TD_btn_Start_sshAgent.Background="#FFDDDDDD"
-                                    SST_ToolMessageCollector -TD_ToolMSGCollector $_.Exception.Message -TD_ToolMSGType Warning
-                                }
-                                $TD_lb_SSHStatusMsg.Content ="SSH-Agent Status is:`n$((Get-Service ssh-agent).Status) "
-                            }
-        {($_ -like "Stop*")} {
-                                try {
-                                    $TD_btn_Start_sshAgent.Content="Start ssh-agent"
-                                    $TD_btn_Start_sshAgent.Background="#FFDDDDDD"
-                                    Stop-Service ssh-agent -ErrorAction Stop
-                                }
-                                catch {
-                                    <#Do this if a terminating exception happens#>
-                                    $TD_btn_Start_sshAgent.Content="Stop ssh-agent"
-                                    $TD_btn_Start_sshAgent.Background="coral"
-                                    SST_ToolMessageCollector -TD_ToolMSGCollector $_.Exception.Message -TD_ToolMSGType Warning
-                                }
-                                $TD_lb_SSHStatusMsg.Content ="SSH-Agent Status is:`n$((Get-Service ssh-agent).Status) "
-                            }
-        Default {SST_ToolMessageCollector -TD_ToolMSGCollector "Something went wrong by get informations about the ssh-agent." -TD_ToolMSGType Error}
-    }
-    $TD_UserControl4.Dispatcher.Invoke([System.Action]{},"Render")
-})
 
-$TD_BTN_AddSSHKey.add_click({
-    #$TD_ButtonColorSSH=$TD_btn_addsshkeyone.Background
-    $IsKeyIn = $TD_TB_PathtoSSHKeyNotVisibil.Text
-    if([string]::IsNullOrWhiteSpace($IsKeyIn)){
-        RemoveSSHKeyfromLine -TD_Storage "yes"
-    }else {
-        AddSSHKeytoLine -TD_Storage "yes"
-    }
-})
+#$TD_btn_Start_sshAgent.add_click({
+#    $TD_btn_Text=$TD_btn_Start_sshAgent.Content
+#    switch ($TD_btn_Text) {
+#        {($_ -like "Start*")} { 
+#                                try {
+#                                    $TD_btn_Start_sshAgent.Content="Stop ssh-agent"
+#                                    $TD_btn_Start_sshAgent.Background="coral"
+#                                    Start-Service ssh-agent -ErrorAction Stop
+#                                }
+#                                catch {
+#                                    <#Do this if a terminating exception happens#>
+#                                    $TD_btn_Start_sshAgent.Content="Start ssh-agent"
+#                                    $TD_btn_Start_sshAgent.Background="#FFDDDDDD"
+#                                    SST_ToolMessageCollector -TD_ToolMSGCollector $_.Exception.Message -TD_ToolMSGType Warning
+#                                }
+#                                $TD_lb_SSHStatusMsg.Content ="SSH-Agent Status is:`n$((Get-Service ssh-agent).Status) "
+#                            }
+#        {($_ -like "Stop*")} {
+#                                try {
+#                                    $TD_btn_Start_sshAgent.Content="Start ssh-agent"
+#                                    $TD_btn_Start_sshAgent.Background="#FFDDDDDD"
+#                                    Stop-Service ssh-agent -ErrorAction Stop
+#                                }
+#                                catch {
+#                                    <#Do this if a terminating exception happens#>
+#                                    $TD_btn_Start_sshAgent.Content="Stop ssh-agent"
+#                                    $TD_btn_Start_sshAgent.Background="coral"
+#                                    SST_ToolMessageCollector -TD_ToolMSGCollector $_.Exception.Message -TD_ToolMSGType Warning
+#                                }
+#                                $TD_lb_SSHStatusMsg.Content ="SSH-Agent Status is:`n$((Get-Service ssh-agent).Status) "
+#                            }
+#        Default {SST_ToolMessageCollector -TD_ToolMSGCollector "Something went wrong by get informations about the ssh-agent." -TD_ToolMSGType Error}
+#    }
+#    $TD_UserControl4.Dispatcher.Invoke([System.Action]{},"Render")
+#})
+#
+#$TD_BTN_AddSSHKey.add_click({
+#    #$TD_ButtonColorSSH=$TD_btn_addsshkeyone.Background
+#    $IsKeyIn = $TD_TB_PathtoSSHKeyNotVisibil.Text
+#    if([string]::IsNullOrWhiteSpace($IsKeyIn)){
+#        RemoveSSHKeyfromLine -TD_Storage "yes"
+#    }else {
+#        AddSSHKeytoLine -TD_Storage "yes"
+#    }
+#})
+#
 #endregion
 
 #region AddDeviceCred
@@ -252,18 +255,25 @@ $TD_btn_ExportCred.add_click({
     <# Save to Dir #>
     $TD_SaveCred = SST_SaveFile_to_Directory -TD_UserDataObject $TD_SST_ExportCred
     if([string]::IsNullOrEmpty($TD_SaveCred.FileName)){
-        SST_ToolMessageCollector -TD_ToolMSGCollector $("Export failed!") -TD_ToolMSGType Warning
+        SST_ToolMessageCollector -TD_ToolMSGCollector $("Export failed!") -TD_ToolMSGType Warning -TD_Shown yes
     }else {
-        SST_ToolMessageCollector -TD_ToolMSGCollector $("Credentials successfully exported to $($TD_SaveCred.FileName)") -TD_ToolMSGType Message
+        SST_ToolMessageCollector -TD_ToolMSGCollector $("Credentials successfully exported to $($TD_SaveCred.FileName)") -TD_ToolMSGType Message -TD_Shown yes
     }
 })
 $TD_btn_ImportCred.add_click({
 
     $TD_ImportedCredentials = SST_ImportCredential
-    if($TD_ImportedCredentials -lt 1){
-        SST_ToolMessageCollector -TD_ToolMSGCollector $("Import failed!") -TD_ToolMSGType Warning
+
+    if($TD_ImportedCredentials.count -lt 1){
+        SST_ToolMessageCollector -TD_ToolMSGCollector $("Import failed!") -TD_ToolMSGType Warning -TD_Shown yes
     }else {
-        SST_ToolMessageCollector -TD_ToolMSGCollector $("Credentials successfully Import") -TD_ToolMSGType Message
+        SST_ToolMessageCollector -TD_ToolMSGCollector $("Credentials successfully Import") -TD_ToolMSGType Message -TD_Shown yes
+        if($TD_CB_OnlineCheckbyImport.IsChecked){
+            $TD_ImportedCredentials | ForEach-Object {
+                SST_DeviceConnecCheck -TD_Selected_Items "yes" -TD_Selected_DeviceType $_.DeviceTyp -TD_Selected_DeviceConnectionType $_.ConnectionTyp -TD_Selected_DeviceIPAddr $_.IPAddress -TD_Selected_DeviceUserName $_.UserName -TD_Selected_DevicePassword $_.Password -TD_Selected_SVCorVF $_.SVCorVF
+                Start-Sleep -Seconds 0.5
+            }
+        }
     }
     
 })
@@ -286,7 +296,7 @@ $TD_DG_KnownDeviceList.add_SelectionChanged({
 })
 #endregion
 
-#region IBM Button
+#region IBM Storage Button
 $TD_btn_IBM_Eventlog.add_click({
 
     $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_.DeviceTyp -eq "Storage"}
@@ -385,6 +395,8 @@ $TD_btn_IBM_HostVolumeMap.add_click({
 <# to keep this file clean :D export the following lines to a func in one if the next Version #>
 $TD_btn_FilterHVM.Add_Click({
     $TD_btn_ClearFilterHVM.Visibility="Visible"
+    $TD_lb_ErrorMsgHVM.Content = ""
+    $TD_lb_ErrorMsgHVM.Visibility="Collapsed"
     [string]$filter= $TD_tb_filter.Text
     [int]$TD_Filter_DG = $TD_cb_ListFilterStorageHVM.Text
     [string]$TD_Filter_DG_Colum = $TD_cb_StorageHVM.Text
@@ -400,7 +412,7 @@ $TD_btn_FilterHVM.Add_Click({
             6 { $TD_Host_Volume_Map = $TD_dg_HostVolInfoSix.ItemsSource }
             7 { $TD_Host_Volume_Map = $TD_dg_HostVolInfoSeven.ItemsSource }
             8 { $TD_Host_Volume_Map = $TD_dg_HostVolInfoEight.ItemsSource }
-            Default {SST_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong, there are no or wrong Data in $($TD_CollectVolInfo.count) found.") -TD_ToolMSGType Error}
+            Default {SST_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong, there are no or wrong Data in $($TD_CollectVolInfo.count) found.") -TD_ToolMSGType Error -TD_Shown yes}
         }
         if($TD_Host_Volume_Map.Count -ne $TD_CollectVolInfo.Count){
             $TD_Host_Volume_Map = $TD_CollectVolInfo }
@@ -411,7 +423,7 @@ $TD_btn_FilterHVM.Add_Click({
                 "Volume" { [array]$WPF_dataGrid = $TD_Host_Volume_Map | Where-Object { $_.VolumeName -Match $filter } }
                 "UID" { [array]$WPF_dataGrid = $TD_Host_Volume_Map | Where-Object { $_.UID -Match $filter } }
                 "Capacity" { [array]$WPF_dataGrid = $TD_Host_Volume_Map | Where-Object { $_.Capacity -Match $filter } }
-                Default {SST_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong, there are no or wrong Data in CollectVolInfo found.") -TD_ToolMSGType Error}
+                Default {SST_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong, there are no or wrong Data in CollectVolInfo found.") -TD_ToolMSGType Error -TD_Shown yes}
             }
             switch ($TD_Filter_DG) {
                 1 { $TD_dg_HostVolInfoOne.ItemsSource = $WPF_dataGrid }
@@ -422,14 +434,14 @@ $TD_btn_FilterHVM.Add_Click({
                 6 { $TD_dg_HostVolInfoSix.ItemsSource = $WPF_dataGrid }
                 7 { $TD_dg_HostVolInfoSeven.ItemsSource = $WPF_dataGrid }
                 8 { $TD_dg_HostVolInfoEight.ItemsSource = $WPF_dataGrid }
-                Default {SST_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong, please check the the Filter or Datapath.") -TD_ToolMSGType Error}
+                Default {SST_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong, please check the the Filter or Datapath.") -TD_ToolMSGType Error -TD_Shown yes}
             }
             
         }
     catch {
         <#Do this if a terminating exception happens#>
-        SST_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong, please check the prompt output first and then the log files.") -TD_ToolMSGType Error
-        SST_ToolMessageCollector -TD_ToolMSGCollector $_.Exception.Message -TD_ToolMSGType Error
+        SST_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong, please check the prompt output first and then the log files.") -TD_ToolMSGType Error -TD_Shown yes
+        SST_ToolMessageCollector -TD_ToolMSGCollector $_.Exception.Message -TD_ToolMSGType Error -TD_Shown no
         $TD_lb_ErrorMsgHVM.Visibility="visible"
         $TD_lb_ErrorMsgHVM.Content = $_.Exception.Message
     }
@@ -440,6 +452,8 @@ $TD_btn_ClearFilterHVM.Add_Click({
 
     [int]$TD_Filter_DG = $TD_cb_ListFilterStorageHVM.Text
     $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {(($_.DeviceTyp -eq "Storage")-and($_.ID -eq $TD_Filter_DG))}
+    $TD_lb_ErrorMsgHVM.Content = ""
+    $TD_lb_ErrorMsgHVM.Visibility="Collapsed"
     
     $TD_tb_filter.Text = ""
     try {
@@ -633,7 +647,7 @@ $TD_btn_IBM_BaseStorageInfo.add_click({
     }
 
     $TD_Credentials | ForEach-Object {
-        [array]$TD_BaseStorageInfo = IBM_BaseStorageInfos -TD_Line_ID $_.ID -TD_Device_ConnectionTyp $_.ConnectionTyp -TD_Device_UserName $_.UserName -TD_Device_DeviceIP $_.IPAddress -TD_Device_DeviceName $_.DeviceName -TD_Device_PW $([Net.NetworkCredential]::new('', $_.Password).Password) -TD_Device_SSHKeyPath $_.SSHKeyPath -TD_Storage $TD_Credential.SVCorVF -TD_Exportpath $TD_tb_ExportPath.Text
+        [array]$TD_BaseStorageInfo = IBM_BaseStorageInfos -TD_Line_ID $_.ID -TD_Device_ConnectionTyp $_.ConnectionTyp -TD_Device_UserName $_.UserName -TD_Device_DeviceIP $_.IPAddress -TD_Device_DeviceName $_.DeviceName -TD_Device_PW $([Net.NetworkCredential]::new('', $_.Password).Password) -TD_Device_SSHKeyPath $_.SSHKeyPath -TD_Storage $_.SVCorVF -TD_Exportpath $TD_tb_ExportPath.Text
         switch ($_.ID) {
             {($_ -eq 1)} { $TD_dg_BaseStorageInfoOne.ItemsSource = $TD_BaseStorageInfo }
             {($_ -eq 2)} { $TD_dg_BaseStorageInfoTwo.ItemsSource = $TD_BaseStorageInfo }
@@ -652,7 +666,7 @@ $TD_btn_IBM_BaseStorageInfo.add_click({
     }
 
     $TD_Credentials | ForEach-Object {
-        [array]$TD_IPQuorumInfo = IBM_IPQuorum -TD_Line_ID $_.ID -TD_Device_ConnectionTyp $_.ConnectionTyp -TD_Device_UserName $_.UserName -TD_Device_DeviceIP $_.IPAddress -TD_Device_DeviceName $_.DeviceName -TD_Device_PW $([Net.NetworkCredential]::new('', $_.Password).Password) -TD_Device_SSHKeyPath $_.SSHKeyPath -TD_Storage $TD_Credential.SVCorVF -TD_Exportpath $TD_tb_ExportPath.Text
+        [array]$TD_IPQuorumInfo = IBM_IPQuorum -TD_Line_ID $_.ID -TD_Device_ConnectionTyp $_.ConnectionTyp -TD_Device_UserName $_.UserName -TD_Device_DeviceIP $_.IPAddress -TD_Device_DeviceName $_.DeviceName -TD_Device_PW $([Net.NetworkCredential]::new('', $_.Password).Password) -TD_Device_SSHKeyPath $_.SSHKeyPath -TD_Storage $_.SVCorVF -TD_Exportpath $TD_tb_ExportPath.Text
         switch ($_.ID) {
             {($_ -eq 1)} { $TD_dg_IPQuorumInfoOne.ItemsSource = $TD_IPQuorumInfo;   }
             {($_ -eq 2)} { $TD_dg_IPQuorumInfoTwo.ItemsSource = $TD_IPQuorumInfo ;  }
@@ -683,7 +697,7 @@ $TD_btn_IBM_PoolVolumeInfo.add_click({
     }
 
     $TD_Credentials | ForEach-Object {
-        [array]$TD_ExpandMDiskInfo = IBM_MDiskInfo -TD_Line_ID $_.ID -TD_Device_ConnectionTyp $_.ConnectionTyp -TD_Device_UserName $_.UserName -TD_Device_DeviceIP $_.IPAddress -TD_Device_DeviceName $_.DeviceName -TD_Device_PW $([Net.NetworkCredential]::new('', $_.Password).Password) -TD_Device_SSHKeyPath $_.SSHKeyPath -TD_Storage $TD_Credential.SVCorVF -TD_Exportpath $TD_tb_ExportPath.Text
+        [array]$TD_ExpandMDiskInfo = IBM_MDiskInfo -TD_Line_ID $_.ID -TD_Device_ConnectionTyp $_.ConnectionTyp -TD_Device_UserName $_.UserName -TD_Device_DeviceIP $_.IPAddress -TD_Device_DeviceName $_.DeviceName -TD_Device_PW $([Net.NetworkCredential]::new('', $_.Password).Password) -TD_Device_SSHKeyPath $_.SSHKeyPath -TD_Storage $_.SVCorVF -TD_Exportpath $TD_tb_ExportPath.Text
         switch ($_.ID) {
             {($_ -eq 1)} { $TD_dg_ExpandMDiskInfoOne.ItemsSource = $TD_ExpandMDiskInfo }
             {($_ -eq 2)} { $TD_dg_ExpandMDiskInfoTwo.ItemsSource = $TD_ExpandMDiskInfo }
@@ -701,7 +715,7 @@ $TD_btn_IBM_PoolVolumeInfo.add_click({
         if($_.items.count -gt 0){$_.ItemsSource = $EmptyVar; $TD_UCRefresh = $true}
     }
     $TD_Credentials | ForEach-Object {
-        [array]$TD_ExpandVolumeInfo = IBM_VolumeInfo -TD_Line_ID $_.ID -TD_Device_ConnectionTyp $_.ConnectionTyp -TD_Device_UserName $_.UserName -TD_Device_DeviceIP $_.IPAddress -TD_Device_DeviceName $_.DeviceName -TD_Device_PW $([Net.NetworkCredential]::new('', $_.Password).Password) -TD_Device_SSHKeyPath $_.SSHKeyPath -TD_Storage $TD_Credential.SVCorVF -TD_Exportpath $TD_tb_ExportPath.Text
+        [array]$TD_ExpandVolumeInfo = IBM_VolumeInfo -TD_Line_ID $_.ID -TD_Device_ConnectionTyp $_.ConnectionTyp -TD_Device_UserName $_.UserName -TD_Device_DeviceIP $_.IPAddress -TD_Device_DeviceName $_.DeviceName -TD_Device_PW $([Net.NetworkCredential]::new('', $_.Password).Password) -TD_Device_SSHKeyPath $_.SSHKeyPath -TD_Storage $_.SVCorVF -TD_Exportpath $TD_tb_ExportPath.Text
         switch ($_.ID) {
             {($_ -eq 1)} { $TD_dg_ExpandVolumeInfoOne.ItemsSource = $TD_ExpandVolumeInfo }
             {($_ -eq 2)} { $TD_dg_ExpandVolumeInfoTwo.ItemsSource = $TD_ExpandVolumeInfo }
@@ -1627,37 +1641,17 @@ $TD_btn_FOS_PortBufferShow.add_click({
 })
 #endregion
 
+#region IBM Power
+#$TD_btn_IBM_Power.add_click({
+#    IBM_PowerCollector
+#})
+#endregion
+
 #region Health Check
 $TD_btn_Storage_SysCheck.add_click({
-    
-    $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_.DeviceTyp -eq "Storage"}
-    <# need to be checked #>
-    foreach($TD_Credential in $TD_Credentials){
-        <# QaD needs a Codeupdate because Grouping dose not work #>
-        $TD_SystemCheck = $TD_cb_Device_HealthCheck.Text
-        switch ($TD_Credential.ID) {
-            {(($_ -eq 1) -and ($TD_SystemCheck-eq "Check the First"))} 
-            {   $TD_TB_storageIPAdrOne.Text ="$($TD_Credential.IPAddress)"
-                IBM_StorageHealthCheck -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.UserName -TD_Device_DeviceName $TD_Credential.DeviceName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $([Net.NetworkCredential]::new('', $TD_Credential.Password).Password) -TD_Device_SSHKeyPath $_.SSHKeyPath -TD_Exportpath $TD_tb_ExportPath.Text
-            }
-            {(($_ -eq 2) -and ($TD_SystemCheck-eq "Check the Second"))} 
-            {   $TD_TB_storageIPAdrTwo.Text ="$($TD_Credential.IPAddress)"
-                IBM_StorageHealthCheck -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.UserName -TD_Device_DeviceName $TD_Credential.DeviceName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $([Net.NetworkCredential]::new('', $TD_Credential.Password).Password) -TD_Device_SSHKeyPath $_.SSHKeyPath -TD_Exportpath $TD_tb_ExportPath.Text
-            }
-            {(($_ -eq 3) -and ($TD_SystemCheck-eq "Check the Third"))}  
-            {   $TD_TB_storageIPAdrThree.Text ="$($TD_Credential.IPAddress)"
-                IBM_StorageHealthCheck -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.UserName -TD_Device_DeviceName $TD_Credential.DeviceName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $([Net.NetworkCredential]::new('', $TD_Credential.Password).Password) -TD_Device_SSHKeyPath $_.SSHKeyPath -TD_Exportpath $TD_tb_ExportPath.Text
-            }
-            {(($_ -eq 4) -and ($TD_SystemCheck-eq "Check the Fourth"))}  
-            {   $TD_TB_storageIPAdrFour.Text ="$($TD_Credential.IPAddress)"
-                IBM_StorageHealthCheck -TD_Line_ID $TD_Credential.ID -TD_Device_ConnectionTyp $TD_Credential.ConnectionTyp -TD_Device_UserName $TD_Credential.UserName -TD_Device_DeviceName $TD_Credential.DeviceName -TD_Device_DeviceIP $TD_Credential.IPAddress -TD_Device_PW $([Net.NetworkCredential]::new('', $TD_Credential.Password).Password) -TD_Device_SSHKeyPath $_.SSHKeyPath -TD_Exportpath $TD_tb_ExportPath.Text
-            }
-            Default {SST_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong, please check the prompt output first and then the log files.") -TD_ToolMSGType Error}
-        }
-    }
+    SST_MainHealthCheckFunc
 })
 $TD_btn_HC_OpenGUI_One.add_click({
-
     Start-Process "https://$($TD_TB_storageIPAdrOne.Text)"
 })
 $TD_btn_HC_OpenGUI_Two.add_click({

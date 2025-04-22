@@ -2,13 +2,32 @@
 
 All notable changes to this project will be documented in this file.
 
-### Unreleased
-- Performance improved
-- Storage RC and FC 
-- Support for Virtual Fabrics
-- Small SAN Healthcheck
-- Small improvements at Storage Healthcheck
-- improvements at SSH-Client using
+# [v1.2.1] - 2025-04-22
+### Added
+- auto Online Check of Devices by import the Creds and check the Box left from the Import Button
+
+### Fixed
+- Bug with SN in StorageBaseFunc
+- Bug in StorageBaseFunc where is SVC Nodes not displayed
+- Bug with named File with DeviceName in FCPortInfo
+- Bug ToolMSGCollector with long MSG
+- Bug where some log msg were not complete saved
+- Bug where check for the currentFirmeware fails
+- Bug in WPF where the site name of the host was not displayed
+- Bug where degraded Hosts not displayed
+- Bug where Usernames not displayed complete
+- Bug Remove-Item, did not work
+- Bug where StorageSWCheck failed in some situations
+
+### Changed
+- Completion of the revision of the Storage Health Check
+- CleanUp some MSG and insert some more useful information
+- Updated Support and Status Matrices FOS Release
+- Revised of the StorageSWChecks, thx IBM -.-
+
+### Removed
+- The ssh settings are deactivated for the time being and a better implementation should be sought.
+
 
 # [v1.2.0] - 2025-01-24
 ### Added

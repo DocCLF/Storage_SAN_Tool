@@ -12,5 +12,5 @@ function SST_ImportCredential {
         $TD_DG_KnownDeviceList.ItemsSource = $TD_ExportCredtoDG
     }
 
-   return $TD_ExportCredtoDG.Count
+   return $TD_ExportCredtoDG
 }

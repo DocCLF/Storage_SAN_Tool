@@ -31,7 +31,7 @@ function IBM_UserInfo {
     process {
         $TD_UserInfoResault = foreach($TD_User in $TD_UserInformation){
             $TD_Userinfo = "" | Select-Object User_Name,Password,SSH_Key,Remote,UserGrp,Locked,PW_Change_required
-            $TD_Userinfo.User_Name = ($TD_User|Select-String -Pattern '^\d+:([a-zA-Z0-9-_]+)' -AllMatches).Matches.Groups[1].Value
+            $TD_Userinfo.User_Name = ($TD_User|Select-String -Pattern '^\d+:([a-zA-Z0-9-_\.]+)' -AllMatches).Matches.Groups[1].Value
             $TD_Userinfo.Password = ($TD_User|Select-String -Pattern ':(yes|no):(yes|no):(yes|no):' -AllMatches).Matches.Groups[1].Value
             $TD_Userinfo.SSH_Key = ($TD_User|Select-String -Pattern ':(yes|no):(yes|no):(yes|no):' -AllMatches).Matches.Groups[2].Value
             $TD_Userinfo.Remote = ($TD_User|Select-String -Pattern ':(yes|no):(yes|no):(yes|no):' -AllMatches).Matches.Groups[3].Value
