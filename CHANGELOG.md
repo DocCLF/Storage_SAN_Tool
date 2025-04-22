@@ -30,10 +30,11 @@ All notable changes to this project will be documented in this file.
 ### Changed
 - Completion of the revision of the Storage Health Check
 - CleanUp some MSG and insert some more useful information
+- Updated Support and Status Matrices FOS Release
 - Revised of the StorageSWChecks, thx IBM -.-
 
 ### Removed
-- ssh key use by default (needs more tests to be able to use it safely)
+- The ssh settings are deactivated for the time being and a better implementation should be sought.
 
 
 # [v1.2.0] - 2025-01-24
