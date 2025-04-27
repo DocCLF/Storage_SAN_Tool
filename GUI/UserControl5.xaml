@@ -1,0 +1,280 @@
+<UserControl 
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+    mc:Ignorable="d" 
+    >
+    <UserControl.Background>
+        <LinearGradientBrush>
+            <GradientStopCollection>
+                <GradientStop Offset="0.1" Color="White" />
+                <GradientStop Offset="0.5" Color="LightGray" />
+                <GradientStop Offset="0.8" Color="White" />
+            </GradientStopCollection>
+        </LinearGradientBrush>
+    </UserControl.Background>
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <Style x:Key="MainBtnStyle" TargetType="{x:Type Button}">
+                <Setter Property="Height" Value="30" />
+                <Setter Property="Width" Value="150" />
+                <Setter Property="HorizontalContentAlignment" Value="Center" />
+                <Setter Property="VerticalContentAlignment" Value="Center" />
+                <Setter Property="Margin" Value="5" />
+                <Setter Property="Padding" Value="2" />
+            </Style>
+            <Style x:Key="MainToggleBtnStyle" TargetType="{x:Type ToggleButton}">
+                <Setter Property="Height" Value="30" />
+                <Setter Property="MinWidth" Value="80" />
+                <Setter Property="HorizontalContentAlignment" Value="Center" />
+                <Setter Property="VerticalContentAlignment" Value="Center" />
+                <Setter Property="Margin" Value="25,2,0,2" />
+                <Setter Property="Padding" Value="2" />
+            </Style>
+            <Style x:Key="MainTextBoxStyle" TargetType="{x:Type TextBox}">
+                <Setter Property="Height" Value="30" />
+                <Setter Property="HorizontalContentAlignment" Value="Center" />
+                <Setter Property="VerticalContentAlignment" Value="Center" />
+                <Setter Property="Margin" Value="2" />
+            </Style>
+            <Style x:Key="MainLabelStyle" TargetType="{x:Type Label}">
+                <Setter Property="Height" Value="30" />
+                <Setter Property="HorizontalContentAlignment" Value="Center" />
+                <Setter Property="VerticalContentAlignment" Value="Center" />
+                <Setter Property="Margin" Value="2" />
+            </Style>
+            <Style x:Key="MainComboBoxStyle" TargetType="{x:Type ComboBox}">
+                <Setter Property="Height" Value="30" />
+                <Setter Property="Width" Value="125" />
+                <Setter Property="HorizontalContentAlignment" Value="Left" />
+                <Setter Property="VerticalContentAlignment" Value="Center" />
+                <Setter Property="Margin" Value="5" />
+            </Style>
+            <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" >
+    <Grid >
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="auto" />
+            <ColumnDefinition Width="auto" />
+            <ColumnDefinition Width="auto" />
+        </Grid.ColumnDefinitions>
+        <GroupBox Grid.Row="0" Grid.Column="0" Header="Device Credentials" MinWidth="820" HorizontalAlignment="Left" Margin="10,10,0,0"  VerticalAlignment="Top">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                </Grid.RowDefinitions>
+                <StackPanel Grid.Row="0" x:Name="STP_GetDeviceCred" Orientation="Horizontal" Margin="2" >
+                    <ComboBox x:Name="CB_DeviceType" SelectedIndex="0" SelectedValuePath="Content" Style="{StaticResource MainComboBoxStyle}" >
+                        <ComboBoxItem>Storage</ComboBoxItem>
+                        <ComboBoxItem>SAN</ComboBoxItem>
+                    </ComboBox>
+                    <!-- needs more tests to be able to use it safely
+                    <ComboBox x:Name="CB_DeviceConnectionType" SelectedIndex="1" SelectedValuePath="Content" Style="{StaticResource MainComboBoxStyle}" >
+                        <ComboBoxItem>Secure Shell (SSH)</ComboBoxItem>
+                        <ComboBoxItem>Classic (UN/PW)</ComboBoxItem>
+                    </ComboBox>
+                    -->
+                    <Label  Content="Cluster IP:" Style="{StaticResource MainLabelStyle}"/>
+                    <TextBox x:Name="TB_DeviceIPAddr" MinWidth="100" MaxLength="15" Style="{StaticResource MainTextBoxStyle}" />
+                    <Label  Content="UserName :" Style="{StaticResource MainLabelStyle}"/>
+                    <TextBox x:Name="TB_DeviceUserName" MaxLength="20" MinWidth="100" Style="{StaticResource MainTextBoxStyle}" />
+                    <Label Content="Password :" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Height="30" Margin="2">
+                        <Label.Style>
+                            <Style TargetType="Label">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding ElementName=CB_DeviceConnectionType, Path=SelectedValue}" Value="Secure Shell (SSH)">
+                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Label.Style>
+                    </Label>
+                    <PasswordBox x:Name="TB_DevicePassword" MaxLength="32" MinWidth="100" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Margin="2" Height="30">
+                        <PasswordBox.Style>
+                            <Style TargetType="PasswordBox">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding ElementName=CB_DeviceConnectionType, Path=SelectedValue}" Value="Secure Shell (SSH)">
+                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </PasswordBox.Style>
+                    </PasswordBox>
+                    <TextBox x:Name="TB_PathtoSSHKeyNotVisibil" Text="" Visibility="Collapsed"/>
+                    <!-- The ssh settings are deactivated for the time being and a better implementation should be sought.
+                    <Button x:Name="BTN_AddSSHKey" Content="Add SSH-Key" Height="30" Margin="5" Padding="2" VerticalContentAlignment="Center" HorizontalContentAlignment="center" >
+                        <Button.Style>
+                            <Style TargetType="Button">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding ElementName=CB_DeviceConnectionType, Path=SelectedValue}" Value="Classic (UN/PW)">
+                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Button.Style>
+                    </Button>
+                    -->
+                    <Label x:Name="LB_SVCorVF" VerticalContentAlignment="Center" HorizontalContentAlignment="center" Margin="2" Height="30" >
+                        <Label.Style>
+                            <Style TargetType="Label">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding ElementName=CB_DeviceType ,Path=SelectedValue}" Value="SAN">
+                                        <Setter Property="Content" Value="Virtual Fabric?" />
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding ElementName=CB_DeviceType ,Path=SelectedValue}" Value="Storage">
+                                        <Setter Property="Content" Value="SVC-Cluster?" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Label.Style>
+                    </Label>
+                    <CheckBox x:Name="CB_SVCorVF" VerticalAlignment="Center" Margin="2"/>
+                    <ToggleButton x:Name="TBTN_SaveCredtoDG" Content="ADD" Style="{StaticResource MainToggleBtnStyle}"/>
+                </StackPanel>
+                <StackPanel Grid.Row="1" x:Name="stp_storagePanel2" Orientation="Horizontal" Margin="2" >
+                    <GroupBox Header="Systeme">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="auto" />
+                            </Grid.ColumnDefinitions>
+                            <DataGrid Grid.Column="0" x:Name="DG_KnownDeviceList" AutoGenerateColumns="False" Margin="10" MaxHeight="400">
+                                <DataGrid.Style>
+                                    <Style TargetType="DataGrid">
+                                        <Style.Triggers>
+                                            <Trigger Property="HasItems" Value="False">
+                                                <Setter Property="Visibility" Value="Collapsed"></Setter>
+                                            </Trigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </DataGrid.Style>
+                                <DataGrid.RowStyle>
+                                    <Style TargetType="DataGridRow">
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding DeviceTyp}" Value="Storage">
+                                                <Setter Property="Background" Value="LightBlue" />
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding DeviceTyp}" Value="SAN">
+                                                <Setter Property="Background" Value="LightYellow" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </DataGrid.RowStyle>
+                                <DataGrid.Columns>
+                                    <DataGridCheckBoxColumn Header="ACK?" Binding="{Binding ACKHosts, NotifyOnTargetUpdated=True, UpdateSourceTrigger=PropertyChanged}" />
+                                    <DataGridTextColumn Header="Device Typ" Width="Auto" Binding="{Binding DeviceTyp}" IsReadOnly="True"/>
+                                    <DataGridTextColumn Header="Connection Typ" Width="Auto" Binding="{Binding ConnectionTyp}" IsReadOnly="True"/>
+                                    <DataGridTextColumn Header="IP-Adresse" Width="Auto"  Binding="{Binding IPAddress}" IsReadOnly="True"/>
+                                    <DataGridTextColumn Header="Device Name" Width="Auto"  Binding="{Binding DeviceName}" IsReadOnly="True"/>
+                                    <DataGridTextColumn Header="Login User" Width="Auto"  Binding="{Binding UserName}" IsReadOnly="True"/>
+                                    <DataGridTextColumn Header="Login PW" Binding="{Binding Password}" Visibility="{Binding ElementName=Password, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}"/>
+                                    <DataGridTextColumn Header="PathtoSSHKey" Binding="{Binding SSHKeyPath}" Visibility="{Binding ElementName=SSHKeyPath, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}"/>
+                                    <DataGridTextColumn Header="MTM-Code" Width="Auto"  Binding="{Binding MTMCode}" IsReadOnly="True"/>
+                                    <DataGridTextColumn Header="Product" Width="Auto"  Binding="{Binding ProductDescr}" IsReadOnly="True"/>
+                                    <DataGridTextColumn Header="Firmware" Width="Auto"  Binding="{Binding CurrentFirmware}" IsReadOnly="True"/>
+                                    <DataGridTextColumn Header="SVC/ VF" Width="Auto" Binding="{Binding SVCorVF}" IsReadOnly="True"/>
+                                </DataGrid.Columns>
+                            </DataGrid>
+                            <StackPanel Grid.Column="1" Margin="10" HorizontalAlignment="Left" VerticalAlignment="Top" Orientation="Horizontal">
+                                <CheckBox x:Name="CB_CredUpdate" VerticalAlignment="Center" Margin="2" />
+                                <Label Content="Credentials Update" Style="{StaticResource MainLabelStyle}" />
+                            </StackPanel>
+                        </Grid>
+                    </GroupBox>
+                </StackPanel>
+            </Grid>
+        </GroupBox>
+        <GroupBox Grid.RowSpan="4" Grid.Column="1" Header="Settings" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top">
+            <StackPanel >
+                <GroupBox Header="Saved Credentials" Margin="0,10">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="auto" />
+                        </Grid.RowDefinitions>
+                        <StackPanel Orientation="Horizontal">
+                            <Button x:Name="btn_ExportCred" Content="Export Credentials" HorizontalAlignment="Left" Style="{StaticResource MainBtnStyle}"/>
+                            <Button x:Name="btn_ImportCred" Content="Import Credentials" HorizontalAlignment="Left" Style="{StaticResource MainBtnStyle}"/>
+                            <CheckBox x:Name="CB_OnlineCheckbyImport" VerticalAlignment="Center" Margin="22,2,2,2" />
+                            <Label Content="Device Online check by import" Style="{StaticResource MainLabelStyle}" />
+                        </StackPanel>
+                        <Label Grid.Row="1" x:Name="lb_CerdExportPath" Content="Save Path" Style="{StaticResource MainLabelStyle}" HorizontalAlignment="Left" />
+                    </Grid>
+                </GroupBox>
+                <GroupBox Header="Export Settings" Margin="0,10">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="auto" />
+                            <ColumnDefinition Width="auto" />
+                            <ColumnDefinition Width="auto" />
+                        </Grid.ColumnDefinitions>
+                        <Label Grid.Column="0" Content="Export Path :" Style="{StaticResource MainLabelStyle}"/>
+                        <TextBox Grid.Column="1" x:Name="tb_ExportPath" Text="" MinWidth="300" MaxWidth="450" HorizontalAlignment="Left" HorizontalContentAlignment="Left" Style="{StaticResource MainTextBoxStyle}"/>
+                        <Button Grid.Column="2" x:Name="btn_ChangeExportPath" Content="Change Export Path" HorizontalAlignment="Left" Style="{StaticResource MainBtnStyle}"/>
+                    </Grid>
+                </GroupBox>
+                <!-- The ssh settings are deactivated for the time being and a better implementation should be sought. -->
+                <GroupBox Header="PROFI PRISM Connect Settings" Margin="0,10">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="auto" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="auto" />
+                        </Grid.RowDefinitions>
+                        <Label Grid.Column="0" Grid.Row="0" x:Name="LB_ConnectionStringLabelPRISM" Content="Insert the Connection String" Height="40" Foreground="Coral" FontSize="12" FontWeight="Bold" Margin="2,0" HorizontalAlignment="Left" Style="{StaticResource MainLabelStyle}" />
+                        <StackPanel Grid.Row="1" Orientation="Horizontal" >
+                            <TextBox x:Name="TB_ConnectionStringPRISM" Text="" MinWidth="300" MaxWidth="450" HorizontalAlignment="Left" HorizontalContentAlignment="Left" Style="{StaticResource MainTextBoxStyle}"/>
+                            <Button x:Name="BTN_SaveConnectionStringPRISM" Content="Save Connection String" HorizontalAlignment="Left" Style="{StaticResource MainBtnStyle}"/>
+                            <Button x:Name="BTN_ChangeConnectionStringPRISM" Content="Change Connection String" Visibility="Collapsed" HorizontalAlignment="Left" Style="{StaticResource MainBtnStyle}"/>
+                        </StackPanel>
+                        <Label Grid.Column="0" Grid.Row="2" x:Name="LB_TestConnectionPRISM" Content="Connect to PROFI PRISM." Margin="2,0,2,0" Foreground="Coral" FontSize="12" FontWeight="Bold" HorizontalAlignment="Left" Style="{StaticResource MainLabelStyle}" />
+                        <Button Grid.Column="0" Grid.Row="3" x:Name="BTN_ConnetionToPRISM" Content="Connetion to PRISM" HorizontalAlignment="Left" Style="{StaticResource MainBtnStyle}" />
+                    </Grid>
+                </GroupBox>
+                <GroupBox Header="Database Settings" Margin="0,10">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="auto" />
+                        </Grid.RowDefinitions>
+                        <Label Grid.ColumnSpan="2" Grid.Row="0" x:Name="LB_DBSettings" Content="" HorizontalAlignment="Left" Height="30" Style="{StaticResource MainLabelStyle}" />
+                        <Button Grid.Column="0" Grid.Row="1" x:Name="BTN_ActivateDB" Content="Use DB" HorizontalAlignment="Left" Style="{StaticResource MainBtnStyle}"/>
+                        <Button Grid.Column="1" Grid.Row="1" x:Name="BTN_DeleteDB" Visibility="Collapsed" Content="Delete DB" HorizontalAlignment="Left" Style="{StaticResource MainBtnStyle}"/>
+                    </Grid>
+                </GroupBox>
+                <GroupBox Header="Tool Settings" Margin="0,10">
+                    <StackPanel Orientation="Horizontal">
+                        <Button x:Name="BTN_SaveToolSettings" Content="Save Tool Settings" HorizontalAlignment="Left" Style="{StaticResource MainBtnStyle}"/>
+                        <Button x:Name="BTN_LoadToolSettings" Content="Load Tool Settings" HorizontalAlignment="Left" Style="{StaticResource MainBtnStyle}"/>
+                        <CheckBox x:Name="CB_LoadSettingsatStartUp" VerticalAlignment="Center" Margin="22,2,2,2" />
+                        <Label Content="Load Settings at StartUp" Style="{StaticResource MainLabelStyle}" />
+                    </StackPanel>
+                </GroupBox>
+            </StackPanel>
+        </GroupBox>
+    </Grid>
+    </ScrollViewer>
+</UserControl>

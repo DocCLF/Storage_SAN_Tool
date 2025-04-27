@@ -1,0 +1,407 @@
+<UserControl 
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+    mc:Ignorable="d" 
+    >
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <Style x:Key="MainBtnStyle" TargetType="{x:Type Button}">
+                <Setter Property="Height" Value="30" />
+                <Setter Property="Width" Value="130" />
+                <Setter Property="HorizontalContentAlignment" Value="Center" />
+                <Setter Property="VerticalContentAlignment" Value="Center" />
+                <Setter Property="Margin" Value="5" />
+                <Setter Property="Padding" Value="2" />
+            </Style>
+            <Style x:Key="MainComboBoxStyle" TargetType="{x:Type ComboBox}">
+                <Setter Property="Height" Value="30" />
+                <Setter Property="Width" Value="150" />
+                <Setter Property="HorizontalAlignment" Value="Left" />
+                <Setter Property="HorizontalContentAlignment" Value="Center" />
+                <Setter Property="VerticalContentAlignment" Value="Center" />
+                <Setter Property="Margin" Value="5" />
+                <Setter Property="Padding" Value="2" />
+            </Style>
+            <Style x:Key="MainLabelStyle" TargetType="{x:Type Label}">
+                <Setter Property="Template" >
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type Label}">
+                            <Border 
+                                BorderBrush="{TemplateBinding BorderBrush}" 
+                                BorderThickness="{TemplateBinding BorderThickness}" 
+                                Background="{TemplateBinding Background}" 
+                                Padding="{TemplateBinding Padding}" 
+                                SnapsToDevicePixels="true"
+                                CornerRadius="3">
+                                <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                            </Border>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+            <Style TargetType="{x:Type DataGrid}">
+                <Setter Property="AlternatingRowBackground" Value="#FAFAFA"/>
+                <Setter Property="Background" Value="{DynamicResource {x:Static SystemColors.ControlBrushKey}}"/>
+                <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"/>
+                <Setter Property="BorderBrush" Value="#FF688CAF"/>
+                <Setter Property="BorderThickness" Value="0"/>
+                <Setter Property="GridLinesVisibility" Value="Horizontal" />
+                <Setter Property="HorizontalGridLinesBrush" Value="#ECECEC" />
+                <Setter Property="HeadersVisibility" Value="Column" />
+                <Setter Property="RowDetailsVisibilityMode" Value="VisibleWhenSelected"/>
+                <Setter Property="SelectionMode" Value="Extended" />
+                <Setter Property="ScrollViewer.CanContentScroll" Value="True"/>
+                <Setter Property="ScrollViewer.PanningMode" Value="Both"/>
+                <Setter Property="Stylus.IsFlicksEnabled" Value="False"/>
+            </Style>
+            <Style TargetType="{x:Type DataGridColumnHeader}">
+                <Setter Property="Background" Value="#4683DE" />
+                <Setter Property="Foreground" Value="#FFFFFF" />
+                <Setter Property="FontWeight" Value="SemiBold" />
+                <Setter Property="Height" Value="26" />
+                <Setter Property="Padding" Value="5" />
+            </Style>
+            <Style TargetType="{x:Type DataGridRow}">
+                <Setter Property="Background" Value="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"/>
+                <Setter Property="SnapsToDevicePixels" Value="true"/>
+                <Setter Property="MinHeight" Value="26" />
+                <Setter Property="Padding" Value="5" />
+            </Style>
+            <Style TargetType="{x:Type DataGridCell}">
+                <Setter Property="Foreground" Value="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=DataGrid}}" />
+                <Setter Property="Padding" Value="5,0" />
+                <Setter Property="VerticalContentAlignment" Value="Center" />
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="DataGridCell">
+                            <Border Background="{TemplateBinding Background}"
+                                    BorderBrush="{TemplateBinding BorderBrush}"
+                                    BorderThickness="{TemplateBinding BorderThickness}">
+                                <ContentPresenter VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                                  HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                                  Margin="{TemplateBinding Padding}" />
+                            </Border>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+            <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" >
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <Grid Grid.Row="1" Grid.IsSharedSizeScope="True" Margin="10,25,10,5" >
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,10" >
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="auto" MaxWidth="150" SharedSizeGroup="Alpha"/>
+                            <ColumnDefinition MinWidth="400" MaxWidth="800" />
+                        </Grid.ColumnDefinitions>
+                        <Label Grid.Column="0" x:Name="lb_SpectVirtFWIfno" Content="Firmware Check" Margin="10,0,20,0" Style="{StaticResource MainLabelStyle}" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Height="26" Background="Green" />
+                        <StackPanel Orientation="Vertical" Grid.Column="1" >
+                            <Label x:Name="lb_CurrentSpectVirtFW" Content="No Info" Margin="0,0,10,5" Style="{StaticResource MainLabelStyle}" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Height="26" Visibility="Collapsed" />
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="auto" />
+                                        <RowDefinition Height="auto" />
+                                        <RowDefinition Height="auto" />
+                                    </Grid.RowDefinitions>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="auto" />
+                                        <ColumnDefinition Width="auto" />
+                                        <ColumnDefinition Width="auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <Label Grid.Row="0" Grid.Column="0" x:Name="lb_MinimumHL" Width="120" Content="Minimum PTF" Background="LightCoral" HorizontalContentAlignment="Center"/>
+                                    <Label Grid.Row="0" Grid.Column="1" x:Name="lb_RecommendedHL" Width="120" Content="Recommended PTF" Background="LightGreen" HorizontalContentAlignment="Center"/>
+                                    <Label Grid.Row="0" Grid.Column="2" x:Name="lb_LatestHL" Width="120" Content="Latest  PTF" Background="YellowGreen" HorizontalContentAlignment="Center"/>
+                                    <Label Grid.Row="1" Grid.Column="0" x:Name="lb_MinimumPTF" Width="120" Content="no info" Background="LightCoral" HorizontalContentAlignment="Center"/>
+                                    <Label Grid.Row="1" Grid.Column="1" x:Name="lb_RecommendedPTF" Width="120" Content="no info" Background="LightGreen" HorizontalContentAlignment="Center"/>
+                                    <Label Grid.Row="1" Grid.Column="2" x:Name="lb_LatestPTF" Width="120" Content="no info" Background="YellowGreen" HorizontalContentAlignment="Center"/>
+                                    <Label Grid.Row="2" Grid.Column="0" x:Name="lb_MinimumDate" Width="120" Content="no info" Background="LightCoral" HorizontalContentAlignment="Center"/>
+                                    <Label Grid.Row="2" Grid.Column="1" x:Name="lb_RecommendedDate" Width="120" Content="no info" Background="LightGreen" HorizontalContentAlignment="Center"/>
+                                    <Label Grid.Row="2" Grid.Column="2" x:Name="lb_LatestDate" Width="120" Content="no info" Background="YellowGreen" HorizontalContentAlignment="Center"/>
+                                </Grid>
+                        </StackPanel>
+                    </Grid>
+                </StackPanel> 
+                <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,10" >
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="auto" MaxWidth="150" SharedSizeGroup="Alpha"/>
+                            <ColumnDefinition MinWidth="400" MaxWidth="800" />
+                        </Grid.ColumnDefinitions>
+                        <Label Grid.Column="0" x:Name="lb_EventlogLight" Content="Eventlog Check" Margin="10,0,20,0" Style="{StaticResource MainLabelStyle}" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Height="26" Background="Green" />
+                        <DataGrid Grid.Column="1" x:Name="dg_EventlogStatusInfoText" AutoGenerateColumns="False" Margin="10" MaxHeight="400" >
+                            <DataGrid.Style>
+                                <Style TargetType="DataGrid">
+                                    <Style.Triggers>
+                                        <Trigger Property="HasItems" Value="False">
+                                            <Setter Property="Visibility" Value="Collapsed"></Setter>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGrid.Style>
+                            <DataGrid.RowStyle>
+                                <Style TargetType="DataGridRow">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding Status}" Value="alert">
+                                            <Setter Property="Background" Value="Red" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGrid.RowStyle>
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="Time" Width="Auto" Binding="{Binding LastTime}" IsReadOnly="True"/>
+                                <DataGridTextColumn Header="Status" Width="Auto" Binding="{Binding Status}" IsReadOnly="True"/>
+                                <DataGridTextColumn Header="Fixed" Width="Auto"  Binding="{Binding Fixed}" IsReadOnly="True"/>
+                                <DataGridTextColumn Header="ErrorCode" Width="Auto" Binding="{Binding ErrorCode}" IsReadOnly="True"/>
+                                <DataGridTextColumn Header="Description" Width="Auto"  Binding="{Binding Description}" IsReadOnly="True"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </Grid>
+                </StackPanel>
+                <StackPanel Grid.Row="2" Orientation="Horizontal" Margin="0,10">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="auto" />
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="auto" MaxWidth="150" SharedSizeGroup="Alpha"/>
+                            <ColumnDefinition MinWidth="400" MaxWidth="800" />
+                        </Grid.ColumnDefinitions>
+                        <Label Grid.Column="0" x:Name="lb_HostStatusLight" Content="Host Check" Margin="10,0,20,0" Style="{StaticResource MainLabelStyle}" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Height="26" Background="Green" />
+                        <DataGrid Grid.Column="2" x:Name="dg_HostStatusInfoText" AutoGenerateColumns="False" Margin="10" MaxHeight="400">
+                            <DataGrid.Style>
+                                <Style TargetType="DataGrid">
+                                    <Style.Triggers>
+                                        <Trigger Property="HasItems" Value="False">
+                                            <Setter Property="Visibility" Value="Collapsed"></Setter>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGrid.Style>
+                            <DataGrid.RowStyle>
+                                <Style TargetType="DataGridRow">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding Status}" Value="offline">
+                                            <Setter Property="Background" Value="Red" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding Status}" Value="degraded">
+                                            <Setter Property="Background" Value="yellow" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGrid.RowStyle>
+                            <DataGrid.Columns>
+                                <DataGridCheckBoxColumn Header="ACK?" Binding="{Binding ACKHosts, NotifyOnTargetUpdated=True, UpdateSourceTrigger=PropertyChanged}" />
+                                <DataGridTextColumn Header="ID" Width="Auto" Binding="{Binding HostID}" IsReadOnly="True"/>
+                                <DataGridTextColumn Header="Name" Width="Auto" Binding="{Binding HostName}" IsReadOnly="True"/>
+                                <DataGridTextColumn Header="Status" Width="Auto" Binding="{Binding Status}" IsReadOnly="True"/>
+                                <DataGridTextColumn Header="HostSite" Width="Auto"  Binding="{Binding SiteName}" IsReadOnly="True"/>
+                                <DataGridTextColumn Header="HostCluster" Width="Auto" Binding="{Binding HostClusterName}" IsReadOnly="True"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                        <Button Grid.Row="1" Grid.Column="2" x:Name="btn_SaveHostStatus" Visibility="Collapsed" Content="Save" Style="{StaticResource MainBtnStyle}" HorizontalAlignment="Right"/>
+                    </Grid>
+                </StackPanel>
+                <StackPanel Grid.Row="3" Orientation="Horizontal" Margin="0,10">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="auto" MaxWidth="150" SharedSizeGroup="Alpha"/>
+                            <ColumnDefinition MinWidth="400" MaxWidth="800" />
+                        </Grid.ColumnDefinitions>
+                        <Label Grid.Column="0" x:Name="lb_MdiskStatusLight" Content="Pool Check" Margin="10,0,20,0" Style="{StaticResource MainLabelStyle}" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Height="26" Background="Green" />
+                        <Label Grid.Column="2" x:Name="lb_MDiskErrorInfo" Content="" Visibility="Collapsed" Style="{StaticResource MainLabelStyle}" Margin="2,5,0,5"/> 
+                        <DataGrid Grid.Column="2" x:Name="dg_MdiskStatusInfoText" AutoGenerateColumns="False" Margin="10" MaxHeight="400">
+                            <DataGrid.Style>
+                                <Style TargetType="DataGrid">
+                                    <Style.Triggers>
+                                        <Trigger Property="HasItems" Value="False">
+                                            <Setter Property="Visibility" Value="Collapsed"></Setter>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGrid.Style>
+                            <DataGrid.RowStyle>
+                                <Style TargetType="DataGridRow">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding Status}" Value="offline">
+                                            <Setter Property="Background" Value="Red" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding Status}" Value="degraded">
+                                            <Setter Property="Background" Value="yellow" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGrid.RowStyle>
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="Pool Name" Width="Auto" Binding="{Binding Pool}" IsReadOnly="True"/>
+                                <DataGridTextColumn Header="Status" Width="Auto" Binding="{Binding Status}" IsReadOnly="True"/>
+                                <DataGridTextColumn Header="Capacity" Width="Auto"  Binding="{Binding Capacity}" IsReadOnly="True"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </Grid>
+                </StackPanel>
+                <StackPanel Grid.Row="4" Orientation="Horizontal" Margin="0,10">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="auto" MaxWidth="150" SharedSizeGroup="Alpha"/>
+                            <ColumnDefinition MinWidth="400" MaxWidth="800" />
+                        </Grid.ColumnDefinitions>
+                        <Label Grid.Column="0" x:Name="lb_VDiskStatusLight" Content="Volume Check" Margin="10,0,20,0" Style="{StaticResource MainLabelStyle}" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Height="26" Background="Green" />
+                        <DataGrid Grid.Column="2" x:Name="dg_VDiskStatusInfoText" AutoGenerateColumns="False" Margin="10" MaxHeight="400">
+                            <DataGrid.Style>
+                                <Style TargetType="DataGrid">
+                                    <Style.Triggers>
+                                        <Trigger Property="HasItems" Value="False">
+                                            <Setter Property="Visibility" Value="Collapsed"></Setter>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGrid.Style>
+                            <DataGrid.RowStyle>
+                                <Style TargetType="DataGridRow">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding Status}" Value="offline">
+                                            <Setter Property="Background" Value="Red" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding Status}" Value="degraded">
+                                            <Setter Property="Background" Value="yellow" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGrid.RowStyle>
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="Volume Name" Width="Auto" Binding="{Binding Volume_Name}" IsReadOnly="True"/>
+                                <DataGridTextColumn Header="Status" Width="Auto" Binding="{Binding Status}" IsReadOnly="True"/>
+                                <DataGridTextColumn Header="Pool" Width="Auto"  Binding="{Binding Pool}" IsReadOnly="True"/>
+                                <DataGridTextColumn Header="UID" Width="Auto" Binding="{Binding Volume_UID}" IsReadOnly="True"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </Grid>
+                </StackPanel>
+                <StackPanel Grid.Row="5" Orientation="Horizontal" Margin="0,10">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="auto" MaxWidth="150" SharedSizeGroup="Alpha"/>
+                            <ColumnDefinition MinWidth="400" MaxWidth="800" />
+                        </Grid.ColumnDefinitions>
+                        <Label Grid.Column="0" x:Name="lb_QuorumStatusLight" Content="Quorum Check" Margin="10,0,20,0" Style="{StaticResource MainLabelStyle}" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Height="26" Background="Green" />
+                        <TextBox Grid.Column="2" x:Name="tb_QuorumErrorMsg" Text="" Visibility="Collapsed" IsReadOnly="True" Background="Transparent" Foreground="Coral" VerticalAlignment="Center" VerticalContentAlignment="Center" Height="60" FontSize="14" BorderThickness="0" TextWrapping="Wrap"/>
+                        <DataGrid Grid.Column="2" x:Name="dg_QuorumStatusInfo" AutoGenerateColumns="False" Margin="10" MaxHeight="400">
+                            <DataGrid.Style>
+                                <Style TargetType="DataGrid">
+                                    <Style.Triggers>
+                                        <Trigger Property="HasItems" Value="False">
+                                            <Setter Property="Visibility" Value="Collapsed"></Setter>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGrid.Style>
+                            <DataGrid.RowStyle>
+                                <Style TargetType="DataGridRow">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding Status}" Value="offline">
+                                            <Setter Property="Background" Value="Red" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGrid.RowStyle>
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="Quorum ID" Width="Auto" Binding="{Binding QuorumIndex}" IsReadOnly="True"/>
+                                <DataGridTextColumn Header="Status" Width="Auto" Binding="{Binding Status}" IsReadOnly="True"/>
+                                <DataGridTextColumn Header="ID" Width="Auto" Binding="{Binding ID}" IsReadOnly="True"/>
+                                <DataGridTextColumn Header="Name" Width="Auto"  Binding="{Binding Name}" IsReadOnly="True"/>
+                                <DataGridTextColumn Header="Site Name" Width="Auto" Binding="{Binding SiteName}" IsReadOnly="True"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </Grid>
+                </StackPanel>
+                <StackPanel Grid.Row="6" Orientation="Horizontal" Margin="0,10">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="auto" MaxWidth="150" SharedSizeGroup="Alpha"/>
+                            <ColumnDefinition MinWidth="400" MaxWidth="800" />
+                        </Grid.ColumnDefinitions>
+                        <Label Grid.Column="0" x:Name="lb_UserStatusLight" Content="User Check" Margin="10,0,20,0" Style="{StaticResource MainLabelStyle}" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Height="26" Background="Green" />
+                        <DataGrid Grid.Column="2" x:Name="dg_UserStatusInfoText" AutoGenerateColumns="False" Margin="10" MaxHeight="400">
+                            <DataGrid.Style>
+                                <Style TargetType="DataGrid">
+                                    <Style.Triggers>
+                                        <Trigger Property="HasItems" Value="False">
+                                            <Setter Property="Visibility" Value="Collapsed"></Setter>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGrid.Style>
+                            <DataGrid.CellStyle>
+                                <Style TargetType="DataGridCell">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding Locked}" Value="auto">
+                                            <Setter Property="Background" Value="Red" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding Locked}" Value="manual">
+                                            <Setter Property="Background" Value="yellow" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding Remote}" Value="yes">
+                                            <Setter Property="Background" Value="Red" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding SSH_Key}" Value="no">
+                                            <Setter Property="Background" Value="yellow" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding PW_Change_required}" Value="yes">
+                                            <Setter Property="Background" Value="yellow" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGrid.CellStyle>
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="User Name" Width="Auto" Binding="{Binding User_Name}" IsReadOnly="True"/>
+                                <DataGridTextColumn Header="Password" Width="Auto" Binding="{Binding Password}" IsReadOnly="True"/>
+                                <DataGridTextColumn Header="SSH Key" Width="Auto"  Binding="{Binding SSH_Key}" IsReadOnly="True"/>
+                                <DataGridTextColumn Header="Remote" Width="Auto" Binding="{Binding Remote}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Specifies if the user is remote."/>
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Header="Locked" Width="Auto"  Binding="{Binding Locked}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="manual -> means: The user is permanently locked due to the security administrator"/>
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Header="PW Change required" Width="Auto" Binding="{Binding PW_Change_required}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="ToolTip" Value="Your password has expired, you will need to change it the next time you log in." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </Grid>
+                </StackPanel>
+            </Grid>
+        </Grid>
+    </ScrollViewer>
+</UserControl>

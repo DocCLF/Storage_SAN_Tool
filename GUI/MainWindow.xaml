@@ -35,6 +35,8 @@
         </Grid.RowDefinitions>
         <StackPanel Orientation="Horizontal" Margin="5" >
             <!--Storage FS & SVC-->
+            <Button x:Name="BTN_Dashboard" Content="Dashboard" Style="{StaticResource MainBtnStyle}"/>
+            <!--Storage FS & SVC-->
             <Button x:Name="btn_IBM_SV" Content="IBM Spectrum Virtualize" Style="{StaticResource MainBtnStyle}"/>
             <!--Brocade SAN-->
             <Button x:Name="btn_Broc_SAN"  Content="Brocade SAN" Style="{StaticResource MainBtnStyle}" />
@@ -44,7 +46,7 @@
             <Button x:Name="btn_Stor_San" Content="Health Check" Style="{StaticResource MainBtnStyle}" /> 
             <!--Settings-->
             <Button x:Name="btn_Settings" Content="Tool Settings" Style="{StaticResource MainBtnStyle}" />
-            <Label x:Name="label_ExpPath" Content="Export Path :" Style="{StaticResource MainLabelStyle}" Margin="25,5,0,5"/>
+            <Label x:Name="LB_ExpPathMainWindow" Content="Export Path :" Style="{StaticResource MainLabelStyle}" Margin="25,5,0,5"/>
         </StackPanel>
         <!--CloseAll GUI-->
         <Button x:Name="btn_CloseAll" Content="Exit" Style="{StaticResource MainBtnStyle}" Margin="5,5,25,5" HorizontalAlignment="Right" Background="LightCoral"/>
@@ -86,7 +88,7 @@
         <StackPanel Grid.Row="3" Orientation="Horizontal" VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="0,0,20,0" Height="34">
             <Label Content="Debug Modus?" FontSize="12" FontWeight="Bold" VerticalContentAlignment="Center"/>
             <CheckBox x:Name="cb_DebugModOnOff" VerticalAlignment="Center" Margin="2"/>
-            <Label Grid.Row="3" Content="v1.2.1" FontSize="12" FontWeight="Bold" VerticalContentAlignment="Center" />
+            <Label Grid.Row="3" Content="Alpha v1.3.0" FontSize="12" FontWeight="Bold" Foreground="Coral" VerticalContentAlignment="Center" />
         </StackPanel>
         <Label Grid.Row="3" Content="Tool-Support: r.glanz@profi-ag.de [or] GitHub: https://github.com/DocCLF/Storage_SAN_Tool" Margin="10,0" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="16" />
         <Image Grid.Row="3" x:Name="LogoImageSmall" Margin="10,10" VerticalAlignment="Bottom" HorizontalAlignment="Left" MaxHeight="30"/>
