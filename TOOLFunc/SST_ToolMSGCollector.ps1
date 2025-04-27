@@ -24,7 +24,7 @@ function SST_ToolMessageCollector {
         [string]$TD_Shown 
     )
     <# Create a DateTime for each entry #>
-    $TD_GetMSGDate = Get-Date -Format "dd/MM/yyy HH:mm:ss"
+    $TD_GetMSGDate = Get-Date -Format "dd/MM/yyyy HH:mm:ss"
     $PSRootPath = Split-Path -Path $PSScriptRoot -Parent
     <# Get to "old MSG" in a Var #>
     $TD_OldMSG = $TD_dg_ToolWindowForDebug.ItemsSource
