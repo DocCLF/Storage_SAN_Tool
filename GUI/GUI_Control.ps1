@@ -1,30 +1,25 @@
-Add-Type -AssemblyName PresentationCore,PresentationFramework
-Add-Type -AssemblyName System.Windows.Forms
+<# wichtig um die dll auch zu finden #>
+$PSRootPath = Split-Path -Path $PSScriptRoot -Parent
+<# Abfrage der PWSH Version da es nur mit pwsh ab der Version 7 und höher funktioniert #>
+if($PSVersionTable.PSVersion.Major -ge 7){
+    Add-Type -Path "$PSRootPath\Resources\DBFolder\LiteDB.dll"
+    #Add-Type -Path ".\OxyPlot.dll"
+    #Add-Type -Path ".\OxyPlot.Wpf.dll"
+}
+Add-Type -AssemblyName PresentationFramework, PresentationCore, System.Windows.Forms, WindowsBase
 
+<# Ab hier start des eigentlichen "programms" #>
 <# Create the xaml Files / Base of GUI Mainwindow #>
 function Storage_SAN_Tool {
 [CmdletBinding()]
+
 #$ErrorActionPreference="SilentlyContinue"
 
-#$ResDicxamlFile ="$PSScriptRoot\ResourcesDictionaryXAML.xaml"
-#$blabla = Get-Content -Path $ResDicxamlFile -raw
-#[xml]$ResDicinputXAML = $blabla
-#[Xml.XmlNodeReader] $ResDicReader = $ResDicinputXAML 
-#$ResDicWindow = [Windows.Markup.XamlReader]::Load( $ResDicReader )
-
-
-$MainxamlFile ="$PSScriptRoot\MainWindow.xaml"
-$inputXAML=Get-Content -Path $MainxamlFile -raw
+$inputXAML=Get-Content -Raw -Path "$PSScriptRoot\MainWindow.xaml"
 [xml]$MainXAML=$inputXAML -replace 'mc:Ignorable="d"','' -replace "x:N","N" -replace "^<Win.*","<Window"
-#[xml]$MainXAML=$inputXAML
 [System.Xml.XmlNodeReader] $Mainreader = $MainXAML
 $MainWindow =[Windows.Markup.XamlReader]::Load($Mainreader)
-#$Mainform.Resources.MergedDictionaries.Add($ResDicWindow)
 $MainXAML.SelectNodes("//*[@Name]") | ForEach-Object {Set-Variable -Name "TD_$($_.Name)" -Value $MainWindow.FindName($_.Name)}
-
-
-
-$PSRootPath = Split-Path -Path $PSScriptRoot -Parent
 
 <# Create UserControls as basis of Content for MainWindow #>
 $UserCxamlFile = Get-ChildItem "$PSScriptRoot\UserControl*.xaml"
@@ -57,22 +52,6 @@ foreach($file in $UserCxamlFile){
             $TD_UserControl3=[Windows.Markup.XamlReader]::Load($Userreader)
             $UserXAML3.SelectNodes("//*[@Name]") | ForEach-Object {Set-Variable -Name "TD_$($_.Name)" -Value $TD_UserControl3.FindName($_.Name) }
          }
-        "*l3_1" { 
-            $UserC3_1=Get-Content -Path $file -raw
-            $UserC3_1=$UserC3_1 -replace 'mc:Ignorable="d"','' -replace "x:N","N" -replace "^<Win.*","<Window"
-            [xml]$UserXAML3_1=$UserC3_1
-            $Userreader = New-Object System.Xml.XmlNodeReader $UserXAML3_1
-            $TD_UserControl3_1=[Windows.Markup.XamlReader]::Load($Userreader)
-            $UserXAML3_1.SelectNodes("//*[@Name]") | ForEach-Object {Set-Variable -Name "TD_$($_.Name)" -Value $TD_UserControl3_1.FindName($_.Name) }
-         }
-        "*l3_2" { 
-            $UserC3_2=Get-Content -Path $file -raw
-            $UserC3_2=$UserC3_2 -replace 'mc:Ignorable="d"','' -replace "x:N","N" -replace "^<Win.*","<Window"
-            [xml]$UserXAML3_2=$UserC3_2
-            $Userreader = New-Object System.Xml.XmlNodeReader $UserXAML3_2
-            $TD_UserControl3_2=[Windows.Markup.XamlReader]::Load($Userreader)
-            $UserXAML3_2.SelectNodes("//*[@Name]") | ForEach-Object {Set-Variable -Name "TD_$($_.Name)" -Value $TD_UserControl3_2.FindName($_.Name) }
-         }
         "*l4" { 
             $UserC4=Get-Content -Path $file -raw
             $UserC4=$UserC4 -replace 'mc:Ignorable="d"','' -replace "x:N","N" -replace "^<Win.*","<Window"
@@ -80,6 +59,30 @@ foreach($file in $UserCxamlFile){
             $Userreader = New-Object System.Xml.XmlNodeReader $UserXAML4
             $TD_UserControl4=[Windows.Markup.XamlReader]::Load($Userreader)
             $UserXAML4.SelectNodes("//*[@Name]") | ForEach-Object {Set-Variable -Name "TD_$($_.Name)" -Value $TD_UserControl4.FindName($_.Name) }
+         }
+        "*l4_1" { 
+            $UserC4_1=Get-Content -Path $file -raw
+            $UserC4_1=$UserC4_1 -replace 'mc:Ignorable="d"','' -replace "x:N","N" -replace "^<Win.*","<Window"
+            [xml]$UserXAML4_1=$UserC4_1
+            $Userreader = New-Object System.Xml.XmlNodeReader $UserXAML4_1
+            $TD_UserControl4_1=[Windows.Markup.XamlReader]::Load($Userreader)
+            $UserXAML4_1.SelectNodes("//*[@Name]") | ForEach-Object {Set-Variable -Name "TD_$($_.Name)" -Value $TD_UserControl4_1.FindName($_.Name) }
+         }
+        "*l4_2" { 
+            $UserC4_2=Get-Content -Path $file -raw
+            $UserC4_2=$UserC4_2 -replace 'mc:Ignorable="d"','' -replace "x:N","N" -replace "^<Win.*","<Window"
+            [xml]$UserXAML4_2=$UserC4_2
+            $Userreader = New-Object System.Xml.XmlNodeReader $UserXAML4_2
+            $TD_UserControl4_2=[Windows.Markup.XamlReader]::Load($Userreader)
+            $UserXAML4_2.SelectNodes("//*[@Name]") | ForEach-Object {Set-Variable -Name "TD_$($_.Name)" -Value $TD_UserControl4_2.FindName($_.Name) }
+         }
+         "*l5" { 
+            $UserC5=Get-Content -Path $file -raw
+            $UserC5=$UserC5 -replace 'mc:Ignorable="d"','' -replace "x:N","N" -replace "^<Win.*","<Window"
+            [xml]$UserXAML5=$UserC5
+            $Userreader = New-Object System.Xml.XmlNodeReader $UserXAML5
+            $TD_UserControl5=[Windows.Markup.XamlReader]::Load($Userreader)
+            $UserXAML5.SelectNodes("//*[@Name]") | ForEach-Object {Set-Variable -Name "TD_$($_.Name)" -Value $TD_UserControl5.FindName($_.Name) }
          }
         Default { Write-Host "Something did not work, start the application in debug mod and/or check the log file." -ForegroundColor Red; Start-Sleep -Seconds 5; exit }
     }
@@ -113,59 +116,222 @@ foreach($file in $UserCxamlFile){
     $TD_LogoImage.Source = "$PSRootPath\Resources\PROFI_Logo_2022_dark.png"
     $TD_LogoImageSmall.Source = "$PSRootPath\Resources\PROFI_Logo_2022_dark.png"
     $TD_LogoImageSmall.Visibility = "hidden"
+    if($PSVersionTable.PSVersion.Major -ge 7){
+        $TD_LB_DBSettings.Content ="Your PSWH Version is $($PSVersionTable.PSVersion), you can use the local DB."
+    }else {
+        $TD_LB_DBSettings.Content ="Your PSWH Version is $($PSVersionTable.PSVersion), you can't use the local DB! `nTo use the database update to pwsh Version 7.x and above."
+        $TD_LB_DBSettings.Height="50"
+        $TD_BTN_DeleteDB,$TD_BTN_ActivateDB | ForEach-Object {$_.Visibility = "Collapsed"}
+    }
 #endregion
 
 #region Menu Button
 <# Button Area Menu #>
-$TD_btn_IBM_SV.add_click({
-    $TD_label_ExpPath.Content ="Export Path: $($TD_tb_ExportPath.Text)"
+$TD_btn_Dashboard.add_click({
+    $TD_LB_ExpPathMainWindow.Content ="Export Path: $($TD_tb_ExportPath.Text)"
     if(!($TD_UserControl1.IsLoaded)){$TD_UserContrArea.Children.Add($TD_UserControl1)}
     $TD_UserContrArea.Children.Remove($TD_UserControl2)
-    $TD_UserControlRightSide.Children.Remove($TD_UserControl3_2)
-    $TD_UserControlLeftSide.Children.Remove($TD_UserControl3_1)
+    $TD_UserControlRightSide.Children.Remove($TD_UserControl4_2)
+    $TD_UserControlLeftSide.Children.Remove($TD_UserControl4_1)
     $TD_UserContrArea.Children.Remove($TD_UserControl3)
     $TD_UserContrArea.Children.Remove($TD_UserControl4)
+    $TD_UserContrArea.Children.Remove($TD_UserControl5)
+    if($TD_LogoImageSmall.Visibility -eq "hidden"){$TD_LogoImageSmall.Visibility = "visible"}
+    
+})
+$TD_btn_IBM_SV.add_click({
+    $TD_LB_ExpPathMainWindow.Content ="Export Path: $($TD_tb_ExportPath.Text)"
+    if(!($TD_UserControl2.IsLoaded)){$TD_UserContrArea.Children.Add($TD_UserControl2)}
+    $TD_UserContrArea.Children.Remove($TD_UserControl1)
+    $TD_UserControlRightSide.Children.Remove($TD_UserControl4_2)
+    $TD_UserControlLeftSide.Children.Remove($TD_UserControl4_1)
+    $TD_UserContrArea.Children.Remove($TD_UserControl3)
+    $TD_UserContrArea.Children.Remove($TD_UserControl4)
+    $TD_UserContrArea.Children.Remove($TD_UserControl5)
     if($TD_LogoImageSmall.Visibility -eq "hidden"){$TD_LogoImageSmall.Visibility = "visible"}
     
 })
 $TD_btn_Broc_SAN.add_click({
-    $TD_label_ExpPath.Content ="Export Path: $($TD_tb_ExportPath.Text)"
-    if(!($TD_UserControl2.IsLoaded)){$TD_UserContrArea.Children.Add($TD_UserControl2)}
+    $TD_LB_ExpPathMainWindow.Content ="Export Path: $($TD_tb_ExportPath.Text)"
+    if(!($TD_UserControl3.IsLoaded)){$TD_UserContrArea.Children.Add($TD_UserControl3)}
     $TD_UserContrArea.Children.Remove($TD_UserControl1)
-    $TD_UserControlRightSide.Children.Remove($TD_UserControl3_2)
-    $TD_UserControlLeftSide.Children.Remove($TD_UserControl3_1)
-    $TD_UserContrArea.Children.Remove($TD_UserControl3)
+    $TD_UserContrArea.Children.Remove($TD_UserControl2)
+    $TD_UserControlRightSide.Children.Remove($TD_UserControl4_2)
+    $TD_UserControlLeftSide.Children.Remove($TD_UserControl4_1)
     $TD_UserContrArea.Children.Remove($TD_UserControl4)
+    $TD_UserContrArea.Children.Remove($TD_UserControl5)
     if($TD_LogoImageSmall.Visibility -eq "hidden"){$TD_LogoImageSmall.Visibility = "visible"}
 })
 $TD_btn_Stor_San.add_click({
-    $TD_label_ExpPath.Content ="Export Path: $($TD_tb_ExportPath.Text)"
-    if(!($TD_UserControl3.IsLoaded)){$TD_UserContrArea.Children.Add($TD_UserControl3); $TD_UserControlLeftSide.Children.add($TD_UserControl3_1);$TD_UserControlRightSide.Children.add($TD_UserControl3_2)}
+    $TD_LB_ExpPathMainWindow.Content ="Export Path: $($TD_tb_ExportPath.Text)"
+    if(!($TD_UserControl4.IsLoaded)){$TD_UserContrArea.Children.Add($TD_UserControl4); $TD_UserControlLeftSide.Children.add($TD_UserControl4_1);$TD_UserControlRightSide.Children.add($TD_UserControl4_2)}
     $TD_UserContrArea.Children.Remove($TD_UserControl1)
     $TD_UserContrArea.Children.Remove($TD_UserControl2)
-    $TD_UserContrArea.Children.Remove($TD_UserControl4)
+    $TD_UserContrArea.Children.Remove($TD_UserControl3)
+    $TD_UserContrArea.Children.Remove($TD_UserControl5)
     if($TD_LogoImageSmall.Visibility -eq "hidden"){$TD_LogoImageSmall.Visibility = "visible"}
 })
 $TD_btn_Settings.add_click({
-    if(!($TD_UserControl4.IsLoaded)){$TD_UserContrArea.Children.Add($TD_UserControl4)}
+    if(!($TD_UserControl5.IsLoaded)){$TD_UserContrArea.Children.Add($TD_UserControl5)}
     $TD_UserContrArea.Children.Remove($TD_UserControl1)
     $TD_UserContrArea.Children.Remove($TD_UserControl2)
     $TD_UserControlRightSide.Children.Remove($TD_UserControl3_2)
     $TD_UserControlLeftSide.Children.Remove($TD_UserControl3_1)
     $TD_UserContrArea.Children.Remove($TD_UserControl3)
+    $TD_UserContrArea.Children.Remove($TD_UserControl4)
     if($TD_LogoImageSmall.Visibility -eq "hidden"){$TD_LogoImageSmall.Visibility = "visible"}
-    <# Clean all LogFiles if there older than 90 Days #>
-    SST_FileCleanUp
 })
 <# Button Export Settings #>
 $TD_btn_ChangeExportPath.add_click({
     $TD_ChPathdialog = New-Object System.Windows.Forms.FolderBrowserDialog
     if ($TD_ChPathdialog.ShowDialog() -eq [System.Windows.Forms.DialogResult]::OK) {
         $TD_DirectoryName = $TD_ChPathdialog.SelectedPath
-        #Write-Host "Directory selected is $TD_DirectoryName"
         $TD_tb_ExportPath.Text = $TD_DirectoryName
     }
-    $TD_label_ExpPath.Content ="Export Path: $($TD_tb_ExportPath.Text)"
+    $TD_LB_ExpPathMainWindow.Content ="Export Path: $($TD_tb_ExportPath.Text)"
+})
+#endregion
+
+#region Settings Button
+$TD_BTN_SaveToolSettings.add_click({
+    SST_SaveLoadToolSettings -SST_SaveSettings $true
+})
+$TD_BTN_LoadToolSettings.add_click({
+    SST_SaveLoadToolSettings -SST_LoadSettings $true
+})
+#endregion
+
+#region PRISM
+$TD_BTN_SaveConnectionStringPRISM.add_click({
+    $TD_BTN_SaveConnectionStringPRISM.Background="#FFDDDDDD"
+    SST_SaveLoadToolSettings -SST_SaveSettings $true
+    $SST_LoadedToolSettings = Import-Clixml -Path "$PSRootPath\Resources\SavedToolSettings.clixml" 
+    $ConnectionStringPRISM = [System.Net.NetworkCredential]::new("", $SST_LoadedToolSettings.ConnectionStringPRISM).Password
+    IF(!([string]::IsNullOrEmpty($ConnectionStringPRISM))){
+        $TD_TB_ConnectionStringPRISM.Visibility="Collapsed"
+        $TD_BTN_SaveConnectionStringPRISM.Content = "Test Connection"
+    }
+    if(($TD_TB_ConnectionStringPRISM.Visibility -eq "Collapsed")-and ($TD_BTN_SaveConnectionStringPRISM.Content -like "Test Connection")){
+        try {
+            $SQLConnection=New-Object System.Data.SqlClient.SqlConnection
+            $SQLConnection.ConnectionString=$TD_TB_ConnectionStringPRISM.Text
+            $SQLConnection.Open()
+        }
+        catch {
+            Write-Debug -Message $_.Exception.Message
+            SST_ToolMessageCollector -TD_ToolMSGCollector $_.Exception.Message -TD_ToolMSGType Error -TD_Shown yes
+            $TD_LB_ConnectionStringLabelPRISM.Content = "$($_.Exception.Message)"
+            $TD_BTN_SaveConnectionStringPRISM.Background = "Coral"
+            $TD_BTN_ChangeConnectionStringPRISM.Visibility = "Visible"
+        }
+        if(($SQLConnection.State -eq 'Open') -and ($TD_BTN_ConnetionToPRISM.Content -notlike "Test Connection")){
+            $TD_BTN_SaveConnectionStringPRISM.Content = "Connection String valid"
+            $TD_BTN_SaveConnectionStringPRISM.Background = "lightgreen"
+            $SQLConnection.Close()
+            $TD_BTN_ChangeConnectionStringPRISM.Visibility = "Visible"
+        }
+    }
+})
+$TD_BTN_ConnetionToPRISM.add_click({
+    $TD_BTN_ConnetionToPRISM.Background="#FFDDDDDD"
+    $SST_LoadedToolSettings = Import-Clixml -Path "$PSRootPath\Resources\SavedToolSettings.clixml" 
+    $ConnectionStringPRISM = [System.Net.NetworkCredential]::new("", $SST_LoadedToolSettings.ConnectionStringPRISM).Password
+    try {
+        $SQLConnection=New-Object System.Data.SqlClient.SqlConnection
+        $SQLConnection.ConnectionString=$ConnectionStringPRISM 
+        $SQLConnection.Open()
+    }
+    catch {
+        Write-Debug -Message $_.Exception.Message
+        SST_ToolMessageCollector -TD_ToolMSGCollector $_.Exception.Message -TD_ToolMSGType Error -TD_Shown yes
+        $TD_LB_TestConnectionPRISM.Foreground = "Coral"
+        $TD_BTN_ConnetionToPRISM.Background ="Coral"
+    }
+    if(($SQLConnection.State -eq 'Open') -and ($TD_BTN_ConnetionToPRISM.Content -like "Close Connection")){
+        $SQLConnection.Close()
+        $TD_BTN_ConnetionToPRISM.Background ="#FFDDDDDD"
+        $TD_LB_TestConnectionPRISM.Foreground = "coral"
+        $TD_LB_TestConnectionPRISM.Content = "Connect to PROFI PRISM."
+        $TD_BTN_ConnetionToPRISM.Content ="Connetion to PRISM"
+        $SST_LoadedToolSettings.ConnectionStringPRISM = $null
+        $ConnectionStringPRISM = $null
+    }
+    if(($SQLConnection.State -eq 'Open') -and ($TD_BTN_ConnetionToPRISM.Content -like "Connetion to PRISM")){
+        $TD_BTN_ConnetionToPRISM.Background ="LightGreen"
+        $TD_LB_TestConnectionPRISM.Foreground = "DarkGreen"
+        $TD_LB_TestConnectionPRISM.Content = "$($SQLConnection.State)"
+        $TD_BTN_ConnetionToPRISM.Content ="Close Connection"
+    }
+})
+$TD_BTN_ChangeConnectionStringPRISM.add_click({
+    $TD_TB_ConnectionStringPRISM.Visibility = "Visible"
+    $TD_TB_ConnectionStringPRISM.Text = $null
+    $TD_BTN_SaveConnectionStringPRISM.Content = "Save Connection String"
+    $TD_BTN_SaveConnectionStringPRISM.Background="#FFDDDDDD"
+    $TD_BTN_ChangeConnectionStringPRISM.Visibility = "Collapsed"
+})
+#endregion
+
+#region LocalDB
+$TD_BTN_ActivateDB.add_click({
+    $TD_DBisActive = Get-Item -Path "$PSRootPath\Resources\DBFolder\SSTLocalDB.db"
+    if([string]::IsNullOrEmpty($TD_DBisActive.Name)){
+        try {
+            $PSRootPath = Split-Path -Path $PSScriptRoot -Parent
+            $SST_LocalDB = [LiteDB.LiteDatabase]::new("Filename= $PSRootPath\Resources\DBFolder\SSTLocalDB.db")
+            $SST_LocalDB.GetCollection("IBMDriveTable")
+            $SST_LocalDB.GetCollection("IBMSTOHWTable")
+        }
+        catch {
+            Write-Host $_.exception.message
+            SST_ToolMessageCollector -TD_ToolMSGCollector "$($_.exception.message)" -TD_ToolMSGType Error -TD_Shown yes
+            $TD_BTN_DeleteDB.Visibility = "Visible"
+            $TD_BTN_DeleteDB.Background = "Coral"
+        }
+        if($SST_LocalDB.count -gt 0){
+            $SST_IBMDriveTable = $SST_LocalDB.GetCollection("IBMDriveTable")
+            $SST_IBMSTOHWTable = $SST_LocalDB.GetCollection("IBMSTOHWTable")
+            if(($SST_IBMDriveTable.Name -eq "IBMDriveTable")-and($SST_IBMSTOHWTable.Name -eq "IBMSTOHWTable")){
+                $TD_BTN_DeleteDB.Visibility = "Visible"
+                $TD_BTN_ActivateDB.Visibility="Collapsed"
+                $SST_LocalDB.Dispose()
+            }
+        }
+    }else {
+        <# Action when all if and elseif conditions are false #>
+        $TD_BTN_ActivateDB.Background = "lightgreen"
+        $TD_BTN_ActivateDB.Content = "LocalDB active"
+        if($SST_LocalDB.count -gt 0){
+            $SST_IBMDriveTable = $SST_LocalDB.GetCollection("IBMDriveTable")
+            $SST_IBMSTOHWTable = $SST_LocalDB.GetCollection("IBMSTOHWTable")
+            if(($SST_IBMDriveTable.Name -eq "IBMDriveTable")-and($SST_IBMSTOHWTable.Name -eq "IBMSTOHWTable")){
+                $TD_BTN_DeleteDB.Visibility = "Visible"
+                #$TD_BTN_ActivateDB.Visibility="Collapsed"
+                #$SST_LocalDB.Dispose()
+            }
+        }
+    }
+})
+$TD_BTN_DeleteDB.add_click({
+    try {
+        $TD_DBtoDelete = Get-Item -Path "$PSRootPath\Resources\DBFolder\SSTLocalDB.db"
+        if(!([string]::IsNullOrEmpty($TD_DBtoDelete.Name))){
+            $SST_LocalDB = [LiteDB.LiteDatabase]::new("Filename= $PSRootPath\Resources\DBFolder\SSTLocalDB.db")
+            $SST_LocalDB.Dispose()
+        }
+        SST_ToolMessageCollector -TD_ToolMSGCollector "This action deletes the $($TD_DBtoDelete.Name)" -TD_ToolMSGType Warning -TD_Shown yes
+        Get-ChildItem -Path "$PSRootPath\Resources\DBFolder\SSTLocalDB.db" | Remove-Item -Confirm:$false -Force -ErrorAction SilentlyContinue
+        #Remove-Item -Path "$PSRootPath\Resources\DBFolder\SSTLocalDB.db" -Confirm:$false -Force -ErrorAction SilentlyContinue
+        SST_ToolMessageCollector -TD_ToolMSGCollector "$($TD_DBtoDelete.Name) are deleted" -TD_ToolMSGType Message -TD_Shown yes
+        $TD_BTN_ActivateDB.Visibility = "Visible"
+        $TD_BTN_DeleteDB.Visibility="Collapsed"
+    }
+    catch {
+        Write-Host $_.exception.message
+        SST_ToolMessageCollector -TD_ToolMSGCollector "$($_.exception.message)" -TD_ToolMSGType Error -TD_Shown yes
+        $TD_BTN_DeleteDB.Visibility = "Visible"
+        $TD_BTN_DeleteDB.Background = "Coral"
+    }
 })
 #endregion
 
@@ -492,6 +658,8 @@ $TD_btn_IBM_DriveInfo.add_click({
     
     $TD_Credentials | ForEach-Object {
         [array]$TD_DriveInfo = IBM_DriveInfo -TD_Line_ID $_.ID -TD_Device_ConnectionTyp $_.ConnectionTyp -TD_Device_UserName $_.UserName -TD_Device_DeviceName $_.DeviceName -TD_Device_DeviceIP $_.IPAddress -TD_Device_PW $([Net.NetworkCredential]::new('', $_.Password).Password) -TD_Device_SSHKeyPath $_.SSHKeyPath -TD_Storage $_.SVCorVF -TD_Exportpath $TD_tb_ExportPath.Text
+        SST_LiteDBControl -SST_InfoType Drive -SST_CollectedInformations $TD_DriveInfo
+        SST_PRISMDBControl -SST_InfoType Drive -SST_CollectedInformations $TD_DriveInfo
         switch ($_.ID) {
             {($_ -eq 1)} { $TD_dg_DriveInfoOne.ItemsSource = $TD_DriveInfo }
             {($_ -eq 2)} { $TD_dg_DriveInfoTwo.ItemsSource = $TD_DriveInfo }
@@ -1680,7 +1848,13 @@ $TD_btn_CloseAll.add_click({
     $MainWindow.Close()
 })
 
+<# muss nicht angezeigt werden kann aber #>
 Get-Variable TD_*
+<# Clean all LogFiles if there older than 90 Days #>
+SST_FileCleanUp
+<# Load Toolsettings if they saved in Resources folder #>
+SST_SaveLoadToolSettings -SST_LoadSettings $true
+
 
 $MainWindow.showDialog()
 $MainWindow.activate()
