@@ -10,9 +10,8 @@ function SST_SaveLoadToolSettings {
 
         $TD_BTN_SaveToolSettings.Background="#FFDDDDDD"
         $TD_BTN_LoadToolSettings.Background="#FFDDDDDD"
-        
+        $PSRootPath = Split-Path -Path $PSScriptRoot -Parent
         try {
-            $PSRootPath = Split-Path -Path $PSScriptRoot -Parent
             $SST_SavedToolSettings = Get-Item -Path "$PSRootPath\Resources\SavedToolSettings.clixml" -ErrorAction SilentlyContinue
         }
         catch {
@@ -21,18 +20,33 @@ function SST_SaveLoadToolSettings {
             $TD_BTN_LoadToolSettings.Background="LightCoral"
             $SST_SavedToolSettings = $null
         }
+        try {
+            $TD_DBisActive = Get-Item -Path "$PSRootPath\Resources\DBFolder\SSTLocalDB.db" -ErrorAction SilentlyContinue
+        }
+        catch {
+            Write-Debug -Message $_.Exception.Message
+            SST_ToolMessageCollector -TD_ToolMSGCollector $_.Exception.Message -TD_ToolMSGType Error -TD_Shown yes
+        }
     }
     
     process {
         <# Can be extended with additional parameters at any time #>
 
         if($SST_SaveSettings){
-            $SST_ExportToolSettings = "" | Select-Object ExportPath,LoadSettingsOnStartUp,OnlineCheckbyImport,ConnectionStringPRISM
+            $SST_ExportToolSettings = "" | Select-Object ExportPath,LoadSettingsOnStartUp,OnlineCheckbyImport,LocalDB,ConnectionStringPRISM
             $SST_ExportToolSettings.ExportPath = $TD_tb_ExportPath.Text
             $SST_ExportToolSettings.LoadSettingsOnStartUp = $TD_CB_LoadSettingsatStartUp.IsChecked
             $SST_ExportToolSettings.OnlineCheckbyImport = $TD_CB_OnlineCheckbyImport.IsChecked
+            if((!([string]::IsNullOrEmpty($TD_DBisActive.Name)))-and($PSVersionTable.PSVersion.Major -ge 7)){
+                $SST_ExportToolSettings.LocalDB = $true
+            }else {
+                $SST_ExportToolSettings.LocalDB = $false
+            }
             if(!([string]::IsNullOrEmpty($TD_TB_ConnectionStringPRISM.Text))){
                 $SST_ExportToolSettings.ConnectionStringPRISM = ConvertTo-SecureString $($TD_TB_ConnectionStringPRISM.Text) -AsPlainText -Force
+            }else {
+                $SST_LoadedToolSettings = Import-Clixml -Path "$PSRootPath\Resources\SavedToolSettings.clixml" 
+                $SST_ExportToolSettings.ConnectionStringPRISM = $SST_LoadedToolSettings.ConnectionStringPRISM
             }
             try {
                 $SST_ExportToolSettings | Export-Clixml -Path "$PSRootPath\Resources\SavedToolSettings.clixml" -Confirm:$false
@@ -62,12 +76,17 @@ function SST_SaveLoadToolSettings {
                         if($SQLConnection.State -eq 'Open'){
                             $TD_TB_ConnectionStringPRISM.Visibility = "Collapsed"
                             $TD_BTN_SaveConnectionStringPRISM.Content = "Connection String loaded"
-                            $TD_BTN_SaveConnectionStringPRISM.Background = "lightgreen"
+                            $TD_BTN_SaveConnectionStringPRISM.Background = "LightGreen"
                             $TD_BTN_ChangeConnectionStringPRISM.Visibility = "Visible"
                             $SQLConnection.Close()
                         }else{
                             <# something should happen if not #>
                         }
+                    }
+                    if(($SST_LoadedToolSettings.LocalDB -eq $true)-and($PSVersionTable.PSVersion.Major -ge 7)){
+                        $TD_BTN_ActivateDB.Background = "LightGreen"
+                        $TD_BTN_ActivateDB.Content = "LocalDB active"
+                        $TD_BTN_DeleteDB.Visibility = "Visible"
                     }
                     $TD_BTN_LoadToolSettings.Background="LightGreen"
                 }
