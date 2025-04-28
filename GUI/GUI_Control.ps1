@@ -274,41 +274,25 @@ $TD_BTN_ChangeConnectionStringPRISM.add_click({
 
 #region LocalDB
 $TD_BTN_ActivateDB.add_click({
-    $TD_DBisActive = Get-Item -Path "$PSRootPath\Resources\DBFolder\SSTLocalDB.db"
-    if([string]::IsNullOrEmpty($TD_DBisActive.Name)){
-        try {
-            $PSRootPath = Split-Path -Path $PSScriptRoot -Parent
-            $SST_LocalDB = [LiteDB.LiteDatabase]::new("Filename= $PSRootPath\Resources\DBFolder\SSTLocalDB.db")
-            $SST_LocalDB.GetCollection("IBMDriveTable")
-            $SST_LocalDB.GetCollection("IBMSTOHWTable")
-        }
-        catch {
-            Write-Host $_.exception.message
-            SST_ToolMessageCollector -TD_ToolMSGCollector "$($_.exception.message)" -TD_ToolMSGType Error -TD_Shown yes
+    try {
+        $PSRootPath = Split-Path -Path $PSScriptRoot -Parent
+        $SST_LocalDB = [LiteDB.LiteDatabase]::new("Filename= $PSRootPath\Resources\DBFolder\SSTLocalDB.db")
+        $SST_LocalDB.GetCollection("IBMDriveTable")
+        $SST_LocalDB.GetCollection("IBMSTOHWTable")
+    }
+    catch {
+        Write-Host $_.exception.message
+        SST_ToolMessageCollector -TD_ToolMSGCollector "$($_.exception.message)" -TD_ToolMSGType Error -TD_Shown yes
+        $TD_BTN_DeleteDB.Visibility = "Visible"
+        $TD_BTN_DeleteDB.Background = "Coral"
+    }
+    if($SST_LocalDB.count -gt 0){
+        $SST_IBMDriveTable = $SST_LocalDB.GetCollection("IBMDriveTable")
+        $SST_IBMSTOHWTable = $SST_LocalDB.GetCollection("IBMSTOHWTable")
+        if(($SST_IBMDriveTable.Name -eq "IBMDriveTable")-and($SST_IBMSTOHWTable.Name -eq "IBMSTOHWTable")){
             $TD_BTN_DeleteDB.Visibility = "Visible"
-            $TD_BTN_DeleteDB.Background = "Coral"
-        }
-        if($SST_LocalDB.count -gt 0){
-            $SST_IBMDriveTable = $SST_LocalDB.GetCollection("IBMDriveTable")
-            $SST_IBMSTOHWTable = $SST_LocalDB.GetCollection("IBMSTOHWTable")
-            if(($SST_IBMDriveTable.Name -eq "IBMDriveTable")-and($SST_IBMSTOHWTable.Name -eq "IBMSTOHWTable")){
-                $TD_BTN_DeleteDB.Visibility = "Visible"
-                $TD_BTN_ActivateDB.Visibility="Collapsed"
-                $SST_LocalDB.Dispose()
-            }
-        }
-    }else {
-        <# Action when all if and elseif conditions are false #>
-        $TD_BTN_ActivateDB.Background = "lightgreen"
-        $TD_BTN_ActivateDB.Content = "LocalDB active"
-        if($SST_LocalDB.count -gt 0){
-            $SST_IBMDriveTable = $SST_LocalDB.GetCollection("IBMDriveTable")
-            $SST_IBMSTOHWTable = $SST_LocalDB.GetCollection("IBMSTOHWTable")
-            if(($SST_IBMDriveTable.Name -eq "IBMDriveTable")-and($SST_IBMSTOHWTable.Name -eq "IBMSTOHWTable")){
-                $TD_BTN_DeleteDB.Visibility = "Visible"
-                #$TD_BTN_ActivateDB.Visibility="Collapsed"
-                #$SST_LocalDB.Dispose()
-            }
+            $TD_BTN_ActivateDB.Visibility="Collapsed"
+            $SST_LocalDB.Dispose()
         }
     }
 })
