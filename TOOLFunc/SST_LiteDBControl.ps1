@@ -39,6 +39,8 @@ function SST_LiteDBControl {
                     $SST_NewDBObject["PhyDriveCap"] = $SST_CollectedInformation.PhyDriveCap
                     $SST_NewDBObject["PhyUsedDriveCap"] = $SST_CollectedInformation.PhyUsedDriveCap
                     $SST_NewDBObject["EffeUsedDriveCap"] = $SST_CollectedInformation.EffeUsedDriveCap
+                    $SST_NewDBObject["DeviceSN"] = $SST_CollectedInformation.DeviceSN
+                    $SST_NewDBObject["DeviceWWNN"] = $SST_CollectedInformation.DeviceWWNN
                     # In DB speichern 
                     $SST_IBMDriveTable.Insert($SST_NewDBObject)
                 }
