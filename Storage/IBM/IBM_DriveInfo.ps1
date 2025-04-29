@@ -65,9 +65,9 @@ function IBM_DriveInfo {
         <# Connect to Device and get all needed Data #>
         if($TD_Storage -eq "FSystem"){
             if($TD_Device_ConnectionTyp -eq "ssh"){
-                $TD_CollectInfos = ssh -i $($TD_Device_SSHKeyPath) $TD_Device_UserName@$TD_Device_DeviceIP 'lsnodecanister -nohdr |while read id name IO_group_id;do lsnodecanister $id;echo;done && lsdrive -nohdr |while read id name IO_group_id;do lsdrive $id ;echo;done'
+                $TD_CollectInfos = ssh -i $($TD_Device_SSHKeyPath) $TD_Device_UserName@$TD_Device_DeviceIP 'lsnodecanister -nohdr -delim : && lsnodecanister -nohdr |while read id name IO_group_id;do lsnodecanister $id;echo;done && lsdrive -nohdr |while read id name IO_group_id;do lsdrive $id ;echo;done'
             }else {
-                $TD_CollectInfos = plink $TD_Device_UserName@$TD_Device_DeviceIP -pw $TD_Device_PW -batch 'lsnodecanister -nohdr |while read id name IO_group_id;do lsnodecanister $id;echo;done && lsdrive -nohdr |while read id name IO_group_id;do lsdrive $id ;echo;done'
+                $TD_CollectInfos = plink $TD_Device_UserName@$TD_Device_DeviceIP -pw $TD_Device_PW -batch 'lsnodecanister -nohdr -delim : && lsnodecanister -nohdr |while read id name IO_group_id;do lsnodecanister $id;echo;done && lsdrive -nohdr |while read id name IO_group_id;do lsdrive $id ;echo;done'
             }
         }else {
             <# Action when all if and elseif conditions are false #>
@@ -75,7 +75,12 @@ function IBM_DriveInfo {
         }
         #$TD_CollectInfos = Get-Content -Path "C:\Users\mailt\Documents\lsdrive.txt"
         Write-Debug -Message "Number of Lines: $($TD_CollectInfos.count) "
+        $TD_TempNodeInfo = "" | Select-Object SerialNumber,WWNN
         0..$TD_CollectInfos.count |ForEach-Object {
+            if($TD_CollectInfos[$_] -match ':([0-9A-z]{16}):'){
+                $TD_TempNodeInfo.WWNN = ($TD_CollectInfos[$_]|Select-String -Pattern ':([0-9A-z]{16}):' -AllMatches).Matches.Groups[1].Value
+                $TD_TempNodeInfo.SerialNumber = ($TD_CollectInfos[$_]|Select-String -Pattern ':\d:\d:([0-9A-Z]{7}):' -AllMatches).Matches.Groups[1].Value
+            }
             <# Split the infos in 2 var #>
             if($TD_CollectInfos[$_] -match '^serial_number'){
                 $TD_NodeInfoTemp = $TD_CollectInfos |Select-Object -First $_
@@ -100,7 +105,7 @@ function IBM_DriveInfo {
         }
 
         <# Drive Info #>
-        $TD_DriveSplitInfos = "" | Select-Object DriveID,DriveStatus,DriveCap,ProductID,FWlev,LatestDriveFW,Slot,PhyDriveCap,PhyUsedDriveCap,EffeUsedDriveCap,FWlevStatus
+        $TD_DriveSplitInfos = "" | Select-Object DriveID,DriveStatus,DriveCap,ProductID,FWlev,LatestDriveFW,Slot,PhyDriveCap,PhyUsedDriveCap,EffeUsedDriveCap,FWlevStatus,DeviceSN,DeviceWWNN
         foreach($TD_CollectInfo in $TD_CollectInfosTemp){
             [int]$TD_DriveSplitInfos.DriveID = ($TD_CollectInfo|Select-String -Pattern '^id\s+(\d+)' -AllMatches).Matches.Groups[1].Value
             [string]$TD_DriveSplitInfos.DriveStatus = ($TD_CollectInfo|Select-String -Pattern '^status\s+(online|offline|degraded)' -AllMatches).Matches.Groups[1].Value
@@ -141,18 +146,20 @@ function IBM_DriveInfo {
                     }
                 }
             }
+            [string]$TD_DriveSplitInfos.DeviceWWNN = $TD_TempNodeInfo.WWNN
+            [string]$TD_DriveSplitInfos.DeviceSN = $TD_TempNodeInfo.SerialNumber
             <# Not the best option but for the first stepp ok #>
             if($TD_TransProt -eq "nvme"){
                 if (![string]::IsNullOrEmpty($TD_DriveSplitInfos.EffeUsedDriveCap)){
                     $TD_DriveOverview += $TD_DriveSplitInfos
                     Write-Debug -Message  $TD_DriveOverview
-                    $TD_DriveSplitInfos = "" | Select-Object DriveID,DriveStatus,DriveCap,ProductID,FWlev,LatestDriveFW,Slot,PhyDriveCap,PhyUsedDriveCap,EffeUsedDriveCap,FWlevStatus
+                    $TD_DriveSplitInfos = "" | Select-Object DriveID,DriveStatus,DriveCap,ProductID,FWlev,LatestDriveFW,Slot,PhyDriveCap,PhyUsedDriveCap,EffeUsedDriveCap,FWlevStatus,DeviceSN,DeviceWWNN
                 }
             }else{
                 if (![string]::IsNullOrEmpty($TD_DriveSplitInfos.PhyDriveCap)){
                     $TD_DriveOverview += $TD_DriveSplitInfos
                     Write-Debug -Message  $TD_DriveOverview
-                    $TD_DriveSplitInfos = "" | Select-Object DriveID,DriveStatus,DriveCap,ProductID,FWlev,LatestDriveFW,Slot,PhyDriveCap,PhyUsedDriveCap,EffeUsedDriveCap,FWlevStatus
+                    $TD_DriveSplitInfos = "" | Select-Object DriveID,DriveStatus,DriveCap,ProductID,FWlev,LatestDriveFW,Slot,PhyDriveCap,PhyUsedDriveCap,EffeUsedDriveCap,FWlevStatus,DeviceSN,DeviceWWNN
                 }
             }
 
