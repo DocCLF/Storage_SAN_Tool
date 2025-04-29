@@ -658,7 +658,6 @@ $TD_btn_IBM_DriveInfo.add_click({
             Write-Host $_.exception.message
             SST_ToolMessageCollector -TD_ToolMSGCollector "PRISMDB - $_.exception.message" -TD_ToolMSGType Error -TD_Shown no
         }
-
         switch ($_.ID) {
             {($_ -eq 1)} { $TD_dg_DriveInfoOne.ItemsSource = $TD_DriveInfo }
             {($_ -eq 2)} { $TD_dg_DriveInfoTwo.ItemsSource = $TD_DriveInfo }
@@ -815,6 +814,22 @@ $TD_btn_IBM_BaseStorageInfo.add_click({
 
     $TD_Credentials | ForEach-Object {
         [array]$TD_BaseStorageInfo = IBM_BaseStorageInfos -TD_Line_ID $_.ID -TD_Device_ConnectionTyp $_.ConnectionTyp -TD_Device_UserName $_.UserName -TD_Device_DeviceIP $_.IPAddress -TD_Device_DeviceName $_.DeviceName -TD_Device_PW $([Net.NetworkCredential]::new('', $_.Password).Password) -TD_Device_SSHKeyPath $_.SSHKeyPath -TD_Storage $_.SVCorVF -TD_Exportpath $TD_tb_ExportPath.Text
+        try {
+            SST_LiteDBControl -SST_InfoType Drive -SST_CollectedInformations $TD_BaseStorageInfo
+        }
+        catch {
+            <#Do this if a terminating exception happens#>
+            Write-Host $_.exception.message
+            SST_ToolMessageCollector -TD_ToolMSGCollector "LiteDB - $_.exception.message" -TD_ToolMSGType Error -TD_Shown no
+        }
+        try {
+            SST_PRISMDBControl -SST_InfoType StorageBase -SST_CollectedInformations $TD_BaseStorageInfo
+        }
+        catch {
+            <#Do this if a terminating exception happens#>
+            Write-Host $_.exception.message
+            SST_ToolMessageCollector -TD_ToolMSGCollector "PRISMDB - $_.exception.message" -TD_ToolMSGType Error -TD_Shown no
+        }
         switch ($_.ID) {
             {($_ -eq 1)} { $TD_dg_BaseStorageInfoOne.ItemsSource = $TD_BaseStorageInfo }
             {($_ -eq 2)} { $TD_dg_BaseStorageInfoTwo.ItemsSource = $TD_BaseStorageInfo }
