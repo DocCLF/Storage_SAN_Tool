@@ -234,7 +234,15 @@ $TD_BTN_SaveConnectionStringPRISM.add_click({
 })
 $TD_BTN_ConnetionToPRISM.add_click({
     $TD_BTN_ConnetionToPRISM.Background="#FFDDDDDD"
-    $SST_LoadedToolSettings = Import-Clixml -Path "$PSRootPath\Resources\SavedToolSettings.clixml" 
+    try {
+        $SST_LoadedToolSettings = Import-Clixml -Path "$PSRootPath\Resources\SavedToolSettings.clixml" -ErrorAction SilentlyContinue
+    }
+    catch {
+        <#Do this if a terminating exception happens#>
+        Write-Debug -Message $_.Exception.Message
+        SST_ToolMessageCollector -TD_ToolMSGCollector $_.Exception.Message -TD_ToolMSGType Error -TD_Shown yes
+    }
+     
     $ConnectionStringPRISM = [System.Net.NetworkCredential]::new("", $SST_LoadedToolSettings.ConnectionStringPRISM).Password
     try {
         $SQLConnection=New-Object System.Data.SqlClient.SqlConnection
@@ -269,6 +277,10 @@ $TD_BTN_ChangeConnectionStringPRISM.add_click({
     $TD_BTN_SaveConnectionStringPRISM.Content = "Save Connection String"
     $TD_BTN_SaveConnectionStringPRISM.Background="#FFDDDDDD"
     $TD_BTN_ChangeConnectionStringPRISM.Visibility = "Collapsed"
+})
+$TD_BTN_SendDataToPRISM.add_click({
+    SST_PRISMDBControl
+    #Start-Process pwsh -ArgumentList '-NoExit -ExecutionPolicy Bypass -Command "& { . ''D:\GitRePo\Storage_SAN_Tool\TOOLFunc\SST_PRISMDBControl.ps1''; SST_PRISMDBControl}"'
 })
 #endregion
 
@@ -1868,7 +1880,6 @@ Get-Variable TD_*
 SST_FileCleanUp
 <# Load Toolsettings if they saved in Resources folder #>
 SST_SaveLoadToolSettings -SST_LoadSettings $true
-
 
 $MainWindow.showDialog()
 $MainWindow.activate()
