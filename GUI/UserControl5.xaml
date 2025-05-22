@@ -246,8 +246,14 @@
                             <Button x:Name="BTN_SaveConnectionStringPRISM" Content="Save Connection String" HorizontalAlignment="Left" Style="{StaticResource MainBtnStyle}"/>
                             <Button x:Name="BTN_ChangeConnectionStringPRISM" Content="Change Connection String" Visibility="Collapsed" HorizontalAlignment="Left" Style="{StaticResource MainBtnStyle}"/>
                         </StackPanel>
-                        <Label Grid.Column="0" Grid.Row="2" x:Name="LB_TestConnectionPRISM" Content="Connect to PROFI PRISM." Margin="2,0,2,0" Foreground="Coral" FontSize="12" FontWeight="Bold" HorizontalAlignment="Left" Style="{StaticResource MainLabelStyle}" />
-                        <Button Grid.Column="0" Grid.Row="3" x:Name="BTN_ConnetionToPRISM" Content="Connetion to PRISM" HorizontalAlignment="Left" Style="{StaticResource MainBtnStyle}" />
+                        <StackPanel Grid.Row="2" Orientation="Vertical" >
+                            <Label Grid.Column="0" Grid.Row="2" x:Name="LB_TestConnectionPRISM" Content="Connect to PROFI PRISM." Margin="2,0,2,0" Foreground="Coral" FontSize="12" FontWeight="Bold" HorizontalAlignment="Left" Style="{StaticResource MainLabelStyle}" />
+                            <Button Grid.Column="0" Grid.Row="3" x:Name="BTN_ConnetionToPRISM" Content="Connetion to PRISM" HorizontalAlignment="Left" Style="{StaticResource MainBtnStyle}" />
+                        </StackPanel>
+                        <StackPanel Grid.Row="3" Orientation="Vertical" >
+                            <Label Grid.Column="0" Grid.Row="2" x:Name="LB_SendDataToPRISM" Content="Send Data to PROFI PRISM." Margin="2,0,2,0" Foreground="Coral" FontSize="12" FontWeight="Bold" HorizontalAlignment="Left" Style="{StaticResource MainLabelStyle}" />
+                            <Button Grid.Column="0" Grid.Row="3" x:Name="BTN_SendDataToPRISM" Content="Send Data" HorizontalAlignment="Left" Style="{StaticResource MainBtnStyle}" />
+                        </StackPanel>    
                     </Grid>
                 </GroupBox>
                 <GroupBox Header="Database Settings" Margin="0,10">
