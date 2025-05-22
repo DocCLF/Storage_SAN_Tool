@@ -3,6 +3,8 @@ function SST_GetCredfGUI {
     param(
         [Int16]$TD_ErrorCode =0,
         [Int16]$TD_CredentialsCount=1,
+        [Parameter(ValueFromPipeline)]
+        [ValidateSet("yes","no")]
         [string]$TD_AddaNewDevice
     )
 
