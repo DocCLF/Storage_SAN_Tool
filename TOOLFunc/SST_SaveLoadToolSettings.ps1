@@ -33,9 +33,10 @@ function SST_SaveLoadToolSettings {
         <# Can be extended with additional parameters at any time #>
 
         if($SST_SaveSettings){
-            $SST_ExportToolSettings = "" | Select-Object ExportPath,LoadSettingsOnStartUp,OnlineCheckbyImport,LocalDB,ConnectionStringPRISM
+            $SST_ExportToolSettings = "" | Select-Object ExportPath,LoadSettingsOnStartUp,DevicestoInExport,OnlineCheckbyImport,LocalDB,ConnectionStringPRISM
             $SST_ExportToolSettings.ExportPath = $TD_tb_ExportPath.Text
             $SST_ExportToolSettings.LoadSettingsOnStartUp = $TD_CB_LoadSettingsatStartUp.IsChecked
+            $SST_ExportToolSettings.DevicestoInExport = $TD_DG_KnownDeviceList.ItemsSource
             $SST_ExportToolSettings.OnlineCheckbyImport = $TD_CB_OnlineCheckbyImport.IsChecked
             if((!([string]::IsNullOrEmpty($TD_DBisActive.Name)))-and($PSVersionTable.PSVersion.Major -ge 7)){
                 $SST_ExportToolSettings.LocalDB = $true
@@ -45,8 +46,15 @@ function SST_SaveLoadToolSettings {
             if(!([string]::IsNullOrEmpty($TD_TB_ConnectionStringPRISM.Text))){
                 $SST_ExportToolSettings.ConnectionStringPRISM = ConvertTo-SecureString $($TD_TB_ConnectionStringPRISM.Text) -AsPlainText -Force
             }else {
-                $SST_LoadedToolSettings = Import-Clixml -Path "$PSRootPath\Resources\SavedToolSettings.clixml" 
-                $SST_ExportToolSettings.ConnectionStringPRISM = $SST_LoadedToolSettings.ConnectionStringPRISM
+                try {
+                    $SST_LoadedToolSettings = Import-Clixml -Path "$PSRootPath\Resources\SavedToolSettings.clixml" -ErrorAction SilentlyContinue
+                    $SST_ExportToolSettings.ConnectionStringPRISM = $SST_LoadedToolSettings.ConnectionStringPRISM                    
+                }
+                catch {
+                    <#Do this if a terminating exception happens#>
+                    Write-Debug -Message $_.Exception.Message
+                    SST_ToolMessageCollector -TD_ToolMSGCollector $_.Exception.Message -TD_ToolMSGType Error -TD_Shown yes
+                }
             }
             try {
                 $SST_ExportToolSettings | Export-Clixml -Path "$PSRootPath\Resources\SavedToolSettings.clixml" -Confirm:$false
@@ -66,6 +74,7 @@ function SST_SaveLoadToolSettings {
                     $TD_tb_ExportPath.Text = $SST_LoadedToolSettings.ExportPath
                     $TD_LB_ExpPathMainWindow.Content = $SST_LoadedToolSettings.ExportPath
                     $TD_CB_LoadSettingsatStartUp.IsChecked = $SST_LoadedToolSettings.LoadSettingsOnStartUp
+                    $TD_InportedDevices = $SST_LoadedToolSettings.DevicestoInExport
                     $TD_CB_OnlineCheckbyImport.IsChecked = $SST_LoadedToolSettings.OnlineCheckbyImport
                     if(!([string]::IsNullOrEmpty($SST_LoadedToolSettings.ConnectionStringPRISM))){
 
@@ -88,6 +97,7 @@ function SST_SaveLoadToolSettings {
                         $TD_BTN_ActivateDB.Content = "LocalDB active"
                         $TD_BTN_DeleteDB.Visibility = "Visible"
                     }
+                    #SST_ImportCredential -SST_ImportDevicesonStartUp yes -SST_ToInportDeviceInfos $TD_InportedDevices
                     $TD_BTN_LoadToolSettings.Background="LightGreen"
                 }
             }
@@ -107,6 +117,8 @@ function SST_SaveLoadToolSettings {
     }
     
     end {
-        
+        if($SST_LoadSettings -and ($null -ne $SST_SavedToolSettings)){
+            SST_ImportCredential -SST_ImportDevicesonStartUp yes -SST_ToInportDeviceInfos $TD_InportedDevices
+        }
     }
 }
