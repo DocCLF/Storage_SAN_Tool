@@ -97,7 +97,7 @@ function SST_SaveLoadToolSettings {
                         $TD_BTN_ActivateDB.Content = "LocalDB active"
                         $TD_BTN_DeleteDB.Visibility = "Visible"
                     }
-                    #SST_ImportCredential -SST_ImportDevicesonStartUp yes -SST_ToInportDeviceInfos $TD_InportedDevices
+                    
                     $TD_BTN_LoadToolSettings.Background="LightGreen"
                 }
             }
