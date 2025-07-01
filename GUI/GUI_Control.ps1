@@ -413,7 +413,7 @@ $TD_TBTN_SaveCredtoDG.add_click({
 <# Button Credentials In-/ Export #>
 $TD_btn_ExportCred.add_click({
     <# Not all needs to exported, if you want to modify the Export got to the SST_ExportCred Func #>
-    $TD_SST_ExportCred = SST_ExportCredential -TD_CollectedCredData $TD_DG_KnownDeviceList.ItemsSource
+    $TD_SST_ExportCred = SST_ExportCredential -TD_CollectedCredDatas $TD_DG_KnownDeviceList.ItemsSource
     <# Save to Dir #>
     $TD_SaveCred = SST_SaveFile_to_Directory -TD_UserDataObject $TD_SST_ExportCred
     if([string]::IsNullOrEmpty($TD_SaveCred.FileName)){
