@@ -396,16 +396,20 @@ $TD_BTN_DeleteDB.add_click({
 
 #region AddDeviceCred
 $TD_TBTN_SaveCredtoDG.add_click({
-
-    $TD_CredfGUIArray = SST_GetCredfGUI -TD_AddaNewDevice "yes"
-    Start-Sleep -Seconds 0.3
-    if(!([string]::IsNullOrEmpty($TD_CredfGUIArray))){
-        $TD_TB_DeviceIPAddr.Text=""
-        $TD_TB_DeviceUserName.Text=""
-        $TD_TB_DevicePassword.Password=""
-        $TD_TB_PathtoSSHKeyNotVisibil.Text=""
-        $TD_CB_SVCorVF.IsChecked=$false
+    if($TD_CB_CredUpdate.IsChecked){
+        $TD_CredfGUIArray = SST_GetCredfGUI -TD_AddaNewDevice "no"
+    }else{
+        $TD_CredfGUIArray = SST_GetCredfGUI -TD_AddaNewDevice "yes"
+        Start-Sleep -Seconds 0.3
+        if(!([string]::IsNullOrEmpty($TD_CredfGUIArray))){
+            $TD_TB_DeviceIPAddr.Text=""
+            $TD_TB_DeviceUserName.Text=""
+            $TD_TB_DevicePassword.Password=""
+            $TD_TB_PathtoSSHKeyNotVisibil.Text=""
+            $TD_CB_SVCorVF.IsChecked=$false
+        }
     }
+
 })
 #endregion
 
@@ -439,6 +443,7 @@ $TD_btn_ImportCred.add_click({
     }
     
 })
+
 <# this part is needed if there are any Updates on the cred in DG #>
 $TD_DG_KnownDeviceList.add_SelectionChanged({
     <# to prevent the function from being executed more than once #>
@@ -446,11 +451,13 @@ $TD_DG_KnownDeviceList.add_SelectionChanged({
         if($TD_CB_CredUpdate.IsChecked){
             $TD_DG_KnownDeviceList | ForEach-Object {
                 $TD_CB_DeviceType.Text = $_.selecteditem.DeviceTyp
-                if($_.selecteditem.ConnectionTyp -eq "plink"){$TD_CB_DeviceConnectionType.Text = "Classic (UN/PW)"}else{$TD_CB_DeviceConnectionType.Text = "Secure Shell (SSH)"}
+                #if($_.selecteditem.ConnectionTyp -eq "plink"){$TD_CB_DeviceConnectionType.Text = "Classic (UN/PW)"}else{$TD_CB_DeviceConnectionType.Text = "Secure Shell (SSH)"}
                 $TD_TB_DeviceIPAddr.Text = $_.selecteditem.IPAddress
                 $TD_TB_DeviceUserName.Text = $_.selecteditem.UserName
                 if($_.selecteditem.SVCorVF -ne ""){$TD_CB_SVCorVF.IsChecked=$true}else{$TD_CB_SVCorVF.IsChecked=$false}
+                $_.selecteditem | Export-Clixml -Path $PSRootPath\ToolLog\ToolTEMP\UpdateCred.xml
             }
+
         }else{
             SST_DeviceConnecCheck -TD_Selected_Items "yes" -TD_Selected_DeviceType $TD_DG_KnownDeviceList.selecteditem.DeviceTyp -TD_Selected_DeviceConnectionType $TD_DG_KnownDeviceList.selecteditem.ConnectionTyp -TD_Selected_DeviceIPAddr $TD_DG_KnownDeviceList.selecteditem.IPAddress -TD_Selected_DeviceUserName $TD_DG_KnownDeviceList.selecteditem.UserName -TD_Selected_DevicePassword $TD_DG_KnownDeviceList.selecteditem.Password -TD_Selected_SVCorVF $TD_DG_KnownDeviceList.selecteditem.SVCorVF
         }
