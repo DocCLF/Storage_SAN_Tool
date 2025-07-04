@@ -152,7 +152,7 @@
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="auto" />
                             </Grid.ColumnDefinitions>
-                            <DataGrid Grid.Column="0" x:Name="DG_KnownDeviceList" AutoGenerateColumns="False" Margin="10" MaxHeight="400">
+                            <DataGrid Grid.Column="0" x:Name="DG_KnownDeviceList" AutoGenerateColumns="False" Margin="10" MaxHeight="400" IsReadOnly="True" CanUserDeleteRows="True">
                                 <DataGrid.Style>
                                     <Style TargetType="DataGrid">
                                         <Style.Triggers>
@@ -176,17 +176,17 @@
                                 </DataGrid.RowStyle>
                                 <DataGrid.Columns>
                                     <DataGridCheckBoxColumn Header="ACK?" Binding="{Binding ACKHosts, NotifyOnTargetUpdated=True, UpdateSourceTrigger=PropertyChanged}" />
-                                    <DataGridTextColumn Header="Device Typ" Width="Auto" Binding="{Binding DeviceTyp}" IsReadOnly="True"/>
-                                    <DataGridTextColumn Header="Connection Typ" Width="Auto" Binding="{Binding ConnectionTyp}" IsReadOnly="True"/>
-                                    <DataGridTextColumn Header="IP-Adresse" Width="Auto"  Binding="{Binding IPAddress}" IsReadOnly="True"/>
-                                    <DataGridTextColumn Header="Device Name" Width="Auto"  Binding="{Binding DeviceName}" IsReadOnly="True"/>
-                                    <DataGridTextColumn Header="Login User" Width="Auto"  Binding="{Binding UserName}" IsReadOnly="True"/>
+                                    <DataGridTextColumn Header="Device Typ" Width="Auto" Binding="{Binding DeviceTyp}" />
+                                    <DataGridTextColumn Header="Connection Typ" Width="Auto" Binding="{Binding ConnectionTyp}" />
+                                    <DataGridTextColumn Header="IP-Adresse" Width="Auto"  Binding="{Binding IPAddress}" />
+                                    <DataGridTextColumn Header="Device Name" Width="Auto"  Binding="{Binding DeviceName}" />
+                                    <DataGridTextColumn Header="Login User" Width="Auto"  Binding="{Binding UserName}" />
                                     <DataGridTextColumn Header="Login PW" Binding="{Binding Password}" Visibility="{Binding ElementName=Password, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}"/>
                                     <DataGridTextColumn Header="PathtoSSHKey" Binding="{Binding SSHKeyPath}" Visibility="{Binding ElementName=SSHKeyPath, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}"/>
-                                    <DataGridTextColumn Header="MTM-Code" Width="Auto"  Binding="{Binding MTMCode}" IsReadOnly="True"/>
-                                    <DataGridTextColumn Header="Product" Width="Auto"  Binding="{Binding ProductDescr}" IsReadOnly="True"/>
-                                    <DataGridTextColumn Header="Firmware" Width="Auto"  Binding="{Binding CurrentFirmware}" IsReadOnly="True"/>
-                                    <DataGridTextColumn Header="SVC/ VF" Width="Auto" Binding="{Binding SVCorVF}" IsReadOnly="True"/>
+                                    <DataGridTextColumn Header="MTM-Code" Width="Auto"  Binding="{Binding MTMCode}" />
+                                    <DataGridTextColumn Header="Product" Width="Auto"  Binding="{Binding ProductDescr}" />
+                                    <DataGridTextColumn Header="Firmware" Width="Auto"  Binding="{Binding CurrentFirmware}" />
+                                    <DataGridTextColumn Header="SVC/ VF" Width="Auto" Binding="{Binding SVCorVF}" />
                                 </DataGrid.Columns>
                             </DataGrid>
                             <StackPanel Grid.Column="1" Margin="10" HorizontalAlignment="Left" VerticalAlignment="Top" Orientation="Horizontal">
