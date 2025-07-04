@@ -31,7 +31,7 @@ function SST_DeviceConnecCheck {
                 $TD_Selected_DeviceType = $TD_CB_DeviceType.Text
                 if($TD_CB_SVCorVF.IsChecked -and ($TD_Selected_DeviceType -eq "Storage")){$TD_UserInputCred = "SVC"};
                 if($TD_CB_SVCorVF.IsChecked -and ($TD_Selected_DeviceType -eq "SAN")){$TD_UserInputCred = "VF"};
-                if(!($TD_CB_SVCorVF.IsChecked)){$TD_UserInputCred = ""};
+                if(!($TD_CB_SVCorVF.IsChecked)){$TD_UserInputCred = "Nothing"};
              }
             Default {SST_ToolMessageCollector -TD_ToolMSGCollector "Something went wrong at SST_DeviceConnecCheck Func please check the promt or close the gui and write $error in the promt." -TD_ToolMSGType Warning}
         }
