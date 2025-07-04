@@ -14,8 +14,8 @@ function SST_GetCredfGUI {
                 $TD_BasicDeviceInfo = SST_DeviceConnecCheck -TD_Selected_Items "no"
                 if([string]::IsNullOrEmpty($TD_BasicDeviceInfo)){
                     $TD_ErrorCode = 1
-                    $TD_BTN_AddSSHKey.Background="#FFDDDDDD"
-                    $TD_BTN_AddSSHKey.Content="Add SSH-Key"
+                    #$TD_BTN_AddSSHKey.Background="#FFDDDDDD"
+                    #$TD_BTN_AddSSHKey.Content="Add SSH-Key"
                     break
                 }
             }
@@ -23,14 +23,51 @@ function SST_GetCredfGUI {
                 $TD_BasicDeviceInfo = SST_DeviceConnecCheck -TD_Selected_Items "no"
                 if([string]::IsNullOrEmpty($TD_BasicDeviceInfo)){
                     $TD_ErrorCode = 1
-                    $TD_BTN_AddSSHKey.Background="#FFDDDDDD"
-                    $TD_BTN_AddSSHKey.Content="Add SSH-Key"
+                    #$TD_BTN_AddSSHKey.Background="#FFDDDDDD"
+                    #$TD_BTN_AddSSHKey.Content="Add SSH-Key"
                     break
                 }
             }
             Default {SST_ToolMessageCollector -TD_ToolMSGCollector "Something went wrong at SST_GetCredfGUI Func or no Device Type was found, please check the promt." -TD_ToolMSGType Warning}
         }
         $TD_AddaNewDevice="no"
+    }else {
+        <# Update Cereds in DG but you must export them new #>
+        $TD_BasicDeviceInfo = SST_DeviceConnecCheck -TD_Selected_Items "no"
+        if([string]::IsNullOrEmpty($TD_BasicDeviceInfo)){
+            $TD_ErrorCode = 1
+            break
+        }
+        $TD_ExistingCreds = $TD_DG_KnownDeviceList.ItemsSource
+        $TD_InportCred = Import-Clixml -Path $PSRootPath\ToolLog\ToolTEMP\UpdateCred.xml
+        [array]$TD_Credentials = foreach ($TD_ExistingCred in $TD_ExistingCreds) {
+            if($TD_ExistingCred.ID -eq $TD_InportCred.ID){
+                $TD_CB_DeviceConnectionTypeText="plink"
+                <# Create the Main_CredObj #>
+                $TD_ExistingCred = "" | Select-Object ID,DeviceTyp,ConnectionTyp,IPAddress,DeviceName,UserName,Password,SSHKeyPath,SVCorVF,MTMCode,ProductDescr,CurrentFirmware,Exportpath
+                $TD_ExistingCred.ID               =   $TD_InportCred.ID;
+                $TD_ExistingCred.DeviceTyp        =   $TD_CB_DeviceType.Text;
+                $TD_ExistingCred.ConnectionTyp    =   $TD_CB_DeviceConnectionTypeText;
+                $TD_ExistingCred.IPAddress        =   $TD_TB_DeviceIPAddr.Text;
+                $TD_ExistingCred.DeviceName       =   $TD_BasicDeviceInfo.DeviceName;
+                $TD_ExistingCred.UserName         =   $TD_TB_DeviceUserName.Text;
+                <# The PwLine needs a better Option #>
+                $TD_ExistingCred.Password         =   ConvertTo-SecureString $TD_TB_DevicePassword.Password -AsPlainText -Force;
+                $TD_ExistingCred.SSHKeyPath       =   $TD_TB_PathtoSSHKeyNotVisibil.Text;
+                if($TD_CB_SVCorVF.IsChecked -and ($TD_CB_DeviceType.Text -eq "Storage")){$TD_ExistingCred.SVCorVF = "SVC"}else{if($TD_CB_DeviceType.Text -eq "Storage"){$TD_ExistingCred.SVCorVF = "FSystem"}};
+                if($TD_CB_SVCorVF.IsChecked -and ($TD_CB_DeviceType.Text -eq "SAN")){$TD_ExistingCred.SVCorVF = "VF"}else{if($TD_CB_DeviceType.Text -eq "SAN"){$TD_ExistingCred.SVCorVF = ""}};
+                $TD_ExistingCred.MTMCode          =   $TD_BasicDeviceInfo.Prod_MTM;
+                $TD_ExistingCred.ProductDescr     =   $TD_BasicDeviceInfo.ProductDes;
+                $TD_ExistingCred.CurrentFirmware  =   $TD_BasicDeviceInfo.Code_Level;
+                $TD_ExistingCred.Exportpath       =   "$PSRootPath\Export\";
+
+            }
+            $TD_ExistingCred
+        }
+        $TD_DG_KnownDeviceList.ItemsSource = $TD_Credentials
+        [array]$TD_Credentials =$null
+        $TD_ExistingCreds = $null
+        Remove-Item -Path $PSRootPath\ToolLog\ToolTEMP\UpdateCred.xml -Confirm:$false
     }
     <# can be set to 1 for tests default value is 0 #>
     if($TD_ErrorCode -eq 0){
@@ -47,12 +84,14 @@ function SST_GetCredfGUI {
         }
         <# Split between Storage and SAN #>
         if($TD_CB_DeviceType.Text -eq "Storage"){
-            $TD_CredentialsCount=(($TD_Credentials |Where-Object {$_.DeviceTyp -eq "Storage"}).count + 1)
+            [int]$TD_CredentialsCount=(($TD_Credentials |Where-Object {$_.DeviceTyp -eq "Storage"}).count + 1)
+            if($TD_Credentials |Where-Object {$_.ID -eq $TD_CredentialsCount}){$TD_CredentialsCount = $TD_CredentialsCount +1}
             SST_ToolMessageCollector -TD_ToolMSGCollector "Storage ID is $TD_CredentialsCount" -TD_ToolMSGType Debug
         }
 
         if($TD_CB_DeviceType.Text -eq "SAN"){
             $TD_CredentialsCount= (($TD_Credentials |Where-Object {$_.DeviceTyp -eq "SAN"}).count + 1)
+            if($TD_Credentials |Where-Object {$_.ID -eq $TD_CredentialsCount}){$TD_CredentialsCount = $TD_CredentialsCount +1}
             SST_ToolMessageCollector -TD_ToolMSGCollector "SAN ID is $TD_CredentialsCount" -TD_ToolMSGType Debug
         }
         <# needs more tests to be able to use it safely thats why plink is plink and not plink and ssh #>
@@ -76,7 +115,6 @@ function SST_GetCredfGUI {
         $TD_UserInputCred.Exportpath       =   "$PSRootPath\Export\";
 
         $TD_Credentials += $TD_UserInputCred
-
         $TD_DG_KnownDeviceList.ItemsSource = $TD_Credentials
 
         if(($TD_DG_KnownDeviceList.ItemsSource.count -gt 0)-and($TD_CB_DeviceConnectionType.Text -like "Secure*")){
