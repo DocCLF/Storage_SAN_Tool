@@ -12,7 +12,7 @@ function IBM_PowerHMCScanner {
     )
     
     begin {
-        if([string]::IsNullOrWhiteSpace($HMCIP)){break}
+        if([string]::IsNullOrWhiteSpace($HMCIP)){Continue}
         try {
             $PT_TempDirHMCScaner = Get-Item -Path $PSScriptRoot\HMCScanerTEMP -ErrorAction Break
             if($null -eq $PT_TempDirHMCScaner.Name){
@@ -31,7 +31,7 @@ function IBM_PowerHMCScanner {
             }
             Get-ChildItem -Path $PSScriptRoot\HMCScanerTEMP\HMCScannerTool\hmcS*.bat -ErrorAction Break
             Write-Debug -Message "found the HMCScanner.bat, we move on"
-            Remove-Item -Path $PSScriptRoot\HMCScanerTEMP\CustomerHMC*.csv -Recurse -Confirm:$false -Force
+            Remove-Item -Path $PSScriptRoot\HMCScanerTEMP\CustomerHMC*.csv -Recurse -Confirm:$false -Force -ErrorAction Continue
         }
         catch {
             <#Do this if a terminating exception happens#>
