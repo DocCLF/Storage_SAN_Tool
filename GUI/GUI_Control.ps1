@@ -658,37 +658,46 @@ $TD_btn_IBM_DriveInfo.add_click({
     $TD_dg_DriveInfo,$TD_dg_DriveInfoTwo,$TD_dg_DriveInfoThree,$TD_dg_DriveInfoFour,$TD_dg_DriveInfoFive,$TD_dg_DriveInfoSix,$TD_dg_DriveInfoSeven,$TD_dg_DriveInfoEight |ForEach-Object {
         if($_.items.count -gt 0){$_.ItemsSource = $EmptyVar; $TD_UCRefresh = $true}
     }
-    
+    [Int16]$TD_DevCounter = 0
     $TD_Credentials | ForEach-Object {
-        [array]$TD_DriveInfo = IBM_DriveInfo -TD_Line_ID $_.ID -TD_Device_ConnectionTyp $_.ConnectionTyp -TD_Device_UserName $_.UserName -TD_Device_DeviceName $_.DeviceName -TD_Device_DeviceIP $_.IPAddress -TD_Device_PW $([Net.NetworkCredential]::new('', $_.Password).Password) -TD_Device_SSHKeyPath $_.SSHKeyPath -TD_Storage $_.SVCorVF -TD_Exportpath $TD_tb_ExportPath.Text
-        try {
-            SST_LiteDBControl -SST_InfoType Drive -SST_CollectedInformations $TD_DriveInfo
+        if(!($_.SVCorVF -eq "SVC")){
+            $TD_DevCounter = $TD_DevCounter +1
+
+            [array]$TD_DriveInfo = IBM_DriveInfo -TD_Line_ID $TD_DevCounter -TD_Device_ConnectionTyp $_.ConnectionTyp -TD_Device_UserName $_.UserName -TD_Device_DeviceName $_.DeviceName -TD_Device_DeviceIP $_.IPAddress -TD_Device_PW $([Net.NetworkCredential]::new('', $_.Password).Password) -TD_Device_SSHKeyPath $_.SSHKeyPath -TD_Storage $_.SVCorVF -TD_Exportpath $TD_tb_ExportPath.Text
+            try {
+                SST_LiteDBControl -SST_InfoType "Drive" -SST_CollectedInformations $TD_DriveInfo
+            }
+            catch {
+                <#Do this if a terminating exception happens#>
+                Write-Host $_.exception.message
+                SST_ToolMessageCollector -TD_ToolMSGCollector "LiteDB - $_.exception.message" -TD_ToolMSGType Error -TD_Shown no
+            }
+            try {
+                SST_PRISMDBControl -SST_InfoType "Drive" -SST_CollectedInformations $TD_DriveInfo
+            }
+            catch {
+                <#Do this if a terminating exception happens#>
+                Write-Host $_.exception.message
+                SST_ToolMessageCollector -TD_ToolMSGCollector "PRISMDB - $_.exception.message" -TD_ToolMSGType Error -TD_Shown no
+            }
+
+            switch ($TD_DevCounter) {
+                {($_ -eq 1)} { $TD_dg_DriveInfoOne.ItemsSource = $TD_DriveInfo }
+                {($_ -eq 2)} { $TD_dg_DriveInfoTwo.ItemsSource = $TD_DriveInfo }
+                {($_ -eq 3)} { $TD_dg_DriveInfoThree.ItemsSource = $TD_DriveInfo }
+                {($_ -eq 4)} { $TD_dg_DriveInfoFour.ItemsSource = $TD_DriveInfo }
+                {($_ -eq 5)} { $TD_dg_DriveInfoFive.ItemsSource = $TD_DriveInfo }
+                {($_ -eq 6)} { $TD_dg_DriveInfoSix.ItemsSource = $TD_DriveInfo }
+                {($_ -eq 7)} { $TD_dg_DriveInfoSeven.ItemsSource = $TD_DriveInfo }
+                {($_ -eq 8)} { $TD_dg_DriveInfoEight.ItemsSource = $TD_DriveInfo }
+                Default { SST_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong, please check the prompt output first and then the log files.") -TD_ToolMSGType Error }
+            }
+            
+            $TD_DriveInfo | Export-Csv -Path $PSRootPath\ToolLog\ToolTEMP\$($_.ID)_$($_.DeviceName)_DriveInfo_$(Get-Date -Format "yyyy-MM-dd")_Temp.csv
+
+        }else{
+            $TD_lb_DriveErrorInfo.Visibility = "Visible"; $TD_lb_DriveErrorInfo.Content = "An SVC has no hard drives or FlashCore Modules."
         }
-        catch {
-            <#Do this if a terminating exception happens#>
-            Write-Host $_.exception.message
-            SST_ToolMessageCollector -TD_ToolMSGCollector "LiteDB - $_.exception.message" -TD_ToolMSGType Error -TD_Shown no
-        }
-        try {
-            SST_PRISMDBControl -SST_InfoType Drive -SST_CollectedInformations $TD_DriveInfo
-        }
-        catch {
-            <#Do this if a terminating exception happens#>
-            Write-Host $_.exception.message
-            SST_ToolMessageCollector -TD_ToolMSGCollector "PRISMDB - $_.exception.message" -TD_ToolMSGType Error -TD_Shown no
-        }
-        switch ($_.ID) {
-            {($_ -eq 1)} { $TD_dg_DriveInfoOne.ItemsSource = $TD_DriveInfo }
-            {($_ -eq 2)} { $TD_dg_DriveInfoTwo.ItemsSource = $TD_DriveInfo }
-            {($_ -eq 3)} { $TD_dg_DriveInfoThree.ItemsSource = $TD_DriveInfo }
-            {($_ -eq 4)} { $TD_dg_DriveInfoFour.ItemsSource = $TD_DriveInfo }
-            {($_ -eq 5)} { $TD_dg_DriveInfoFive.ItemsSource = $TD_DriveInfo }
-            {($_ -eq 6)} { $TD_dg_DriveInfoSix.ItemsSource = $TD_DriveInfo }
-            {($_ -eq 7)} { $TD_dg_DriveInfoSeven.ItemsSource = $TD_DriveInfo }
-            {($_ -eq 8)} { $TD_dg_DriveInfoEight.ItemsSource = $TD_DriveInfo }
-            Default { SST_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong, please check the prompt output first and then the log files.") -TD_ToolMSGType Error }
-        }
-        $TD_DriveInfo | Export-Csv -Path $PSRootPath\ToolLog\ToolTEMP\$($_.ID)_$($_.DeviceName)_DriveInfo_$(Get-Date -Format "yyyy-MM-dd")_Temp.csv
     }
 
     if($TD_UCRefresh){$TD_UserControl1.Dispatcher.Invoke([System.Action]{},"Render");$TD_UCRefresh=$false}
