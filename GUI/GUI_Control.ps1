@@ -692,7 +692,7 @@ $TD_btn_IBM_DriveInfo.add_click({
                 {($_ -eq 8)} { $TD_dg_DriveInfoEight.ItemsSource = $TD_DriveInfo }
                 Default { SST_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong, please check the prompt output first and then the log files.") -TD_ToolMSGType Error }
             }
-            
+
             $TD_DriveInfo | Export-Csv -Path $PSRootPath\ToolLog\ToolTEMP\$($_.ID)_$($_.DeviceName)_DriveInfo_$(Get-Date -Format "yyyy-MM-dd")_Temp.csv
 
         }else{
@@ -843,7 +843,7 @@ $TD_btn_IBM_BaseStorageInfo.add_click({
     $TD_Credentials | ForEach-Object {
         [array]$TD_BaseStorageInfo = IBM_BaseStorageInfos -TD_Line_ID $_.ID -TD_Device_ConnectionTyp $_.ConnectionTyp -TD_Device_UserName $_.UserName -TD_Device_DeviceIP $_.IPAddress -TD_Device_DeviceName $_.DeviceName -TD_Device_PW $([Net.NetworkCredential]::new('', $_.Password).Password) -TD_Device_SSHKeyPath $_.SSHKeyPath -TD_Storage $_.SVCorVF -TD_Exportpath $TD_tb_ExportPath.Text
         try {
-            SST_LiteDBControl -SST_InfoType Drive -SST_CollectedInformations $TD_BaseStorageInfo
+            SST_LiteDBControl -SST_InfoType "StorageBase" -SST_CollectedInformations $TD_BaseStorageInfo
         }
         catch {
             <#Do this if a terminating exception happens#>
@@ -1874,6 +1874,8 @@ $TD_btn_HC_OpenGUI_Four.add_click({
     Start-Process "https://$($TD_TB_storageIPAdrFour.Text)"
 })
 #endregion
+
+SST_DashBoardMain -MainPath $PSRootPath
 
 $TD_btn_CloseAll.add_click({
     <#CleanUp before close #>
