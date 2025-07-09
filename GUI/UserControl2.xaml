@@ -51,7 +51,6 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="auto" />
             <RowDefinition Height="*" />
-            
         </Grid.RowDefinitions>
         <StackPanel Grid.Column="0" Grid.RowSpan="4" >
         <GroupBox Header="For all Versions"  HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,10,0,0">
@@ -145,7 +144,7 @@
             </StackPanel>
         </GroupBox>   
         </StackPanel> 
-        <GroupBox Grid.Column="1" Grid.Row="0" Header="Visibility" Margin="10,10,10,10" >
+        <GroupBox Grid.Column="1" Grid.Row="0" Header="Visibility" Margin="10" >
             <StackPanel Orientation="Horizontal" ToolTip="klick for visibility">
                 <Label x:Name="LB_STO_DG1" Content="devicename1" FontSize="14" VerticalContentAlignment="Center" Visibility="Collapsed"/>
                 <CheckBox x:Name="CB_STO_DG1" VerticalContentAlignment="Center" IsChecked="False" Margin="0,7,10,5" Visibility="Collapsed"/>
