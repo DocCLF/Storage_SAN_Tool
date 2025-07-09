@@ -39,7 +39,7 @@ function IBM_BaseStorageInfos {
         }
         $TD_BaseInformations = $TD_BaseInformations |Select-Object -Skip 1
     }
-    
+
     process {
         $TD_StorageInfo = foreach($TD_FSBaseInfo in $TD_BaseInformations){
             $TD_FSBaseTemp = "" | Select-Object ID,Name,WWNN,Status,IO_group_id,IO_group_Name,Serial_Number,Code_Level,Config_Node,SideID,SideName,Prod_MTM,RecommendedPTF
@@ -50,7 +50,7 @@ function IBM_BaseStorageInfos {
             $TD_FSBaseTemp.IO_group_id = ($TD_FSBaseInfo|Select-String -Pattern '^\d+:[a-zA-Z0-9-_]+:.*:([a-zA-Z0-9-_]+):(online|offline|service|flushing|adding|deleting|service):(\d+)' -AllMatches).Matches.Groups[3].Value
             $TD_FSBaseTemp.IO_group_Name = ($TD_FSBaseInfo|Select-String -Pattern '\d+:([a-zA-Z0-9-_]+):(yes|no):' -AllMatches).Matches.Groups[1].Value
             $TD_FSBaseBackEndSerial_Number = ($TD_FSBaseInfo|Select-String -Pattern ':\d+:\d+:([a-zA-Z0-9]+):' -AllMatches).Matches.Groups[1].Value
-            $TD_FSBaseSVCSerialNumber = ($TD_FSBaseInfo|Select-String -Pattern ':([a-zA-Z0-9]+):(\d+|):(\d+|):([a-zA-Z0-9]+|):(\d+|):([a-zA-Z0-9-_]+)' -AllMatches).Matches.Groups[1].Value
+            $TD_FSBaseSVCSerialNumber = ($TD_FSBaseInfo|Select-String -Pattern ':(\w{6,8}):(|\d+):(|\d+):(|\w{6,8}):' -AllMatches).Matches.Groups[1].Value
             if($TD_Storage -eq "SVC"){
                $TD_FSBaseTemp.Serial_Number = $TD_FSBaseSVCSerialNumber
             }else {
