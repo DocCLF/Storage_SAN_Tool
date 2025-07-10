@@ -16,23 +16,6 @@
     </UserControl.Background>
     <UserControl.Resources>
         <ResourceDictionary>
-            <Style x:Key="MainBtnStyle" TargetType="{x:Type Button}">
-                <Setter Property="Height" Value="30" />
-                <Setter Property="Width" Value="130" />
-                <Setter Property="HorizontalContentAlignment" Value="Center" />
-                <Setter Property="VerticalContentAlignment" Value="Center" />
-                <Setter Property="Margin" Value="5" />
-                <Setter Property="Padding" Value="2" />
-            </Style>
-            <Style x:Key="MainComboBoxStyle" TargetType="{x:Type ComboBox}">
-                <Setter Property="Height" Value="30" />
-                <Setter Property="Width" Value="150" />
-                <Setter Property="HorizontalAlignment" Value="Left" />
-                <Setter Property="HorizontalContentAlignment" Value="Center" />
-                <Setter Property="VerticalContentAlignment" Value="Center" />
-                <Setter Property="Margin" Value="5" />
-                <Setter Property="Padding" Value="2" />
-            </Style>
             <Style x:Key="MainLabelStyle" TargetType="{x:Type Label}">
                 <Setter Property="Template" >
                     <Setter.Value>
@@ -106,7 +89,7 @@
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
             <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="10,5">
-                <Button x:Name="btn_Storage_SysCheck" Content="Storage System Check" Style="{StaticResource MainBtnStyle}" Margin="10,20,25,5"/>
+                <Button x:Name="btn_Storage_SysCheck" Content="Storage System Check" Style="{DynamicResource MainBtnStyle}" Margin="10,20,25,5"/>
                 <ComboBox Margin="25,20,20,5" x:Name="cb_Device_HealthCheck" SelectedIndex="0" SelectedValuePath="Content" >
                     <!--<ComboBoxItem IsSelected="True" ToolTip="Check Storages">Check all Storages</ComboBoxItem>-->
                     <ComboBoxItem IsSelected="True" ToolTip="Check Storages">Check the First</ComboBoxItem>
@@ -114,13 +97,13 @@
                     <ComboBoxItem ToolTip="Check Storages">Check the Third</ComboBoxItem>
                     <ComboBoxItem ToolTip="Check Storages">Check the Fourth</ComboBoxItem>
                 </ComboBox>
-                <Button x:Name="btn_HC_OpenGUI_One" Content="Open GUI 1" Style="{StaticResource MainBtnStyle}" Margin="20,20,5,5" />
+                <Button x:Name="btn_HC_OpenGUI_One" Content="Open GUI 1" Style="{DynamicResource MainBtnStyle}" Margin="20,20,5,5" />
                 <TextBox x:Name="TB_storageIPAdrOne" Text="" Visibility="Collapsed"/>
-                <Button x:Name="btn_HC_OpenGUI_Two" Content="Open GUI 2" Style="{StaticResource MainBtnStyle}" Margin="20,20,5,5" />
+                <Button x:Name="btn_HC_OpenGUI_Two" Content="Open GUI 2" Style="{DynamicResource MainBtnStyle}" Margin="20,20,5,5" />
                 <TextBox x:Name="TB_storageIPAdrTwo" Text="" Visibility="Collapsed"/>
-                <Button x:Name="btn_HC_OpenGUI_Three" Content="Open GUI 3" Style="{StaticResource MainBtnStyle}" Margin="20,20,5,5" />
+                <Button x:Name="btn_HC_OpenGUI_Three" Content="Open GUI 3" Style="{DynamicResource MainBtnStyle}" Margin="20,20,5,5" />
                 <TextBox x:Name="TB_storageIPAdrThree" Text="" Visibility="Collapsed"/>
-                <Button x:Name="btn_HC_OpenGUI_Four" Content="Open GUI 4" Style="{StaticResource MainBtnStyle}" Margin="20,20,5,5" />
+                <Button x:Name="btn_HC_OpenGUI_Four" Content="Open GUI 4" Style="{DynamicResource MainBtnStyle}" Margin="20,20,5,5" />
                 <TextBox x:Name="TB_storageIPAdrFour" Text="" Visibility="Collapsed"/>
             </StackPanel>
             <StackPanel Grid.Row="1" Orientation="Horizontal" >
