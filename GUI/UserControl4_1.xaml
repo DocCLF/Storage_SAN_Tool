@@ -7,23 +7,6 @@
     >
     <UserControl.Resources>
         <ResourceDictionary>
-            <Style x:Key="MainBtnStyle" TargetType="{x:Type Button}">
-                <Setter Property="Height" Value="30" />
-                <Setter Property="Width" Value="130" />
-                <Setter Property="HorizontalContentAlignment" Value="Center" />
-                <Setter Property="VerticalContentAlignment" Value="Center" />
-                <Setter Property="Margin" Value="5" />
-                <Setter Property="Padding" Value="2" />
-            </Style>
-            <Style x:Key="MainComboBoxStyle" TargetType="{x:Type ComboBox}">
-                <Setter Property="Height" Value="30" />
-                <Setter Property="Width" Value="150" />
-                <Setter Property="HorizontalAlignment" Value="Left" />
-                <Setter Property="HorizontalContentAlignment" Value="Center" />
-                <Setter Property="VerticalContentAlignment" Value="Center" />
-                <Setter Property="Margin" Value="5" />
-                <Setter Property="Padding" Value="2" />
-            </Style>
             <Style x:Key="MainLabelStyle" TargetType="{x:Type Label}">
                 <Setter Property="Template" >
                     <Setter.Value>
@@ -218,7 +201,7 @@
                                 <DataGridTextColumn Header="HostCluster" Width="Auto" Binding="{Binding HostClusterName}" IsReadOnly="True"/>
                             </DataGrid.Columns>
                         </DataGrid>
-                        <Button Grid.Row="1" Grid.Column="2" x:Name="btn_SaveHostStatus" Visibility="Collapsed" Content="Save" Style="{StaticResource MainBtnStyle}" HorizontalAlignment="Right"/>
+                        <Button Grid.Row="1" Grid.Column="2" x:Name="btn_SaveHostStatus" Visibility="Collapsed" Content="Save" Style="{DynamicResource MainBtnStyle}" HorizontalAlignment="Right"/>
                     </Grid>
                 </StackPanel>
                 <StackPanel Grid.Row="3" Orientation="Horizontal" Margin="0,10">
