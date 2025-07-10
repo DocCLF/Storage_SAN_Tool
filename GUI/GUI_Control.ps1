@@ -19,7 +19,13 @@ $inputXAML=Get-Content -Raw -Path "$PSScriptRoot\MainWindow.xaml"
 [xml]$MainXAML=$inputXAML -replace 'mc:Ignorable="d"','' -replace "x:N","N" -replace "^<Win.*","<Window"
 [System.Xml.XmlNodeReader] $Mainreader = $MainXAML
 $MainWindow =[Windows.Markup.XamlReader]::Load($Mainreader)
+
 $MainXAML.SelectNodes("//*[@Name]") | ForEach-Object {Set-Variable -Name "TD_$($_.Name)" -Value $MainWindow.FindName($_.Name)}
+<# add ResourceDictionary for WPF to App #>
+$AppStyles = [Windows.Markup.XamlReader]::Parse((Get-Content -Path "$PSRootPath\Resources\AppStyle.xaml" -Raw))
+$MainWindow.Resources.MergedDictionaries.Add( $AppStyles )
+$ButtonStyles = [Windows.Markup.XamlReader]::Parse((Get-Content -Path "$PSRootPath\Resources\ButtonStyle.xaml" -Raw))
+$MainWindow.Resources.MergedDictionaries.Add( $ButtonStyles )
 
 <# Create UserControls as basis of Content for MainWindow #>
 $UserCxamlFile = Get-ChildItem "$PSScriptRoot\UserControl*.xaml"
