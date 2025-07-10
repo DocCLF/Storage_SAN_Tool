@@ -9,13 +9,6 @@
         <Setter Property="FontWeight" Value="Bold" />
     </Style>
 
-    <Style TargetType="{x:Type TextBox}" x:Key="MainTextBoxStyle" >
-        <Setter Property="Height" Value="30" />
-        <Setter Property="HorizontalContentAlignment" Value="Center" />
-        <Setter Property="VerticalContentAlignment" Value="Center" />
-        <Setter Property="Margin" Value="2" />
-    </Style>
-
     <Style TargetType="{x:Type ComboBox}" x:Key="MainComboBoxStyle" >
         <Setter Property="Height" Value="30" />
         <Setter Property="Width" Value="125" />
