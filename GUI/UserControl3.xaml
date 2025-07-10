@@ -16,30 +16,6 @@
     </UserControl.Background>
     <UserControl.Resources>
         <ResourceDictionary>
-            <Style x:Key="MainBtnStyle" TargetType="{x:Type Button}">
-                <Setter Property="Height" Value="25" />
-                <Setter Property="Width" Value="150" />
-                <Setter Property="HorizontalContentAlignment" Value="Center" />
-                <Setter Property="VerticalContentAlignment" Value="Center" />
-                <Setter Property="Margin" Value="5" />
-                <Setter Property="Padding" Value="2" />
-            </Style>
-            <Style x:Key="MainComboBoxStyle" TargetType="{x:Type ComboBox}">
-                <Setter Property="Height" Value="25" />
-                <Setter Property="Width" Value="150" />
-                <Setter Property="HorizontalAlignment" Value="Left" />
-                <Setter Property="HorizontalContentAlignment" Value="Center" />
-                <Setter Property="VerticalContentAlignment" Value="Center" />
-                <Setter Property="Margin" Value="5" />
-                <Setter Property="Padding" Value="2" />
-            </Style>
-            <Style x:Key="MainLabelStyle" TargetType="{x:Type Label}">
-                <Setter Property="Height" Value="25" />
-                <Setter Property="HorizontalContentAlignment" Value="Center" />
-                <Setter Property="VerticalContentAlignment" Value="Center" />
-                <Setter Property="FontSize" Value="13" />
-                <Setter Property="FontWeight" Value="Bold" />
-            </Style>
             <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
         </ResourceDictionary>
     </UserControl.Resources>
@@ -62,7 +38,7 @@
                     SelectedIndex="0" 
                     SelectedValuePath="Content"
                     ToolTip="Selcet your FOS-Version"
-                    Style="{StaticResource MainComboBoxStyle}">
+                    Style="{DynamicResource MainComboBoxStyle}">
                     <ComboBoxItem IsSelected="True">FOS 9.x</ComboBoxItem>
                     <ComboBoxItem >FOS 8.x</ComboBoxItem>
                     <ComboBoxItem >FOS 7.x</ComboBoxItem>
@@ -70,49 +46,49 @@
                 <!--FOS_BasicSwichInfo-->
                 <Button
                 x:Name="btn_FOS_BasicSwitchInfo"
-                Style="{StaticResource MainBtnStyle}"
+                Style="{DynamicResource MainBtnStyle}"
                 Content="Switch Info" 
                 ToolTip="Get basic SAN-Switch information"/>                
                 <!--FOS_SwitchShow-->
                 <Button
                 x:Name="btn_FOS_SwitchShow"
-                Style="{StaticResource MainBtnStyle}"
+                Style="{DynamicResource MainBtnStyle}"
                 Content="Switch Show" 
                 ToolTip="Get switch and port status information"/>
                 <!--FOS_PortLicenseShow-->
                 <Button
                 x:Name="btn_FOS_PortLicenseShow"
-                Style="{StaticResource MainBtnStyle}"
+                Style="{DynamicResource MainBtnStyle}"
                 Content="License/ -Port Show" 
                 ToolTip="Get the current license keys and information."/>
                 <!--FOS_ZoneDetails-->
                 <Button
                 x:Name="btn_FOS_ZoneDetailsShow"
-                Style="{StaticResource MainBtnStyle}"
+                Style="{DynamicResource MainBtnStyle}"
                 Content="Effective Zone Show" 
                 ToolTip="Get all Effective zone configuration information"/>
                 <!--FOS_SensorShow-->
                 <Button
                 x:Name="btn_FOS_SensorShow"
-                Style="{StaticResource MainBtnStyle}"
+                Style="{DynamicResource MainBtnStyle}"
                 Content="Sensor Show" 
                 ToolTip="Get the current temperature, fan, and power supply status and readings from sensors located on the switch"/>
                 <!--FOS_PortErrorShow-->
                 <Button
                 x:Name="btn_FOS_SFPHealthShow"
-                Style="{StaticResource MainBtnStyle}"
+                Style="{DynamicResource MainBtnStyle}"
                 Content="SFP Basic Infos" 
                 ToolTip="Get a summary of all SFPs in the switch"/>
                 <!--FOS_SFPDetails-->
                 <Button
                 x:Name="btn_FOS_PortErrorShow"
-                Style="{StaticResource MainBtnStyle}"
+                Style="{DynamicResource MainBtnStyle}"
                 Content="Port Error Show" 
                 ToolTip="Get a port error summary"/>
                 <!--FOS_PortBufferShow-->
                 <Button
                 x:Name="btn_FOS_PortBufferShow"
-                Style="{StaticResource MainBtnStyle}"
+                Style="{DynamicResource MainBtnStyle}"
                 Content="Port Buffer Show" 
                 ToolTip="Get the buffer usage information for a port group or for all port groups in the switch"/>
             </StackPanel>
@@ -1034,17 +1010,17 @@
                         <RowDefinition Height="auto" />
                         <RowDefinition Height="auto" />
                     </Grid.RowDefinitions>
-                    <Label Grid.Row="0" Content="StatsClear requires administrator rights on the SAN-Switch!" Foreground="Coral" FontSize="12" FontWeight="Bold" Margin="2,0,0,0" HorizontalAlignment="Left" Style="{StaticResource MainLabelStyle}" />
+                    <Label Grid.Row="0" Content="StatsClear requires administrator rights on the SAN-Switch!" Foreground="Coral" FontSize="12" FontWeight="Bold" Margin="2,0,0,0" HorizontalAlignment="Left" Style="{DynamicResource MainLabelStyle}" />
                     <StackPanel Grid.Row="1" Orientation="Horizontal" >
-                      <Button x:Name="btn_StatsClear" Style="{StaticResource MainBtnStyle}" Content="Stats Clear" Margin="2,2,2,5" HorizontalAlignment="Left" Background="LightCoral" />
-                      <Label x:Name="lb_OneClear" Content="One Clear" Style="{StaticResource MainLabelStyle}" Width="75" FontWeight="Normal" Margin="10,0,0,0" Background="green" Visibility="Collapsed" />
-                      <Label x:Name="lb_TwoClear" Content="Two Clear" Style="{StaticResource MainLabelStyle}" Width="75" FontWeight="Normal" Margin="0" Background="green" Visibility="Collapsed" />
-                      <Label x:Name="lb_ThreeClear" Content="Three Clear" Style="{StaticResource MainLabelStyle}" Width="75" FontWeight="Normal" Margin="0" Background="green" Visibility="Collapsed" />
-                      <Label x:Name="lb_FourClear" Content="Four Clear" Style="{StaticResource MainLabelStyle}" Width="75" FontWeight="Normal" Margin="0" Background="green" Visibility="Collapsed" />
-                      <Label x:Name="lb_FiveClear" Content="Five Clear" Style="{StaticResource MainLabelStyle}" Width="75" FontWeight="Normal" Margin="10,0,0,0" Background="green" Visibility="Collapsed" />
-                      <Label x:Name="lb_SixClear" Content="Six Clear" Style="{StaticResource MainLabelStyle}" Width="75" FontWeight="Normal" Margin="0" Background="green" Visibility="Collapsed" />
-                      <Label x:Name="lb_SevenClear" Content="Seven Clear" Style="{StaticResource MainLabelStyle}" Width="75" FontWeight="Normal" Margin="0" Background="green" Visibility="Collapsed" />
-                      <Label x:Name="lb_EightClear" Content="Eight Clear" Style="{StaticResource MainLabelStyle}" Width="75" FontWeight="Normal" Margin="0" Background="green" Visibility="Collapsed" />
+                      <Button x:Name="btn_StatsClear" Style="{DynamicResource MainBtnStyle}" Content="Stats Clear" Margin="2,2,2,5" HorizontalAlignment="Left" Background="LightCoral" />
+                      <Label x:Name="lb_OneClear" Content="One Clear" Style="{DynamicResource MainLabelStyle}" Width="75" FontWeight="Normal" Margin="10,0,0,0" Background="green" Visibility="Collapsed" />
+                      <Label x:Name="lb_TwoClear" Content="Two Clear" Style="{DynamicResource MainLabelStyle}" Width="75" FontWeight="Normal" Margin="0" Background="green" Visibility="Collapsed" />
+                      <Label x:Name="lb_ThreeClear" Content="Three Clear" Style="{DynamicResource MainLabelStyle}" Width="75" FontWeight="Normal" Margin="0" Background="green" Visibility="Collapsed" />
+                      <Label x:Name="lb_FourClear" Content="Four Clear" Style="{DynamicResource MainLabelStyle}" Width="75" FontWeight="Normal" Margin="0" Background="green" Visibility="Collapsed" />
+                      <Label x:Name="lb_FiveClear" Content="Five Clear" Style="{DynamicResource MainLabelStyle}" Width="75" FontWeight="Normal" Margin="10,0,0,0" Background="green" Visibility="Collapsed" />
+                      <Label x:Name="lb_SixClear" Content="Six Clear" Style="{DynamicResource MainLabelStyle}" Width="75" FontWeight="Normal" Margin="0" Background="green" Visibility="Collapsed" />
+                      <Label x:Name="lb_SevenClear" Content="Seven Clear" Style="{DynamicResource MainLabelStyle}" Width="75" FontWeight="Normal" Margin="0" Background="green" Visibility="Collapsed" />
+                      <Label x:Name="lb_EightClear" Content="Eight Clear" Style="{DynamicResource MainLabelStyle}" Width="75" FontWeight="Normal" Margin="0" Background="green" Visibility="Collapsed" />
                     </StackPanel>
                     <StackPanel Grid.Row="2" Orientation="Vertical" >
                         <Label x:Name="LB_PortErrorShowOne" Content="Switch 1" Visibility="{Binding ElementName=CB_SAN_DG1, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}"/>
@@ -2152,7 +2128,7 @@
                         <RowDefinition Height="auto" />
                     </Grid.RowDefinitions>
                     <StackPanel Grid.Row="0" Grid.ColumnSpan="2" Orientation="Horizontal" Margin="2">
-                            <ComboBox x:Name="cb_ListFilterSANSwShow" ToolTip="Selcet your Device Panel" SelectedIndex="0" SelectedValuePath="Content" Style="{StaticResource MainComboBoxStyle}">
+                            <ComboBox x:Name="cb_ListFilterSANSwShow" ToolTip="Selcet your Device Panel" SelectedIndex="0" SelectedValuePath="Content" Style="{DynamicResource MainComboBoxStyle}">
                                     <ComboBoxItem>1</ComboBoxItem>
                                     <ComboBoxItem>2</ComboBoxItem>
                                     <ComboBoxItem>3</ComboBoxItem>
@@ -2162,7 +2138,7 @@
                                     <ComboBoxItem>7</ComboBoxItem>
                                     <ComboBoxItem>8</ComboBoxItem>
                                 </ComboBox>
-                            <ComboBox x:Name="cb_FilterColumSANSwShow" ToolTip="Selcet your Filter" SelectedIndex="0" SelectedValuePath="Content" Style="{StaticResource MainComboBoxStyle}">
+                            <ComboBox x:Name="cb_FilterColumSANSwShow" ToolTip="Selcet your Filter" SelectedIndex="0" SelectedValuePath="Content" Style="{DynamicResource MainComboBoxStyle}">
                                 <ComboBoxItem>Port</ComboBoxItem>
                                 <ComboBoxItem>Address</ComboBoxItem>
                                 <ComboBoxItem>Speed</ComboBoxItem>
@@ -2170,9 +2146,9 @@
                                 <ComboBoxItem>PortConnect</ComboBoxItem>
                             </ComboBox>
                             <TextBox x:Name="tb_FilterWordSANSwShow" HorizontalAlignment="Left" MinWidth="100" MaxWidth="250" Margin="5" Text="Filter" TextWrapping="Wrap" FontSize="14" VerticalContentAlignment="Center"/>
-                            <Button x:Name="btn_FilterSANSwShow" Style="{StaticResource MainBtnStyle}" Content="Apply Filter" />
-                            <Button x:Name="btn_ClearFilterSANSwShow" Style="{StaticResource MainBtnStyle}" Content="Clear Filter" Background="LightPink"/>
-                            <Label x:Name="lb_ErrorMsgSANSwShow"  Visibility="Collapsed" Foreground="Red" Content="" Style="{StaticResource MainLabelStyle}" Padding="2" Margin="25,5,0,5"/>
+                            <Button x:Name="btn_FilterSANSwShow" Style="{DynamicResource MainBtnStyle}" Content="Apply Filter" />
+                            <Button x:Name="btn_ClearFilterSANSwShow" Style="{DynamicResource MainBtnStyle}" Content="Clear Filter" Background="LightPink"/>
+                            <Label x:Name="lb_ErrorMsgSANSwShow"  Visibility="Collapsed" Foreground="Red" Content="" Style="{DynamicResource MainLabelStyle}" Padding="2" Margin="25,5,0,5"/>
                     </StackPanel>
                     <StackPanel Grid.Row="1" Grid.Column="0" Orientation="vertical" Visibility="{Binding ElementName=CB_SAN_DG1, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}" >
                         <Label x:Name="LB_SwitchShowOne" Content="Switch 1" Visibility="Collapsed"/>
@@ -2881,15 +2857,15 @@
                         <RowDefinition Height="auto" />
                     </Grid.RowDefinitions>
                     <StackPanel Grid.Row="0" Grid.Column="0" >
-                        <Label x:Name="lb_FabricOne" Content="Fabric A" Style="{StaticResource MainLabelStyle}" />
+                        <Label x:Name="lb_FabricOne" Content="Fabric A" Style="{DynamicResource MainLabelStyle}" />
                         <StackPanel x:Name="stp_FilterFabricOneVisibilty" Orientation="Horizontal" >
-                        <ComboBox x:Name="cb_FilterFabricOne" ToolTip="Selcet your Filter" SelectedIndex="0" SelectedValuePath="Content" Style="{StaticResource MainComboBoxStyle}">
+                        <ComboBox x:Name="cb_FilterFabricOne" ToolTip="Selcet your Filter" SelectedIndex="0" SelectedValuePath="Content" Style="{DynamicResource MainComboBoxStyle}">
                                 <ComboBoxItem>Zone</ComboBoxItem>
                                 <ComboBoxItem>WWPN</ComboBoxItem>
                                 <ComboBoxItem>Alias</ComboBoxItem>
                         </ComboBox>        
                         <TextBox x:Name="tb_FilterFabricOne" HorizontalAlignment="Left" MinWidth="150" MaxWidth="300" Margin="5" Text="Filter" TextWrapping="Wrap" FontSize="14" VerticalContentAlignment="Center" />
-                        <Button x:Name="btn_FilterFabricOne" Content="Apply Filter " Style="{StaticResource MainBtnStyle}" />
+                        <Button x:Name="btn_FilterFabricOne" Content="Apply Filter " Style="{DynamicResource MainBtnStyle}" />
                         </StackPanel>
                         <DataGrid x:Name="dg_ZoneDetailsOne" CanUserSortColumns="False" AutoGenerateColumns="False" Margin="5" MaxHeight="420" >
                             <DataGrid.Style>
@@ -2909,15 +2885,15 @@
                         </DataGrid>
                     </StackPanel>
                     <StackPanel Grid.Row="0" Grid.Column="1"  >
-                        <Label x:Name="lb_FabricTwo" Content="Fabric B" Style="{StaticResource MainLabelStyle}" />
+                        <Label x:Name="lb_FabricTwo" Content="Fabric B" Style="{DynamicResource MainLabelStyle}" />
                         <StackPanel x:Name="stp_FilterFabricTwoVisibilty" Orientation="Horizontal" >
-                        <ComboBox x:Name="cb_FilterFabricTwo" ToolTip="Selcet your Filter" SelectedIndex="0" SelectedValuePath="Content" Style="{StaticResource MainComboBoxStyle}">
+                        <ComboBox x:Name="cb_FilterFabricTwo" ToolTip="Selcet your Filter" SelectedIndex="0" SelectedValuePath="Content" Style="{DynamicResource MainComboBoxStyle}">
                                 <ComboBoxItem>Zone</ComboBoxItem>
                                 <ComboBoxItem>WWPN</ComboBoxItem>
                                 <ComboBoxItem>Alias</ComboBoxItem>
                         </ComboBox>        
                         <TextBox x:Name="tb_FilterFabricTwo" HorizontalAlignment="Left" MinWidth="150" MaxWidth="300" Margin="5" Text="Filter" TextWrapping="Wrap" FontSize="14" VerticalContentAlignment="Center" />
-                        <Button x:Name="btn_FilterFabricTwo" Content="Apply Filter " Style="{StaticResource MainBtnStyle}" />
+                        <Button x:Name="btn_FilterFabricTwo" Content="Apply Filter " Style="{DynamicResource MainBtnStyle}" />
                         </StackPanel>
                         <DataGrid x:Name="dg_ZoneDetailsTwo" CanUserSortColumns="False" AutoGenerateColumns="False" Margin="5" MaxHeight="420" >
                             <DataGrid.Style>
