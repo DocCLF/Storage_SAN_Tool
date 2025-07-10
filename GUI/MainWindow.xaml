@@ -8,21 +8,6 @@
         Title="Storage SAN Tool" MinHeight="600" MinWidth="1200" WindowState="Normal" WindowStartupLocation="CenterScreen" >
     <Window.Resources>
         <ResourceDictionary>
-            <Style x:Key="MainBtnStyle" TargetType="{x:Type Button}">
-                <Setter Property="Height" Value="30" />
-                <Setter Property="Width" Value="150" />
-                <Setter Property="HorizontalContentAlignment" Value="Center" />
-                <Setter Property="VerticalContentAlignment" Value="Center" />
-                <Setter Property="Margin" Value="5" />
-                <Setter Property="Padding" Value="2" />
-            </Style>
-            <Style x:Key="MainLabelStyle" TargetType="{x:Type Label}">
-                <Setter Property="Height" Value="25" />
-                <Setter Property="HorizontalContentAlignment" Value="Center" />
-                <Setter Property="VerticalContentAlignment" Value="Center" />
-                <Setter Property="FontSize" Value="13" />
-                <Setter Property="FontWeight" Value="Bold" />
-            </Style>
             <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
         </ResourceDictionary>
     </Window.Resources>
@@ -35,23 +20,23 @@
         </Grid.RowDefinitions>
         <StackPanel Orientation="Horizontal" Margin="5" >
             <!--Storage FS & SVC-->
-            <Button x:Name="BTN_Dashboard" Content="Dashboard" Style="{StaticResource MainBtnStyle}"/>
+            <Button x:Name="BTN_Dashboard" Content="Dashboard" Style="{DynamicResource MainBtnStyle}"/>
             <!--Storage FS & SVC-->
-            <Button x:Name="btn_IBM_SV" Content="IBM Spectrum Virtualize" Style="{StaticResource MainBtnStyle}"/>
+            <Button x:Name="btn_IBM_SV" Content="IBM Spectrum Virtualize" Style="{DynamicResource MainBtnStyle}"/>
             <!--IBM Power-->
-            <Button x:Name="BTN_PowerBoard" Content="IBM Power Board" Style="{StaticResource MainBtnStyle}" />
+            <Button x:Name="BTN_PowerBoard" Content="IBM Power Board" Style="{DynamicResource MainBtnStyle}" />
             <!--Brocade SAN-->
-            <Button x:Name="btn_Broc_SAN"  Content="Brocade SAN" Style="{StaticResource MainBtnStyle}" />
+            <Button x:Name="btn_Broc_SAN"  Content="Brocade SAN" Style="{DynamicResource MainBtnStyle}" />
             <!--Brocade SAN-->
             <!-- Placeholder for later use -->
             <!--Health-->
-            <Button x:Name="btn_Stor_San" Content="Health Check" Style="{StaticResource MainBtnStyle}" /> 
+            <Button x:Name="btn_Stor_San" Content="Health Check" Style="{DynamicResource MainBtnStyle}" /> 
             <!--Settings-->
-            <Button x:Name="btn_Settings" Content="Tool Settings" Style="{StaticResource MainBtnStyle}" />
-            <Label x:Name="LB_ExpPathMainWindow" Content="Export Path :" Style="{StaticResource MainLabelStyle}" Margin="25,5,0,5"/>
+            <Button x:Name="btn_Settings" Content="Tool Settings" Style="{DynamicResource MainBtnStyle}" />
+            <Label x:Name="LB_ExpPathMainWindow" Content="Export Path :" Style="{DynamicResource MainLabelStyle}" Margin="25,5,0,5"/>
         </StackPanel>
         <!--CloseAll GUI-->
-        <Button x:Name="btn_CloseAll" Content="Exit" Style="{StaticResource MainBtnStyle}" Margin="5,5,25,5" HorizontalAlignment="Right" Background="LightCoral"/>
+        <Button x:Name="btn_CloseAll" Content="Exit" Style="{DynamicResource MainBtnStyle}" Margin="5,5,25,5" HorizontalAlignment="Right" Background="LightCoral"/>
         <Grid Grid.Row="1" x:Name="UserContrArea" > 
             <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" >
                 <Image x:Name="LogoImage" Margin="30,0,30,0" /> 
