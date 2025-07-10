@@ -29,15 +29,55 @@
         </Grid.RowDefinitions>
         <GroupBox Grid.Row="0" Header="Storage Info" MinWidth="500" HorizontalAlignment="Left" Margin="10,10,0,0"  VerticalAlignment="Top">
             <StackPanel Grid.Row="0" Orientation="Vertical">
-                <StackPanel Orientation="Horizontal" Margin="5" Height="125" Background="AliceBlue">
-                    <Button x:Name="BTN_STO_DevOne" Content="" MaxWidth="250" MaxHeight="150" Margin="5,5,5,5" Padding="5" Visibility = "Collapsed"/>
-                    <Button x:Name="BTN_STO_DevTwo" Content="" MaxWidth="250" MaxHeight="150" Margin="15,5,5,5" Padding="5" Visibility = "Collapsed"/>
-                    <Button x:Name="BTN_STO_DevThree" Content="" MaxWidth="250" MaxHeight="150" Margin="15,5,5,5" Padding="5" Visibility = "Collapsed"/>
-                    <Button x:Name="BTN_STO_DevFour" Content="" MaxWidth="250" MaxHeight="150" Margin="15,5,5,5" Padding="5" Visibility = "Collapsed"/>
-                    <Button x:Name="BTN_STO_DevFive" Content="" MaxWidth="250" MaxHeight="150" Margin="15,5,5,5" Padding="5" Visibility = "Collapsed"/>
-                    <Button x:Name="BTN_STO_DevSix" Content="" MaxWidth="250" MaxHeight="150" Margin="15,5,5,5" Padding="5" Visibility = "Collapsed"/>
-                    <Button x:Name="BTN_STO_DevSeven" Content="" MaxWidth="250" MaxHeight="150" Margin="15,5,5,5" Padding="5" Visibility = "Collapsed"/>
-                    <Button x:Name="BTN_STO_DevEight" Content="" MaxWidth="250" MaxHeight="150" Margin="15,5,5,5" Padding="5" Visibility = "Collapsed"/>
+                <StackPanel Orientation="Horizontal" Margin="5" Height="125" >
+                    <Button x:Name="BTN_STO_DevOne" Style="{DynamicResource DashBoardBTNStyle}" Margin="15,5,5,5" IsEnabled="{Binding Text.Length, ElementName=BTN_STO_DevOne}">
+                        <Grid>
+                            <TextBlock x:Name="TB_STO_DevOne" Text=" " Style="{DynamicResource DashBoardTB1}"  Margin="5" Padding="5" Visibility = "Collapsed"/>
+                        </Grid>
+                    </Button>
+                    <Button x:Name="BTN_STO_DevTwo" Style="{DynamicResource DashBoardBTNStyle}" Margin="15,5,5,5">
+                        <Grid>
+                            <TextBlock x:Name="TB_STO_DevTwo" Text=" " Style="{DynamicResource DashBoardTB1}"  Margin="5" Padding="5" Visibility = "Collapsed"/>
+                        </Grid>
+                    </Button>
+                    <Button x:Name="BTN_STO_DevThree" Style="{DynamicResource DashBoardBTNStyle}" Margin="15,5,5,5">
+                        <Grid>
+                            <TextBlock x:Name="TB_STO_DevThree" Text=" " Style="{DynamicResource DashBoardTB1}"  Margin="5" Padding="5" Visibility = "Collapsed"/>
+                        </Grid>
+                    </Button>
+                    <Button x:Name="BTN_STO_DevFour" Style="{DynamicResource DashBoardBTNStyle}" Margin="15,5,5,5">
+                        <Grid>
+                            <TextBlock x:Name="TB_STO_DevFour" Text=" " Style="{DynamicResource DashBoardTB1}"  Margin="5" Padding="5" Visibility = "Collapsed"/>
+                        </Grid>
+                    </Button>
+                    <Button x:Name="BTN_STO_DevFive" Style="{DynamicResource DashBoardBTNStyle}" Margin="15,5,5,5" >
+                        <Grid>
+                            <TextBlock x:Name="TB_STO_DevFive" Text=" " Style="{DynamicResource DashBoardTB1}"  Margin="5" Padding="5" Visibility = "Collapsed"/>
+                        </Grid>
+                    </Button>
+                    <Button x:Name="BTN_STO_DevSix" Style="{DynamicResource DashBoardBTNStyle}" Margin="15,5,5,5">
+                        <Grid>
+                            <TextBlock x:Name="TB_STO_DevSix" Text=" " Style="{DynamicResource DashBoardTB1}"  Margin="5" Padding="5" Visibility = "Collapsed"/>
+                        </Grid>
+                    </Button>
+                    <Button x:Name="BTN_STO_DevSeven" Style="{DynamicResource DashBoardBTNStyle}" Margin="15,5,5,5">
+                        <Grid>
+                            <TextBlock x:Name="TB_STO_DevSeven" Text=" " Style="{DynamicResource DashBoardTB1}"  Margin="5" Padding="5" Visibility = "Collapsed"/>
+                        </Grid>
+                    </Button>
+                    <Button x:Name="BTN_STO_DevEight" Style="{DynamicResource DashBoardBTNStyle}" Margin="15,5,5,5">
+                        <Grid>
+                            <TextBlock x:Name="TB_STO_DevEight" Text=" " Style="{DynamicResource DashBoardTB1}"  Margin="5" Padding="5" Visibility = "Collapsed"/>
+                        </Grid>
+                    </Button>
+                    <!--<Button x:Name="BTN_STO_DevOne" Content="" MaxWidth="250" MaxHeight="150" Margin="15,5,5,5" Padding="5" Visibility = "Collapsed"/>  -->
+                    <!--<Button x:Name="BTN_STO_DevTwo" Content="" MaxWidth="250" MaxHeight="150" Margin="15,5,5,5" Padding="5" Visibility = "Collapsed"/>  -->
+                    <!--<Button x:Name="BTN_STO_DevThree" Content="" MaxWidth="250" MaxHeight="150" Margin="15,5,5,5" Padding="5" Visibility = "Collapsed"/>-->
+                    <!--<Button x:Name="BTN_STO_DevFour" Content="" MaxWidth="250" MaxHeight="150" Margin="15,5,5,5" Padding="5" Visibility = "Collapsed"/> -->
+                    <!--<Button x:Name="BTN_STO_DevFive" Content="" MaxWidth="250" MaxHeight="150" Margin="15,5,5,5" Padding="5" Visibility = "Collapsed"/> -->
+                    <!--<Button x:Name="BTN_STO_DevSix" Content="" MaxWidth="250" MaxHeight="150" Margin="15,5,5,5" Padding="5" Visibility = "Collapsed"/>  -->
+                    <!--<Button x:Name="BTN_STO_DevSeven" Content="" MaxWidth="250" MaxHeight="150" Margin="15,5,5,5" Padding="5" Visibility = "Collapsed"/>-->
+                    <!--<Button x:Name="BTN_STO_DevEight" Content="" MaxWidth="250" MaxHeight="150" Margin="15,5,5,5" Padding="5" Visibility = "Collapsed"/>-->
                 </StackPanel>
             </StackPanel>
         </GroupBox>
