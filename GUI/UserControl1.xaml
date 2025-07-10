@@ -5,7 +5,84 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
     mc:Ignorable="d" 
     >
+    <UserControl.Background>
+        <LinearGradientBrush>
+            <GradientStopCollection>
+                <GradientStop Offset="0.1" Color="White" />
+                <GradientStop Offset="0.5" Color="LightGray" />
+                <GradientStop Offset="0.8" Color="White" />
+            </GradientStopCollection>
+        </LinearGradientBrush>
+    </UserControl.Background>
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" >
     <Grid>
-            
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
+        </Grid.RowDefinitions>
+        <GroupBox Grid.Row="0" Header="Storage Info" MinWidth="500" HorizontalAlignment="Left" Margin="10,10,0,0"  VerticalAlignment="Top">
+            <StackPanel Grid.Row="0" Orientation="Vertical">
+                <StackPanel Orientation="Horizontal" Margin="5" Height="125" Background="AliceBlue">
+                    <Button x:Name="BTN_STO_DevOne" Content="" MaxWidth="250" MaxHeight="150" Margin="5,5,5,5" Padding="5" Visibility = "Collapsed"/>
+                    <Button x:Name="BTN_STO_DevTwo" Content="" MaxWidth="250" MaxHeight="150" Margin="15,5,5,5" Padding="5" Visibility = "Collapsed"/>
+                    <Button x:Name="BTN_STO_DevThree" Content="" MaxWidth="250" MaxHeight="150" Margin="15,5,5,5" Padding="5" Visibility = "Collapsed"/>
+                    <Button x:Name="BTN_STO_DevFour" Content="" MaxWidth="250" MaxHeight="150" Margin="15,5,5,5" Padding="5" Visibility = "Collapsed"/>
+                    <Button x:Name="BTN_STO_DevFive" Content="" MaxWidth="250" MaxHeight="150" Margin="15,5,5,5" Padding="5" Visibility = "Collapsed"/>
+                    <Button x:Name="BTN_STO_DevSix" Content="" MaxWidth="250" MaxHeight="150" Margin="15,5,5,5" Padding="5" Visibility = "Collapsed"/>
+                    <Button x:Name="BTN_STO_DevSeven" Content="" MaxWidth="250" MaxHeight="150" Margin="15,5,5,5" Padding="5" Visibility = "Collapsed"/>
+                    <Button x:Name="BTN_STO_DevEight" Content="" MaxWidth="250" MaxHeight="150" Margin="15,5,5,5" Padding="5" Visibility = "Collapsed"/>
+                </StackPanel>
+            </StackPanel>
+        </GroupBox>
+        <GroupBox Grid.Row="1" Header="Power Info" MinWidth="820" HorizontalAlignment="Left" Margin="10,10,0,0"  VerticalAlignment="Top">
+            <StackPanel Grid.Row="0" Orientation="Vertical">
+                <StackPanel Orientation="Horizontal" Margin="5" Height="150" Background="AliceBlue">
+                    <Button x:Name="BTN_PWR_DevOne" Content="" MaxWidth="250" MaxHeight="150" Margin="5" Padding="5"/>
+                    <Button x:Name="BTN_PWR_DevTwo" Content="" MaxWidth="250" MaxHeight="150" Margin="5" Padding="5"/>
+                    <Button x:Name="BTN_PWR_DevThree" Content="" MaxWidth="250" MaxHeight="150" Margin="5" Padding="5"/>
+                    <Button x:Name="BTN_PWR_DevFour" Content="" MaxWidth="250" MaxHeight="150" Margin="5" Padding="5"/>
+                    <Button x:Name="BTN_PWR_DevFive" Content="" MaxWidth="250" MaxHeight="150" Margin="5" Padding="5"/>
+                    <Button x:Name="BTN_PWR_DevSix" Content="" MaxWidth="250" MaxHeight="150" Margin="5" Padding="5"/>
+                    <Button x:Name="BTN_PWR_DevSeven" Content="" MaxWidth="250" MaxHeight="150" Margin="5" Padding="5"/>
+                    <Button x:Name="BTN_PWR_DevEight" Content="" MaxWidth="250" MaxHeight="150" Margin="5" Padding="5"/>
+                </StackPanel>
+            </StackPanel>
+        </GroupBox>
+        <GroupBox Grid.Row="2" Header="SAN Info" MinWidth="820" HorizontalAlignment="Left" Margin="10,10,0,0"  VerticalAlignment="Top">
+            <StackPanel Grid.Row="0" Orientation="Vertical">
+                <StackPanel Orientation="Horizontal" Margin="5" Height="150" Background="AliceBlue">
+                    <Button x:Name="BTN_SAN_DevOne" Content="" MaxWidth="250" MaxHeight="150" Margin="5" Padding="5"/>
+                    <Button x:Name="BTN_SAN_DevTwo" Content="" MaxWidth="250" MaxHeight="150" Margin="5" Padding="5"/>
+                    <Button x:Name="BTN_SAN_DevThree" Content="" MaxWidth="250" MaxHeight="150" Margin="5" Padding="5"/>
+                    <Button x:Name="BTN_SAN_DevFour" Content="" MaxWidth="250" MaxHeight="150" Margin="5" Padding="5"/>
+                    <Button x:Name="BTN_SAN_DevFive" Content="" MaxWidth="250" MaxHeight="150" Margin="5" Padding="5"/>
+                    <Button x:Name="BTN_SAN_DevSix" Content="" MaxWidth="250" MaxHeight="150" Margin="5" Padding="5"/>
+                    <Button x:Name="BTN_SAN_DevSeven" Content="" MaxWidth="250" MaxHeight="150" Margin="5" Padding="5"/>
+                    <Button x:Name="BTN_SAN_DevEight" Content="" MaxWidth="250" MaxHeight="150" Margin="5" Padding="5"/>
+                </StackPanel>
+            </StackPanel>
+        </GroupBox>
+        <GroupBox Grid.Row="3" Header="Host Info" MinWidth="820" HorizontalAlignment="Left" Margin="10,10,0,0"  VerticalAlignment="Top">
+            <StackPanel Grid.Row="0" Orientation="Vertical">
+                <StackPanel Orientation="Horizontal" Margin="5" Height="150" Background="AliceBlue">
+                    <Button x:Name="BTN_HOSTS_DevOne" Content="" MaxWidth="250" MaxHeight="150" Margin="5" Padding="5"/>
+                    <Button x:Name="BTN_HOSTS_DevTwo" Content="" MaxWidth="250" MaxHeight="150" Margin="5" Padding="5"/>
+                    <Button x:Name="BTN_HOSTS_DevThree" Content="" MaxWidth="250" MaxHeight="150" Margin="5" Padding="5"/>
+                    <Button x:Name="BTN_HOSTS_DevFour" Content="" MaxWidth="250" MaxHeight="150" Margin="5" Padding="5"/>
+                    <Button x:Name="BTN_HOSTS_DevFive" Content="" MaxWidth="250" MaxHeight="150" Margin="5" Padding="5"/>
+                    <Button x:Name="BTN_HOSTS_DevSix" Content="" MaxWidth="250" MaxHeight="150" Margin="5" Padding="5"/>
+                    <Button x:Name="BTN_HOSTS_DevSeven" Content="" MaxWidth="250" MaxHeight="150" Margin="5" Padding="5"/>
+                    <Button x:Name="BTN_HOSTS_DevEight" Content="" MaxWidth="250" MaxHeight="150" Margin="5" Padding="5"/>
+                </StackPanel>
+            </StackPanel>
+        </GroupBox>
     </Grid>
+    </ScrollViewer>
 </UserControl>
