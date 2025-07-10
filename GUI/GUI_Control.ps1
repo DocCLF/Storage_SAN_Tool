@@ -24,6 +24,8 @@ $MainXAML.SelectNodes("//*[@Name]") | ForEach-Object {Set-Variable -Name "TD_$($
 <# add ResourceDictionary for WPF to App #>
 $AppStyles = [Windows.Markup.XamlReader]::Parse((Get-Content -Path "$PSRootPath\Resources\AppStyle.xaml" -Raw))
 $MainWindow.Resources.MergedDictionaries.Add( $AppStyles )
+$TextBoxStyle = [Windows.Markup.XamlReader]::Parse((Get-Content -Path "$PSRootPath\Resources\TextBoxStyle.xaml" -Raw))
+$MainWindow.Resources.MergedDictionaries.Add( $TextBoxStyle )
 $ButtonStyles = [Windows.Markup.XamlReader]::Parse((Get-Content -Path "$PSRootPath\Resources\ButtonStyle.xaml" -Raw))
 $MainWindow.Resources.MergedDictionaries.Add( $ButtonStyles )
 
