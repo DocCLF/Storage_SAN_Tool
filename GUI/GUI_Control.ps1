@@ -2,9 +2,12 @@
 $PSRootPath = Split-Path -Path $PSScriptRoot -Parent
 <# Abfrage der PWSH Version da es nur mit pwsh ab der Version 7 und höher funktioniert #>
 if($PSVersionTable.PSVersion.Major -ge 7){
-    Add-Type -Path "$PSRootPath\Resources\DBFolder\LiteDB.dll"
+    Add-Type -Path "$PSRootPath\Resources\DBFolder\System.Data.SQLite.dll"
     #Add-Type -Path ".\OxyPlot.dll"
     #Add-Type -Path ".\OxyPlot.Wpf.dll"
+}
+if($PSVersionTable.PSVersion.Major -eq 5){
+    Add-Type -Path "$PSRootPath\Resources\DBFolder\PWSH5\System.Data.SQLite.dll"
 }
 Add-Type -AssemblyName PresentationFramework, PresentationCore, System.Windows.Forms, WindowsBase
 
@@ -29,6 +32,15 @@ $MainWindow.Resources.MergedDictionaries.Add( $TextBoxStyle )
 $ButtonStyles = [Windows.Markup.XamlReader]::Parse((Get-Content -Path "$PSRootPath\Resources\ButtonStyle.xaml" -Raw))
 $MainWindow.Resources.MergedDictionaries.Add( $ButtonStyles )
 
+<# PowerShell WPF XAML simple data binding datacontext #>
+class DashBoardIMG {
+    [string]$IBMSTOIcon 
+    [string]$ClockIcon96
+}
+$DashBoardIcons =[DashBoardIMG]::new()
+$DashBoardIcons.IBMSTOIcon = "$PSRootPath\Resources\icons\ibmstoicon.png"
+$DashBoardIcons.ClockIcon96 = "$PSRootPath\Resources\icons\icons8-clock-96.png"
+
 <# Create UserControls as basis of Content for MainWindow #>
 $UserCxamlFile = Get-ChildItem "$PSScriptRoot\UserControl*.xaml"
 foreach($file in $UserCxamlFile){
@@ -43,6 +55,7 @@ foreach($file in $UserCxamlFile){
             $Userreader = New-Object System.Xml.XmlNodeReader $UserXAML1
             $TD_UserControl1=[Windows.Markup.XamlReader]::Load($Userreader)
             $UserXAML1.SelectNodes("//*[@Name]") | ForEach-Object {Set-Variable -Name "TD_$($_.Name)" -Value $TD_UserControl1.FindName($_.Name) }
+            $TD_UserControl1.DataContext = $DashBoardIcons
          }
         "*l2" { 
             $UserC2=Get-Content -Path $file -raw
@@ -296,9 +309,9 @@ $TD_BTN_SendDataToPRISM.add_click({
 $TD_BTN_ActivateDB.add_click({
     try {
         $PSRootPath = Split-Path -Path $PSScriptRoot -Parent
-        $SST_LocalDB = [LiteDB.LiteDatabase]::new("Filename= $PSRootPath\Resources\DBFolder\SSTLocalDB.db")
-        $SST_LocalDB.GetCollection("IBMDriveTable")
-        $SST_LocalDB.GetCollection("IBMSTOHWTable")
+        $SST_ConnectionString = "Data Source=$PSRootPath\Resources\DBFolder\SSTLocalDB.db;Version=3;"
+        $SST_SQLiteCon = New-Object System.Data.SQLite.SQLiteConnection $SST_ConnectionString
+        $SST_SQLiteCon.Open()
     }
     catch {
         Write-Host $_.exception.message
@@ -306,26 +319,24 @@ $TD_BTN_ActivateDB.add_click({
         $TD_BTN_DeleteDB.Visibility = "Visible"
         $TD_BTN_DeleteDB.Background = "Coral"
     }
-    if($SST_LocalDB.count -gt 0){
-        $SST_IBMDriveTable = $SST_LocalDB.GetCollection("IBMDriveTable")
-        $SST_IBMSTOHWTable = $SST_LocalDB.GetCollection("IBMSTOHWTable")
-        if(($SST_IBMDriveTable.Name -eq "IBMDriveTable")-and($SST_IBMSTOHWTable.Name -eq "IBMSTOHWTable")){
-            $TD_BTN_DeleteDB.Visibility = "Visible"
-            $TD_BTN_ActivateDB.Visibility="Collapsed"
-            $SST_LocalDB.Dispose()
-        }
+    if(($SST_SQLiteCon.State -eq "Open")-and($SST_SQLiteCon.DataSource -eq "SSTLocalDB")){
+        $TD_BTN_DeleteDB.Visibility = "Visible"
+        $TD_BTN_ActivateDB.Visibility="Collapsed"
+        $SST_SQLiteCon.Close()
     }
 })
 $TD_BTN_DeleteDB.add_click({
     try {
         $TD_DBtoDelete = Get-Item -Path "$PSRootPath\Resources\DBFolder\SSTLocalDB.db"
         if(!([string]::IsNullOrEmpty($TD_DBtoDelete.Name))){
-            $SST_LocalDB = [LiteDB.LiteDatabase]::new("Filename= $PSRootPath\Resources\DBFolder\SSTLocalDB.db")
-            $SST_LocalDB.Dispose()
+            $SST_ConnectionString = "Data Source=$PSRootPath\Resources\DBFolder\SSTLocalDB.db;Version=3;"
+            $SST_SQLiteCon = New-Object System.Data.SQLite.SQLiteConnection $SST_ConnectionString
+            $SST_SQLiteCon.Close()
+            $SST_SQLiteCon.Dispose()
+            
         }
         SST_ToolMessageCollector -TD_ToolMSGCollector "This action deletes the $($TD_DBtoDelete.Name)" -TD_ToolMSGType Warning -TD_Shown yes
-        Get-ChildItem -Path "$PSRootPath\Resources\DBFolder\SSTLocalDB.db" | Remove-Item -Confirm:$false -Force -ErrorAction SilentlyContinue
-        #Remove-Item -Path "$PSRootPath\Resources\DBFolder\SSTLocalDB.db" -Confirm:$false -Force -ErrorAction SilentlyContinue
+        Remove-Item -Path "$PSRootPath\Resources\DBFolder\SSTLocalDB.db" -Confirm:$false -Force -ErrorAction Continue #SilentlyContinue
         SST_ToolMessageCollector -TD_ToolMSGCollector "$($TD_DBtoDelete.Name) are deleted" -TD_ToolMSGType Message -TD_Shown yes
         $TD_BTN_ActivateDB.Visibility = "Visible"
         $TD_BTN_DeleteDB.Visibility="Collapsed"
@@ -1883,8 +1894,9 @@ $TD_btn_HC_OpenGUI_Four.add_click({
 })
 #endregion
 
-SST_DashBoardMain -MainPath $PSRootPath
-
+if(!([string]::IsNullOrWhiteSpace($(Get-ChildItem -Path $PSRootPath\Resources\DBFolder\*.db).Name))){
+    SST_DashBoardMain -MainPath $PSRootPath
+}
 $TD_btn_CloseAll.add_click({
     <#CleanUp before close #>
     try {
