@@ -113,7 +113,11 @@ function SST_SaveLoadToolSettings {
                 $TD_BTN_LoadToolSettings.Background="LightCoral"
             }
         }
-
+        if((!([string]::IsNullOrEmpty($TD_DBisActive.Name)))-and($PSVersionTable.PSVersion.Major -ge 7)){
+            $TD_BTN_ActivateDB.Background = "LightGreen"
+            $TD_BTN_ActivateDB.Content = "LocalDB active"
+            $TD_BTN_DeleteDB.Visibility = "Visible"
+        }
     }
     
     end {
