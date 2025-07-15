@@ -40,18 +40,24 @@ function SST_FileCleanUp {
         }else {
             $TD_UsedLogPath = $TD_UserInputPath
         }
+        $CutoffDate = (Get-Date).AddDays(-$TD_KeepFilesForDays)
+
     }
     
     process {
+        
         if((Get-ChildItem -Path $TD_UsedLogPath -File).Count -lt 2){
             SST_ToolMessageCollector -TD_ToolMSGCollector "There are no files in the specified directory: $TD_UsedLogPath" -TD_ToolMSGType Message -TD_Shown yes    
         }else {
             try {
-                $TD_FilesToDelete = (Get-ChildItem -Path $TD_UsedLogPath -Attributes $TD_DeleteWhat | Where-Object {$_.LastWriteTime -LT $(Get-Date).AddDays(-90)}).Count
-                Get-ChildItem -Path $TD_UsedLogPath -Attributes $TD_DeleteWhat | Where-Object {$_.LastWriteTime -LT $(Get-Date).AddDays(-$TD_KeepFilesForDays)} | Remove-Item -Confirm:$false -Force -ErrorAction SilentlyContinue
+                $TD_FilesToDelete = (Get-ChildItem -Path $TD_UsedLogPath -Recurse -File | Where-Object { $_.LastWriteTime -lt $CutoffDate}).Count
+                
+                Get-ChildItem -Path $TD_UsedLogPath -Recurse -File | Where-Object { $_.LastWriteTime -lt $CutoffDate} | Remove-Item -Confirm:$false -Force -ErrorAction SilentlyContinue
+
                 SST_ToolMessageCollector -TD_ToolMSGCollector "$TD_FilesToDelete files older than $TD_KeepFilesForDays days have been deleted from the directory: $TD_UsedLogPath " -TD_ToolMSGType Message -TD_Shown yes
             }
             catch {
+                Write-Host $_.Exception.Message
                 SST_ToolMessageCollector -TD_ToolMSGCollector $_.Exception.Message -TD_ToolMSGType Warning -TD_Shown yes
             }
         }
