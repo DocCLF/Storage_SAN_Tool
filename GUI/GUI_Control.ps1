@@ -144,9 +144,9 @@ foreach($file in $UserCxamlFile){
     if($PSVersionTable.PSVersion.Major -ge 7){
         $TD_LB_DBSettings.Content ="Your PSWH Version is $($PSVersionTable.PSVersion), you can use the local DB."
     }else {
-        $TD_LB_DBSettings.Content ="Your PSWH Version is $($PSVersionTable.PSVersion), you can't use the local DB! `nTo use the database update to pwsh Version 7.x and above."
+        $TD_LB_DBSettings.Content ="Your PSWH Version is $($PSVersionTable.PSVersion), you can use the local DB! `nBut it has currently only been tested with the PWSH Version 7.x and above."
         $TD_LB_DBSettings.Height="50"
-        $TD_BTN_DeleteDB,$TD_BTN_ActivateDB | ForEach-Object {$_.Visibility = "Collapsed"}
+        #$TD_BTN_DeleteDB,$TD_BTN_ActivateDB | ForEach-Object {$_.Visibility = "Collapsed"}
     }
 #endregion
 
