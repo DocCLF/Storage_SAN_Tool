@@ -28,7 +28,7 @@
             <RowDefinition Height="auto" />
             <RowDefinition Height="auto" />
         </Grid.RowDefinitions>
-        <GroupBox Grid.Row="0" Header="Storage Info" MinWidth="500" HorizontalAlignment="Left" Margin="10,10,0,0"  VerticalAlignment="Top">
+        <GroupBox Grid.Row="0" Header="Storage Info" MinWidth="400" HorizontalAlignment="Left" Margin="10,10,0,0"  VerticalAlignment="Top">
             <WrapPanel Orientation="Horizontal" Margin="5" MinHeight="125">
                     <Button Style="{DynamicResource DashBoardBTNStyle}" x:Name="BTN_STO_DevOne" Margin="0,5,5,5" Visibility = "Collapsed">
                         <Grid Margin="5">
@@ -472,7 +472,7 @@
                     </Button>
             </WrapPanel>
         </GroupBox>
-        <GroupBox Grid.Row="1" Header="Power Info" MinWidth="820" HorizontalAlignment="Left" Margin="10,10,0,0"  VerticalAlignment="Top">
+        <!--<GroupBox Grid.Row="1" Header="Power Info" MinWidth="820" HorizontalAlignment="Left" Margin="10,10,0,0"  VerticalAlignment="Top">
             <StackPanel Grid.Row="0" Orientation="Vertical">
                 <StackPanel Orientation="Horizontal" Margin="5" Height="150" Background="AliceBlue">
                     <Button x:Name="BTN_PWR_DevOne" Content="" MaxWidth="250" MaxHeight="150" Margin="5" Padding="5"/>
@@ -485,34 +485,950 @@
                     <Button x:Name="BTN_PWR_DevEight" Content="" MaxWidth="250" MaxHeight="150" Margin="5" Padding="5"/>
                 </StackPanel>
             </StackPanel>
+        </GroupBox> -->
+        <GroupBox Grid.Row="2" Header="SAN Info" MinWidth="400" HorizontalAlignment="Left" Margin="10,10,0,0"  VerticalAlignment="Top">
+            <WrapPanel Orientation="Horizontal" Margin="5" MinHeight="125">
+                    <Button Style="{DynamicResource DashBoardBTNStyle}" x:Name="BTN_SAN_DevOne" Margin="0,5,5,5" Visibility = "Collapsed">
+                        <Grid Margin="5">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="100"/>
+                                <RowDefinition Height="25"/>
+                            </Grid.RowDefinitions>
+                            <Grid >
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="70" />
+                                    <ColumnDefinition />
+                                </Grid.ColumnDefinitions>
+                                <Ellipse Width="65" Height="65" Fill="WhiteSmoke" Stretch="Uniform" >
+                                    <Ellipse.Effect>
+                                        <DropShadowEffect Direction="320" ShadowDepth="2" Color="LightBlue" BlurRadius="5" />
+                                    </Ellipse.Effect>
+                                </Ellipse>
+                                <Ellipse Width="60" Height="60" >
+                                   <Ellipse.Fill>
+                                       <ImageBrush ImageSource = "{Binding BrocadeIcon , Mode=TwoWay}" Stretch="Uniform" />
+                                   </Ellipse.Fill>
+                                </Ellipse>
+                                <TextBlock
+                                    x:Name="TB_SAN_DevOne"
+                                    Grid.Column="1"
+                                    Style="{DynamicResource DashBoardTB1}"
+                                    HorizontalAlignment="Left"
+                                    VerticalAlignment="Center"
+                                    Text=" " 
+                                    Margin="8,0,5,0"
+                                    Visibility = "Collapsed"/>
+                            </Grid>
+                            <Grid Grid.Row="1">
+                                <StackPanel Orientation="Horizontal" Margin="5,3,5,0" ToolTip="Last Changes">
+                                    <Image Source = "{Binding ClockIcon96 , Mode=TwoWay}" Stretch="Uniform" VerticalAlignment="Bottom" HorizontalAlignment="Left" MaxHeight="30" />
+                                    <TextBlock x:Name="TB_Clock_SAN_DevOne" Text="" HorizontalAlignment="Right" Margin="5,3" />
+                                </StackPanel>
+                            </Grid>
+                        </Grid>
+                    </Button>
+                    <Button Style="{DynamicResource DashBoardBTNStyle}" x:Name="BTN_SAN_DevTwo" Margin="15,5,5,5" Visibility = "Collapsed" >
+                        <Grid Margin="5">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="100"/>
+                                <RowDefinition Height="25"/>
+                            </Grid.RowDefinitions>
+                            <Grid >
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="70" />
+                                    <ColumnDefinition />
+                                </Grid.ColumnDefinitions>
+                                <Ellipse Width="65" Height="65" Fill="WhiteSmoke" Stretch="Uniform" >
+                                    <Ellipse.Effect>
+                                        <DropShadowEffect Direction="320" ShadowDepth="2" Color="LightBlue" BlurRadius="5" />
+                                    </Ellipse.Effect>
+                                </Ellipse>
+                                <Ellipse Width="60" Height="60" >
+                                   <Ellipse.Fill>
+                                       <ImageBrush ImageSource = "{Binding BrocadeIcon , Mode=TwoWay}" Stretch="Uniform" />
+                                   </Ellipse.Fill>
+                                </Ellipse>
+                                <TextBlock
+                                    x:Name="TB_SAN_DevTwo"
+                                    Grid.Column="1"
+                                    Style="{DynamicResource DashBoardTB1}"
+                                    HorizontalAlignment="Left"
+                                    VerticalAlignment="Center"
+                                    Text=" " 
+                                    Margin="8,0,5,0"
+                                    Visibility = "Collapsed"/>
+                            </Grid>
+                            <Grid Grid.Row="1">
+                                <StackPanel Orientation="Horizontal" Margin="5,3,5,0" ToolTip="Last Changes">
+                                    <Image Source = "{Binding ClockIcon96 , Mode=TwoWay}" Stretch="Uniform" VerticalAlignment="Bottom" HorizontalAlignment="Left" MaxHeight="30" />
+                                    <TextBlock x:Name="TB_Clock_SAN_DevTwo" Text="" HorizontalAlignment="Right" Margin="5,3" />
+                                </StackPanel>
+                            </Grid>
+                        </Grid>
+                    </Button>
+                    <Button Style="{DynamicResource DashBoardBTNStyle}" x:Name="BTN_SAN_DevThree" Margin="15,5,5,5" Visibility = "Collapsed" >
+                        <Grid Margin="5">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="100"/>
+                                <RowDefinition Height="25"/>
+                            </Grid.RowDefinitions>
+                            <Grid >
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="70" />
+                                    <ColumnDefinition />
+                                </Grid.ColumnDefinitions>
+                                <Ellipse Width="65" Height="65" Fill="WhiteSmoke" Stretch="Uniform" >
+                                    <Ellipse.Effect>
+                                        <DropShadowEffect Direction="320" ShadowDepth="2" Color="LightBlue" BlurRadius="5" />
+                                    </Ellipse.Effect>
+                                </Ellipse>
+                                <Ellipse Width="60" Height="60" >
+                                   <Ellipse.Fill>
+                                       <ImageBrush ImageSource = "{Binding BrocadeIcon , Mode=TwoWay}" Stretch="Uniform" />
+                                   </Ellipse.Fill>
+                                </Ellipse>
+                                <TextBlock
+                                    x:Name="TB_SAN_DevThree"
+                                    Grid.Column="1"
+                                    Style="{DynamicResource DashBoardTB1}"
+                                    HorizontalAlignment="Left"
+                                    VerticalAlignment="Center"
+                                    Text=" " 
+                                    Margin="8,0,5,0"
+                                    Visibility = "Collapsed"/>
+                            </Grid>
+                            <Grid Grid.Row="1">
+                                <StackPanel Orientation="Horizontal" Margin="5,3,5,0" ToolTip="Last Changes">
+                                    <Image Source = "{Binding ClockIcon96 , Mode=TwoWay}" Stretch="Uniform" VerticalAlignment="Bottom" HorizontalAlignment="Left" MaxHeight="30" />
+                                    <TextBlock x:Name="TB_Clock_SAN_DevThree" Text="" HorizontalAlignment="Right" Margin="5,3" />
+                                </StackPanel>
+                            </Grid>
+                        </Grid>
+                    </Button>
+                    <Button Style="{DynamicResource DashBoardBTNStyle}" x:Name="BTN_SAN_DevFour" Margin="15,5,5,5" Visibility = "Collapsed" >
+                        <Grid Margin="5">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="100"/>
+                                <RowDefinition Height="25"/>
+                            </Grid.RowDefinitions>
+                            <Grid >
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="70" />
+                                    <ColumnDefinition />
+                                </Grid.ColumnDefinitions>
+                                <Ellipse Width="65" Height="65" Fill="WhiteSmoke" Stretch="Uniform" >
+                                    <Ellipse.Effect>
+                                        <DropShadowEffect Direction="320" ShadowDepth="2" Color="LightBlue" BlurRadius="5" />
+                                    </Ellipse.Effect>
+                                </Ellipse>
+                                <Ellipse Width="60" Height="60" >
+                                   <Ellipse.Fill>
+                                       <ImageBrush ImageSource = "{Binding BrocadeIcon , Mode=TwoWay}" Stretch="Uniform" />
+                                   </Ellipse.Fill>
+                                </Ellipse>
+                                <TextBlock
+                                    x:Name="TB_SAN_DevFour"
+                                    Grid.Column="1"
+                                    Style="{DynamicResource DashBoardTB1}"
+                                    HorizontalAlignment="Left"
+                                    VerticalAlignment="Center"
+                                    Text=" " 
+                                    Margin="8,0,5,0"
+                                    Visibility = "Collapsed"/>
+                            </Grid>
+                            <Grid Grid.Row="2">
+                                <StackPanel Orientation="Horizontal" Margin="5,3,5,0" ToolTip="Last Changes">
+                                    <Image Source = "{Binding ClockIcon96 , Mode=TwoWay}" Stretch="Uniform" VerticalAlignment="Bottom" HorizontalAlignment="Left" MaxHeight="30" />
+                                    <TextBlock x:Name="TB_Clock_SAN_DevFour" Text="" HorizontalAlignment="Right" Margin="5,3" />
+                                </StackPanel>
+                            </Grid>
+                        </Grid>
+                    </Button>
+                    <Button Style="{DynamicResource DashBoardBTNStyle}" x:Name="BTN_SAN_DevFive" Margin="15,5,5,5" Visibility = "Collapsed" >
+                        <Grid Margin="5">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="100"/>
+                                <RowDefinition Height="25"/>
+                            </Grid.RowDefinitions>
+                            <Grid >
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="70" />
+                                    <ColumnDefinition />
+                                </Grid.ColumnDefinitions>
+                                <Ellipse Width="65" Height="65" Fill="WhiteSmoke" Stretch="Uniform" >
+                                    <Ellipse.Effect>
+                                        <DropShadowEffect Direction="320" ShadowDepth="2" Color="LightBlue" BlurRadius="5" />
+                                    </Ellipse.Effect>
+                                </Ellipse>
+                                <Ellipse Width="60" Height="60" >
+                                   <Ellipse.Fill>
+                                       <ImageBrush ImageSource = "{Binding BrocadeIcon , Mode=TwoWay}" Stretch="Uniform" />
+                                   </Ellipse.Fill>
+                                </Ellipse>
+                                <TextBlock
+                                    x:Name="TB_SAN_DevFive"
+                                    Grid.Column="1"
+                                    Style="{DynamicResource DashBoardTB1}"
+                                    HorizontalAlignment="Left"
+                                    VerticalAlignment="Center"
+                                    Text=" " 
+                                    Margin="8,0,5,0"
+                                    Visibility = "Collapsed"/>
+                            </Grid>
+                            <Grid Grid.Row="1">
+                                <StackPanel Orientation="Horizontal" Margin="5,3,5,0" ToolTip="Last Changes">
+                                    <Image Source = "{Binding ClockIcon96 , Mode=TwoWay}" Stretch="Uniform" VerticalAlignment="Bottom" HorizontalAlignment="Left" MaxHeight="30" />
+                                    <TextBlock x:Name="TB_Clock_SAN_DevFive" Text="" HorizontalAlignment="Right" Margin="5,3"/>
+                                </StackPanel>
+                            </Grid>
+                        </Grid>
+                    </Button>
+                    <Button Style="{DynamicResource DashBoardBTNStyle}" x:Name="BTN_SAN_DevSix" Margin="15,5,5,5" Visibility = "Collapsed" >
+                        <Grid Margin="5">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="100"/>
+                                <RowDefinition Height="25"/>
+                            </Grid.RowDefinitions>
+                            <Grid >
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="70" />
+                                    <ColumnDefinition />
+                                </Grid.ColumnDefinitions>
+                                <Ellipse Width="65" Height="65" Fill="WhiteSmoke" Stretch="Uniform" >
+                                    <Ellipse.Effect>
+                                        <DropShadowEffect Direction="320" ShadowDepth="2" Color="LightBlue" BlurRadius="5" />
+                                    </Ellipse.Effect>
+                                </Ellipse>
+                                <Ellipse Width="60" Height="60" >
+                                   <Ellipse.Fill>
+                                       <ImageBrush ImageSource = "{Binding BrocadeIcon , Mode=TwoWay}" Stretch="Uniform" />
+                                   </Ellipse.Fill>
+                                </Ellipse>
+                                <TextBlock
+                                    x:Name="TB_SAN_DevSix"
+                                    Grid.Column="1"
+                                    Style="{DynamicResource DashBoardTB1}"
+                                    HorizontalAlignment="Left"
+                                    VerticalAlignment="Center"
+                                    Text=" " 
+                                    Margin="8,0,5,0"
+                                    Visibility = "Collapsed"/>
+                            </Grid>
+                            <Grid Grid.Row="1">
+                                <StackPanel Orientation="Horizontal" Margin="5,3,5,0" ToolTip="Last Changes">
+                                    <Image Source = "{Binding ClockIcon96 , Mode=TwoWay}" Stretch="Uniform" VerticalAlignment="Bottom" HorizontalAlignment="Left" MaxHeight="30" />
+                                    <TextBlock x:Name="TB_Clock_SAN_DevSix" Text="" HorizontalAlignment="Right" Margin="5,3"/>
+                                </StackPanel>
+                            </Grid>
+                        </Grid>
+                    </Button>
+                    <Button Style="{DynamicResource DashBoardBTNStyle}" x:Name="BTN_SAN_DevSeven" Margin="15,5,5,5" Visibility = "Collapsed" >
+                        <Grid Margin="5">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="100"/>
+                                <RowDefinition Height="25"/>
+                            </Grid.RowDefinitions>
+                            <Grid >
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="70" />
+                                    <ColumnDefinition />
+                                </Grid.ColumnDefinitions>
+                                <Ellipse Width="65" Height="65" Fill="WhiteSmoke" Stretch="Uniform" >
+                                    <Ellipse.Effect>
+                                        <DropShadowEffect Direction="320" ShadowDepth="2" Color="LightBlue" BlurRadius="5" />
+                                    </Ellipse.Effect>
+                                </Ellipse>
+                                <Ellipse Width="60" Height="60" >
+                                   <Ellipse.Fill>
+                                       <ImageBrush ImageSource = "{Binding BrocadeIcon , Mode=TwoWay}" Stretch="Uniform" />
+                                   </Ellipse.Fill>
+                                </Ellipse>
+                                <TextBlock
+                                    x:Name="TB_SAN_DevSeven"
+                                    Grid.Column="1"
+                                    Style="{DynamicResource DashBoardTB1}"
+                                    HorizontalAlignment="Left"
+                                    VerticalAlignment="Center"
+                                    Text=" " 
+                                    Margin="8,0,5,0"
+                                    Visibility = "Collapsed"/>
+                            </Grid>
+                            <Grid Grid.Row="2">
+                                <StackPanel Orientation="Horizontal" Margin="5,3,5,0" ToolTip="Last Changes">
+                                    <Image Source = "{Binding ClockIcon96 , Mode=TwoWay}" Stretch="Uniform" VerticalAlignment="Bottom" HorizontalAlignment="Left" MaxHeight="30" />
+                                    <TextBlock x:Name="TB_Clock_SAN_DevSeven" Text="" HorizontalAlignment="Right" Margin="5,3"/>
+                                </StackPanel>
+                            </Grid>
+                        </Grid>
+                    </Button>
+                    <Button Style="{DynamicResource DashBoardBTNStyle}" x:Name="BTN_SAN_DevEight" Margin="15,5,5,5" Visibility = "Collapsed" >
+                        <Grid Margin="5">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="100"/>
+                                <RowDefinition Height="25"/>
+                            </Grid.RowDefinitions>
+                            <Grid >
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="70" />
+                                    <ColumnDefinition />
+                                </Grid.ColumnDefinitions>
+                                <Ellipse Width="65" Height="65" Fill="WhiteSmoke" Stretch="Uniform" >
+                                    <Ellipse.Effect>
+                                        <DropShadowEffect Direction="320" ShadowDepth="2" Color="LightBlue" BlurRadius="5" />
+                                    </Ellipse.Effect>
+                                </Ellipse>
+                                <Ellipse Width="60" Height="60" >
+                                   <Ellipse.Fill>
+                                       <ImageBrush ImageSource = "{Binding BrocadeIcon , Mode=TwoWay}" Stretch="Uniform" />
+                                   </Ellipse.Fill>
+                                </Ellipse>
+                                <TextBlock
+                                    x:Name="TB_SAN_DevEight"
+                                    Grid.Column="1"
+                                    Style="{DynamicResource DashBoardTB1}"
+                                    HorizontalAlignment="Left"
+                                    VerticalAlignment="Center"
+                                    Text=" " 
+                                    Margin="8,0,5,0"
+                                    Visibility = "Collapsed"/>
+                            </Grid>
+                            <Grid Grid.Row="1">
+                                <StackPanel Orientation="Horizontal" Margin="5,3,5,0" ToolTip="Last Changes">
+                                    <Image Source = "{Binding ClockIcon96 , Mode=TwoWay}" Stretch="Uniform" VerticalAlignment="Bottom" HorizontalAlignment="Left" MaxHeight="30" />
+                                    <TextBlock x:Name="TB_Clock_SAN_DevEight" Text="" HorizontalAlignment="Right" Margin="5,3"/>
+                                </StackPanel>
+                            </Grid>
+                        </Grid>
+                    </Button>
+            </WrapPanel>
         </GroupBox>
-        <GroupBox Grid.Row="2" Header="SAN Info" MinWidth="820" HorizontalAlignment="Left" Margin="10,10,0,0"  VerticalAlignment="Top">
-            <StackPanel Grid.Row="0" Orientation="Vertical">
-                <StackPanel Orientation="Horizontal" Margin="5" Height="150" Background="AliceBlue">
-                    <Button x:Name="BTN_SAN_DevOne" Content="" MaxWidth="250" MaxHeight="150" Margin="5" Padding="5"/>
-                    <Button x:Name="BTN_SAN_DevTwo" Content="" MaxWidth="250" MaxHeight="150" Margin="5" Padding="5"/>
-                    <Button x:Name="BTN_SAN_DevThree" Content="" MaxWidth="250" MaxHeight="150" Margin="5" Padding="5"/>
-                    <Button x:Name="BTN_SAN_DevFour" Content="" MaxWidth="250" MaxHeight="150" Margin="5" Padding="5"/>
-                    <Button x:Name="BTN_SAN_DevFive" Content="" MaxWidth="250" MaxHeight="150" Margin="5" Padding="5"/>
-                    <Button x:Name="BTN_SAN_DevSix" Content="" MaxWidth="250" MaxHeight="150" Margin="5" Padding="5"/>
-                    <Button x:Name="BTN_SAN_DevSeven" Content="" MaxWidth="250" MaxHeight="150" Margin="5" Padding="5"/>
-                    <Button x:Name="BTN_SAN_DevEight" Content="" MaxWidth="250" MaxHeight="150" Margin="5" Padding="5"/>
-                </StackPanel>
-            </StackPanel>
-        </GroupBox>
-        <GroupBox Grid.Row="3" Header="Host Info" MinWidth="820" HorizontalAlignment="Left" Margin="10,10,0,0"  VerticalAlignment="Top">
-            <StackPanel Grid.Row="0" Orientation="Vertical">
-                <StackPanel Orientation="Horizontal" Margin="5" Height="150" Background="AliceBlue">
-                    <Button x:Name="BTN_HOSTS_DevOne" Content="" MaxWidth="250" MaxHeight="150" Margin="5" Padding="5"/>
-                    <Button x:Name="BTN_HOSTS_DevTwo" Content="" MaxWidth="250" MaxHeight="150" Margin="5" Padding="5"/>
-                    <Button x:Name="BTN_HOSTS_DevThree" Content="" MaxWidth="250" MaxHeight="150" Margin="5" Padding="5"/>
-                    <Button x:Name="BTN_HOSTS_DevFour" Content="" MaxWidth="250" MaxHeight="150" Margin="5" Padding="5"/>
-                    <Button x:Name="BTN_HOSTS_DevFive" Content="" MaxWidth="250" MaxHeight="150" Margin="5" Padding="5"/>
-                    <Button x:Name="BTN_HOSTS_DevSix" Content="" MaxWidth="250" MaxHeight="150" Margin="5" Padding="5"/>
-                    <Button x:Name="BTN_HOSTS_DevSeven" Content="" MaxWidth="250" MaxHeight="150" Margin="5" Padding="5"/>
-                    <Button x:Name="BTN_HOSTS_DevEight" Content="" MaxWidth="250" MaxHeight="150" Margin="5" Padding="5"/>
-                </StackPanel>
-            </StackPanel>
+        <GroupBox Grid.Row="3" Header="Host Info" MinWidth="400" HorizontalAlignment="Left" Margin="10,10,0,0"  VerticalAlignment="Top">
+            <WrapPanel Orientation="Horizontal" Margin="5" MinHeight="125">
+                    <Button Style="{DynamicResource DashBoardBTNStyle}" x:Name="BTN_STO_HostOne" Margin="0,5,5,5" Visibility = "Collapsed" MaxWidth="250">
+                        <Grid Margin="5">
+                            <Grid.RowDefinitions>
+                                <RowDefinition MaxHeight="100"/>
+                                <RowDefinition Height="20"/>
+                            </Grid.RowDefinitions>
+                            <Grid >
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition MaxWidth="70" />
+                                    <ColumnDefinition />
+                                </Grid.ColumnDefinitions>
+                                <Ellipse Width="45" Height="45" Fill="WhiteSmoke" Stretch="Uniform" >
+                                    <Ellipse.Effect>
+                                        <DropShadowEffect Direction="320" ShadowDepth="2" Color="LightBlue" BlurRadius="5" />
+                                    </Ellipse.Effect>
+                                </Ellipse>
+                                <Ellipse Width="40" Height="40" >
+                                   <Ellipse.Fill>
+                                       <ImageBrush ImageSource = "{Binding HostIcon96 , Mode=TwoWay}" Stretch="Uniform" />
+                                   </Ellipse.Fill>
+                                </Ellipse>
+                                <TextBlock
+                                    x:Name="TB_STO_HostOne"
+                                    Grid.Column="1"
+                                    Style="{DynamicResource DashBoardTB2}"
+                                    HorizontalAlignment="Left"
+                                    VerticalAlignment="Center"
+                                    Text=" " 
+                                    Margin="8,0,5,0"
+                                    Visibility = "Collapsed"/>
+                            </Grid>
+                            <Grid Grid.Row="1">
+                                <StackPanel Orientation="Horizontal" Margin="5,0" ToolTip="Last Changes">
+                                    <Image Source = "{Binding ClockIcon96 , Mode=TwoWay}" Stretch="Uniform" VerticalAlignment="Bottom" HorizontalAlignment="Left" MaxHeight="30" />
+                                    <TextBlock x:Name="TB_Clock_STO_HostOne" Text="" HorizontalAlignment="Right" Margin="5,2" />
+                                </StackPanel>
+                            </Grid>
+                        </Grid>
+                    </Button>
+                    <Button Style="{DynamicResource DashBoardBTNStyle}" x:Name="BTN_STO_HostTwo" Margin="0,5,5,5" Visibility = "Collapsed">
+                        <Grid Margin="5">
+                            <Grid.RowDefinitions>
+                                <RowDefinition MaxHeight="100"/>
+                                <RowDefinition Height="20"/>
+                            </Grid.RowDefinitions>
+                            <Grid >
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition MaxWidth="70" />
+                                    <ColumnDefinition />
+                                </Grid.ColumnDefinitions>
+                                <Ellipse Width="45" Height="45" Fill="WhiteSmoke" Stretch="Uniform" >
+                                    <Ellipse.Effect>
+                                        <DropShadowEffect Direction="320" ShadowDepth="2" Color="LightBlue" BlurRadius="5" />
+                                    </Ellipse.Effect>
+                                </Ellipse>
+                                <Ellipse Width="40" Height="40" >
+                                   <Ellipse.Fill>
+                                       <ImageBrush ImageSource = "{Binding HostIcon96 , Mode=TwoWay}" Stretch="Uniform" />
+                                   </Ellipse.Fill>
+                                </Ellipse>
+                                <TextBlock
+                                    x:Name="TB_STO_HostTwo"
+                                    Grid.Column="1"
+                                    Style="{DynamicResource DashBoardTB2}"
+                                    HorizontalAlignment="Left"
+                                    VerticalAlignment="Center"
+                                    Text=" " 
+                                    Margin="8,0,5,0"
+                                    Visibility = "Collapsed"/>
+                            </Grid>
+                            <Grid Grid.Row="1">
+                                <StackPanel Orientation="Horizontal" Margin="5,0" ToolTip="Last Changes">
+                                    <Image Source = "{Binding ClockIcon96 , Mode=TwoWay}" Stretch="Uniform" VerticalAlignment="Bottom" HorizontalAlignment="Left" MaxHeight="30" />
+                                    <TextBlock x:Name="TB_Clock_STO_HostTwo" Text="" HorizontalAlignment="Right" Margin="5,2" />
+                                </StackPanel>
+                            </Grid>
+                        </Grid>
+                    </Button>
+                    <Button Style="{DynamicResource DashBoardBTNStyle}" x:Name="BTN_STO_HostThree" Margin="0,5,5,5" Visibility = "Collapsed">
+                        <Grid Margin="5">
+                            <Grid.RowDefinitions>
+                                <RowDefinition MaxHeight="100"/>
+                                <RowDefinition Height="20"/>
+                            </Grid.RowDefinitions>
+                            <Grid >
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition MaxWidth="70" />
+                                    <ColumnDefinition />
+                                </Grid.ColumnDefinitions>
+                                <Ellipse Width="45" Height="45" Fill="WhiteSmoke" Stretch="Uniform" >
+                                    <Ellipse.Effect>
+                                        <DropShadowEffect Direction="320" ShadowDepth="2" Color="LightBlue" BlurRadius="5" />
+                                    </Ellipse.Effect>
+                                </Ellipse>
+                                <Ellipse Width="40" Height="40" >
+                                   <Ellipse.Fill>
+                                       <ImageBrush ImageSource = "{Binding HostIcon96 , Mode=TwoWay}" Stretch="Uniform" />
+                                   </Ellipse.Fill>
+                                </Ellipse>
+                                <TextBlock
+                                    x:Name="TB_STO_HostThree"
+                                    Grid.Column="1"
+                                    Style="{DynamicResource DashBoardTB2}"
+                                    HorizontalAlignment="Left"
+                                    VerticalAlignment="Center"
+                                    Text=" " 
+                                    Margin="8,0,5,0"
+                                    Visibility = "Collapsed"/>
+                            </Grid>
+                            <Grid Grid.Row="1">
+                                <StackPanel Orientation="Horizontal" Margin="5,0" ToolTip="Last Changes">
+                                    <Image Source = "{Binding ClockIcon96 , Mode=TwoWay}" Stretch="Uniform" VerticalAlignment="Bottom" HorizontalAlignment="Left" MaxHeight="30" />
+                                    <TextBlock x:Name="TB_Clock_STO_HostThree" Text="" HorizontalAlignment="Right" Margin="5,2" />
+                                </StackPanel>
+                            </Grid>
+                        </Grid>
+                    </Button>
+                    <Button Style="{DynamicResource DashBoardBTNStyle}" x:Name="BTN_STO_HostFour" Margin="0,5,5,5" Visibility = "Collapsed">
+                        <Grid Margin="5">
+                            <Grid.RowDefinitions>
+                                <RowDefinition MaxHeight="100"/>
+                                <RowDefinition Height="20"/>
+                            </Grid.RowDefinitions>
+                            <Grid >
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition MaxWidth="70" />
+                                    <ColumnDefinition />
+                                </Grid.ColumnDefinitions>
+                                <Ellipse Width="45" Height="45" Fill="WhiteSmoke" Stretch="Uniform" >
+                                    <Ellipse.Effect>
+                                        <DropShadowEffect Direction="320" ShadowDepth="2" Color="LightBlue" BlurRadius="5" />
+                                    </Ellipse.Effect>
+                                </Ellipse>
+                                <Ellipse Width="40" Height="40" >
+                                   <Ellipse.Fill>
+                                       <ImageBrush ImageSource = "{Binding HostIcon96 , Mode=TwoWay}" Stretch="Uniform" />
+                                   </Ellipse.Fill>
+                                </Ellipse>
+                                <TextBlock
+                                    x:Name="TB_STO_HostFour"
+                                    Grid.Column="1"
+                                    Style="{DynamicResource DashBoardTB2}"
+                                    HorizontalAlignment="Left"
+                                    VerticalAlignment="Center"
+                                    Text=" " 
+                                    Margin="8,0,5,0"
+                                    Visibility = "Collapsed"/>
+                            </Grid>
+                            <Grid Grid.Row="1">
+                                <StackPanel Orientation="Horizontal" Margin="5,0" ToolTip="Last Changes">
+                                    <Image Source = "{Binding ClockIcon96 , Mode=TwoWay}" Stretch="Uniform" VerticalAlignment="Bottom" HorizontalAlignment="Left" MaxHeight="30" />
+                                    <TextBlock x:Name="TB_Clock_STO_HostFour" Text="" HorizontalAlignment="Right" Margin="5,2" />
+                                </StackPanel>
+                            </Grid>
+                        </Grid>
+                    </Button>
+                    <Button Style="{DynamicResource DashBoardBTNStyle}" x:Name="BTN_STO_HostFive" Margin="0,5,5,5" Visibility = "Collapsed">
+                        <Grid Margin="5">
+                            <Grid.RowDefinitions>
+                                <RowDefinition MaxHeight="100"/>
+                                <RowDefinition Height="20"/>
+                            </Grid.RowDefinitions>
+                            <Grid >
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition MaxWidth="70" />
+                                    <ColumnDefinition />
+                                </Grid.ColumnDefinitions>
+                                <Ellipse Width="45" Height="45" Fill="WhiteSmoke" Stretch="Uniform" >
+                                    <Ellipse.Effect>
+                                        <DropShadowEffect Direction="320" ShadowDepth="2" Color="LightBlue" BlurRadius="5" />
+                                    </Ellipse.Effect>
+                                </Ellipse>
+                                <Ellipse Width="40" Height="40" >
+                                   <Ellipse.Fill>
+                                       <ImageBrush ImageSource = "{Binding HostIcon96 , Mode=TwoWay}" Stretch="Uniform" />
+                                   </Ellipse.Fill>
+                                </Ellipse>
+                                <TextBlock
+                                    x:Name="TB_STO_HostFive"
+                                    Grid.Column="1"
+                                    Style="{DynamicResource DashBoardTB2}"
+                                    HorizontalAlignment="Left"
+                                    VerticalAlignment="Center"
+                                    Text=" " 
+                                    Margin="8,0,5,0"
+                                    Visibility = "Collapsed"/>
+                            </Grid>
+                            <Grid Grid.Row="1">
+                                <StackPanel Orientation="Horizontal" Margin="5,0" ToolTip="Last Changes">
+                                    <Image Source = "{Binding ClockIcon96 , Mode=TwoWay}" Stretch="Uniform" VerticalAlignment="Bottom" HorizontalAlignment="Left" MaxHeight="30" />
+                                    <TextBlock x:Name="TB_Clock_STO_HostFive" Text="" HorizontalAlignment="Right" Margin="5,2" />
+                                </StackPanel>
+                            </Grid>
+                        </Grid>
+                    </Button>
+                    <Button Style="{DynamicResource DashBoardBTNStyle}" x:Name="BTN_STO_HostSix" Margin="0,5,5,5" Visibility = "Collapsed">
+                        <Grid Margin="5">
+                            <Grid.RowDefinitions>
+                                <RowDefinition MaxHeight="100"/>
+                                <RowDefinition Height="20"/>
+                            </Grid.RowDefinitions>
+                            <Grid >
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition MaxWidth="70" />
+                                    <ColumnDefinition />
+                                </Grid.ColumnDefinitions>
+                                <Ellipse Width="45" Height="45" Fill="WhiteSmoke" Stretch="Uniform" >
+                                    <Ellipse.Effect>
+                                        <DropShadowEffect Direction="320" ShadowDepth="2" Color="LightBlue" BlurRadius="5" />
+                                    </Ellipse.Effect>
+                                </Ellipse>
+                                <Ellipse Width="40" Height="40" >
+                                   <Ellipse.Fill>
+                                       <ImageBrush ImageSource = "{Binding HostIcon96 , Mode=TwoWay}" Stretch="Uniform" />
+                                   </Ellipse.Fill>
+                                </Ellipse>
+                                <TextBlock
+                                    x:Name="TB_STO_HostSix"
+                                    Grid.Column="1"
+                                    Style="{DynamicResource DashBoardTB2}"
+                                    HorizontalAlignment="Left"
+                                    VerticalAlignment="Center"
+                                    Text=" " 
+                                    Margin="8,0,5,0"
+                                    Visibility = "Collapsed"/>
+                            </Grid>
+                            <Grid Grid.Row="1">
+                                <StackPanel Orientation="Horizontal" Margin="5,0" ToolTip="Last Changes">
+                                    <Image Source = "{Binding ClockIcon96 , Mode=TwoWay}" Stretch="Uniform" VerticalAlignment="Bottom" HorizontalAlignment="Left" MaxHeight="30" />
+                                    <TextBlock x:Name="TB_Clock_STO_HostSix" Text="" HorizontalAlignment="Right" Margin="5,2" />
+                                </StackPanel>
+                            </Grid>
+                        </Grid>
+                    </Button>
+                    <Button Style="{DynamicResource DashBoardBTNStyle}" x:Name="BTN_STO_HostSeven" Margin="0,5,5,5" Visibility = "Collapsed">
+                        <Grid Margin="5">
+                            <Grid.RowDefinitions>
+                                <RowDefinition MaxHeight="100"/>
+                                <RowDefinition Height="20"/>
+                            </Grid.RowDefinitions>
+                            <Grid >
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition MaxWidth="70" />
+                                    <ColumnDefinition />
+                                </Grid.ColumnDefinitions>
+                                <Ellipse Width="45" Height="45" Fill="WhiteSmoke" Stretch="Uniform" >
+                                    <Ellipse.Effect>
+                                        <DropShadowEffect Direction="320" ShadowDepth="2" Color="LightBlue" BlurRadius="5" />
+                                    </Ellipse.Effect>
+                                </Ellipse>
+                                <Ellipse Width="40" Height="40" >
+                                   <Ellipse.Fill>
+                                       <ImageBrush ImageSource = "{Binding HostIcon96 , Mode=TwoWay}" Stretch="Uniform" />
+                                   </Ellipse.Fill>
+                                </Ellipse>
+                                <TextBlock
+                                    x:Name="TB_STO_HostSeven"
+                                    Grid.Column="1"
+                                    Style="{DynamicResource DashBoardTB2}"
+                                    HorizontalAlignment="Left"
+                                    VerticalAlignment="Center"
+                                    Text=" " 
+                                    Margin="8,0,5,0"
+                                    Visibility = "Collapsed"/>
+                            </Grid>
+                            <Grid Grid.Row="1">
+                                <StackPanel Orientation="Horizontal" Margin="5,0" ToolTip="Last Changes">
+                                    <Image Source = "{Binding ClockIcon96 , Mode=TwoWay}" Stretch="Uniform" VerticalAlignment="Bottom" HorizontalAlignment="Left" MaxHeight="30" />
+                                    <TextBlock x:Name="TB_Clock_STO_HostSeven" Text="" HorizontalAlignment="Right" Margin="5,2" />
+                                </StackPanel>
+                            </Grid>
+                        </Grid>
+                    </Button>
+                    <Button Style="{DynamicResource DashBoardBTNStyle}" x:Name="BTN_STO_HostEight" Margin="0,5,5,5" Visibility = "Collapsed">
+                        <Grid Margin="5">
+                            <Grid.RowDefinitions>
+                                <RowDefinition MaxHeight="100"/>
+                                <RowDefinition Height="20"/>
+                            </Grid.RowDefinitions>
+                            <Grid >
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition MaxWidth="70" />
+                                    <ColumnDefinition />
+                                </Grid.ColumnDefinitions>
+                                <Ellipse Width="45" Height="45" Fill="WhiteSmoke" Stretch="Uniform" >
+                                    <Ellipse.Effect>
+                                        <DropShadowEffect Direction="320" ShadowDepth="2" Color="LightBlue" BlurRadius="5" />
+                                    </Ellipse.Effect>
+                                </Ellipse>
+                                <Ellipse Width="40" Height="40" >
+                                   <Ellipse.Fill>
+                                       <ImageBrush ImageSource = "{Binding HostIcon96 , Mode=TwoWay}" Stretch="Uniform" />
+                                   </Ellipse.Fill>
+                                </Ellipse>
+                                <TextBlock
+                                    x:Name="TB_STO_HostEight"
+                                    Grid.Column="1"
+                                    Style="{DynamicResource DashBoardTB2}"
+                                    HorizontalAlignment="Left"
+                                    VerticalAlignment="Center"
+                                    Text=" " 
+                                    Margin="8,0,5,0"
+                                    Visibility = "Collapsed"/>
+                            </Grid>
+                            <Grid Grid.Row="1">
+                                <StackPanel Orientation="Horizontal" Margin="5,0" ToolTip="Last Changes">
+                                    <Image Source = "{Binding ClockIcon96 , Mode=TwoWay}" Stretch="Uniform" VerticalAlignment="Bottom" HorizontalAlignment="Left" MaxHeight="30" />
+                                    <TextBlock x:Name="TB_Clock_STO_HostEight" Text="" HorizontalAlignment="Right" Margin="5,2" />
+                                </StackPanel>
+                            </Grid>
+                        </Grid>
+                    </Button>
+                    <Button Style="{DynamicResource DashBoardBTNStyle}" x:Name="BTN_STO_HostNine" Margin="0,5,5,5" Visibility = "Collapsed">
+                        <Grid Margin="5">
+                            <Grid.RowDefinitions>
+                                <RowDefinition MaxHeight="100"/>
+                                <RowDefinition Height="20"/>
+                            </Grid.RowDefinitions>
+                            <Grid >
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition MaxWidth="70" />
+                                    <ColumnDefinition />
+                                </Grid.ColumnDefinitions>
+                                <Ellipse Width="45" Height="45" Fill="WhiteSmoke" Stretch="Uniform" >
+                                    <Ellipse.Effect>
+                                        <DropShadowEffect Direction="320" ShadowDepth="2" Color="LightBlue" BlurRadius="5" />
+                                    </Ellipse.Effect>
+                                </Ellipse>
+                                <Ellipse Width="40" Height="40" >
+                                   <Ellipse.Fill>
+                                       <ImageBrush ImageSource = "{Binding HostIcon96 , Mode=TwoWay}" Stretch="Uniform" />
+                                   </Ellipse.Fill>
+                                </Ellipse>
+                                <TextBlock
+                                    x:Name="TB_STO_HostNine"
+                                    Grid.Column="1"
+                                    Style="{DynamicResource DashBoardTB2}"
+                                    HorizontalAlignment="Left"
+                                    VerticalAlignment="Center"
+                                    Text=" " 
+                                    Margin="8,0,5,0"
+                                    Visibility = "Collapsed"/>
+                            </Grid>
+                            <Grid Grid.Row="1">
+                                <StackPanel Orientation="Horizontal" Margin="5,0" ToolTip="Last Changes">
+                                    <Image Source = "{Binding ClockIcon96 , Mode=TwoWay}" Stretch="Uniform" VerticalAlignment="Bottom" HorizontalAlignment="Left" MaxHeight="30" />
+                                    <TextBlock x:Name="TB_Clock_STO_HostNine" Text="" HorizontalAlignment="Right" Margin="5,2" />
+                                </StackPanel>
+                            </Grid>
+                        </Grid>
+                    </Button>
+                    <Button Style="{DynamicResource DashBoardBTNStyle}" x:Name="BTN_STO_HostTen" Margin="0,5,5,5" Visibility = "Collapsed">
+                        <Grid Margin="5">
+                            <Grid.RowDefinitions>
+                                <RowDefinition MaxHeight="100"/>
+                                <RowDefinition Height="20"/>
+                            </Grid.RowDefinitions>
+                            <Grid >
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition MaxWidth="70" />
+                                    <ColumnDefinition />
+                                </Grid.ColumnDefinitions>
+                                <Ellipse Width="45" Height="45" Fill="WhiteSmoke" Stretch="Uniform" >
+                                    <Ellipse.Effect>
+                                        <DropShadowEffect Direction="320" ShadowDepth="2" Color="LightBlue" BlurRadius="5" />
+                                    </Ellipse.Effect>
+                                </Ellipse>
+                                <Ellipse Width="40" Height="40" >
+                                   <Ellipse.Fill>
+                                       <ImageBrush ImageSource = "{Binding HostIcon96 , Mode=TwoWay}" Stretch="Uniform" />
+                                   </Ellipse.Fill>
+                                </Ellipse>
+                                <TextBlock
+                                    x:Name="TB_STO_HostTen"
+                                    Grid.Column="1"
+                                    Style="{DynamicResource DashBoardTB2}"
+                                    HorizontalAlignment="Left"
+                                    VerticalAlignment="Center"
+                                    Text=" " 
+                                    Margin="8,0,5,0"
+                                    Visibility = "Collapsed"/>
+                            </Grid>
+                            <Grid Grid.Row="1">
+                                <StackPanel Orientation="Horizontal" Margin="5,0" ToolTip="Last Changes">
+                                    <Image Source = "{Binding ClockIcon96 , Mode=TwoWay}" Stretch="Uniform" VerticalAlignment="Bottom" HorizontalAlignment="Left" MaxHeight="30" />
+                                    <TextBlock x:Name="TB_Clock_STO_HostTen" Text="" HorizontalAlignment="Right" Margin="5,2" />
+                                </StackPanel>
+                            </Grid>
+                        </Grid>
+                    </Button>
+                    <Button Style="{DynamicResource DashBoardBTNStyle}" x:Name="BTN_STO_HostEleven" Margin="0,5,5,5" Visibility = "Collapsed">
+                        <Grid Margin="5">
+                            <Grid.RowDefinitions>
+                                <RowDefinition MaxHeight="100"/>
+                                <RowDefinition Height="20"/>
+                            </Grid.RowDefinitions>
+                            <Grid >
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition MaxWidth="70" />
+                                    <ColumnDefinition />
+                                </Grid.ColumnDefinitions>
+                                <Ellipse Width="45" Height="45" Fill="WhiteSmoke" Stretch="Uniform" >
+                                    <Ellipse.Effect>
+                                        <DropShadowEffect Direction="320" ShadowDepth="2" Color="LightBlue" BlurRadius="5" />
+                                    </Ellipse.Effect>
+                                </Ellipse>
+                                <Ellipse Width="40" Height="40" >
+                                   <Ellipse.Fill>
+                                       <ImageBrush ImageSource = "{Binding HostIcon96 , Mode=TwoWay}" Stretch="Uniform" />
+                                   </Ellipse.Fill>
+                                </Ellipse>
+                                <TextBlock
+                                    x:Name="TB_STO_HostEleven"
+                                    Grid.Column="1"
+                                    Style="{DynamicResource DashBoardTB2}"
+                                    HorizontalAlignment="Left"
+                                    VerticalAlignment="Center"
+                                    Text=" " 
+                                    Margin="8,0,5,0"
+                                    Visibility = "Collapsed"/>
+                            </Grid>
+                            <Grid Grid.Row="1">
+                                <StackPanel Orientation="Horizontal" Margin="5,0" ToolTip="Last Changes">
+                                    <Image Source = "{Binding ClockIcon96 , Mode=TwoWay}" Stretch="Uniform" VerticalAlignment="Bottom" HorizontalAlignment="Left" MaxHeight="30" />
+                                    <TextBlock x:Name="TB_Clock_STO_HostEleven" Text="" HorizontalAlignment="Right" Margin="5,2" />
+                                </StackPanel>
+                            </Grid>
+                        </Grid>
+                    </Button>
+                    <Button Style="{DynamicResource DashBoardBTNStyle}" x:Name="BTN_STO_HostTwelve" Margin="0,5,5,5" Visibility = "Collapsed">
+                        <Grid Margin="5">
+                            <Grid.RowDefinitions>
+                                <RowDefinition MaxHeight="100"/>
+                                <RowDefinition Height="20"/>
+                            </Grid.RowDefinitions>
+                            <Grid >
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition MaxWidth="70" />
+                                    <ColumnDefinition />
+                                </Grid.ColumnDefinitions>
+                                <Ellipse Width="45" Height="45" Fill="WhiteSmoke" Stretch="Uniform" >
+                                    <Ellipse.Effect>
+                                        <DropShadowEffect Direction="320" ShadowDepth="2" Color="LightBlue" BlurRadius="5" />
+                                    </Ellipse.Effect>
+                                </Ellipse>
+                                <Ellipse Width="40" Height="40" >
+                                   <Ellipse.Fill>
+                                       <ImageBrush ImageSource = "{Binding HostIcon96 , Mode=TwoWay}" Stretch="Uniform" />
+                                   </Ellipse.Fill>
+                                </Ellipse>
+                                <TextBlock
+                                    x:Name="TB_STO_HostTwelve"
+                                    Grid.Column="1"
+                                    Style="{DynamicResource DashBoardTB2}"
+                                    HorizontalAlignment="Left"
+                                    VerticalAlignment="Center"
+                                    Text=" " 
+                                    Margin="8,0,5,0"
+                                    Visibility = "Collapsed"/>
+                            </Grid>
+                            <Grid Grid.Row="1">
+                                <StackPanel Orientation="Horizontal" Margin="5,0" ToolTip="Last Changes">
+                                    <Image Source = "{Binding ClockIcon96 , Mode=TwoWay}" Stretch="Uniform" VerticalAlignment="Bottom" HorizontalAlignment="Left" MaxHeight="30" />
+                                    <TextBlock x:Name="TB_Clock_STO_HostTwelve" Text="" HorizontalAlignment="Right" Margin="5,2" />
+                                </StackPanel>
+                            </Grid>
+                        </Grid>
+                    </Button>
+                    <Button Style="{DynamicResource DashBoardBTNStyle}" x:Name="BTN_STO_HostThirteen" Margin="0,5,5,5" Visibility = "Collapsed">
+                        <Grid Margin="5">
+                            <Grid.RowDefinitions>
+                                <RowDefinition MaxHeight="100"/>
+                                <RowDefinition Height="20"/>
+                            </Grid.RowDefinitions>
+                            <Grid >
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition MaxWidth="70" />
+                                    <ColumnDefinition />
+                                </Grid.ColumnDefinitions>
+                                <Ellipse Width="45" Height="45" Fill="WhiteSmoke" Stretch="Uniform" >
+                                    <Ellipse.Effect>
+                                        <DropShadowEffect Direction="320" ShadowDepth="2" Color="LightBlue" BlurRadius="5" />
+                                    </Ellipse.Effect>
+                                </Ellipse>
+                                <Ellipse Width="40" Height="40" >
+                                   <Ellipse.Fill>
+                                       <ImageBrush ImageSource = "{Binding HostIcon96 , Mode=TwoWay}" Stretch="Uniform" />
+                                   </Ellipse.Fill>
+                                </Ellipse>
+                                <TextBlock
+                                    x:Name="TB_STO_HostThirteen"
+                                    Grid.Column="1"
+                                    Style="{DynamicResource DashBoardTB2}"
+                                    HorizontalAlignment="Left"
+                                    VerticalAlignment="Center"
+                                    Text=" " 
+                                    Margin="8,0,5,0"
+                                    Visibility = "Collapsed"/>
+                            </Grid>
+                            <Grid Grid.Row="1">
+                                <StackPanel Orientation="Horizontal" Margin="5,0" ToolTip="Last Changes">
+                                    <Image Source = "{Binding ClockIcon96 , Mode=TwoWay}" Stretch="Uniform" VerticalAlignment="Bottom" HorizontalAlignment="Left" MaxHeight="30" />
+                                    <TextBlock x:Name="TB_Clock_STO_HostThirteen" Text="" HorizontalAlignment="Right" Margin="5,2" />
+                                </StackPanel>
+                            </Grid>
+                        </Grid>
+                    </Button>
+                    <Button Style="{DynamicResource DashBoardBTNStyle}" x:Name="BTN_STO_HostFourteen" Margin="0,5,5,5" Visibility = "Collapsed">
+                        <Grid Margin="5">
+                            <Grid.RowDefinitions>
+                                <RowDefinition MaxHeight="100"/>
+                                <RowDefinition Height="20"/>
+                            </Grid.RowDefinitions>
+                            <Grid >
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition MaxWidth="70" />
+                                    <ColumnDefinition />
+                                </Grid.ColumnDefinitions>
+                                <Ellipse Width="45" Height="45" Fill="WhiteSmoke" Stretch="Uniform" >
+                                    <Ellipse.Effect>
+                                        <DropShadowEffect Direction="320" ShadowDepth="2" Color="LightBlue" BlurRadius="5" />
+                                    </Ellipse.Effect>
+                                </Ellipse>
+                                <Ellipse Width="40" Height="40" >
+                                   <Ellipse.Fill>
+                                       <ImageBrush ImageSource = "{Binding HostIcon96 , Mode=TwoWay}" Stretch="Uniform" />
+                                   </Ellipse.Fill>
+                                </Ellipse>
+                                <TextBlock
+                                    x:Name="TB_STO_HostFourteen"
+                                    Grid.Column="1"
+                                    Style="{DynamicResource DashBoardTB2}"
+                                    HorizontalAlignment="Left"
+                                    VerticalAlignment="Center"
+                                    Text=" " 
+                                    Margin="8,0,5,0"
+                                    Visibility = "Collapsed"/>
+                            </Grid>
+                            <Grid Grid.Row="1">
+                                <StackPanel Orientation="Horizontal" Margin="5,0" ToolTip="Last Changes">
+                                    <Image Source = "{Binding ClockIcon96 , Mode=TwoWay}" Stretch="Uniform" VerticalAlignment="Bottom" HorizontalAlignment="Left" MaxHeight="30" />
+                                    <TextBlock x:Name="TB_Clock_STO_HostFourteen" Text="" HorizontalAlignment="Right" Margin="5,2" />
+                                </StackPanel>
+                            </Grid>
+                        </Grid>
+                    </Button>
+                    <Button Style="{DynamicResource DashBoardBTNStyle}" x:Name="BTN_STO_HostFifteen" Margin="0,5,5,5" Visibility = "Collapsed">
+                        <Grid Margin="5">
+                            <Grid.RowDefinitions>
+                                <RowDefinition MaxHeight="100"/>
+                                <RowDefinition Height="20"/>
+                            </Grid.RowDefinitions>
+                            <Grid >
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition MaxWidth="70" />
+                                    <ColumnDefinition />
+                                </Grid.ColumnDefinitions>
+                                <Ellipse Width="45" Height="45" Fill="WhiteSmoke" Stretch="Uniform" >
+                                    <Ellipse.Effect>
+                                        <DropShadowEffect Direction="320" ShadowDepth="2" Color="LightBlue" BlurRadius="5" />
+                                    </Ellipse.Effect>
+                                </Ellipse>
+                                <Ellipse Width="40" Height="40" >
+                                   <Ellipse.Fill>
+                                       <ImageBrush ImageSource = "{Binding HostIcon96 , Mode=TwoWay}" Stretch="Uniform" />
+                                   </Ellipse.Fill>
+                                </Ellipse>
+                                <TextBlock
+                                    x:Name="TB_STO_HostFifteen"
+                                    Grid.Column="1"
+                                    Style="{DynamicResource DashBoardTB2}"
+                                    HorizontalAlignment="Left"
+                                    VerticalAlignment="Center"
+                                    Text=" " 
+                                    Margin="8,0,5,0"
+                                    Visibility = "Collapsed"/>
+                            </Grid>
+                            <Grid Grid.Row="1">
+                                <StackPanel Orientation="Horizontal" Margin="5,0" ToolTip="Last Changes">
+                                    <Image Source = "{Binding ClockIcon96 , Mode=TwoWay}" Stretch="Uniform" VerticalAlignment="Bottom" HorizontalAlignment="Left" MaxHeight="30" />
+                                    <TextBlock x:Name="TB_Clock_STO_HostFifteen" Text="" HorizontalAlignment="Right" Margin="5,2" />
+                                </StackPanel>
+                            </Grid>
+                        </Grid>
+                    </Button>
+                    <Button Style="{DynamicResource DashBoardBTNStyle}" x:Name="BTN_STO_HostSixteen" Margin="0,5,5,5" Visibility = "Collapsed">
+                        <Grid Margin="5">
+                            <Grid.RowDefinitions>
+                                <RowDefinition MaxHeight="100"/>
+                                <RowDefinition Height="20"/>
+                            </Grid.RowDefinitions>
+                            <Grid >
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition MaxWidth="70" />
+                                    <ColumnDefinition />
+                                </Grid.ColumnDefinitions>
+                                <Ellipse Width="45" Height="45" Fill="WhiteSmoke" Stretch="Uniform" >
+                                    <Ellipse.Effect>
+                                        <DropShadowEffect Direction="320" ShadowDepth="2" Color="LightBlue" BlurRadius="5" />
+                                    </Ellipse.Effect>
+                                </Ellipse>
+                                <Ellipse Width="40" Height="40" >
+                                   <Ellipse.Fill>
+                                       <ImageBrush ImageSource = "{Binding HostIcon96 , Mode=TwoWay}" Stretch="Uniform" />
+                                   </Ellipse.Fill>
+                                </Ellipse>
+                                <TextBlock
+                                    x:Name="TB_STO_HostSixteen"
+                                    Grid.Column="1"
+                                    Style="{DynamicResource DashBoardTB2}"
+                                    HorizontalAlignment="Left"
+                                    VerticalAlignment="Center"
+                                    Text=" " 
+                                    Margin="8,0,5,0"
+                                    Visibility = "Collapsed"/>
+                            </Grid>
+                            <Grid Grid.Row="1">
+                                <StackPanel Orientation="Horizontal" Margin="5,0" ToolTip="Last Changes">
+                                    <Image Source = "{Binding ClockIcon96 , Mode=TwoWay}" Stretch="Uniform" VerticalAlignment="Bottom" HorizontalAlignment="Left" MaxHeight="30" />
+                                    <TextBlock x:Name="TB_Clock_STO_HostSixteen" Text="" HorizontalAlignment="Right" Margin="5,2" />
+                                </StackPanel>
+                            </Grid>
+                        </Grid>
+                    </Button>
+            </WrapPanel>
         </GroupBox>
     </Grid>
     </ScrollViewer>
