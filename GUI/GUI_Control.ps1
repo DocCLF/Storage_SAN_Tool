@@ -35,11 +35,15 @@ $MainWindow.Resources.MergedDictionaries.Add( $ButtonStyles )
 <# PowerShell WPF XAML simple data binding datacontext #>
 class DashBoardIMG {
     [string]$IBMSTOIcon 
+    [string]$BrocadeIcon
     [string]$ClockIcon96
+    [string]$HostIcon96
 }
 $DashBoardIcons =[DashBoardIMG]::new()
 $DashBoardIcons.IBMSTOIcon = "$PSRootPath\Resources\icons\ibmstoicon.png"
+$DashBoardIcons.BrocadeIcon = "$PSRootPath\Resources\icons\broadcom-96.png"
 $DashBoardIcons.ClockIcon96 = "$PSRootPath\Resources\icons\icons8-clock-96.png"
+$DashBoardIcons.HostIcon96 = "$PSRootPath\Resources\icons\icons8-server-96.png"
 
 <# Create UserControls as basis of Content for MainWindow #>
 $UserCxamlFile = Get-ChildItem "$PSScriptRoot\UserControl*.xaml"
@@ -1043,6 +1047,14 @@ $TD_btn_IBM_HostInfo.add_click({
 
     $TD_Credentials | ForEach-Object {
         [array]$TD_Collected_HostInfoResult = IBM_HostInfo -TD_Line_ID $_.ID -TD_Device_ConnectionTyp $_.ConnectionTyp -TD_Device_UserName $_.UserName -TD_Device_DeviceIP $_.IPAddress -TD_Device_DeviceName $_.DeviceName -TD_Device_PW $([Net.NetworkCredential]::new('', $_.Password).Password) -TD_Device_SSHKeyPath $_.SSHKeyPath -TD_Exportpath $TD_tb_ExportPath.Text
+        try {
+            SST_LiteDBControl -SST_InfoType "StorageHostInfo" -SST_CollectedInformations $TD_Collected_HostInfoResult
+        }
+        catch {
+            <#Do this if a terminating exception happens#>
+            Write-Host $_.exception.message
+            SST_ToolMessageCollector -TD_ToolMSGCollector "LiteDB - $_.exception.message" -TD_ToolMSGType Error -TD_Shown no
+        }
         switch ($_.ID) {
             {($_ -eq 1)} { $TD_dg_CollectedHostInfoOne.ItemsSource = $TD_Collected_HostInfoResult   }
             {($_ -eq 2)} { $TD_dg_CollectedHostInfoTwo.ItemsSource = $TD_Collected_HostInfoResult   }
@@ -1116,6 +1128,14 @@ $TD_btn_FOS_BasicSwitchInfo.add_click({
     $TD_Credentials | ForEach-Object {
         $FOS_BasicSwitch = $null
         $FOS_BasicSwitch = FOS_BasicSwitchInfos -TD_Line_ID $_.ID -TD_Device_ConnectionTyp $_.ConnectionTyp -TD_Device_UserName $_.UserName -TD_Device_DeviceName $_.DeviceName -TD_Device_DeviceIP $_.IPAddress -TD_Device_PW $([Net.NetworkCredential]::new('', $_.Password).Password) -TD_Device_SSHKeyPath $_.SSHKeyPath -TD_Exportpath $TD_tb_ExportPath.Text
+        try {
+            SST_LiteDBControl -SST_InfoType "SANBase" -SST_CollectedInformations $FOS_BasicSwitch
+        }
+        catch {
+            <#Do this if a terminating exception happens#>
+            Write-Host $_.exception.message
+            SST_ToolMessageCollector -TD_ToolMSGCollector "LiteDB - $_.exception.message" -TD_ToolMSGType Error -TD_Shown no
+        }
         switch ($_.ID) {
             {($_ -eq 1)} { $TD_dg_sanBasicSwitchInfoOne.ItemsSource = $FOS_BasicSwitch }
             {($_ -eq 2)} { $TD_dg_sanBasicSwitchInfoTwo.ItemsSource = $FOS_BasicSwitch }
