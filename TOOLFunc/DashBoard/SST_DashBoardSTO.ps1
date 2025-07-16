@@ -15,6 +15,7 @@ function SST_DashBoardSTO {
         while ($STOHWCollection.Read()) {
             $ID    = $STOHWCollection["DID"]
             $Name  = $STOHWCollection["Name"]
+            $ClusterName = $STOHWCollection["ClusterName"]
             $WWNN = $STOHWCollection["WWNN"]
             $Status    = $STOHWCollection["Status"]
             $IOgroupid  = $STOHWCollection["IOgroupid"]
@@ -26,7 +27,7 @@ function SST_DashBoardSTO {
             $ProdMTM  = $STOHWCollection["ProdMTM"]
             $TimeStamp = $STOHWCollection["TimeStamp"]
 
-            $SST_BTN_Content="Name: $Name`nStatus: $Status`nMTM:  $ProdMTM`nSN:      $SerialNumber`nFW:      $CodeLevel"
+            $SST_BTN_Content="ClusterName: $ClusterName`nName: $Name`nStatus: $Status`nMTM:  $ProdMTM`nSN:      $SerialNumber`nFW:      $CodeLevel"
             $TD_TB_STO_DevOne,$TD_TB_STO_DevTwo,$TD_TB_STO_DevThree,$TD_TB_STO_DevFour,$TD_TB_STO_DevFive,$TD_TB_STO_DevSix,$TD_TB_STO_DevSeven,$TD_TB_STO_DevEight |ForEach-Object {
                 $SST_CheckBTN_Content = $_.Text
                 if((!([string]::IsNullOrWhiteSpace($SST_BTN_Content))) -and ([string]::IsNullOrWhiteSpace($SST_CheckBTN_Content))){
