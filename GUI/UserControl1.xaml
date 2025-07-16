@@ -37,7 +37,7 @@
                     <Button Style="{DynamicResource DashBoardBTNStyle}" x:Name="BTN_STO_DevOne" Margin="0,5,5,5" Visibility = "Collapsed">
                         <Grid Margin="5">
                             <Grid.RowDefinitions>
-                                <RowDefinition Height="100"/>
+                                <RowDefinition Height="120"/>
                                 <RowDefinition Height="auto"/>
                                 <RowDefinition Height="25"/>
                             </Grid.RowDefinitions>
@@ -92,7 +92,7 @@
                     <Button Style="{DynamicResource DashBoardBTNStyle}" x:Name="BTN_STO_DevTwo" Margin="15,5,5,5" Visibility = "Collapsed" >
                         <Grid Margin="5">
                             <Grid.RowDefinitions>
-                                <RowDefinition Height="100"/>
+                                <RowDefinition Height="120"/>
                                 <RowDefinition Height="auto"/>
                                 <RowDefinition Height="25"/>
                             </Grid.RowDefinitions>
@@ -147,7 +147,7 @@
                     <Button Style="{DynamicResource DashBoardBTNStyle}" x:Name="BTN_STO_DevThree" Margin="15,5,5,5" Visibility = "Collapsed" >
                         <Grid Margin="5">
                             <Grid.RowDefinitions>
-                                <RowDefinition Height="100"/>
+                                <RowDefinition Height="120"/>
                                 <RowDefinition Height="auto"/>
                                 <RowDefinition Height="25"/>
                             </Grid.RowDefinitions>
@@ -202,7 +202,7 @@
                     <Button Style="{DynamicResource DashBoardBTNStyle}" x:Name="BTN_STO_DevFour" Margin="15,5,5,5" Visibility = "Collapsed" >
                         <Grid Margin="5">
                             <Grid.RowDefinitions>
-                                <RowDefinition Height="100"/>
+                                <RowDefinition Height="120"/>
                                 <RowDefinition Height="auto"/>
                                 <RowDefinition Height="25"/>
                             </Grid.RowDefinitions>
@@ -257,7 +257,7 @@
                     <Button Style="{DynamicResource DashBoardBTNStyle}" x:Name="BTN_STO_DevFive" Margin="15,5,5,5" Visibility = "Collapsed" >
                         <Grid Margin="5">
                             <Grid.RowDefinitions>
-                                <RowDefinition Height="100"/>
+                                <RowDefinition Height="120"/>
                                 <RowDefinition Height="auto"/>
                                 <RowDefinition Height="25"/>
                             </Grid.RowDefinitions>
@@ -312,7 +312,7 @@
                     <Button Style="{DynamicResource DashBoardBTNStyle}" x:Name="BTN_STO_DevSix" Margin="15,5,5,5" Visibility = "Collapsed" >
                         <Grid Margin="5">
                             <Grid.RowDefinitions>
-                                <RowDefinition Height="100"/>
+                                <RowDefinition Height="120"/>
                                 <RowDefinition Height="auto"/>
                                 <RowDefinition Height="25"/>
                             </Grid.RowDefinitions>
@@ -367,7 +367,7 @@
                     <Button Style="{DynamicResource DashBoardBTNStyle}" x:Name="BTN_STO_DevSeven" Margin="15,5,5,5" Visibility = "Collapsed" >
                         <Grid Margin="5">
                             <Grid.RowDefinitions>
-                                <RowDefinition Height="100"/>
+                                <RowDefinition Height="120"/>
                                 <RowDefinition Height="auto"/>
                                 <RowDefinition Height="25"/>
                             </Grid.RowDefinitions>
@@ -422,7 +422,7 @@
                     <Button Style="{DynamicResource DashBoardBTNStyle}" x:Name="BTN_STO_DevEight" Margin="15,5,5,5" Visibility = "Collapsed" >
                         <Grid Margin="5">
                             <Grid.RowDefinitions>
-                                <RowDefinition Height="100"/>
+                                <RowDefinition Height="120"/>
                                 <RowDefinition Height="auto"/>
                                 <RowDefinition Height="25"/>
                             </Grid.RowDefinitions>
