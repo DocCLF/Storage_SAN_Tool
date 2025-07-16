@@ -38,12 +38,14 @@ class DashBoardIMG {
     [string]$BrocadeIcon
     [string]$ClockIcon96
     [string]$HostIcon96
+    [string]$RefrehIcon96
 }
 $DashBoardIcons =[DashBoardIMG]::new()
 $DashBoardIcons.IBMSTOIcon = "$PSRootPath\Resources\icons\ibmstoicon.png"
 $DashBoardIcons.BrocadeIcon = "$PSRootPath\Resources\icons\broadcom-96.png"
 $DashBoardIcons.ClockIcon96 = "$PSRootPath\Resources\icons\icons8-clock-96.png"
 $DashBoardIcons.HostIcon96 = "$PSRootPath\Resources\icons\icons8-server-96.png"
+$DashBoardIcons.RefrehIcon96 = "$PSRootPath\Resources\icons\icons8-refresh-96.png"
 
 <# Create UserControls as basis of Content for MainWindow #>
 $UserCxamlFile = Get-ChildItem "$PSScriptRoot\UserControl*.xaml"
@@ -141,6 +143,7 @@ foreach($file in $UserCxamlFile){
     $TD_LogoImage.Source = "$PSRootPath\Resources\PROFI_Logo_2022_dark.png"
     $TD_LogoImageSmall.Source = "$PSRootPath\Resources\PROFI_Logo_2022_dark.png"
     $TD_LogoImageSmall.Visibility = "hidden"
+    # Since the switch to SQLite, the DB can also be used with PowerShell V5.
     if($PSVersionTable.PSVersion.Major -ge 7){
         $TD_LB_DBSettings.Content ="Your PSWH Version is $($PSVersionTable.PSVersion), you can use the local DB."
     }else {
@@ -162,7 +165,6 @@ $TD_btn_Dashboard.add_click({
     $TD_UserContrArea.Children.Remove($TD_UserControl4)
     $TD_UserContrArea.Children.Remove($TD_UserControl5)
     if($TD_LogoImageSmall.Visibility -eq "hidden"){$TD_LogoImageSmall.Visibility = "visible"}
-    
 })
 $TD_btn_IBM_SV.add_click({
     $TD_LB_ExpPathMainWindow.Content ="Export Path: $($TD_tb_ExportPath.Text)"
@@ -214,6 +216,16 @@ $TD_btn_ChangeExportPath.add_click({
         $TD_tb_ExportPath.Text = $TD_DirectoryName
     }
     $TD_LB_ExpPathMainWindow.Content ="Export Path: $($TD_tb_ExportPath.Text)"
+})
+<# Refresh Button #>
+$TD_BTN_RefreshUC1.add_click({
+    $TD_BTN_STO_DevOne,$TD_BTN_STO_DevTwo,$TD_BTN_STO_DevThree,$TD_BTN_STO_DevFour,$TD_BTN_STO_DevFive,$TD_BTN_STO_DevSix,$TD_BTN_STO_DevSeven,$TD_BTN_STO_DevEight |ForEach-Object {$_.Visibility = "Collapsed"}
+    $TD_TB_STO_DevOne,$TD_TB_STO_DevTwo,$TD_TB_STO_DevThree,$TD_TB_STO_DevFour,$TD_TB_STO_DevFive,$TD_TB_STO_DevSix,$TD_TB_STO_DevSeven,$TD_TB_STO_DevEight |ForEach-Object {$_.Text = "" }
+    $TD_BTN_SAN_DevOne,$TD_BTN_SAN_DevTwo,$TD_BTN_SAN_DevThree,$TD_BTN_SAN_DevFour,$TD_BTN_SAN_DevFive,$TD_BTN_SAN_DevSix,$TD_BTN_SAN_DevSeven,$TD_BTN_SAN_DevEight |ForEach-Object {$_.Visibility = "Collapsed"}
+    $TD_TB_SAN_DevOne,$TD_TB_SAN_DevTwo,$TD_TB_SAN_DevThree,$TD_TB_SAN_DevFour,$TD_TB_SAN_DevFive,$TD_TB_SAN_DevSix,$TD_TB_SAN_DevSeven,$TD_TB_SAN_DevEight |ForEach-Object {$_.Text = "" }
+    $TD_BTN_STO_HostOne,$TD_BTN_STO_HostTwo,$TD_BTN_STO_HostThree,$TD_BTN_STO_HostFour,$TD_BTN_STO_HostFive,$TD_BTN_STO_HostSix,$TD_BTN_STO_HostSeven,$TD_BTN_STO_HostEight,$TD_BTN_STO_HostNine,$TD_BTN_STO_HostTen,$TD_BTN_STO_HostEleven,$TD_BTN_STO_HostTwelve,$TD_BTN_STO_HostThirteen,$TD_BTN_STO_HostFourteen,$TD_BTN_STO_HostFifteen,$TD_BTN_STO_HostSixteen |ForEach-Object {$_.Visibility = "Collapsed"}
+    $TD_TB_STO_HostOne,$TD_TB_STO_HostTwo,$TD_TB_STO_HostThree,$TD_TB_STO_HostFour,$TD_TB_STO_HostFive,$TD_TB_STO_HostSix,$TD_TB_STO_HostSeven,$TD_TB_STO_HostEight,$TD_TB_STO_HostNine,$TD_TB_STO_HostTen,$TD_TB_STO_HostEleven,$TD_TB_STO_HostTwelve,$TD_TB_STO_HostThirteen,$TD_TB_STO_HostFourteen,$TD_TB_STO_HostFifteen,$TD_TB_STO_HostSixteen |ForEach-Object {$_.Text = "" }
+    SST_DashBoardMain -MainPath $PSRootPath
 })
 #endregion
 
