@@ -27,8 +27,12 @@
             <RowDefinition Height="auto" />
             <RowDefinition Height="auto" />
             <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
         </Grid.RowDefinitions>
-        <GroupBox Grid.Row="0" Header="Storage Info" MinWidth="400" HorizontalAlignment="Left" Margin="10,10,0,0"  VerticalAlignment="Top">
+        <Button Grid.Row="0" x:name="BTN_RefreshUC1" Height="50" Width="50" HorizontalAlignment="Right" Background="Transparent" BorderThickness="0" Margin="5,5,20,5">
+            <Image Source = "{Binding RefrehIcon96 , Mode=TwoWay}" Stretch="Uniform" VerticalAlignment="Bottom" HorizontalAlignment="Left" MaxHeight="30" />
+        </Button>
+        <GroupBox Grid.Row="1" Header="Storage Info" MinWidth="400" HorizontalAlignment="Left" Margin="10,10,0,0"  VerticalAlignment="Top">
             <WrapPanel Orientation="Horizontal" Margin="5" MinHeight="125">
                     <Button Style="{DynamicResource DashBoardBTNStyle}" x:Name="BTN_STO_DevOne" Margin="0,5,5,5" Visibility = "Collapsed">
                         <Grid Margin="5">
@@ -472,7 +476,7 @@
                     </Button>
             </WrapPanel>
         </GroupBox>
-        <!--<GroupBox Grid.Row="1" Header="Power Info" MinWidth="820" HorizontalAlignment="Left" Margin="10,10,0,0"  VerticalAlignment="Top">
+        <!--<GroupBox Grid.Row="2" Header="Power Info" MinWidth="820" HorizontalAlignment="Left" Margin="10,10,0,0"  VerticalAlignment="Top">
             <StackPanel Grid.Row="0" Orientation="Vertical">
                 <StackPanel Orientation="Horizontal" Margin="5" Height="150" Background="AliceBlue">
                     <Button x:Name="BTN_PWR_DevOne" Content="" MaxWidth="250" MaxHeight="150" Margin="5" Padding="5"/>
@@ -486,7 +490,7 @@
                 </StackPanel>
             </StackPanel>
         </GroupBox> -->
-        <GroupBox Grid.Row="2" Header="SAN Info" MinWidth="400" HorizontalAlignment="Left" Margin="10,10,0,0"  VerticalAlignment="Top">
+        <GroupBox Grid.Row="3" Header="SAN Info" MinWidth="400" HorizontalAlignment="Left" Margin="10,10,0,0"  VerticalAlignment="Top">
             <WrapPanel Orientation="Horizontal" Margin="5" MinHeight="125">
                     <Button Style="{DynamicResource DashBoardBTNStyle}" x:Name="BTN_SAN_DevOne" Margin="0,5,5,5" Visibility = "Collapsed">
                         <Grid Margin="5">
@@ -802,7 +806,7 @@
                     </Button>
             </WrapPanel>
         </GroupBox>
-        <GroupBox Grid.Row="3" Header="Host Info" MinWidth="400" HorizontalAlignment="Left" Margin="10,10,0,0"  VerticalAlignment="Top">
+        <GroupBox Grid.Row="4" Header="Host Info" MinWidth="400" HorizontalAlignment="Left" Margin="10,10,0,0"  VerticalAlignment="Top">
             <WrapPanel Orientation="Horizontal" Margin="5" MinHeight="125">
                     <Button Style="{DynamicResource DashBoardBTNStyle}" x:Name="BTN_STO_HostOne" Margin="0,5,5,5" Visibility = "Collapsed" MaxWidth="250">
                         <Grid Margin="5">
