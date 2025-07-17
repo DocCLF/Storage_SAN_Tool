@@ -27,7 +27,13 @@ function SST_DashBoardSTO {
             $ProdMTM  = $STOHWCollection["ProdMTM"]
             $TimeStamp = $STOHWCollection["TimeStamp"]
 
-            $SST_BTN_Content="ClusterName: $ClusterName`nName: $Name`nStatus: $Status`nMTM:  $ProdMTM`nSN:      $SerialNumber`nFW:      $CodeLevel"
+            if(($ProdMTM -like "2145*") -or ($ProdMTM -like "2147*")){
+                $SST_BTN_Content="ClusterName: $ClusterName`nName: $Name`nStatus: $Status`nMTM:  $ProdMTM`nSN:      $SerialNumber`nFW:      $CodeLevel"
+            }else {
+                <# Action when all if and elseif conditions are false #>
+                $SST_BTN_Content="ClusterName: $ClusterName`nStatus: $Status`nMTM:  $ProdMTM`nSN:      $SerialNumber`nFW:      $CodeLevel"
+            }
+            
             $TD_TB_STO_DevOne,$TD_TB_STO_DevTwo,$TD_TB_STO_DevThree,$TD_TB_STO_DevFour,$TD_TB_STO_DevFive,$TD_TB_STO_DevSix,$TD_TB_STO_DevSeven,$TD_TB_STO_DevEight |ForEach-Object {
                 $SST_CheckBTN_Content = $_.Text
                 if((!([string]::IsNullOrWhiteSpace($SST_BTN_Content))) -and ([string]::IsNullOrWhiteSpace($SST_CheckBTN_Content))){
