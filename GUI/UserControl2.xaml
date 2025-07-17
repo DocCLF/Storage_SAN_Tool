@@ -5486,25 +5486,18 @@
                                 </Style>
                             </DataGrid.Style>
                             <DataGrid.Columns>
-                                <DataGridTextColumn Width="auto" Header="MDiskID"  Binding ="{Binding MDiskID}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="MDiskGrpID"  Binding ="{Binding MDiskID}" IsReadOnly="True"/>
                                 <DataGridTextColumn Width="auto" Header="Name" Binding ="{Binding Name}" IsReadOnly="True"/>
                                 <DataGridTextColumn Width="auto" Header="Status" Binding ="{Binding Status}" IsReadOnly="True"/>  
-                                <DataGridTextColumn Width="auto" Header="Mode" Binding ="{Binding Mode}" IsReadOnly="True"/> 
-                                <DataGridTextColumn Width="auto" Header="MDiskGrpName" Binding ="{Binding MDiskGrpName}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="MDiskCount" Binding ="{Binding MDiskCount}" IsReadOnly="True"/> 
+                                <DataGridTextColumn Width="auto" Header="VDiskCount" Binding ="{Binding VDiskCount}" IsReadOnly="True"/>
                                 <DataGridTextColumn Width="auto" Header="Capacity" Binding ="{Binding Capacity}" IsReadOnly="True"/>  
-                                <DataGridTextColumn Width="auto" Header="Phys Capacity"  Binding ="{Binding PhysicalCapacity}" IsReadOnly="True"/>
-                                <DataGridTextColumn Width="auto" Header="Phys FreeCapacity" Binding ="{Binding PhysicalFreeCapacity}" IsReadOnly="True"/>
-                                <DataGridTextColumn Width="auto" Header="Allocated Capacity"  Binding ="{Binding AllocatedCapacity}" IsReadOnly="True"/>  
-                                <DataGridTextColumn Width="auto" Header="Effec UsedCapacity" Binding ="{Binding EffectiveUsedCapacity}" IsReadOnly="True"/>  
-                                <DataGridTextColumn Width="auto" Header="Drive Count" Binding ="{Binding DriveCount}" IsReadOnly="True"/> 
-                                <DataGridTextColumn Width="auto" Header="Raid Status" Binding ="{Binding RaidStatus}" IsReadOnly="True"/>
-                                <DataGridTextColumn Width="auto" Header="Raid Level" Binding ="{Binding RaidLevel}" IsReadOnly="True"/> 
-                                <DataGridTextColumn Width="auto" Header="Strip Size" Binding ="{Binding StripSize}" IsReadOnly="True"/>
-                                <DataGridTextColumn Width="auto" Header="Tier"  Binding ="{Binding Tier}" IsReadOnly="True"/>  
-                                <DataGridTextColumn Width="auto" Header="Encrypt" Binding ="{Binding Encrypt}" IsReadOnly="True"/>  
-                                <DataGridTextColumn Width="auto" Header="Site Name" Binding ="{Binding SiteName}" IsReadOnly="True"/> 
-                                <DataGridTextColumn Width="auto" Header="Over Provisioned" Binding ="{Binding OverProvisioned}" IsReadOnly="True"/>
-                                <DataGridTextColumn Width="auto" Header="UnMap" Binding ="{Binding unmap}" IsReadOnly="True"/> 
+                                <DataGridTextColumn Width="auto" Header="Extent Size"  Binding ="{Binding ExtentSize}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Free Capacity" Binding ="{Binding FreeCapacity}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Virtual Capacity"  Binding ="{Binding VirtualCapacity}" IsReadOnly="True"/>  
+                                <DataGridTextColumn Width="auto" Header="Used Capacity" Binding ="{Binding UsedCapacity}" IsReadOnly="True"/>  
+                                <DataGridTextColumn Width="auto" Header="Real Capacity" Binding ="{Binding RealCapacity}" IsReadOnly="True"/> 
+                                <DataGridTextColumn Width="auto" Header="Overallocation" Binding ="{Binding Overallocation}" IsReadOnly="True"/>
                             </DataGrid.Columns>
                         </DataGrid>
                         <DataGrid Grid.Row="1" x:Name="dg_ExpandVolumeInfoOne" AutoGenerateColumns="False" Margin="5" MaxWidth="1280" MaxHeight="480" Visibility="{Binding ElementName=CB_STO_DG1, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
@@ -5541,25 +5534,18 @@
                                 </Style>
                             </DataGrid.Style>
                             <DataGrid.Columns>
-                                <DataGridTextColumn Width="auto" Header="MDiskID"  Binding ="{Binding MDiskID}" IsReadOnly="True"/>
-                                <DataGridTextColumn Width="auto" Header="Name" Binding ="{Binding Name}" IsReadOnly="True"/> 
+                                <DataGridTextColumn Width="auto" Header="MDiskGrpID"  Binding ="{Binding MDiskID}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Name" Binding ="{Binding Name}" IsReadOnly="True"/>
                                 <DataGridTextColumn Width="auto" Header="Status" Binding ="{Binding Status}" IsReadOnly="True"/>  
-                                <DataGridTextColumn Width="auto" Header="Mode" Binding ="{Binding Mode}" IsReadOnly="True"/> 
-                                <DataGridTextColumn Width="auto" Header="MDiskGrpName" Binding ="{Binding MDiskGrpName}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="MDiskCount" Binding ="{Binding MDiskCount}" IsReadOnly="True"/> 
+                                <DataGridTextColumn Width="auto" Header="VDiskCount" Binding ="{Binding VDiskCount}" IsReadOnly="True"/>
                                 <DataGridTextColumn Width="auto" Header="Capacity" Binding ="{Binding Capacity}" IsReadOnly="True"/>  
-                                <DataGridTextColumn Width="auto" Header="Phys Capacity"  Binding ="{Binding PhysicalCapacity}" IsReadOnly="True"/>
-                                <DataGridTextColumn Width="auto" Header="Phys FreeCapacity" Binding ="{Binding PhysicalFreeCapacity}" IsReadOnly="True"/>
-                                <DataGridTextColumn Width="auto" Header="Allocated Capacity"  Binding ="{Binding AllocatedCapacity}" IsReadOnly="True"/>  
-                                <DataGridTextColumn Width="auto" Header="Effec UsedCapacity" Binding ="{Binding EffectiveUsedCapacity}" IsReadOnly="True"/>  
-                                <DataGridTextColumn Width="auto" Header="Drive Count" Binding ="{Binding DriveCount}" IsReadOnly="True"/> 
-                                <DataGridTextColumn Width="auto" Header="Raid Status" Binding ="{Binding RaidStatus}" IsReadOnly="True"/>
-                                <DataGridTextColumn Width="auto" Header="Raid Level" Binding ="{Binding RaidLevel}" IsReadOnly="True"/> 
-                                <DataGridTextColumn Width="auto" Header="Strip Size" Binding ="{Binding StripSize}" IsReadOnly="True"/>
-                                <DataGridTextColumn Width="auto" Header="Tier"  Binding ="{Binding Tier}" IsReadOnly="True"/>  
-                                <DataGridTextColumn Width="auto" Header="Encrypt" Binding ="{Binding Encrypt}" IsReadOnly="True"/>  
-                                <DataGridTextColumn Width="auto" Header="Site Name" Binding ="{Binding SiteName}" IsReadOnly="True"/> 
-                                <DataGridTextColumn Width="auto" Header="Over Provisioned" Binding ="{Binding OverProvisioned}" IsReadOnly="True"/>
-                                <DataGridTextColumn Width="auto" Header="UnMap" Binding ="{Binding unmap}" IsReadOnly="True"/> 
+                                <DataGridTextColumn Width="auto" Header="Extent Size"  Binding ="{Binding ExtentSize}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Free Capacity" Binding ="{Binding FreeCapacity}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Virtual Capacity"  Binding ="{Binding VirtualCapacity}" IsReadOnly="True"/>  
+                                <DataGridTextColumn Width="auto" Header="Used Capacity" Binding ="{Binding UsedCapacity}" IsReadOnly="True"/>  
+                                <DataGridTextColumn Width="auto" Header="Real Capacity" Binding ="{Binding RealCapacity}" IsReadOnly="True"/> 
+                                <DataGridTextColumn Width="auto" Header="Overallocation" Binding ="{Binding Overallocation}" IsReadOnly="True"/>
                             </DataGrid.Columns>
                         </DataGrid>
                         <DataGrid Grid.Row="1" x:Name="dg_ExpandVolumeInfoTwo" AutoGenerateColumns="False" Margin="5" MaxWidth="1280" MaxHeight="480" Visibility="{Binding ElementName=CB_STO_DG2, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
@@ -5596,25 +5582,18 @@
                                 </Style>
                             </DataGrid.Style>
                             <DataGrid.Columns>
-                                <DataGridTextColumn Width="auto" Header="MDiskID"  Binding ="{Binding MDiskID}" IsReadOnly="True"/>
-                                <DataGridTextColumn Width="auto" Header="Name" Binding ="{Binding Name}" IsReadOnly="True"/> 
+                                <DataGridTextColumn Width="auto" Header="MDiskGrpID"  Binding ="{Binding MDiskID}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Name" Binding ="{Binding Name}" IsReadOnly="True"/>
                                 <DataGridTextColumn Width="auto" Header="Status" Binding ="{Binding Status}" IsReadOnly="True"/>  
-                                <DataGridTextColumn Width="auto" Header="Mode" Binding ="{Binding Mode}" IsReadOnly="True"/> 
-                                <DataGridTextColumn Width="auto" Header="MDiskGrpName" Binding ="{Binding MDiskGrpName}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="MDiskCount" Binding ="{Binding MDiskCount}" IsReadOnly="True"/> 
+                                <DataGridTextColumn Width="auto" Header="VDiskCount" Binding ="{Binding VDiskCount}" IsReadOnly="True"/>
                                 <DataGridTextColumn Width="auto" Header="Capacity" Binding ="{Binding Capacity}" IsReadOnly="True"/>  
-                                <DataGridTextColumn Width="auto" Header="Phys Capacity"  Binding ="{Binding PhysicalCapacity}" IsReadOnly="True"/>
-                                <DataGridTextColumn Width="auto" Header="Phys FreeCapacity" Binding ="{Binding PhysicalFreeCapacity}" IsReadOnly="True"/>
-                                <DataGridTextColumn Width="auto" Header="Allocated Capacity"  Binding ="{Binding AllocatedCapacity}" IsReadOnly="True"/>  
-                                <DataGridTextColumn Width="auto" Header="Effec UsedCapacity" Binding ="{Binding EffectiveUsedCapacity}" IsReadOnly="True"/>  
-                                <DataGridTextColumn Width="auto" Header="Drive Count" Binding ="{Binding DriveCount}" IsReadOnly="True"/> 
-                                <DataGridTextColumn Width="auto" Header="Raid Status" Binding ="{Binding RaidStatus}" IsReadOnly="True"/>
-                                <DataGridTextColumn Width="auto" Header="Raid Level" Binding ="{Binding RaidLevel}" IsReadOnly="True"/> 
-                                <DataGridTextColumn Width="auto" Header="Strip Size" Binding ="{Binding StripSize}" IsReadOnly="True"/>
-                                <DataGridTextColumn Width="auto" Header="Tier"  Binding ="{Binding Tier}" IsReadOnly="True"/>  
-                                <DataGridTextColumn Width="auto" Header="Encrypt" Binding ="{Binding Encrypt}" IsReadOnly="True"/>  
-                                <DataGridTextColumn Width="auto" Header="Site Name" Binding ="{Binding SiteName}" IsReadOnly="True"/> 
-                                <DataGridTextColumn Width="auto" Header="Over Provisioned" Binding ="{Binding OverProvisioned}" IsReadOnly="True"/>
-                                <DataGridTextColumn Width="auto" Header="UnMap" Binding ="{Binding unmap}" IsReadOnly="True"/> 
+                                <DataGridTextColumn Width="auto" Header="Extent Size"  Binding ="{Binding ExtentSize}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Free Capacity" Binding ="{Binding FreeCapacity}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Virtual Capacity"  Binding ="{Binding VirtualCapacity}" IsReadOnly="True"/>  
+                                <DataGridTextColumn Width="auto" Header="Used Capacity" Binding ="{Binding UsedCapacity}" IsReadOnly="True"/>  
+                                <DataGridTextColumn Width="auto" Header="Real Capacity" Binding ="{Binding RealCapacity}" IsReadOnly="True"/> 
+                                <DataGridTextColumn Width="auto" Header="Overallocation" Binding ="{Binding Overallocation}" IsReadOnly="True"/>
                             </DataGrid.Columns>
                         </DataGrid>
                         <DataGrid Grid.Row="1" x:Name="dg_ExpandVolumeInfoThree" AutoGenerateColumns="False" Margin="5" MaxWidth="1280" MaxHeight="480" Visibility="{Binding ElementName=CB_STO_DG3, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
@@ -5651,25 +5630,18 @@
                                 </Style>
                             </DataGrid.Style>
                             <DataGrid.Columns>
-                                <DataGridTextColumn Width="auto" Header="MDiskID"  Binding ="{Binding MDiskID}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="MDiskGrpID"  Binding ="{Binding MDiskID}" IsReadOnly="True"/>
                                 <DataGridTextColumn Width="auto" Header="Name" Binding ="{Binding Name}" IsReadOnly="True"/>
                                 <DataGridTextColumn Width="auto" Header="Status" Binding ="{Binding Status}" IsReadOnly="True"/>  
-                                <DataGridTextColumn Width="auto" Header="Mode" Binding ="{Binding Mode}" IsReadOnly="True"/> 
-                                <DataGridTextColumn Width="auto" Header="MDiskGrpName" Binding ="{Binding MDiskGrpName}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="MDiskCount" Binding ="{Binding MDiskCount}" IsReadOnly="True"/> 
+                                <DataGridTextColumn Width="auto" Header="VDiskCount" Binding ="{Binding VDiskCount}" IsReadOnly="True"/>
                                 <DataGridTextColumn Width="auto" Header="Capacity" Binding ="{Binding Capacity}" IsReadOnly="True"/>  
-                                <DataGridTextColumn Width="auto" Header="Phys Capacity"  Binding ="{Binding PhysicalCapacity}" IsReadOnly="True"/>
-                                <DataGridTextColumn Width="auto" Header="Phys FreeCapacity" Binding ="{Binding PhysicalFreeCapacity}" IsReadOnly="True"/>
-                                <DataGridTextColumn Width="auto" Header="Allocated Capacity"  Binding ="{Binding AllocatedCapacity}" IsReadOnly="True"/>  
-                                <DataGridTextColumn Width="auto" Header="Effec UsedCapacity" Binding ="{Binding EffectiveUsedCapacity}" IsReadOnly="True"/>  
-                                <DataGridTextColumn Width="auto" Header="Drive Count" Binding ="{Binding DriveCount}" IsReadOnly="True"/> 
-                                <DataGridTextColumn Width="auto" Header="Raid Status" Binding ="{Binding RaidStatus}" IsReadOnly="True"/>
-                                <DataGridTextColumn Width="auto" Header="Raid Level" Binding ="{Binding RaidLevel}" IsReadOnly="True"/> 
-                                <DataGridTextColumn Width="auto" Header="Strip Size" Binding ="{Binding StripSize}" IsReadOnly="True"/>
-                                <DataGridTextColumn Width="auto" Header="Tier"  Binding ="{Binding Tier}" IsReadOnly="True"/>  
-                                <DataGridTextColumn Width="auto" Header="Encrypt" Binding ="{Binding Encrypt}" IsReadOnly="True"/>  
-                                <DataGridTextColumn Width="auto" Header="Site Name" Binding ="{Binding SiteName}" IsReadOnly="True"/> 
-                                <DataGridTextColumn Width="auto" Header="Over Provisioned" Binding ="{Binding OverProvisioned}" IsReadOnly="True"/>
-                                <DataGridTextColumn Width="auto" Header="UnMap" Binding ="{Binding unmap}" IsReadOnly="True"/> 
+                                <DataGridTextColumn Width="auto" Header="Extent Size"  Binding ="{Binding ExtentSize}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Free Capacity" Binding ="{Binding FreeCapacity}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Virtual Capacity"  Binding ="{Binding VirtualCapacity}" IsReadOnly="True"/>  
+                                <DataGridTextColumn Width="auto" Header="Used Capacity" Binding ="{Binding UsedCapacity}" IsReadOnly="True"/>  
+                                <DataGridTextColumn Width="auto" Header="Real Capacity" Binding ="{Binding RealCapacity}" IsReadOnly="True"/> 
+                                <DataGridTextColumn Width="auto" Header="Overallocation" Binding ="{Binding Overallocation}" IsReadOnly="True"/>
                             </DataGrid.Columns>
                         </DataGrid>
                         <DataGrid Grid.Row="1" x:Name="dg_ExpandVolumeInfoFour" AutoGenerateColumns="False" Margin="5" MaxWidth="1280" MaxHeight="480" Visibility="{Binding ElementName=CB_STO_DG4, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
@@ -5706,25 +5678,18 @@
                                 </Style>
                             </DataGrid.Style>
                             <DataGrid.Columns>
-                                <DataGridTextColumn Width="auto" Header="MDiskID"  Binding ="{Binding MDiskID}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="MDiskGrpID"  Binding ="{Binding MDiskID}" IsReadOnly="True"/>
                                 <DataGridTextColumn Width="auto" Header="Name" Binding ="{Binding Name}" IsReadOnly="True"/>
                                 <DataGridTextColumn Width="auto" Header="Status" Binding ="{Binding Status}" IsReadOnly="True"/>  
-                                <DataGridTextColumn Width="auto" Header="Mode" Binding ="{Binding Mode}" IsReadOnly="True"/> 
-                                <DataGridTextColumn Width="auto" Header="MDiskGrpName" Binding ="{Binding MDiskGrpName}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="MDiskCount" Binding ="{Binding MDiskCount}" IsReadOnly="True"/> 
+                                <DataGridTextColumn Width="auto" Header="VDiskCount" Binding ="{Binding VDiskCount}" IsReadOnly="True"/>
                                 <DataGridTextColumn Width="auto" Header="Capacity" Binding ="{Binding Capacity}" IsReadOnly="True"/>  
-                                <DataGridTextColumn Width="auto" Header="Phys Capacity"  Binding ="{Binding PhysicalCapacity}" IsReadOnly="True"/>
-                                <DataGridTextColumn Width="auto" Header="Phys FreeCapacity" Binding ="{Binding PhysicalFreeCapacity}" IsReadOnly="True"/>
-                                <DataGridTextColumn Width="auto" Header="Allocated Capacity"  Binding ="{Binding AllocatedCapacity}" IsReadOnly="True"/>  
-                                <DataGridTextColumn Width="auto" Header="Effec UsedCapacity" Binding ="{Binding EffectiveUsedCapacity}" IsReadOnly="True"/>  
-                                <DataGridTextColumn Width="auto" Header="Drive Count" Binding ="{Binding DriveCount}" IsReadOnly="True"/> 
-                                <DataGridTextColumn Width="auto" Header="Raid Status" Binding ="{Binding RaidStatus}" IsReadOnly="True"/>
-                                <DataGridTextColumn Width="auto" Header="Raid Level" Binding ="{Binding RaidLevel}" IsReadOnly="True"/> 
-                                <DataGridTextColumn Width="auto" Header="Strip Size" Binding ="{Binding StripSize}" IsReadOnly="True"/>
-                                <DataGridTextColumn Width="auto" Header="Tier"  Binding ="{Binding Tier}" IsReadOnly="True"/>  
-                                <DataGridTextColumn Width="auto" Header="Encrypt" Binding ="{Binding Encrypt}" IsReadOnly="True"/>  
-                                <DataGridTextColumn Width="auto" Header="Site Name" Binding ="{Binding SiteName}" IsReadOnly="True"/> 
-                                <DataGridTextColumn Width="auto" Header="Over Provisioned" Binding ="{Binding OverProvisioned}" IsReadOnly="True"/>
-                                <DataGridTextColumn Width="auto" Header="UnMap" Binding ="{Binding unmap}" IsReadOnly="True"/> 
+                                <DataGridTextColumn Width="auto" Header="Extent Size"  Binding ="{Binding ExtentSize}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Free Capacity" Binding ="{Binding FreeCapacity}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Virtual Capacity"  Binding ="{Binding VirtualCapacity}" IsReadOnly="True"/>  
+                                <DataGridTextColumn Width="auto" Header="Used Capacity" Binding ="{Binding UsedCapacity}" IsReadOnly="True"/>  
+                                <DataGridTextColumn Width="auto" Header="Real Capacity" Binding ="{Binding RealCapacity}" IsReadOnly="True"/> 
+                                <DataGridTextColumn Width="auto" Header="Overallocation" Binding ="{Binding Overallocation}" IsReadOnly="True"/>
                             </DataGrid.Columns>
                         </DataGrid>
                         <DataGrid Grid.Row="1" x:Name="dg_ExpandVolumeInfoFive" AutoGenerateColumns="False" Margin="5" MaxWidth="1280" MaxHeight="480" Visibility="{Binding ElementName=CB_STO_DG5, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
@@ -5762,25 +5727,18 @@
                                 </Style>
                             </DataGrid.Style>
                             <DataGrid.Columns>
-                                <DataGridTextColumn Width="auto" Header="MDiskID"  Binding ="{Binding MDiskID}" IsReadOnly="True"/>
-                                <DataGridTextColumn Width="auto" Header="Name" Binding ="{Binding Name}" IsReadOnly="True"/> 
+                                <DataGridTextColumn Width="auto" Header="MDiskGrpID"  Binding ="{Binding MDiskID}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Name" Binding ="{Binding Name}" IsReadOnly="True"/>
                                 <DataGridTextColumn Width="auto" Header="Status" Binding ="{Binding Status}" IsReadOnly="True"/>  
-                                <DataGridTextColumn Width="auto" Header="Mode" Binding ="{Binding Mode}" IsReadOnly="True"/> 
-                                <DataGridTextColumn Width="auto" Header="MDiskGrpName" Binding ="{Binding MDiskGrpName}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="MDiskCount" Binding ="{Binding MDiskCount}" IsReadOnly="True"/> 
+                                <DataGridTextColumn Width="auto" Header="VDiskCount" Binding ="{Binding VDiskCount}" IsReadOnly="True"/>
                                 <DataGridTextColumn Width="auto" Header="Capacity" Binding ="{Binding Capacity}" IsReadOnly="True"/>  
-                                <DataGridTextColumn Width="auto" Header="Phys Capacity"  Binding ="{Binding PhysicalCapacity}" IsReadOnly="True"/>
-                                <DataGridTextColumn Width="auto" Header="Phys FreeCapacity" Binding ="{Binding PhysicalFreeCapacity}" IsReadOnly="True"/>
-                                <DataGridTextColumn Width="auto" Header="Allocated Capacity"  Binding ="{Binding AllocatedCapacity}" IsReadOnly="True"/>  
-                                <DataGridTextColumn Width="auto" Header="Effec UsedCapacity" Binding ="{Binding EffectiveUsedCapacity}" IsReadOnly="True"/>  
-                                <DataGridTextColumn Width="auto" Header="Drive Count" Binding ="{Binding DriveCount}" IsReadOnly="True"/> 
-                                <DataGridTextColumn Width="auto" Header="Raid Status" Binding ="{Binding RaidStatus}" IsReadOnly="True"/>
-                                <DataGridTextColumn Width="auto" Header="Raid Level" Binding ="{Binding RaidLevel}" IsReadOnly="True"/> 
-                                <DataGridTextColumn Width="auto" Header="Strip Size" Binding ="{Binding StripSize}" IsReadOnly="True"/>
-                                <DataGridTextColumn Width="auto" Header="Tier"  Binding ="{Binding Tier}" IsReadOnly="True"/>  
-                                <DataGridTextColumn Width="auto" Header="Encrypt" Binding ="{Binding Encrypt}" IsReadOnly="True"/>  
-                                <DataGridTextColumn Width="auto" Header="Site Name" Binding ="{Binding SiteName}" IsReadOnly="True"/> 
-                                <DataGridTextColumn Width="auto" Header="Over Provisioned" Binding ="{Binding OverProvisioned}" IsReadOnly="True"/>
-                                <DataGridTextColumn Width="auto" Header="UnMap" Binding ="{Binding unmap}" IsReadOnly="True"/> 
+                                <DataGridTextColumn Width="auto" Header="Extent Size"  Binding ="{Binding ExtentSize}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Free Capacity" Binding ="{Binding FreeCapacity}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Virtual Capacity"  Binding ="{Binding VirtualCapacity}" IsReadOnly="True"/>  
+                                <DataGridTextColumn Width="auto" Header="Used Capacity" Binding ="{Binding UsedCapacity}" IsReadOnly="True"/>  
+                                <DataGridTextColumn Width="auto" Header="Real Capacity" Binding ="{Binding RealCapacity}" IsReadOnly="True"/> 
+                                <DataGridTextColumn Width="auto" Header="Overallocation" Binding ="{Binding Overallocation}" IsReadOnly="True"/>
                             </DataGrid.Columns>
                         </DataGrid>
                         <DataGrid Grid.Row="1" x:Name="dg_ExpandVolumeInfoSix" AutoGenerateColumns="False" Margin="5" MaxWidth="1280" MaxHeight="480" Visibility="{Binding ElementName=CB_STO_DG6, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
@@ -5817,25 +5775,18 @@
                                 </Style>
                             </DataGrid.Style>
                             <DataGrid.Columns>
-                                <DataGridTextColumn Width="auto" Header="MDiskID"  Binding ="{Binding MDiskID}" IsReadOnly="True"/>
-                                <DataGridTextColumn Width="auto" Header="Name" Binding ="{Binding Name}" IsReadOnly="True"/> 
+                                <DataGridTextColumn Width="auto" Header="MDiskGrpID"  Binding ="{Binding MDiskID}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Name" Binding ="{Binding Name}" IsReadOnly="True"/>
                                 <DataGridTextColumn Width="auto" Header="Status" Binding ="{Binding Status}" IsReadOnly="True"/>  
-                                <DataGridTextColumn Width="auto" Header="Mode" Binding ="{Binding Mode}" IsReadOnly="True"/> 
-                                <DataGridTextColumn Width="auto" Header="MDiskGrpName" Binding ="{Binding MDiskGrpName}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="MDiskCount" Binding ="{Binding MDiskCount}" IsReadOnly="True"/> 
+                                <DataGridTextColumn Width="auto" Header="VDiskCount" Binding ="{Binding VDiskCount}" IsReadOnly="True"/>
                                 <DataGridTextColumn Width="auto" Header="Capacity" Binding ="{Binding Capacity}" IsReadOnly="True"/>  
-                                <DataGridTextColumn Width="auto" Header="Phys Capacity"  Binding ="{Binding PhysicalCapacity}" IsReadOnly="True"/>
-                                <DataGridTextColumn Width="auto" Header="Phys FreeCapacity" Binding ="{Binding PhysicalFreeCapacity}" IsReadOnly="True"/>
-                                <DataGridTextColumn Width="auto" Header="Allocated Capacity"  Binding ="{Binding AllocatedCapacity}" IsReadOnly="True"/>  
-                                <DataGridTextColumn Width="auto" Header="Effec UsedCapacity" Binding ="{Binding EffectiveUsedCapacity}" IsReadOnly="True"/>  
-                                <DataGridTextColumn Width="auto" Header="Drive Count" Binding ="{Binding DriveCount}" IsReadOnly="True"/> 
-                                <DataGridTextColumn Width="auto" Header="Raid Status" Binding ="{Binding RaidStatus}" IsReadOnly="True"/>
-                                <DataGridTextColumn Width="auto" Header="Raid Level" Binding ="{Binding RaidLevel}" IsReadOnly="True"/> 
-                                <DataGridTextColumn Width="auto" Header="Strip Size" Binding ="{Binding StripSize}" IsReadOnly="True"/>
-                                <DataGridTextColumn Width="auto" Header="Tier"  Binding ="{Binding Tier}" IsReadOnly="True"/>  
-                                <DataGridTextColumn Width="auto" Header="Encrypt" Binding ="{Binding Encrypt}" IsReadOnly="True"/>  
-                                <DataGridTextColumn Width="auto" Header="Site Name" Binding ="{Binding SiteName}" IsReadOnly="True"/> 
-                                <DataGridTextColumn Width="auto" Header="Over Provisioned" Binding ="{Binding OverProvisioned}" IsReadOnly="True"/>
-                                <DataGridTextColumn Width="auto" Header="UnMap" Binding ="{Binding unmap}" IsReadOnly="True"/> 
+                                <DataGridTextColumn Width="auto" Header="Extent Size"  Binding ="{Binding ExtentSize}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Free Capacity" Binding ="{Binding FreeCapacity}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Virtual Capacity"  Binding ="{Binding VirtualCapacity}" IsReadOnly="True"/>  
+                                <DataGridTextColumn Width="auto" Header="Used Capacity" Binding ="{Binding UsedCapacity}" IsReadOnly="True"/>  
+                                <DataGridTextColumn Width="auto" Header="Real Capacity" Binding ="{Binding RealCapacity}" IsReadOnly="True"/> 
+                                <DataGridTextColumn Width="auto" Header="Overallocation" Binding ="{Binding Overallocation}" IsReadOnly="True"/>
                             </DataGrid.Columns>
                         </DataGrid>
                         <DataGrid Grid.Row="1" x:Name="dg_ExpandVolumeInfoSeven" AutoGenerateColumns="False" Margin="5" MaxWidth="1280" MaxHeight="480" Visibility="{Binding ElementName=CB_STO_DG7, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
@@ -5872,25 +5823,18 @@
                                 </Style>
                             </DataGrid.Style>
                             <DataGrid.Columns>
-                                <DataGridTextColumn Width="auto" Header="MDiskID"  Binding ="{Binding MDiskID}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="MDiskGrpID"  Binding ="{Binding MDiskID}" IsReadOnly="True"/>
                                 <DataGridTextColumn Width="auto" Header="Name" Binding ="{Binding Name}" IsReadOnly="True"/>
                                 <DataGridTextColumn Width="auto" Header="Status" Binding ="{Binding Status}" IsReadOnly="True"/>  
-                                <DataGridTextColumn Width="auto" Header="Mode" Binding ="{Binding Mode}" IsReadOnly="True"/> 
-                                <DataGridTextColumn Width="auto" Header="MDiskGrpName" Binding ="{Binding MDiskGrpName}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="MDiskCount" Binding ="{Binding MDiskCount}" IsReadOnly="True"/> 
+                                <DataGridTextColumn Width="auto" Header="VDiskCount" Binding ="{Binding VDiskCount}" IsReadOnly="True"/>
                                 <DataGridTextColumn Width="auto" Header="Capacity" Binding ="{Binding Capacity}" IsReadOnly="True"/>  
-                                <DataGridTextColumn Width="auto" Header="Phys Capacity"  Binding ="{Binding PhysicalCapacity}" IsReadOnly="True"/>
-                                <DataGridTextColumn Width="auto" Header="Phys FreeCapacity" Binding ="{Binding PhysicalFreeCapacity}" IsReadOnly="True"/>
-                                <DataGridTextColumn Width="auto" Header="Allocated Capacity"  Binding ="{Binding AllocatedCapacity}" IsReadOnly="True"/>  
-                                <DataGridTextColumn Width="auto" Header="Effec UsedCapacity" Binding ="{Binding EffectiveUsedCapacity}" IsReadOnly="True"/>  
-                                <DataGridTextColumn Width="auto" Header="Drive Count" Binding ="{Binding DriveCount}" IsReadOnly="True"/> 
-                                <DataGridTextColumn Width="auto" Header="Raid Status" Binding ="{Binding RaidStatus}" IsReadOnly="True"/>
-                                <DataGridTextColumn Width="auto" Header="Raid Level" Binding ="{Binding RaidLevel}" IsReadOnly="True"/> 
-                                <DataGridTextColumn Width="auto" Header="Strip Size" Binding ="{Binding StripSize}" IsReadOnly="True"/>
-                                <DataGridTextColumn Width="auto" Header="Tier"  Binding ="{Binding Tier}" IsReadOnly="True"/>  
-                                <DataGridTextColumn Width="auto" Header="Encrypt" Binding ="{Binding Encrypt}" IsReadOnly="True"/>  
-                                <DataGridTextColumn Width="auto" Header="Site Name" Binding ="{Binding SiteName}" IsReadOnly="True"/> 
-                                <DataGridTextColumn Width="auto" Header="Over Provisioned" Binding ="{Binding OverProvisioned}" IsReadOnly="True"/>
-                                <DataGridTextColumn Width="auto" Header="UnMap" Binding ="{Binding unmap}" IsReadOnly="True"/> 
+                                <DataGridTextColumn Width="auto" Header="Extent Size"  Binding ="{Binding ExtentSize}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Free Capacity" Binding ="{Binding FreeCapacity}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="Virtual Capacity"  Binding ="{Binding VirtualCapacity}" IsReadOnly="True"/>  
+                                <DataGridTextColumn Width="auto" Header="Used Capacity" Binding ="{Binding UsedCapacity}" IsReadOnly="True"/>  
+                                <DataGridTextColumn Width="auto" Header="Real Capacity" Binding ="{Binding RealCapacity}" IsReadOnly="True"/> 
+                                <DataGridTextColumn Width="auto" Header="Overallocation" Binding ="{Binding Overallocation}" IsReadOnly="True"/>
                             </DataGrid.Columns>
                         </DataGrid>
                         <DataGrid Grid.Row="1" x:Name="dg_ExpandVolumeInfoEight" AutoGenerateColumns="False" Margin="5" MaxWidth="1280" MaxHeight="480" Visibility="{Binding ElementName=CB_STO_DG8, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
