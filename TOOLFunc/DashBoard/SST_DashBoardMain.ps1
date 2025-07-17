@@ -20,7 +20,7 @@ function SST_DashBoardMain {
     process {
         try {
             $SST_SQLiteSTODashBoardQuery = $null
-            $SST_SQLiteSTODashBoardQuery = " SELECT ID, DID, Name, ClusterName, WWNN, Status, IOgroupid, IOgroupName, SerialNumber, CodeLevel, ConfigNode, SideID, SideName, ProdMTM, TimeStamp FROM IBMSTOHWTable d WHERE TimeStamp = ( SELECT MAX(TimeStamp) FROM IBMSTOHWTable WHERE DID = d.DID ) ORDER BY DID; "
+            $SST_SQLiteSTODashBoardQuery = " SELECT ID, DID, Name, ClusterName, WWNN, Status, IOgroupid, IOgroupName, SerialNumber, CodeLevel, ConfigNode, SideID, SideName, ProdMTM, TimeStamp FROM IBMSTOHWTable d WHERE TimeStamp = ( SELECT MAX(TimeStamp) FROM IBMSTOHWTable WHERE SerialNumber = d.SerialNumber ) GROUP BY SerialNumber ORDER BY ID; "
             $SST_SQliteReadCMD.CommandText = $SST_SQLiteSTODashBoardQuery
             $SST_SQLiteDBReader = $SST_SQliteReadCMD.ExecuteReader()
 
