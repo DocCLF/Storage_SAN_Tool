@@ -22,34 +22,27 @@ function IBM_MDiskInfo {
         $ProgressBar = New-ProgressBar
         <# Connect to Device and get all needed Data #>
         if($TD_Device_ConnectionTyp -eq "ssh"){
-                $TD_MDiskInformation = ssh -i $($TD_Device_SSHKeyPath) $TD_Device_UserName@$TD_Device_DeviceIP 'lsmdisk -gui -delim : -nohdr'
+                $TD_MDiskInformation = ssh -i $($TD_Device_SSHKeyPath) $TD_Device_UserName@$TD_Device_DeviceIP 'lsmdiskgrp -gui -delim : -nohdr'
         }else {
-                $TD_MDiskInformation = plink $TD_Device_UserName@$TD_Device_DeviceIP -pw $TD_Device_PW -batch 'lsmdisk -gui -delim : -nohdr'
+                $TD_MDiskInformation = plink $TD_Device_UserName@$TD_Device_DeviceIP -pw $TD_Device_PW -batch 'lsmdiskgrp -gui -delim : -nohdr'
         }
     }
     
     process {
         $TD_MDiskInfoResault = foreach ($TD_MDisk in $TD_MDiskInformation){
-            $TD_MDiskInfo = "" | Select-Object MDiskID,Name,Status,Mode,MDiskGrpName,Capacity,PhysicalCapacity,PhysicalFreeCapacity,AllocatedCapacity,EffectiveUsedCapacity,DriveCount,RaidStatus,RaidLevel,StripSize,Tier,Encrypt,SiteName,OverProvisioned,unmap
-            $TD_MDiskInfo.MDiskID = ($TD_MDisk|Select-String -Pattern '(\d+)' -AllMatches).Matches.Groups[1].Value
+            $TD_MDiskInfo = "" | Select-Object MDiskID,Name,Status,MDiskCount,VDiskCount,Capacity,ExtentSize,FreeCapacity,VirtualCapacity,UsedCapacity,RealCapacity,Overallocation
+            $TD_MDiskInfo.MDiskID = ($TD_MDisk|Select-String -Pattern '^(\d+)' -AllMatches).Matches.Groups[1].Value
             $TD_MDiskInfo.Name = ($TD_MDisk|Select-String -Pattern '^\d+:([a-zA-Z0-9-_]+):' -AllMatches).Matches.Groups[1].Value
             $TD_MDiskInfo.Status = ($TD_MDisk|Select-String -Pattern '\d+:([a-zA-Z0-9-_]+):(online|offline|excluded|degraded|degraded_paths|degraded_ports):' -AllMatches).Matches.Groups[2].Value
-            $TD_MDiskInfo.Mode = ($TD_MDisk|Select-String -Pattern ':(online|offline|excluded|degraded|degraded_paths|degraded_ports):(array|image|managed|unmanaged):' -AllMatches).Matches.Groups[2].Value
-            $TD_MDiskInfo.MDiskGrpName = ($TD_MDisk|Select-String -Pattern ':(array|image|managed|unmanaged):\d+:([0-9a-zA-Z-_]+):(\d+.\d+[A-Z]+):' -AllMatches).Matches.Groups[2].Value
-            $TD_MDiskInfo.Capacity = ($TD_MDisk|Select-String -Pattern ':(array|image|managed|unmanaged):\d+:([0-9a-zA-Z-_]+):(\d+.\d+[A-Z]+):' -AllMatches).Matches.Groups[3].Value
-            $TD_MDiskInfo.PhysicalCapacity = ($TD_MDisk|Select-String -Pattern '(\d+\.\d+[A-Z]+|):(\d+\.\d+[A-Z]+|):(yes|no):(\d+\.\d+[A-Z]+|):(\d+)' -AllMatches).Matches.Groups[1].Value
-            $TD_MDiskInfo.PhysicalFreeCapacity = ($TD_MDisk|Select-String -Pattern '(\d+\.\d+[A-Z]+|):(\d+\.\d+[A-Z]+|):(yes|no):(\d+\.\d+[A-Z]+|):(\d+)' -AllMatches).Matches.Groups[2].Value
-            $TD_MDiskInfo.AllocatedCapacity = ($TD_MDisk|Select-String -Pattern '(\d+\.\d+[A-Z]+|):(\d+\.\d+[A-Z]+|):(yes|no):(\d+\.\d+[A-Z]+|):(\d+)' -AllMatches).Matches.Groups[4].Value
-            $TD_MDiskInfo.EffectiveUsedCapacity = ($TD_MDisk|Select-String -Pattern ':(\d+\.\d+[A-Z]+|):(\d+):(low|medium|high|very_high|)$' -AllMatches).Matches.Groups[1].Value
-            $TD_MDiskInfo.DriveCount = ($TD_MDisk|Select-String -Pattern '(\d+\.\d+[A-Z]+|):(\d+\.\d+[A-Z]+|):(yes|no):(\d+\.\d+[A-Z]+|):(\d+)' -AllMatches).Matches.Groups[5].Value
-            $TD_MDiskInfo.RaidStatus = ($TD_MDisk|Select-String -Pattern ':(offline|online|degraded|syncing|initting|expanding):(raid6|raid5):' -AllMatches).Matches.Groups[1].Value
-            $TD_MDiskInfo.RaidLevel = ($TD_MDisk|Select-String -Pattern ':(offline|online|degraded|syncing|initting|expanding):(raid6|raid5):' -AllMatches).Matches.Groups[2].Value
-            $TD_MDiskInfo.StripSize = ($TD_MDisk|Select-String -Pattern ':(raid6|raid5):\d+:([0-9]{1,4}):' -AllMatches).Matches.Groups[2].Value
-            $TD_MDiskInfo.Tier = ($TD_MDisk|Select-String -Pattern ':(tier0_flash|tier1_flash|tier_enterprise|tier_nearline|tier_scm):' -AllMatches).Matches.Groups[2].Value
-            $TD_MDiskInfo.Encrypt = ($TD_MDisk|Select-String -Pattern ':(yes|no):(\d+|):([0-9a-zA-Z-_]+|):(yes|no):(yes|no):(yes|no):(yes|no)' -AllMatches).Matches.Groups[1].Value
-            $TD_MDiskInfo.SiteName = ($TD_MDisk|Select-String -Pattern ':(yes|no):(\d+|):([0-9a-zA-Z-_]+|):(yes|no):(yes|no):(yes|no):(yes|no)' -AllMatches).Matches.Groups[3].Value
-            $TD_MDiskInfo.OverProvisioned = ($TD_MDisk|Select-String -Pattern ':(yes|no):(\d+|):([0-9a-zA-Z-_]+|):(yes|no):(yes|no):(yes|no):(yes|no)' -AllMatches).Matches.Groups[6].Value
-            $TD_MDiskInfo.unmap = ($TD_MDisk|Select-String -Pattern ':(yes|no):(\d+|):([0-9a-zA-Z-_]+|):(yes|no):(yes|no):(yes|no):(yes|no)' -AllMatches).Matches.Groups[7].Value
+            $TD_MDiskInfo.MDiskCount = ($TD_MDisk|Select-String -Pattern ':(\d+):\d+:[\d.]+[GB|TB]+:' -AllMatches).Matches.Groups[1].Value
+            $TD_MDiskInfo.VDiskCount = ($TD_MDisk|Select-String -Pattern ':\d+:(\d+):[\d.]+[GB|TB]+:' -AllMatches).Matches.Groups[1].Value
+            $TD_MDiskInfo.Capacity = ($TD_MDisk|Select-String -Pattern ':\d+:\d+:([\d.]+[GB|TB]+)' -AllMatches).Matches.Groups[1].Value
+            $TD_MDiskInfo.ExtentSize = ($TD_MDisk|Select-String -Pattern ':[\d.]+[GB|TB]+:(16|32|64|128|256|512|1024|2048|4096|8192):' -AllMatches).Matches.Groups[1].Value
+            $TD_MDiskInfo.FreeCapacity = ($TD_MDisk|Select-String -Pattern '\d+:([\d.]+[MB|GB|TB]+):([\d.]+[MB|GB|TB]+):([\d.]+[MB|GB|TB]+):([\d.]+[MB|GB|TB]+):\d+' -AllMatches).Matches.Groups[1].Value
+            $TD_MDiskInfo.VirtualCapacity = ($TD_MDisk|Select-String -Pattern '\d+:([\d.]+[MB|GB|TB]+):([\d.]+[MB|GB|TB]+):([\d.]+[MB|GB|TB]+):([\d.]+[MB|GB|TB]+):\d+' -AllMatches).Matches.Groups[2].Value
+            $TD_MDiskInfo.UsedCapacity = ($TD_MDisk|Select-String -Pattern '\d+:([\d.]+[MB|GB|TB]+):([\d.]+[MB|GB|TB]+):([\d.]+[MB|GB|TB]+):([\d.]+[MB|GB|TB]+):\d+' -AllMatches).Matches.Groups[3].Value
+            $TD_MDiskInfo.RealCapacity = ($TD_MDisk|Select-String -Pattern '\d+:([\d.]+[MB|GB|TB]+):([\d.]+[MB|GB|TB]+):([\d.]+[MB|GB|TB]+):([\d.]+[MB|GB|TB]+):\d+' -AllMatches).Matches.Groups[4].Value
+            $TD_MDiskInfo.Overallocation = ($TD_MDisk|Select-String -Pattern '\d+:[\d.]+[MB|GB|TB]+:[\d.]+[MB|GB|TB]+:[\d.]+[MB|GB|TB]+:[\d.]+[MB|GB|TB]+:(\d+)' -AllMatches).Matches.Groups[1].Value
 
             $TD_MDiskInfo
 
