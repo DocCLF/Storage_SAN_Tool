@@ -29,15 +29,76 @@
             <RowDefinition Height="auto" />
             <RowDefinition Height="auto" />
         </Grid.RowDefinitions>
-        <Button Grid.Row="0" x:name="BTN_RefreshUC1" Height="50" Width="50" HorizontalAlignment="Right" Background="Transparent" BorderThickness="0" Margin="5,5,20,5">
-            <Image Source = "{Binding RefrehIcon96 , Mode=TwoWay}" Stretch="Uniform" VerticalAlignment="Bottom" HorizontalAlignment="Left" MaxHeight="30" />
-        </Button>
+        
+        <GroupBox Grid.Row="0" Margin="10,10,10,0" Padding="10" Header="Overview" VerticalContentAlignment="Center" HorizontalContentAlignment="Center">
+            <Grid>
+                <WrapPanel>
+                    <Label >
+                        <StackPanel Width="150">
+                            <TextBlock Text="Overall Status" FontWeight="Bold" HorizontalAlignment="Left"/>
+                            <TextBlock Text="Health OK" Foreground="Green" FontWeight="Bold" HorizontalAlignment="Center"/>
+                            <Button x:name="BTN_RefreshUC1" Height="50" Width="50" HorizontalAlignment="center" Background="Transparent" BorderThickness="0" >
+                                <Image Source = "{Binding RefrehIcon96 , Mode=TwoWay}" Stretch="Uniform" VerticalAlignment="Bottom" HorizontalAlignment="Left" MaxHeight="30" />
+                            </Button>
+                        </StackPanel>
+                    </Label>
+                    <Label Height="150" Width="175" Background="AliceBlue" Margin="10">
+                        <Grid >
+                            <Grid.RowDefinitions>
+                                <RowDefinition />
+                                <RowDefinition />
+                                <RowDefinition />
+                                <RowDefinition />
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="auto"/>
+                                <ColumnDefinition />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Row="0" Text="Storage Devices:" FontWeight="Bold" HorizontalAlignment="Left" Padding="5"/>
+                            <TextBlock x:Name="TB_STODEVCount" Grid.Row="0" Grid.Column="1" Text="0" Foreground="Green" FontWeight="Bold" Padding="5"/>
+                            <TextBlock Grid.Row="1" Text="Events:" FontWeight="Bold" HorizontalAlignment="Left" Padding="5"/>
+                            <TextBlock Grid.Row="1" Grid.Column="1" Text="0" Foreground="Green" FontWeight="Bold" Padding="5"/>
+                            <TextBlock Grid.Row="2" Text="SAN Devices:" FontWeight="Bold" HorizontalAlignment="Left" Padding="5"/>
+                            <TextBlock x:Name="TB_SANDEVCount" Grid.Row="2" Grid.Column="1" Text="0" Foreground="Green" FontWeight="Bold" Padding="5"/>
+                            <TextBlock Grid.Row="3" Text="Events:" FontWeight="Bold" HorizontalAlignment="Left" Padding="5"/>
+                            <TextBlock Grid.Row="3" Grid.Column="1" Text="0" Foreground="Green" FontWeight="Bold" Padding="5"/>
+                        </Grid>
+                    </Label>
+                    <Label Height="150" Width="175" Background="AliceBlue" Margin="10">
+                        <Grid >
+                            <Grid.RowDefinitions>
+                                <RowDefinition />
+                                <RowDefinition />
+                                <RowDefinition />
+                                <RowDefinition />
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="auto"/>
+                                <ColumnDefinition />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Row="0" Text="Host Devices:" FontWeight="Bold" HorizontalAlignment="Left" Padding="5"/>
+                            <TextBlock x:Name="TB_ALLHostCount" Grid.Row="0" Grid.Column="1" Text="0" Foreground="Green" FontWeight="Bold" Padding="5"/>
+                            <TextBlock Grid.Row="1" Text="Events:" FontWeight="Bold" HorizontalAlignment="Left" Padding="5"/>
+                            <TextBlock Grid.Row="1" Grid.Column="1" Text="0" Foreground="Green" FontWeight="Bold" Padding="5"/>
+                            <TextBlock Grid.Row="2" Text="Online Hosts:" FontWeight="Bold" HorizontalAlignment="Left" Padding="5"/>
+                            <TextBlock x:Name="TB_OnlinelHostCount" Grid.Row="2" Grid.Column="1" Text="0" Foreground="Green" FontWeight="Bold" Padding="5"/>
+                            <TextBlock Grid.Row="3" Text="Offline Hosts:" FontWeight="Bold" HorizontalAlignment="Left" Padding="5"/>
+                            <TextBlock x:Name="TB_OfflHostCount" Grid.Row="3" Grid.Column="1" Text="0" Foreground="red" FontWeight="Bold" Padding="5"/>
+                        </Grid>                        
+                    </Label>
+
+                    <Label Height="150" Width="175" Background="AliceBlue" Margin="10">
+                        <TextBlock Grid.Row="0" Grid.ColumnSpan="2" Text="Nice to Know" FontWeight="Bold" Padding="5" HorizontalAlignment="Center"/>
+                    </Label>
+                </WrapPanel>
+            </Grid>
+        </GroupBox>
         <GroupBox Grid.Row="1" Header="Storage Info" MinWidth="400" HorizontalAlignment="Left" Margin="10,10,0,0"  VerticalAlignment="Top">
             <WrapPanel Orientation="Horizontal" Margin="5" MinHeight="125">
                     <Button Style="{DynamicResource DashBoardBTNStyle}" x:Name="BTN_STO_DevOne" Margin="0,5,5,5" Visibility = "Collapsed">
                         <Grid Margin="5">
                             <Grid.RowDefinitions>
-                                <RowDefinition Height="120"/>
+                                <RowDefinition Height="125"/>
                                 <RowDefinition Height="auto"/>
                                 <RowDefinition Height="25"/>
                             </Grid.RowDefinitions>
@@ -92,7 +153,7 @@
                     <Button Style="{DynamicResource DashBoardBTNStyle}" x:Name="BTN_STO_DevTwo" Margin="15,5,5,5" Visibility = "Collapsed" >
                         <Grid Margin="5">
                             <Grid.RowDefinitions>
-                                <RowDefinition Height="120"/>
+                                <RowDefinition Height="125"/>
                                 <RowDefinition Height="auto"/>
                                 <RowDefinition Height="25"/>
                             </Grid.RowDefinitions>
@@ -147,7 +208,7 @@
                     <Button Style="{DynamicResource DashBoardBTNStyle}" x:Name="BTN_STO_DevThree" Margin="15,5,5,5" Visibility = "Collapsed" >
                         <Grid Margin="5">
                             <Grid.RowDefinitions>
-                                <RowDefinition Height="120"/>
+                                <RowDefinition Height="125"/>
                                 <RowDefinition Height="auto"/>
                                 <RowDefinition Height="25"/>
                             </Grid.RowDefinitions>
@@ -202,7 +263,7 @@
                     <Button Style="{DynamicResource DashBoardBTNStyle}" x:Name="BTN_STO_DevFour" Margin="15,5,5,5" Visibility = "Collapsed" >
                         <Grid Margin="5">
                             <Grid.RowDefinitions>
-                                <RowDefinition Height="120"/>
+                                <RowDefinition Height="125"/>
                                 <RowDefinition Height="auto"/>
                                 <RowDefinition Height="25"/>
                             </Grid.RowDefinitions>
@@ -257,7 +318,7 @@
                     <Button Style="{DynamicResource DashBoardBTNStyle}" x:Name="BTN_STO_DevFive" Margin="15,5,5,5" Visibility = "Collapsed" >
                         <Grid Margin="5">
                             <Grid.RowDefinitions>
-                                <RowDefinition Height="120"/>
+                                <RowDefinition Height="125"/>
                                 <RowDefinition Height="auto"/>
                                 <RowDefinition Height="25"/>
                             </Grid.RowDefinitions>
@@ -312,7 +373,7 @@
                     <Button Style="{DynamicResource DashBoardBTNStyle}" x:Name="BTN_STO_DevSix" Margin="15,5,5,5" Visibility = "Collapsed" >
                         <Grid Margin="5">
                             <Grid.RowDefinitions>
-                                <RowDefinition Height="120"/>
+                                <RowDefinition Height="125"/>
                                 <RowDefinition Height="auto"/>
                                 <RowDefinition Height="25"/>
                             </Grid.RowDefinitions>
@@ -367,7 +428,7 @@
                     <Button Style="{DynamicResource DashBoardBTNStyle}" x:Name="BTN_STO_DevSeven" Margin="15,5,5,5" Visibility = "Collapsed" >
                         <Grid Margin="5">
                             <Grid.RowDefinitions>
-                                <RowDefinition Height="120"/>
+                                <RowDefinition Height="125"/>
                                 <RowDefinition Height="auto"/>
                                 <RowDefinition Height="25"/>
                             </Grid.RowDefinitions>
@@ -422,7 +483,7 @@
                     <Button Style="{DynamicResource DashBoardBTNStyle}" x:Name="BTN_STO_DevEight" Margin="15,5,5,5" Visibility = "Collapsed" >
                         <Grid Margin="5">
                             <Grid.RowDefinitions>
-                                <RowDefinition Height="120"/>
+                                <RowDefinition Height="125"/>
                                 <RowDefinition Height="auto"/>
                                 <RowDefinition Height="25"/>
                             </Grid.RowDefinitions>
