@@ -11,7 +11,7 @@ function SST_DashBoardSTO {
     process {
 
         #ID, Name, WWNN, Status, IOgroupid, IOgroupName, SerialNumber, CodeLevel, ConfigNode, SideID, ProdMTM, TimeStamp
-        
+        $DeviceCounter = 0
         while ($STOHWCollection.Read()) {
             $ID    = $STOHWCollection["DID"]
             $Name  = $STOHWCollection["Name"]
@@ -25,15 +25,19 @@ function SST_DashBoardSTO {
             $ConfigNode = $STOHWCollection["ConfigNode"]
             $SideID    = $STOHWCollection["SideID"]
             $ProdMTM  = $STOHWCollection["ProdMTM"]
+            $RecommendedPTF = $STOHWCollection["RecommendedPTF"]
             $TimeStamp = $STOHWCollection["TimeStamp"]
 
             if(($ProdMTM -like "2145*") -or ($ProdMTM -like "2147*")){
-                $SST_BTN_Content="ClusterName: $ClusterName`nName: $Name`nStatus: $Status`nMTM:  $ProdMTM`nSN:      $SerialNumber`nFW:      $CodeLevel"
+                $SST_BTN_Content="ClusterName: $ClusterName`nName:   $Name`nStatus:   $Status`nMTM:    $ProdMTM`nSN:        $SerialNumber`nFW:        $CodeLevel`nFW Rec: $RecommendedPTF"
             }else {
                 <# Action when all if and elseif conditions are false #>
-                $SST_BTN_Content="ClusterName: $ClusterName`nStatus: $Status`nMTM:  $ProdMTM`nSN:      $SerialNumber`nFW:      $CodeLevel"
+                $SST_BTN_Content="ClusterName: $ClusterName`nStatus:   $Status`nMTM:    $ProdMTM`nSN:        $SerialNumber`nFW:        $CodeLevel`nFW Rec: $RecommendedPTF"
             }
-            
+            if($SerialNumber -ne $SerialNumberOld){
+                $DeviceCounter++
+                $SerialNumberOld = $SerialNumber
+            }
             $TD_TB_STO_DevOne,$TD_TB_STO_DevTwo,$TD_TB_STO_DevThree,$TD_TB_STO_DevFour,$TD_TB_STO_DevFive,$TD_TB_STO_DevSix,$TD_TB_STO_DevSeven,$TD_TB_STO_DevEight |ForEach-Object {
                 $SST_CheckBTN_Content = $_.Text
                 if((!([string]::IsNullOrWhiteSpace($SST_BTN_Content))) -and ([string]::IsNullOrWhiteSpace($SST_CheckBTN_Content))){
@@ -56,6 +60,7 @@ function SST_DashBoardSTO {
                 }
             }
         }
+        $TD_TB_STODEVCount.Text = $DeviceCounter
     }
     
     end {
