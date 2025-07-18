@@ -11,7 +11,7 @@ function SST_DashBoardSAN {
     process {
 
         #ID, DID, Name, Status, CodeLevel, BrocadeProdName, SerialNumber, TimeStamp FROM IBMSANHWTabl
-        
+        $DeviceCounter = 0
         while ($STOHWCollection.Read()) {
             $Name  = $STOHWCollection["Name"]
             $Status    = $STOHWCollection["Status"]
@@ -19,6 +19,11 @@ function SST_DashBoardSAN {
             $BrocadeProdName = $STOHWCollection["BrocadeProdName"]
             $SerialNumber    = $STOHWCollection["SerialNumber"]
             $TimeStamp = $STOHWCollection["TimeStamp"]
+
+            if($SerialNumber -ne $SerialNumberOld){
+                $DeviceCounter++
+                $SerialNumberOld = $SerialNumber
+            }
 
             $SST_BTN_Content="Name: $Name`nStatus: $Status`nMTM:  $BrocadeProdName`nSN:      $SerialNumber`nFW:      $CodeLevel"
             $TD_TB_SAN_DevOne,$TD_TB_SAN_DevTwo,$TD_TB_SAN_DevThree,$TD_TB_SAN_DevFour,$TD_TB_SAN_DevFive,$TD_TB_SAN_DevSix,$TD_TB_SAN_DevSeven,$TD_TB_SAN_DevEight |ForEach-Object {
@@ -43,6 +48,7 @@ function SST_DashBoardSAN {
                 }
             }
         }
+        $TD_TB_SANDEVCount.Text = $DeviceCounter
     }
     
     end {
