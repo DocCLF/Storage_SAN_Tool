@@ -39,7 +39,7 @@ function SST_DashBoardMain {
             $SST_SQLiteDBReader = $SST_SQliteReadCMD.ExecuteReader()
             SST_DashBoardHosts -STOHWCollection $SST_SQLiteDBReader -SST_IBMHostDeviceCounter 0
             $SST_SQLiteDBReader.Close()
-            $SST_SQliteReadCMD.CommandText = "SELECT COUNT(DISTINCT HID) AS DeviceCount FROM IBMSTOHostTable;"
+            $SST_SQliteReadCMD.CommandText = "SELECT COUNT(DISTINCT Name) AS DeviceCount FROM IBMSTOHostTable;"
             $SST_IBMHostDeviceCounter = $SST_SQliteReadCMD.ExecuteScalar()
             SST_DashBoardHosts -SST_IBMHostDeviceCounter $SST_IBMHostDeviceCounter
         }
