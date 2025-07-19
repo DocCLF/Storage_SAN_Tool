@@ -18,7 +18,7 @@ function SST_DashBoardHosts {
             [int]$SST_OfflineHost = 0
             while ($STOHWCollection.Read()) {
                 $SST_OfflineHost++
-                $HID    = $STOHWCollection["HID"]
+                #$HID    = $STOHWCollection["HID"]
                 $Name  = $STOHWCollection["Name"]
                 $Status = $STOHWCollection["Status"]
                 $HostClusterName    = $STOHWCollection["HostClusterName"]
@@ -52,7 +52,14 @@ function SST_DashBoardHosts {
             }
             $TD_TB_OfflHostCount.Text = "$SST_OfflineHost"
         }else {
-            $TD_TB_ALLHostCount.Text = "$SST_IBMHostDeviceCounter"
+            if("0" -eq $TD_TB_ALLHostCount.Text){
+                $TD_TB_ALLHostCount.Text = "$SST_IBMHostDeviceCounter"
+            }else {
+                [int]$SST_OLDDeviceCounter = $TD_TB_ALLHostCount.Text
+                $TD_TB_ALLHostCount.Text = $SST_OLDDeviceCounter + $SST_IBMHostDeviceCounter
+                $SST_OLDDeviceCounter =$null
+            }
+            
 
             $SST_OfflineHost = $TD_TB_OfflHostCount.Text
             $SST_OnlineHosts = $SST_IBMHostDeviceCounter - $SST_OfflineHost
