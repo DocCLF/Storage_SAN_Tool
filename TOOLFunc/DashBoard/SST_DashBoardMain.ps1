@@ -61,6 +61,22 @@ function SST_DashBoardMain {
             Write-Host $_.Exception.Message
             SST_ToolMessageCollector -TD_ToolMSGCollector "There is something wrong, mybe there is no Table" -TD_ToolMSGType Warning -TD_Shown yes
         }
+
+        try {
+            #DriveID, Slot, ProductID, DriveStatus, FWlev, LatestDriveFW, DriveCap, PhyDriveCap, PhyUsedDriveCap, EffeUsedDriveCap, DeviceSN, DeviceWWNN, TimeStamp
+            $SST_SQLiteSTODashBoardQuery = $null
+            #$SST_SQLiteSTODashBoardQuery = " SELECT d.DeviceSN, d.FWlev, d.LatestDriveFW, n.ClusterName AS Name FROM IBMSTODriveTable d JOIN ( SELECT DeviceSN, MAX(TimeStamp) AS MaxTime FROM IBMSTODriveTable GROUP BY DeviceSN ) latestDrive ON d.DeviceSN = latestDrive.DeviceSN AND d.TimeStamp = latestDrive.MaxTime JOIN ( SELECT SerialNumber, MAX(TimeStamp) AS MaxTime FROM IBMSTOHWTable GROUP BY SerialNumber ) latestNode ON d.DeviceSN = latestNode.SerialNumber JOIN IBMSTOHWTable n ON n.SerialNumber = latestNode.SerialNumber AND n.TimeStamp = latestNode.MaxTime ORDER BY d.DeviceSN; "
+            $SST_SQLiteSTODashBoardQuery = " SELECT d.*, n.ClusterName AS Name FROM IBMSTODriveTable d JOIN ( SELECT DeviceSN, ProductID, MAX(TimeStamp) AS MaxTime FROM IBMSTODriveTable GROUP BY DeviceSN, ProductID ) latest ON d.DeviceSN = latest.DeviceSN AND d.ProductID = latest.ProductID AND d.TimeStamp = latest.MaxTime JOIN IBMSTOHWTable n ON d.DeviceSN = n.SerialNumber ORDER BY d.DeviceSN, d.ProductID; "
+            $SST_SQliteReadCMD.CommandText = $SST_SQLiteSTODashBoardQuery
+            $SST_SQLiteDBReader = $SST_SQliteReadCMD.ExecuteReader()
+
+            SST_DashBoardDrives -STODriveCollection $SST_SQLiteDBReader
+            $SST_SQLiteDBReader.Close()
+        }
+        catch {
+            Write-Host $_.Exception.Message
+            SST_ToolMessageCollector -TD_ToolMSGCollector "There is something wrong, mybe there is no Table" -TD_ToolMSGType Warning -TD_Shown yes
+        }
     }
     
     end {
