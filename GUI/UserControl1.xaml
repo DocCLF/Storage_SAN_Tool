@@ -87,8 +87,32 @@
                         </Grid>                        
                     </Label>
 
-                    <Label Height="150" Width="175" Background="AliceBlue" Margin="10">
-                        <TextBlock Grid.Row="0" Grid.ColumnSpan="2" Text="Nice to Know" FontWeight="Bold" Padding="5" HorizontalAlignment="Center"/>
+                    <Label Background="AliceBlue" Margin="10" >
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="auto"/>
+                                <RowDefinition Height="auto"/>
+                                <RowDefinition Height="auto"/>
+                                <RowDefinition Height="auto"/>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="auto" />
+                                <ColumnDefinition Width="auto" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Row="0" Grid.Column="0" Text="Nice to Know" FontWeight="Bold" HorizontalAlignment="Center"/>
+                            <StackPanel Grid.Row="1" Orientation="Vertical" Margin="5,5,10,5">
+                                <TextBlock Text="Device" FontWeight="Bold" HorizontalAlignment="left" TextDecorations="Underline"/>
+                                <TextBlock x:Name="TB_NKNDescrOne" Text="" FontWeight="Bold" HorizontalAlignment="left" Visibility = "Collapsed"/>
+                                <TextBlock x:Name="TB_NKNDescrTwo" Text="" FontWeight="Bold" HorizontalAlignment="left" Visibility = "Collapsed"/>
+                                <TextBlock x:Name="TB_NKNDescrThree" Text="" FontWeight="Bold" HorizontalAlignment="left" Visibility = "Collapsed"/>
+                            </StackPanel>
+                            <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Vertical" Margin="5">
+                                <TextBlock Text="DriveFW / Latest DriveFW" FontWeight="Bold" HorizontalAlignment="left" TextDecorations="Underline"/>
+                                <TextBlock x:Name="TB_NKNResOne" Text=""  HorizontalAlignment="left" Visibility = "Collapsed"/>
+                                <TextBlock x:Name="TB_NKNResTwo" Text="" HorizontalAlignment="left" Visibility = "Collapsed"/>
+                                <TextBlock x:Name="TB_NKNResThree" Text="" HorizontalAlignment="left" Visibility = "Collapsed"/>
+                            </StackPanel>
+                        </Grid>
                     </Label>
                 </WrapPanel>
             </Grid>
