@@ -915,8 +915,9 @@ $TD_btn_IBM_BaseStorageInfo.add_click({
 
     $TD_Credentials | ForEach-Object {
         [array]$TD_BaseStorageInfo = IBM_BaseStorageInfos -TD_Line_ID $_.ID -TD_Device_ConnectionTyp $_.ConnectionTyp -TD_Device_UserName $_.UserName -TD_Device_DeviceIP $_.IPAddress -TD_Device_DeviceName $_.DeviceName -TD_Device_PW $([Net.NetworkCredential]::new('', $_.Password).Password) -TD_Device_SSHKeyPath $_.SSHKeyPath -TD_Storage $_.SVCorVF -TD_Exportpath $TD_tb_ExportPath.Text
+        $TD_SystemInfo = IBM_SystemInfo -TD_Line_ID $_.ID -TD_Device_ConnectionTyp $_.ConnectionTyp -TD_Device_UserName $_.UserName -TD_Device_DeviceIP $_.IPAddress -TD_Device_DeviceName $_.DeviceName -TD_Device_PW $([Net.NetworkCredential]::new('', $_.Password).Password) -TD_Device_SSHKeyPath $_.SSHKeyPath -TD_Storage $_.SVCorVF -TD_Exportpath $TD_tb_ExportPath.Text
         try {
-            SST_LiteDBControl -SST_InfoType "StorageBase" -SST_CollectedInformations $TD_BaseStorageInfo
+            SST_LiteDBControl -SST_InfoType "StorageBase" -SST_CollectedInformations $TD_BaseStorageInfo,$TD_SystemInfo
         }
         catch {
             <#Do this if a terminating exception happens#>
