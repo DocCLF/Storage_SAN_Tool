@@ -30,10 +30,10 @@
             <RowDefinition Height="auto" />
         </Grid.RowDefinitions>
         
-        <GroupBox Grid.Row="0" Margin="10,10,10,0" Padding="10" Header="Overview" VerticalContentAlignment="Center" HorizontalContentAlignment="Center">
+        <GroupBox Grid.Row="0" Header="Overview" MinWidth="400" Margin="10,10,10,0" HorizontalAlignment="Left" VerticalAlignment="Top">
             <Grid>
                 <WrapPanel>
-                    <Label >
+                    <Label MinWidth="150" Margin="5">
                         <StackPanel Width="150">
                             <TextBlock Text="Overall Status" FontWeight="Bold" HorizontalAlignment="Left"/>
                             <TextBlock Text="Health OK" Foreground="Green" FontWeight="Bold" HorizontalAlignment="Center"/>
@@ -42,7 +42,7 @@
                             </Button>
                         </StackPanel>
                     </Label>
-                    <Label Height="150" Width="175" Background="AliceBlue" Margin="10">
+                    <Label MinWidth="150" Margin="0">
                         <Grid >
                             <Grid.RowDefinitions>
                                 <RowDefinition />
@@ -64,7 +64,7 @@
                             <TextBlock Grid.Row="3" Grid.Column="1" Text="0" Foreground="Green" FontWeight="Bold" Padding="5"/>
                         </Grid>
                     </Label>
-                    <Label Height="150" Width="175" Background="AliceBlue" Margin="10">
+                    <Label MinWidth="150" Margin="0">
                         <Grid >
                             <Grid.RowDefinitions>
                                 <RowDefinition />
@@ -86,12 +86,9 @@
                             <TextBlock x:Name="TB_OfflHostCount" Grid.Row="3" Grid.Column="1" Text="0" Foreground="red" FontWeight="Bold" Padding="5"/>
                         </Grid>                        
                     </Label>
-
-                    <Label Background="AliceBlue" Margin="10" >
+                    <Label MinWidth="150" Margin="0" >
                         <Grid>
                             <Grid.RowDefinitions>
-                                <RowDefinition Height="auto"/>
-                                <RowDefinition Height="auto"/>
                                 <RowDefinition Height="auto"/>
                                 <RowDefinition Height="auto"/>
                             </Grid.RowDefinitions>
@@ -99,18 +96,17 @@
                                 <ColumnDefinition Width="auto" />
                                 <ColumnDefinition Width="auto" />
                             </Grid.ColumnDefinitions>
-                            <TextBlock Grid.Row="0" Grid.Column="0" Text="Nice to Know" FontWeight="Bold" HorizontalAlignment="Center"/>
-                            <StackPanel Grid.Row="1" Orientation="Vertical" Margin="5,5,10,5">
-                                <TextBlock Text="Device" FontWeight="Bold" HorizontalAlignment="left" TextDecorations="Underline"/>
-                                <TextBlock x:Name="TB_NKNDescrOne" Text="" FontWeight="Bold" HorizontalAlignment="left" Visibility = "Collapsed"/>
-                                <TextBlock x:Name="TB_NKNDescrTwo" Text="" FontWeight="Bold" HorizontalAlignment="left" Visibility = "Collapsed"/>
-                                <TextBlock x:Name="TB_NKNDescrThree" Text="" FontWeight="Bold" HorizontalAlignment="left" Visibility = "Collapsed"/>
+                            <StackPanel Grid.Row="0" Orientation="Vertical" Margin="5,5,10,5">
+                                <TextBlock Text="Device" FontWeight="Bold" HorizontalAlignment="left" TextDecorations="Underline" Margin="2"/>
+                                <TextBlock x:Name="TB_NKNDescrOne" Text="" FontWeight="Bold" HorizontalAlignment="left" Visibility = "Collapsed" Margin="2"/>
+                                <TextBlock x:Name="TB_NKNDescrTwo" Text="" FontWeight="Bold" HorizontalAlignment="left" Visibility = "Collapsed" Margin="2"/>
+                                <TextBlock x:Name="TB_NKNDescrThree" Text="" FontWeight="Bold" HorizontalAlignment="left" Visibility = "Collapsed" Margin="2"/>
                             </StackPanel>
-                            <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Vertical" Margin="5">
+                            <StackPanel Grid.Row="0" Grid.Column="1" Orientation="Vertical" Margin="5">
                                 <TextBlock Text="DriveFW / Latest DriveFW" FontWeight="Bold" HorizontalAlignment="left" TextDecorations="Underline"/>
-                                <TextBlock x:Name="TB_NKNResOne" Text=""  HorizontalAlignment="left" Visibility = "Collapsed"/>
-                                <TextBlock x:Name="TB_NKNResTwo" Text="" HorizontalAlignment="left" Visibility = "Collapsed"/>
-                                <TextBlock x:Name="TB_NKNResThree" Text="" HorizontalAlignment="left" Visibility = "Collapsed"/>
+                                <TextBlock x:Name="TB_NKNResOne" Text=""  HorizontalAlignment="left" Visibility = "Collapsed" Margin="2"/>
+                                <TextBlock x:Name="TB_NKNResTwo" Text="" HorizontalAlignment="left" Visibility = "Collapsed" Margin="2"/>
+                                <TextBlock x:Name="TB_NKNResThree" Text="" HorizontalAlignment="left" Visibility = "Collapsed" Margin="2"/>
                             </StackPanel>
                         </Grid>
                     </Label>
@@ -119,7 +115,7 @@
         </GroupBox>
         <GroupBox Grid.Row="1" Header="Storage Info" MinWidth="400" HorizontalAlignment="Left" Margin="10,10,0,0"  VerticalAlignment="Top">
             <WrapPanel Orientation="Horizontal" Margin="5" MinHeight="125">
-                    <Button Style="{DynamicResource DashBoardBTNStyle}" x:Name="BTN_STO_DevOne" Margin="0,5,5,5" Visibility = "Collapsed">
+                    <Button Style="{DynamicResource DashBoardBTNStyle}" x:Name="BTN_STO_DevOne" Margin="0,5,5,5" Visibility = "Collapsed" >
                         <Grid Margin="5">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="125"/>
@@ -154,8 +150,8 @@
                             <Grid Grid.Row="1">
                                 <StackPanel Margin="5,0">
                                     <Grid Margin="0,0,0,2">
-                                        <TextBlock Text="45" />
-                                        <TextBlock Text="100" HorizontalAlignment="Right"/>
+                                        <TextBlock x:Name="TB_STO_DevOneUsed" Text="45" />
+                                        <TextBlock x:Name="TB_STO_DevOneTotal" Text="100" HorizontalAlignment="Right"/>
                                     </Grid>
                                     <ProgressBar Height="5" BorderBrush="WhiteSmoke" Foreground="Teal" Value="45">
                                         <ProgressBar.Resources>
@@ -209,8 +205,8 @@
                             <Grid Grid.Row="1">
                                 <StackPanel Margin="5,0">
                                     <Grid Margin="0,0,0,2">
-                                        <TextBlock Text="45" />
-                                        <TextBlock Text="100" HorizontalAlignment="Right"/>
+                                        <TextBlock x:Name="TB_STO_DevTwoUsed" Text="45" />
+                                        <TextBlock x:Name="TB_STO_DevTwoTotal" Text="100" HorizontalAlignment="Right"/>
                                     </Grid>
                                     <ProgressBar Height="5" BorderBrush="WhiteSmoke" Foreground="Teal" Value="45">
                                         <ProgressBar.Resources>
@@ -264,8 +260,8 @@
                             <Grid Grid.Row="1">
                                 <StackPanel Margin="5,0">
                                     <Grid Margin="0,0,0,2">
-                                        <TextBlock Text="85" />
-                                        <TextBlock Text="100" HorizontalAlignment="Right"/>
+                                        <TextBlock x:Name="TB_STO_DevThreeUsed" Text="80" />
+                                        <TextBlock x:Name="TB_STO_DevThreeTotal" Text="100" HorizontalAlignment="Right"/>
                                     </Grid>
                                     <ProgressBar Height="5" BorderBrush="WhiteSmoke" Foreground="Teal" Value="85">
                                         <ProgressBar.Resources>
@@ -319,8 +315,8 @@
                             <Grid Grid.Row="1">
                                 <StackPanel Margin="5,0">
                                     <Grid Margin="0,0,0,2">
-                                        <TextBlock Text="80" />
-                                        <TextBlock Text="100" HorizontalAlignment="Right"/>
+                                        <TextBlock x:Name="TB_STO_DevFourUsed" Text="80" />
+                                        <TextBlock x:Name="TB_STO_DevFourTotal" Text="100" HorizontalAlignment="Right"/>
                                     </Grid>
                                     <ProgressBar Height="5" BorderBrush="WhiteSmoke" Foreground="Teal" Value="80">
                                         <ProgressBar.Resources>
@@ -374,8 +370,8 @@
                             <Grid Grid.Row="1">
                                 <StackPanel Margin="5,0">
                                     <Grid Margin="0,0,0,2">
-                                        <TextBlock Text="70" />
-                                        <TextBlock Text="100" HorizontalAlignment="Right"/>
+                                        <TextBlock x:Name="TB_STO_DevFiveUsed" Text="70" />
+                                        <TextBlock x:Name="TB_STO_DevFiveTotal" Text="100" HorizontalAlignment="Right"/>
                                     </Grid>
                                     <ProgressBar Height="5" BorderBrush="WhiteSmoke" Foreground="Teal" Value="60">
                                         <ProgressBar.Resources>
@@ -429,8 +425,8 @@
                             <Grid Grid.Row="1">
                                 <StackPanel Margin="5,0">
                                     <Grid Margin="0,0,0,2">
-                                        <TextBlock Text="70" />
-                                        <TextBlock Text="100" HorizontalAlignment="Right"/>
+                                        <TextBlock x:Name="TB_STO_DevSixUsed" Text="70" />
+                                        <TextBlock x:Name="TB_STO_DevSixTotal" Text="100" HorizontalAlignment="Right"/>
                                     </Grid>
                                     <ProgressBar Height="5" BorderBrush="WhiteSmoke" Foreground="Teal" Value="60">
                                         <ProgressBar.Resources>
@@ -484,8 +480,8 @@
                             <Grid Grid.Row="1">
                                 <StackPanel Margin="5,0">
                                     <Grid Margin="0,0,0,2">
-                                        <TextBlock Text="70" />
-                                        <TextBlock Text="100" HorizontalAlignment="Right"/>
+                                        <TextBlock x:Name="TB_STO_DevSevenUsed" Text="70" />
+                                        <TextBlock x:Name="TB_STO_DevSevenTotal" Text="100" HorizontalAlignment="Right"/>
                                     </Grid>
                                     <ProgressBar Height="5" BorderBrush="WhiteSmoke" Foreground="Teal" Value="60">
                                         <ProgressBar.Resources>
@@ -539,8 +535,8 @@
                             <Grid Grid.Row="1">
                                 <StackPanel Margin="5,0">
                                     <Grid Margin="0,0,0,2">
-                                        <TextBlock Text="70" />
-                                        <TextBlock Text="100" HorizontalAlignment="Right"/>
+                                        <TextBlock x:Name="TB_STO_DevEightUsed" Text="70" />
+                                        <TextBlock x:Name="TB_STO_DevEightTotal" Text="100" HorizontalAlignment="Right"/>
                                     </Grid>
                                     <ProgressBar Height="5" BorderBrush="WhiteSmoke" Foreground="Teal" Value="60">
                                         <ProgressBar.Resources>
