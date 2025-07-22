@@ -16,6 +16,7 @@ function SST_DashBoardHosts {
         #ID, HID, Name, Status, HostClusterName, SideName, TimeStamp FROM IBMSTOHostTable
         if($SST_IBMHostDeviceCounter -lt 1){
             [int]$SST_OfflineHost = 0
+            $TD_TB_OfflHostCount.Text = "$SST_OfflineHost"
             while ($STOHWCollection.Read()) {
                 $SST_OfflineHost++
                 #$HID    = $STOHWCollection["HID"]
