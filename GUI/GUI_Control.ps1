@@ -225,7 +225,9 @@ $TD_BTN_RefreshUC1.add_click({
     $TD_TB_SAN_DevOne,$TD_TB_SAN_DevTwo,$TD_TB_SAN_DevThree,$TD_TB_SAN_DevFour,$TD_TB_SAN_DevFive,$TD_TB_SAN_DevSix,$TD_TB_SAN_DevSeven,$TD_TB_SAN_DevEight |ForEach-Object {$_.Text = "" }
     $TD_BTN_STO_HostOne,$TD_BTN_STO_HostTwo,$TD_BTN_STO_HostThree,$TD_BTN_STO_HostFour,$TD_BTN_STO_HostFive,$TD_BTN_STO_HostSix,$TD_BTN_STO_HostSeven,$TD_BTN_STO_HostEight,$TD_BTN_STO_HostNine,$TD_BTN_STO_HostTen,$TD_BTN_STO_HostEleven,$TD_BTN_STO_HostTwelve,$TD_BTN_STO_HostThirteen,$TD_BTN_STO_HostFourteen,$TD_BTN_STO_HostFifteen,$TD_BTN_STO_HostSixteen |ForEach-Object {$_.Visibility = "Collapsed"}
     $TD_TB_STO_HostOne,$TD_TB_STO_HostTwo,$TD_TB_STO_HostThree,$TD_TB_STO_HostFour,$TD_TB_STO_HostFive,$TD_TB_STO_HostSix,$TD_TB_STO_HostSeven,$TD_TB_STO_HostEight,$TD_TB_STO_HostNine,$TD_TB_STO_HostTen,$TD_TB_STO_HostEleven,$TD_TB_STO_HostTwelve,$TD_TB_STO_HostThirteen,$TD_TB_STO_HostFourteen,$TD_TB_STO_HostFifteen,$TD_TB_STO_HostSixteen |ForEach-Object {$_.Text = "" }
-    
+    <#wenn refresh sollte der Counter auf 0 gestellt werden #>
+    $TD_TB_OfflHostCount.Text = "0"
+
     $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_.DeviceTyp -eq "Storage"}
     $TD_Credentials | ForEach-Object {
         [array]$TD_BaseStorageInfo = IBM_BaseStorageInfos -TD_Line_ID $_.ID -TD_Device_ConnectionTyp $_.ConnectionTyp -TD_Device_UserName $_.UserName -TD_Device_DeviceIP $_.IPAddress -TD_Device_DeviceName $_.DeviceName -TD_Device_PW $([Net.NetworkCredential]::new('', $_.Password).Password) -TD_Device_SSHKeyPath $_.SSHKeyPath -TD_Storage $_.SVCorVF -TD_Exportpath $TD_tb_ExportPath.Text
