@@ -42,8 +42,12 @@ function IBM_BaseStorageInfos {
     }
 
     process {
+
+        $TD_SystemInfo = IBM_SystemInfo -TD_Line_ID $TD_Line_ID -TD_Device_ConnectionTyp $TD_Device_ConnectionTyp -TD_Device_UserName $TD_Device_UserName -TD_Device_DeviceIP $TD_Device_DeviceIP -TD_Device_PW $TD_Device_PW
+
+
         $TD_StorageInfo = foreach($TD_FSBaseInfo in $TD_BaseInformations){
-            $TD_FSBaseTemp = "" | Select-Object ID,Name,ClusterName,WWNN,Status,IO_group_id,IO_group_Name,Serial_Number,Code_Level,Config_Node,SideID,SideName,Prod_MTM,RecommendedPTF
+            $TD_FSBaseTemp = "" | Select-Object ID,Name,ClusterName,WWNN,Status,IO_group_id,IO_group_Name,Serial_Number,Code_Level,Config_Node,SideID,SideName,Prod_MTM,RecommendedPTF,MDiskTotalCapacity,MDiskFreeCapacity,MDiskUsedCapacity,PhysicalTotalCapacity,PhysicalFreeCapacity,HostUnmap,BackendUnmap
             $TD_FSBaseTemp.ID = ($TD_FSBaseInfo|Select-String -Pattern '^(\d+):' -AllMatches).Matches.Groups[1].Value
             $TD_FSBaseTemp.Name = ($TD_FSBaseInfo|Select-String -Pattern '^\d+:([a-zA-Z0-9-_]+):' -AllMatches).Matches.Groups[1].Value
             $TD_FSBaseTemp.ClusterName = ($TD_BaseInformations|Select-String -Pattern '^name\,([\w\-]+)' -AllMatches).Matches.Groups[1].Value
@@ -76,13 +80,20 @@ function IBM_BaseStorageInfos {
                     [string]$TD_FSBaseTemp.RecommendedPTF = $TD_SpectrVirtuFWInfos.RecommendedPTF
                 }
             }
-        
+            $TD_FSBaseTemp.MDiskTotalCapacity=$TD_SystemInfo.'MDiskTotalCapacity'
+            $TD_FSBaseTemp.MDiskFreeCapacity=$TD_SystemInfo.'MDiskFreeCapacity'
+            $TD_FSBaseTemp.MDiskUsedCapacity=$TD_SystemInfo.'MDiskUsedCapacity'
+            $TD_FSBaseTemp.PhysicalTotalCapacity=$TD_SystemInfo.'PhysicalTotalCapacity'
+            $TD_FSBaseTemp.PhysicalFreeCapacity=$TD_SystemInfo.'PhysicalFreeCapacity'
+            $TD_FSBaseTemp.HostUnmap=$TD_SystemInfo.'HostUnmap'
+            $TD_FSBaseTemp.BackendUnmap=$TD_SystemInfo.'BackendUnmap'
             if(([String]::IsNullOrEmpty($TD_FSBaseTemp.ID))){continue}
             $TD_FSBaseTemp
             <# Progressbar  #>
             $ProgCounter++
             Write-ProgressBar -ProgressBar $ProgressBar -Activity "Collect data for Device $($TD_Line_ID) $($TD_Device_DeviceName)" -PercentComplete (($ProgCounter/$TD_BaseInformations.Count) * 100)
         }
+        
     }
     
     end {
