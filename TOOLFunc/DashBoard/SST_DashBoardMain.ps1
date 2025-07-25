@@ -42,6 +42,7 @@ function SST_DashBoardMain {
             $SST_SQliteReadCMD.CommandText = "SELECT COUNT(DISTINCT Name) AS DeviceCount FROM IBMSTOHostTable;"
             $SST_IBMHostDeviceCounter = $SST_SQliteReadCMD.ExecuteScalar()
             SST_DashBoardHosts -SST_IBMHostDeviceCounter $SST_IBMHostDeviceCounter
+            $SST_SQLiteDBReader.Close()
         }
         catch {
             Write-Host $_.Exception.Message
