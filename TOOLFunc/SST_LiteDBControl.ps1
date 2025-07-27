@@ -2,7 +2,7 @@ function SST_LiteDBControl {
     [CmdletBinding()]
     param (
         [Parameter(ValueFromPipeline)]
-        [ValidateSet("Drive","StorageBase","StorageHostInfo","SANBase")]
+        [ValidateSet("StorageDrive","StorageBase","StorageHostInfo","SANBase")]
         $SST_InfoType,
         $SST_NewDBObject =$null,
         [array]$SST_CollectedInformations,
@@ -23,15 +23,17 @@ function SST_LiteDBControl {
             $SST_SQliteCreateTBCMD = $SST_SQLiteCon.CreateCommand()
             switch ($SST_InfoType) {
                 "StorageBase" { 
-                    $SST_SQLiteTabelQuery ="CREATE TABLE IF NOT EXISTS IBMSTOHWTable (ID INTEGER PRIMARY KEY AUTOINCREMENT, DID INTEGER NOT NULL, Name TEXT NOT NULL, ClusterName TEXT, WWNN TEXT NOT NULL, Status TEXT NOT NULL, IOgroupid INTEGER, IOgroupName TEXT, SerialNumber TEXT, CodeLevel TEXT, ConfigNode TEXT, SideID INTEGER, SideName TEXT, ProdMTM TEXT, RecommendedPTF TEXT, TimeStamp TEXT );"
-                    $SST_SQliteCreateTBCMD.CommandText = $SST_SQLiteTabelQuery
-                    $SST_SQliteCreateTBCMD.ExecuteNonQuery()
-                    $SST_SQLiteTabelQuery ="CREATE TABLE IF NOT EXISTS IBMSTOSystemTable (ID INTEGER PRIMARY KEY AUTOINCREMENT, MDiskTC TEXT, MDiskFC TEXT, MDiskUC TEXT, PhysicalTC TEXT, PhysicalFC TEXT, TimeStamp TEXT );"
+                    $SST_SQLiteTabelQuery ="CREATE TABLE IF NOT EXISTS IBMSTOHWTable (ID INTEGER PRIMARY KEY AUTOINCREMENT, DID INTEGER NOT NULL, Name TEXT NOT NULL, ClusterName TEXT, WWNN TEXT NOT NULL, Status TEXT NOT NULL, IOgroupid INTEGER, IOgroupName TEXT, SerialNumber TEXT, CodeLevel TEXT, ConfigNode TEXT, SideID INTEGER, SideName TEXT, ProdMTM TEXT, RecommendedPTF TEXT, MDiskTC TEXT, MDiskFC TEXT, MDiskUC TEXT, PhysicalTC TEXT, PhysicalFC TEXT, TimeStamp TEXT );"
                     $SST_SQliteCreateTBCMD.CommandText = $SST_SQLiteTabelQuery
                     $SST_SQliteCreateTBCMD.ExecuteNonQuery()
                 }
                 "StorageHostInfo" { 
                     $SST_SQLiteTabelQuery ="CREATE TABLE IF NOT EXISTS IBMSTOHostTable (ID INTEGER PRIMARY KEY AUTOINCREMENT, HID INTEGER NOT NULL, Name TEXT NOT NULL, Status TEXT NOT NULL, HostClusterName TEXT, SideName TEXT, TimeStamp TEXT );" 
+                    $SST_SQliteCreateTBCMD.CommandText = $SST_SQLiteTabelQuery
+                    $SST_SQliteCreateTBCMD.ExecuteNonQuery()
+                }
+                "StorageDrive" { 
+                    $SST_SQLiteTabelQuery ="CREATE TABLE IF NOT EXISTS IBMSTODriveTable (ID INTEGER PRIMARY KEY AUTOINCREMENT, DriveID INTEGER NOT NULL, Slot INTEGER, ProductID TEXT NOT NULL, DriveStatus TEXT NOT NULL, CurrentDriveFW TEXT, LatestDriveFW TEXT, DriveCap TEXT, PhyDriveCap TEXT, PhyUsedDriveCap TEXT, EffeUsedDriveCap TEXT, DeviceSN TEXT, DeviceWWNN TEXT, TimeStamp TEXT );" 
                     $SST_SQliteCreateTBCMD.CommandText = $SST_SQLiteTabelQuery
                     $SST_SQliteCreateTBCMD.ExecuteNonQuery()
                 }
@@ -55,27 +57,30 @@ function SST_LiteDBControl {
         $SST_SQliteInsertCMD = $SST_SQLiteCon.CreateCommand()
         # Objekt zum Einfügen
         switch ($SST_InfoType) {
-            "Drive" { 
+            "StorageDrive" { 
                 foreach ($SST_CollectedInformation in $SST_CollectedInformations){
-                    $SST_NewDBObject = [LiteDB.BsonDocument]::new()
-                    $SST_NewDBObject["DriveID"] = $SST_CollectedInformation.DriveID
-                    $SST_NewDBObject["Slot"] = $SST_CollectedInformation.Slot
-                    $SST_NewDBObject["ProductID"] = $SST_CollectedInformation.ProductID
-                    $SST_NewDBObject["DriveStatus"] = $SST_CollectedInformation.DriveStatus
-                    $SST_NewDBObject["FWlev"] = $SST_CollectedInformation.FWlev
-                    $SST_NewDBObject["DriveCap"] = $SST_CollectedInformation.DriveCap
-                    $SST_NewDBObject["PhyDriveCap"] = $SST_CollectedInformation.PhyDriveCap
-                    $SST_NewDBObject["PhyUsedDriveCap"] = $SST_CollectedInformation.PhyUsedDriveCap
-                    $SST_NewDBObject["EffeUsedDriveCap"] = $SST_CollectedInformation.EffeUsedDriveCap
-                    $SST_NewDBObject["DeviceSN"] = $SST_CollectedInformation.DeviceSN
-                    $SST_NewDBObject["DeviceWWNN"] = $SST_CollectedInformation.DeviceWWNN
+                    $SST_SQliteInsertCMD.CommandText ="INSERT INTO IBMSTODriveTable (DriveID, Slot, ProductID, DriveStatus, CurrentDriveFW, LatestDriveFW, DriveCap, PhyDriveCap, PhyUsedDriveCap, EffeUsedDriveCap, DeviceSN, DeviceWWNN, TimeStamp) VALUES (@DriveID, @Slot, @ProductID, @DriveStatus, @CurrentDriveFW, @LatestDriveFW, @DriveCap, @PhyDriveCap, @PhyUsedDriveCap, @EffeUsedDriveCap, @DeviceSN, @DeviceWWNN, @TimeStamp);"
+                    $SST_SQliteInsertCMD.Parameters.AddWithValue("@DriveID", $SST_CollectedInformation.DriveID) | Out-Null
+                    $SST_SQliteInsertCMD.Parameters.AddWithValue("@Slot", $SST_CollectedInformation.Slot) | Out-Null
+                    $SST_SQliteInsertCMD.Parameters.AddWithValue("@ProductID", $SST_CollectedInformation.ProductID) | Out-Null
+                    $SST_SQliteInsertCMD.Parameters.AddWithValue("@DriveStatus", $SST_CollectedInformation.DriveStatus) | Out-Null
+                    $SST_SQliteInsertCMD.Parameters.AddWithValue("@CurrentDriveFW", $SST_CollectedInformation.FWlev) | Out-Null
+                    $SST_SQliteInsertCMD.Parameters.AddWithValue("@LatestDriveFW", $SST_CollectedInformation.LatestDriveFW) | Out-Null
+                    $SST_SQliteInsertCMD.Parameters.AddWithValue("@DriveCap", $SST_CollectedInformation.DriveCap) | Out-Null
+                    $SST_SQliteInsertCMD.Parameters.AddWithValue("@PhyDriveCap", $SST_CollectedInformation.PhyDriveCap) | Out-Null
+                    $SST_SQliteInsertCMD.Parameters.AddWithValue("@PhyUsedDriveCap", $SST_CollectedInformation.PhyUsedDriveCap) | Out-Null
+                    $SST_SQliteInsertCMD.Parameters.AddWithValue("@EffeUsedDriveCap", $SST_CollectedInformation.EffeUsedDriveCap) | Out-Null
+                    $SST_SQliteInsertCMD.Parameters.AddWithValue("@DeviceSN", $SST_CollectedInformation.DeviceSN) | Out-Null
+                    $SST_SQliteInsertCMD.Parameters.AddWithValue("@DeviceWWNN", $SST_CollectedInformation.DeviceWWNN) | Out-Null
+                    $SST_SQliteInsertCMD.Parameters.AddWithValue("@TimeStamp", $TimeStamp) | Out-Null
+
                     # In DB speichern 
-                    $SST_IBMDriveTable.Insert($SST_NewDBObject)
+                    $SST_SQliteInsertCMD.ExecuteNonQuery()
                 }
              }
             "StorageBase" { 
                 foreach ($SST_CollectedInformation in $SST_CollectedInformations[0]){ 
-                    $SST_SQliteInsertCMD.CommandText ="INSERT INTO IBMSTOHWTable (DID, Name, ClusterName, WWNN, Status, IOgroupid, IOgroupName, SerialNumber, CodeLevel, ConfigNode, SideID, SideName, ProdMTM, RecommendedPTF, TimeStamp) VALUES (@DID, @Name, @ClusterName, @WWNN, @Status, @IOgroupid, @IOgroupName, @SerialNumber, @CodeLevel, @ConfigNode, @SideID, @SideName, @ProdMTM, @RecommendedPTF, @TimeStamp);"
+                    $SST_SQliteInsertCMD.CommandText ="INSERT INTO IBMSTOHWTable (DID, Name, ClusterName, WWNN, Status, IOgroupid, IOgroupName, SerialNumber, CodeLevel, ConfigNode, SideID, SideName, ProdMTM, RecommendedPTF, MDiskTC, MDiskFC, MDiskUC, PhysicalTC, PhysicalFC, TimeStamp) VALUES (@DID, @Name, @ClusterName, @WWNN, @Status, @IOgroupid, @IOgroupName, @SerialNumber, @CodeLevel, @ConfigNode, @SideID, @SideName, @ProdMTM, @RecommendedPTF, @MDiskTC, @MDiskFC, @MDiskUC, @PhysicalTC, @PhysicalFC, @TimeStamp);"
                     $SST_SQliteInsertCMD.Parameters.AddWithValue("@DID", $SST_CollectedInformation.ID) | Out-Null
                     $SST_SQliteInsertCMD.Parameters.AddWithValue("@Name", $SST_CollectedInformation.Name) | Out-Null
                     $SST_SQliteInsertCMD.Parameters.AddWithValue("@ClusterName", $SST_CollectedInformation.ClusterName) | Out-Null
@@ -90,13 +95,6 @@ function SST_LiteDBControl {
                     $SST_SQliteInsertCMD.Parameters.AddWithValue("@SideName", $SST_CollectedInformation.SideName) | Out-Null
                     $SST_SQliteInsertCMD.Parameters.AddWithValue("@ProdMTM", $SST_CollectedInformation.Prod_MTM) | Out-Null
                     $SST_SQliteInsertCMD.Parameters.AddWithValue("@RecommendedPTF", $SST_CollectedInformation.RecommendedPTF) | Out-Null
-                    $SST_SQliteInsertCMD.Parameters.AddWithValue("@TimeStamp", $TimeStamp) | Out-Null
- 
-                    # In DB speichern 
-                    $SST_SQliteInsertCMD.ExecuteNonQuery()
-                }
-                foreach ($SST_CollectedInformation in $SST_CollectedInformations[1]){ 
-                    $SST_SQliteInsertCMD.CommandText ="INSERT INTO IBMSTOSystemTable (MDiskTC, MDiskFC, MDiskUC, PhysicalTC, PhysicalFC, TimeStamp) VALUES (@MDiskTC, @MDiskFC, @MDiskUC, @PhysicalTC, @PhysicalFC, @TimeStamp);"
                     $SST_SQliteInsertCMD.Parameters.AddWithValue("@MDiskTC", $SST_CollectedInformation.'MDiskTotalCapacity') | Out-Null
                     $SST_SQliteInsertCMD.Parameters.AddWithValue("@MDiskFC", $SST_CollectedInformation.'MDiskFreeCapacity') | Out-Null
                     $SST_SQliteInsertCMD.Parameters.AddWithValue("@MDiskUC", $SST_CollectedInformation.'MDiskUsedCapacity') | Out-Null
