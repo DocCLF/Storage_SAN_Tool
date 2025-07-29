@@ -20,7 +20,7 @@ function SST_DashBoardMain {
     process {
         try {
             $SST_SQLiteSTODashBoardQuery = $null
-            $SST_SQLiteSTODashBoardQuery = " SELECT ID, DID, Name, ClusterName, WWNN, Status, IOgroupid, IOgroupName, SerialNumber, CodeLevel, ConfigNode, SideID, SideName, ProdMTM, RecommendedPTF, TimeStamp FROM IBMSTOHWTable d WHERE TimeStamp = ( SELECT MAX(TimeStamp) FROM IBMSTOHWTable WHERE SerialNumber = d.SerialNumber ) GROUP BY SerialNumber ORDER BY ID; "
+            $SST_SQLiteSTODashBoardQuery = " SELECT ID, DID, Name, ClusterName, WWNN, Status, IOgroupid, IOgroupName, SerialNumber, CodeLevel, ConfigNode, SideID, SideName, ProdMTM, RecommendedPTF, MDiskTC, MDiskUC, TimeStamp FROM IBMSTOHWTable d WHERE TimeStamp = ( SELECT MAX(TimeStamp) FROM IBMSTOHWTable WHERE SerialNumber = d.SerialNumber ) GROUP BY SerialNumber ORDER BY ID; "
             $SST_SQliteReadCMD.CommandText = $SST_SQLiteSTODashBoardQuery
             $SST_SQLiteDBReader = $SST_SQliteReadCMD.ExecuteReader()
 
@@ -29,7 +29,7 @@ function SST_DashBoardMain {
         }
         catch {
             Write-Host $_.Exception.Message
-            SST_ToolMessageCollector -TD_ToolMSGCollector "There is something wrong, mybe there is no Table" -TD_ToolMSGType Warning -TD_Shown yes
+            SST_ToolMessageCollector -TD_ToolMSGCollector "There is something wrong, mybe there is no IBMSTOHWTable Table" -TD_ToolMSGType Warning -TD_Shown yes
         }
 
         try {
@@ -46,7 +46,7 @@ function SST_DashBoardMain {
         }
         catch {
             Write-Host $_.Exception.Message
-            SST_ToolMessageCollector -TD_ToolMSGCollector "There is something wrong, mybe there is no Table" -TD_ToolMSGType Warning -TD_Shown yes
+            SST_ToolMessageCollector -TD_ToolMSGCollector "There is something wrong, mybe there is no IBMSTOHostTable Table" -TD_ToolMSGType Warning -TD_Shown yes
         }
 
         try {
@@ -60,7 +60,7 @@ function SST_DashBoardMain {
         }
         catch {
             Write-Host $_.Exception.Message
-            SST_ToolMessageCollector -TD_ToolMSGCollector "There is something wrong, mybe there is no Table" -TD_ToolMSGType Warning -TD_Shown yes
+            SST_ToolMessageCollector -TD_ToolMSGCollector "There is something wrong, mybe there is no IBMSANHWTable Table" -TD_ToolMSGType Warning -TD_Shown yes
         }
 
         try {
@@ -76,7 +76,7 @@ function SST_DashBoardMain {
         }
         catch {
             Write-Host $_.Exception.Message
-            SST_ToolMessageCollector -TD_ToolMSGCollector "There is something wrong, mybe there is no Table" -TD_ToolMSGType Warning -TD_Shown yes
+            SST_ToolMessageCollector -TD_ToolMSGCollector "There is something wrong, mybe there is no IBMSTODriveTable Table" -TD_ToolMSGType Warning -TD_Shown yes
         }
     }
     
