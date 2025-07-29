@@ -88,22 +88,8 @@
                     </Label>
                     <Label MinWidth="150" Margin="0" >
                         <Grid>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="auto"/>
-                                <RowDefinition Height="auto"/>
-                            </Grid.RowDefinitions>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="auto" />
-                                <ColumnDefinition Width="auto" />
-                            </Grid.ColumnDefinitions>
-                            <StackPanel Grid.Row="0" Orientation="Vertical" Margin="5,5,10,5">
-                                <TextBlock Text="Device" FontWeight="Bold" HorizontalAlignment="left" TextDecorations="Underline" Margin="2"/>
-                                <TextBlock x:Name="TB_NKNDescrOne" Text="" FontWeight="Bold" HorizontalAlignment="left" Visibility = "Collapsed" Margin="2"/>
-                                <TextBlock x:Name="TB_NKNDescrTwo" Text="" FontWeight="Bold" HorizontalAlignment="left" Visibility = "Collapsed" Margin="2"/>
-                                <TextBlock x:Name="TB_NKNDescrThree" Text="" FontWeight="Bold" HorizontalAlignment="left" Visibility = "Collapsed" Margin="2"/>
-                            </StackPanel>
                             <StackPanel Grid.Row="0" Grid.Column="1" Orientation="Vertical" Margin="5">
-                                <TextBlock Text="DriveFW / Latest DriveFW" FontWeight="Bold" HorizontalAlignment="left" TextDecorations="Underline"/>
+                                <TextBlock Text="DriveFW / Latest DriveFW" FontWeight="Bold" HorizontalAlignment="left" />
                                 <TextBlock x:Name="TB_NKNResOne" Text=""  HorizontalAlignment="left" Visibility = "Collapsed" Margin="2"/>
                                 <TextBlock x:Name="TB_NKNResTwo" Text="" HorizontalAlignment="left" Visibility = "Collapsed" Margin="2"/>
                                 <TextBlock x:Name="TB_NKNResThree" Text="" HorizontalAlignment="left" Visibility = "Collapsed" Margin="2"/>
@@ -150,10 +136,10 @@
                             <Grid Grid.Row="1">
                                 <StackPanel Margin="5,0">
                                     <Grid Margin="0,0,0,2">
-                                        <TextBlock x:Name="TB_STO_DevOneUsed" Text="45" />
-                                        <TextBlock x:Name="TB_STO_DevOneTotal" Text="100" HorizontalAlignment="Right"/>
+                                        <TextBlock Text="0" />
+                                        <TextBlock x:Name="TB_STO_DevOneTotal" Text=" " HorizontalAlignment="Right"/>
                                     </Grid>
-                                    <ProgressBar Height="5" BorderBrush="WhiteSmoke" Foreground="Teal" Value="45">
+                                    <ProgressBar x:Name="PB_STO_DevOneUsed" Height="5" BorderBrush="WhiteSmoke" Foreground="Teal" Value="0">
                                         <ProgressBar.Resources>
                                             <Style TargetType="{x:Type Border}">
                                                 <Setter Property="CornerRadius" Value="2" />
@@ -205,10 +191,10 @@
                             <Grid Grid.Row="1">
                                 <StackPanel Margin="5,0">
                                     <Grid Margin="0,0,0,2">
-                                        <TextBlock x:Name="TB_STO_DevTwoUsed" Text="45" />
-                                        <TextBlock x:Name="TB_STO_DevTwoTotal" Text="100" HorizontalAlignment="Right"/>
+                                        <TextBlock Text="0" />
+                                        <TextBlock x:Name="TB_STO_DevTwoTotal" Text=" " HorizontalAlignment="Right"/>
                                     </Grid>
-                                    <ProgressBar Height="5" BorderBrush="WhiteSmoke" Foreground="Teal" Value="45">
+                                    <ProgressBar x:Name="PB_STO_DevTwoUsed" Height="5" BorderBrush="WhiteSmoke" Foreground="Teal" Value="0">
                                         <ProgressBar.Resources>
                                             <Style TargetType="{x:Type Border}">
                                                 <Setter Property="CornerRadius" Value="2" />
@@ -260,10 +246,10 @@
                             <Grid Grid.Row="1">
                                 <StackPanel Margin="5,0">
                                     <Grid Margin="0,0,0,2">
-                                        <TextBlock x:Name="TB_STO_DevThreeUsed" Text="80" />
-                                        <TextBlock x:Name="TB_STO_DevThreeTotal" Text="100" HorizontalAlignment="Right"/>
+                                        <TextBlock Text="0" />
+                                        <TextBlock x:Name="TB_STO_DevThreeTotal" Text=" " HorizontalAlignment="Right"/>
                                     </Grid>
-                                    <ProgressBar Height="5" BorderBrush="WhiteSmoke" Foreground="Teal" Value="85">
+                                    <ProgressBar x:Name="PB_STO_DevThreeUsed" Height="5" BorderBrush="WhiteSmoke" Foreground="Teal" Value="0">
                                         <ProgressBar.Resources>
                                             <Style TargetType="{x:Type Border}">
                                                 <Setter Property="CornerRadius" Value="2" />
@@ -315,10 +301,10 @@
                             <Grid Grid.Row="1">
                                 <StackPanel Margin="5,0">
                                     <Grid Margin="0,0,0,2">
-                                        <TextBlock x:Name="TB_STO_DevFourUsed" Text="80" />
-                                        <TextBlock x:Name="TB_STO_DevFourTotal" Text="100" HorizontalAlignment="Right"/>
+                                        <TextBlock Text="0" />
+                                        <TextBlock x:Name="TB_STO_DevFourTotal" Text=" " HorizontalAlignment="Right"/>
                                     </Grid>
-                                    <ProgressBar Height="5" BorderBrush="WhiteSmoke" Foreground="Teal" Value="80">
+                                    <ProgressBar x:Name="PB_STO_DevFourUsed" Height="5" BorderBrush="WhiteSmoke" Foreground="Teal" Value="0">
                                         <ProgressBar.Resources>
                                             <Style TargetType="{x:Type Border}">
                                                 <Setter Property="CornerRadius" Value="2" />
@@ -370,10 +356,10 @@
                             <Grid Grid.Row="1">
                                 <StackPanel Margin="5,0">
                                     <Grid Margin="0,0,0,2">
-                                        <TextBlock x:Name="TB_STO_DevFiveUsed" Text="70" />
-                                        <TextBlock x:Name="TB_STO_DevFiveTotal" Text="100" HorizontalAlignment="Right"/>
+                                        <TextBlock Text="0" />
+                                        <TextBlock x:Name="TB_STO_DevFiveTotal" Text=" " HorizontalAlignment="Right"/>
                                     </Grid>
-                                    <ProgressBar Height="5" BorderBrush="WhiteSmoke" Foreground="Teal" Value="60">
+                                    <ProgressBar x:Name="PB_STO_DevFiveUsed" Height="5" BorderBrush="WhiteSmoke" Foreground="Teal" Value="0">
                                         <ProgressBar.Resources>
                                             <Style TargetType="{x:Type Border}">
                                                 <Setter Property="CornerRadius" Value="2" />
@@ -425,10 +411,10 @@
                             <Grid Grid.Row="1">
                                 <StackPanel Margin="5,0">
                                     <Grid Margin="0,0,0,2">
-                                        <TextBlock x:Name="TB_STO_DevSixUsed" Text="70" />
-                                        <TextBlock x:Name="TB_STO_DevSixTotal" Text="100" HorizontalAlignment="Right"/>
+                                        <TextBlock Text="0" />
+                                        <TextBlock x:Name="TB_STO_DevSixTotal" Text=" " HorizontalAlignment="Right"/>
                                     </Grid>
-                                    <ProgressBar Height="5" BorderBrush="WhiteSmoke" Foreground="Teal" Value="60">
+                                    <ProgressBar x:Name="PB_STO_DevSixUsed" Height="5" BorderBrush="WhiteSmoke" Foreground="Teal" Value="0">
                                         <ProgressBar.Resources>
                                             <Style TargetType="{x:Type Border}">
                                                 <Setter Property="CornerRadius" Value="2" />
@@ -480,10 +466,10 @@
                             <Grid Grid.Row="1">
                                 <StackPanel Margin="5,0">
                                     <Grid Margin="0,0,0,2">
-                                        <TextBlock x:Name="TB_STO_DevSevenUsed" Text="70" />
-                                        <TextBlock x:Name="TB_STO_DevSevenTotal" Text="100" HorizontalAlignment="Right"/>
+                                        <TextBlock Text="0" />
+                                        <TextBlock x:Name="TB_STO_DevSevenTotal" Text=" " HorizontalAlignment="Right"/>
                                     </Grid>
-                                    <ProgressBar Height="5" BorderBrush="WhiteSmoke" Foreground="Teal" Value="60">
+                                    <ProgressBar x:Name="PB_STO_DevSevenUsed" Height="5" BorderBrush="WhiteSmoke" Foreground="Teal" Value="0">
                                         <ProgressBar.Resources>
                                             <Style TargetType="{x:Type Border}">
                                                 <Setter Property="CornerRadius" Value="2" />
@@ -535,10 +521,10 @@
                             <Grid Grid.Row="1">
                                 <StackPanel Margin="5,0">
                                     <Grid Margin="0,0,0,2">
-                                        <TextBlock x:Name="TB_STO_DevEightUsed" Text="70" />
-                                        <TextBlock x:Name="TB_STO_DevEightTotal" Text="100" HorizontalAlignment="Right"/>
+                                        <TextBlock Text="0" />
+                                        <TextBlock x:Name="TB_STO_DevEightTotal" Text=" " HorizontalAlignment="Right"/>
                                     </Grid>
-                                    <ProgressBar Height="5" BorderBrush="WhiteSmoke" Foreground="Teal" Value="60">
+                                    <ProgressBar x:Name="PB_STO_DevEightUsed" Height="5" BorderBrush="WhiteSmoke" Foreground="Teal" Value="0">
                                         <ProgressBar.Resources>
                                             <Style TargetType="{x:Type Border}">
                                                 <Setter Property="CornerRadius" Value="2" />
