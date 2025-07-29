@@ -12,40 +12,31 @@ function SST_DashBoardDrives {
 
         #DriveID, Slot, ProductID, DriveStatus, FWlev, LatestDriveFW, DriveCap, PhyDriveCap, PhyUsedDriveCap, EffeUsedDriveCap, DeviceSN, DeviceWWNN, TimeStamp
         while ($STODriveCollection.Read()) {
-            $DeviceSN = $STODriveCollection["DeviceSN"] 
-            $FWlev = $STODriveCollection["FWlev"]
+            $CurrentDriveFW = $STODriveCollection["CurrentDriveFW"]
             $LatestDriveFW = $STODriveCollection["LatestDriveFW"]
-            $Name = $STODriveCollection["Name"]
             $ProductID = $STODriveCollection["ProductID"]
 
             if($ProductID -ne $ProductIDOld){
-                Write-Host $FWlev / $LatestDriveFW
                 if($TD_TB_NKNResOne.Text -eq ""){
-                    $TD_TB_NKNDescrOne.Text = "$Name Drive FW:"
-                    $TD_TB_NKNResOne.Text = "$FWlev / $LatestDriveFW"
-                    $TD_TB_NKNDescrOne.Visibility = "visible"
+                    $TD_TB_NKNResOne.Text = "$CurrentDriveFW / $LatestDriveFW"
                     $TD_TB_NKNResOne.Visibility = "visible"
-                    if($LatestDriveFW -like "*$FWlev*"){
+                    if($LatestDriveFW -like "*$CurrentDriveFW*"){
                         $TD_TB_NKNResOne.Foreground = "Green"
                     }else {
                         $TD_TB_NKNResOne.Foreground = "Orange"
                     }
                 }elseif ($TD_TB_NKNResTwo.Text -eq "") {
-                    $TD_TB_NKNDescrTwo.Text = "$Name Drive FW:"
-                    $TD_TB_NKNResTwo.Text = "$FWlev / $LatestDriveFW"
-                    $TD_TB_NKNDescrTwo.Visibility = "visible"
+                    $TD_TB_NKNResTwo.Text = "$CurrentDriveFW / $LatestDriveFW"
                     $TD_TB_NKNResTwo.Visibility = "visible"
-                    if($LatestDriveFW -like "*$FWlev*"){
+                    if($LatestDriveFW -like "*$CurrentDriveFW*"){
                         $TD_TB_NKNResTwo.Foreground = "Green"
                     }else {
                         $TD_TB_NKNResTwo.Foreground = "Orange"
                     }
                 }else{
-                    $TD_TB_NKNDescrThree.Text = "$Name Drive FW:"
-                    $TD_TB_NKNResThree.Text = "$FWlev / $LatestDriveFW"
-                    $TD_TB_NKNDescrThree.Visibility = "visible"
+                    $TD_TB_NKNResThree.Text = "$CurrentDriveFW / $LatestDriveFW"
                     $TD_TB_NKNResThree.Visibility = "visible"
-                    if($LatestDriveFW -like "*$FWlev*"){
+                    if($LatestDriveFW -like "*$CurrentDriveFW*"){
                         $TD_TB_NKNResThree.Foreground = "Green"
                     }else {
                         $TD_TB_NKNResThree.Foreground = "Orange"
