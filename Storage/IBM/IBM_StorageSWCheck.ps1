@@ -51,7 +51,7 @@ function IBM_StorageSWCheck {
             $IBM_WebSpecVirtSWInofs.Content | Out-File -FilePath $PSRootPath\ToolLog\ToolTEMP\IBMSVSWTemp.txt
             $IBM_LocSpecVirtSWInofsTemp = Get-Content -Path $PSRootPath\ToolLog\ToolTEMP\IBMSVSWTemp.txt
             $IBM_WebDateInfo = ($IBM_LocSpecVirtSWInofsTemp|Select-String -Pattern '([1-9]+\s[A-Za-z]+\s[0-9]+)' -AllMatches).Matches.Groups[1].Value
-            Remove-Item -Path $PSRootPath\ToolLog\ToolTEMP\IBMSVSWTemp.txt -Force
+            Remove-Item -Path $PSRootPath\ToolLog\ToolTEMP\IBMSVSWTemp.txt -Force -Confirm:$false
         }
         catch {
             <#Do this if a terminating exception happens#>
@@ -69,9 +69,15 @@ function IBM_StorageSWCheck {
                 }
             }
 
-            $IBM_LocSpecVirtSWInofs = $IBM_LocSpecVirtSWInofs |Select-Object -SkipLast ($IBM_LocSpecVirtSWInofs.Count - 80)
+            $IBM_LocSpecVirtSWInofs = $IBM_LocSpecVirtSWInofs |Select-Object -SkipLast ($IBM_LocSpecVirtSWInofs.Count - 100)
+            $IBM_WebSiteTemp = $IBM_LocSpecVirtSWInofs| ForEach-Object { $_ -replace '<([\w\s\=""\;\:\.\/-]+)>',''}
+            $IBM_WebSiteTempRaw = $IBM_WebSiteTemp -replace '&nbsp;'
+            $IBM_WebSiteTempRaw | Where-Object {$_.Trim()} | Set-Content -Path $PSRootPath\ToolLog\ToolTEMP\IBM_WebSiteHTMLclean.txt
+            $IBM_LocSpecVirtSWInofs = $null
+            $IBM_LocSpecVirtSWInofs = (Get-Content -Path $PSRootPath\ToolLog\ToolTEMP\IBM_WebSiteHTMLclean.txt).Replace("t","")
+            Remove-Item -Path $PSRootPath\ToolLog\ToolTEMP\IBM_WebSiteHTMLclean.txt -Force -Confirm:$false
             $IBM_LocSpecVirtSWInofs | Out-File -FilePath $PSRootPath\Resources\IBM_StorageSWCheck_$IBM_WebDateInfo.txt
-            Remove-Item -Path $PSRootPath\Resources\IBM_StorageSWCheck_$IBM_LocDateInfo.txt -Force
+            Remove-Item -Path $PSRootPath\Resources\IBM_StorageSWCheck_$IBM_LocDateInfo.txt -Force -Confirm:$false
             $IBM_LocDateInfo = $null
             $IBM_LocDateInfo = $IBM_WebDateInfo
         }else {
@@ -84,17 +90,29 @@ function IBM_StorageSWCheck {
         Write-Debug -Message " $IBM_CurrentSpectrVirtuFW ------- $IBM_ProdMTM "
         SST_ToolMessageCollector -TD_ToolMSGCollector " $IBM_CurrentSpectrVirtuFW ------- $IBM_ProdMTM " -TD_ToolMSGType Debug -TD_Shown no
         $IBM_SpecVirtSWInfo = switch ($IBM_CurrentSpectrVirtuFW) {
+            {$_ -like "9.1.0*"} { 
+
+                $IBM_LocSpecVirtSW = "" | Select-Object IBM_ReleaseDate,MinimumPTF,MinimumPTFDate,RecommendedPTF,RecommendedPTFDate,LatestPTF,LatestPTFDate
+                $IBM_LocSpecVirtSW.IBM_ReleaseDate = $IBM_LocDateInfo
+                $IBM_LocSpecVirtSW.MinimumPTF = ($IBM_LocSpecVirtSWInofs|Select-String -Pattern '(9.1.0.\d+)' -AllMatches).Matches[0].Value
+                $IBM_LocSpecVirtSW.MinimumPTFDate = ($IBM_LocSpecVirtSWInofs|Select-String -Pattern '\[([A-Za-z]+\s+\d+|\w+\d+)\]' -AllMatches).Matches[0].Value
+                $IBM_LocSpecVirtSW.RecommendedPTF = ($IBM_LocSpecVirtSWInofs|Select-String -Pattern '(9.1.0.\d+)' -AllMatches).Matches[1].Value
+                $IBM_LocSpecVirtSW.RecommendedPTFDate = ($IBM_LocSpecVirtSWInofs|Select-String -Pattern '\[([A-Za-z]+\s+\d+|\w+\d+)\]' -AllMatches).Matches[1].Value
+                $IBM_LocSpecVirtSW.LatestPTF = ($IBM_LocSpecVirtSWInofs|Select-String -Pattern '(9.1.0.\d+)' -AllMatches).Matches[2].Value
+                $IBM_LocSpecVirtSW.LatestPTFDate = ($IBM_LocSpecVirtSWInofs|Select-String -Pattern '\[([A-Za-z]+\s+\d+|\w+\d+)\]' -AllMatches).Matches[2].Value
+                $IBM_LocSpecVirtSW
+            }
             <# FlashSystem 5x00 Software Levels #>
             {$_ -like "8.7.0*"} { 
 
                 $IBM_LocSpecVirtSW = "" | Select-Object IBM_ReleaseDate,MinimumPTF,MinimumPTFDate,RecommendedPTF,RecommendedPTFDate,LatestPTF,LatestPTFDate
                 $IBM_LocSpecVirtSW.IBM_ReleaseDate = $IBM_LocDateInfo
-                $IBM_LocSpecVirtSW.MinimumPTF = ($IBM_LocSpecVirtSWInofs|Select-String -Pattern '(\d+.\d+.\d+.\d+)' -AllMatches).Matches[0].Value
-                $IBM_LocSpecVirtSW.MinimumPTFDate = ($IBM_LocSpecVirtSWInofs|Select-String -Pattern '([A-Za-z]+\s+\d+)' -AllMatches).Matches[0].Value
-                $IBM_LocSpecVirtSW.RecommendedPTF = ($IBM_LocSpecVirtSWInofs|Select-String -Pattern '(\d+.\d+.\d+.\d+)' -AllMatches).Matches[1].Value
-                $IBM_LocSpecVirtSW.RecommendedPTFDate = ($IBM_LocSpecVirtSWInofs|Select-String -Pattern '([A-Za-z]+\s+\d+)' -AllMatches).Matches[1].Value
-                $IBM_LocSpecVirtSW.LatestPTF = ($IBM_LocSpecVirtSWInofs|Select-String -Pattern '(\d+.\d+.\d+.\d+)' -AllMatches).Matches[2].Value
-                $IBM_LocSpecVirtSW.LatestPTFDate = ($IBM_LocSpecVirtSWInofs|Select-String -Pattern '([A-Za-z]+\s+\d+)' -AllMatches).Matches[2].Value
+                $IBM_LocSpecVirtSW.MinimumPTF = ($IBM_LocSpecVirtSWInofs|Select-String -Pattern '(8.7.0.\d+)' -AllMatches).Matches[0].Value
+                $IBM_LocSpecVirtSW.MinimumPTFDate = ($IBM_LocSpecVirtSWInofs|Select-String -Pattern '\[([A-Za-z]+\s+\d+|\w+\d+)\]' -AllMatches).Matches[3].Value
+                $IBM_LocSpecVirtSW.RecommendedPTF = ($IBM_LocSpecVirtSWInofs|Select-String -Pattern '(8.7.0.\d+)' -AllMatches).Matches[1].Value
+                $IBM_LocSpecVirtSW.RecommendedPTFDate = ($IBM_LocSpecVirtSWInofs|Select-String -Pattern '\[([A-Za-z]+\s+\d+|\w+\d+)\]' -AllMatches).Matches[4].Value
+                $IBM_LocSpecVirtSW.LatestPTF = ($IBM_LocSpecVirtSWInofs|Select-String -Pattern '(8.7.0.\d+)' -AllMatches).Matches[2].Value
+                $IBM_LocSpecVirtSW.LatestPTFDate = ($IBM_LocSpecVirtSWInofs|Select-String -Pattern '\[([A-Za-z]+\s+\d+|\w+\d+)\]' -AllMatches).Matches[5].Value
                 $IBM_LocSpecVirtSW
             }
             <# FlashSystem 7x00 Software Levels #>
@@ -102,12 +120,12 @@ function IBM_StorageSWCheck {
 
                 $IBM_LocSpecVirtSW = "" | Select-Object IBM_ReleaseDate,MinimumPTF,MinimumPTFDate,RecommendedPTF,RecommendedPTFDate,LatestPTF,LatestPTFDate
                 $IBM_LocSpecVirtSW.IBM_ReleaseDate = $IBM_LocDateInfo
-                $IBM_LocSpecVirtSW.MinimumPTF = ($IBM_LocSpecVirtSWInofs|Select-String -Pattern '(\d+.\d+.\d+.\d+)' -AllMatches).Matches[3].Value
-                $IBM_LocSpecVirtSW.MinimumPTFDate = ($IBM_LocSpecVirtSWInofs|Select-String -Pattern '([A-Za-z]+\s+\d+)' -AllMatches).Matches[3].Value
-                $IBM_LocSpecVirtSW.RecommendedPTF = ($IBM_LocSpecVirtSWInofs|Select-String -Pattern '(\d+.\d+.\d+.\d+)' -AllMatches).Matches[4].Value
-                $IBM_LocSpecVirtSW.RecommendedPTFDate = ($IBM_LocSpecVirtSWInofs|Select-String -Pattern '([A-Za-z]+\s+\d+)' -AllMatches).Matches[4].Value
-                $IBM_LocSpecVirtSW.LatestPTF = ($IBM_LocSpecVirtSWInofs|Select-String -Pattern '(\d+.\d+.\d+.\d+)' -AllMatches).Matches[5].Value
-                $IBM_LocSpecVirtSW.LatestPTFDate = ($IBM_LocSpecVirtSWInofs|Select-String -Pattern '([A-Za-z]+\s+\d+)' -AllMatches).Matches[5].Value
+                $IBM_LocSpecVirtSW.MinimumPTF = ($IBM_LocSpecVirtSWInofs|Select-String -Pattern '(8.6.0.\d+)' -AllMatches).Matches[0].Value
+                $IBM_LocSpecVirtSW.MinimumPTFDate = ($IBM_LocSpecVirtSWInofs|Select-String -Pattern '\[([A-Za-z]+\s+\d+|\w+\d+)\]' -AllMatches).Matches[6].Value
+                $IBM_LocSpecVirtSW.RecommendedPTF = ($IBM_LocSpecVirtSWInofs|Select-String -Pattern '(8.6.0.\d+)' -AllMatches).Matches[1].Value
+                $IBM_LocSpecVirtSW.RecommendedPTFDate = ($IBM_LocSpecVirtSWInofs|Select-String -Pattern '\[([A-Za-z]+\s+\d+|\w+\d+)\]' -AllMatches).Matches[7].Value
+                $IBM_LocSpecVirtSW.LatestPTF = ($IBM_LocSpecVirtSWInofs|Select-String -Pattern '(8.6.0.\d+)' -AllMatches).Matches[2].Value
+                $IBM_LocSpecVirtSW.LatestPTFDate = ($IBM_LocSpecVirtSWInofs|Select-String -Pattern '\[([A-Za-z]+\s+\d+|\w+\d+)\]' -AllMatches).Matches[8].Value
                 $IBM_LocSpecVirtSW
                 
             }
@@ -116,12 +134,12 @@ function IBM_StorageSWCheck {
 
                 $IBM_LocSpecVirtSW = "" | Select-Object IBM_ReleaseDate,MinimumPTF,MinimumPTFDate,RecommendedPTF,RecommendedPTFDate,LatestPTF,LatestPTFDate
                 $IBM_LocSpecVirtSW.IBM_ReleaseDate = $IBM_LocDateInfo
-                $IBM_LocSpecVirtSW.MinimumPTF = ($IBM_LocSpecVirtSWInofs|Select-String -Pattern '(\d+.\d+.\d+.\d+)' -AllMatches).Matches[6].Value
-                $IBM_LocSpecVirtSW.MinimumPTFDate = ($IBM_LocSpecVirtSWInofs|Select-String -Pattern '([A-Za-z]+\s+\d+)' -AllMatches).Matches[6].Value
-                $IBM_LocSpecVirtSW.RecommendedPTF = ($IBM_LocSpecVirtSWInofs|Select-String -Pattern '(\d+.\d+.\d+.\d+)' -AllMatches).Matches[7].Value
-                $IBM_LocSpecVirtSW.RecommendedPTFDate = ($IBM_LocSpecVirtSWInofs|Select-String -Pattern '([A-Za-z]+\s+\d+)' -AllMatches).Matches[7].Value
-                $IBM_LocSpecVirtSW.LatestPTF = ($IBM_LocSpecVirtSWInofs|Select-String -Pattern '(\d+.\d+.\d+.\d+)' -AllMatches).Matches[8].Value
-                $IBM_LocSpecVirtSW.LatestPTFDate = ($IBM_LocSpecVirtSWInofs|Select-String -Pattern '([A-Za-z]+\s+\d+)' -AllMatches).Matches[8].Value
+                $IBM_LocSpecVirtSW.MinimumPTF = ($IBM_LocSpecVirtSWInofs|Select-String -Pattern '(8.5.0.\d+)' -AllMatches).Matches[0].Value
+                $IBM_LocSpecVirtSW.MinimumPTFDate = ($IBM_LocSpecVirtSWInofs|Select-String -Pattern '\[([A-Za-z]+\s+\d+|\w+\d+)\]' -AllMatches).Matches[9].Value
+                $IBM_LocSpecVirtSW.RecommendedPTF = ($IBM_LocSpecVirtSWInofs|Select-String -Pattern '(8.5.0.\d+)' -AllMatches).Matches[1].Value
+                $IBM_LocSpecVirtSW.RecommendedPTFDate = ($IBM_LocSpecVirtSWInofs|Select-String -Pattern '\[([A-Za-z]+\s+\d+|\w+\d+)\]' -AllMatches).Matches[10].Value
+                $IBM_LocSpecVirtSW.LatestPTF = ($IBM_LocSpecVirtSWInofs|Select-String -Pattern '(8.5.0.\d+)' -AllMatches).Matches[2].Value
+                $IBM_LocSpecVirtSW.LatestPTFDate = ($IBM_LocSpecVirtSWInofs|Select-String -Pattern '\[([A-Za-z]+\s+\d+|\w+\d+)\]' -AllMatches).Matches[11].Value
                 $IBM_LocSpecVirtSW
 
             }
@@ -130,12 +148,12 @@ function IBM_StorageSWCheck {
 
                 $IBM_LocSpecVirtSW = "" | Select-Object IBM_ReleaseDate,MinimumPTF,MinimumPTFDate,RecommendedPTF,RecommendedPTFDate,LatestPTF,LatestPTFDate
                 $IBM_LocSpecVirtSW.IBM_ReleaseDate = $IBM_LocDateInfo
-                $IBM_LocSpecVirtSW.MinimumPTF = ($IBM_LocSpecVirtSWInofs|Select-String -Pattern '(\d+.\d+.\d+.\d+)' -AllMatches).Matches[9].Value
-                $IBM_LocSpecVirtSW.MinimumPTFDate = ($IBM_LocSpecVirtSWInofs|Select-String -Pattern '([A-Za-z]+\s+\d+)' -AllMatches).Matches[9].Value
-                $IBM_LocSpecVirtSW.RecommendedPTF = ($IBM_LocSpecVirtSWInofs|Select-String -Pattern '(\d+.\d+.\d+.\d+)' -AllMatches).Matches[10].Value
-                $IBM_LocSpecVirtSW.RecommendedPTFDate = ($IBM_LocSpecVirtSWInofs|Select-String -Pattern '([A-Za-z]+\s+\d+)' -AllMatches).Matches[10].Value
-                $IBM_LocSpecVirtSW.LatestPTF = ($IBM_LocSpecVirtSWInofs|Select-String -Pattern '(\d+.\d+.\d+.\d+)' -AllMatches).Matches[11].Value
-                $IBM_LocSpecVirtSW.LatestPTFDate = ($IBM_LocSpecVirtSWInofs|Select-String -Pattern '([A-Za-z]+\s+\d+)' -AllMatches).Matches[11].Value
+                $IBM_LocSpecVirtSW.MinimumPTF = ($IBM_LocSpecVirtSWInofs|Select-String -Pattern '(8.4.0.\d+)' -AllMatches).Matches[0].Value
+                $IBM_LocSpecVirtSW.MinimumPTFDate = ($IBM_LocSpecVirtSWInofs|Select-String -Pattern '\[([A-Za-z]+\s+\d+|\w+\d+)\]' -AllMatches).Matches[12].Value
+                $IBM_LocSpecVirtSW.RecommendedPTF = ($IBM_LocSpecVirtSWInofs|Select-String -Pattern '(8.4.0.\d+)' -AllMatches).Matches[1].Value
+                $IBM_LocSpecVirtSW.RecommendedPTFDate = ($IBM_LocSpecVirtSWInofs|Select-String -Pattern '\[([A-Za-z]+\s+\d+|\w+\d+)\]' -AllMatches).Matches[13].Value
+                $IBM_LocSpecVirtSW.LatestPTF = ($IBM_LocSpecVirtSWInofs|Select-String -Pattern '(8.4.0.\d+)' -AllMatches).Matches[2].Value
+                $IBM_LocSpecVirtSW.LatestPTFDate = ($IBM_LocSpecVirtSWInofs|Select-String -Pattern '\[([A-Za-z]+\s+\d+|\w+\d+)\]' -AllMatches).Matches[14].Value
                 $IBM_LocSpecVirtSW
 
             }
