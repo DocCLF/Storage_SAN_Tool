@@ -2,7 +2,7 @@ function SST_LiteDBControl {
     [CmdletBinding()]
     param (
         [Parameter(ValueFromPipeline)]
-        [ValidateSet("StorageDrive","StorageBase","StorageHostInfo","SANBase")]
+        [ValidateSet("StorageDrive","StorageBase","StorageHostInfo","StorageEventLog","SANBase")]
         $SST_InfoType,
         $SST_NewDBObject =$null,
         [array]$SST_CollectedInformations,
@@ -34,6 +34,11 @@ function SST_LiteDBControl {
                 }
                 "StorageDrive" { 
                     $SST_SQLiteTabelQuery ="CREATE TABLE IF NOT EXISTS IBMSTODriveTable (ID INTEGER PRIMARY KEY AUTOINCREMENT, DriveID INTEGER NOT NULL, Slot INTEGER, ProductID TEXT NOT NULL, DriveStatus TEXT NOT NULL, CurrentDriveFW TEXT, LatestDriveFW TEXT, DriveCap TEXT, PhyDriveCap TEXT, PhyUsedDriveCap TEXT, EffeUsedDriveCap TEXT, DeviceSN TEXT, DeviceWWNN TEXT, TimeStamp TEXT );" 
+                    $SST_SQliteCreateTBCMD.CommandText = $SST_SQLiteTabelQuery
+                    $SST_SQliteCreateTBCMD.ExecuteNonQuery()
+                }
+                "StorageEventLog" {
+                    $SST_SQLiteTabelQuery ="CREATE TABLE IF NOT EXISTS IBMSTOEventsTable (ID INTEGER PRIMARY KEY AUTOINCREMENT, SeqID INTEGER NOT NULL, LastTime TEXT, ObjectType TEXT, ObjectID INTEGER, ObjectName TEXT, CopyID INTEGER, Status TEXT, Fixed TEXT, ErrorCode TEXT, Description TEXT, WWNN TEXT, SerialNumber TEXT, TimeStamp TEXT );" 
                     $SST_SQliteCreateTBCMD.CommandText = $SST_SQLiteTabelQuery
                     $SST_SQliteCreateTBCMD.ExecuteNonQuery()
                 }
@@ -117,6 +122,31 @@ function SST_LiteDBControl {
                     $SST_SQliteInsertCMD.Parameters.AddWithValue("@TimeStamp", $TimeStamp) | Out-Null
  
                     # In DB speichern 
+                    $SST_SQliteInsertCMD.ExecuteNonQuery()
+                }
+            }
+            "StorageEventLog" {
+                foreach ($SST_CollectedInformation in $SST_CollectedInformations){
+                    $SST_SQliteInsertCMD.CommandText ="INSERT INTO IBMSTOEventsTable (SeqID, LastTime, ObjectType, ObjectID, ObjectName, CopyID, Status, Fixed, ErrorCode, Description, WWNN, SerialNumber, TimeStamp) VALUES (@SeqID, @LastTime, @ObjectType, @ObjectID, @ObjectName, @CopyID, @Status, @Fixed, @ErrorCode, @Description, @WWNN, @SerialNumber, @TimeStamp);"
+                    $SST_SQliteInsertCMD.Parameters.AddWithValue("@SeqID", $SST_CollectedInformation.SeqID) | Out-Null
+                    $SST_SQliteInsertCMD.Parameters.AddWithValue("@LastTime", $SST_CollectedInformation.LastTime) | Out-Null
+                    $SST_SQliteInsertCMD.Parameters.AddWithValue("@ObjectType", $SST_CollectedInformation.ObjectType) | Out-Null
+                    $SST_SQliteInsertCMD.Parameters.AddWithValue("@ObjectID", $SST_CollectedInformation.ObjectID) | Out-Null
+                    $SST_SQliteInsertCMD.Parameters.AddWithValue("@ObjectName", $SST_CollectedInformation.ObjectName) | Out-Null
+                    $SST_SQliteInsertCMD.Parameters.AddWithValue("@CopyID", $SST_CollectedInformation.CopyID) | Out-Null
+                    $SST_SQliteInsertCMD.Parameters.AddWithValue("@Status", $SST_CollectedInformation.Status) | Out-Null
+                    $SST_SQliteInsertCMD.Parameters.AddWithValue("@Fixed", $SST_CollectedInformation.Fixed) | Out-Null
+                    $SST_SQliteInsertCMD.Parameters.AddWithValue("@ErrorCode", $SST_CollectedInformation.ErrorCode) | Out-Null
+                    $SST_SQliteInsertCMD.Parameters.AddWithValue("@Description", $SST_CollectedInformation.Description) | Out-Null
+                    $SST_SQliteInsertCMD.Parameters.AddWithValue("@WWNN", $SST_CollectedInformation.WWNN) | Out-Null
+                    $SST_SQliteInsertCMD.Parameters.AddWithValue("@SerialNumber", $SST_CollectedInformation.SerialNumber) | Out-Null
+                    $SST_SQliteInsertCMD.Parameters.AddWithValue("@TimeStamp", $TimeStamp) | Out-Null
+ 
+                    # In DB speichern 
+                    $SST_SQliteInsertCMD.ExecuteNonQuery()
+
+                    # Delete | Keep only the 500 most recent entries after TimeStamp
+                    $SST_SQliteInsertCMD.CommandText = "DELETE FROM IBMSTOEventsTable WHERE ID NOT IN ( SELECT ID FROM IBMSTOEventsTable ORDER BY TimeStamp DESC LIMIT 500 );"
                     $SST_SQliteInsertCMD.ExecuteNonQuery()
                 }
             }
