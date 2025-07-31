@@ -33,12 +33,18 @@ function SST_DashBoardMain {
         }
 
         try {
+            $DashBoardHostsView = [System.Collections.Generic.List[object]]::new()
             $SST_SQLiteSTODashBoardQuery = $null
             $SST_SQLiteSTODashBoardQuery = " SELECT ID, HID, Name, Status, HostClusterName, SideName, TimeStamp FROM IBMSTOHostTable d WHERE TimeStamp = ( SELECT MAX(TimeStamp) FROM IBMSTOHostTable WHERE HID = d.HID ) AND Status != 'online' ORDER BY HID; "
-            $SST_SQliteReadCMD.CommandText = $SST_SQLiteSTODashBoardQuery
-            $SST_SQLiteDBReader = $SST_SQliteReadCMD.ExecuteReader()
-            SST_DashBoardHosts -STOHWCollection $SST_SQLiteDBReader -SST_IBMHostDeviceCounter 0
+            SST_DashBoardHosts -STOHWCollection $SST_SQLiteSTODashBoardQuery -SST_IBMHostDeviceCounter 0 -SQLReader $SST_SQliteReadCMD
             $SST_SQLiteDBReader.Close()
+        }
+        catch {
+            Write-Host $_.Exception.Message
+            SST_ToolMessageCollector -TD_ToolMSGCollector "There is something wrong, mybe there is no IBMSTOHostTable Table" -TD_ToolMSGType Warning -TD_Shown yes
+        }
+
+        try {
             $SST_SQliteReadCMD.CommandText = "SELECT COUNT(DISTINCT Name) AS DeviceCount FROM IBMSTOHostTable;"
             $SST_IBMHostDeviceCounter = $SST_SQliteReadCMD.ExecuteScalar()
             SST_DashBoardHosts -SST_IBMHostDeviceCounter $SST_IBMHostDeviceCounter
@@ -46,7 +52,7 @@ function SST_DashBoardMain {
         }
         catch {
             Write-Host $_.Exception.Message
-            SST_ToolMessageCollector -TD_ToolMSGCollector "There is something wrong, mybe there is no IBMSTOHostTable Table" -TD_ToolMSGType Warning -TD_Shown yes
+            SST_ToolMessageCollector -TD_ToolMSGCollector "There is something wrong, mybe there is no IBMSANHWTable Table" -TD_ToolMSGType Warning -TD_Shown yes
         }
 
         try {
@@ -77,6 +83,19 @@ function SST_DashBoardMain {
         catch {
             Write-Host $_.Exception.Message
             SST_ToolMessageCollector -TD_ToolMSGCollector "There is something wrong, mybe there is no IBMSTODriveTable Table" -TD_ToolMSGType Warning -TD_Shown yes
+        }
+
+        try {
+            $SST_SQLiteSTODashBoardQuery = $null
+            $SST_SQLiteSTODashBoardQuery = " SELECT * FROM IBMSTOEventsTable e WHERE Status = 'alert' AND TimeStamp >= datetime('now', '-14 days') AND TimeStamp = (SELECT MAX(TimeStamp) FROM IBMSTOEventsTable WHERE Status = 'alert' AND TimeStamp >= datetime('now', '-14 days'));"
+            $SST_SQliteReadCMD.CommandText = $SST_SQLiteSTODashBoardQuery
+            $SST_SQLiteDBReader = $SST_SQliteReadCMD.ExecuteReader()
+            SST_DashBoardEvents -STOEVCollection $SST_SQLiteDBReader 
+            $SST_SQLiteDBReader.Close()
+        }
+        catch {
+            Write-Host $_.Exception.Message
+            SST_ToolMessageCollector -TD_ToolMSGCollector "There is something wrong, mybe there is no IBMSTOHostTable Table" -TD_ToolMSGType Warning -TD_Shown yes
         }
     }
     
