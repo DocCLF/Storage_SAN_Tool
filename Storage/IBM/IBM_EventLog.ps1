@@ -37,24 +37,29 @@ function IBM_EventLog {
         [int]$ProgCounter=0
 
         <# Action when all if and elseif conditions are false #>
-        if($TD_Device_ConnectionTyp -eq "ssh"){
-            $TD_CollectEventInfo = ssh -i $($TD_Device_SSHKeyPath) $TD_Device_UserName@$TD_Device_DeviceIP "lseventlog -delim :"
+        if($TD_Storage -eq "SVC"){
+            $TD_CollectEventInfo = plink $TD_Device_UserName@$TD_Device_DeviceIP -pw $TD_Device_PW -batch "lseventlog -delim : && lsnode -delim . -nohdr"
         }else {
-            $TD_CollectEventInfo = plink $TD_Device_UserName@$TD_Device_DeviceIP -pw $TD_Device_PW -batch "lseventlog -delim :"
+            $TD_CollectEventInfo = plink $TD_Device_UserName@$TD_Device_DeviceIP -pw $TD_Device_PW -batch "lseventlog -delim : && lsnodecanister -delim . -nohdr"
         }
         
         $TD_CollectEventInfo = $TD_CollectEventInfo | Select-Object -Skip 1
-        
     }
 
     process{
         Write-Debug -Message "IBM_EventLog Process block |$(Get-Date)"
+        $TD_EventSplitInfoWWNN = ($TD_CollectEventInfo|Select-String -Pattern '\.([\w+]{14,18})\.' -AllMatches).Matches.Groups[1].Value
+        if($TD_Storage -eq "SVC"){
+            $TD_FSBaseSerialNumber = ($TD_CollectEventInfo|Select-String -Pattern '\.(\w{6,8})\.(|\d+)\.(|\d+)\.(|\w{6,8})' -AllMatches).Matches.Groups[1].Value
+        }else{
+            $TD_FSBaseSerialNumber = ($TD_CollectEventInfo|Select-String -Pattern '\.\d+\.\d+\.(\w{6,8})\.' -AllMatches).Matches.Groups[1].Value
+        }
 
         [array]$TD_EventCollection = foreach($EventLine in $TD_CollectEventInfo){
             <# Node Info#>
-            $TD_EventSplitInfo = "" | Select-Object SeqID,LastTime,ObjectType,ObjectID,ObjectName,CopyID,Status,Fixed,ErrorCode,Description
-
-            $TD_EventSplitInfo.SeqID = ($EventLine|Select-String -Pattern '^(\d+)' -AllMatches).Matches.Groups[1].Value
+            $TD_EventSplitInfo = "" | Select-Object SeqID,LastTime,ObjectType,ObjectID,ObjectName,CopyID,Status,Fixed,ErrorCode,Description,WWNN,SerialNumber
+            if([string]::IsNullOrWhiteSpace($(($EventLine|Select-String -Pattern '^(\d+)\:' -AllMatches).Matches.Groups[1].Value))){continue}
+            $TD_EventSplitInfo.SeqID = ($EventLine|Select-String -Pattern '^(\d+)\:' -AllMatches).Matches.Groups[1].Value
             $TD_Timestamp = ($EventLine|Select-String -Pattern '^(\d+):(\d+)' -AllMatches).Matches.Groups[2].Value
             $TD_EventSplitInfo.LastTime = [datetime]::ParseExact($TD_Timestamp, 'yyMMddHHmmss', [cultureinfo]::InvariantCulture)
             $TD_EventSplitInfo.ObjectType = ($EventLine|Select-String -Pattern '^(\d+):(\d+):([\w_.]+)' -AllMatches).Matches.Groups[3].Value
@@ -78,6 +83,8 @@ function IBM_EventLog {
                 $TD_EventSplitInfo.ErrorCode = "none"
             }
             $TD_EventSplitInfo.Description = ($EventLine|Select-String -Pattern '([\w\s\,\/]+)$' -AllMatches).Matches.Groups[1].Value
+            $TD_EventSplitInfo.WWNN = $TD_EventSplitInfoWWNN
+            $TD_EventSplitInfo.SerialNumber = $TD_FSBaseSerialNumber
 
             $TD_EventSplitInfo
 
