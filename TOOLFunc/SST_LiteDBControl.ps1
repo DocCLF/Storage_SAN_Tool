@@ -28,7 +28,7 @@ function SST_LiteDBControl {
                     $SST_SQliteCreateTBCMD.ExecuteNonQuery()
                 }
                 "StorageHostInfo" { 
-                    $SST_SQLiteTabelQuery ="CREATE TABLE IF NOT EXISTS IBMSTOHostTable (ID INTEGER PRIMARY KEY AUTOINCREMENT, HID INTEGER NOT NULL, Name TEXT NOT NULL, Status TEXT NOT NULL, HostClusterName TEXT, SideName TEXT, TimeStamp TEXT );" 
+                    $SST_SQLiteTabelQuery ="CREATE TABLE IF NOT EXISTS IBMSTOHostTable (ID INTEGER PRIMARY KEY AUTOINCREMENT, HID INTEGER NOT NULL, Name TEXT NOT NULL, Status TEXT NOT NULL, HostClusterName TEXT, SideName TEXT, STOName TEXT, WWNN TEXT, SerialNumber TEXT, TimeStamp TEXT );" 
                     $SST_SQliteCreateTBCMD.CommandText = $SST_SQLiteTabelQuery
                     $SST_SQliteCreateTBCMD.ExecuteNonQuery()
                 }
@@ -113,12 +113,15 @@ function SST_LiteDBControl {
             }
             "StorageHostInfo" { 
                 foreach ($SST_CollectedInformation in $SST_CollectedInformations){
-                    $SST_SQliteInsertCMD.CommandText ="INSERT INTO IBMSTOHostTable (HID, Name, Status, HostClusterName, SideName, TimeStamp) VALUES (@HID, @Name, @Status, @HostClusterName, @SideName, @TimeStamp);"
+                    $SST_SQliteInsertCMD.CommandText ="INSERT INTO IBMSTOHostTable (HID, Name, Status, HostClusterName, SideName, STOName, WWNN, SerialNumber, TimeStamp) VALUES (@HID, @Name, @Status, @HostClusterName, @SideName, @STOName, @WWNN, @SerialNumber, @TimeStamp);"
                     $SST_SQliteInsertCMD.Parameters.AddWithValue("@HID", $SST_CollectedInformation.HostID) | Out-Null
                     $SST_SQliteInsertCMD.Parameters.AddWithValue("@Name", $SST_CollectedInformation.HostName) | Out-Null
                     $SST_SQliteInsertCMD.Parameters.AddWithValue("@Status", $SST_CollectedInformation.Status) | Out-Null
                     $SST_SQliteInsertCMD.Parameters.AddWithValue("@HostClusterName", $SST_CollectedInformation.HostClusterName) | Out-Null
                     $SST_SQliteInsertCMD.Parameters.AddWithValue("@SideName", $SST_CollectedInformation.SiteName) | Out-Null
+                    $SST_SQliteInsertCMD.Parameters.AddWithValue("@STOName", $SST_CollectedInformation.STOName) | Out-Null
+                    $SST_SQliteInsertCMD.Parameters.AddWithValue("@WWNN", $SST_CollectedInformation.WWNN) | Out-Null
+                    $SST_SQliteInsertCMD.Parameters.AddWithValue("@SerialNumber", $SST_CollectedInformation.SerialNumber) | Out-Null
                     $SST_SQliteInsertCMD.Parameters.AddWithValue("@TimeStamp", $TimeStamp) | Out-Null
  
                     # In DB speichern 
