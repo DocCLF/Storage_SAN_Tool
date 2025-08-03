@@ -25,6 +25,7 @@ function SST_DashBoardHosts {
                     Status  = $SST_SQLiteDBReader["Status"]
                     HostClusterName = $SST_SQLiteDBReader["HostClusterName"]
                     SideName = $SST_SQLiteDBReader["SideName"]
+                    STOName = $SST_SQLiteDBReader["STOName"]
                     HostIcon = "$PSRootPath\Resources\icons\icons8-server-96.png"
                     TimeStamp    = $SST_SQLiteDBReader["TimeStamp"]
                     ClockIcon96 = "$PSRootPath\Resources\icons\icons8-clock-96.png"
