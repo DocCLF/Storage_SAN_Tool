@@ -878,7 +878,7 @@
                     <ItemsControl x:Name="IC_DashBoardHosts">
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
-                                <Button Style="{DynamicResource DashBoardBTNStyle}" Margin="0,5,5,5" MaxWidth="400" IsEnabled="True">
+                                <Button Style="{DynamicResource DashBoardBTNStyle}" Margin="0,5,5,5" Width="350" IsEnabled="True">
                                     <Grid Margin="5">
                                         <Grid.RowDefinitions>
                                             <RowDefinition MaxHeight="100"/>
@@ -886,6 +886,7 @@
                                         </Grid.RowDefinitions>
                                         <Grid Grid.Row="0">
                                             <Grid.RowDefinitions>
+                                                <RowDefinition />
                                                 <RowDefinition />
                                                 <RowDefinition />
                                                 <RowDefinition />
@@ -958,7 +959,7 @@
                                                                 <Setter Property= "Foreground" Value="Red"/>
                                                             </Trigger>
                                                             <Trigger Property ="Text" Value="degraded">
-                                                                <Setter Property= "Foreground" Value="yellow"/>
+                                                                <Setter Property= "Foreground" Value="Orange"/>
                                                             </Trigger>
                                                         </Style.Triggers>
                                                     </Style>
@@ -970,10 +971,25 @@
                                                 Style="{DynamicResource DashBoardTB2}"
                                                 HorizontalAlignment="Left"
                                                 VerticalAlignment="Center"
-                                                Text="SideName:" 
+                                                Text="StorageName:" 
                                                 Margin="8,0,0,0"/>
                                             <TextBlock
                                                 Grid.Row="3"
+                                                Grid.Column="2"
+                                                Style="{DynamicResource DashBoardTB2}"
+                                                HorizontalAlignment="Left"
+                                                VerticalAlignment="Center"
+                                                Text="{Binding STOName}"/>
+                                            <TextBlock
+                                                Grid.Row="4"
+                                                Grid.Column="1"
+                                                Style="{DynamicResource DashBoardTB2}"
+                                                HorizontalAlignment="Left"
+                                                VerticalAlignment="Center"
+                                                Text="SideName:" 
+                                                Margin="8,0,0,0"/>
+                                            <TextBlock
+                                                Grid.Row="4"
                                                 Grid.Column="2"
                                                 Style="{DynamicResource DashBoardTB2}"
                                                 HorizontalAlignment="Left"
