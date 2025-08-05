@@ -24,7 +24,7 @@
             <!--Storage FS & SVC-->
             <Button x:Name="btn_IBM_SV" Content="IBM Spectrum Virtualize" Style="{DynamicResource MainBtnStyle}"/>
             <!--IBM Power-->
-            <Button x:Name="BTN_PowerBoard" Content="IBM Power Board" Style="{DynamicResource MainBtnStyle}" />
+            <!--<Button x:Name="BTN_PowerBoard" Content="IBM Power Board" Style="{DynamicResource MainBtnStyle}" /> -->
             <!--Brocade SAN-->
             <Button x:Name="btn_Broc_SAN"  Content="Brocade SAN" Style="{DynamicResource MainBtnStyle}" />
             <!--Brocade SAN-->
