@@ -25,11 +25,11 @@ $MainWindow =[Windows.Markup.XamlReader]::Load($Mainreader)
 
 $MainXAML.SelectNodes("//*[@Name]") | ForEach-Object {Set-Variable -Name "TD_$($_.Name)" -Value $MainWindow.FindName($_.Name)}
 <# add ResourceDictionary for WPF to App #>
-$AppStyles = [Windows.Markup.XamlReader]::Parse((Get-Content -Path "$PSRootPath\Resources\AppStyle.xaml" -Raw))
+$AppStyles = [Windows.Markup.XamlReader]::Parse((Get-Content -Path "$PSRootPath\Resources\Styles\AppStyle.xaml" -Raw))
 $MainWindow.Resources.MergedDictionaries.Add( $AppStyles )
-$TextBoxStyle = [Windows.Markup.XamlReader]::Parse((Get-Content -Path "$PSRootPath\Resources\TextBoxStyle.xaml" -Raw))
+$TextBoxStyle = [Windows.Markup.XamlReader]::Parse((Get-Content -Path "$PSRootPath\Resources\Styles\TextBoxStyle.xaml" -Raw))
 $MainWindow.Resources.MergedDictionaries.Add( $TextBoxStyle )
-$ButtonStyles = [Windows.Markup.XamlReader]::Parse((Get-Content -Path "$PSRootPath\Resources\ButtonStyle.xaml" -Raw))
+$ButtonStyles = [Windows.Markup.XamlReader]::Parse((Get-Content -Path "$PSRootPath\Resources\Styles\ButtonStyle.xaml" -Raw))
 $MainWindow.Resources.MergedDictionaries.Add( $ButtonStyles )
 
 <# PowerShell WPF XAML simple data binding datacontext #>
