@@ -19,12 +19,10 @@ function SST_DashBoardMain {
     
     process {
         try {
+            $DashBoardSTODeviceView = [System.Collections.Generic.List[object]]::new()
             $SST_SQLiteSTODashBoardQuery = $null
             $SST_SQLiteSTODashBoardQuery = " SELECT ID, DID, Name, ClusterName, WWNN, Status, IOgroupid, IOgroupName, SerialNumber, CodeLevel, ConfigNode, SideID, SideName, ProdMTM, RecommendedPTF, MDiskTC, MDiskUC, TimeStamp FROM IBMSTOHWTable d WHERE TimeStamp = ( SELECT MAX(TimeStamp) FROM IBMSTOHWTable WHERE SerialNumber = d.SerialNumber ) GROUP BY SerialNumber ORDER BY ID; "
-            $SST_SQliteReadCMD.CommandText = $SST_SQLiteSTODashBoardQuery
-            $SST_SQLiteDBReader = $SST_SQliteReadCMD.ExecuteReader()
-
-            SST_DashBoardSTO -STOHWCollection $SST_SQLiteDBReader
+            SST_DashBoardSTO -STOHWCollection $SST_SQLiteSTODashBoardQuery -SQLReader $SST_SQliteReadCMD
             $SST_SQLiteDBReader.Close()
         }
         catch {
