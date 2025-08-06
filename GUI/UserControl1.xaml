@@ -99,449 +99,167 @@
                 </WrapPanel>
             </Grid>
         </GroupBox>
-        <GroupBox Grid.Row="1" Header="Storage Info" MinWidth="400" HorizontalAlignment="Left" Margin="10,10,0,0"  VerticalAlignment="Top">
-            <WrapPanel Orientation="Horizontal" Margin="5" MinHeight="125">
-                    <Button Style="{DynamicResource DashBoardBTNStyle}" x:Name="BTN_STO_DevOne" Margin="0,5,5,5" Visibility = "Collapsed" >
-                        <Grid Margin="5">
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="125"/>
-                                <RowDefinition Height="auto"/>
-                                <RowDefinition Height="25"/>
-                            </Grid.RowDefinitions>
-                            <Grid >
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="70" />
-                                    <ColumnDefinition />
-                                </Grid.ColumnDefinitions>
-                                <Ellipse Width="65" Height="65" Fill="WhiteSmoke" Stretch="Uniform" >
-                                    <Ellipse.Effect>
-                                        <DropShadowEffect Direction="320" ShadowDepth="2" Color="LightBlue" BlurRadius="5" />
-                                    </Ellipse.Effect>
-                                </Ellipse>
-                                <Ellipse Width="60" Height="60" >
-                                   <Ellipse.Fill>
-                                       <ImageBrush ImageSource = "{Binding IBMSTOIcon , Mode=TwoWay}" Stretch="Uniform" />
-                                   </Ellipse.Fill>
-                                </Ellipse>
-                                <TextBlock
-                                    x:Name="TB_STO_DevOne"
-                                    Grid.Column="1"
-                                    Style="{DynamicResource DashBoardTB1}"
-                                    HorizontalAlignment="Left"
-                                    VerticalAlignment="Center"
-                                    Text=" " 
-                                    Margin="8,0,5,0"
-                                    Visibility = "Collapsed"/>
-                            </Grid>
-                            <Grid Grid.Row="1">
-                                <StackPanel Margin="5,0">
-                                    <Grid Margin="0,0,0,2">
-                                        <TextBlock Text="0" />
-                                        <TextBlock x:Name="TB_STO_DevOneTotal" Text=" " HorizontalAlignment="Right"/>
+        <GroupBox Grid.Row="1" Header="Storage Info" MinWidth="400" MaxHeight="340" HorizontalAlignment="Left" Margin="10,10,0,0"  VerticalAlignment="Top">
+            <ScrollViewer Margin="5" VerticalScrollBarVisibility="Auto">
+                <ItemsControl x:Name="IC_DashBoardSTODevice">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Button Style="{DynamicResource DashBoardBTNStyle}" Margin="0,5,5,5" Width="300" IsEnabled="True">
+                                <Grid Margin="5">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition MaxHeight="150"/>
+                                        <RowDefinition Height="20"/>
+                                    </Grid.RowDefinitions>
+                                    <Grid Grid.Row="0">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition />
+                                            <RowDefinition />
+                                            <RowDefinition />
+                                            <RowDefinition />
+                                            <RowDefinition />
+                                            <RowDefinition />
+                                            <RowDefinition />
+                                        </Grid.RowDefinitions>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition MaxWidth="70" />
+                                            <ColumnDefinition />
+                                            <ColumnDefinition />
+                                        </Grid.ColumnDefinitions>
+                                        <Ellipse Grid.RowSpan="6" Width="65" Height="65" Fill="WhiteSmoke" Stretch="Uniform" >
+                                            <Ellipse.Effect>
+                                                <DropShadowEffect Direction="320" ShadowDepth="2" Color="LightBlue" BlurRadius="5" />
+                                            </Ellipse.Effect>
+                                        </Ellipse>
+                                        <Ellipse Grid.RowSpan="6" Width="60" Height="60" >
+                                           <Ellipse.Fill>
+                                               <ImageBrush ImageSource = "{Binding STOIcon , Mode=TwoWay}" Stretch="Uniform" />
+                                           </Ellipse.Fill>
+                                        </Ellipse>
+                                        <TextBlock
+                                            Grid.Column="1"
+                                            Style="{DynamicResource DashBoardTB1}"
+                                            HorizontalAlignment="Left"
+                                            VerticalAlignment="Center"
+                                            Text="ClusterName:" 
+                                            Margin="3,0"/>
+                                        <TextBlock
+                                            Grid.Column="2"
+                                            Style="{DynamicResource DashBoardTB1}"
+                                            HorizontalAlignment="Left"
+                                            VerticalAlignment="Center"
+                                            Text="{Binding ClusterName}"
+                                            Margin="0"/>
+                                        <TextBlock
+                                            Grid.Row="1"
+                                            Grid.Column="1"
+                                            Style="{DynamicResource DashBoardTB1}"
+                                            HorizontalAlignment="Left"
+                                            VerticalAlignment="Center"
+                                            Text="Status:" 
+                                            Margin="3,0"/>
+                                        <TextBlock
+                                            Grid.Row="1"
+                                            Grid.Column="2"
+                                            Style="{DynamicResource DashBoardTB1}"
+                                            HorizontalAlignment="Left"
+                                            VerticalAlignment="Center"
+                                            Text="{Binding Status}"
+                                            Margin="0"/>
+                                        <TextBlock
+                                            Grid.Row="2"
+                                            Grid.Column="1"
+                                            Style="{DynamicResource DashBoardTB1}"
+                                            HorizontalAlignment="Left"
+                                            VerticalAlignment="Center"
+                                            Text="MTM:" 
+                                            Margin="3,0"/>
+                                        <TextBlock
+                                            Grid.Row="2"
+                                            Grid.Column="2"
+                                            Style="{DynamicResource DashBoardTB1}"
+                                            HorizontalAlignment="Left"
+                                            VerticalAlignment="Center"
+                                            Text="{Binding ProdMTM}"
+                                            Margin="0"/>
+                                        <TextBlock
+                                            Grid.Row="3"
+                                            Grid.Column="1"
+                                            Style="{DynamicResource DashBoardTB1}"
+                                            HorizontalAlignment="Left"
+                                            VerticalAlignment="Center"
+                                            Text="SN:" 
+                                            Margin="3,0"/>
+                                        <TextBlock
+                                            Grid.Row="3"
+                                            Grid.Column="2"
+                                            Style="{DynamicResource DashBoardTB1}"
+                                            HorizontalAlignment="Left"
+                                            VerticalAlignment="Center"
+                                            Text="{Binding SerialNumber}"
+                                            Margin="0"/>
+                                        <TextBlock
+                                            Grid.Row="4"
+                                            Grid.Column="1"
+                                            Style="{DynamicResource DashBoardTB1}"
+                                            HorizontalAlignment="Left"
+                                            VerticalAlignment="Center"
+                                            Text="FW:" 
+                                            Margin="3,0"/>
+                                        <TextBlock
+                                            Grid.Row="4"
+                                            Grid.Column="2"
+                                            Style="{DynamicResource DashBoardTB1}"
+                                            HorizontalAlignment="Left"
+                                            VerticalAlignment="Center"
+                                            Text="{Binding CodeLevel}"
+                                            Margin="0"/>
+                                        <TextBlock
+                                            Grid.Row="5"
+                                            Grid.Column="1"
+                                            Style="{DynamicResource DashBoardTB1}"
+                                            HorizontalAlignment="Left"
+                                            VerticalAlignment="Center"
+                                            Text="FW Rec:" 
+                                            Margin="3,0"/>
+                                        <TextBlock
+                                            Grid.Row="5"
+                                            Grid.Column="2"
+                                            Style="{DynamicResource DashBoardTB1}"
+                                            HorizontalAlignment="Left"
+                                            VerticalAlignment="Center"
+                                            Text="{Binding RecommendedPTF}"
+                                            Margin="0"/>
+                                        <StackPanel Grid.Row="6" Grid.ColumnSpan="3" Margin="5,0">
+                                            <Grid Margin="0,0,0,2">
+                                                <TextBlock Text="0" />
+                                                <TextBlock Text="{Binding MDiskTC}" HorizontalAlignment="Right"/>
+                                            </Grid>
+                                            <ProgressBar Height="5" BorderBrush="WhiteSmoke" Foreground="Teal" Maximum="{Binding MDiskTCfPGB}" Value="{Binding MDiskUC}">
+                                                <ProgressBar.Resources>
+                                                    <Style TargetType="{x:Type Border}">
+                                                        <Setter Property="CornerRadius" Value="2" />
+                                                    </Style>
+                                                </ProgressBar.Resources>
+                                            </ProgressBar>
+                                        </StackPanel>
                                     </Grid>
-                                    <ProgressBar x:Name="PB_STO_DevOneUsed" Height="5" BorderBrush="WhiteSmoke" Foreground="Teal" Value="0">
-                                        <ProgressBar.Resources>
-                                            <Style TargetType="{x:Type Border}">
-                                                <Setter Property="CornerRadius" Value="2" />
-                                            </Style>
-                                        </ProgressBar.Resources>
-                                    </ProgressBar>
-                                </StackPanel>
-                            </Grid>
-                            <Grid Grid.Row="2">
-                                <StackPanel Orientation="Horizontal" Margin="5,3,5,0" ToolTip="Last Changes">
-                                    <Image Source = "{Binding ClockIcon96 , Mode=TwoWay}" Stretch="Uniform" VerticalAlignment="Bottom" HorizontalAlignment="Left" MaxHeight="30" />
-                                    <TextBlock x:Name="TB_Clock_STO_DevOne" Text="" HorizontalAlignment="Right" Margin="5,3" />
-                                </StackPanel>
-                            </Grid>
-                        </Grid>
-                    </Button>
-                    <Button Style="{DynamicResource DashBoardBTNStyle}" x:Name="BTN_STO_DevTwo" Margin="15,5,5,5" Visibility = "Collapsed" >
-                        <Grid Margin="5">
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="125"/>
-                                <RowDefinition Height="auto"/>
-                                <RowDefinition Height="25"/>
-                            </Grid.RowDefinitions>
-                            <Grid >
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="70" />
-                                    <ColumnDefinition />
-                                </Grid.ColumnDefinitions>
-                                <Ellipse Width="65" Height="65" Fill="WhiteSmoke" Stretch="Uniform" >
-                                    <Ellipse.Effect>
-                                        <DropShadowEffect Direction="320" ShadowDepth="2" Color="LightBlue" BlurRadius="5" />
-                                    </Ellipse.Effect>
-                                </Ellipse>
-                                <Ellipse Width="60" Height="60" >
-                                   <Ellipse.Fill>
-                                       <ImageBrush ImageSource = "{Binding IBMSTOIcon , Mode=TwoWay}" Stretch="Uniform" />
-                                   </Ellipse.Fill>
-                                </Ellipse>
-                                <TextBlock
-                                    x:Name="TB_STO_DevTwo"
-                                    Grid.Column="1"
-                                    Style="{DynamicResource DashBoardTB1}"
-                                    HorizontalAlignment="Left"
-                                    VerticalAlignment="Center"
-                                    Text=" " 
-                                    Margin="8,0,5,0"
-                                    Visibility = "Collapsed"/>
-                            </Grid>
-                            <Grid Grid.Row="1">
-                                <StackPanel Margin="5,0">
-                                    <Grid Margin="0,0,0,2">
-                                        <TextBlock Text="0" />
-                                        <TextBlock x:Name="TB_STO_DevTwoTotal" Text=" " HorizontalAlignment="Right"/>
+                                    <Grid Grid.Row="1">
+                                        <StackPanel Orientation="Horizontal" Margin="5,0" ToolTip="Last Changes">
+                                            <Image Source = "{Binding ClockIcon96 , Mode=TwoWay}" Stretch="Uniform" VerticalAlignment="Bottom" HorizontalAlignment="Left" MaxHeight="30" />
+                                            <TextBlock Text="{Binding TimeStamp}" HorizontalAlignment="Right" Margin="5,2" />
+                                        </StackPanel>
                                     </Grid>
-                                    <ProgressBar x:Name="PB_STO_DevTwoUsed" Height="5" BorderBrush="WhiteSmoke" Foreground="Teal" Value="0">
-                                        <ProgressBar.Resources>
-                                            <Style TargetType="{x:Type Border}">
-                                                <Setter Property="CornerRadius" Value="2" />
-                                            </Style>
-                                        </ProgressBar.Resources>
-                                    </ProgressBar>
-                                </StackPanel>
-                            </Grid>
-                            <Grid Grid.Row="2">
-                                <StackPanel Orientation="Horizontal" Margin="5,3,5,0" ToolTip="Last Changes">
-                                    <Image Source = "{Binding ClockIcon96 , Mode=TwoWay}" Stretch="Uniform" VerticalAlignment="Bottom" HorizontalAlignment="Left" MaxHeight="30" />
-                                    <TextBlock x:Name="TB_Clock_STO_DevTwo" Text="" HorizontalAlignment="Right" Margin="5,3" />
-                                </StackPanel>
-                            </Grid>
-                        </Grid>
-                    </Button>
-                    <Button Style="{DynamicResource DashBoardBTNStyle}" x:Name="BTN_STO_DevThree" Margin="15,5,5,5" Visibility = "Collapsed" >
-                        <Grid Margin="5">
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="125"/>
-                                <RowDefinition Height="auto"/>
-                                <RowDefinition Height="25"/>
-                            </Grid.RowDefinitions>
-                            <Grid >
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="70" />
-                                    <ColumnDefinition />
-                                </Grid.ColumnDefinitions>
-                                <Ellipse Width="65" Height="65" Fill="WhiteSmoke" Stretch="Uniform" >
-                                    <Ellipse.Effect>
-                                        <DropShadowEffect Direction="320" ShadowDepth="2" Color="LightBlue" BlurRadius="5" />
-                                    </Ellipse.Effect>
-                                </Ellipse>
-                                <Ellipse Width="60" Height="60" >
-                                   <Ellipse.Fill>
-                                       <ImageBrush ImageSource = "{Binding IBMSTOIcon , Mode=TwoWay}" Stretch="Uniform" />
-                                   </Ellipse.Fill>
-                                </Ellipse>
-                                <TextBlock
-                                    x:Name="TB_STO_DevThree"
-                                    Grid.Column="1"
-                                    Style="{DynamicResource DashBoardTB1}"
-                                    HorizontalAlignment="Left"
-                                    VerticalAlignment="Center"
-                                    Text=" " 
-                                    Margin="8,0,5,0"
-                                    Visibility = "Collapsed"/>
-                            </Grid>
-                            <Grid Grid.Row="1">
-                                <StackPanel Margin="5,0">
-                                    <Grid Margin="0,0,0,2">
-                                        <TextBlock Text="0" />
-                                        <TextBlock x:Name="TB_STO_DevThreeTotal" Text=" " HorizontalAlignment="Right"/>
-                                    </Grid>
-                                    <ProgressBar x:Name="PB_STO_DevThreeUsed" Height="5" BorderBrush="WhiteSmoke" Foreground="Teal" Value="0">
-                                        <ProgressBar.Resources>
-                                            <Style TargetType="{x:Type Border}">
-                                                <Setter Property="CornerRadius" Value="2" />
-                                            </Style>
-                                        </ProgressBar.Resources>
-                                    </ProgressBar>
-                                </StackPanel>
-                            </Grid>
-                            <Grid Grid.Row="2">
-                                <StackPanel Orientation="Horizontal" Margin="5,3,5,0" ToolTip="Last Changes">
-                                    <Image Source = "{Binding ClockIcon96 , Mode=TwoWay}" Stretch="Uniform" VerticalAlignment="Bottom" HorizontalAlignment="Left" MaxHeight="30" />
-                                    <TextBlock x:Name="TB_Clock_STO_DevThree" Text="" HorizontalAlignment="Right" Margin="5,3" />
-                                </StackPanel>
-                            </Grid>
-                        </Grid>
-                    </Button>
-                    <Button Style="{DynamicResource DashBoardBTNStyle}" x:Name="BTN_STO_DevFour" Margin="15,5,5,5" Visibility = "Collapsed" >
-                        <Grid Margin="5">
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="125"/>
-                                <RowDefinition Height="auto"/>
-                                <RowDefinition Height="25"/>
-                            </Grid.RowDefinitions>
-                            <Grid >
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="70" />
-                                    <ColumnDefinition />
-                                </Grid.ColumnDefinitions>
-                                <Ellipse Width="65" Height="65" Fill="WhiteSmoke" Stretch="Uniform" >
-                                    <Ellipse.Effect>
-                                        <DropShadowEffect Direction="320" ShadowDepth="2" Color="LightBlue" BlurRadius="5" />
-                                    </Ellipse.Effect>
-                                </Ellipse>
-                                <Ellipse Width="60" Height="60" >
-                                   <Ellipse.Fill>
-                                       <ImageBrush ImageSource = "{Binding IBMSTOIcon , Mode=TwoWay}" Stretch="Uniform" />
-                                   </Ellipse.Fill>
-                                </Ellipse>
-                                <TextBlock
-                                    x:Name="TB_STO_DevFour"
-                                    Grid.Column="1"
-                                    Style="{DynamicResource DashBoardTB1}"
-                                    HorizontalAlignment="Left"
-                                    VerticalAlignment="Center"
-                                    Text=" " 
-                                    Margin="8,0,5,0"
-                                    Visibility = "Collapsed"/>
-                            </Grid>
-                            <Grid Grid.Row="1">
-                                <StackPanel Margin="5,0">
-                                    <Grid Margin="0,0,0,2">
-                                        <TextBlock Text="0" />
-                                        <TextBlock x:Name="TB_STO_DevFourTotal" Text=" " HorizontalAlignment="Right"/>
-                                    </Grid>
-                                    <ProgressBar x:Name="PB_STO_DevFourUsed" Height="5" BorderBrush="WhiteSmoke" Foreground="Teal" Value="0">
-                                        <ProgressBar.Resources>
-                                            <Style TargetType="{x:Type Border}">
-                                                <Setter Property="CornerRadius" Value="2" />
-                                            </Style>
-                                        </ProgressBar.Resources>
-                                    </ProgressBar>
-                                </StackPanel>
-                            </Grid>
-                            <Grid Grid.Row="2">
-                                <StackPanel Orientation="Horizontal" Margin="5,3,5,0" ToolTip="Last Changes">
-                                    <Image Source = "{Binding ClockIcon96 , Mode=TwoWay}" Stretch="Uniform" VerticalAlignment="Bottom" HorizontalAlignment="Left" MaxHeight="30" />
-                                    <TextBlock x:Name="TB_Clock_STO_DevFour" Text="" HorizontalAlignment="Right" Margin="5,3" />
-                                </StackPanel>
-                            </Grid>
-                        </Grid>
-                    </Button>
-                    <Button Style="{DynamicResource DashBoardBTNStyle}" x:Name="BTN_STO_DevFive" Margin="15,5,5,5" Visibility = "Collapsed" >
-                        <Grid Margin="5">
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="125"/>
-                                <RowDefinition Height="auto"/>
-                                <RowDefinition Height="25"/>
-                            </Grid.RowDefinitions>
-                            <Grid >
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="70" />
-                                    <ColumnDefinition />
-                                </Grid.ColumnDefinitions>
-                                <Ellipse Width="65" Height="65" Fill="WhiteSmoke" Stretch="Uniform" >
-                                    <Ellipse.Effect>
-                                        <DropShadowEffect Direction="320" ShadowDepth="2" Color="LightBlue" BlurRadius="5" />
-                                    </Ellipse.Effect>
-                                </Ellipse>
-                                <Ellipse Width="60" Height="60" >
-                                   <Ellipse.Fill>
-                                       <ImageBrush ImageSource = "{Binding IBMSTOIcon , Mode=TwoWay}" Stretch="Uniform" />
-                                   </Ellipse.Fill>
-                                </Ellipse>
-                                <TextBlock
-                                    x:Name="TB_STO_DevFive"
-                                    Grid.Column="1"
-                                    Style="{DynamicResource DashBoardTB1}"
-                                    HorizontalAlignment="Left"
-                                    VerticalAlignment="Center"
-                                    Text=" " 
-                                    Margin="8,0,5,0"
-                                    Visibility = "Collapsed"/>
-                            </Grid>
-                            <Grid Grid.Row="1">
-                                <StackPanel Margin="5,0">
-                                    <Grid Margin="0,0,0,2">
-                                        <TextBlock Text="0" />
-                                        <TextBlock x:Name="TB_STO_DevFiveTotal" Text=" " HorizontalAlignment="Right"/>
-                                    </Grid>
-                                    <ProgressBar x:Name="PB_STO_DevFiveUsed" Height="5" BorderBrush="WhiteSmoke" Foreground="Teal" Value="0">
-                                        <ProgressBar.Resources>
-                                            <Style TargetType="{x:Type Border}">
-                                                <Setter Property="CornerRadius" Value="2" />
-                                            </Style>
-                                        </ProgressBar.Resources>
-                                    </ProgressBar>
-                                </StackPanel>
-                            </Grid>
-                            <Grid Grid.Row="2">
-                                <StackPanel Orientation="Horizontal" Margin="5,3,5,0" ToolTip="Last Changes">
-                                    <Image Source = "{Binding ClockIcon96 , Mode=TwoWay}" Stretch="Uniform" VerticalAlignment="Bottom" HorizontalAlignment="Left" MaxHeight="30" />
-                                    <TextBlock x:Name="TB_Clock_STO_DevFive" Text="" HorizontalAlignment="Right" Margin="5,3"/>
-                                </StackPanel>
-                            </Grid>
-                        </Grid>
-                    </Button>
-                    <Button Style="{DynamicResource DashBoardBTNStyle}" x:Name="BTN_STO_DevSix" Margin="15,5,5,5" Visibility = "Collapsed" >
-                        <Grid Margin="5">
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="125"/>
-                                <RowDefinition Height="auto"/>
-                                <RowDefinition Height="25"/>
-                            </Grid.RowDefinitions>
-                            <Grid >
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="70" />
-                                    <ColumnDefinition />
-                                </Grid.ColumnDefinitions>
-                                <Ellipse Width="65" Height="65" Fill="WhiteSmoke" Stretch="Uniform" >
-                                    <Ellipse.Effect>
-                                        <DropShadowEffect Direction="320" ShadowDepth="2" Color="LightBlue" BlurRadius="5" />
-                                    </Ellipse.Effect>
-                                </Ellipse>
-                                <Ellipse Width="60" Height="60" >
-                                   <Ellipse.Fill>
-                                       <ImageBrush ImageSource = "{Binding IBMSTOIcon , Mode=TwoWay}" Stretch="Uniform" />
-                                   </Ellipse.Fill>
-                                </Ellipse>
-                                <TextBlock
-                                    x:Name="TB_STO_DevSix"
-                                    Grid.Column="1"
-                                    Style="{DynamicResource DashBoardTB1}"
-                                    HorizontalAlignment="Left"
-                                    VerticalAlignment="Center"
-                                    Text=" " 
-                                    Margin="8,0,5,0"
-                                    Visibility = "Collapsed"/>
-                            </Grid>
-                            <Grid Grid.Row="1">
-                                <StackPanel Margin="5,0">
-                                    <Grid Margin="0,0,0,2">
-                                        <TextBlock Text="0" />
-                                        <TextBlock x:Name="TB_STO_DevSixTotal" Text=" " HorizontalAlignment="Right"/>
-                                    </Grid>
-                                    <ProgressBar x:Name="PB_STO_DevSixUsed" Height="5" BorderBrush="WhiteSmoke" Foreground="Teal" Value="0">
-                                        <ProgressBar.Resources>
-                                            <Style TargetType="{x:Type Border}">
-                                                <Setter Property="CornerRadius" Value="2" />
-                                            </Style>
-                                        </ProgressBar.Resources>
-                                    </ProgressBar>
-                                </StackPanel>
-                            </Grid>
-                            <Grid Grid.Row="2">
-                                <StackPanel Orientation="Horizontal" Margin="5,3,5,0" ToolTip="Last Changes">
-                                    <Image Source = "{Binding ClockIcon96 , Mode=TwoWay}" Stretch="Uniform" VerticalAlignment="Bottom" HorizontalAlignment="Left" MaxHeight="30" />
-                                    <TextBlock x:Name="TB_Clock_STO_DevSix" Text="" HorizontalAlignment="Right" Margin="5,3"/>
-                                </StackPanel>
-                            </Grid>
-                        </Grid>
-                    </Button>
-                    <Button Style="{DynamicResource DashBoardBTNStyle}" x:Name="BTN_STO_DevSeven" Margin="15,5,5,5" Visibility = "Collapsed" >
-                        <Grid Margin="5">
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="125"/>
-                                <RowDefinition Height="auto"/>
-                                <RowDefinition Height="25"/>
-                            </Grid.RowDefinitions>
-                            <Grid >
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="70" />
-                                    <ColumnDefinition />
-                                </Grid.ColumnDefinitions>
-                                <Ellipse Width="65" Height="65" Fill="WhiteSmoke" Stretch="Uniform" >
-                                    <Ellipse.Effect>
-                                        <DropShadowEffect Direction="320" ShadowDepth="2" Color="LightBlue" BlurRadius="5" />
-                                    </Ellipse.Effect>
-                                </Ellipse>
-                                <Ellipse Width="60" Height="60" >
-                                   <Ellipse.Fill>
-                                       <ImageBrush ImageSource = "{Binding IBMSTOIcon , Mode=TwoWay}" Stretch="Uniform" />
-                                   </Ellipse.Fill>
-                                </Ellipse>
-                                <TextBlock
-                                    x:Name="TB_STO_DevSeven"
-                                    Grid.Column="1"
-                                    Style="{DynamicResource DashBoardTB1}"
-                                    HorizontalAlignment="Left"
-                                    VerticalAlignment="Center"
-                                    Text=" " 
-                                    Margin="8,0,5,0"
-                                    Visibility = "Collapsed"/>
-                            </Grid>
-                            <Grid Grid.Row="1">
-                                <StackPanel Margin="5,0">
-                                    <Grid Margin="0,0,0,2">
-                                        <TextBlock Text="0" />
-                                        <TextBlock x:Name="TB_STO_DevSevenTotal" Text=" " HorizontalAlignment="Right"/>
-                                    </Grid>
-                                    <ProgressBar x:Name="PB_STO_DevSevenUsed" Height="5" BorderBrush="WhiteSmoke" Foreground="Teal" Value="0">
-                                        <ProgressBar.Resources>
-                                            <Style TargetType="{x:Type Border}">
-                                                <Setter Property="CornerRadius" Value="2" />
-                                            </Style>
-                                        </ProgressBar.Resources>
-                                    </ProgressBar>
-                                </StackPanel>
-                            </Grid>
-                            <Grid Grid.Row="2">
-                                <StackPanel Orientation="Horizontal" Margin="5,3,5,0" ToolTip="Last Changes">
-                                    <Image Source = "{Binding ClockIcon96 , Mode=TwoWay}" Stretch="Uniform" VerticalAlignment="Bottom" HorizontalAlignment="Left" MaxHeight="30" />
-                                    <TextBlock x:Name="TB_Clock_STO_DevSeven" Text="" HorizontalAlignment="Right" Margin="5,3"/>
-                                </StackPanel>
-                            </Grid>
-                        </Grid>
-                    </Button>
-                    <Button Style="{DynamicResource DashBoardBTNStyle}" x:Name="BTN_STO_DevEight" Margin="15,5,5,5" Visibility = "Collapsed" >
-                        <Grid Margin="5">
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="125"/>
-                                <RowDefinition Height="auto"/>
-                                <RowDefinition Height="25"/>
-                            </Grid.RowDefinitions>
-                            <Grid >
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="70" />
-                                    <ColumnDefinition />
-                                </Grid.ColumnDefinitions>
-                                <Ellipse Width="65" Height="65" Fill="WhiteSmoke" Stretch="Uniform" >
-                                    <Ellipse.Effect>
-                                        <DropShadowEffect Direction="320" ShadowDepth="2" Color="LightBlue" BlurRadius="5" />
-                                    </Ellipse.Effect>
-                                </Ellipse>
-                                <Ellipse Width="60" Height="60" >
-                                   <Ellipse.Fill>
-                                       <ImageBrush ImageSource = "{Binding IBMSTOIcon , Mode=TwoWay}" Stretch="Uniform" />
-                                   </Ellipse.Fill>
-                                </Ellipse>
-                                <TextBlock
-                                    x:Name="TB_STO_DevEight"
-                                    Grid.Column="1"
-                                    Style="{DynamicResource DashBoardTB1}"
-                                    HorizontalAlignment="Left"
-                                    VerticalAlignment="Center"
-                                    Text=" " 
-                                    Margin="8,0,5,0"
-                                    Visibility = "Collapsed"/>
-                            </Grid>
-                            <Grid Grid.Row="1">
-                                <StackPanel Margin="5,0">
-                                    <Grid Margin="0,0,0,2">
-                                        <TextBlock Text="0" />
-                                        <TextBlock x:Name="TB_STO_DevEightTotal" Text=" " HorizontalAlignment="Right"/>
-                                    </Grid>
-                                    <ProgressBar x:Name="PB_STO_DevEightUsed" Height="5" BorderBrush="WhiteSmoke" Foreground="Teal" Value="0">
-                                        <ProgressBar.Resources>
-                                            <Style TargetType="{x:Type Border}">
-                                                <Setter Property="CornerRadius" Value="2" />
-                                            </Style>
-                                        </ProgressBar.Resources>
-                                    </ProgressBar>
-                                </StackPanel>
-                            </Grid>
-                            <Grid Grid.Row="2">
-                                <StackPanel Orientation="Horizontal" Margin="5,3,5,0" ToolTip="Last Changes">
-                                    <Image Source = "{Binding ClockIcon96 , Mode=TwoWay}" Stretch="Uniform" VerticalAlignment="Bottom" HorizontalAlignment="Left" MaxHeight="30" />
-                                    <TextBlock x:Name="TB_Clock_STO_DevEight" Text="" HorizontalAlignment="Right" Margin="5,3"/>
-                                </StackPanel>
-                            </Grid>
-                        </Grid>
-                    </Button>
-            </WrapPanel>
+                                </Grid>
+                            </Button>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapPanel />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                </ItemsControl>
+            </ScrollViewer>
         </GroupBox>
         <!--<GroupBox Grid.Row="2" Header="Power Info" MinWidth="820" HorizontalAlignment="Left" Margin="10,10,0,0"  VerticalAlignment="Top">
             <StackPanel Grid.Row="0" Orientation="Vertical">
