@@ -54,12 +54,10 @@ function SST_DashBoardMain {
         }
 
         try {
+            $DashBoardSANDeviceView = [System.Collections.Generic.List[object]]::new()
             $SST_SQLiteSTODashBoardQuery = $null
             $SST_SQLiteSTODashBoardQuery = " SELECT Name, Status, CodeLevel, BrocadeProdName, SerialNumber, TimeStamp FROM IBMSANHWTable d WHERE TimeStamp = ( SELECT MAX(TimeStamp) FROM IBMSANHWTable WHERE SerialNumber = d.SerialNumber ) ORDER BY SerialNumber; "
-            $SST_SQliteReadCMD.CommandText = $SST_SQLiteSTODashBoardQuery
-            $SST_SQLiteDBReader = $SST_SQliteReadCMD.ExecuteReader()
-
-            SST_DashBoardSAN -STOHWCollection $SST_SQLiteDBReader
+            SST_DashBoardSAN -SANHWCollection $SST_SQLiteSTODashBoardQuery -SQLReader $SST_SQliteReadCMD
             $SST_SQLiteDBReader.Close()
         }
         catch {
