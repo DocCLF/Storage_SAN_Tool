@@ -14,6 +14,7 @@ function SST_DashBoardSTO {
     process {
 
         #ID, Name, WWNN, Status, IOgroupid, IOgroupName, SerialNumber, CodeLevel, ConfigNode, SideID, ProdMTM, TimeStamp
+        # need a workaround if PB is used
         while ($SST_SQLiteDBReader.Read()) {
             
             $DashBoardSTOsObj = [PSCustomObject]@{
