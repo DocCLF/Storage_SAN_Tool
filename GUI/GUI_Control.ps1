@@ -41,11 +41,11 @@ class DashBoardIMG {
     [string]$RefrehIcon96
 }
 $DashBoardIcons =[DashBoardIMG]::new()
-$DashBoardIcons.IBMSTOIcon = "$PSRootPath\Resources\icons\ibmstoicon.png"
-$DashBoardIcons.BrocadeIcon = "$PSRootPath\Resources\icons\broadcom-96.png"
-$DashBoardIcons.ClockIcon96 = "$PSRootPath\Resources\icons\icons8-clock-96.png"
-$DashBoardIcons.HostIcon96 = "$PSRootPath\Resources\icons\icons8-server-96.png"
-$DashBoardIcons.RefrehIcon96 = "$PSRootPath\Resources\icons\icons8-refresh-96.png"
+$DashBoardIcons.IBMSTOIcon = "$PSRootPath\Resources\Icons\ibmstoicon.png"
+$DashBoardIcons.BrocadeIcon = "$PSRootPath\Resources\Icons\broadcom-96.png"
+$DashBoardIcons.ClockIcon96 = "$PSRootPath\Resources\Icons\icons8-clock-96.png"
+$DashBoardIcons.HostIcon96 = "$PSRootPath\Resources\Icons\icons8-server-96.png"
+$DashBoardIcons.RefrehIcon96 = "$PSRootPath\Resources\Icons\icons8-refresh-96.png"
 
 <# Create UserControls as basis of Content for MainWindow #>
 $UserCxamlFile = Get-ChildItem "$PSScriptRoot\UserControl*.xaml"
@@ -140,8 +140,8 @@ foreach($file in $UserCxamlFile){
         #$TD_tb_Exportpath.Text = $_.Exception.Message
     }
     <# MainWindow Background IMG #>
-    $TD_LogoImage.Source = "$PSRootPath\Resources\PROFI_Logo_2022_dark.png"
-    $TD_LogoImageSmall.Source = "$PSRootPath\Resources\PROFI_Logo_2022_dark.png"
+    $TD_LogoImage.Source = "$PSRootPath\Resources\Icons\PROFI_Logo_2022_dark.png"
+    $TD_LogoImageSmall.Source = "$PSRootPath\Resources\Icons\PROFI_Logo_2022_dark.png"
     $TD_LogoImageSmall.Visibility = "hidden"
     # Since the switch to SQLite, the DB can also be used with PowerShell V5.
     if($PSVersionTable.PSVersion.Major -ge 7){
@@ -219,12 +219,7 @@ $TD_btn_ChangeExportPath.add_click({
 })
 <# Refresh Button #>
 $TD_BTN_RefreshUC1.add_click({
-    $TD_BTN_STO_DevOne,$TD_BTN_STO_DevTwo,$TD_BTN_STO_DevThree,$TD_BTN_STO_DevFour,$TD_BTN_STO_DevFive,$TD_BTN_STO_DevSix,$TD_BTN_STO_DevSeven,$TD_BTN_STO_DevEight |ForEach-Object {$_.Visibility = "Collapsed"}
-    $TD_TB_STO_DevOne,$TD_TB_STO_DevTwo,$TD_TB_STO_DevThree,$TD_TB_STO_DevFour,$TD_TB_STO_DevFive,$TD_TB_STO_DevSix,$TD_TB_STO_DevSeven,$TD_TB_STO_DevEight |ForEach-Object {$_.Text = "" }
-    $TD_BTN_SAN_DevOne,$TD_BTN_SAN_DevTwo,$TD_BTN_SAN_DevThree,$TD_BTN_SAN_DevFour,$TD_BTN_SAN_DevFive,$TD_BTN_SAN_DevSix,$TD_BTN_SAN_DevSeven,$TD_BTN_SAN_DevEight |ForEach-Object {$_.Visibility = "Collapsed"}
-    $TD_TB_SAN_DevOne,$TD_TB_SAN_DevTwo,$TD_TB_SAN_DevThree,$TD_TB_SAN_DevFour,$TD_TB_SAN_DevFive,$TD_TB_SAN_DevSix,$TD_TB_SAN_DevSeven,$TD_TB_SAN_DevEight |ForEach-Object {$_.Text = "" }
-    $TD_BTN_STO_HostOne,$TD_BTN_STO_HostTwo,$TD_BTN_STO_HostThree,$TD_BTN_STO_HostFour,$TD_BTN_STO_HostFive,$TD_BTN_STO_HostSix,$TD_BTN_STO_HostSeven,$TD_BTN_STO_HostEight,$TD_BTN_STO_HostNine,$TD_BTN_STO_HostTen,$TD_BTN_STO_HostEleven,$TD_BTN_STO_HostTwelve,$TD_BTN_STO_HostThirteen,$TD_BTN_STO_HostFourteen,$TD_BTN_STO_HostFifteen,$TD_BTN_STO_HostSixteen |ForEach-Object {$_.Visibility = "Collapsed"}
-    $TD_TB_STO_HostOne,$TD_TB_STO_HostTwo,$TD_TB_STO_HostThree,$TD_TB_STO_HostFour,$TD_TB_STO_HostFive,$TD_TB_STO_HostSix,$TD_TB_STO_HostSeven,$TD_TB_STO_HostEight,$TD_TB_STO_HostNine,$TD_TB_STO_HostTen,$TD_TB_STO_HostEleven,$TD_TB_STO_HostTwelve,$TD_TB_STO_HostThirteen,$TD_TB_STO_HostFourteen,$TD_TB_STO_HostFifteen,$TD_TB_STO_HostSixteen |ForEach-Object {$_.Text = "" }
+
     <#wenn refresh sollte der Counter auf 0 gestellt werden #>
     $TD_TB_ALLHostCount,$TD_TB_OfflHostCount,$TD_TB_OnlinelHostCount | ForEach-Object {$_.Text="0"}
 
@@ -733,8 +728,9 @@ $TD_btn_ClearFilterHVM.Add_Click({
 })
 
 $TD_btn_IBM_DriveInfo.add_click({
-    $TD_lb_DriveInfoOne.Visibility = "Hidden"; $TD_lb_DriveInfoTwo.Visibility = "Hidden"; $TD_lb_DriveInfoThree.Visibility = "Hidden"; $TD_lb_DriveInfoFour.Visibility = "Hidden"; 
-    $TD_lb_DriveInfoFive.Visibility = "Hidden"; $TD_lb_DriveInfoSix.Visibility = "Hidden"; $TD_lb_DriveInfoSeven.Visibility = "Hidden"; $TD_lb_DriveInfoEight.Visibility = "Hidden";
+    $TD_lb_DriveInfoOne,$TD_lb_DriveInfoTwo,$TD_lb_DriveInfoThree,$TD_lb_DriveInfoFour,$TD_lb_DriveInfoFive,$TD_lb_DriveInfoSix,$TD_lb_DriveInfoSeven,$TD_lb_DriveInfoEight  |ForEach-Object {
+        $_.Visibility = "Hidden"
+    }
 
     $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_.DeviceTyp -eq "Storage"}
 
@@ -765,14 +761,14 @@ $TD_btn_IBM_DriveInfo.add_click({
             }
 
             switch ($TD_DevCounter) {
-                {($_ -eq 1)} { $TD_dg_DriveInfoOne.ItemsSource = $TD_DriveInfo }
-                {($_ -eq 2)} { $TD_dg_DriveInfoTwo.ItemsSource = $TD_DriveInfo }
-                {($_ -eq 3)} { $TD_dg_DriveInfoThree.ItemsSource = $TD_DriveInfo }
-                {($_ -eq 4)} { $TD_dg_DriveInfoFour.ItemsSource = $TD_DriveInfo }
-                {($_ -eq 5)} { $TD_dg_DriveInfoFive.ItemsSource = $TD_DriveInfo }
-                {($_ -eq 6)} { $TD_dg_DriveInfoSix.ItemsSource = $TD_DriveInfo }
-                {($_ -eq 7)} { $TD_dg_DriveInfoSeven.ItemsSource = $TD_DriveInfo }
-                {($_ -eq 8)} { $TD_dg_DriveInfoEight.ItemsSource = $TD_DriveInfo }
+                {($_ -eq 1)} { $TD_IC_STODriveViewOne.ItemsSource = $TD_DriveInfo }
+                {($_ -eq 2)} { $TD_IC_STODriveViewTwo.ItemsSource = $TD_DriveInfo }
+                {($_ -eq 3)} { $TD_IC_STODriveViewThree.ItemsSource = $TD_DriveInfo }
+                {($_ -eq 4)} { $TD_IC_STODriveViewFour.ItemsSource = $TD_DriveInfo }
+                {($_ -eq 5)} { $TD_IC_STODriveViewFive.ItemsSource = $TD_DriveInfo }
+                {($_ -eq 6)} { $TD_IC_STODriveViewix.ItemsSource = $TD_DriveInfo }
+                {($_ -eq 7)} { $TD_IC_STODriveViewSeven.ItemsSource = $TD_DriveInfo }
+                {($_ -eq 8)} { $TD_IC_STODriveViewEight.ItemsSource = $TD_DriveInfo }
                 Default { SST_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong, please check the prompt output first and then the log files.") -TD_ToolMSGType Error }
             }
 
