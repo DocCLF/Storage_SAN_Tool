@@ -26,9 +26,9 @@ function SST_DashBoardHosts {
                     HostClusterName = $SST_SQLiteDBReader["HostClusterName"]
                     SideName = $SST_SQLiteDBReader["SideName"]
                     STOName = $SST_SQLiteDBReader["STOName"]
-                    HostIcon = "$PSRootPath\Resources\icons\icons8-server-96.png"
+                    HostIcon = "$PSRootPath\Resources\Icons\icons8-server-96.png"
                     TimeStamp    = $SST_SQLiteDBReader["TimeStamp"]
-                    ClockIcon96 = "$PSRootPath\Resources\icons\icons8-clock-96.png"
+                    ClockIcon96 = "$PSRootPath\Resources\Icons\icons8-clock-96.png"
                 }
                 $DashBoardHostsView.Add($DashBoardHostsObj)
             }
