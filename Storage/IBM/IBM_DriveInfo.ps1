@@ -64,15 +64,15 @@ function IBM_DriveInfo {
         [int]$ProgCounter=0
         <# Connect to Device and get all needed Data #>
         if($TD_Storage -eq "FSystem"){
-            if($TD_Device_ConnectionTyp -eq "ssh"){
-                $TD_CollectInfos = ssh -i $($TD_Device_SSHKeyPath) $TD_Device_UserName@$TD_Device_DeviceIP 'lsnodecanister -nohdr -delim : && lsnodecanister -nohdr |while read id name IO_group_id;do lsnodecanister $id;echo;done && lsdrive -nohdr |while read id name IO_group_id;do lsdrive $id ;echo;done'
-            }else {
+            #if($TD_Device_ConnectionTyp -eq "ssh"){
+            #    $TD_CollectInfos = ssh -i $($TD_Device_SSHKeyPath) $TD_Device_UserName@$TD_Device_DeviceIP 'lsnodecanister -nohdr -delim : && lsnodecanister -nohdr |while read id name IO_group_id;do lsnodecanister $id;echo;done && lsdrive -nohdr |while read id name IO_group_id;do lsdrive $id ;echo;done'
+            #}else {
                 $TD_CollectInfos = plink $TD_Device_UserName@$TD_Device_DeviceIP -pw $TD_Device_PW -batch 'lsnodecanister -nohdr -delim : && lsnodecanister -nohdr |while read id name IO_group_id;do lsnodecanister $id;echo;done && lsdrive -nohdr |while read id name IO_group_id;do lsdrive $id ;echo;done'
-            }
-        }else {
+           # }
+        }#else {
             <# Action when all if and elseif conditions are false #>
-            $TD_lb_DriveErrorInfo.Visibility = "Visible"; $TD_lb_DriveErrorInfo.Content = "An SVC has no hard drives or FlashCore Modules."
-        }
+        #    $TD_lb_DriveErrorInfo.Visibility = "Visible"; $TD_lb_DriveErrorInfo.Content = "An SVC has no hard drives or FlashCore Modules."
+        #}
         #$TD_CollectInfos = Get-Content -Path "C:\Users\mailt\Documents\lsdrive.txt"
         Write-Debug -Message "Number of Lines: $($TD_CollectInfos.count) "
         $TD_TempNodeInfo = "" | Select-Object SerialNumber,WWNN
@@ -172,14 +172,14 @@ function IBM_DriveInfo {
 
     end{
         Close-ProgressBar -ProgressBar $ProgressBar
-        if(($TD_Line_ID -eq 1) -and ($TD_Storage -eq "FSystem")){$TD_lb_DriveInfoOne.Visibility = "Visible"; $TD_lb_DriveInfoOne.Content = "Serial Number: $($TD_TempNodeInfo.SerialNumber)  Product-Type: $($TD_NodeSplitInfo.ProdName)"    ;$TD_CB_STO_DG1.IsChecked="true";$TD_CB_STO_DG1.Visibility="visible";$TD_LB_STO_DG1.Visibility="visible"; $TD_LB_STO_DG1.Content=$TD_Device_DeviceName }
-        if(($TD_Line_ID -eq 2) -and ($TD_Storage -eq "FSystem")){$TD_lb_DriveInfoTwo.Visibility = "Visible"; $TD_lb_DriveInfoTwo.Content = "Serial Number: $($TD_TempNodeInfo.SerialNumber)  Product-Type: $($TD_NodeSplitInfo.ProdName)"    ;$TD_CB_STO_DG2.IsChecked="true";$TD_CB_STO_DG2.Visibility="visible";$TD_LB_STO_DG2.Visibility="visible"; $TD_LB_STO_DG2.Content=$TD_Device_DeviceName }
-        if(($TD_Line_ID -eq 3) -and ($TD_Storage -eq "FSystem")){$TD_lb_DriveInfoThree.Visibility = "Visible"; $TD_lb_DriveInfoThree.Content = "Serial Number: $($TD_TempNodeInfo.SerialNumber)  Product-Type: $($TD_NodeSplitInfo.ProdName)";$TD_CB_STO_DG3.IsChecked="true";$TD_CB_STO_DG3.Visibility="visible";$TD_LB_STO_DG3.Visibility="visible"; $TD_LB_STO_DG3.Content=$TD_Device_DeviceName }
-        if(($TD_Line_ID -eq 4) -and ($TD_Storage -eq "FSystem")){$TD_lb_DriveInfoFour.Visibility = "Visible"; $TD_lb_DriveInfoFour.Content = "Serial Number: $($TD_TempNodeInfo.SerialNumber)  Product-Type: $($TD_NodeSplitInfo.ProdName)"  ;$TD_CB_STO_DG4.IsChecked="true";$TD_CB_STO_DG4.Visibility="visible";$TD_LB_STO_DG4.Visibility="visible"; $TD_LB_STO_DG4.Content=$TD_Device_DeviceName }
-        if(($TD_Line_ID -eq 5) -and ($TD_Storage -eq "FSystem")){$TD_lb_DriveInfoFive.Visibility = "Visible"; $TD_lb_DriveInfoFive.Content = "Serial Number: $($TD_TempNodeInfo.SerialNumber)  Product-Type: $($TD_NodeSplitInfo.ProdName)"  ;$TD_CB_STO_DG5.IsChecked="true";$TD_CB_STO_DG5.Visibility="visible";$TD_LB_STO_DG5.Visibility="visible"; $TD_LB_STO_DG5.Content=$TD_Device_DeviceName }
-        if(($TD_Line_ID -eq 6) -and ($TD_Storage -eq "FSystem")){$TD_lb_DriveInfoSix.Visibility = "Visible"; $TD_lb_DriveInfoSix.Content = "Serial Number: $($TD_TempNodeInfo.SerialNumber)  Product-Type: $($TD_NodeSplitInfo.ProdName)"    ;$TD_CB_STO_DG6.IsChecked="true";$TD_CB_STO_DG6.Visibility="visible";$TD_LB_STO_DG6.Visibility="visible"; $TD_LB_STO_DG6.Content=$TD_Device_DeviceName }
-        if(($TD_Line_ID -eq 7) -and ($TD_Storage -eq "FSystem")){$TD_lb_DriveInfoSeven.Visibility = "Visible"; $TD_lb_DriveInfoSeven.Content = "Serial Number: $($TD_TempNodeInfo.SerialNumber)  Product-Type: $($TD_NodeSplitInfo.ProdName)";$TD_CB_STO_DG7.IsChecked="true";$TD_CB_STO_DG7.Visibility="visible";$TD_LB_STO_DG7.Visibility="visible"; $TD_LB_STO_DG7.Content=$TD_Device_DeviceName }
-        if(($TD_Line_ID -eq 8) -and ($TD_Storage -eq "FSystem")){$TD_lb_DriveInfoEight.Visibility = "Visible"; $TD_lb_DriveInfoEight.Content = "Serial Number: $($TD_TempNodeInfo.SerialNumber)  Product-Type: $($TD_NodeSplitInfo.ProdName)";$TD_CB_STO_DG8.IsChecked="true";$TD_CB_STO_DG8.Visibility="visible";$TD_LB_STO_DG8.Visibility="visible"; $TD_LB_STO_DG8.Content=$TD_Device_DeviceName }
+        if($TD_Line_ID -eq 1){$TD_lb_DriveInfoOne.Visibility = "Visible"; $TD_lb_DriveInfoOne.Content = "Serial Number: $($TD_TempNodeInfo.SerialNumber)  Product-Type: $($TD_NodeSplitInfo.ProdName)"    ;$TD_CB_STO_DG1.IsChecked="true";$TD_CB_STO_DG1.Visibility="visible";$TD_LB_STO_DG1.Visibility="visible"; $TD_LB_STO_DG1.Content=$TD_Device_DeviceName }
+        if($TD_Line_ID -eq 2){$TD_lb_DriveInfoTwo.Visibility = "Visible"; $TD_lb_DriveInfoTwo.Content = "Serial Number: $($TD_TempNodeInfo.SerialNumber)  Product-Type: $($TD_NodeSplitInfo.ProdName)"    ;$TD_CB_STO_DG2.IsChecked="true";$TD_CB_STO_DG2.Visibility="visible";$TD_LB_STO_DG2.Visibility="visible"; $TD_LB_STO_DG2.Content=$TD_Device_DeviceName }
+        if($TD_Line_ID -eq 3){$TD_lb_DriveInfoThree.Visibility = "Visible"; $TD_lb_DriveInfoThree.Content = "Serial Number: $($TD_TempNodeInfo.SerialNumber)  Product-Type: $($TD_NodeSplitInfo.ProdName)";$TD_CB_STO_DG3.IsChecked="true";$TD_CB_STO_DG3.Visibility="visible";$TD_LB_STO_DG3.Visibility="visible"; $TD_LB_STO_DG3.Content=$TD_Device_DeviceName }
+        if($TD_Line_ID -eq 4){$TD_lb_DriveInfoFour.Visibility = "Visible"; $TD_lb_DriveInfoFour.Content = "Serial Number: $($TD_TempNodeInfo.SerialNumber)  Product-Type: $($TD_NodeSplitInfo.ProdName)"  ;$TD_CB_STO_DG4.IsChecked="true";$TD_CB_STO_DG4.Visibility="visible";$TD_LB_STO_DG4.Visibility="visible"; $TD_LB_STO_DG4.Content=$TD_Device_DeviceName }
+        if($TD_Line_ID -eq 5){$TD_lb_DriveInfoFive.Visibility = "Visible"; $TD_lb_DriveInfoFive.Content = "Serial Number: $($TD_TempNodeInfo.SerialNumber)  Product-Type: $($TD_NodeSplitInfo.ProdName)"  ;$TD_CB_STO_DG5.IsChecked="true";$TD_CB_STO_DG5.Visibility="visible";$TD_LB_STO_DG5.Visibility="visible"; $TD_LB_STO_DG5.Content=$TD_Device_DeviceName }
+        if($TD_Line_ID -eq 6){$TD_lb_DriveInfoSix.Visibility = "Visible"; $TD_lb_DriveInfoSix.Content = "Serial Number: $($TD_TempNodeInfo.SerialNumber)  Product-Type: $($TD_NodeSplitInfo.ProdName)"    ;$TD_CB_STO_DG6.IsChecked="true";$TD_CB_STO_DG6.Visibility="visible";$TD_LB_STO_DG6.Visibility="visible"; $TD_LB_STO_DG6.Content=$TD_Device_DeviceName }
+        if($TD_Line_ID -eq 7){$TD_lb_DriveInfoSeven.Visibility = "Visible"; $TD_lb_DriveInfoSeven.Content = "Serial Number: $($TD_TempNodeInfo.SerialNumber)  Product-Type: $($TD_NodeSplitInfo.ProdName)";$TD_CB_STO_DG7.IsChecked="true";$TD_CB_STO_DG7.Visibility="visible";$TD_LB_STO_DG7.Visibility="visible"; $TD_LB_STO_DG7.Content=$TD_Device_DeviceName }
+        if($TD_Line_ID -eq 8){$TD_lb_DriveInfoEight.Visibility = "Visible"; $TD_lb_DriveInfoEight.Content = "Serial Number: $($TD_TempNodeInfo.SerialNumber)  Product-Type: $($TD_NodeSplitInfo.ProdName)";$TD_CB_STO_DG8.IsChecked="true";$TD_CB_STO_DG8.Visibility="visible";$TD_LB_STO_DG8.Visibility="visible"; $TD_LB_STO_DG8.Content=$TD_Device_DeviceName }
         
         <# export y or n #>
         if($TD_export -eq "yes"){
