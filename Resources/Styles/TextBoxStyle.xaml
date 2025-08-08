@@ -8,6 +8,24 @@
         <Setter Property="Margin" Value="2" />
     </Style>
 
+    <Style TargetType="TextBox" x:Key="STODriveTB" >
+        <Setter Property="Margin" Value="1,0"/>
+        <Setter Property="FontWeight" Value="Bold"/>
+        <Setter Property="FontSize" Value="11"/>
+        <Setter Property="Foreground" Value="DarkSlateGray"/>
+        <Setter Property="HorizontalContentAlignment" Value="Center"/>
+        <Setter Property="VerticalContentAlignment" Value="Stretch"/>
+        <Setter Property="IsReadOnly" Value="True" />
+        <Setter Property="BorderBrush" Value="Transparent" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding IsMouseOver, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Button}}" Value="true">
+                <Setter Property="Foreground" Value="White"/>
+                <Setter Property="Background" Value="Transparent"/>
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+
     <Style TargetType="TextBlock" x:Key="DashBoardTB1" >
         <Setter Property="Margin" Value="5"/>
         <Setter Property="FontWeight" Value="Bold"/>
