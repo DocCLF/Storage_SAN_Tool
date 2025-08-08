@@ -23,8 +23,8 @@ function SST_DashBoardSAN {
             BrocadeProdName = $SST_SQLiteDBReader["BrocadeProdName"]
             SerialNumber    = $SST_SQLiteDBReader["SerialNumber"]
             TimeStamp = $SST_SQLiteDBReader["TimeStamp"]
-            BrocadeIcon = "$PSRootPath\Resources\icons\broadcom-96.png"
-            ClockIcon96 = "$PSRootPath\Resources\icons\icons8-clock-96.png"
+            BrocadeIcon = "$PSRootPath\Resources\Icons\broadcom-96.png"
+            ClockIcon96 = "$PSRootPath\Resources\Icons\icons8-clock-96.png"
             }
             $DashBoardSANDeviceView.Add($DashBoardSANsObj)
         }
