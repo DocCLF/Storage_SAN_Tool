@@ -28,9 +28,9 @@ function SST_DashBoardSTO {
                 MDiskTC = $SST_SQLiteDBReader["MDiskTC"]
                 MDiskTCfPGB = $SST_SQLiteDBReader["MDiskTC"] -replace '(MB|TB|PB)',''
                 MDiskUC = $SST_SQLiteDBReader["MDiskUC"] -replace '(MB|TB|PB)',''
-                STOIcon = "$PSRootPath\Resources\icons\ibmstoicon.png"
+                STOIcon = "$PSRootPath\Resources\Icons\ibmstoicon.png"
                 TimeStamp    = $SST_SQLiteDBReader["TimeStamp"]
-                ClockIcon96 = "$PSRootPath\Resources\icons\icons8-clock-96.png"
+                ClockIcon96 = "$PSRootPath\Resources\Icons\icons8-clock-96.png"
             }
             $DashBoardSTODeviceView.Add($DashBoardSTOsObj)
         }
