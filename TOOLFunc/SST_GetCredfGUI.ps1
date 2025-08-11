@@ -85,13 +85,13 @@ function SST_GetCredfGUI {
         <# Split between Storage and SAN #>
         if($TD_CB_DeviceType.Text -eq "Storage"){
             [int]$TD_CredentialsCount=(($TD_Credentials |Where-Object {$_.DeviceTyp -eq "Storage"}).count + 1)
-            if($TD_Credentials |Where-Object {$_.ID -eq $TD_CredentialsCount}){$TD_CredentialsCount = $TD_CredentialsCount +1}
+            if($TD_Credentials |Where-Object {($_.DeviceTyp -eq "Storage") -and ($_.ID -eq $TD_CredentialsCount)}){$TD_CredentialsCount = $TD_CredentialsCount +1}
             SST_ToolMessageCollector -TD_ToolMSGCollector "Storage ID is $TD_CredentialsCount" -TD_ToolMSGType Debug
         }
 
-        if($TD_CB_DeviceType.Text -eq "SAN"){
-            $TD_CredentialsCount= (($TD_Credentials |Where-Object {$_.DeviceTyp -eq "SAN"}).count + 1)
-            if($TD_Credentials |Where-Object {$_.ID -eq $TD_CredentialsCount}){$TD_CredentialsCount = $TD_CredentialsCount +1}
+        if($TD_CB_DeviceType.Text -eq "SAN"){   
+            [int]$TD_CredentialsCount= (($TD_Credentials |Where-Object {$_.DeviceTyp -eq "SAN"}).count + 1)
+            if($TD_Credentials |Where-Object {($_.DeviceTyp -eq "SAN") -and ($_.ID -eq $TD_CredentialsCount)}){$TD_CredentialsCount = $TD_CredentialsCount +1}
             SST_ToolMessageCollector -TD_ToolMSGCollector "SAN ID is $TD_CredentialsCount" -TD_ToolMSGType Debug
         }
         <# needs more tests to be able to use it safely thats why plink is plink and not plink and ssh #>
