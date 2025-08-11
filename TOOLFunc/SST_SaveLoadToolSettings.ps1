@@ -38,7 +38,7 @@ function SST_SaveLoadToolSettings {
             $SST_ExportToolSettings.LoadSettingsOnStartUp = $TD_CB_LoadSettingsatStartUp.IsChecked
             $SST_ExportToolSettings.DevicestoInExport = $TD_DG_KnownDeviceList.ItemsSource
             $SST_ExportToolSettings.OnlineCheckbyImport = $TD_CB_OnlineCheckbyImport.IsChecked
-            if((!([string]::IsNullOrEmpty($TD_DBisActive.Name)))-and($PSVersionTable.PSVersion.Major -ge 7)){
+            if((!([string]::IsNullOrEmpty($TD_DBisActive.Name)))-and($PSVersionTable.PSVersion.Major -ge 5)){
                 $SST_ExportToolSettings.LocalDB = $true
             }else {
                 $SST_ExportToolSettings.LocalDB = $false
