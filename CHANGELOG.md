@@ -1,6 +1,36 @@
 # Change Log
+## [Unreleased]
+- History Data 
+- LineCharts
+- PowerServer Support
+- Host "last seen online"
+- Additional support for errors in the event log
+- PBHA and DR Support
 
 All notable changes to this project will be documented in this file.
+# [v1.3.x] - 2025-08-??
+### Added 
+- Dashboard for a first fast Overview
+- DB Function local and azure
+- Function to save and load the Toolsettings on startup, incl. saved Devices
+- Support for Spectrum Virt Version 9.1.x
+- more Information on some Functions for later Updates
+
+### Fixed
+- some major and minor bugs in the main function GUI Control
+- minor bugs in the SST_DeviceConnecCheck where, among other things, IDs were assigned twice.
+- minor bugs in all *xaml Files
+- Drive Function and GUI has been revised
+- some small mistakes in SST_ImportCredential Function
+- minor bug at Eventlog Function where Disciption was not displayed
+- major bug in the Cleanup Function, which could lead to the unintentionally necessary files being additionally deleted
+
+### Changed
+- some Basis Functions like StorageBaseInfo, DriveInfo, SANBaseInfo and so on 
+- Code cleanup performed in various places
+- folder and code structure revised
+- DB from LiteDB to MYSql
+- some samll things in FW Check for Drives and SV-Software
 
 # [v1.2.1] - 2025-04-22
 ### Added
