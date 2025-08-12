@@ -28,7 +28,7 @@ Set-ExecutionPolicy -ExecutionPolicy Bypass -Scope Process
 ```
 followed by 
 ```powershell
-Import-Module Storage_SAN_Kit
+Import-Module Storage_SAN_Tool
 ```
 Or another measure can be that you have to confirm that you are allowed to perform the individual functions.
 
