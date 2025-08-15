@@ -16,7 +16,7 @@ function SST_SaveLoadToolSettings {
         }
         catch {
             Write-Debug -Message $_.Exception.Message
-            SST_ToolMessageCollector -TD_ToolMSGCollector $_.Exception.Message -TD_ToolMSGType Error -TD_Shown yes
+            SST_ToolMessageCollector -TD_ToolMSGCollector $_.Exception.Message -TD_ToolMSGType Error -TD_Shown no
             $TD_BTN_LoadToolSettings.Background="LightCoral"
             $SST_SavedToolSettings = $null
         }
