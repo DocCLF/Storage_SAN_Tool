@@ -23,6 +23,7 @@ All notable changes to this project will be documented in this file.
 - Drive Function and GUI has been revised
 - some small mistakes in SST_ImportCredential Function
 - minor bug at Eventlog Function where Disciption was not displayed
+- minor bug at the DashBoard where capacity was not displayed correctly
 - major bug in the Cleanup Function, which could lead to the unintentionally necessary files being additionally deleted
 
 ### Changed
