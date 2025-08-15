@@ -24,7 +24,7 @@ function IBM_SystemInfo {
         $MDiskTotalCapacityinTB = $null
 
         $TempMDiskCap=(($TD_DeviceInformation | Select-String -Pattern 'total_mdisk_capacity:([\w\.]+)' -AllMatches).Matches.groups[1].Value)
-        if($TempMDiskCap -like "PB"){
+        if($TempMDiskCap -like "*PB"){
             [float]$TemPConvertCap=($TempMDiskCap -replace 'PB','')
             [string]$TemPConvertCapToTB = [math]::Round($TemPConvertCap*1000)
             [string]$MDiskTotalCapacityinTB = [string]$TemPConvertCapToTB + "TB"
