@@ -20,6 +20,7 @@ function SST_DashBoardSAN {
             Name  = $SST_SQLiteDBReader["Name"]
             Status    = $SST_SQLiteDBReader["Status"]
             CodeLevel  = $SST_SQLiteDBReader["CodeLevel"]
+            CodeLevelLV  = $SST_SQLiteDBReader["CodeLevelLV"] -replace '(EOS [\w]{3} [\d]{2}, [\d]{4}, latest version |latest version )','v'
             BrocadeProdName = $SST_SQLiteDBReader["BrocadeProdName"]
             SerialNumber    = $SST_SQLiteDBReader["SerialNumber"]
             TimeStamp = $SST_SQLiteDBReader["TimeStamp"]
