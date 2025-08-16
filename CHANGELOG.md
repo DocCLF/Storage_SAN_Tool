@@ -15,6 +15,7 @@ All notable changes to this project will be documented in this file.
 - Function to save and load the Toolsettings on startup, incl. saved Devices
 - Support for Spectrum Virt Version 9.1.x
 - more Information on some Functions for later Updates
+- rudimentary FOS FW recommendation, requires adjustments later on
 
 ### Fixed
 - some major and minor bugs in the main function GUI Control
