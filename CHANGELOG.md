@@ -32,6 +32,7 @@ All notable changes to this project will be documented in this file.
 - Code cleanup performed in various places
 - folder and code structure revised
 - DB from LiteDB to MYSql
+- the Fabric OS Matrix at Switch Info
 - some samll things in FW Check for Drives and SV-Software
 
 # [v1.2.1] - 2025-04-22
