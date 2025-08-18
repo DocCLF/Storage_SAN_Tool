@@ -6,7 +6,7 @@ function SST_DashBoardSTO {
     )
     
     begin {
-
+        $DeviceCounter = 0
         $SQLReader.CommandText = $STOHWCollection
         $SST_SQLiteDBReader = $SQLReader.ExecuteReader()
     }
@@ -16,7 +16,7 @@ function SST_DashBoardSTO {
         #ID, Name, WWNN, Status, IOgroupid, IOgroupName, SerialNumber, CodeLevel, ConfigNode, SideID, ProdMTM, TimeStamp
         # need a workaround if PB is used
         while ($SST_SQLiteDBReader.Read()) {
-            
+            $DeviceCounter++
             $DashBoardSTOsObj = [PSCustomObject]@{
                 Name  = $SST_SQLiteDBReader["Name"]
                 Status  = $SST_SQLiteDBReader["Status"]
@@ -37,6 +37,7 @@ function SST_DashBoardSTO {
         $SST_SQLiteDBReader.Close()
         $TD_IC_DashBoardSTODevice.ItemsSource = $DashBoardSTODeviceView
 
+        $TD_TB_STODEVCount.Text = $DeviceCounter
     }
     
     end {
