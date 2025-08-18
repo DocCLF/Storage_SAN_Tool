@@ -26,6 +26,7 @@ All notable changes to this project will be documented in this file.
 - minor bug at Eventlog Function where Disciption was not displayed
 - minor bug at the DashBoard where capacity was not displayed correctly
 - major bug in the Cleanup Function, which could lead to the unintentionally necessary files being additionally deleted
+- Storage Device Counter in Dashboard
 
 ### Changed
 - some Basis Functions like StorageBaseInfo, DriveInfo, SANBaseInfo and so on 
@@ -34,6 +35,7 @@ All notable changes to this project will be documented in this file.
 - DB from LiteDB to MYSql
 - the Fabric OS Matrix at Switch Info
 - some samll things in FW Check for Drives and SV-Software
+- Eventlog Counter form 14 to 28 days in the past
 
 # [v1.2.1] - 2025-04-22
 ### Added
