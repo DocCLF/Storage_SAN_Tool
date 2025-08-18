@@ -19,7 +19,7 @@ function SST_DashBoardEvents {
         }
         #Write-Host $EventCounter
         $TD_TB_STOEventsCount.Text = $EventCounter
-        if($EventCounter -gt 1){
+        if($EventCounter -ge 1){
             $TD_TB_HealthStatus.Text = "Attention"
             $TD_TB_HealthStatus.Foreground = "Orange"
             $TD_TB_STOEventsCount.Foreground = "Orange"
