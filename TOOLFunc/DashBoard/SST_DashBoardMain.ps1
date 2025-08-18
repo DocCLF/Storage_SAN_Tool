@@ -83,7 +83,7 @@ function SST_DashBoardMain {
 
         try {
             $SST_SQLiteSTODashBoardQuery = $null
-            $SST_SQLiteSTODashBoardQuery = " SELECT * FROM IBMSTOEventsTable e WHERE Status = 'alert' AND TimeStamp >= datetime('now', '-14 days') AND TimeStamp = (SELECT MAX(TimeStamp) FROM IBMSTOEventsTable WHERE Status = 'alert' AND TimeStamp >= datetime('now', '-14 days'));"
+            $SST_SQLiteSTODashBoardQuery = " SELECT * FROM IBMSTOEventsTable e WHERE Status = 'alert' AND TimeStamp >= datetime('now', '-28 days') AND TimeStamp = (SELECT MAX(TimeStamp) FROM IBMSTOEventsTable WHERE Status = 'alert' AND TimeStamp >= datetime('now', '-28 days'));"
             $SST_SQliteReadCMD.CommandText = $SST_SQLiteSTODashBoardQuery
             $SST_SQLiteDBReader = $SST_SQliteReadCMD.ExecuteReader()
             SST_DashBoardEvents -STOEVCollection $SST_SQLiteDBReader 
