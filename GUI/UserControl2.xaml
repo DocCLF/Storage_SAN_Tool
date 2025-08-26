@@ -2064,10 +2064,10 @@
                         <ScrollViewer Margin="2,5" VerticalScrollBarVisibility="Auto">
                         <StackPanel Orientation="Vertical" >
                         <Label x:Name="lb_DriveInfoTwo" Content="No Device Info" Margin="0,5" FontSize="14" Height="26"/>
-                            <ItemsControl x:Name="IC_STODriveViewTwo" >
+                            <ItemsControl x:Name="IC_STODriveViewTwo" Margin="3">
                                 <ItemsControl.ItemTemplate>
                                     <DataTemplate>
-                                        <Button Style="{DynamicResource DashBoardBTNStyle}" MaxWidth="90" Height="250" Margin="2"  ToolTipService.InitialShowDelay="10">
+                                        <Button Style="{DynamicResource DashBoardBTNStyle}" MaxWidth="92" Height="250" Margin="2"  ToolTipService.InitialShowDelay="10">
                                             <Grid>
                                                 <Grid.RowDefinitions>
                                                     <RowDefinition Height="50"/>
@@ -2126,10 +2126,10 @@
                         <ScrollViewer Margin="2,5" VerticalScrollBarVisibility="Auto">
                         <StackPanel Orientation="Vertical" >
                         <Label x:Name="lb_DriveInfoThree" Content="No Device Info" Margin="0,5" FontSize="14" Height="26"/>
-                            <ItemsControl x:Name="IC_STODriveViewThree" >
+                            <ItemsControl x:Name="IC_STODriveViewThree" Margin="3">
                                 <ItemsControl.ItemTemplate>
                                     <DataTemplate>
-                                        <Button Style="{DynamicResource DashBoardBTNStyle}" MaxWidth="90" Height="250" Margin="2"  ToolTipService.InitialShowDelay="10">
+                                        <Button Style="{DynamicResource DashBoardBTNStyle}" MaxWidth="92" Height="250" Margin="2"  ToolTipService.InitialShowDelay="10">
                                             <Grid>
                                                 <Grid.RowDefinitions>
                                                     <RowDefinition Height="50"/>
@@ -2188,10 +2188,10 @@
                         <ScrollViewer Margin="2,5" VerticalScrollBarVisibility="Auto">
                         <StackPanel Orientation="Vertical" >
                         <Label x:Name="lb_DriveInfoFour" Content="No Device Info" Margin="0,5" FontSize="14" Height="26"/>
-                            <ItemsControl x:Name="IC_STODriveViewFour" >
+                            <ItemsControl x:Name="IC_STODriveViewFour" Margin="3">
                                 <ItemsControl.ItemTemplate>
                                     <DataTemplate>
-                                        <Button Style="{DynamicResource DashBoardBTNStyle}" MaxWidth="90" Height="250" Margin="2"  ToolTipService.InitialShowDelay="10">
+                                        <Button Style="{DynamicResource DashBoardBTNStyle}" MaxWidth="92" Height="250" Margin="2"  ToolTipService.InitialShowDelay="10">
                                             <Grid>
                                                 <Grid.RowDefinitions>
                                                     <RowDefinition Height="50"/>
@@ -2250,10 +2250,10 @@
                         <ScrollViewer Margin="2,5" VerticalScrollBarVisibility="Auto">
                         <StackPanel Orientation="Vertical" >
                         <Label x:Name="lb_DriveInfoFive" Content="No Device Info" Margin="0,5" FontSize="14" Height="26"/>
-                            <ItemsControl x:Name="IC_STODriveViewFive" >
+                            <ItemsControl x:Name="IC_STODriveViewFive" Margin="3">
                                 <ItemsControl.ItemTemplate>
                                     <DataTemplate>
-                                        <Button Style="{DynamicResource DashBoardBTNStyle}" MaxWidth="90" Height="250" Margin="2"  ToolTipService.InitialShowDelay="10">
+                                        <Button Style="{DynamicResource DashBoardBTNStyle}" MaxWidth="92" Height="250" Margin="2"  ToolTipService.InitialShowDelay="10">
                                             <Grid>
                                                 <Grid.RowDefinitions>
                                                     <RowDefinition Height="50"/>
@@ -2312,10 +2312,10 @@
                         <ScrollViewer Margin="2,5" VerticalScrollBarVisibility="Auto">
                         <StackPanel Orientation="Vertical" >
                         <Label x:Name="lb_DriveInfoSix" Content="No Device Info" Margin="0,5" FontSize="14" Height="26"/>
-                            <ItemsControl x:Name="IC_STODriveViewSix" >
+                            <ItemsControl x:Name="IC_STODriveViewSix" Margin="3">
                                 <ItemsControl.ItemTemplate>
                                     <DataTemplate>
-                                        <Button Style="{DynamicResource DashBoardBTNStyle}" MaxWidth="90" Height="250" Margin="2"  ToolTipService.InitialShowDelay="10">
+                                        <Button Style="{DynamicResource DashBoardBTNStyle}" MaxWidth="92" Height="250" Margin="2"  ToolTipService.InitialShowDelay="10">
                                             <Grid>
                                                 <Grid.RowDefinitions>
                                                     <RowDefinition Height="50"/>
@@ -2374,10 +2374,10 @@
                         <ScrollViewer Margin="2,5" VerticalScrollBarVisibility="Auto">
                         <StackPanel Orientation="Vertical" >
                         <Label x:Name="lb_DriveInfoSeven" Content="No Device Info" Margin="0,5" FontSize="14" Height="26"/>
-                            <ItemsControl x:Name="IC_STODriveViewSeven" >
+                            <ItemsControl x:Name="IC_STODriveViewSeven" Margin="3">
                                 <ItemsControl.ItemTemplate>
                                     <DataTemplate>
-                                        <Button Style="{DynamicResource DashBoardBTNStyle}" MaxWidth="90" Height="250" Margin="2"  ToolTipService.InitialShowDelay="10">
+                                        <Button Style="{DynamicResource DashBoardBTNStyle}" MaxWidth="92" Height="250" Margin="2"  ToolTipService.InitialShowDelay="10">
                                             <Grid>
                                                 <Grid.RowDefinitions>
                                                     <RowDefinition Height="50"/>
@@ -2436,10 +2436,10 @@
                         <ScrollViewer Margin="2,5" VerticalScrollBarVisibility="Auto">
                         <StackPanel Orientation="Vertical" >
                         <Label x:Name="lb_DriveInfoEight" Content="No Device Info" Margin="0,5" FontSize="14" Height="26"/>
-                            <ItemsControl x:Name="IC_STODriveViewEight" >
+                            <ItemsControl x:Name="IC_STODriveViewEight" Margin="3">
                                 <ItemsControl.ItemTemplate>
                                     <DataTemplate>
-                                        <Button Style="{DynamicResource DashBoardBTNStyle}" MaxWidth="90" Height="250" Margin="2"  ToolTipService.InitialShowDelay="10">
+                                        <Button Style="{DynamicResource DashBoardBTNStyle}" MaxWidth="92" Height="250" Margin="2"  ToolTipService.InitialShowDelay="10">
                                             <Grid>
                                                 <Grid.RowDefinitions>
                                                     <RowDefinition Height="50"/>
