@@ -151,6 +151,10 @@ foreach($file in $UserCxamlFile){
         $TD_LB_DBSettings.Height="50"
         #$TD_BTN_DeleteDB,$TD_BTN_ActivateDB | ForEach-Object {$_.Visibility = "Collapsed"}
     }
+    function CheckBoxReseter {
+        param ()
+        $TD_CB_STO_DG1,$TD_CB_STO_DG2,$TD_CB_STO_DG3,$TD_CB_STO_DG4,$TD_CB_STO_DG5,$TD_CB_STO_DG6,$TD_CB_STO_DG7,$TD_CB_STO_DG8 | ForEach-Object {if($_.IsChecked=$true){$_.IsChecked=$false; $_.Visibility="Collapsed";}}
+    }
 #endregion
 
 #region Menu Button
@@ -537,7 +541,7 @@ $TD_DG_KnownDeviceList.add_SelectionChanged({
 
 #region IBM Storage Button
 $TD_btn_IBM_Eventlog.add_click({
-
+    CheckBoxReseter
     $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_.DeviceTyp -eq "Storage"}
 
     $TD_lb_StorageEventLogOne,$TD_lb_StorageEventLogTwo,$TD_lb_StorageEventLogThree,$TD_lb_StorageEventLogFour,$TD_lb_StorageEventLogFive,$TD_lb_StorageEventLogSix,$TD_lb_StorageEventLogSeven,$TD_lb_StorageEventLogEight |ForEach-Object {
@@ -576,7 +580,7 @@ $TD_btn_IBM_Eventlog.add_click({
 })
 
 $TD_btn_IBM_CatAuditLog.add_click({
-
+    CheckBoxReseter
     $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_.DeviceTyp -eq "Storage"}
 
     $TD_dg_StorageAuditLogOne,$TD_dg_StorageAuditLogTwo,$TD_dg_StorageAuditLogThree,$TD_dg_StorageAuditLogFour,$TD_dg_StorageAuditLogFive,$TD_dg_StorageAuditLogSix,$TD_dg_StorageAuditLogSeven,$TD_dg_StorageAuditLogEight |ForEach-Object {
@@ -608,7 +612,7 @@ $TD_btn_IBM_CatAuditLog.add_click({
 })
 
 $TD_btn_IBM_HostVolumeMap.add_click({
-
+    CheckBoxReseter
     $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_.DeviceTyp -eq "Storage"}
 
     $TD_dg_HostVolInfoOne,$TD_dg_HostVolInfoTwo,$TD_dg_HostVolInfoThree,$TD_dg_HostVolInfoFour,$TD_dg_HostVolInfoFive,$TD_dg_HostVolInfoSix,$TD_dg_HostVolInfoSeven,$TD_dg_HostVolInfoEight |ForEach-Object {
@@ -728,6 +732,7 @@ $TD_btn_ClearFilterHVM.Add_Click({
 })
 
 $TD_btn_IBM_DriveInfo.add_click({
+    CheckBoxReseter
     $TD_lb_DriveInfoOne,$TD_lb_DriveInfoTwo,$TD_lb_DriveInfoThree,$TD_lb_DriveInfoFour,$TD_lb_DriveInfoFive,$TD_lb_DriveInfoSix,$TD_lb_DriveInfoSeven,$TD_lb_DriveInfoEight  |ForEach-Object {
         $_.Visibility = "Hidden"
     }
@@ -820,7 +825,7 @@ $TD_btn_IBM_FCPortStats.add_click({
 })
 
 $TD_btn_IBM_FCPortInfo.add_click({
-
+    CheckBoxReseter
     $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_.DeviceTyp -eq "Storage"}
 
     $TD_dg_FCPortInfoOne,$TD_dg_FCPortInfoTwo,$TD_dg_FCPortInfoThree,$TD_dg_FCPortInfoFour,$TD_dg_FCPortInfoFive,$TD_dg_FCPortInfoSix,$TD_dg_FCPortInfoSeven,$TD_dg_FCPortInfoEight |ForEach-Object {
@@ -852,6 +857,7 @@ $TD_btn_IBM_FCPortInfo.add_click({
 })
 
 $TD_btn_IBM_PolicyBased_Rep.add_click({
+    CheckBoxReseter
     $TD_stp_PoolVolumeInfo,$TD_stp_IBM_IPPortInfo,$TD_stp_IBM_HostInfo,$TD_stp_FCPortStats,$TD_stp_DriveInfo,$TD_stp_HostVolInfo,$TD_stp_BackUpConfig,$TD_stp_BaseStorageInfo,$TD_stp_IBM_FCPortInfo,$TD_stp_StorageEventLog,$TD_stp_StorageAuditLog,$TD_stp_CleanUpDump | ForEach-Object {$_.Visibility="Collapsed"}
 
     $TD_stp_PolicyBased_Rep.Visibility="Visible"
@@ -912,7 +918,7 @@ $TD_btn_FilterPBR.add_click({
 })
 
 $TD_btn_IBM_BaseStorageInfo.add_click({
-
+    CheckBoxReseter
     $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_.DeviceTyp -eq "Storage"}
 
     $TD_dg_BaseStorageInfoOne,$TD_dg_BaseStorageInfoTwo,$TD_dg_BaseStorageInfoThree,$TD_dg_BaseStorageInfoFour,$TD_dg_BaseStorageInfoFive,$TD_dg_BaseStorageInfoSix,$TD_dg_BaseStorageInfoSeven,$TD_dg_BaseStorageInfoEight |ForEach-Object {
@@ -979,7 +985,7 @@ $TD_btn_IBM_BaseStorageInfo.add_click({
 })
 
 $TD_btn_IBM_PoolVolumeInfo.add_click({
-
+    CheckBoxReseter
     $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_.DeviceTyp -eq "Storage"}
 
     $TD_dg_ExpandMDiskInfoOne,$TD_dg_ExpandMDiskInfoTwo,$TD_dg_ExpandMDiskInfoThree,$TD_dg_ExpandMDiskInfoFour,$TD_dg_ExpandMDiskInfoFive,$TD_dg_ExpandMDiskInfoSix,$TD_dg_ExpandMDiskInfoSeven,$TD_dg_ExpandMDiskInfoEight |ForEach-Object {
@@ -1029,7 +1035,7 @@ $TD_btn_IBM_PoolVolumeInfo.add_click({
 
 $TD_btn_IBM_CleanUpDumps.add_click({
     $ErrorActionPreference="Continue"
-
+    CheckBoxReseter
     $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_.DeviceTyp -eq "Storage"}
 
     $TD_Credentials | ForEach-Object {
@@ -1054,7 +1060,7 @@ $TD_btn_IBM_CleanUpDumps.add_click({
 
 $TD_btn_IBM_BackUpConfig.add_click({
     $ErrorActionPreference="Continue"
-
+    CheckBoxReseter
     $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_.DeviceTyp -eq "Storage"}
 
     $TD_Credentials | ForEach-Object {
@@ -1094,7 +1100,7 @@ $TD_btn_IBM_BackUpConfig.add_click({
 })
 
 $TD_btn_IBM_HostInfo.add_click({
-
+    CheckBoxReseter
     $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_.DeviceTyp -eq "Storage"}
 
 
@@ -1135,7 +1141,7 @@ $TD_btn_IBM_HostInfo.add_click({
 })
 
 $TD_btn_IBM_IPPortInfo.add_click({
-
+    CheckBoxReseter
     $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_.DeviceTyp -eq "Storage"}
 
     $TD_dg_IPPortInfoOne,$TD_dg_IPPortInfoTwo,$TD_dg_IPPortInfoThree,$TD_dg_IPPortInfoFour,$TD_dg_IPPortInfoFive,$TD_dg_IPPortInfoSix,$TD_dg_IPPortInfoSeven,$TD_dg_IPPortInfoEight |ForEach-Object {
