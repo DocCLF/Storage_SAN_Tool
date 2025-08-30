@@ -37,6 +37,7 @@ All notable changes to this project will be documented in this file.
 - some samll things in FW Check for Drives and SV-Software
 - Eventlog Counter form 14 to 28 days in the past
 - Significantly improved performance at ZoneShow
+- ACK removed from the device data grid in the settings
 
 # [v1.2.1] - 2025-04-22
 ### Added
