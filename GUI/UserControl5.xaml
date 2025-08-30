@@ -146,7 +146,7 @@
                                     </Style>
                                 </DataGrid.RowStyle>
                                 <DataGrid.Columns>
-                                    <DataGridCheckBoxColumn Header="ACK?" Binding="{Binding ACKHosts, NotifyOnTargetUpdated=True, UpdateSourceTrigger=PropertyChanged}" />
+                                    <!--<DataGridCheckBoxColumn Header="ACK?" Binding="{Binding ACKHosts, NotifyOnTargetUpdated=True, UpdateSourceTrigger=PropertyChanged}" /> -->
                                     <DataGridTextColumn Header="Device Typ" Width="Auto" Binding="{Binding DeviceTyp}" />
                                     <DataGridTextColumn Header="Connection Typ" Width="Auto" Binding="{Binding ConnectionTyp}" />
                                     <DataGridTextColumn Header="IP-Adresse" Width="Auto"  Binding="{Binding IPAddress}" />
