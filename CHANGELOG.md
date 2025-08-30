@@ -8,7 +8,7 @@
 - PBHA and DR Support
 
 All notable changes to this project will be documented in this file.
-# [v1.3.x] - 2025-08-??
+# [v1.3.x] - 2025-09-??
 ### Added 
 - Dashboard for a first fast Overview
 - DB Function local and azure
@@ -36,6 +36,7 @@ All notable changes to this project will be documented in this file.
 - the Fabric OS Matrix at Switch Info
 - some samll things in FW Check for Drives and SV-Software
 - Eventlog Counter form 14 to 28 days in the past
+- Significantly improved performance at ZoneShow
 
 # [v1.2.1] - 2025-04-22
 ### Added
