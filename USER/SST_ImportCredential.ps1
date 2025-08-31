@@ -27,5 +27,7 @@ function SST_ImportCredential {
             Start-Sleep -Seconds 0.5
         }
     }
-   #$TD_ExportCredtoDG
+
+    $TD_ImportedCredentials
+
 }
