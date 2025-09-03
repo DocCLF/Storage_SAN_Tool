@@ -802,18 +802,19 @@ $TD_btn_IBM_FCPortStats.add_click({
 
     $TD_Credentials | ForEach-Object {
         [array]$TD_FCPortStats = IBM_FCPortStats -TD_Line_ID $_.ID -TD_Device_ConnectionTyp $_.ConnectionTyp -TD_Device_UserName $_.UserName -TD_Device_DeviceName $_.DeviceName -TD_Device_DeviceIP $_.IPAddress -TD_Device_PW $([Net.NetworkCredential]::new('', $_.Password).Password) -TD_Device_SSHKeyPath $_.SSHKeyPath -TD_Storage $_.SVCorVF -TD_Exportpath $TD_tb_ExportPath.Text
+        $TD_FCPortStatsClean = $TD_FCPortStats| Where-Object { $_ }
         switch ($_.ID) {
-            {($_ -eq 1)} { $TD_dg_FCPortStatsOne.ItemsSource = $TD_FCPortStats }
-            {($_ -eq 2)} { $TD_dg_FCPortStatsTwo.ItemsSource = $TD_FCPortStats }
-            {($_ -eq 3)} { $TD_dg_FCPortStatsThree.ItemsSource = $TD_FCPortStats }
-            {($_ -eq 4)} { $TD_dg_FCPortStatsFour.ItemsSource = $TD_FCPortStats }
-            {($_ -eq 5)} { $TD_dg_FCPortStatsFive.ItemsSource = $TD_FCPortStats }
-            {($_ -eq 6)} { $TD_dg_FCPortStatsSix.ItemsSource = $TD_FCPortStats }
-            {($_ -eq 7)} { $TD_dg_FCPortStatsSeven.ItemsSource = $TD_FCPortStats }
-            {($_ -eq 8)} { $TD_dg_FCPortStatsEight.ItemsSource = $TD_FCPortStats }
+            {($_ -eq 1)} { $TD_dg_FCPortStatsOne.ItemsSource = $TD_FCPortStatsClean }
+            {($_ -eq 2)} { $TD_dg_FCPortStatsTwo.ItemsSource = $TD_FCPortStatsClean }
+            {($_ -eq 3)} { $TD_dg_FCPortStatsThree.ItemsSource = $TD_FCPortStatsClean }
+            {($_ -eq 4)} { $TD_dg_FCPortStatsFour.ItemsSource = $TD_FCPortStatsClean }
+            {($_ -eq 5)} { $TD_dg_FCPortStatsFive.ItemsSource = $TD_FCPortStatsClean }
+            {($_ -eq 6)} { $TD_dg_FCPortStatsSix.ItemsSource = $TD_FCPortStatsClean }
+            {($_ -eq 7)} { $TD_dg_FCPortStatsSeven.ItemsSource = $TD_FCPortStatsClean }
+            {($_ -eq 8)} { $TD_dg_FCPortStatsEight.ItemsSource = $TD_FCPortStatsClean }
             Default { SST_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong, please check the prompt output first and then the log files.") -TD_ToolMSGType Error }
         }
-        $TD_FCPortStats | Export-Csv -Path $PSRootPath\ToolLog\ToolTEMP\$($_.ID)_$($_.DeviceName)_FCPortStats_$(Get-Date -Format "yyyy-MM-dd")_Temp.csv
+        $TD_FCPortStatsClean | Export-Csv -Path $PSRootPath\ToolLog\ToolTEMP\$($_.ID)_$($_.DeviceName)_FCPortStats_$(Get-Date -Format "yyyy-MM-dd")_Temp.csv
     }
 
     if($TD_UCRefresh){$TD_UserControl1.Dispatcher.Invoke([System.Action]{},"Render");$TD_UCRefresh=$false}
