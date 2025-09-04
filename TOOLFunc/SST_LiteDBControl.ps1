@@ -42,12 +42,17 @@ function SST_LiteDBControl {
                     $SST_SQliteCreateTBCMD.CommandText = $SST_SQLiteTabelQuery
                     $SST_SQliteCreateTBCMD.ExecuteNonQuery()
                 }
+                "FCPortStats" {
+                    $SST_SQLiteTabelQuery ="CREATE TABLE IF NOT EXISTS IBMSTOFCPortStatsTable (ID INTEGER PRIMARY KEY AUTOINCREMENT, CardType TEXT, CardID TEXT, PortID TEXT, WWPN TEXT, LinkFailure TEXT, LoseSync TEXT, LoseSig TEXT, PSErrCount TEXT, InvTransErr TEXT, CRCErr TEXT, ZeroBtB TEXT, SFPTemp TEXT, TXPwr TEXT, RXPwr TEXT, WWNN TEXT, SerialNumber TEXT, TimeStamp TEXT );" 
+                    $SST_SQliteCreateTBCMD.CommandText = $SST_SQLiteTabelQuery
+                    $SST_SQliteCreateTBCMD.ExecuteNonQuery()
+                }
                 "SANBase" { 
                     $SST_SQLiteTabelQuery ="CREATE TABLE IF NOT EXISTS IBMSANHWTable (ID INTEGER PRIMARY KEY AUTOINCREMENT, Name TEXT NOT NULL, Status TEXT NOT NULL, BrocadeProdName TEXT, SerialNumber TEXT, CodeLevel TEXT, CodeLevelLV TEXT, TimeStamp TEXT );" 
                     $SST_SQliteCreateTBCMD.CommandText = $SST_SQLiteTabelQuery
                     $SST_SQliteCreateTBCMD.ExecuteNonQuery()
                 }
-                Default {SST_ToolMessageCollector -TD_ToolMSGCollector "Something went wrong at LocalDB" -TD_ToolMSGType Message -TD_Shown no}
+                Default {SST_ToolMessageCollector -TD_ToolMSGCollector "Something went wrong at LocalDB in combination with $SST_InfoType" -TD_ToolMSGType Message -TD_Shown no}
             }
 
             SST_ToolMessageCollector -TD_ToolMSGCollector "LocalDB is ready and loaded" -TD_ToolMSGType Message -TD_Shown no
@@ -150,6 +155,35 @@ function SST_LiteDBControl {
 
                     # Delete | Keep only the 500 most recent entries after TimeStamp
                     $SST_SQliteInsertCMD.CommandText = "DELETE FROM IBMSTOEventsTable WHERE ID NOT IN ( SELECT ID FROM IBMSTOEventsTable ORDER BY TimeStamp DESC LIMIT 500 );"
+                    $SST_SQliteInsertCMD.ExecuteNonQuery()
+                }
+            }
+            "FCPortStats" {
+                foreach ($SST_CollectedInformation in $SST_CollectedInformations){
+                    $SST_SQliteInsertCMD.CommandText ="INSERT INTO IBMSTOFCPortStatsTable (CardType, CardID, PortID, WWPN, LinkFailure, LoseSync, LoseSig, PSErrCount, InvTransErr, CRCErr, ZeroBtB, SFPTemp, TXPwr, RXPwr, WWNN, SerialNumber, TimeStamp) VALUES (@CardType, @CardID, @PortID, @WWPN, @LinkFailure, @LoseSync, @LoseSig, @PSErrCount, @InvTransErr, @CRCErr, @ZeroBtB, @SFPTemp, @TXPwr, @RXPwr, @WWNN, @SerialNumber, @TimeStamp);"
+                    $SST_SQliteInsertCMD.Parameters.AddWithValue("@CardType", $SST_CollectedInformation.CardType) | Out-Null
+                    $SST_SQliteInsertCMD.Parameters.AddWithValue("@CardID", $SST_CollectedInformation.CardID) | Out-Null
+                    $SST_SQliteInsertCMD.Parameters.AddWithValue("@PortID", $SST_CollectedInformation.PortID) | Out-Null
+                    $SST_SQliteInsertCMD.Parameters.AddWithValue("@WWPN", $SST_CollectedInformation.WWPN) | Out-Null
+                    $SST_SQliteInsertCMD.Parameters.AddWithValue("@LinkFailure", $SST_CollectedInformation.LinkFailure) | Out-Null
+                    $SST_SQliteInsertCMD.Parameters.AddWithValue("@LoseSync", $SST_CollectedInformation.LoseSync) | Out-Null
+                    $SST_SQliteInsertCMD.Parameters.AddWithValue("@LoseSig", $SST_CollectedInformation.LoseSig) | Out-Null
+                    $SST_SQliteInsertCMD.Parameters.AddWithValue("@PSErrCount", $SST_CollectedInformation.PSErrCount) | Out-Null
+                    $SST_SQliteInsertCMD.Parameters.AddWithValue("@InvTransErr", $SST_CollectedInformation.InvTransErr) | Out-Null
+                    $SST_SQliteInsertCMD.Parameters.AddWithValue("@CRCErr", $SST_CollectedInformation.CRCErr) | Out-Null
+                    $SST_SQliteInsertCMD.Parameters.AddWithValue("@ZeroBtB", $SST_CollectedInformation.ZeroBtB) | Out-Null
+                    $SST_SQliteInsertCMD.Parameters.AddWithValue("@SFPTemp", $SST_CollectedInformation.SFPTemp) | Out-Null
+                    $SST_SQliteInsertCMD.Parameters.AddWithValue("@TXPwr", $SST_CollectedInformation.TXPwr) | Out-Null
+                    $SST_SQliteInsertCMD.Parameters.AddWithValue("@RXPwr", $SST_CollectedInformation.RXPwr) | Out-Null
+                    $SST_SQliteInsertCMD.Parameters.AddWithValue("@WWNN", $SST_CollectedInformation.NodeWWNN) | Out-Null
+                    $SST_SQliteInsertCMD.Parameters.AddWithValue("@SerialNumber", $SST_CollectedInformation.NodeSN) | Out-Null
+                    $SST_SQliteInsertCMD.Parameters.AddWithValue("@TimeStamp", $TimeStamp) | Out-Null
+
+                    # In DB speichern 
+                    $SST_SQliteInsertCMD.ExecuteNonQuery()
+
+                    # Delete | Keep only the 500 most recent entries after TimeStamp
+                    $SST_SQliteInsertCMD.CommandText = "DELETE FROM IBMSTOFCPortStatsTable WHERE ID NOT IN ( SELECT ID FROM IBMSTOFCPortStatsTable ORDER BY TimeStamp DESC LIMIT 1000 );"
                     $SST_SQliteInsertCMD.ExecuteNonQuery()
                 }
             }
