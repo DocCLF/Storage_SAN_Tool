@@ -77,8 +77,8 @@ function IBM_DriveInfo {
         Write-Debug -Message "Number of Lines: $($TD_CollectInfos.count) "
         $TD_TempNodeInfo = "" | Select-Object SerialNumber,WWNN
         0..$TD_CollectInfos.count |ForEach-Object {
-            if($TD_CollectInfos[$_] -match ':([0-9A-z]{16}):'){
-                $TD_TempNodeInfo.WWNN = ($TD_CollectInfos[$_]|Select-String -Pattern ':([0-9A-z]{16}):' -AllMatches).Matches.Groups[1].Value
+            if($TD_CollectInfos[$_] -match ':([0-9a-zA-Z]{16}):'){
+                $TD_TempNodeInfo.WWNN = ($TD_CollectInfos[$_]|Select-String -Pattern ':([0-9a-zA-Z]{15,17}):' -AllMatches).Matches.Groups[1].Value
                 $TD_TempNodeInfo.SerialNumber = ($TD_CollectInfos[$_]|Select-String -Pattern ':\d:\d:([0-9A-Z]{7}):' -AllMatches).Matches.Groups[1].Value
             }
             <# Split the infos in 2 var #>
@@ -123,7 +123,7 @@ function IBM_DriveInfo {
                     $TD_DriveSplitInfosProductID = $TD_DriveSplitInfos.ProductID
                     
                     Write-Debug -Message $TD_DriveSplitInfos.FWlev $TD_LatestDriveFW
-                    if($TD_DriveSplitInfos.FWlev -eq $TD_LatestDriveFW){
+                    if($TD_LatestDriveFW -like "*$($TD_DriveSplitInfos.FWlev)*"){
                         [string]$TD_DriveSplitInfos.FWlevStatus = "LightGreen"
                         [string]$TD_DriveSplitInfos.LatestDriveFW = $TD_LatestDriveFW
                     }elseif ($TD_LatestDriveFW -eq "unknown") {
@@ -134,7 +134,7 @@ function IBM_DriveInfo {
                         [string]$TD_DriveSplitInfos.LatestDriveFW = $TD_LatestDriveFW
                     }
                 }else {
-                    if($TD_DriveSplitInfos.FWlev -eq $TD_LatestDriveFW){
+                    if($TD_LatestDriveFW -like "*$($TD_DriveSplitInfos.FWlev)*" ){
                         [string]$TD_DriveSplitInfos.FWlevStatus = "LightGreen"
                         [string]$TD_DriveSplitInfos.LatestDriveFW = $TD_LatestDriveFW
                     }elseif ($TD_LatestDriveFW -eq "unknown") {
@@ -166,7 +166,6 @@ function IBM_DriveInfo {
             <# Progressbar  #>
             $ProgCounter++
             Write-ProgressBar -ProgressBar $ProgressBar -Activity "Collect data for Device $($TD_Line_ID) $($TD_Device_DeviceName)" -PercentComplete (($ProgCounter/$TD_CollectInfosTemp.Count) * 100)
-
         }
     }
 
