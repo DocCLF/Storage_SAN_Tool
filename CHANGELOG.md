@@ -16,6 +16,7 @@ All notable changes to this project will be documented in this file.
 - Support for Spectrum Virt Version 9.1.x
 - more Information on some Functions for later Updates
 - rudimentary FOS FW recommendation, requires adjustments later on
+- simple ssh hostkey check
 
 ### Fixed
 - some major and minor bugs in the main function GUI Control
@@ -27,6 +28,8 @@ All notable changes to this project will be documented in this file.
 - minor bug at the DashBoard where capacity was not displayed correctly
 - major bug in the Cleanup Function, which could lead to the unintentionally necessary files being additionally deleted
 - Storage Device Counter in Dashboard
+- WWNN error where it was possible that a name was displayed instead of the WWNN 
+- the failure that the firmware was not correctly compared with the new firmware, which led to confusion.
 
 ### Changed
 - some Basis Functions like StorageBaseInfo, DriveInfo, SANBaseInfo and so on 
@@ -38,6 +41,7 @@ All notable changes to this project will be documented in this file.
 - Eventlog Counter form 14 to 28 days in the past
 - Significantly improved performance at ZoneShow
 - ACK removed from the device data grid in the settings
+- better recognition of FW relevance in Drive Info
 
 # [v1.2.1] - 2025-04-22
 ### Added
