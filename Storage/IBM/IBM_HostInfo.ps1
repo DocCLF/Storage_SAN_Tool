@@ -42,7 +42,7 @@ function IBM_HostInfo {
             $TD_CollectInfos = plink $TD_Device_UserName@$TD_Device_DeviceIP -pw $TD_Device_PW -batch 'lshost -nohdr |while read id name IO_group_id;do lshost -delim : $id ;echo;done && lsnodecanister -delim . -nohdr && lssystem -delim . |grep name'
         }
 
-        $TD_EventSplitInfoWWNN = ($TD_CollectInfos|Select-String -Pattern '\.([\w+]{14,18})\.' -AllMatches).Matches.Groups[1].Value
+        $TD_EventSplitInfoWWNN = ($TD_CollectInfos|Select-String -Pattern '\.([0-9a-zA-Z]{14,18})\.' -AllMatches).Matches.Groups[1].Value
         $TD_STOName = ($TD_CollectInfos|Select-String -Pattern '^name\.([\w\-\.]+)' -AllMatches).Matches.Groups[1].Value
         if($TD_Storage -eq "SVC"){
             $TD_FSBaseSerialNumber = ($TD_CollectInfos|Select-String -Pattern '\.(\w{6,8})\.(|\d+)\.(|\d+)\.(|\w{6,8})' -AllMatches).Matches.Groups[1].Value
