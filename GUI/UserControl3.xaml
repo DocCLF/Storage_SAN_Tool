@@ -187,7 +187,7 @@
                             <TextBox Grid.Row="5" Padding="2" Width="650" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Text="Established Major Version (Supported, Transitions to  Unsupported Release on December 30, 2025): FOS v9.1.X " FontSize="18" FontWeight="Bold" Background="yellow" Margin="5,20,5,0" IsReadOnly="True" TextWrapping="Wrap"/>
                             <StackPanel Orientation="Horizontal" Grid.Row="6" Margin="5,0,0,0">
                                 <TextBox Width="150" Padding="2" Text="FOS v9.1.1d7" Background="LightGreen" IsReadOnly="True"/>
-                                <TextBox Width="100" Padding="2" Text="January 11, 2024" IsReadOnly="True"/>
+                                <TextBox Width="100" Padding="2" Text="Jan 11, 2024" IsReadOnly="True"/>
                                 <TextBox Width="100" Padding="2" Text="Yes" Background="LightGreen" IsReadOnly="True"/>
                                 <TextBox Width="300" Padding="2" Text=""  TextWrapping="Wrap" IsReadOnly="True"/>
                             </StackPanel>
@@ -200,7 +200,7 @@
                             <TextBox Grid.Row="8" Padding="2" Width="650" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Text="Legacy Support and Availability Version (Supported Only as Specified): FOS v8.2.x" FontSize="18" FontWeight="Bold" Background="orange" Margin="5,20,5,0" IsReadOnly="True" TextWrapping="Wrap"/>
                             <StackPanel Orientation="Horizontal" Grid.Row="9" Margin="5,0,0,0">
                                 <TextBox Width="150" Padding="2" Text="FOS v8.2.3e2" Background="LightGreen" IsReadOnly="True"/>
-                                <TextBox Width="100" Padding="2" Text="December 17, 2024" IsReadOnly="True"/>
+                                <TextBox Width="100" Padding="2" Text="Dec 17, 2024" IsReadOnly="True"/>
                                 <TextBox Width="100" Padding="2" Text="Yes" Background="LightGreen" IsReadOnly="True"/>
                                 <TextBox Width="300" Padding="2" Text="Available for supported Gen 5 platforms only." TextWrapping="Wrap" IsReadOnly="True"/>
                             </StackPanel>
@@ -261,7 +261,7 @@
                     </StackPanel>
                     <StackPanel Grid.Row="0" Grid.Column="0" Visibility="{Binding ElementName=CB_SAN_DG1, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
                         <Label x:Name="LB_sanBasicSwitchInfoOne" Content="Switch 1" />
-                        <DataGrid Name="dg_sanBasicSwitchInfoOne" CanUserSortColumns="False" AutoGenerateColumns="False" MaxHeight="500" MaxWidth="300" Margin="5,0,5,5" >
+                        <DataGrid Name="dg_sanBasicSwitchInfoOne" CanUserSortColumns="False" AutoGenerateColumns="False" MaxHeight="500" MaxWidth="350" Margin="5,0,5,5" >
                             <DataGrid.Style>
                                 <Style TargetType="DataGrid">
                                     <Style.Triggers>
@@ -279,7 +279,7 @@
                     </StackPanel>
                     <StackPanel Grid.Row="0" Grid.Column="1"  Visibility="{Binding ElementName=CB_SAN_DG2, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
                         <Label x:Name="LB_sanBasicSwitchInfoTwo" Content="Switch 2" />
-                        <DataGrid Name="dg_sanBasicSwitchInfoTwo" CanUserSortColumns="False" AutoGenerateColumns="False" MaxHeight="500" MaxWidth="300" Margin="5,0,5,5" >
+                        <DataGrid Name="dg_sanBasicSwitchInfoTwo" CanUserSortColumns="False" AutoGenerateColumns="False" MaxHeight="500" MaxWidth="350" Margin="5,0,5,5" >
                             <DataGrid.Style>
                                 <Style TargetType="DataGrid">
                                     <Style.Triggers>
@@ -297,7 +297,7 @@
                     </StackPanel>
                     <StackPanel Grid.Row="1" Grid.Column="0"  Visibility="{Binding ElementName=CB_SAN_DG3, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
                         <Label x:Name="LB_sanBasicSwitchInfoThree" Content="Switch 3" />
-                        <DataGrid Name="dg_sanBasicSwitchInfoThree" CanUserSortColumns="False" AutoGenerateColumns="False" MaxHeight="500" MaxWidth="300" Margin="5,0,5,5" >
+                        <DataGrid Name="dg_sanBasicSwitchInfoThree" CanUserSortColumns="False" AutoGenerateColumns="False" MaxHeight="500" MaxWidth="350" Margin="5,0,5,5" >
                             <DataGrid.Style>
                                 <Style TargetType="DataGrid">
                                     <Style.Triggers>
@@ -315,7 +315,7 @@
                     </StackPanel>
                     <StackPanel Grid.Row="1" Grid.Column="1" Visibility="{Binding ElementName=CB_SAN_DG4, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
                         <Label x:Name="LB_sanBasicSwitchInfoFour" Content="Switch 4" />
-                        <DataGrid Name="dg_sanBasicSwitchInfoFour" CanUserSortColumns="False" AutoGenerateColumns="False" MaxHeight="500" MaxWidth="300" Margin="5,0,5,5" >
+                        <DataGrid Name="dg_sanBasicSwitchInfoFour" CanUserSortColumns="False" AutoGenerateColumns="False" MaxHeight="500" MaxWidth="350" Margin="5,0,5,5" >
                             <DataGrid.Style>
                                 <Style TargetType="DataGrid">
                                     <Style.Triggers>
@@ -333,7 +333,7 @@
                     </StackPanel>
                     <StackPanel Grid.Row="2" Grid.Column="0" Visibility="{Binding ElementName=CB_SAN_DG5, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
                         <Label x:Name="LB_sanBasicSwitchInfoFive" Content="Switch 5" />
-                        <DataGrid Name="dg_sanBasicSwitchInfoFive" CanUserSortColumns="False" AutoGenerateColumns="False" MaxHeight="500" MaxWidth="300" Margin="5,0,5,5" >
+                        <DataGrid Name="dg_sanBasicSwitchInfoFive" CanUserSortColumns="False" AutoGenerateColumns="False" MaxHeight="500" MaxWidth="350" Margin="5,0,5,5" >
                             <DataGrid.Style>
                                 <Style TargetType="DataGrid">
                                     <Style.Triggers>
@@ -351,7 +351,7 @@
                     </StackPanel>
                     <StackPanel Grid.Row="2" Grid.Column="1" Visibility="{Binding ElementName=CB_SAN_DG6, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}" >
                         <Label x:Name="LB_sanBasicSwitchInfoSix" Content="Switch 6" />
-                        <DataGrid Name="dg_sanBasicSwitchInfoSix" CanUserSortColumns="False" AutoGenerateColumns="False" MaxHeight="500" MaxWidth="300" Margin="5,0,5,5" >
+                        <DataGrid Name="dg_sanBasicSwitchInfoSix" CanUserSortColumns="False" AutoGenerateColumns="False" MaxHeight="500" MaxWidth="350" Margin="5,0,5,5" >
                             <DataGrid.Style>
                                 <Style TargetType="DataGrid">
                                     <Style.Triggers>
@@ -369,7 +369,7 @@
                     </StackPanel>
                     <StackPanel Grid.Row="3" Grid.Column="0"  Visibility="{Binding ElementName=CB_SAN_DG7, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
                         <Label x:Name="LB_sanBasicSwitchInfoSeven" Content="Switch 7" />
-                        <DataGrid Name="dg_sanBasicSwitchInfoSeven" CanUserSortColumns="False" AutoGenerateColumns="False" MaxHeight="500" MaxWidth="300" Margin="5,0,5,5" >
+                        <DataGrid Name="dg_sanBasicSwitchInfoSeven" CanUserSortColumns="False" AutoGenerateColumns="False" MaxHeight="500" MaxWidth="350" Margin="5,0,5,5" >
                             <DataGrid.Style>
                                 <Style TargetType="DataGrid">
                                     <Style.Triggers>
@@ -387,7 +387,7 @@
                     </StackPanel>
                     <StackPanel Grid.Row="3" Grid.Column="1" Visibility="{Binding ElementName=CB_SAN_DG8, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
                         <Label x:Name="LB_sanBasicSwitchInfoEight" Content="Switch 8" />
-                        <DataGrid Name="dg_sanBasicSwitchInfoEight" CanUserSortColumns="False" AutoGenerateColumns="False" MaxHeight="500" MaxWidth="300" Margin="5,0,5,5" >
+                        <DataGrid Name="dg_sanBasicSwitchInfoEight" CanUserSortColumns="False" AutoGenerateColumns="False" MaxHeight="500" MaxWidth="350" Margin="5,0,5,5" >
                             <DataGrid.Style>
                                 <Style TargetType="DataGrid">
                                     <Style.Triggers>
