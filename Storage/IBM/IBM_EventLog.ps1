@@ -48,7 +48,7 @@ function IBM_EventLog {
 
     process{
         Write-Debug -Message "IBM_EventLog Process block |$(Get-Date)"
-        $TD_EventSplitInfoWWNN = ($TD_CollectEventInfo|Select-String -Pattern '\.([\w+]{14,18})\.' -AllMatches).Matches.Groups[1].Value
+        $TD_EventSplitInfoWWNN = ($TD_CollectEventInfo|Select-String -Pattern '\.([0-9a-zA-Z]{14,18})\.' -AllMatches).Matches.Groups[1].Value
         if($TD_Storage -eq "SVC"){
             $TD_FSBaseSerialNumber = ($TD_CollectEventInfo|Select-String -Pattern '\.(\w{6,8})\.(|\d+)\.(|\d+)\.(|\w{6,8})' -AllMatches).Matches.Groups[1].Value
         }else{
