@@ -2005,7 +2005,7 @@
                             <ItemsControl x:Name="IC_STODriveViewOne" Margin="3">
                                 <ItemsControl.ItemTemplate>
                                     <DataTemplate>
-                                        <Button Style="{DynamicResource DashBoardBTNStyle}" MaxWidth="92" Height="250" Margin="2"  ToolTipService.InitialShowDelay="10">
+                                        <Button Style="{DynamicResource DashBoardBTNStyle}" MaxWidth="92" Height="250" Margin="2" ToolTipService.InitialShowDelay="10">
                                             <Grid>
                                                 <Grid.RowDefinitions>
                                                     <RowDefinition Height="50"/>
@@ -2020,8 +2020,8 @@
                                                                 <Trigger Property ="Text" Value="online">
                                                                     <Setter Property= "Background" Value="LightGreen"/>
                                                                 </Trigger>
-                                                                <Trigger Property ="Text" Value="unused">
-                                                                    <Setter Property= "Background" Value="LightGray"/>
+                                                                <Trigger Property ="Text" Value="degraded">
+                                                                    <Setter Property= "Background" Value="Lightyellow"/>
                                                                 </Trigger>
                                                             </Style.Triggers>
                                                         </Style>
@@ -2031,7 +2031,7 @@
                                                     <TextBox Style="{DynamicResource STODriveTB}" FontSize="13" Text="{Binding Slot, StringFormat=Slot: {0:D}}" />
                                                     <TextBox Style="{DynamicResource STODriveTB}" FontSize="13" Text="{Binding DriveID, StringFormat=DID: {0:D}}" />
                                                     <TextBox Style="{DynamicResource STODriveTB}" Margin="0,10,0,0" FontSize="13" Text="{Binding DriveCap}" />
-                                                    <TextBox Style="{DynamicResource STODriveTB}" Margin="0,3,0,0" FontSize="13" Text="{Binding FWlev}" />
+                                                    <TextBox Style="{DynamicResource STODriveTB}" Background="{Binding FWlevStatus}" Margin="0,3,0,0" FontSize="13" Text="{Binding FWlev}" />
                                                 </StackPanel>
                                                 <StackPanel Grid.Row="2" Orientation="Vertical" Margin="2">
                                                     <TextBox Style="{DynamicResource STODriveTB}" Text="{Binding ProductID}"/>
@@ -2067,7 +2067,7 @@
                             <ItemsControl x:Name="IC_STODriveViewTwo" Margin="3">
                                 <ItemsControl.ItemTemplate>
                                     <DataTemplate>
-                                        <Button Style="{DynamicResource DashBoardBTNStyle}" MaxWidth="92" Height="250" Margin="2"  ToolTipService.InitialShowDelay="10">
+                                        <Button Style="{DynamicResource DashBoardBTNStyle}" MaxWidth="92" Height="250" Margin="2" ToolTipService.InitialShowDelay="10">
                                             <Grid>
                                                 <Grid.RowDefinitions>
                                                     <RowDefinition Height="50"/>
@@ -2082,8 +2082,8 @@
                                                                 <Trigger Property ="Text" Value="online">
                                                                     <Setter Property= "Background" Value="LightGreen"/>
                                                                 </Trigger>
-                                                                <Trigger Property ="Text" Value="unused">
-                                                                    <Setter Property= "Background" Value="LightGray"/>
+                                                                <Trigger Property ="Text" Value="degraded">
+                                                                    <Setter Property= "Background" Value="Lightyellow"/>
                                                                 </Trigger>
                                                             </Style.Triggers>
                                                         </Style>
@@ -2093,7 +2093,7 @@
                                                     <TextBox Style="{DynamicResource STODriveTB}" FontSize="13" Text="{Binding Slot, StringFormat=Slot: {0:D}}" />
                                                     <TextBox Style="{DynamicResource STODriveTB}" FontSize="13" Text="{Binding DriveID, StringFormat=DID: {0:D}}" />
                                                     <TextBox Style="{DynamicResource STODriveTB}" Margin="0,10,0,0" FontSize="13" Text="{Binding DriveCap}" />
-                                                    <TextBox Style="{DynamicResource STODriveTB}" Margin="0,3,0,0" FontSize="13" Text="{Binding FWlev}" />
+                                                    <TextBox Style="{DynamicResource STODriveTB}" Background="{Binding FWlevStatus}" Margin="0,3,0,0" FontSize="13" Text="{Binding FWlev}" />
                                                 </StackPanel>
                                                 <StackPanel Grid.Row="2" Orientation="Vertical" Margin="2">
                                                     <TextBox Style="{DynamicResource STODriveTB}" Text="{Binding ProductID}"/>
@@ -2144,8 +2144,8 @@
                                                                 <Trigger Property ="Text" Value="online">
                                                                     <Setter Property= "Background" Value="LightGreen"/>
                                                                 </Trigger>
-                                                                <Trigger Property ="Text" Value="unused">
-                                                                    <Setter Property= "Background" Value="LightGray"/>
+                                                                <Trigger Property ="Text" Value="degraded">
+                                                                    <Setter Property= "Background" Value="Lightyellow"/>
                                                                 </Trigger>
                                                             </Style.Triggers>
                                                         </Style>
@@ -2155,7 +2155,7 @@
                                                     <TextBox Style="{DynamicResource STODriveTB}" FontSize="13" Text="{Binding Slot, StringFormat=Slot: {0:D}}" />
                                                     <TextBox Style="{DynamicResource STODriveTB}" FontSize="13" Text="{Binding DriveID, StringFormat=DID: {0:D}}" />
                                                     <TextBox Style="{DynamicResource STODriveTB}" Margin="0,10,0,0" FontSize="13" Text="{Binding DriveCap}" />
-                                                    <TextBox Style="{DynamicResource STODriveTB}" Margin="0,3,0,0" FontSize="13" Text="{Binding FWlev}" />
+                                                    <TextBox Style="{DynamicResource STODriveTB}" Background="{Binding FWlevStatus}" Margin="0,3,0,0" FontSize="13" Text="{Binding FWlev}" />
                                                 </StackPanel>
                                                 <StackPanel Grid.Row="2" Orientation="Vertical" Margin="2">
                                                     <TextBox Style="{DynamicResource STODriveTB}" Text="{Binding ProductID}"/>
@@ -2206,8 +2206,8 @@
                                                                 <Trigger Property ="Text" Value="online">
                                                                     <Setter Property= "Background" Value="LightGreen"/>
                                                                 </Trigger>
-                                                                <Trigger Property ="Text" Value="unused">
-                                                                    <Setter Property= "Background" Value="LightGray"/>
+                                                                <Trigger Property ="Text" Value="degraded">
+                                                                    <Setter Property= "Background" Value="Lightyellow"/>
                                                                 </Trigger>
                                                             </Style.Triggers>
                                                         </Style>
@@ -2217,7 +2217,7 @@
                                                     <TextBox Style="{DynamicResource STODriveTB}" FontSize="13" Text="{Binding Slot, StringFormat=Slot: {0:D}}" />
                                                     <TextBox Style="{DynamicResource STODriveTB}" FontSize="13" Text="{Binding DriveID, StringFormat=DID: {0:D}}" />
                                                     <TextBox Style="{DynamicResource STODriveTB}" Margin="0,10,0,0" FontSize="13" Text="{Binding DriveCap}" />
-                                                    <TextBox Style="{DynamicResource STODriveTB}" Margin="0,3,0,0" FontSize="13" Text="{Binding FWlev}" />
+                                                    <TextBox Style="{DynamicResource STODriveTB}" Background="{Binding FWlevStatus}" Margin="0,3,0,0" FontSize="13" Text="{Binding FWlev}" />
                                                 </StackPanel>
                                                 <StackPanel Grid.Row="2" Orientation="Vertical" Margin="2">
                                                     <TextBox Style="{DynamicResource STODriveTB}" Text="{Binding ProductID}"/>
@@ -2268,8 +2268,8 @@
                                                                 <Trigger Property ="Text" Value="online">
                                                                     <Setter Property= "Background" Value="LightGreen"/>
                                                                 </Trigger>
-                                                                <Trigger Property ="Text" Value="unused">
-                                                                    <Setter Property= "Background" Value="LightGray"/>
+                                                                <Trigger Property ="Text" Value="degraded">
+                                                                    <Setter Property= "Background" Value="Lightyellow"/>
                                                                 </Trigger>
                                                             </Style.Triggers>
                                                         </Style>
@@ -2278,8 +2278,8 @@
                                                 <StackPanel Grid.Row="1" Margin="0,15,0,0">
                                                     <TextBox Style="{DynamicResource STODriveTB}" FontSize="13" Text="{Binding Slot, StringFormat=Slot: {0:D}}" />
                                                     <TextBox Style="{DynamicResource STODriveTB}" FontSize="13" Text="{Binding DriveID, StringFormat=DID: {0:D}}" />
-                                                    <TextBox Style="{DynamicResource STODriveTB}" Margin="0,10,0,0" FontSize="13" Text="{Binding DriveCap }" />
-                                                    <TextBox Style="{DynamicResource STODriveTB}" Margin="0,3,0,0" FontSize="13" Text="{Binding FWlev }" />
+                                                    <TextBox Style="{DynamicResource STODriveTB}" Margin="0,10,0,0" FontSize="13" Text="{Binding DriveCap}" />
+                                                    <TextBox Style="{DynamicResource STODriveTB}" Background="{Binding FWlevStatus}" Margin="0,3,0,0" FontSize="13" Text="{Binding FWlev}" />
                                                 </StackPanel>
                                                 <StackPanel Grid.Row="2" Orientation="Vertical" Margin="2">
                                                     <TextBox Style="{DynamicResource STODriveTB}" Text="{Binding ProductID}"/>
@@ -2330,8 +2330,8 @@
                                                                 <Trigger Property ="Text" Value="online">
                                                                     <Setter Property= "Background" Value="LightGreen"/>
                                                                 </Trigger>
-                                                                <Trigger Property ="Text" Value="unused">
-                                                                    <Setter Property= "Background" Value="LightGray"/>
+                                                                <Trigger Property ="Text" Value="degraded">
+                                                                    <Setter Property= "Background" Value="Lightyellow"/>
                                                                 </Trigger>
                                                             </Style.Triggers>
                                                         </Style>
@@ -2340,8 +2340,8 @@
                                                 <StackPanel Grid.Row="1" Margin="0,15,0,0">
                                                     <TextBox Style="{DynamicResource STODriveTB}" FontSize="13" Text="{Binding Slot, StringFormat=Slot: {0:D}}" />
                                                     <TextBox Style="{DynamicResource STODriveTB}" FontSize="13" Text="{Binding DriveID, StringFormat=DID: {0:D}}" />
-                                                    <TextBox Style="{DynamicResource STODriveTB}" Margin="0,10,0,0" FontSize="13" Text="{Binding DriveCap }" />
-                                                    <TextBox Style="{DynamicResource STODriveTB}" Margin="0,3,0,0" FontSize="13" Text="{Binding FWlev }" />
+                                                    <TextBox Style="{DynamicResource STODriveTB}" Margin="0,10,0,0" FontSize="13" Text="{Binding DriveCap}" />
+                                                    <TextBox Style="{DynamicResource STODriveTB}" Background="{Binding FWlevStatus}" Margin="0,3,0,0" FontSize="13" Text="{Binding FWlev}" />
                                                 </StackPanel>
                                                 <StackPanel Grid.Row="2" Orientation="Vertical" Margin="2">
                                                     <TextBox Style="{DynamicResource STODriveTB}" Text="{Binding ProductID}"/>
@@ -2392,8 +2392,8 @@
                                                                 <Trigger Property ="Text" Value="online">
                                                                     <Setter Property= "Background" Value="LightGreen"/>
                                                                 </Trigger>
-                                                                <Trigger Property ="Text" Value="unused">
-                                                                    <Setter Property= "Background" Value="LightGray"/>
+                                                                <Trigger Property ="Text" Value="degraded">
+                                                                    <Setter Property= "Background" Value="Lightyellow"/>
                                                                 </Trigger>
                                                             </Style.Triggers>
                                                         </Style>
@@ -2402,8 +2402,8 @@
                                                 <StackPanel Grid.Row="1" Margin="0,15,0,0">
                                                     <TextBox Style="{DynamicResource STODriveTB}" FontSize="13" Text="{Binding Slot, StringFormat=Slot: {0:D}}" />
                                                     <TextBox Style="{DynamicResource STODriveTB}" FontSize="13" Text="{Binding DriveID, StringFormat=DID: {0:D}}" />
-                                                    <TextBox Style="{DynamicResource STODriveTB}" Margin="0,10,0,0" FontSize="13" Text="{Binding DriveCap }" />
-                                                    <TextBox Style="{DynamicResource STODriveTB}" Margin="0,3,0,0" FontSize="13" Text="{Binding FWlev }" />
+                                                    <TextBox Style="{DynamicResource STODriveTB}" Margin="0,10,0,0" FontSize="13" Text="{Binding DriveCap}" />
+                                                    <TextBox Style="{DynamicResource STODriveTB}" Background="{Binding FWlevStatus}" Margin="0,3,0,0" FontSize="13" Text="{Binding FWlev}" />
                                                 </StackPanel>
                                                 <StackPanel Grid.Row="2" Orientation="Vertical" Margin="2">
                                                     <TextBox Style="{DynamicResource STODriveTB}" Text="{Binding ProductID}"/>
@@ -2454,8 +2454,8 @@
                                                                 <Trigger Property ="Text" Value="online">
                                                                     <Setter Property= "Background" Value="LightGreen"/>
                                                                 </Trigger>
-                                                                <Trigger Property ="Text" Value="unused">
-                                                                    <Setter Property= "Background" Value="LightGray"/>
+                                                                <Trigger Property ="Text" Value="degraded">
+                                                                    <Setter Property= "Background" Value="Lightyellow"/>
                                                                 </Trigger>
                                                             </Style.Triggers>
                                                         </Style>
@@ -2464,8 +2464,8 @@
                                                 <StackPanel Grid.Row="1" Margin="0,15,0,0">
                                                     <TextBox Style="{DynamicResource STODriveTB}" FontSize="13" Text="{Binding Slot, StringFormat=Slot: {0:D}}" />
                                                     <TextBox Style="{DynamicResource STODriveTB}" FontSize="13" Text="{Binding DriveID, StringFormat=DID: {0:D}}" />
-                                                    <TextBox Style="{DynamicResource STODriveTB}" Margin="0,10,0,0" FontSize="13" Text="{Binding DriveCap }" />
-                                                    <TextBox Style="{DynamicResource STODriveTB}" Margin="0,3,0,0" FontSize="13" Text="{Binding FWlev }" />
+                                                    <TextBox Style="{DynamicResource STODriveTB}" Margin="0,10,0,0" FontSize="13" Text="{Binding DriveCap}" />
+                                                    <TextBox Style="{DynamicResource STODriveTB}" Background="{Binding FWlevStatus}" Margin="0,3,0,0" FontSize="13" Text="{Binding FWlev}" />
                                                 </StackPanel>
                                                 <StackPanel Grid.Row="2" Orientation="Vertical" Margin="2">
                                                     <TextBox Style="{DynamicResource STODriveTB}" Text="{Binding ProductID}"/>
