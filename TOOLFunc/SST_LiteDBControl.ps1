@@ -2,7 +2,7 @@ function SST_LiteDBControl {
     [CmdletBinding()]
     param (
         [Parameter(ValueFromPipeline)]
-        [ValidateSet("StorageDrive","StorageBase","StorageHostInfo","StorageEventLog","SANBase")]
+        [ValidateSet("StorageDrive","StorageBase","StorageHostInfo","StorageEventLog","SANBase","FCPortStats")]
         $SST_InfoType,
         $SST_NewDBObject =$null,
         [array]$SST_CollectedInformations,
