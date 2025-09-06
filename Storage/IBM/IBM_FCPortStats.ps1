@@ -81,7 +81,7 @@ function IBM_FCPortStats {
                 NodeID = ($NodeBasicInfo|Select-String -Pattern '^(\d+)\.' -AllMatches).Matches.Groups[1].Value
                 NodeSN = $NodeSN
                 NodeName = ($NodeBasicInfo|Select-String -Pattern '^\d+\.([\w\-]+)\.' -AllMatches).Matches.Groups[1].Value
-                NodeWWNN = ($NodeBasicInfo|Select-String -Pattern '\.([\w+]{14,18})\.' -AllMatches).Matches.Groups[1].Value
+                NodeWWNN = ($NodeBasicInfo|Select-String -Pattern '\.([0-9a-zA-Z]{14,18})\.' -AllMatches).Matches.Groups[1].Value
             }
         }
         $NodePortStatsInfos = $TD_CollectInfos |Select-Object -Skip ($NodeBasicInfos.Count)
