@@ -120,7 +120,7 @@ function SST_DeviceConnecCheck {
                     $TD_BInfo = "" | Select-Object DeviceName,ProductDes,Prod_MTM,Code_Level
                     $TD_BInfo.DeviceName = $TD_BasicDeviceInfos.'Swicht Name'
                     $TD_BInfo.ProductDes = $TD_BasicDeviceInfos.'Brocade Product Name'
-                    $TD_BInfo.Prod_MTM = $FOS_HWMTM
+                    $TD_BInfo.Prod_MTM = $TD_BasicDeviceInfos.'MTM'
                     $TD_BInfo.Code_Level = $TD_BasicDeviceInfos.'Fabric OS'
                     $TD_BasicDeviceInfo += $TD_BInfo
                     SST_ToolMessageCollector -TD_ToolMSGCollector "Added SAN Device to the List" -TD_ToolMSGType Message
