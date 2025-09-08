@@ -63,7 +63,7 @@ function SST_DeviceConnecCheck {
                     }
 
                     switch ($TD_BasicDeviceInfos.Prod_MTM[0]) {
-                        {$_ -like "2078-324"}  { $TD_BInfo.ProductDes = "V5030 Gen2" }
+                        {$_ -like "2078-324"} { $TD_BInfo.ProductDes = "V5030 Gen2" }
                         {$_ -like "4680-3*"}  { $TD_BInfo.ProductDes = "FlashSystem 5045" }
                         {$_ -like "2077-4H4" -or $_ -like "2078-4H4" }  { $TD_BInfo.ProductDes = "FlashSystem 5100" }
                         {$_ -like "4662-6H2" -or $_ -like "4662-UH6" }  { $TD_BInfo.ProductDes = "FlashSystem 5200" }
@@ -104,11 +104,23 @@ function SST_DeviceConnecCheck {
                 }
                 Start-Sleep -Seconds 0.5
                 $TD_BasicDeviceInfos = FOS_BasicSwitchInfos -TD_Device_ConnectionTyp $TD_Selected_DeviceConnectionType -TD_Device_DeviceIP $TD_Selected_DeviceIPAddr -TD_Device_UserName $TD_Selected_DeviceUserName -TD_Device_PW $([Net.NetworkCredential]::new('', $TD_Selected_DevicePassword).Password) -TD_Device_SSHKeyPath $TD_Selected_DeviceSSHFile 
+                
+                switch ($($TD_BasicDeviceInfos.'Brocade Product Name')) {
+                    {$_ -like "Brocade G720"}  { $FOS_HWMTM = "8960-P/R64" }
+                    {$_ -like "Brocade G730"}  { $FOS_HWMTM = "8960-P/R96" }
+                    {$_ -like "Brocade G610"}  { $FOS_HWMTM = "8969-F24" }
+                    {$_ -like "Brocade G620"}  { $FOS_HWMTM = "8960-F/N65 V2" }
+                    {$_ -like "Brocade G630"}  { $FOS_HWMTM = "8960-F/N97" }
+                    {$_ -like "Brocade 6510"}  { $FOS_HWMTM = "2498-F48" }
+                    {$_ -like "Brocade 6505"}  { $FOS_HWMTM = "2498-F24" }
+                    Default {$FOS_HWMTM = "Unknown Type"}
+                }
+                
                 if($TD_BasicDeviceInfos.count -gt 0){
                     $TD_BInfo = "" | Select-Object DeviceName,ProductDes,Prod_MTM,Code_Level
                     $TD_BInfo.DeviceName = $TD_BasicDeviceInfos.'Swicht Name'
                     $TD_BInfo.ProductDes = $TD_BasicDeviceInfos.'Brocade Product Name'
-                    $TD_BInfo.Prod_MTM = "unknown"
+                    $TD_BInfo.Prod_MTM = $FOS_HWMTM
                     $TD_BInfo.Code_Level = $TD_BasicDeviceInfos.'Fabric OS'
                     $TD_BasicDeviceInfo += $TD_BInfo
                     SST_ToolMessageCollector -TD_ToolMSGCollector "Added SAN Device to the List" -TD_ToolMSGType Message
