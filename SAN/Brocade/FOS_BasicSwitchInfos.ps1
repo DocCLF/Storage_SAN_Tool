@@ -59,9 +59,11 @@ function FOS_BasicSwitchInfos {
             {$_ -like "183*"}  { $FOS_SwHw = "Brocade G620" }
             {$_ -like "173*"}  { $FOS_SwHw = "Brocade G630" }
             {$_ -like "184*"}  { $FOS_SwHw = "Brocade G630" }
-            {$_ -like "178*"}  { $FOS_SwHw = "Brocade 7810 Extension Switch" }
+            {$_ -like "178*"}  { $FOS_SwHw = "Brocade 7810 Ext. Switch" }
             {$_ -like "181*"}  { $FOS_SwHw = "Brocade G720" }
             {$_ -like "189*"}  { $FOS_SwHw = "Brocade G730" }
+            {$_ -like "190*"}  { $FOS_SwHw = "Brocade 7850 Ext. Switch" }
+            {$_ -like "191*"}  { $FOS_SwHw = "Brocade G710" }
             Default {$FOS_SwHw = "Unknown Type"}
         }
     }
