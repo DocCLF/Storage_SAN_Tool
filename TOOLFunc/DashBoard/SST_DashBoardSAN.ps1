@@ -23,6 +23,7 @@ function SST_DashBoardSAN {
             CodeLevelLV  = $SST_SQLiteDBReader["CodeLevelLV"] -replace '(EOS [\w]{3} [\d]{2}, [\d]{4}, latest version |latest version )','v'
             CodeLevelLVInfo  = $SST_SQLiteDBReader["CodeLevelLV"]
             BrocadeProdName = $SST_SQLiteDBReader["BrocadeProdName"]
+            MTM = $SST_SQLiteDBReader["MTM"]
             SerialNumber    = $SST_SQLiteDBReader["SerialNumber"]
             TimeStamp = $SST_SQLiteDBReader["TimeStamp"]
             BrocadeIcon = "$PSRootPath\Resources\Icons\broadcom-96.png"
