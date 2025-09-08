@@ -302,6 +302,7 @@
                                             <RowDefinition />
                                             <RowDefinition />
                                             <RowDefinition />
+                                            <RowDefinition />
                                         </Grid.RowDefinitions>
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition MaxWidth="70" />
@@ -354,7 +355,7 @@
                                             Style="{DynamicResource DashBoardTB1}"
                                             HorizontalAlignment="Left"
                                             VerticalAlignment="Center"
-                                            Text="MTM:" 
+                                            Text="ProdName:" 
                                             Margin="3,0"/>
                                         <TextBlock
                                             Grid.Row="2"
@@ -370,7 +371,7 @@
                                             Style="{DynamicResource DashBoardTB1}"
                                             HorizontalAlignment="Left"
                                             VerticalAlignment="Center"
-                                            Text="SN:" 
+                                            Text="MTM:" 
                                             Margin="3,0"/>
                                         <TextBlock
                                             Grid.Row="3"
@@ -378,7 +379,7 @@
                                             Style="{DynamicResource DashBoardTB1}"
                                             HorizontalAlignment="Left"
                                             VerticalAlignment="Center"
-                                            Text="{Binding SerialNumber}"
+                                            Text="{Binding MTM}"
                                             Margin="0"/>
                                         <TextBlock
                                             Grid.Row="4"
@@ -386,7 +387,7 @@
                                             Style="{DynamicResource DashBoardTB1}"
                                             HorizontalAlignment="Left"
                                             VerticalAlignment="Center"
-                                            Text="FW:" 
+                                            Text="SN:" 
                                             Margin="3,0"/>
                                         <TextBlock
                                             Grid.Row="4"
@@ -394,7 +395,7 @@
                                             Style="{DynamicResource DashBoardTB1}"
                                             HorizontalAlignment="Left"
                                             VerticalAlignment="Center"
-                                            Text="{Binding CodeLevel}"
+                                            Text="{Binding SerialNumber}"
                                             Margin="0"/>
                                         <TextBlock
                                             Grid.Row="5"
@@ -402,10 +403,26 @@
                                             Style="{DynamicResource DashBoardTB1}"
                                             HorizontalAlignment="Left"
                                             VerticalAlignment="Center"
-                                            Text="FW Rec:" 
+                                            Text="FW:" 
                                             Margin="3,0"/>
                                         <TextBlock
                                             Grid.Row="5"
+                                            Grid.Column="2"
+                                            Style="{DynamicResource DashBoardTB1}"
+                                            HorizontalAlignment="Left"
+                                            VerticalAlignment="Center"
+                                            Text="{Binding CodeLevel}"
+                                            Margin="0"/>
+                                        <TextBlock
+                                            Grid.Row="6"
+                                            Grid.Column="1"
+                                            Style="{DynamicResource DashBoardTB1}"
+                                            HorizontalAlignment="Left"
+                                            VerticalAlignment="Center"
+                                            Text="FW Rec:" 
+                                            Margin="3,0"/>
+                                        <TextBlock
+                                            Grid.Row="6"
                                             Grid.Column="2"
                                             Style="{DynamicResource DashBoardTB1}"
                                             HorizontalAlignment="Left"
