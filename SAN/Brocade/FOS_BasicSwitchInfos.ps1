@@ -66,6 +66,21 @@ function FOS_BasicSwitchInfos {
             {$_ -like "191*"}  { $FOS_SwHw = "Brocade G710" }
             Default {$FOS_SwHw = "Unknown Type"}
         }
+
+        switch (($FOS_MainInformation | Select-String -Pattern 'Part\sNum:\s+(\w+)$' |ForEach-Object {$_.Matches.Groups[1].Value})) {
+            {$_ -like "*8960*P64"}  { $FOS_HWMTM = "8960-P64" }
+            {$_ -like "*8960*R64"}  { $FOS_HWMTM = "8960-R64" }
+            {$_ -like "*8960*P96"}  { $FOS_HWMTM = "8960-P96" }
+            {$_ -like "*8960*R96"}  { $FOS_HWMTM = "8960-R96" }
+            {$_ -like "*8969*F24"}  { $FOS_HWMTM = "8969-F24" }
+            {$_ -like "*8960*F65"}  { $FOS_HWMTM = "8960-F65 V2" }
+            {$_ -like "*8960*N65"}  { $FOS_HWMTM = "8960-N65 V2" }
+            {$_ -like "*8960*F97"}  { $FOS_HWMTM = "8960-N97" }
+            {$_ -like "*8960*N97"}  { $FOS_HWMTM = "8960-F97" }
+            {$_ -like "*2498*F48"}  { $FOS_HWMTM = "2498-F48" }
+            {$_ -like "*2498*F24"}  { $FOS_HWMTM = "2498-F24" }
+            Default {$FOS_HWMTM = "Unknown Type"}
+        }
     }
     
     process {
@@ -91,6 +106,7 @@ function FOS_BasicSwitchInfos {
         }
 
         $FOS_SwGeneralInfos.Add('Brocade Product Name',$FOS_SwHw)
+        $FOS_SwGeneralInfos.Add('MTM',$FOS_HWMTM)
         $FOS_SwGeneralInfos.Add('Serial Num',$FOS_LoSw_CFG[0])
 
         $FOS_SwitchOSVersion= FOS_SwitchFW -SwitchData $FOS_MainInformation
