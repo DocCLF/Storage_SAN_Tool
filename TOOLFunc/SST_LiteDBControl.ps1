@@ -48,7 +48,7 @@ function SST_LiteDBControl {
                     $SST_SQliteCreateTBCMD.ExecuteNonQuery()
                 }
                 "SANBase" { 
-                    $SST_SQLiteTabelQuery ="CREATE TABLE IF NOT EXISTS IBMSANHWTable (ID INTEGER PRIMARY KEY AUTOINCREMENT, Name TEXT NOT NULL, Status TEXT NOT NULL, BrocadeProdName TEXT, SerialNumber TEXT, CodeLevel TEXT, CodeLevelLV TEXT, TimeStamp TEXT );" 
+                    $SST_SQLiteTabelQuery ="CREATE TABLE IF NOT EXISTS IBMSANHWTable (ID INTEGER PRIMARY KEY AUTOINCREMENT, Name TEXT NOT NULL, Status TEXT NOT NULL, BrocadeProdName TEXT, MTM TEXT, SerialNumber TEXT, CodeLevel TEXT, CodeLevelLV TEXT, TimeStamp TEXT );" 
                     $SST_SQliteCreateTBCMD.CommandText = $SST_SQLiteTabelQuery
                     $SST_SQliteCreateTBCMD.ExecuteNonQuery()
                 }
@@ -189,12 +189,13 @@ function SST_LiteDBControl {
             }
             "SANBase" {
                 foreach ($SST_CollectedInformation in $SST_CollectedInformations){
-                    $SST_SQliteInsertCMD.CommandText ="INSERT INTO IBMSANHWTable (Name, Status, CodeLevel, CodeLevelLV, BrocadeProdName, SerialNumber, TimeStamp) VALUES (@Name, @Status, @CodeLevel, @CodeLevelLV, @BrocadeProdName, @SerialNumber, @TimeStamp);"
+                    $SST_SQliteInsertCMD.CommandText ="INSERT INTO IBMSANHWTable (Name, Status, CodeLevel, CodeLevelLV, BrocadeProdName, MTM, SerialNumber, TimeStamp) VALUES (@Name, @Status, @CodeLevel, @CodeLevelLV, @BrocadeProdName, @MTM, @SerialNumber, @TimeStamp);"
                     $SST_SQliteInsertCMD.Parameters.AddWithValue("@Name", $SST_CollectedInformation.'Swicht Name') | Out-Null
                     $SST_SQliteInsertCMD.Parameters.AddWithValue("@Status", $SST_CollectedInformation.'Switch State') | Out-Null
                     $SST_SQliteInsertCMD.Parameters.AddWithValue("@CodeLevel", $SST_CollectedInformation.'Fabric OS') | Out-Null
                     $SST_SQliteInsertCMD.Parameters.AddWithValue("@CodeLevelLV", $SST_CollectedInformation.'Fabric OSLV') | Out-Null
                     $SST_SQliteInsertCMD.Parameters.AddWithValue("@BrocadeProdName", $SST_CollectedInformation.'Brocade Product Name') | Out-Null
+                    $SST_SQliteInsertCMD.Parameters.AddWithValue("@MTM", $SST_CollectedInformation.'MTM') | Out-Null
                     $SST_SQliteInsertCMD.Parameters.AddWithValue("@SerialNumber", $SST_CollectedInformation.'Serial Num') | Out-Null
                     $SST_SQliteInsertCMD.Parameters.AddWithValue("@TimeStamp", $TimeStamp) | Out-Null
                 
