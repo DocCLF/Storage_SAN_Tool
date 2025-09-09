@@ -43,7 +43,12 @@ function SST_DeviceConnecCheck {
         switch ($TD_Selected_DeviceType) {
             "Storage" { 
                 try {
-                    ssh-keygen.exe -F $TD_Selected_DeviceIPAddr || ssh-keyscan.exe $TD_Selected_DeviceIPAddr >> ~/.ssh/known_hosts
+                    if($PSVersionTable.PSVersion.Major -ge 7){
+                        ssh-keygen.exe -F $TD_Selected_DeviceIPAddr || ssh-keyscan.exe $TD_Selected_DeviceIPAddr >> ~/.ssh/known_hosts
+                    }else {
+                        ssh-keygen.exe -F $TD_Selected_DeviceIPAddr
+                        ssh-keyscan.exe $TD_Selected_DeviceIPAddr >> ~/.ssh/known_hosts
+                    }
                 }
                 catch {
                     Write-Host $_.exception.message
@@ -95,7 +100,12 @@ function SST_DeviceConnecCheck {
             }
             "SAN" { 
                 try {
-                    ssh-keygen.exe -F $TD_Selected_DeviceIPAddr || ssh-keyscan.exe $TD_Selected_DeviceIPAddr >> ~/.ssh/known_hosts
+                    if($PSVersionTable.PSVersion.Major -ge 7){
+                        ssh-keygen.exe -F $TD_Selected_DeviceIPAddr || ssh-keyscan.exe $TD_Selected_DeviceIPAddr >> ~/.ssh/known_hosts
+                    }else {
+                        ssh-keygen.exe -F $TD_Selected_DeviceIPAddr
+                        ssh-keyscan.exe $TD_Selected_DeviceIPAddr >> ~/.ssh/known_hosts
+                    }
                 }
                 catch {
                     Write-Host $_.exception.message
