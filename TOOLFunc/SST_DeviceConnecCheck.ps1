@@ -12,6 +12,8 @@ function SST_DeviceConnecCheck {
     )
     
     begin {
+        $ErrorActionPreference="SilentlyContinue"
+        
         switch ($TD_Selected_Items) {
             "yes" { 
                 $TD_Selected_DeviceType
