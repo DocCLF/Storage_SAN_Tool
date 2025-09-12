@@ -45,12 +45,13 @@ function SST_DeviceConnecCheck {
         switch ($TD_Selected_DeviceType) {
             "Storage" { 
                 try {
-                    if($PSVersionTable.PSVersion.Major -ge 7){
-                        ssh-keygen.exe -F $TD_Selected_DeviceIPAddr || ssh-keyscan.exe $TD_Selected_DeviceIPAddr >> ~/.ssh/known_hosts
-                    }else {
+                    <# need to be reworked #>
+                    #if($PSVersionTable.PSVersion.Major -ge 7){
+                    #    ssh-keygen.exe -F $TD_Selected_DeviceIPAddr || ssh-keyscan.exe $TD_Selected_DeviceIPAddr >> ~/.ssh/known_hosts
+                    #}else {
                         ssh-keygen.exe -F $TD_Selected_DeviceIPAddr
                         ssh-keyscan.exe $TD_Selected_DeviceIPAddr >> ~/.ssh/known_hosts
-                    }
+                    #}
                 }
                 catch {
                     Write-Host $_.exception.message
@@ -102,12 +103,13 @@ function SST_DeviceConnecCheck {
             }
             "SAN" { 
                 try {
-                    if($PSVersionTable.PSVersion.Major -ge 7){
-                        ssh-keygen.exe -F $TD_Selected_DeviceIPAddr || ssh-keyscan.exe $TD_Selected_DeviceIPAddr >> ~/.ssh/known_hosts
-                    }else {
+                    <# need to be reworked #>
+                    #if($PSVersionTable.PSVersion.Major -ge 7){
+                    #    ssh-keygen.exe -F $TD_Selected_DeviceIPAddr || ssh-keyscan.exe $TD_Selected_DeviceIPAddr >> ~/.ssh/known_hosts
+                    #}else {
                         ssh-keygen.exe -F $TD_Selected_DeviceIPAddr
                         ssh-keyscan.exe $TD_Selected_DeviceIPAddr >> ~/.ssh/known_hosts
-                    }
+                    #}
                 }
                 catch {
                     Write-Host $_.exception.message
