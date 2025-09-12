@@ -73,10 +73,14 @@ function FOS_BasicSwitchInfos {
             {$_ -like "*8960*P96"}  { $FOS_HWMTM = "8960-P96" }
             {$_ -like "*8960*R96"}  { $FOS_HWMTM = "8960-R96" }
             {$_ -like "*8969*F24"}  { $FOS_HWMTM = "8969-F24" }
+            {$_ -like "*8960*F64"}  { $FOS_HWMTM = "8960-F64 V1" }
+            {$_ -like "*8960*N64"}  { $FOS_HWMTM = "8960-N64 V1" }
             {$_ -like "*8960*F65"}  { $FOS_HWMTM = "8960-F65 V2" }
             {$_ -like "*8960*N65"}  { $FOS_HWMTM = "8960-N65 V2" }
-            {$_ -like "*8960*F97"}  { $FOS_HWMTM = "8960-N97" }
-            {$_ -like "*8960*N97"}  { $FOS_HWMTM = "8960-F97" }
+            {$_ -like "*8960*F97"}  { $FOS_HWMTM = "8960-F97" }
+            {$_ -like "*8960*N97"}  { $FOS_HWMTM = "8960-N97" }
+            {$_ -like "*8960*F96"}  { $FOS_HWMTM = "8960-F96" }
+            {$_ -like "*8960*N96"}  { $FOS_HWMTM = "8960-N96" }
             {$_ -like "*2498*F48"}  { $FOS_HWMTM = "2498-F48" }
             {$_ -like "*2498*F24"}  { $FOS_HWMTM = "2498-F24" }
             Default {$FOS_HWMTM = "Unknown Type"}
