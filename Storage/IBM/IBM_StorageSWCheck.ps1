@@ -59,8 +59,8 @@ function IBM_StorageSWCheck {
             Write-Debug -Message $_.Exception.Message
             $IBM_WebSpecVirtSWInofs ="nothing in here"
         }
-        
-        Write-Debug -Message "$($IBM_LocDateInfo) - $($IBM_WebDateInfo)"
+
+        SST_ToolMessageCollector -TD_ToolMSGCollector "$($IBM_LocDateInfo) - $($IBM_WebDateInfo)" -TD_ToolMSGType Debug -TD_Shown no
         if("$($IBM_LocDateInfo)" -ne "$($IBM_WebDateInfo)"){
             
             0..$IBM_LocSpecVirtSWInofsTemp.count |ForEach-Object {
