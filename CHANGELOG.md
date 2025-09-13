@@ -17,6 +17,7 @@ All notable changes to this project will be documented in this file.
 - more Information on some Functions for later Updates
 - rudimentary FOS FW recommendation, requires adjustments later on
 - simple ssh hostkey check
+- Button at Settingspanel changes from ADD to Update and back when the checkbox for updating the Credentials is activated or not.
 
 ### Fixed
 - some major and minor bugs in the main function GUI Control
@@ -30,6 +31,9 @@ All notable changes to this project will be documented in this file.
 - Storage Device Counter in Dashboard
 - WWNN error where it was possible that a name was displayed instead of the WWNN 
 - the failure that the firmware was not correctly compared with the new firmware, which led to confusion.
+- Checkbox was automatically checked if the access data needed to be updated. 
+- ID matching problem when updating Credentials
+- not all virtual WWPNs were displayed in the SwitchShow panel.
 
 ### Changed
 - some Basis Functions like StorageBaseInfo, DriveInfo, SANBaseInfo and so on 
