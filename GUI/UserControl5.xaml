@@ -114,7 +114,18 @@
                         </Label.Style>
                     </Label>
                     <CheckBox x:Name="CB_SVCorVF" VerticalAlignment="Center" Margin="2"/>
-                    <ToggleButton x:Name="TBTN_SaveCredtoDG" Content="ADD" Style="{DynamicResource MainToggleBtnStyle}"/>
+                    <ToggleButton x:Name="TBTN_SaveCredtoDG" Height="30" MinWidth="80" Margin="25,2,0,2" Padding="2">
+                        <ToggleButton.Style>
+                            <Style TargetType="ToggleButton">
+                                <Setter Property="Content" Value="ADD" />
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding ElementName=CB_CredUpdate, Path=IsChecked}" Value="True">
+                                        <Setter Property="Content" Value="Update" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </ToggleButton.Style>
+                    </ToggleButton>
                 </StackPanel>
                 <StackPanel Grid.Row="1" x:Name="stp_storagePanel2" Orientation="Horizontal" Margin="2" >
                     <GroupBox Header="Systeme">
