@@ -528,7 +528,8 @@ $TD_DG_KnownDeviceList.add_SelectionChanged({
                 #if($_.selecteditem.ConnectionTyp -eq "plink"){$TD_CB_DeviceConnectionType.Text = "Classic (UN/PW)"}else{$TD_CB_DeviceConnectionType.Text = "Secure Shell (SSH)"}
                 $TD_TB_DeviceIPAddr.Text = $_.selecteditem.IPAddress
                 $TD_TB_DeviceUserName.Text = $_.selecteditem.UserName
-                if($_.selecteditem.SVCorVF -ne ""){$TD_CB_SVCorVF.IsChecked=$true}else{$TD_CB_SVCorVF.IsChecked=$false}
+                if(($_.selecteditem.DeviceTyp -eq "Storage")-and($_.selecteditem.SVCorVF -eq "SVC")){$TD_CB_SVCorVF.IsChecked=$true}else{$TD_CB_SVCorVF.IsChecked=$false}
+                if(($_.selecteditem.DeviceTyp -eq "SAN")-and($_.selecteditem.SVCorVF -eq "VF")){$TD_CB_SVCorVF.IsChecked=$true}else{$TD_CB_SVCorVF.IsChecked=$false}
                 $_.selecteditem | Export-Clixml -Path $PSRootPath\ToolLog\ToolTEMP\UpdateCred.xml
             }
 
@@ -542,6 +543,8 @@ $TD_DG_KnownDeviceList.add_SelectionChanged({
 #region IBM Storage Button
 $TD_btn_IBM_Eventlog.add_click({
     CheckBoxReseter
+    $TD_stp_PoolVolumeInfo,$TD_stp_IBM_IPPortInfo,$TD_stp_IBM_HostInfo,$TD_stp_FCPortStats,$TD_stp_DriveInfo,$TD_stp_HostVolInfo,$TD_stp_BackUpConfig,$TD_stp_BaseStorageInfo,$TD_stp_IBM_FCPortInfo,$TD_stp_PolicyBased_Rep,$TD_stp_StorageAuditLog,$TD_stp_CleanUpDump | ForEach-Object {$_.Visibility="Collapsed"}
+    $TD_UserControl1.Dispatcher.Invoke([System.Action]{},"Render")
     $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_.DeviceTyp -eq "Storage"}
 
     $TD_lb_StorageEventLogOne,$TD_lb_StorageEventLogTwo,$TD_lb_StorageEventLogThree,$TD_lb_StorageEventLogFour,$TD_lb_StorageEventLogFive,$TD_lb_StorageEventLogSix,$TD_lb_StorageEventLogSeven,$TD_lb_StorageEventLogEight |ForEach-Object {
@@ -556,7 +559,7 @@ $TD_btn_IBM_Eventlog.add_click({
         catch {
             <#Do this if a terminating exception happens#>
             Write-Host $_.exception.message
-            SST_ToolMessageCollector -TD_ToolMSGCollector "LiteDB - $_.exception.message" -TD_ToolMSGType Error -TD_Shown no
+            SST_ToolMessageCollector -TD_ToolMSGCollector "LiteDB - $($_.exception.message)" -TD_ToolMSGType Error -TD_Shown no
         }
         switch ($_.ID) {
             {($_ -eq 1)} { $TD_lb_StorageEventLogOne.ItemsSource = $TD_IBM_EventLogShow }
@@ -572,8 +575,6 @@ $TD_btn_IBM_Eventlog.add_click({
     }
 
     if($TD_UCRefresh){$TD_UserControl1.Dispatcher.Invoke([System.Action]{},"Render");$TD_UCRefresh=$false}
-
-    $TD_stp_PoolVolumeInfo,$TD_stp_IBM_IPPortInfo,$TD_stp_IBM_HostInfo,$TD_stp_FCPortStats,$TD_stp_DriveInfo,$TD_stp_HostVolInfo,$TD_stp_BackUpConfig,$TD_stp_BaseStorageInfo,$TD_stp_IBM_FCPortInfo,$TD_stp_PolicyBased_Rep,$TD_stp_StorageAuditLog,$TD_stp_CleanUpDump | ForEach-Object {$_.Visibility="Collapsed"}
 
     $TD_stp_StorageEventLog.Visibility="Visible" 
 
@@ -943,7 +944,7 @@ $TD_btn_IBM_BaseStorageInfo.add_click({
         catch {
             <#Do this if a terminating exception happens#>
             Write-Host $_.exception.message
-            SST_ToolMessageCollector -TD_ToolMSGCollector "LiteDB - $_.exception.message" -TD_ToolMSGType Error -TD_Shown no
+            SST_ToolMessageCollector -TD_ToolMSGCollector "LiteDB - $($_.exception.message)" -TD_ToolMSGType Error -TD_Shown no
         }
         try {
             SST_PRISMDBControl -SST_InfoType StorageBase -SST_CollectedInformations $TD_BaseStorageInfo
@@ -951,7 +952,7 @@ $TD_btn_IBM_BaseStorageInfo.add_click({
         catch {
             <#Do this if a terminating exception happens#>
             Write-Host $_.exception.message
-            SST_ToolMessageCollector -TD_ToolMSGCollector "PRISMDB - $_.exception.message" -TD_ToolMSGType Error -TD_Shown no
+            SST_ToolMessageCollector -TD_ToolMSGCollector "PRISMDB - $($_.exception.message)" -TD_ToolMSGType Error -TD_Shown no
         }
         switch ($_.ID) {
             {($_ -eq 1)} { $TD_dg_BaseStorageInfoOne.ItemsSource = $TD_BaseStorageInfo }
@@ -1125,7 +1126,7 @@ $TD_btn_IBM_HostInfo.add_click({
         catch {
             <#Do this if a terminating exception happens#>
             Write-Host $_.exception.message
-            SST_ToolMessageCollector -TD_ToolMSGCollector "LiteDB - $_.exception.message" -TD_ToolMSGType Error -TD_Shown no
+            SST_ToolMessageCollector -TD_ToolMSGCollector "LiteDB - $($_.exception.message)" -TD_ToolMSGType Error -TD_Shown no
         }
         switch ($_.ID) {
             {($_ -eq 1)} { $TD_dg_CollectedHostInfoOne.ItemsSource = $TD_Collected_HostInfoResult   }
@@ -1206,7 +1207,7 @@ $TD_btn_FOS_BasicSwitchInfo.add_click({
         catch {
             <#Do this if a terminating exception happens#>
             Write-Host $_.exception.message
-            SST_ToolMessageCollector -TD_ToolMSGCollector "LiteDB - $_.exception.message" -TD_ToolMSGType Error -TD_Shown no
+            SST_ToolMessageCollector -TD_ToolMSGCollector "LiteDB - $($_.exception.message)" -TD_ToolMSGType Error -TD_Shown no
         }
         switch ($_.ID) {
             {($_ -eq 1)} { $TD_dg_sanBasicSwitchInfoOne.ItemsSource = $FOS_BasicSwitch }
