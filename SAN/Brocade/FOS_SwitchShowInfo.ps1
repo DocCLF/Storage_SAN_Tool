@@ -104,13 +104,13 @@ function FOS_SwitchShowInfo {
                 }
                 
                 if($FOS_SWsh.PortConnect -like "*NPIV*"){
+                    $FOS_SwBasicPortDetails += $FOS_SWsh
                     <# need a better way to connect #>
                     if($TD_Device_ConnectionTyp -eq "ssh"){
                         $FOS_MainInformation = ssh -i $($TD_Device_SSHKeyPath) $TD_Device_UserName@$TD_Device_DeviceIP "portshow $($FOS_SWsh.Port)"
                         foreach($FOS_PortConnect_Info in $FOS_PortConnect_Infos){
                             $FOS_NPIV_Info = ($FOS_PortConnect_Info |Select-String -Pattern '^\s+(([0-9a-f]{2}:){7}[0-9a-f]{2})' -AllMatches).Matches.Groups.Value[1]
                             if($FOS_NPIV_Info -ne $FOS_NPIV_Info_temp){
-                                $FOS_SwBasicPortDetails += $FOS_SWsh
                                 $FOS_SWsh = "" | Select-Object Index,Port,Address,Media,Speed,State,Proto,PortConnect
                                 $FOS_SWsh.Index = $FOS_SWshIndex
                                 $FOS_SWsh.Port = $FOS_SWshPort
@@ -125,7 +125,6 @@ function FOS_SwitchShowInfo {
                         foreach($FOS_PortConnect_Info in $FOS_PortConnect_Infos){
                             $FOS_NPIV_Info = ($FOS_PortConnect_Info |Select-String -Pattern '^\s+(([0-9a-f]{2}:){7}[0-9a-f]{2})' -AllMatches).Matches.Groups.Value[1]
                             if($FOS_NPIV_Info -ne $FOS_NPIV_Info_temp){
-                                $FOS_SwBasicPortDetails += $FOS_SWsh
                                 $FOS_SWsh = "" | Select-Object Index,Port,Address,Media,Speed,State,Proto,PortConnect
                                 $FOS_SWsh.Index = $FOS_SWshIndex
                                 $FOS_SWsh.Port = $FOS_SWshPort
@@ -133,7 +132,7 @@ function FOS_SwitchShowInfo {
                                 $FOS_SWsh.State = $FOS_SWshState
                                 $FOS_SWsh.PortConnect = $FOS_NPIV_Info
                                 $FOS_NPIV_Info_temp = $FOS_NPIV_Info
-                                }
+                            }
                         }
                     }
                 }else{
