@@ -28,6 +28,8 @@
             <RowDefinition Height="auto" />
             <RowDefinition Height="auto" />
             <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
         </Grid.RowDefinitions>
         
         <GroupBox Grid.Row="0" Header="Overview" MinWidth="400" Margin="10,10,10,0" HorizontalAlignment="Left" VerticalAlignment="Top">
@@ -440,6 +442,7 @@
                                 <Button.ToolTip>
                                     <ToolTip>
                                     <StackPanel>
+                                        <TextBlock Text="{Binding Name}"/>
                                         <TextBlock Text="{Binding CodeLevelLVInfo}"/>
                                     </StackPanel>
                                     </ToolTip>
@@ -455,9 +458,154 @@
                 </ItemsControl>
             </ScrollViewer>
         </GroupBox>
-        <GroupBox Grid.Row="4" Header="Host Info" MinWidth="400" MaxHeight="260" HorizontalAlignment="Left" Margin="10,10,0,0"  VerticalAlignment="Top">
+        <StackPanel Grid.Row="4" Margin="10,10,0,5" Orientation="Horizontal">
+            <CheckBox x:Name="CB_DashBoardOnlineHosts" Content="View Online Hosts" Margin="2" />
+            <CheckBox x:Name="CB_DashBoardOfflineHosts" Content="View Offline Hosts" Margin="10,2,0,2" />
+        </StackPanel>
+        <GroupBox Grid.Row="5" Header="Online Hosts" MinWidth="400" MaxHeight="280" HorizontalAlignment="Left" Margin="10,5,0,0"  VerticalAlignment="Top" Visibility="{Binding ElementName=CB_DashBoardOnlineHosts, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
                 <ScrollViewer Margin="5" VerticalScrollBarVisibility="Auto">
-                    <ItemsControl x:Name="IC_DashBoardHosts">
+                    <ItemsControl x:Name="IC_DashBoardOnlineHosts">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Button Style="{DynamicResource DashBoardBTNStyle}" Margin="0,5,5,5" Width="350" IsEnabled="True">
+                                    <Grid Margin="5">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition MaxHeight="100"/>
+                                            <RowDefinition Height="20"/>
+                                        </Grid.RowDefinitions>
+                                        <Grid Grid.Row="0">
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition />
+                                                <RowDefinition />
+                                                <RowDefinition />
+                                                <RowDefinition />
+                                                <RowDefinition />
+                                            </Grid.RowDefinitions>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition MaxWidth="70" />
+                                                <ColumnDefinition />
+                                                <ColumnDefinition />
+                                            </Grid.ColumnDefinitions>
+                                            <Ellipse Grid.RowSpan="4" Width="45" Height="45" Fill="WhiteSmoke" Stretch="Uniform" >
+                                                <Ellipse.Effect>
+                                                    <DropShadowEffect Direction="320" ShadowDepth="2" Color="LightBlue" BlurRadius="5" />
+                                                </Ellipse.Effect>
+                                            </Ellipse>
+                                            <Ellipse Grid.RowSpan="4" Width="40" Height="40" >
+                                               <Ellipse.Fill>
+                                                   <ImageBrush ImageSource = "{Binding HostIcon , Mode=TwoWay}" Stretch="Uniform" />
+                                               </Ellipse.Fill>
+                                            </Ellipse>
+                                            <TextBlock
+                                                Grid.Column="1"
+                                                Style="{DynamicResource DashBoardTB2}"
+                                                HorizontalAlignment="Left"
+                                                VerticalAlignment="Center"
+                                                Text="HostName:" 
+                                                Margin="8,0,5,0"/>
+                                            <TextBlock
+                                                Grid.Column="2"
+                                                Style="{DynamicResource DashBoardTB2}"
+                                                HorizontalAlignment="Left"
+                                                VerticalAlignment="Center"
+                                                Text="{Binding Name}"/>
+                                            <TextBlock
+                                                Grid.Row="1"
+                                                Grid.Column="1"
+                                                Style="{DynamicResource DashBoardTB2}"
+                                                HorizontalAlignment="Left"
+                                                VerticalAlignment="Center"
+                                                Text="HostClusterName:" 
+                                                Margin="8,0,5,0"/>
+                                            <TextBlock
+                                                Grid.Row="1"
+                                                Grid.Column="2"
+                                                Style="{DynamicResource DashBoardTB2}"
+                                                HorizontalAlignment="Left"
+                                                VerticalAlignment="Center"
+                                                Text="{Binding HostClusterName}"/>
+                                            <TextBlock
+                                                Grid.Row="2"
+                                                Grid.Column="1"
+                                                Style="{DynamicResource DashBoardTB2}"
+                                                HorizontalAlignment="Left"
+                                                VerticalAlignment="Center"
+                                                Text="Status:" 
+                                                Margin="8,0,5,0"/>
+                                            <TextBlock
+                                                Grid.Row="2"
+                                                Grid.Column="2"
+                                                Margin="1"
+                                                HorizontalAlignment="Left"
+                                                VerticalAlignment="Center"
+                                                FontWeight="Bold"
+                                                FontSize="12"
+                                                Text="{Binding Status}">
+                                                <TextBlock.Style>
+                                                    <Style TargetType="TextBlock">
+                                                        <Style.Triggers>
+                                                            <Trigger Property ="Text" Value="online">
+                                                                <Setter Property= "Foreground" Value="Green"/>
+                                                            </Trigger>
+                                                            <Trigger Property ="Text" Value="degraded">
+                                                                <Setter Property= "Foreground" Value="Orange"/>
+                                                            </Trigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </TextBlock.Style>
+                                                </TextBlock>
+                                            <TextBlock
+                                                Grid.Row="3"
+                                                Grid.Column="1"
+                                                Style="{DynamicResource DashBoardTB2}"
+                                                HorizontalAlignment="Left"
+                                                VerticalAlignment="Center"
+                                                Text="StorageName:" 
+                                                Margin="8,0,0,0"/>
+                                            <TextBlock
+                                                Grid.Row="3"
+                                                Grid.Column="2"
+                                                Style="{DynamicResource DashBoardTB2}"
+                                                HorizontalAlignment="Left"
+                                                VerticalAlignment="Center"
+                                                Text="{Binding STOName}"/>
+                                            <TextBlock
+                                                Grid.Row="4"
+                                                Grid.Column="1"
+                                                Style="{DynamicResource DashBoardTB2}"
+                                                HorizontalAlignment="Left"
+                                                VerticalAlignment="Center"
+                                                Text="SideName:" 
+                                                Margin="8,0,0,0"/>
+                                            <TextBlock
+                                                Grid.Row="4"
+                                                Grid.Column="2"
+                                                Style="{DynamicResource DashBoardTB2}"
+                                                HorizontalAlignment="Left"
+                                                VerticalAlignment="Center"
+                                                Text="{Binding SideName}"/>
+                                        </Grid>
+                                        <Grid Grid.Row="1">
+                                            <StackPanel Orientation="Horizontal" Margin="5,0" ToolTip="Last Changes">
+                                                <Image Source = "{Binding ClockIcon96 , Mode=TwoWay}" Stretch="Uniform" VerticalAlignment="Bottom" HorizontalAlignment="Left" MaxHeight="30" />
+                                                <TextBlock Text="{Binding TimeStamp}" HorizontalAlignment="Right" Margin="5,2" />
+                                            </StackPanel>
+                                        </Grid>
+                                    </Grid>
+                                </Button>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <WrapPanel />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                    </ItemsControl>
+                </ScrollViewer>
+        </GroupBox>
+        <GroupBox Grid.Row="6" Header="Offline Hosts" MinWidth="400" MaxHeight="280" HorizontalAlignment="Left" Margin="10,5,0,0"  VerticalAlignment="Top" Visibility="{Binding ElementName=CB_DashBoardOfflineHosts, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
+                <ScrollViewer Margin="5" VerticalScrollBarVisibility="Auto">
+                    <ItemsControl x:Name="IC_DashBoardOfflineHosts">
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
                                 <Button Style="{DynamicResource DashBoardBTNStyle}" Margin="0,5,5,5" Width="350" IsEnabled="True">
