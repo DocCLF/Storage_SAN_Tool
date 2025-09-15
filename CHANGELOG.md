@@ -18,6 +18,7 @@ All notable changes to this project will be documented in this file.
 - rudimentary FOS FW recommendation, requires adjustments later on
 - simple ssh hostkey check
 - Button at Settingspanel changes from ADD to Update and back when the checkbox for updating the Credentials is activated or not.
+- in Dashboard now Online and Offline Hosts shown
 
 ### Fixed
 - some major and minor bugs in the main function GUI Control
