@@ -53,7 +53,7 @@ function SST_MainHealthCheckFunc {
                     try {
                         $TD_SpectrVirtuFWInfos = IBM_StorageSWCheck -IBM_CurrentSpectrVirtuFW $Temp_Credentials.CurrentFirmware
                         SST_ToolMessageCollector -TD_ToolMSGCollector "Storage HealthCheck used this FW $($Temp_Credentials.CurrentFirmware)" -TD_ToolMSGType Debug -TD_Shown no
-                        SST_ToolMessageCollector -TD_ToolMSGCollector "And this was Found`n$($TD_SpectrVirtuFWInfos)" -TD_ToolMSGType Debug -TD_Shown no                        
+                        SST_ToolMessageCollector -TD_ToolMSGCollector "And this was Found $($TD_SpectrVirtuFWInfos)" -TD_ToolMSGType Debug -TD_Shown no                        
                     }
                     catch {
                         SST_ToolMessageCollector -TD_ToolMSGCollector "There is no Device FW found" -TD_ToolMSGType Error -TD_Shown yes
