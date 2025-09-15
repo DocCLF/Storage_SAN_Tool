@@ -3,6 +3,9 @@ function SST_DashBoardHosts {
  param (
         $STOHWCollection,
         $SQLReader,
+        [Parameter(ValueFromPipeline)]
+        [ValidateSet("online","offline")]
+        $HostStatus,
         [int]$SST_IBMHostDeviceCounter
     )
     
@@ -33,9 +36,13 @@ function SST_DashBoardHosts {
                 $DashBoardHostsView.Add($DashBoardHostsObj)
             }
             $SST_SQLiteDBReader.Close()
-            $TD_IC_DashBoardHosts.ItemsSource = $DashBoardHostsView
 
-            $TD_TB_OfflHostCount.Text = "$SST_OfflineHost"
+            if($HostStatus -eq "online"){
+                $TD_IC_DashBoardOnlineHosts.ItemsSource = $DashBoardHostsView
+            }else {
+               $TD_IC_DashBoardOfflineHosts.ItemsSource = $DashBoardHostsView
+               $TD_TB_OfflHostCount.Text = "$SST_OfflineHost"
+            }
 
         }else{
 
