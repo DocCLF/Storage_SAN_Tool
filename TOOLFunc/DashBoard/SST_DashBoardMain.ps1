@@ -54,6 +54,18 @@ function SST_DashBoardMain {
         }
 
         try {
+            $DashBoardHostsView = [System.Collections.Generic.List[object]]::new()
+            $SST_SQLiteSTODashBoardQuery = $null
+            $SST_SQLiteSTODashBoardQuery = " SELECT ID, HID, Name, Status, HostClusterName, STOName, SideName, TimeStamp FROM IBMSTOHostTable d WHERE TimeStamp = ( SELECT MAX(TimeStamp) FROM IBMSTOHostTable WHERE HID = d.HID ) AND Status != 'offline' ORDER BY HID; "
+            SST_DashBoardHosts -STOHWCollection $SST_SQLiteSTODashBoardQuery -SST_IBMHostDeviceCounter 0 -SQLReader $SST_SQliteReadCMD -HostStatus "online"
+            $SST_SQLiteDBReader.Close()
+        }
+        catch {
+            Write-Host $_.Exception.Message
+            SST_ToolMessageCollector -TD_ToolMSGCollector "There is something wrong, mybe there is no IBMSTOHostTable Table" -TD_ToolMSGType Warning -TD_Shown yes
+        }
+
+        try {
             $DashBoardSANDeviceView = [System.Collections.Generic.List[object]]::new()
             $SST_SQLiteSTODashBoardQuery = $null
             $SST_SQLiteSTODashBoardQuery = " SELECT Name, Status, CodeLevel, CodeLevelLV, BrocadeProdName, MTM, SerialNumber, TimeStamp FROM IBMSANHWTable d WHERE TimeStamp = ( SELECT MAX(TimeStamp) FROM IBMSANHWTable WHERE SerialNumber = d.SerialNumber ) ORDER BY SerialNumber; "
