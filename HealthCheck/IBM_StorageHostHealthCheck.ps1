@@ -59,7 +59,7 @@ function IBM_StorageHostHealthCheck {
             <#Do this if a terminating exception happens#>
             $TD_HostLogHistoryEntrys = $null
             SST_ToolMessageCollector -TD_ToolMSGCollector $_.Exception.Message -TD_ToolMSGType Error -TD_Shown no
-            SST_ToolMessageCollector -TD_ToolMSGCollector "No File to import at $($TD_HostLogHistoryFile)" -TD_ToolMSGType Error -TD_Shown "yes"
+            SST_ToolMessageCollector -TD_ToolMSGCollector "No File to import at $($PSRootPath)\ToolLog\ToolTEMP\" -TD_ToolMSGType Error -TD_Shown "yes"
         }
 
         <# Match old vs current Data#>
