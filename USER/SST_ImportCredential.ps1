@@ -20,6 +20,7 @@ function SST_ImportCredential {
 
     [array]$TD_ExportCredtoDG = $TD_ImportedCredentials | Where-Object { $_ }
     $TD_DG_KnownDeviceList.ItemsSource = $TD_ExportCredtoDG
+    
     <# if the TD_CB_OnlineCheckbyImport is checked this part will connect to the devices #>
     if(($TD_CB_OnlineCheckbyImport.IsChecked)-and($SST_ImportDevicesonStartUp -eq "yes")){
         $TD_ExportCredtoDG | ForEach-Object {
