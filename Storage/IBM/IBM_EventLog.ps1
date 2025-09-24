@@ -11,14 +11,13 @@ function IBM_EventLog {
     #>
     [CmdletBinding()]
     param (
-        [Parameter(Mandatory)]
+        #[Parameter(Mandatory)]
         [Int16]$TD_Line_ID,
-        [Parameter(Mandatory)]
         [string]$TD_Device_ConnectionTyp,
-        [Parameter(Mandatory)]
+        #[Parameter(Mandatory)]
         [string]$TD_Device_UserName,
         [string]$TD_Device_DeviceName,
-        [Parameter(Mandatory)]
+        #[Parameter(Mandatory)]
         [string]$TD_Device_DeviceIP,
         [string]$TD_Device_PW,
         [string]$TD_Device_SSHKeyPath,
@@ -30,7 +29,7 @@ function IBM_EventLog {
     )
     
     begin{
-        <# suppresses error messages #>
+        #<# suppresses error messages #>
         $ErrorActionPreference="SilentlyContinue"
         $ProgressBar = New-ProgressBar
         Write-Debug -Message "IBM_EventLog Begin block |$(Get-Date)"
@@ -47,7 +46,7 @@ function IBM_EventLog {
     }
 
     process{
-        Write-Debug -Message "IBM_EventLog Process block |$(Get-Date)"
+        SST_ToolMessageCollector -TD_ToolMSGCollector "Start EventLog Block" -TD_ToolMSGType Debug -TD_Shown "no"
         $TD_EventSplitInfoWWNN = ($TD_CollectEventInfo|Select-String -Pattern '\.([0-9a-zA-Z]{14,18})\.' -AllMatches).Matches.Groups[1].Value
         if($TD_Storage -eq "SVC"){
             $TD_FSBaseSerialNumber = ($TD_CollectEventInfo|Select-String -Pattern '\.(\w{6,8})\.(|\d+)\.(|\d+)\.(|\w{6,8})' -AllMatches).Matches.Groups[1].Value
