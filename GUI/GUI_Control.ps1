@@ -34,18 +34,15 @@ $MainWindow.Resources.MergedDictionaries.Add( $ButtonStyles )
 
 <# PowerShell WPF XAML simple data binding datacontext #>
 class DashBoardIMG {
-    [string]$IBMSTOIcon 
-    [string]$BrocadeIcon
-    [string]$ClockIcon96
-    [string]$HostIcon96
-    [string]$RefrehIcon96
+    [string]$IBMFS73Icon
+    [string]$SAN64B7Icon
+    [string]$IBMPower11Icon
 }
 $DashBoardIcons =[DashBoardIMG]::new()
-$DashBoardIcons.IBMSTOIcon = "$PSRootPath\Resources\Icons\ibmstoicon.png"
-$DashBoardIcons.BrocadeIcon = "$PSRootPath\Resources\Icons\broadcom-96.png"
-$DashBoardIcons.ClockIcon96 = "$PSRootPath\Resources\Icons\icons8-clock-96.png"
-$DashBoardIcons.HostIcon96 = "$PSRootPath\Resources\Icons\icons8-server-96.png"
-$DashBoardIcons.RefrehIcon96 = "$PSRootPath\Resources\Icons\icons8-refresh-96.png"
+$DashBoardIcons.IBMFS73Icon = "$PSRootPath\Resources\Icons\IBMFS73Icon.png"
+$DashBoardIcons.SAN64B7Icon = "$PSRootPath\Resources\Icons\SAN64B7Icon.png"
+$DashBoardIcons.IBMPower11Icon = "$PSRootPath\Resources\Icons\IBMPower11Icon.png"
+
 
 <# Create UserControls as basis of Content for MainWindow #>
 $UserCxamlFile = Get-ChildItem "$PSScriptRoot\UserControl*.xaml"
@@ -86,22 +83,7 @@ foreach($file in $UserCxamlFile){
             $Userreader = New-Object System.Xml.XmlNodeReader $UserXAML4
             $TD_UserControl4=[Windows.Markup.XamlReader]::Load($Userreader)
             $UserXAML4.SelectNodes("//*[@Name]") | ForEach-Object {Set-Variable -Name "TD_$($_.Name)" -Value $TD_UserControl4.FindName($_.Name) }
-         }
-        "*l4_1" { 
-            $UserC4_1=Get-Content -Path $file -raw
-            $UserC4_1=$UserC4_1 -replace 'mc:Ignorable="d"','' -replace "x:N","N" -replace "^<Win.*","<Window"
-            [xml]$UserXAML4_1=$UserC4_1
-            $Userreader = New-Object System.Xml.XmlNodeReader $UserXAML4_1
-            $TD_UserControl4_1=[Windows.Markup.XamlReader]::Load($Userreader)
-            $UserXAML4_1.SelectNodes("//*[@Name]") | ForEach-Object {Set-Variable -Name "TD_$($_.Name)" -Value $TD_UserControl4_1.FindName($_.Name) }
-         }
-        "*l4_2" { 
-            $UserC4_2=Get-Content -Path $file -raw
-            $UserC4_2=$UserC4_2 -replace 'mc:Ignorable="d"','' -replace "x:N","N" -replace "^<Win.*","<Window"
-            [xml]$UserXAML4_2=$UserC4_2
-            $Userreader = New-Object System.Xml.XmlNodeReader $UserXAML4_2
-            $TD_UserControl4_2=[Windows.Markup.XamlReader]::Load($Userreader)
-            $UserXAML4_2.SelectNodes("//*[@Name]") | ForEach-Object {Set-Variable -Name "TD_$($_.Name)" -Value $TD_UserControl4_2.FindName($_.Name) }
+            $TD_UserControl4.DataContext = $DashBoardIcons
          }
          "*l5" { 
             $UserC5=Get-Content -Path $file -raw
@@ -163,8 +145,6 @@ $TD_btn_Dashboard.add_click({
     $TD_LB_ExpPathMainWindow.Content ="Export Path: $($TD_tb_ExportPath.Text)"
     if(!($TD_UserControl1.IsLoaded)){$TD_UserContrArea.Children.Add($TD_UserControl1)}
     $TD_UserContrArea.Children.Remove($TD_UserControl2)
-    $TD_UserControlRightSide.Children.Remove($TD_UserControl4_2)
-    $TD_UserControlLeftSide.Children.Remove($TD_UserControl4_1)
     $TD_UserContrArea.Children.Remove($TD_UserControl3)
     $TD_UserContrArea.Children.Remove($TD_UserControl4)
     $TD_UserContrArea.Children.Remove($TD_UserControl5)
@@ -174,8 +154,6 @@ $TD_btn_IBM_SV.add_click({
     $TD_LB_ExpPathMainWindow.Content ="Export Path: $($TD_tb_ExportPath.Text)"
     if(!($TD_UserControl2.IsLoaded)){$TD_UserContrArea.Children.Add($TD_UserControl2)}
     $TD_UserContrArea.Children.Remove($TD_UserControl1)
-    $TD_UserControlRightSide.Children.Remove($TD_UserControl4_2)
-    $TD_UserControlLeftSide.Children.Remove($TD_UserControl4_1)
     $TD_UserContrArea.Children.Remove($TD_UserControl3)
     $TD_UserContrArea.Children.Remove($TD_UserControl4)
     $TD_UserContrArea.Children.Remove($TD_UserControl5)
@@ -187,15 +165,13 @@ $TD_btn_Broc_SAN.add_click({
     if(!($TD_UserControl3.IsLoaded)){$TD_UserContrArea.Children.Add($TD_UserControl3)}
     $TD_UserContrArea.Children.Remove($TD_UserControl1)
     $TD_UserContrArea.Children.Remove($TD_UserControl2)
-    $TD_UserControlRightSide.Children.Remove($TD_UserControl4_2)
-    $TD_UserControlLeftSide.Children.Remove($TD_UserControl4_1)
     $TD_UserContrArea.Children.Remove($TD_UserControl4)
     $TD_UserContrArea.Children.Remove($TD_UserControl5)
     if($TD_LogoImageSmall.Visibility -eq "hidden"){$TD_LogoImageSmall.Visibility = "visible"}
 })
 $TD_btn_Stor_San.add_click({
     $TD_LB_ExpPathMainWindow.Content ="Export Path: $($TD_tb_ExportPath.Text)"
-    if(!($TD_UserControl4.IsLoaded)){$TD_UserContrArea.Children.Add($TD_UserControl4); $TD_UserControlLeftSide.Children.add($TD_UserControl4_1);$TD_UserControlRightSide.Children.add($TD_UserControl4_2)}
+    if(!($TD_UserControl4.IsLoaded)){$TD_UserContrArea.Children.Add($TD_UserControl4); SST_MainHealthCheckFunc -SST_UCOBJ $TD_UserControl4 -SST_UCSTYLEOBJ $ButtonStyles  }
     $TD_UserContrArea.Children.Remove($TD_UserControl1)
     $TD_UserContrArea.Children.Remove($TD_UserControl2)
     $TD_UserContrArea.Children.Remove($TD_UserControl3)
@@ -206,8 +182,6 @@ $TD_btn_Settings.add_click({
     if(!($TD_UserControl5.IsLoaded)){$TD_UserContrArea.Children.Add($TD_UserControl5)}
     $TD_UserContrArea.Children.Remove($TD_UserControl1)
     $TD_UserContrArea.Children.Remove($TD_UserControl2)
-    $TD_UserControlRightSide.Children.Remove($TD_UserControl3_2)
-    $TD_UserControlLeftSide.Children.Remove($TD_UserControl3_1)
     $TD_UserContrArea.Children.Remove($TD_UserControl3)
     $TD_UserContrArea.Children.Remove($TD_UserControl4)
     if($TD_LogoImageSmall.Visibility -eq "hidden"){$TD_LogoImageSmall.Visibility = "visible"}
@@ -515,7 +489,6 @@ $TD_btn_ImportCred.add_click({
             }
         }
     }
-    
 })
 
 <# this part is needed if there are any Updates on the cred in DG #>
@@ -1970,21 +1943,21 @@ $TD_btn_FOS_PortBufferShow.add_click({
 #endregion
 
 #region Health Check
-$TD_btn_Storage_SysCheck.add_click({
-    SST_MainHealthCheckFunc
-})
-$TD_btn_HC_OpenGUI_One.add_click({
-    Start-Process "https://$($TD_TB_storageIPAdrOne.Text)"
-})
-$TD_btn_HC_OpenGUI_Two.add_click({
-    Start-Process "https://$($TD_TB_storageIPAdrTwo.Text)"
-})
-$TD_btn_HC_OpenGUI_Three.add_click({
-    Start-Process "https://$($TD_TB_storageIPAdrThree.Text)"
-})
-$TD_btn_HC_OpenGUI_Four.add_click({
-    Start-Process "https://$($TD_TB_storageIPAdrFour.Text)"
-})
+#$TD_btn_Storage_SysCheck.add_click({
+#    SST_MainHealthCheckFunc
+#})
+#$TD_btn_HC_OpenGUI_One.add_click({
+#    Start-Process "https://$($TD_TB_storageIPAdrOne.Text)"
+#})
+#$TD_btn_HC_OpenGUI_Two.add_click({
+#    Start-Process "https://$($TD_TB_storageIPAdrTwo.Text)"
+#})
+#$TD_btn_HC_OpenGUI_Three.add_click({
+#    Start-Process "https://$($TD_TB_storageIPAdrThree.Text)"
+#})
+#$TD_btn_HC_OpenGUI_Four.add_click({
+#    Start-Process "https://$($TD_TB_storageIPAdrFour.Text)"
+#})
 #endregion
 
 if(!([string]::IsNullOrWhiteSpace($(Get-ChildItem -Path $PSRootPath\Resources\DBFolder\*.db).Name))){
