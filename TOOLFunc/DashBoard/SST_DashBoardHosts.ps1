@@ -32,6 +32,7 @@ function SST_DashBoardHosts {
                     HostIcon = "$PSRootPath\Resources\Icons\icons8-server-96.png"
                     TimeStamp    = $SST_SQLiteDBReader["TimeStamp"]
                     ClockIcon96 = "$PSRootPath\Resources\Icons\icons8-clock-96.png"
+                    
                 }
                 $DashBoardHostsView.Add($DashBoardHostsObj)
             }
