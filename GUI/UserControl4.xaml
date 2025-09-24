@@ -16,100 +16,28 @@
     </UserControl.Background>
     <UserControl.Resources>
         <ResourceDictionary>
-            <Style x:Key="MainLabelStyle" TargetType="{x:Type Label}">
-                <Setter Property="Template" >
-                    <Setter.Value>
-                        <ControlTemplate TargetType="{x:Type Label}">
-                            <Border 
-                                BorderBrush="{TemplateBinding BorderBrush}" 
-                                BorderThickness="{TemplateBinding BorderThickness}" 
-                                Background="{TemplateBinding Background}" 
-                                Padding="{TemplateBinding Padding}" 
-                                SnapsToDevicePixels="true"
-                                CornerRadius="3">
-                                <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
-                            </Border>
-                        </ControlTemplate>
-                    </Setter.Value>
-                </Setter>
-            </Style>
-            <Style TargetType="{x:Type DataGrid}">
-                <Setter Property="AlternatingRowBackground" Value="#FAFAFA"/>
-                <Setter Property="Background" Value="{DynamicResource {x:Static SystemColors.ControlBrushKey}}"/>
-                <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"/>
-                <Setter Property="BorderBrush" Value="#FF688CAF"/>
-                <Setter Property="BorderThickness" Value="0"/>
-                <Setter Property="GridLinesVisibility" Value="Horizontal" />
-                <Setter Property="HorizontalGridLinesBrush" Value="#ECECEC" />
-                <Setter Property="HeadersVisibility" Value="Column" />
-                <Setter Property="RowDetailsVisibilityMode" Value="VisibleWhenSelected"/>
-                <Setter Property="SelectionMode" Value="Extended" />
-                <Setter Property="ScrollViewer.CanContentScroll" Value="True"/>
-                <Setter Property="ScrollViewer.PanningMode" Value="Both"/>
-                <Setter Property="Stylus.IsFlicksEnabled" Value="False"/>
-            </Style>
-            <Style TargetType="{x:Type DataGridColumnHeader}">
-                <Setter Property="Background" Value="#4683DE" />
-                <Setter Property="Foreground" Value="#FFFFFF" />
-                <Setter Property="FontWeight" Value="SemiBold" />
-                <Setter Property="Height" Value="26" />
-                <Setter Property="Padding" Value="5" />
-            </Style>
-            <Style TargetType="{x:Type DataGridRow}">
-                <Setter Property="Background" Value="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"/>
-                <Setter Property="SnapsToDevicePixels" Value="true"/>
-                <Setter Property="MinHeight" Value="26" />
-                <Setter Property="Padding" Value="5" />
-            </Style>
-            <Style TargetType="{x:Type DataGridCell}">
-                <Setter Property="Foreground" Value="{Binding Foreground, RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=DataGrid}}" />
-                <Setter Property="Padding" Value="5,0" />
-                <Setter Property="VerticalContentAlignment" Value="Center" />
-                <Setter Property="Template">
-                    <Setter.Value>
-                        <ControlTemplate TargetType="DataGridCell">
-                            <Border Background="{TemplateBinding Background}"
-                                    BorderBrush="{TemplateBinding BorderBrush}"
-                                    BorderThickness="{TemplateBinding BorderThickness}">
-                                <ContentPresenter VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
-                                                  HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
-                                                  Margin="{TemplateBinding Padding}" />
-                            </Border>
-                        </ControlTemplate>
-                    </Setter.Value>
-                </Setter>
-            </Style>
             <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
         </ResourceDictionary>
     </UserControl.Resources>
-    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" >
+    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" >
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="auto" />
-                <RowDefinition Height="*" />
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="auto" />
             </Grid.RowDefinitions>
-            <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="10,5">
-                <Button x:Name="btn_Storage_SysCheck" Content="Storage System Check" Style="{DynamicResource MainBtnStyle}" Margin="10,20,25,5"/>
-                <ComboBox Margin="25,20,20,5" x:Name="cb_Device_HealthCheck" SelectedIndex="0" SelectedValuePath="Content" >
-                    <!--<ComboBoxItem IsSelected="True" ToolTip="Check Storages">Check all Storages</ComboBoxItem>-->
-                    <ComboBoxItem IsSelected="True" ToolTip="Check Storages">Check the First</ComboBoxItem>
-                    <ComboBoxItem ToolTip="Check Storages">Check the Second</ComboBoxItem>
-                    <ComboBoxItem ToolTip="Check Storages">Check the Third</ComboBoxItem>
-                    <ComboBoxItem ToolTip="Check Storages">Check the Fourth</ComboBoxItem>
-                </ComboBox>
-                <Button x:Name="btn_HC_OpenGUI_One" Content="Open GUI 1" Style="{DynamicResource MainBtnStyle}" Margin="20,20,5,5" />
-                <TextBox x:Name="TB_storageIPAdrOne" Text="" Visibility="Collapsed"/>
-                <Button x:Name="btn_HC_OpenGUI_Two" Content="Open GUI 2" Style="{DynamicResource MainBtnStyle}" Margin="20,20,5,5" />
-                <TextBox x:Name="TB_storageIPAdrTwo" Text="" Visibility="Collapsed"/>
-                <Button x:Name="btn_HC_OpenGUI_Three" Content="Open GUI 3" Style="{DynamicResource MainBtnStyle}" Margin="20,20,5,5" />
-                <TextBox x:Name="TB_storageIPAdrThree" Text="" Visibility="Collapsed"/>
-                <Button x:Name="btn_HC_OpenGUI_Four" Content="Open GUI 4" Style="{DynamicResource MainBtnStyle}" Margin="20,20,5,5" />
-                <TextBox x:Name="TB_storageIPAdrFour" Text="" Visibility="Collapsed"/>
+            <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="15,5,0,0">
+                <RadioButton x:Name="StorageCheckboxHealth" Content="Storage" Margin="5" FontSize="14" VerticalAlignment="Center" VerticalContentAlignment="Center"/>
+                <RadioButton x:Name="SANCheckboxHealth"  Content="SAN" Margin="5" FontSize="14" VerticalAlignment="Center" VerticalContentAlignment="Center" />
+                <RadioButton x:Name="ServerCheckboxHealth" Content="Server" Margin="5" FontSize="14" VerticalAlignment="Center" VerticalContentAlignment="Center"/>
             </StackPanel>
-            <StackPanel Grid.Row="1" Orientation="Horizontal" >
-                <Grid x:Name="UserControlLeftSide" />
-                <Grid x:Name="UserControlRightSide" />
-            </StackPanel>
+            
+            <WrapPanel Grid.Row="1" x:name="WP_STOHealthCheck" Visibility="{Binding ElementName=StorageCheckboxHealth, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Visible}"></WrapPanel>
+            <WrapPanel Grid.Row="1" x:name="WP_SANHealthCheck" Visibility="{Binding ElementName=SANCheckboxHealth, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Visible}"></WrapPanel>
+            <WrapPanel Grid.Row="1" x:name="WP_SVRHealthCheck" Visibility="{Binding ElementName=ServerCheckboxHealth, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Visible}"></WrapPanel>
+            <WrapPanel Grid.Row="2" x:Name="WP_HealthResaults" Orientation="Horizontal" ></WrapPanel>
         </Grid>
     </ScrollViewer>
 </UserControl>
