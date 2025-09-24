@@ -16,6 +16,7 @@ function IBM_BaseStorageInfos {
     )
     
     begin {
+        
         $ErrorActionPreference="SilentlyContinue"
         [int]$ProgCounter=0
         $ProgressBar = New-ProgressBar
