@@ -32,7 +32,7 @@ function IBM_SANHealthCheck {
                         SST_ToolMessageCollector -TD_ToolMSGCollector "SANSwitch_Base_Info" -TD_ToolMSGType Debug -TD_Shown no
                         [int]$i=0
                         SST_CreateHealthLayout -SST_UCOBJ $UCOBJ -SST_MainStackPName "$BROSANDeviceMainSTPName" -SST_GridFuncName "BROSANBaseInfoFunc$DeviceIDPlaceHolder" -SST_LabelColorForCheck "green" -SST_StackPFuncName "FuncBROSANBaseInfoStackPN$DeviceIDPlaceHolder" -SST_StackPResultsName "ResultsBROSANBaseInfoStackPN$DeviceIDPlaceHolder" -SST_LabelNameHelper "$("BROSANBaseInfoCheck$DeviceIDPlaceHolder"+"_"+$i)" -SST_DeviceID $DeviceIDPlaceHolder -SST_LabelVisuNameofCheck "SwitchInfo" -DataGridSecOption $true
-                        $DGforKeyValueStatusInfoText = $UCOBJ.FindName("DGforKeyValueStatusInfoText$DeviceIDPlaceHolder")
+                        $DGforKeyValueStatusInfoText = $UCOBJ.FindName("DGforKeyValueSwitchInfoStatusInfoText$DeviceIDPlaceHolder")
                         $DGforKeyValueStatusInfoText.ItemsSource = $FOS_BasicSwitch
                         
                         $i=0
