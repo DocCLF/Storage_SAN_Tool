@@ -14,7 +14,8 @@ function SST_CreateHealthLayout {
         $SST_LabelNameHelper = $null,
         $DummyNameSTP = $null,
         [bool]$DataGridOption = $false,
-        [bool]$DataGridSecOption = $false
+        [bool]$DataGridSecOption = $false,
+        [bool]$Storage = $false
     )
     
     begin {
@@ -213,37 +214,39 @@ function SST_CreateHealthLayout {
 
             # --- Column 1: Attribute Name ---
             $colAttributeName = New-Object Windows.Controls.DataGridTextColumn
-            $colAttributeName.Header = "Attribute Name"
+            $colAttributeName.Header = "Name"
             $colAttributeName.Width  = "Auto"
             $colAttributeName.IsReadOnly = $true
-            $colAttributeName.Binding = New-Object Windows.Data.Binding("AttributeName")
+            $colAttributeName.Binding = New-Object Windows.Data.Binding("Key")
             # --- Column 2: Configured Value mit Tooltip ---
             $colConfiguredValue = New-Object Windows.Controls.DataGridTextColumn
-            $colConfiguredValue.Header = "Configured Value"
+            $colConfiguredValue.Header = "Set Value"
             $colConfiguredValue.Width  = "Auto"
             $colConfiguredValue.IsReadOnly = $true
-            $colConfiguredValue.Binding = New-Object Windows.Data.Binding("ConfiguredValue")
+            $colConfiguredValue.Binding = New-Object Windows.Data.Binding("Value")
 
-            $styleConfigured = New-Object Windows.Style([Windows.Controls.DataGridCell])
-            $styleConfigured.Setters.Add((New-Object Windows.Setter([Windows.Controls.ToolTipService]::ToolTipProperty, "Your current security settings.")))
-            $colConfiguredValue.CellStyle = $styleConfigured
-
-            # --- Column 3: Recommended Value mit Tooltip ---
-            $colRecommendedValue = New-Object Windows.Controls.DataGridTextColumn
-            $colRecommendedValue.Header = "Field Experiences*"
-            $colRecommendedValue.Width  = "Auto"
-            $colRecommendedValue.IsReadOnly = $true
-            $colRecommendedValue.Binding = New-Object Windows.Data.Binding("RecommendedValue")
-
-            $styleRecommended = New-Object Windows.Style([Windows.Controls.DataGridCell])
-            $styleRecommended.Setters.Add((New-Object Windows.Setter([Windows.Controls.ToolTipService]::ToolTipProperty, "Shows the most common settings from the field, which do not claim to be the ideal solution for every environment.")))
-            $colRecommendedValue.CellStyle = $styleRecommended
+            if($Storage){
+                $styleConfigured = New-Object Windows.Style([Windows.Controls.DataGridCell])
+                $styleConfigured.Setters.Add((New-Object Windows.Setter([Windows.Controls.ToolTipService]::ToolTipProperty, "Your current security settings.")))
+                $colConfiguredValue.CellStyle = $styleConfigured
+                $styleRecommended = New-Object Windows.Style([Windows.Controls.DataGridCell])
+                $styleRecommended.Setters.Add((New-Object Windows.Setter([Windows.Controls.ToolTipService]::ToolTipProperty, "Shows the most common settings from the field, which do not claim to be the ideal solution for every environment.")))
+                $colRecommendedValue.CellStyle = $styleRecommended
+                # --- Column 3: Recommended Value mit Tooltip ---
+                $colRecommendedValue = New-Object Windows.Controls.DataGridTextColumn
+                $colRecommendedValue.Header = "Field Experiences*"
+                $colRecommendedValue.Width  = "Auto"
+                $colRecommendedValue.IsReadOnly = $true
+                $colRecommendedValue.Binding = New-Object Windows.Data.Binding("RecommendedValue")
                 
+            }
             # --- Columns zum DataGrid hinzufügen ---
             $DGSecurityStatusInfoText.Columns.Add($colAttributeName)    | Out-Null
             $DGSecurityStatusInfoText.Columns.Add($colConfiguredValue)  | Out-Null
-            $DGSecurityStatusInfoText.Columns.Add($colRecommendedValue) | Out-Null
-                
+            if($Storage){
+                $DGSecurityStatusInfoText.Columns.Add($colRecommendedValue) | Out-Null
+            }
+            
             # DataGrid jetzt in dein Grid oder Window einfügen:
             $SST_UCOBJ.RegisterName($DGSecurityStatusInfoText.Name, $DGSecurityStatusInfoText)
 
