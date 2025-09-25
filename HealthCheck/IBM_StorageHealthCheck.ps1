@@ -25,13 +25,26 @@ function IBM_StorageHealthCheck {
                         $IBMSTODeviceMainSTPName = "IBMSTO"+"$($_.DeviceName)"+"$($_.ID)"
                         [int]$DeviceIDPlaceHolder = $_.ID
 
+                        <# Create the Basic Layout in the Main StackPanel for the Device#>
+                        SST_CreateHealthLayout -SST_UCOBJ $UCOBJ -SST_MainStackPName "$IBMSTODeviceMainSTPName" -SST_GridFuncName "IBMSTOBaseInfoFunc$($_.ID)" -SST_StackPFuncName "FuncIBMSTOBaseInfoStackPN$($_.ID)" -SST_LabelVisuNameofCheck "StorageInfo" -SST_StackPResultsName "ResultsIBMSTOBaseInfoStackPN$($_.ID)" -SST_DeviceID $_.ID
+                        
+                        #region Storage_Base_Info
+                        [array]$TD_BaseStorageInfo = IBM_BaseStorageInfos -TD_Line_ID $_.ID -TD_Device_ConnectionTyp $_.ConnectionTyp -TD_Device_UserName $_.UserName -TD_Device_DeviceIP $_.IPAddress -TD_Device_DeviceName $_.DeviceName -TD_Device_PW $([Net.NetworkCredential]::new('', $_.Password).Password) -TD_Device_SSHKeyPath $_.SSHKeyPath -TD_Export "no"
+                        SST_ToolMessageCollector -TD_ToolMSGCollector "Storage HS_Eventlog" -TD_ToolMSGType Debug -TD_Shown no
+                        [int]$i=0
+                        $TD_BaseStorageInfo | ForEach-Object{
+                            $i++
+                            SST_CreateHealthLayout -SST_UCOBJ $UCOBJ -SST_MainStackPName "$IBMSTODeviceMainSTPName" -SST_GridFuncName "IBMSTOBaseInfoFunc$DeviceIDPlaceHolder" -SST_LabelVisuResultsofCheck $("Status: $($_.Status)"+" - "+"Name: $($_.Name)"+" - "+"MTM: $($_.Prod_MTM)"+" - "+"SerialNumber: $($_.Serial_Number)"+" - "+"CodeLevel: $($_.Code_Level)"+" - "+"RecommendedPTF: $($_.RecommendedPTF)") -SST_LabelColorForCheck "green" -SST_StackPFuncName "FuncIBMSTOBaseInfoStackPN$DeviceIDPlaceHolder" -SST_StackPResultsName "ResultsIBMSTOBaseInfoStackPN$DeviceIDPlaceHolder" -SST_LabelNameHelper "$("IBMSTOBaseInfoCheck$DeviceIDPlaceHolder"+"_"+$i)" -SST_DeviceID $DeviceIDPlaceHolder -SST_LabelVisuNameofCheck "StorageInfo"
+						}
+                        $i=0
+                        $UCOBJ.Dispatcher.Invoke([System.Action]{},"Render")
+                        #endregion
+
                         #region Storage_HS_Eventlog
                         [array]$TD_IBM_EventLogCheck = IBM_EventLog -TD_Line_ID $_.ID -TD_Device_ConnectionTyp $_.ConnectionTyp -TD_Device_UserName $_.UserName -TD_Device_DeviceIP $_.IPAddress -TD_Device_DeviceName $_.DeviceName -TD_Device_PW $([Net.NetworkCredential]::new('', $_.Password).Password) -TD_Device_SSHKeyPath $_.SSHKeyPath -TD_Export "no"
                         SST_ToolMessageCollector -TD_ToolMSGCollector "Storage HS_Eventlog" -TD_ToolMSGType Debug -TD_Shown no
 
-                        <# Create the Basic Layout in the Main StackPanel for the Device#>
-                        SST_CreateHealthLayout -SST_UCOBJ $UCOBJ -SST_MainStackPName "$IBMSTODeviceMainSTPName" -SST_GridFuncName "IBMEventlogFunc$($_.ID)" -SST_StackPFuncName "FuncIBMEventlogStackPN$($_.ID)" -SST_LabelVisuNameofCheck "Eventlog" -SST_StackPResultsName "ResultsIBMEventlogStackPN$($_.ID)" -SST_DeviceID $_.ID
-                        
+
                         [int]$i=0
                         $TD_IBM_EventLogCheck | ForEach-Object{
                             $i++
@@ -44,6 +57,9 @@ function IBM_StorageHealthCheck {
                                 SST_CreateHealthLayout -SST_UCOBJ $UCOBJ -SST_MainStackPName "$IBMSTODeviceMainSTPName" -SST_GridFuncName "IBM_EventlogFunc$DeviceIDPlaceHolder" -SST_LabelVisuResultsofCheck $("Status: $($_.Status)"+" - "+"Time: $($_.LastTime)"+" - "+"Fixed: $($_.Fixed)"+" - "+"ErrorCode: $($_.ErrorCode)"+" - "+"Description: $($_.Description)") -SST_LabelColorForCheck "yellow" -SST_StackPFuncName "FuncIBMEventlogStackPN$DeviceIDPlaceHolder" -SST_StackPResultsName "ResultsIBMEventlogStackPN$DeviceIDPlaceHolder" -SST_LabelNameHelper "$("IBMSTOEventLogCheck$DeviceIDPlaceHolder"+"_"+$i)" -SST_DeviceID $DeviceIDPlaceHolder -SST_LabelVisuNameofCheck "Eventlog"
                             }
                         }
+						if((($TD_IBM_EventLogCheck | Where-Object {($_.Status -eq "alert") -and ($_.Fixed -eq "no")}).Count -lt 1)-and(($TD_IBM_EventLogCheck | Where-Object {($_.Status -eq "monitoring")-and($_.Fixed -eq "expired")}).Count -lt 1)){
+							SST_CreateHealthLayout -SST_UCOBJ $UCOBJ -SST_MainStackPName "$IBMSTODeviceMainSTPName" -SST_GridFuncName "IBM_EventlogFunc$DeviceIDPlaceHolder" -SST_LabelVisuResultsofCheck "No Events in the List" -SST_LabelColorForCheck "green" -SST_StackPFuncName "FuncIBMEventlogStackPN$DeviceIDPlaceHolder" -SST_StackPResultsName "ResultsIBMEventlogStackPN$DeviceIDPlaceHolder" -SST_LabelNameHelper "$("IBMSTOEventLogCheck$DeviceIDPlaceHolder"+"_"+$i)" -SST_DeviceID $DeviceIDPlaceHolder -SST_LabelVisuNameofCheck "Eventlog"
+						}
                         $i=0
                         $UCOBJ.Dispatcher.Invoke([System.Action]{},"Render")
                         #endregion
@@ -56,7 +72,7 @@ function IBM_StorageHealthCheck {
                         SST_CreateHealthLayout -SST_UCOBJ $UCOBJ -SST_MainStackPName "$IBMSTODeviceMainSTPName" -SST_GridFuncName "IBMHostCheckFunc$($_.ID)" -SST_StackPFuncName "FuncIBMHostCheckStackPN$($_.ID)" -SST_LabelVisuNameofCheck "HostCheck" -SST_StackPResultsName "ResultsIBMHostCheckStackPN$($_.ID)" -SST_DeviceID $_.ID
                         
                         [int]$i=0
-                        $TD_IBM_HostInfo = $TD_IBM_HostInfo | Select-Object -SkipLast 35
+                        $TD_IBM_HostInfo = $TD_IBM_HostInfo
                         $TD_IBM_HostInfo | ForEach-Object{
                             $i++
                             if($_.Status -eq "offline"){
