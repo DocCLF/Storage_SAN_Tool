@@ -37,8 +37,6 @@ function SST_MainHealthCheckFunc {
                 })
             }
 
-
-
         }
         catch {
             SST_ToolMessageCollector -TD_ToolMSGCollector $_.Exception.Message -TD_ToolMSGType Error -TD_Shown yes       
@@ -64,7 +62,7 @@ function SST_MainHealthCheckFunc {
                     $FoundUSControl = Get-ParentUserControl -control $sender
                     $TD_Credential = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {($_.DeviceTyp -eq "SAN")-and($this.Name -like "*_$($_.ID)")}   
 
-                    IBM_StorageHealthCheck -SST_DeviceLoggingInfo $TD_Credential -UCOBJ $FoundUSControl
+                    IBM_SANHealthCheck -SST_DeviceLoggingInfo $TD_Credential -UCOBJ $FoundUSControl
                 })
 
             }
