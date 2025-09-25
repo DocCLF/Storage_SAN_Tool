@@ -177,10 +177,10 @@ function IBM_StorageHealthCheck {
                         
                         if(!([String]::IsNullOrEmpty($TD_IBM_StorSecuCheck))){
                             SST_CreateHealthLayout -SST_UCOBJ $UCOBJ -SST_MainStackPName "$IBMSTODeviceMainSTPName" -SST_GridFuncName "IBMSecurityFunc$DeviceIDPlaceHolder" -SST_LabelColorForCheck "green" -SST_StackPFuncName "FuncIBMSecurityStackPN$DeviceIDPlaceHolder" -SST_StackPResultsName "ResultsIBMSecurityStackPN$DeviceIDPlaceHolder" -SST_LabelNameHelper "$("IBMSTOSecurityCheck$DeviceIDPlaceHolder"+"_"+$i)" -SST_DeviceID $DeviceIDPlaceHolder -SST_LabelVisuNameofCheck "StorageSecurity" -DataGridSecOption $true
-                            $DGSecurityStatusInfo = $UCOBJ.FindName("DGforKeyValueStatusInfoText$DeviceIDPlaceHolder")
+                            $DGSecurityStatusInfo = $UCOBJ.FindName("DGforKeyValueStorageSecurityStatusInfoText$DeviceIDPlaceHolder")
                             $DGSecurityStatusInfo.ItemsSource = $TD_IBM_StorSecuCheck
 
-                            $TBSecurityStatusInfo = $UCOBJ.FindName("TBforKeyValueStatusInfoText$DeviceIDPlaceHolder")
+                            $TBSecurityStatusInfo = $UCOBJ.FindName("TBforKeyValueStorageSecurityStatusInfoText$DeviceIDPlaceHolder")
                             $TBSecurityStatusInfo.Text ="*For further information visit the IBM Docs page of your system,`ne.g. for FS5X00 :https://www.ibm.com/docs/en/flashsystem-5x00/8.6.x?topic=csc-lssecurity-2"
                             $TBSecurityStatusInfo.Visibility = "Visible"
 
