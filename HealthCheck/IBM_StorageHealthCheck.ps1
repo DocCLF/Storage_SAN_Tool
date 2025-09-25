@@ -161,7 +161,7 @@ function IBM_StorageHealthCheck {
                             if($_.PW_Change_required -eq "yes"){
                                 <# Create a InfoLabel with the MSG and push the color for the Device#>
                                 SST_CreateHealthLayout -SST_UCOBJ $UCOBJ -SST_MainStackPName "$IBMSTODeviceMainSTPName" -SST_GridFuncName "IBMUserCheckFunc$DeviceIDPlaceHolder" -SST_LabelVisuResultsofCheck $("UserName: $($_.User_Name)"+" - "+"Password: $($_.Password)"+" - "+"Change_required: $($_.PW_Change_required)"+" - "+"SSHKey: $($_.SSH_Key)"+" - "+"Locked: $($_.Locked)"+" - "+"UserGrp: $($_.UserGrp)"+" - "+"Remote: $($_.Remote)") -SST_LabelColorForCheck "red" -SST_StackPFuncName "FuncIBMUserCheckStackPN$DeviceIDPlaceHolder" -SST_StackPResultsName "ResultsIBMUserCheckStackPN$DeviceIDPlaceHolder" -SST_LabelNameHelper "$("IBMSTOUserCheckkCheck$DeviceIDPlaceHolder"+"_"+$i)" -SST_DeviceID $DeviceIDPlaceHolder -SST_LabelVisuNameofCheck "UserCheck"
-                            }elseif ($_.Locked -ne "no") {
+                            }elseif ($_.Locked -ne "yes") {
                                 <# Create a InfoLabel with the MSG and push the color for the Device#>
                                 SST_CreateHealthLayout -SST_UCOBJ $UCOBJ -SST_MainStackPName "$IBMSTODeviceMainSTPName" -SST_GridFuncName "IBMUserCheckFunc$DeviceIDPlaceHolder" -SST_LabelVisuResultsofCheck $("UserName: $($_.User_Name)"+" - "+"Password: $($_.Password)"+" - "+"Change_required: $($_.PW_Change_required)"+" - "+"SSHKey: $($_.SSH_Key)"+" - "+"Locked: $($_.Locked)"+" - "+"UserGrp: $($_.UserGrp)"+" - "+"Remote: $($_.Remote)") -SST_LabelColorForCheck "yellow" -SST_StackPFuncName "FuncIBMUserCheckStackPN$DeviceIDPlaceHolder" -SST_StackPResultsName "ResultsIBMUserCheckStackPN$DeviceIDPlaceHolder" -SST_LabelNameHelper "$("IBMSTOUserCheckkCheck$DeviceIDPlaceHolder"+"_"+$i)" -SST_DeviceID $DeviceIDPlaceHolder -SST_LabelVisuNameofCheck "UserCheck"
                             }else {
@@ -176,7 +176,7 @@ function IBM_StorageHealthCheck {
                         SST_ToolMessageCollector -TD_ToolMSGCollector "Storage IBM_StorageSecurity" -TD_ToolMSGType Debug -TD_Shown yes
                         
                         if(!([String]::IsNullOrEmpty($TD_IBM_StorSecuCheck))){
-                            SST_CreateHealthLayout -SST_UCOBJ $UCOBJ -SST_MainStackPName "$IBMSTODeviceMainSTPName" -SST_GridFuncName "IBMSecurityFunc$DeviceIDPlaceHolder" -SST_LabelColorForCheck "green" -SST_StackPFuncName "FuncIBMSecurityStackPN$DeviceIDPlaceHolder" -SST_StackPResultsName "ResultsIBMSecurityStackPN$DeviceIDPlaceHolder" -SST_LabelNameHelper "$("IBMSTOSecurityCheck$DeviceIDPlaceHolder"+"_"+$i)" -SST_DeviceID $DeviceIDPlaceHolder -SST_LabelVisuNameofCheck "StorageSecurity" -DataGridSecOption $true
+                            SST_CreateHealthLayout -SST_UCOBJ $UCOBJ -SST_MainStackPName "$IBMSTODeviceMainSTPName" -SST_GridFuncName "IBMSecurityFunc$DeviceIDPlaceHolder" -SST_LabelColorForCheck "green" -SST_StackPFuncName "FuncIBMSecurityStackPN$DeviceIDPlaceHolder" -SST_StackPResultsName "ResultsIBMSecurityStackPN$DeviceIDPlaceHolder" -SST_LabelNameHelper "$("IBMSTOSecurityCheck$DeviceIDPlaceHolder"+"_"+$i)" -SST_DeviceID $DeviceIDPlaceHolder -SST_LabelVisuNameofCheck "StorageSecurity" -DataGridSecOption $true -Storage $true
                             $DGSecurityStatusInfo = $UCOBJ.FindName("DGforKeyValueStorageSecurityStatusInfoText$DeviceIDPlaceHolder")
                             $DGSecurityStatusInfo.ItemsSource = $TD_IBM_StorSecuCheck
 
