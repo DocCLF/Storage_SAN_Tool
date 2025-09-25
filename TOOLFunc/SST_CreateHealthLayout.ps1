@@ -196,7 +196,7 @@ function SST_CreateHealthLayout {
         if($DataGridSecOption){
             # Neues DataGrid
             $DGSecurityStatusInfoText = New-Object Windows.Controls.DataGrid
-            $DGSecurityStatusInfoText.Name = "DGSecurityStatusInfoText$SST_DeviceID"
+            $DGSecurityStatusInfoText.Name = "DGforKeyValueStatusInfoText$SST_DeviceID"
             $DGSecurityStatusInfoText.Margin = "10,10,10,5"
             $DGSecurityStatusInfoText.MaxHeight = 400
             $DGSecurityStatusInfoText.AutoGenerateColumns = $false
@@ -251,7 +251,7 @@ function SST_CreateHealthLayout {
 
             # --- TextBox ---
             $TBSecurityStatusErrorMsg = New-Object Windows.Controls.TextBox
-            $TBSecurityStatusErrorMsg.Name   = "TBSecurityStatusInfoText$SST_DeviceID"
+            $TBSecurityStatusErrorMsg.Name   = "TBforKeyValueStatusInfoText$SST_DeviceID"
             #$TBSecurityStatusErrorMsg.Text   = ""
             $TBSecurityStatusErrorMsg.Visibility = [Windows.Visibility]::Collapsed
             $TBSecurityStatusErrorMsg.IsReadOnly = $true
