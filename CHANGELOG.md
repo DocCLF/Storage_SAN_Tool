@@ -48,6 +48,8 @@ All notable changes to this project will be documented in this file.
 - ACK removed from the device data grid in the settings
 - better recognition of FW relevance in Drive Info
 - updated SAN-HW and add MTMs
+- complete revision of the health check
+
 
 # [v1.2.1] - 2025-04-22
 ### Added
