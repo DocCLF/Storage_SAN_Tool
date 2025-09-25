@@ -27,15 +27,17 @@ function SST_MainHealthCheckFunc {
                 
                 $SST_STOHealthCheckWP.Children.Add($SST_DummyBTN)
 
+                $SST_DummyBTN.Add_Click({ 
+                    param($sender,$e)
+
+                    $FoundUSControl = Get-ParentUserControl -control $sender
+                    $TD_Credential = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {($_.DeviceTyp -eq "Storage")-and($this.Name -like "*_$($_.ID)")}   
+
+                    IBM_StorageHealthCheck -SST_DeviceLoggingInfo $TD_Credential -UCOBJ $FoundUSControl
+                })
             }
 
-            $SST_DummyBTN.Add_Click({ 
-                param($sender,$e)
-                $FoundUSControl = Get-ParentUserControl -control $sender
-                $TD_Credential = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {($_.DeviceTyp -eq "Storage")-and($this.Name -like "*_$($_.ID)")}   
 
-                IBM_StorageHealthCheck -SST_DeviceLoggingInfo $TD_Credential -UCOBJ $FoundUSControl
-            })
 
         }
         catch {
@@ -57,16 +59,15 @@ function SST_MainHealthCheckFunc {
 
                 $SST_STOHealthCheckWP.Children.Add($SST_DummyBTN)
 
+                $SST_DummyBTN.Add_Click({ 
+                    param($sender,$e)
+                    $FoundUSControl = Get-ParentUserControl -control $sender
+                    $TD_Credential = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {($_.DeviceTyp -eq "SAN")-and($this.Name -like "*_$($_.ID)")}   
+
+                    IBM_StorageHealthCheck -SST_DeviceLoggingInfo $TD_Credential -UCOBJ $FoundUSControl
+                })
+
             }
-
-            $SST_DummyBTN.Add_Click({ 
-                param($sender,$e)
-                $FoundUSControl = Get-ParentUserControl -control $sender
-                $TD_Credential = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {($_.DeviceTyp -eq "SAN")-and($this.Name -like "*_$($_.ID)")}   
-
-                IBM_StorageHealthCheck -SST_DeviceLoggingInfo $TD_Credential -UCOBJ $FoundUSControl
-            })
-
         }
         catch {
             SST_ToolMessageCollector -TD_ToolMSGCollector $_.Exception.Message -TD_ToolMSGType Error -TD_Shown yes       
