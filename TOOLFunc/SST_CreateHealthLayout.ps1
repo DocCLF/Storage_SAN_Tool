@@ -13,6 +13,7 @@ function SST_CreateHealthLayout {
         $SST_DeviceID,
         $SST_LabelNameHelper = $null,
         $DummyNameSTP = $null,
+        [int]$SST_MainStackPWith = 840,
         [bool]$DataGridOption = $false,
         [bool]$DataGridSecOption = $false,
         [bool]$Storage = $false
@@ -70,8 +71,8 @@ function SST_CreateHealthLayout {
             $MainFuncGrid.Children.Add($MainFuncGridBorder)
 
             # ColumnDefinitions hinzufügen
-            $GridFuncCloDef.Width = "160"
-            $GridResultsCloDef.Width = "840"
+            $GridFuncCloDef.Width = "180"
+            $GridResultsCloDef.Width = $SST_MainStackPWith
             $MainFuncGrid.ColumnDefinitions.Add($GridFuncCloDef)
             $MainFuncGrid.ColumnDefinitions.Add($GridResultsCloDef)
 
@@ -84,7 +85,7 @@ function SST_CreateHealthLayout {
             $StackPFunc.VerticalAlignment = "Center"
             $LabelNameoftheCheck = New-Object Windows.Controls.Label
             $LabelNameoftheCheck.Name = $SST_LabelVisuNameofCheck+"_"+$SST_DeviceID
-            $LabelNameoftheCheck.Width = "120"
+            $LabelNameoftheCheck.Width = "160"
             $LabelNameoftheCheck.HorizontalContentAlignment = "Center"
             $LabelNameoftheCheck.HorizontalAlignment = "Center"
             $LabelNameoftheCheck.VerticalAlignment = "Center"
@@ -224,6 +225,9 @@ function SST_CreateHealthLayout {
             $colConfiguredValue.Width  = "Auto"
             $colConfiguredValue.IsReadOnly = $true
             $colConfiguredValue.Binding = New-Object Windows.Data.Binding("Value")
+            # --- Columns zum DataGrid hinzufügen ---
+            $DGSecurityStatusInfoText.Columns.Add($colAttributeName)    | Out-Null
+            $DGSecurityStatusInfoText.Columns.Add($colConfiguredValue)  | Out-Null
 
             if($Storage){
                 $styleConfigured = New-Object Windows.Style([Windows.Controls.DataGridCell])
@@ -238,12 +242,7 @@ function SST_CreateHealthLayout {
                 $colRecommendedValue.Width  = "Auto"
                 $colRecommendedValue.IsReadOnly = $true
                 $colRecommendedValue.Binding = New-Object Windows.Data.Binding("RecommendedValue")
-                
-            }
-            # --- Columns zum DataGrid hinzufügen ---
-            $DGSecurityStatusInfoText.Columns.Add($colAttributeName)    | Out-Null
-            $DGSecurityStatusInfoText.Columns.Add($colConfiguredValue)  | Out-Null
-            if($Storage){
+                # --- Columns zum DataGrid hinzufügen ---
                 $DGSecurityStatusInfoText.Columns.Add($colRecommendedValue) | Out-Null
             }
             
