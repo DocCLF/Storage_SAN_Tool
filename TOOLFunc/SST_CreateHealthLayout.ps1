@@ -13,6 +13,7 @@ function SST_CreateHealthLayout {
         $SST_DeviceID,
         $SST_LabelNameHelper = $null,
         $DummyNameSTP = $null,
+        $DeviceIP,
         [int]$SST_MainStackPWith = 840,
         [bool]$DataGridOption = $false,
         [bool]$DataGridSecOption = $false,
@@ -41,10 +42,33 @@ function SST_CreateHealthLayout {
             $SST_WPHealthResaults.MinWidth = 400
             $SST_WPHealthResaults.MinHeight = 400
             $SST_WPHealthResaults.Orientation="Horizontal"
-            #$SST_WPHealthResaults.Background=[Windows.Media.Brushes]::"#FFD3D3D3"
+            <# Create the Main StackPanel for each Device #>
             $MainDeviceStackP = New-Object Windows.Controls.StackPanel
             $MainDeviceStackP.Name = $SST_MainStackPName
             $SST_UCOBJ.RegisterName($MainDeviceStackP.Name, $MainDeviceStackP)
+            
+            $SST_HealthResaultsVisibility = $SST_UCOBJ.FindName("WP_HealthResaultsVisibility")
+            $SST_HealthResaultsVisibility.MinWidth = 400
+            $SST_HealthResaultsVisibility.MaxHeight = 100
+            $SST_HealthResaultsVisibility.Orientation="Horizontal"
+            # CheckBox erstellen
+            $CBDevice = New-Object Windows.Controls.CheckBox
+            $CBDevice.Name = "CB$SST_MainStackPName"
+            $CBDevice.Content = $DeviceIP
+            $CBDevice.Margin = "10"
+            $CBDevice.IsChecked = $true
+            # Binding Visibility -> CheckBox.IsChecked mit Converter
+            $CBandSPbinding = New-Object Windows.Data.Binding
+            $CBandSPbinding.Source   = $CBDevice
+            $CBandSPbinding.Path          = "IsChecked"
+            $CBandSPbinding.Converter     = $SST_UCOBJ.Resources["BooleanToVisibilityConverter"]
+            $CBandSPbinding.FallbackValue = [System.Windows.Visibility]::Visible
+            [Windows.Data.BindingOperations]::SetBinding(
+                $MainDeviceStackP,
+                [Windows.UIElement]::VisibilityProperty,
+                $CBandSPbinding
+            )
+            $SST_HealthResaultsVisibility.Children.Add($CBDevice)
             $SST_WPHealthResaults.Children.Add($MainDeviceStackP)
         }
 
@@ -225,23 +249,23 @@ function SST_CreateHealthLayout {
             $colConfiguredValue.Width  = "Auto"
             $colConfiguredValue.IsReadOnly = $true
             $colConfiguredValue.Binding = New-Object Windows.Data.Binding("Value")
+            $styleConfigured = New-Object Windows.Style([Windows.Controls.DataGridCell])
+            $styleConfigured.Setters.Add((New-Object Windows.Setter([Windows.Controls.ToolTipService]::ToolTipProperty, "Your current settings.")))
+            $colConfiguredValue.CellStyle = $styleConfigured
             # --- Columns zum DataGrid hinzufügen ---
             $DGSecurityStatusInfoText.Columns.Add($colAttributeName)    | Out-Null
             $DGSecurityStatusInfoText.Columns.Add($colConfiguredValue)  | Out-Null
 
             if($Storage){
-                $styleConfigured = New-Object Windows.Style([Windows.Controls.DataGridCell])
-                $styleConfigured.Setters.Add((New-Object Windows.Setter([Windows.Controls.ToolTipService]::ToolTipProperty, "Your current security settings.")))
-                $colConfiguredValue.CellStyle = $styleConfigured
-                $styleRecommended = New-Object Windows.Style([Windows.Controls.DataGridCell])
-                $styleRecommended.Setters.Add((New-Object Windows.Setter([Windows.Controls.ToolTipService]::ToolTipProperty, "Shows the most common settings from the field, which do not claim to be the ideal solution for every environment.")))
-                $colRecommendedValue.CellStyle = $styleRecommended
                 # --- Column 3: Recommended Value mit Tooltip ---
                 $colRecommendedValue = New-Object Windows.Controls.DataGridTextColumn
                 $colRecommendedValue.Header = "Field Experiences*"
                 $colRecommendedValue.Width  = "Auto"
                 $colRecommendedValue.IsReadOnly = $true
                 $colRecommendedValue.Binding = New-Object Windows.Data.Binding("RecommendedValue")
+                $styleRecommended = New-Object Windows.Style([Windows.Controls.DataGridCell])
+                $styleRecommended.Setters.Add((New-Object Windows.Setter([Windows.Controls.ToolTipService]::ToolTipProperty, "Shows the most common settings from the field, which do not claim to be the ideal solution for every environment.")))
+                $colRecommendedValue.CellStyle = $styleRecommended
                 # --- Columns zum DataGrid hinzufügen ---
                 $DGSecurityStatusInfoText.Columns.Add($colRecommendedValue) | Out-Null
             }
