@@ -26,7 +26,7 @@ function IBM_SANHealthCheck {
                         [int]$MainWith = 480
 
                         <# Create the Basic Layout in the Main StackPanel for the Device#>
-                        SST_CreateHealthLayout -SST_UCOBJ $UCOBJ -SST_MainStackPName "$BROSANDeviceMainSTPName" -SST_GridFuncName "BROSANBaseInfoFunc$($_.ID)" -SST_StackPFuncName "FuncBROSANBaseInfoStackPN$($_.ID)" -SST_LabelVisuNameofCheck "SwitchInfo" -SST_StackPResultsName "ResultsBROSANBaseInfoStackPN$($_.ID)" -SST_DeviceID $_.ID -SST_MainStackPWith $MainWith
+                        SST_CreateHealthLayout -SST_UCOBJ $UCOBJ -SST_MainStackPName "$BROSANDeviceMainSTPName" -SST_GridFuncName "BROSANBaseInfoFunc$($_.ID)" -SST_StackPFuncName "FuncBROSANBaseInfoStackPN$($_.ID)" -SST_LabelVisuNameofCheck "SwitchInfo" -SST_StackPResultsName "ResultsBROSANBaseInfoStackPN$($_.ID)" -SST_DeviceID $_.ID -SST_MainStackPWith $MainWith -DeviceIP $_.IPAddress
                         
                         #region SANSwitch_Base_Info
                         $FOS_BasicSwitch = FOS_BasicSwitchInfos -TD_Line_ID $_.ID -TD_Device_ConnectionTyp $_.ConnectionTyp -TD_Device_UserName $_.UserName -TD_Device_DeviceIP $_.IPAddress -TD_Device_DeviceName $_.DeviceName -TD_Device_PW $([Net.NetworkCredential]::new('', $_.Password).Password) 
