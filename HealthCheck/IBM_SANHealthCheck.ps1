@@ -21,7 +21,8 @@ function IBM_SANHealthCheck {
                     $SST_DeviceLoggingInfo | ForEach-Object {
                         
                         <# Create the Name for Main StackPanel for each Device#>
-                        $BROSANDeviceMainSTPName = "BROSAN"+"$($_.DeviceName)"+"$($_.ID)"
+                        $SANSWName = $_.DeviceName -replace ('[^a-zA-Z\d\s:]', '')
+                        $BROSANDeviceMainSTPName = "BROSAN"+"$SANSWName"+"$($_.ID)"
                         [int]$DeviceIDPlaceHolder = $_.ID
                         [int]$MainWith = 480
 
