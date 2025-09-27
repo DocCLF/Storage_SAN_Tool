@@ -37,11 +37,13 @@ class DashBoardIMG {
     [string]$IBMFS73Icon
     [string]$SAN64B7Icon
     [string]$IBMPower11Icon
+    [string]$RefrehIcon96
 }
 $DashBoardIcons =[DashBoardIMG]::new()
 $DashBoardIcons.IBMFS73Icon = "$PSRootPath\Resources\Icons\IBMFS73Icon.png"
 $DashBoardIcons.SAN64B7Icon = "$PSRootPath\Resources\Icons\SAN64B7Icon.png"
 $DashBoardIcons.IBMPower11Icon = "$PSRootPath\Resources\Icons\IBMPower11Icon.png"
+$DashBoardIcons.RefrehIcon96 = "$PSRootPath\Resources\Icons\iconrefresh96.png"
 
 
 <# Create UserControls as basis of Content for MainWindow #>
@@ -1979,7 +1981,7 @@ $TD_btn_CloseAll.add_click({
 })
 
 <# muss nicht angezeigt werden kann aber #>
-Get-Variable TD_*
+Get-Variable TD_* |Out-Null
 <# Clean all LogFiles if there older than 90 Days #>
 SST_FileCleanUp
 <# Load Toolsettings if they saved in Resources folder #>
