@@ -36,8 +36,6 @@ function SST_DashBoardSTO {
         }
         $SST_SQLiteDBReader.Close()
         $TD_IC_DashBoardSTODevice.ItemsSource = $DashBoardSTODeviceView
-        $TD_DG_KnownDeviceListdd.ItemsSource = $DashBoardSTODeviceView
-
         $TD_TB_STODEVCount.Text = $DeviceCounter
     }
     
