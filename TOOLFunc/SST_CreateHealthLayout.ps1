@@ -226,6 +226,8 @@ function SST_CreateHealthLayout {
             $DGSecurityStatusInfoText.Margin = "10,10,10,5"
             $DGSecurityStatusInfoText.MaxHeight = 400
             $DGSecurityStatusInfoText.AutoGenerateColumns = $false
+            $DGSecurityStatusInfoText.GridLinesVisibility  = "None"
+            $DGSecurityStatusInfoText.HeadersVisibility  = "None"
 
             # --- Style: Collapsed wenn keine Items ---
             $DGStyle = New-Object Windows.Style([Windows.Controls.DataGrid])
@@ -251,6 +253,7 @@ function SST_CreateHealthLayout {
             $colConfiguredValue.Binding = New-Object Windows.Data.Binding("Value")
             $styleConfigured = New-Object Windows.Style([Windows.Controls.DataGridCell])
             $styleConfigured.Setters.Add((New-Object Windows.Setter([Windows.Controls.ToolTipService]::ToolTipProperty, "Your current settings.")))
+            $styleConfigured.Setters.Add((New-Object Windows.Setter([Windows.Controls.ToolTipService]::InitialShowDelayProperty, 10)))
             $colConfiguredValue.CellStyle = $styleConfigured
             # --- Columns zum DataGrid hinzufügen ---
             $DGSecurityStatusInfoText.Columns.Add($colAttributeName)    | Out-Null
@@ -265,6 +268,7 @@ function SST_CreateHealthLayout {
                 $colRecommendedValue.Binding = New-Object Windows.Data.Binding("RecommendedValue")
                 $styleRecommended = New-Object Windows.Style([Windows.Controls.DataGridCell])
                 $styleRecommended.Setters.Add((New-Object Windows.Setter([Windows.Controls.ToolTipService]::ToolTipProperty, "Shows the most common settings from the field, which do not claim to be the ideal solution for every environment.")))
+                $styleRecommended.Setters.Add((New-Object Windows.Setter([Windows.Controls.ToolTipService]::InitialShowDelayProperty, 10)))
                 $colRecommendedValue.CellStyle = $styleRecommended
                 # --- Columns zum DataGrid hinzufügen ---
                 $DGSecurityStatusInfoText.Columns.Add($colRecommendedValue) | Out-Null
