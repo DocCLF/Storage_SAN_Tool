@@ -22,7 +22,8 @@ function IBM_StorageHealthCheck {
                     $SST_DeviceLoggingInfo | ForEach-Object {
                         
                         <# Create the Name for Main StackPanel for each Device#>
-                        $IBMSTODeviceMainSTPName = "IBMSTO"+"$($_.DeviceName)"+"$($_.ID)"
+                        $STODeviceName = $_.DeviceName -replace ('[^a-zA-Z\d\s:]', '')
+                        $IBMSTODeviceMainSTPName = "IBMSTO"+"$STODeviceName"+"$($_.ID)"
                         [int]$DeviceIDPlaceHolder = $_.ID
 
                         <# Create the Basic Layout in the Main StackPanel for the Device#>
