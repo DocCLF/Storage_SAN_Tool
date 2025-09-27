@@ -72,7 +72,6 @@ function IBM_StorageHealthCheck {
                         SST_CreateHealthLayout -SST_UCOBJ $UCOBJ -SST_MainStackPName "$IBMSTODeviceMainSTPName" -SST_GridFuncName "IBMHostCheckFunc$($_.ID)" -SST_StackPFuncName "FuncIBMHostCheckStackPN$($_.ID)" -SST_LabelVisuNameofCheck "HostCheck" -SST_StackPResultsName "ResultsIBMHostCheckStackPN$($_.ID)" -SST_DeviceID $_.ID
                         
                         [int]$i=0
-                        $TD_IBM_HostInfo = $TD_IBM_HostInfo
                         $TD_IBM_HostInfo | ForEach-Object{
                             $i++
                             if($_.Status -eq "offline"){
