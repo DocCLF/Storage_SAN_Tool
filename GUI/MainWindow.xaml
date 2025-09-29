@@ -33,7 +33,7 @@
             <Button x:Name="btn_Stor_San" Content="Health Check" Style="{DynamicResource MainBtnStyle}" /> 
             <!--Settings-->
             <Button x:Name="btn_Settings" Content="Tool Settings" Style="{DynamicResource MainBtnStyle}" />
-            <Label x:Name="LB_ExpPathMainWindow" Content="Export Path :" Style="{DynamicResource MainLabelStyle}" Margin="25,5,0,5"/>
+            <Label x:Name="LB_ExpPathMainWindow" Content="Export Path :" Style="{DynamicResource MainLabelStyle}" Margin="25,5,0,5" Padding="3"/>
         </StackPanel>
         <!--CloseAll GUI-->
         <Button x:Name="btn_CloseAll" Content="Exit" Style="{DynamicResource MainBtnStyle}" Margin="5,5,25,5" HorizontalAlignment="Right" Background="LightCoral"/>
