@@ -188,6 +188,7 @@ $TD_btn_Settings.add_click({
     $TD_UserContrArea.Children.Remove($TD_UserControl4)
     if($TD_LogoImageSmall.Visibility -eq "hidden"){$TD_LogoImageSmall.Visibility = "visible"}
 })
+$TD_BTN_PowerBoard.add_click({SST_ExtensionChecker -SST_UCOBJ $TD_UserControl5})
 <# Button Export Settings #>
 $TD_btn_ChangeExportPath.add_click({
     $TD_ChPathdialog = New-Object System.Windows.Forms.FolderBrowserDialog
