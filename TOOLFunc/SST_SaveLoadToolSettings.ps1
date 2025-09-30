@@ -33,7 +33,7 @@ function SST_SaveLoadToolSettings {
         <# Can be extended with additional parameters at any time #>
 
         if($SST_SaveSettings){
-            $SST_ExportToolSettings = "" | Select-Object ExportPath,LoadSettingsOnStartUp,DevicestoInExport,OnlineCheckbyImport,LocalDB,ConnectionStringPRISM
+            $SST_ExportToolSettings = "" | Select-Object ExportPath,LoadSettingsOnStartUp,DevicestoInExport,OnlineCheckbyImport,LocalDB,ConnectionStringPRISM,CustomerNumber
             $SST_ExportToolSettings.ExportPath = $TD_tb_ExportPath.Text
             $SST_ExportToolSettings.LoadSettingsOnStartUp = $TD_CB_LoadSettingsatStartUp.IsChecked
             $SST_ExportToolSettings.DevicestoInExport = $TD_DG_KnownDeviceList.ItemsSource
@@ -43,12 +43,14 @@ function SST_SaveLoadToolSettings {
             }else {
                 $SST_ExportToolSettings.LocalDB = $false
             }
-            if(!([string]::IsNullOrEmpty($TD_TB_ConnectionStringPRISM.Text))){
-                $SST_ExportToolSettings.ConnectionStringPRISM = ConvertTo-SecureString $($TD_TB_ConnectionStringPRISM.Text) -AsPlainText -Force
+            if(!([string]::IsNullOrEmpty($TD_TB_ConnectionStringPRISM.Password))){
+                $SST_ExportToolSettings.ConnectionStringPRISM = ConvertTo-SecureString $($TD_TB_ConnectionStringPRISM.Password) -AsPlainText -Force
+                $SST_ExportToolSettings.CustomerNumber = $TD_TB_CustomerNumberPRISM.Text
             }else {
                 try {
                     $SST_LoadedToolSettings = Import-Clixml -Path "$PSRootPath\Resources\SavedToolSettings.clixml" -ErrorAction SilentlyContinue
-                    $SST_ExportToolSettings.ConnectionStringPRISM = $SST_LoadedToolSettings.ConnectionStringPRISM                    
+                    $SST_ExportToolSettings.ConnectionStringPRISM = $SST_LoadedToolSettings.ConnectionStringPRISM   
+                    $SST_ExportToolSettings.CustomerNumber = $SST_LoadedToolSettings.CustomerNumber                 
                 }
                 catch {
                     <#Do this if a terminating exception happens#>
@@ -77,11 +79,15 @@ function SST_SaveLoadToolSettings {
                     $TD_InportedDevices = $SST_LoadedToolSettings.DevicestoInExport
                     $TD_CB_OnlineCheckbyImport.IsChecked = $SST_LoadedToolSettings.OnlineCheckbyImport
                     if(!([string]::IsNullOrEmpty($SST_LoadedToolSettings.ConnectionStringPRISM))){
-
+                        $TD_TB_CustomerNumberPRISM.Text = $SST_LoadedToolSettings.CustomerNumber
                         $ConnectionStringPRISM = [System.Net.NetworkCredential]::new("", $SST_LoadedToolSettings.ConnectionStringPRISM).Password
                         $SQLConnection=New-Object System.Data.SqlClient.SqlConnection
                         $SQLConnection.ConnectionString=$ConnectionStringPRISM
-                        $SQLConnection.Open()
+                        Write-Host "Waiting for the Cloud, no Panik ;)" -ForegroundColor Yellow
+                        while ($SQLConnection.State -eq "close") {
+                            $SQLConnection.Open()
+                        }
+                        Write-Host "Cloud Status is $($SQLConnection.State),Hura.. )" -ForegroundColor Green
                         if($SQLConnection.State -eq 'Open'){
                             $TD_TB_ConnectionStringPRISM.Visibility = "Collapsed"
                             $TD_BTN_SaveConnectionStringPRISM.Content = "Connection String loaded"
