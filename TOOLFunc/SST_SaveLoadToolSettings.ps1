@@ -87,7 +87,7 @@ function SST_SaveLoadToolSettings {
                         while ($SQLConnection.State -eq "close") {
                             $SQLConnection.Open()
                         }
-                        Write-Host "Cloud Status is $($SQLConnection.State),Hura.. )" -ForegroundColor Green
+                        Write-Host "Cloud Status is $($SQLConnection.State),Hura.. :)" -ForegroundColor Green
                         if($SQLConnection.State -eq 'Open'){
                             $TD_TB_ConnectionStringPRISM.Visibility = "Collapsed"
                             $TD_BTN_SaveConnectionStringPRISM.Content = "Connection String loaded"
