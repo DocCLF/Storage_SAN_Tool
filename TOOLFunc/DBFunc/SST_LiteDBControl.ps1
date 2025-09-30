@@ -12,10 +12,12 @@ function SST_LiteDBControl {
     begin {
         $TimeStamp = Get-Date -UFormat "%Y-%m-%d %R"
         $PSRootPath = Split-Path -Path $PSScriptRoot -Parent
-
+        $PSRootPath = Split-Path -Path $PSRootPath -Parent
+        
         try {
             # Pfad zur Datenbank
             $SST_ConnectionString = "Data Source=$PSRootPath\Resources\DBFolder\SSTLocalDB.db;Version=3;"
+
             # Verbindung öffnen
             $SST_SQLiteCon = New-Object System.Data.SQLite.SQLiteConnection $SST_ConnectionString
             $SST_SQLiteCon.Open()
