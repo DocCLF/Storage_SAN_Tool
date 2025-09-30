@@ -240,7 +240,8 @@
                         </Grid.RowDefinitions>
                         <Label Grid.Column="0" Grid.Row="0" x:Name="LB_ConnectionStringLabelPRISM" Content="Insert the Connection String" Height="40" Foreground="Coral" FontSize="12" FontWeight="Bold" Margin="2,0" HorizontalAlignment="Left" Style="{DynamicResource MainLabelStyle}" />
                         <StackPanel Grid.Row="1" Orientation="Horizontal" >
-                            <TextBox x:Name="TB_ConnectionStringPRISM" Text="" MinWidth="300" MaxWidth="450" HorizontalAlignment="Left" HorizontalContentAlignment="Left" Style="{DynamicResource MainTextBoxStyle}"/>
+                            <PasswordBox x:Name="TB_ConnectionStringPRISM" MinWidth="250" MaxWidth="350" HorizontalAlignment="Left" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" Margin="2" Height="30"/>
+                            <TextBox x:Name="TB_CustomerNumberPRISM" Text="CustomerNumber"  MaxLength="20" MinWidth="100" Style="{DynamicResource MainTextBoxStyle}" />
                             <Button x:Name="BTN_SaveConnectionStringPRISM" Content="Save Connection String" HorizontalAlignment="Left" Style="{DynamicResource MainBtnStyle}"/>
                             <Button x:Name="BTN_ChangeConnectionStringPRISM" Content="Change Connection String" Visibility="Collapsed" HorizontalAlignment="Left" Style="{DynamicResource MainBtnStyle}"/>
                         </StackPanel>
