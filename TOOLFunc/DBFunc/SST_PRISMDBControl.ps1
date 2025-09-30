@@ -13,6 +13,7 @@ function SST_PRISMDBControl {
     begin {
         $TimeStamp = Get-Date -UFormat "%Y-%m-%d %R"
         $PSRootPath = Split-Path -Path $PSScriptRoot -Parent
+        $PSRootPath = Split-Path -Path $PSRootPath -Parent
 
         try{
             $SQLConnection=New-Object System.Data.SqlClient.SqlConnection
