@@ -266,7 +266,7 @@ $TD_BTN_SaveConnectionStringPRISM.add_click({
     if(($TD_TB_ConnectionStringPRISM.Visibility -eq "Collapsed")-and ($TD_BTN_SaveConnectionStringPRISM.Content -like "Test Connection")){
         try {
             $SQLConnection=New-Object System.Data.SqlClient.SqlConnection
-            $SQLConnection.ConnectionString=$TD_TB_ConnectionStringPRISM.Text
+            $SQLConnection.ConnectionString=$TD_TB_ConnectionStringPRISM.Password
             $SQLConnection.Open()
         }
         catch {
@@ -281,6 +281,7 @@ $TD_BTN_SaveConnectionStringPRISM.add_click({
             $TD_BTN_SaveConnectionStringPRISM.Background = "lightgreen"
             $SQLConnection.Close()
             $TD_BTN_ChangeConnectionStringPRISM.Visibility = "Visible"
+            $TD_LB_ConnectionStringLabelPRISM.Content ="Connection valid"
         }
     }
 })
@@ -325,7 +326,7 @@ $TD_BTN_ConnetionToPRISM.add_click({
 })
 $TD_BTN_ChangeConnectionStringPRISM.add_click({
     $TD_TB_ConnectionStringPRISM.Visibility = "Visible"
-    $TD_TB_ConnectionStringPRISM.Text = $null
+    $TD_TB_ConnectionStringPRISM.Password = $null
     $TD_BTN_SaveConnectionStringPRISM.Content = "Save Connection String"
     $TD_BTN_SaveConnectionStringPRISM.Background="#FFDDDDDD"
     $TD_BTN_ChangeConnectionStringPRISM.Visibility = "Collapsed"
