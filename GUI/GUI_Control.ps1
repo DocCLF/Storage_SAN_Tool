@@ -95,6 +95,14 @@ foreach($file in $UserCxamlFile){
             $TD_UserControl5=[Windows.Markup.XamlReader]::Load($Userreader)
             $UserXAML5.SelectNodes("//*[@Name]") | ForEach-Object {Set-Variable -Name "TD_$($_.Name)" -Value $TD_UserControl5.FindName($_.Name) }
          }
+         "*l6" { 
+            $UserC6=Get-Content -Path $file -raw
+            $UserC6=$UserC6 -replace 'mc:Ignorable="d"','' -replace "x:N","N" -replace "^<Win.*","<Window"
+            [xml]$UserXAML6=$UserC6
+            $Userreader = New-Object System.Xml.XmlNodeReader $UserXAML6
+            $TD_UserControl6=[Windows.Markup.XamlReader]::Load($Userreader)
+            $UserXAML6.SelectNodes("//*[@Name]") | ForEach-Object {Set-Variable -Name "TD_$($_.Name)" -Value $TD_UserControl6.FindName($_.Name) }
+         }
         Default { Write-Host "Something did not work, start the application in debug mod and/or check the log file." -ForegroundColor Red; Start-Sleep -Seconds 5; exit }
     }
 }
@@ -150,6 +158,7 @@ $TD_btn_Dashboard.add_click({
     $TD_UserContrArea.Children.Remove($TD_UserControl3)
     $TD_UserContrArea.Children.Remove($TD_UserControl4)
     $TD_UserContrArea.Children.Remove($TD_UserControl5)
+    $TD_UserContrArea.Children.Remove($TD_UserControl6)
     if($TD_LogoImageSmall.Visibility -eq "hidden"){$TD_LogoImageSmall.Visibility = "visible"}
 })
 $TD_btn_IBM_SV.add_click({
@@ -159,8 +168,8 @@ $TD_btn_IBM_SV.add_click({
     $TD_UserContrArea.Children.Remove($TD_UserControl3)
     $TD_UserContrArea.Children.Remove($TD_UserControl4)
     $TD_UserContrArea.Children.Remove($TD_UserControl5)
+    $TD_UserContrArea.Children.Remove($TD_UserControl6)
     if($TD_LogoImageSmall.Visibility -eq "hidden"){$TD_LogoImageSmall.Visibility = "visible"}
-    
 })
 $TD_btn_Broc_SAN.add_click({
     $TD_LB_ExpPathMainWindow.Content ="Export Path: $($TD_tb_ExportPath.Text)"
@@ -169,7 +178,19 @@ $TD_btn_Broc_SAN.add_click({
     $TD_UserContrArea.Children.Remove($TD_UserControl2)
     $TD_UserContrArea.Children.Remove($TD_UserControl4)
     $TD_UserContrArea.Children.Remove($TD_UserControl5)
+    $TD_UserContrArea.Children.Remove($TD_UserControl6)
     if($TD_LogoImageSmall.Visibility -eq "hidden"){$TD_LogoImageSmall.Visibility = "visible"}
+})
+$TD_BTN_PowerBoard.add_click({
+    $TD_LB_ExpPathMainWindow.Content ="Export Path: $($TD_tb_ExportPath.Text)"
+    if(!($TD_UserControl6.IsLoaded)){$TD_UserContrArea.Children.Add($TD_UserControl6)}
+    $TD_UserContrArea.Children.Remove($TD_UserControl1)
+    $TD_UserContrArea.Children.Remove($TD_UserControl2)
+    $TD_UserContrArea.Children.Remove($TD_UserControl3)
+    $TD_UserContrArea.Children.Remove($TD_UserControl4)
+    $TD_UserContrArea.Children.Remove($TD_UserControl5)
+    if($TD_LogoImageSmall.Visibility -eq "hidden"){$TD_LogoImageSmall.Visibility = "visible"}
+    if(($TD_BTN_HMCCollector.IsEnabled) -eq $false ){$TD_BTN_HMCCollector.IsEnabled= $true}
 })
 $TD_btn_Stor_San.add_click({
     $TD_LB_ExpPathMainWindow.Content ="Export Path: $($TD_tb_ExportPath.Text)"
@@ -178,6 +199,7 @@ $TD_btn_Stor_San.add_click({
     $TD_UserContrArea.Children.Remove($TD_UserControl2)
     $TD_UserContrArea.Children.Remove($TD_UserControl3)
     $TD_UserContrArea.Children.Remove($TD_UserControl5)
+    $TD_UserContrArea.Children.Remove($TD_UserControl6)
     if($TD_LogoImageSmall.Visibility -eq "hidden"){$TD_LogoImageSmall.Visibility = "visible"}
 })
 $TD_btn_Settings.add_click({
@@ -186,9 +208,10 @@ $TD_btn_Settings.add_click({
     $TD_UserContrArea.Children.Remove($TD_UserControl2)
     $TD_UserContrArea.Children.Remove($TD_UserControl3)
     $TD_UserContrArea.Children.Remove($TD_UserControl4)
+    $TD_UserContrArea.Children.Remove($TD_UserControl6)
     if($TD_LogoImageSmall.Visibility -eq "hidden"){$TD_LogoImageSmall.Visibility = "visible"}
 })
-$TD_BTN_PowerBoard.add_click({SST_ExtensionChecker -SST_UCOBJ $TD_UserControl5 -SST_MWOBJ $MainWindow})
+
 <# Button Export Settings #>
 $TD_btn_ChangeExportPath.add_click({
     $TD_ChPathdialog = New-Object System.Windows.Forms.FolderBrowserDialog
@@ -1941,9 +1964,9 @@ $TD_btn_FOS_PortBufferShow.add_click({
 #endregion
 
 #region IBM Power
-#$TD_btn_IBM_Power.add_click({
-#    IBM_PowerCollector
-#})
+$TD_BTN_HMCCollector.add_click({
+    SST_ExtensionChecker -SST_UCOBJ $TD_UserControl5 -SST_MWOBJ $TD_UserControl6
+})
 #endregion
 
 #region Health Check
