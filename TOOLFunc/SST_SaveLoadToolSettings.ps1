@@ -3,7 +3,9 @@ function SST_SaveLoadToolSettings {
     param (
         [bool]$SST_LoadSettings = $false,
         [bool]$SST_SaveSettings = $false,
-        $SST_SavedToolSettings = $null
+        $SST_SavedToolSettings = $null,
+        $SST_MWOBJ,
+        $SST_UCOBJ
     )
     
     begin {
@@ -105,7 +107,9 @@ function SST_SaveLoadToolSettings {
                     }
                     
                     $TD_BTN_LoadToolSettings.Background="LightGreen"
+                    SST_ExtensionChecker -LoadedToolSettings $SST_LoadedToolSettings -SST_MWOBJ $SST_MWOBJ -SST_UCOBJ $TD_UserControl5
                 }
+                
             }
             catch {
                 Write-Debug -Message $_.Exception.Message
