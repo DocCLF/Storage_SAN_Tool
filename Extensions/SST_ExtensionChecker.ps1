@@ -2,6 +2,7 @@ function SST_ExtensionChecker {
     [CmdletBinding()]
     param (
         $SST_UCOBJ,
+        $SST_MWOBJ,
         [bool]$YNExtension,
         [bool]$CloudDB = $false
     )
@@ -10,15 +11,19 @@ function SST_ExtensionChecker {
         
         $PSRootPath = Split-Path -Path $PSScriptRoot -Parent
         $Extension = Get-Item -Path "$PSRootPath\Extensions\*" -Exclude *.ps1
+        $SST_BTN_PowerBoard = $SST_MWOBJ.FindName("BTN_PowerBoard")
+        $SST_BTN_PowerBoardTooltip = $SST_MWOBJ.FindName("BTN_PowerBoardTooltip")
 
         if(($Extension).count -lt 1){ 
             $YNExtension = $false
+            $SST_BTN_PowerBoard.Background = "Coral"
+            $SST_BTN_PowerBoardTooltip.Text = "No Extension are installed"
         }else {
             $YNExtension = $true
         }
 
-        $Extension_PRISMTOOL = @(Get-ChildItem -Path $PSRootPath\Extensions\PRISMTOOL_Customer\PRISMCustomerMainFunc.ps1 -ErrorAction SilentlyContinue)
         if($YNExtension){
+            $Extension_PRISMTOOL = @(Get-ChildItem -Path $PSRootPath\Extensions\PRISMTOOL_Customer\PRISMCustomerMainFunc.ps1 -ErrorAction SilentlyContinue)
             foreach($import in @($Extension_PRISMTOOL)) {
                 try {
                     . $import.fullname
