@@ -143,6 +143,13 @@ function SST_DeviceConnecCheck {
                     break
                 }
             }
+            "PowerHMC" {
+                $TD_BInfo = "" | Select-Object DeviceName,ProductDes
+                $TD_BInfo.DeviceName = "HMC"
+                $TD_BInfo.ProductDes = "PowerHMC"
+                $TD_BasicDeviceInfo += $TD_BInfo
+                SST_ToolMessageCollector -TD_ToolMSGCollector "It's a HMC is okay" -TD_ToolMSGType Message
+            }
             Default {SST_ToolMessageCollector -TD_ToolMSGCollector "Something went wrong at SST_DeviceConnecCheck Func or no Device Type was found, please check the promt." -TD_ToolMSGType Warning}
         }
         
