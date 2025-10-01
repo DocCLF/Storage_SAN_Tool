@@ -52,6 +52,7 @@
                     <ComboBox x:Name="CB_DeviceType" SelectedIndex="0" SelectedValuePath="Content" Style="{DynamicResource MainComboBoxStyle}" >
                         <ComboBoxItem>Storage</ComboBoxItem>
                         <ComboBoxItem>SAN</ComboBoxItem>
+                        <ComboBoxItem>PowerHMC</ComboBoxItem>
                     </ComboBox>
                     <!-- needs more tests to be able to use it safely
                     <ComboBox x:Name="CB_DeviceConnectionType" SelectedIndex="1" SelectedValuePath="Content" Style="{DynamicResource MainBtnStyle}" >
@@ -113,7 +114,17 @@
                             </Style>
                         </Label.Style>
                     </Label>
-                    <CheckBox x:Name="CB_SVCorVF" VerticalAlignment="Center" Margin="2"/>
+                    <CheckBox x:Name="CB_SVCorVF" VerticalAlignment="Center" Margin="2" >
+                        <CheckBox.Style>
+                            <Style TargetType="CheckBox">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding ElementName=CB_DeviceType ,Path=SelectedValue}" Value="PowerHMC">
+                                        <Setter Property="Visibility" Value="Collapsed" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </CheckBox.Style>
+                    </CheckBox>
                     <ToggleButton x:Name="TBTN_SaveCredtoDG" Height="30" MinWidth="80" Margin="25,2,0,2" Padding="2">
                         <ToggleButton.Style>
                             <Style TargetType="ToggleButton">
@@ -152,6 +163,9 @@
                                             </DataTrigger>
                                             <DataTrigger Binding="{Binding DeviceTyp}" Value="SAN">
                                                 <Setter Property="Background" Value="LightYellow" />
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding DeviceTyp}" Value="PowerHMC">
+                                                <Setter Property="Background" Value="LightGreen" />
                                             </DataTrigger>
                                         </Style.Triggers>
                                     </Style>
