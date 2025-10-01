@@ -28,6 +28,16 @@ function SST_GetCredfGUI {
                     break
                 }
             }
+            "PowerHMC" { 
+                $TD_BasicDeviceInfo = SST_DeviceConnecCheck -TD_Selected_Items "no"
+                Write-Host "adad $TD_BasicDeviceInfo"
+                if([string]::IsNullOrEmpty($TD_BasicDeviceInfo)){
+                    $TD_ErrorCode = 1
+                    #$TD_BTN_AddSSHKey.Background="#FFDDDDDD"
+                    #$TD_BTN_AddSSHKey.Content="Add SSH-Key"
+                    break
+                }
+            }
             Default {SST_ToolMessageCollector -TD_ToolMSGCollector "Something went wrong at SST_GetCredfGUI Func or no Device Type was found, please check the promt." -TD_ToolMSGType Warning}
         }
         $TD_AddaNewDevice="no"
@@ -108,6 +118,13 @@ function SST_GetCredfGUI {
             if($TD_CB_DeviceType.Text -eq "SAN"){   
                 [int]$TD_CredentialsCount= (($TD_Credentials |Where-Object {$_.DeviceTyp -eq "SAN"}).count + 1)
                 if($TD_Credentials |Where-Object {($_.DeviceTyp -eq "SAN") -and ($_.ID -eq $TD_CredentialsCount)}){$TD_CredentialsCount = $TD_CredentialsCount +1}
+                SST_ToolMessageCollector -TD_ToolMSGCollector "SAN ID is $TD_CredentialsCount" -TD_ToolMSGType Debug
+            }
+        }
+        if($TD_AddaNewDevice -eq "yes"){
+            if($TD_CB_DeviceType.Text -eq "PowerHMC"){   
+                [int]$TD_CredentialsCount= (($TD_Credentials |Where-Object {$_.DeviceTyp -eq "PowerHMC"}).count + 1)
+                if($TD_Credentials |Where-Object {($_.DeviceTyp -eq "PowerHMC") -and ($_.ID -eq $TD_CredentialsCount)}){$TD_CredentialsCount = $TD_CredentialsCount +1}
                 SST_ToolMessageCollector -TD_ToolMSGCollector "SAN ID is $TD_CredentialsCount" -TD_ToolMSGType Debug
             }
         }
