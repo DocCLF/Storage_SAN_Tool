@@ -27,7 +27,7 @@
             <Button x:Name="BTN_PowerBoard" Content="IBM Power Board" Style="{DynamicResource MainBtnStyle}" ToolTipService.InitialShowDelay="10">
                 <Button.ToolTip>
                     <ToolTip>
-                        <TextBlock Text="Only works in conjunction with the PRISMTool"/>
+                        <TextBlock x:Name="BTN_PowerBoardTooltip" Text="Only works in conjunction with the PRISMTool"/>
                     </ToolTip>
                 </Button.ToolTip>
             </Button>
