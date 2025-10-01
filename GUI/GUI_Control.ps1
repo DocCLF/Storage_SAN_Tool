@@ -247,7 +247,7 @@ $TD_BTN_RefreshUC1.add_click({
 
 #region Settings Button
 $TD_BTN_SaveToolSettings.add_click({
-    SST_SaveLoadToolSettings -SST_SaveSettings $true
+    SST_SaveLoadToolSettings -SST_SaveSettings $true 
 })
 $TD_BTN_LoadToolSettings.add_click({
     SST_SaveLoadToolSettings -SST_LoadSettings $true
@@ -1987,7 +1987,7 @@ Get-Variable TD_* |Out-Null
 <# Clean all LogFiles if there older than 90 Days #>
 SST_FileCleanUp
 <# Load Toolsettings if they saved in Resources folder #>
-SST_SaveLoadToolSettings -SST_LoadSettings $true
+SST_SaveLoadToolSettings -SST_LoadSettings $true -SST_MWOBJ $MainWindow -SST_UCOBJ $TD_UserControl5
 
 $MainWindow.showDialog()
 $MainWindow.activate()
