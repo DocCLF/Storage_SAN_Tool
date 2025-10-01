@@ -16,7 +16,7 @@ function SST_CreateButton {
 
         if($DeviceTyp -eq "Storage"){$ButtonIcon = "$PSRootPath\Resources\Icons\IBMFS73Icon.png"}
         if($DeviceTyp -eq "SAN"){$ButtonIcon = "$PSRootPath\Resources\Icons\SAN64B7Icon.png"}
-        if($DeviceTyp -eq "Power"){$ButtonIcon = "$PSRootPath\Resources\Icons\IBMPower11Icon.png"}
+        if($DeviceTyp -eq "PowerHMC"){$ButtonIcon = "$PSRootPath\Resources\Icons\IBMPower11Icon.png"}
     }
     
     process {
