@@ -12,8 +12,8 @@ function SST_ExtensionChecker {
         
         $PSRootPath = Split-Path -Path $PSScriptRoot -Parent
         $Extension = Get-Item -Path "$PSRootPath\Extensions\*" -Exclude *.ps1
-        $SST_BTN_PowerBoard = $SST_MWOBJ.FindName("BTN_PowerBoard")
-        $SST_BTN_PowerBoardTooltip = $SST_MWOBJ.FindName("BTN_PowerBoardTooltip")
+        $SST_BTN_PowerBoard = $SST_MWOBJ.FindName("BTN_HMCCollector")
+        $SST_BTN_PowerBoardTooltip = $SST_MWOBJ.FindName("BTN_HMCCollectorTooltip")
         $SST_STODeviceCred = $SST_UCOBJ.FindName("DG_KnownDeviceList")
 
         if((($Extension).count -lt 1) -and ((($SST_STODeviceCred.ItemsSource).count -lt 1))-or(($LoadedToolSettings).count -lt 1)){ 
@@ -27,7 +27,7 @@ function SST_ExtensionChecker {
 
         if($YNExtension){
             $Extension_PRISMTOOL = @(Get-ChildItem -Path $PSRootPath\Extensions\PRISMTOOL_Customer\PRISMCustomerMainFunc.ps1 -ErrorAction SilentlyContinue)
-            
+
             foreach($import in @($Extension_PRISMTOOL)) {
                 try {
                     . $import.fullname
