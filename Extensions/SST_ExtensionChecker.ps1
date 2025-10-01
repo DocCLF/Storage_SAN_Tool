@@ -4,7 +4,8 @@ function SST_ExtensionChecker {
         $SST_UCOBJ,
         $SST_MWOBJ,
         [bool]$YNExtension,
-        [bool]$CloudDB = $false
+        [bool]$CloudDB = $false,
+        $LoadedToolSettings
     )
     
     begin {
@@ -13,17 +14,20 @@ function SST_ExtensionChecker {
         $Extension = Get-Item -Path "$PSRootPath\Extensions\*" -Exclude *.ps1
         $SST_BTN_PowerBoard = $SST_MWOBJ.FindName("BTN_PowerBoard")
         $SST_BTN_PowerBoardTooltip = $SST_MWOBJ.FindName("BTN_PowerBoardTooltip")
+        $SST_STODeviceCred = $SST_UCOBJ.FindName("DG_KnownDeviceList")
 
-        if(($Extension).count -lt 1){ 
+        if((($Extension).count -lt 1) -and ((($SST_STODeviceCred.ItemsSource).count -lt 1))-or(($LoadedToolSettings).count -lt 1)){ 
             $YNExtension = $false
             $SST_BTN_PowerBoard.Background = "Coral"
-            $SST_BTN_PowerBoardTooltip.Text = "No Extension are installed"
+            $SST_BTN_PowerBoardTooltip.Text = "No Extension are installed or Credentials are loaded!"
+            $SST_BTN_PowerBoard.IsEnabled= $false
         }else {
             $YNExtension = $true
         }
 
         if($YNExtension){
             $Extension_PRISMTOOL = @(Get-ChildItem -Path $PSRootPath\Extensions\PRISMTOOL_Customer\PRISMCustomerMainFunc.ps1 -ErrorAction SilentlyContinue)
+            
             foreach($import in @($Extension_PRISMTOOL)) {
                 try {
                     . $import.fullname
@@ -40,8 +44,8 @@ function SST_ExtensionChecker {
     
     process {
         if($YNExtension){
-            $SST_STOHealthCheckWP = $SST_UCOBJ.FindName("DG_KnownDeviceList")
-            $TD_Credentials = $SST_STOHealthCheckWP.ItemsSource |ForEach-Object {$_}
+            
+            $TD_Credentials = $SST_STODeviceCred.ItemsSource |ForEach-Object {$_}
 
             <#PRISMCustomerMainFunc#>
             <#Cloud is needed#>
