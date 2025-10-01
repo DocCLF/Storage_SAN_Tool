@@ -2,7 +2,7 @@ function SST_LiteDBControl {
     [CmdletBinding()]
     param (
         [Parameter(ValueFromPipeline)]
-        [ValidateSet("StorageDrive","StorageBase","StorageHostInfo","StorageEventLog","SANBase","FCPortStats")]
+        [ValidateSet("StorageDrive","StorageBase","StorageHostInfo","StorageEventLog","SANBase","FCPortStats","HMC","PowerSysSummary","LPARSummary")]
         $SST_InfoType,
         $SST_NewDBObject =$null,
         [array]$SST_CollectedInformations,
@@ -51,6 +51,21 @@ function SST_LiteDBControl {
                 }
                 "SANBase" { 
                     $SST_SQLiteTabelQuery ="CREATE TABLE IF NOT EXISTS IBMSANHWTable (ID INTEGER PRIMARY KEY AUTOINCREMENT, Name TEXT NOT NULL, Status TEXT NOT NULL, BrocadeProdName TEXT, MTM TEXT, SerialNumber TEXT, CodeLevel TEXT, CodeLevelLV TEXT, TimeStamp TEXT );" 
+                    $SST_SQliteCreateTBCMD.CommandText = $SST_SQLiteTabelQuery
+                    $SST_SQliteCreateTBCMD.ExecuteNonQuery()
+                }
+                "PowerHMC" { 
+                    $SST_SQLiteTabelQuery ="CREATE TABLE IF NOT EXISTS PowerHMC (ID INTEGER PRIMARY KEY AUTOINCREMENT, HMCName TEXT NOT NULL, HMCHWModell TEXT NOT NULL, HMCHWSN TEXT, HMCHWBios TEXT, HMCSWVersion TEXT, HMCSWBuildLevel TEXT, HMCSWBaseVersion TEXT, HMCSWFixes TEXT, TimeStamp TEXT );" 
+                    $SST_SQliteCreateTBCMD.CommandText = $SST_SQLiteTabelQuery
+                    $SST_SQliteCreateTBCMD.ExecuteNonQuery()
+                }
+                "PowerSysSummary" { 
+                    $SST_SQLiteTabelQuery ="CREATE TABLE IF NOT EXISTS PowerSysSummary (ID INTEGER PRIMARY KEY AUTOINCREMENT, PowerSysManagedSystem TEXT NOT NULL, PowerSysSystemStatus TEXT NOT NULL, PowerSysSystemMTM TEXT, PowerSysSystemSN TEXT, PowerSysMGRIPAddr TEXT, PowerSysPrimSPIPAddr TEXT, PowerSysECNumber TEXT NOT NULL, PowerSysIPLLevel TEXT, PowerSysIPLActivatedLevel TEXT, PowerSysCoDEvent TEXT, TimeStamp TEXT );" 
+                    $SST_SQliteCreateTBCMD.CommandText = $SST_SQLiteTabelQuery
+                    $SST_SQliteCreateTBCMD.ExecuteNonQuery()
+                }
+                "LPARSummary" { 
+                    $SST_SQLiteTabelQuery ="CREATE TABLE IF NOT EXISTS LPARSummary (ID INTEGER PRIMARY KEY AUTOINCREMENT, LPARName TEXT NOT NULL, LPARID TEXT NOT NULL, LPARStatus TEXT, LPAREnvironment TEXT, LPAROSVersion TEXT, LPARRMCIP TEXT, LPARManagedSystemName TEXT, LPARManagedSystemSN TEXT, TimeStamp TEXT );" 
                     $SST_SQliteCreateTBCMD.CommandText = $SST_SQLiteTabelQuery
                     $SST_SQliteCreateTBCMD.ExecuteNonQuery()
                 }
@@ -199,6 +214,59 @@ function SST_LiteDBControl {
                     $SST_SQliteInsertCMD.Parameters.AddWithValue("@BrocadeProdName", $SST_CollectedInformation.'Brocade Product Name') | Out-Null
                     $SST_SQliteInsertCMD.Parameters.AddWithValue("@MTM", $SST_CollectedInformation.'MTM') | Out-Null
                     $SST_SQliteInsertCMD.Parameters.AddWithValue("@SerialNumber", $SST_CollectedInformation.'Serial Num') | Out-Null
+                    $SST_SQliteInsertCMD.Parameters.AddWithValue("@TimeStamp", $TimeStamp) | Out-Null
+                
+                    # In DB speichern 
+                    $SST_SQliteInsertCMD.ExecuteNonQuery()
+                }
+            }
+            "PowerHMC" {
+                foreach ($SST_CollectedInformation in $SST_CollectedInformations){
+                    $SST_SQliteInsertCMD.CommandText ="INSERT INTO PowerHMC (HMCName, HMCHWModell, HMCHWSN, HMCHWBios, HMCSWVersion, HMCSWBuildLevel, HMCSWBaseVersion, HMCSWFixes, TimeStamp) VALUES (@HMCName, @HMCHWModell, @HMCHWSN, @HMCHWBios, @HMCSWVersion, @HMCSWBuildLevel, @HMCSWBaseVersion, @HMCSWFixes, @TimeStamp);"
+                    $SST_SQliteInsertCMD.Parameters.AddWithValue("@HMCName", $SST_CollectedInformation.HMCName) | Out-Null
+                    $SST_SQliteInsertCMD.Parameters.AddWithValue("@HMCHWModell", $SST_CollectedInformation.HMCHWModell) | Out-Null
+                    $SST_SQliteInsertCMD.Parameters.AddWithValue("@HMCHWSN", $SST_CollectedInformation.HMCHWSN) | Out-Null
+                    $SST_SQliteInsertCMD.Parameters.AddWithValue("@HMCHWBios", $SST_CollectedInformation.HMCHWBios) | Out-Null
+                    $SST_SQliteInsertCMD.Parameters.AddWithValue("@HMCSWVersion", $SST_CollectedInformation.HMCSWVersion) | Out-Null
+                    $SST_SQliteInsertCMD.Parameters.AddWithValue("@HMCSWBuildLevel", $SST_CollectedInformation.HMCSWBuildLevel) | Out-Null
+                    $SST_SQliteInsertCMD.Parameters.AddWithValue("@HMCSWBaseVersion", $SST_CollectedInformation.HMCSWBaseVersion) | Out-Null
+                    $SST_SQliteInsertCMD.Parameters.AddWithValue("@HMCSWFixes", $SST_CollectedInformation.HMCSWFixes) | Out-Null
+                    $SST_SQliteInsertCMD.Parameters.AddWithValue("@TimeStamp", $TimeStamp) | Out-Null
+                
+                    # In DB speichern 
+                    $SST_SQliteInsertCMD.ExecuteNonQuery()
+                }
+            }
+            "PowerSysSummary" {
+                foreach ($SST_CollectedInformation in $SST_CollectedInformations){
+                    $SST_SQliteInsertCMD.CommandText ="INSERT INTO PowerSysSummary (PowerSysManagedSystem, PowerSysSystemStatus, PowerSysSystemMTM, PowerSysSystemSN, PowerSysMGRIPAddr, PowerSysPrimSPIPAddr, PowerSysECNumber, PowerSysIPLLevel, PowerSysIPLActivatedLevel, PowerSysCoDEvent, TimeStamp) VALUES (@PowerSysManagedSystem, @PowerSysSystemStatus, @PowerSysSystemMTM, @PowerSysSystemSN, @PowerSysMGRIPAddr, @PowerSysPrimSPIPAddr, @PowerSysECNumber, @PowerSysIPLLevel, @PowerSysIPLActivatedLevel, @PowerSysCoDEvent, @TimeStamp);"
+                    $SST_SQliteInsertCMD.Parameters.AddWithValue("@PowerSysManagedSystem", $SST_CollectedInformation.HMCName) | Out-Null
+                    $SST_SQliteInsertCMD.Parameters.AddWithValue("@PowerSysSystemStatus", $SST_CollectedInformation.HMCHWModell) | Out-Null
+                    $SST_SQliteInsertCMD.Parameters.AddWithValue("@PowerSysSystemMTM", $SST_CollectedInformation.HMCHWSN) | Out-Null
+                    $SST_SQliteInsertCMD.Parameters.AddWithValue("@PowerSysSystemSN", $SST_CollectedInformation.HMCHWBios) | Out-Null
+                    $SST_SQliteInsertCMD.Parameters.AddWithValue("@PowerSysMGRIPAddr", $SST_CollectedInformation.HMCSWVersion) | Out-Null
+                    $SST_SQliteInsertCMD.Parameters.AddWithValue("@PowerSysPrimSPIPAddr", $SST_CollectedInformation.HMCSWBuildLevel) | Out-Null
+                    $SST_SQliteInsertCMD.Parameters.AddWithValue("@PowerSysECNumber", $SST_CollectedInformation.HMCSWBaseVersion) | Out-Null
+                    $SST_SQliteInsertCMD.Parameters.AddWithValue("@PowerSysIPLLevel", $SST_CollectedInformation.HMCSWFixes) | Out-Null
+                    $SST_SQliteInsertCMD.Parameters.AddWithValue("@PowerSysIPLActivatedLevel", $SST_CollectedInformation.HMCSWBaseVersion) | Out-Null
+                    $SST_SQliteInsertCMD.Parameters.AddWithValue("@PowerSysCoDEvent", $SST_CollectedInformation.HMCSWFixes) | Out-Null
+                    $SST_SQliteInsertCMD.Parameters.AddWithValue("@TimeStamp", $TimeStamp) | Out-Null
+                
+                    # In DB speichern 
+                    $SST_SQliteInsertCMD.ExecuteNonQuery()
+                }
+            }
+            "LPARSummary" {
+                foreach ($SST_CollectedInformation in $SST_CollectedInformations){
+                    $SST_SQliteInsertCMD.CommandText ="INSERT INTO LPARSummary (LPARName, LPARID, LPARStatus, LPAREnvironment, LPAROSVersion, LPARRMCIP, LPARManagedSystemName, LPARManagedSystemSN, TimeStamp) VALUES (@LPARName, @LPARID, @LPARStatus, @LPAREnvironment, @LPAROSVersion, @LPARRMCIP, @LPARManagedSystemName, @LPARManagedSystemSN, @TimeStamp);"
+                    $SST_SQliteInsertCMD.Parameters.AddWithValue("@LPARName", $SST_CollectedInformation.LPARName) | Out-Null
+                    $SST_SQliteInsertCMD.Parameters.AddWithValue("@LPARID", $SST_CollectedInformation.LPARID) | Out-Null
+                    $SST_SQliteInsertCMD.Parameters.AddWithValue("@LPARStatus", $SST_CollectedInformation.LPARStatus) | Out-Null
+                    $SST_SQliteInsertCMD.Parameters.AddWithValue("@LPAREnvironment", $SST_CollectedInformation.LPAREnvironment) | Out-Null
+                    $SST_SQliteInsertCMD.Parameters.AddWithValue("@LPAROSVersion", $SST_CollectedInformation.LPAROSVersion) | Out-Null
+                    $SST_SQliteInsertCMD.Parameters.AddWithValue("@LPARRMCIP", $SST_CollectedInformation.RMCIP) | Out-Null
+                    $SST_SQliteInsertCMD.Parameters.AddWithValue("@LPARManagedSystemName", $SST_CollectedInformation.ManagedSystemName) | Out-Null
+                    $SST_SQliteInsertCMD.Parameters.AddWithValue("@LPARManagedSystemSN", $SST_CollectedInformation.ManagedSystemSN) | Out-Null
                     $SST_SQliteInsertCMD.Parameters.AddWithValue("@TimeStamp", $TimeStamp) | Out-Null
                 
                     # In DB speichern 
