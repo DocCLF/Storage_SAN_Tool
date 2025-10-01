@@ -19,7 +19,17 @@
             <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
         </ResourceDictionary>
     </UserControl.Resources>
-    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" >
+    <Grid>
+    <Grid.RowDefinitions>
+        <RowDefinition Height="auto" />
+        <RowDefinition Height="auto" />
+    </Grid.RowDefinitions>
+    <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="15,5,0,0">
+        <RadioButton x:Name="StorageCheckboxHealth" Content="Storage" Margin="5" FontSize="14" VerticalAlignment="Center" VerticalContentAlignment="Center"/>
+        <RadioButton x:Name="SANCheckboxHealth"  Content="SAN" Margin="5" FontSize="14" VerticalAlignment="Center" VerticalContentAlignment="Center" />
+        <RadioButton x:Name="ServerCheckboxHealth" Content="Server" Margin="5" FontSize="14" VerticalAlignment="Center" VerticalContentAlignment="Center"/>
+    </StackPanel>
+    <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" >
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="auto" />
@@ -28,17 +38,14 @@
                 <RowDefinition Height="auto" />
                 <RowDefinition Height="auto" />
             </Grid.RowDefinitions>
-            <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="15,5,0,0">
-                <RadioButton x:Name="StorageCheckboxHealth" Content="Storage" Margin="5" FontSize="14" VerticalAlignment="Center" VerticalContentAlignment="Center"/>
-                <RadioButton x:Name="SANCheckboxHealth"  Content="SAN" Margin="5" FontSize="14" VerticalAlignment="Center" VerticalContentAlignment="Center" />
-                <RadioButton x:Name="ServerCheckboxHealth" Content="Server" Margin="5" FontSize="14" VerticalAlignment="Center" VerticalContentAlignment="Center"/>
-            </StackPanel>
+
             
-            <WrapPanel Grid.Row="1" x:name="WP_STOHealthCheck" Visibility="{Binding ElementName=StorageCheckboxHealth, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Visible}"></WrapPanel>
-            <WrapPanel Grid.Row="1" x:name="WP_SANHealthCheck" Visibility="{Binding ElementName=SANCheckboxHealth, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Visible}"></WrapPanel>
-            <WrapPanel Grid.Row="1" x:name="WP_SVRHealthCheck" Visibility="{Binding ElementName=ServerCheckboxHealth, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Visible}"></WrapPanel>
-            <WrapPanel Grid.Row="2" x:Name="WP_HealthResaultsVisibility" Orientation="Horizontal" ></WrapPanel>
-            <WrapPanel Grid.Row="3" x:Name="WP_HealthResaults" Orientation="Horizontal" ></WrapPanel>
+            <WrapPanel Grid.Row="0" x:name="WP_STOHealthCheck" Visibility="{Binding ElementName=StorageCheckboxHealth, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Visible}"></WrapPanel>
+            <WrapPanel Grid.Row="0" x:name="WP_SANHealthCheck" Visibility="{Binding ElementName=SANCheckboxHealth, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Visible}"></WrapPanel>
+            <WrapPanel Grid.Row="0" x:name="WP_SVRHealthCheck" Visibility="{Binding ElementName=ServerCheckboxHealth, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Visible}"></WrapPanel>
+            <WrapPanel Grid.Row="1" x:Name="WP_HealthResaultsVisibility" Orientation="Horizontal" ></WrapPanel>
+            <WrapPanel Grid.Row="2" x:Name="WP_HealthResaults" Orientation="Horizontal" ></WrapPanel>
         </Grid>
     </ScrollViewer>
+    </Grid>
 </UserControl>
