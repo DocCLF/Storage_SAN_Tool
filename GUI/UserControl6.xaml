@@ -28,17 +28,23 @@
             <RowDefinition Height="auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        <GroupBox Grid.Column="0" Grid.RowSpan="4" Header="Actions" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,10,0,0" >
-            <StackPanel x:Name="SP_HMCCollector">
-                <Button x:Name="BTN_HMCCollector" Content="HMCScaner" Style="{DynamicResource MainBtnStyle}">
-                    <Button.ToolTip>
-                         <ToolTip>
-                             <TextBlock x:Name="BTN_HMCCollectorTooltip" Text="Only works in conjunction with the PRISMTool"/>
-                         </ToolTip>
-                    </Button.ToolTip>
-                </Button>
-            </StackPanel>
-        </GroupBox>
+        <StackPanel Grid.Column="0" Grid.RowSpan="4" >
+            <GroupBox Header="Actions" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,10,0,0" >
+                <StackPanel x:Name="SP_HMCCollector">
+                    <Button x:Name="BTN_HMCCollector" Content="HMCScaner" Style="{DynamicResource MainBtnStyle}" ToolTipService.InitialShowDelay="10">
+                        <Button.ToolTip>
+                            <ToolTip>
+                                <TextBlock x:Name="BTN_HMCCollectorTooltip" Text="Only works in conjunction with the PRISMTool"/>
+                            </ToolTip>
+                        </Button.ToolTip>
+                    </Button>
+                </StackPanel>
+            </GroupBox>
+            <GroupBox Header="HMC" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,10,0,0" Visibility="Collapsed">
+                <StackPanel x:Name="SP_HMCView">
+                </StackPanel>
+            </GroupBox>
+        </StackPanel>
         <ScrollViewer Grid.Column="1" Grid.Row="1" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
             <Grid>
                 <Grid.RowDefinitions>
