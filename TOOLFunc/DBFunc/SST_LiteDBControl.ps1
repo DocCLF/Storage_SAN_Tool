@@ -2,7 +2,7 @@ function SST_LiteDBControl {
     [CmdletBinding()]
     param (
         [Parameter(ValueFromPipeline)]
-        [ValidateSet("StorageDrive","StorageBase","StorageHostInfo","StorageEventLog","SANBase","FCPortStats","HMC","PowerSysSummary","LPARSummary")]
+        [ValidateSet("StorageDrive","StorageBase","StorageHostInfo","StorageEventLog","SANBase","FCPortStats","PowerHMC","PowerSysSummary","LPARSummary")]
         $SST_InfoType,
         $SST_NewDBObject =$null,
         [array]$SST_CollectedInformations,
@@ -240,18 +240,17 @@ function SST_LiteDBControl {
             "PowerSysSummary" {
                 foreach ($SST_CollectedInformation in $SST_CollectedInformations){
                     $SST_SQliteInsertCMD.CommandText ="INSERT INTO PowerSysSummary (PowerSysManagedSystem, PowerSysSystemStatus, PowerSysSystemMTM, PowerSysSystemSN, PowerSysMGRIPAddr, PowerSysPrimSPIPAddr, PowerSysECNumber, PowerSysIPLLevel, PowerSysIPLActivatedLevel, PowerSysCoDEvent, TimeStamp) VALUES (@PowerSysManagedSystem, @PowerSysSystemStatus, @PowerSysSystemMTM, @PowerSysSystemSN, @PowerSysMGRIPAddr, @PowerSysPrimSPIPAddr, @PowerSysECNumber, @PowerSysIPLLevel, @PowerSysIPLActivatedLevel, @PowerSysCoDEvent, @TimeStamp);"
-                    $SST_SQliteInsertCMD.Parameters.AddWithValue("@PowerSysManagedSystem", $SST_CollectedInformation.HMCName) | Out-Null
-                    $SST_SQliteInsertCMD.Parameters.AddWithValue("@PowerSysSystemStatus", $SST_CollectedInformation.HMCHWModell) | Out-Null
-                    $SST_SQliteInsertCMD.Parameters.AddWithValue("@PowerSysSystemMTM", $SST_CollectedInformation.HMCHWSN) | Out-Null
-                    $SST_SQliteInsertCMD.Parameters.AddWithValue("@PowerSysSystemSN", $SST_CollectedInformation.HMCHWBios) | Out-Null
-                    $SST_SQliteInsertCMD.Parameters.AddWithValue("@PowerSysMGRIPAddr", $SST_CollectedInformation.HMCSWVersion) | Out-Null
-                    $SST_SQliteInsertCMD.Parameters.AddWithValue("@PowerSysPrimSPIPAddr", $SST_CollectedInformation.HMCSWBuildLevel) | Out-Null
-                    $SST_SQliteInsertCMD.Parameters.AddWithValue("@PowerSysECNumber", $SST_CollectedInformation.HMCSWBaseVersion) | Out-Null
-                    $SST_SQliteInsertCMD.Parameters.AddWithValue("@PowerSysIPLLevel", $SST_CollectedInformation.HMCSWFixes) | Out-Null
-                    $SST_SQliteInsertCMD.Parameters.AddWithValue("@PowerSysIPLActivatedLevel", $SST_CollectedInformation.HMCSWBaseVersion) | Out-Null
-                    $SST_SQliteInsertCMD.Parameters.AddWithValue("@PowerSysCoDEvent", $SST_CollectedInformation.HMCSWFixes) | Out-Null
+                    $SST_SQliteInsertCMD.Parameters.AddWithValue("@PowerSysManagedSystem", $SST_CollectedInformation.ManagedSystem) | Out-Null
+                    $SST_SQliteInsertCMD.Parameters.AddWithValue("@PowerSysSystemStatus", $SST_CollectedInformation.SystemStatus) | Out-Null
+                    $SST_SQliteInsertCMD.Parameters.AddWithValue("@PowerSysSystemMTM", $SST_CollectedInformation.SystemMTM) | Out-Null
+                    $SST_SQliteInsertCMD.Parameters.AddWithValue("@PowerSysSystemSN", $SST_CollectedInformation.SystemSN) | Out-Null
+                    $SST_SQliteInsertCMD.Parameters.AddWithValue("@PowerSysMGRIPAddr", $SST_CollectedInformation.MGRIPAddr) | Out-Null
+                    $SST_SQliteInsertCMD.Parameters.AddWithValue("@PowerSysPrimSPIPAddr", $SST_CollectedInformation.PrimSPIPAddr) | Out-Null
+                    $SST_SQliteInsertCMD.Parameters.AddWithValue("@PowerSysECNumber", $SST_CollectedInformation.ECNumber) | Out-Null
+                    $SST_SQliteInsertCMD.Parameters.AddWithValue("@PowerSysIPLLevel", $SST_CollectedInformation.IPLLevel) | Out-Null
+                    $SST_SQliteInsertCMD.Parameters.AddWithValue("@PowerSysIPLActivatedLevel", $SST_CollectedInformation.IPLActivatedLevel) | Out-Null
+                    $SST_SQliteInsertCMD.Parameters.AddWithValue("@PowerSysCoDEvent", $SST_CollectedInformation.CoDEvent) | Out-Null
                     $SST_SQliteInsertCMD.Parameters.AddWithValue("@TimeStamp", $TimeStamp) | Out-Null
-                
                     # In DB speichern 
                     $SST_SQliteInsertCMD.ExecuteNonQuery()
                 }
