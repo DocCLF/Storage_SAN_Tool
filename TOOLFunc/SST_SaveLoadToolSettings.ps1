@@ -107,7 +107,8 @@ function SST_SaveLoadToolSettings {
                     }
                     
                     $TD_BTN_LoadToolSettings.Background="LightGreen"
-                    SST_ExtensionChecker -LoadedToolSettings $SST_LoadedToolSettings -SST_MWOBJ $SST_MWOBJ -SST_UCOBJ $TD_UserControl5
+                    <# check on startup for later use #>
+                    #SST_ExtensionChecker -LoadedToolSettings $SST_LoadedToolSettings -SST_MWOBJ $SST_MWOBJ -SST_UCOBJ $TD_UserControl5
                 }
                 
             }
