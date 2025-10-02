@@ -16,7 +16,7 @@ function SST_ExtensionChecker {
         $SST_BTN_PowerBoardTooltip = $SST_MWOBJ.FindName("BTN_HMCCollectorTooltip")
         $SST_STODeviceCred = $SST_UCOBJ.FindName("DG_KnownDeviceList")
 
-        if((($Extension).count -lt 1) -and ((($SST_STODeviceCred.ItemsSource).count -lt 1))-or(($LoadedToolSettings).count -lt 1)){ 
+        if(((($SST_STODeviceCred.ItemsSource).count -lt 1))-or(($LoadedToolSettings).count -lt 1)-and (($Extension).count -lt 1)){ 
             $YNExtension = $false
             $SST_BTN_PowerBoard.Background = "Coral"
             $SST_BTN_PowerBoardTooltip.Text = "No Extension are installed or Credentials are loaded!"
@@ -46,13 +46,14 @@ function SST_ExtensionChecker {
         if($YNExtension){
             
             $TD_Credentials = $SST_STODeviceCred.ItemsSource |ForEach-Object {$_}
-
+            
             <#PRISMCustomerMainFunc#>
             <#Cloud is needed#>
             if($CloudDB){
                 <#Cloud is true check if there is a file#>
                 if((Get-ChildItem -Path $PSRootPath\Resources\SavedToolSettings.clixml)){
                     $PRISMString = Import-Clixml -Path $PSRootPath\Resources\SavedToolSettings.clixml 
+                    Write-Host $PRISMString
                     PRISMCustomerMainFunc -TD_SecDeviceData $TD_Credentials -LocalDB $true -CloudDB $true -ConnectionString $PRISMString
                 }
             }
