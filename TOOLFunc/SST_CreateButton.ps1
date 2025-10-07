@@ -3,6 +3,7 @@ function SST_CreateButton {
     param (
         $SST_UCOBJ,
         $SST_UCSTYLEOBJ,
+        $UCStyleName,
         $BTNStyle,
         $DeviceTyp,
         $DeviceID,
@@ -28,7 +29,7 @@ function SST_CreateButton {
             $SST_UCOBJ.Resources.MergedDictionaries.Add( $SST_UCSTYLEOBJ )
 
             $SST_DummyBTN = New-Object Windows.Controls.Button
-            $SST_DummyBTN.Style = $SST_UCOBJ.TryFindResource("HealthBoardBTNStyle")
+            $SST_DummyBTN.Style = $SST_UCOBJ.TryFindResource($UCStyleName)
             $SST_DummyBTN.Name = $DeviceTyp+"_"+$DeviceID
             $SST_BTNSTACKP = New-Object Windows.Controls.StackPanel
             $SST_BTNIMG = New-Object Windows.Controls.Image
