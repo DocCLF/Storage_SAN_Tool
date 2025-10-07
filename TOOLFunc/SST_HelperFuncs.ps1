@@ -6,6 +6,7 @@ function Get-ParentUserControl {
     $parent = $control
     while ($parent) {
         if ($parent -is [System.Windows.Controls.UserControl]) {
+            
             return $parent
         }
         $parent = [System.Windows.Media.VisualTreeHelper]::GetParent($parent)
