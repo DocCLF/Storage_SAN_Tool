@@ -183,18 +183,17 @@ $TD_btn_Broc_SAN.add_click({
 })
 $TD_BTN_PowerBoard.add_click({
     $TD_LB_ExpPathMainWindow.Content ="Export Path: $($TD_tb_ExportPath.Text)"
-    if(!($TD_UserControl6.IsLoaded)){$TD_UserContrArea.Children.Add($TD_UserControl6)}
+    if(!($TD_UserControl6.IsLoaded)){$TD_UserContrArea.Children.Add($TD_UserControl6); IBM_PowerMainFunc -PSRootPath $PSRootPath -SST_UCOBJ $TD_UserControl6 -SST_UCSTYLEOBJ $ButtonStyles}
     $TD_UserContrArea.Children.Remove($TD_UserControl1)
     $TD_UserContrArea.Children.Remove($TD_UserControl2)
     $TD_UserContrArea.Children.Remove($TD_UserControl3)
     $TD_UserContrArea.Children.Remove($TD_UserControl4)
     $TD_UserContrArea.Children.Remove($TD_UserControl5)
     if($TD_LogoImageSmall.Visibility -eq "hidden"){$TD_LogoImageSmall.Visibility = "visible"}
-    if(($TD_BTN_HMCCollector.IsEnabled) -eq $false ){$TD_BTN_HMCCollector.IsEnabled= $true}
 })
 $TD_btn_Stor_San.add_click({
     $TD_LB_ExpPathMainWindow.Content ="Export Path: $($TD_tb_ExportPath.Text)"
-    if(!($TD_UserControl4.IsLoaded)){$TD_UserContrArea.Children.Add($TD_UserControl4); SST_MainHealthCheckFunc -SST_UCOBJ $TD_UserControl4 -SST_UCSTYLEOBJ $ButtonStyles  }
+    if(!($TD_UserControl4.IsLoaded)){$TD_UserContrArea.Children.Add($TD_UserControl4); SST_MainHealthCheckFunc -SST_UCOBJ $TD_UserControl4 -SST_UCSTYLEOBJ $ButtonStyles }
     $TD_UserContrArea.Children.Remove($TD_UserControl1)
     $TD_UserContrArea.Children.Remove($TD_UserControl2)
     $TD_UserContrArea.Children.Remove($TD_UserControl3)
@@ -264,7 +263,7 @@ $TD_BTN_RefreshUC1.add_click({
         }
     }
 
-    SST_DashBoardMain -MainPath $PSRootPath
+    SST_DashBoardMain -MainPath $PSRootPath -SST_UCOBJ $TD_UserControl1
 })
 #endregion
 
@@ -1964,9 +1963,7 @@ $TD_btn_FOS_PortBufferShow.add_click({
 #endregion
 
 #region IBM Power
-$TD_BTN_HMCCollector.add_click({
-    SST_ExtensionChecker -SST_UCOBJ $TD_UserControl5 -SST_MWOBJ $TD_UserControl6
-})
+#tbt
 #endregion
 
 #region Health Check
@@ -1988,7 +1985,7 @@ $TD_BTN_HMCCollector.add_click({
 #endregion
 
 if(!([string]::IsNullOrWhiteSpace($(Get-ChildItem -Path $PSRootPath\Resources\DBFolder\*.db).Name))){
-    SST_DashBoardMain -MainPath $PSRootPath
+    SST_DashBoardMain -MainPath $PSRootPath -SST_UCOBJ $TD_UserControl1
 }
 $TD_btn_CloseAll.add_click({
     <#CleanUp before close #>
