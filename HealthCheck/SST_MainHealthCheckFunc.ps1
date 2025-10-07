@@ -20,9 +20,9 @@ function SST_MainHealthCheckFunc {
             
             foreach ($TD_Credential in $TD_Credentials) {
 
-                $SST_DummyBTN = SST_CreateButton -SST_UCOBJ $SST_UCOBJ -SST_UCSTYLEOBJ $SST_UCSTYLEOBJ -DeviceTyp $TD_Credential.DeviceTyp -DeviceID $TD_Credential.ID -DeviceIPAddress $TD_Credential.IPAddress
-                #$win = $SST_UCOBJ.FindName($SST_DummyBTN)
-
+                $SST_DummyBTN = SST_CreateButton -SST_UCOBJ $SST_UCOBJ -SST_UCSTYLEOBJ $SST_UCSTYLEOBJ -UCStyleName "HealthBoardBTNStyle" -DeviceTyp $TD_Credential.DeviceTyp -DeviceID $TD_Credential.ID -DeviceIPAddress $TD_Credential.IPAddress
+                Write-Host $SST_DummyBTN
+                Write-Host $SST_DummyBTN.Name
                 $SST_UCOBJ.RegisterName($SST_DummyBTN.Name, $SST_DummyBTN)
                 
                 $SST_STOHealthCheckWP.Children.Add($SST_DummyBTN)
@@ -50,8 +50,7 @@ function SST_MainHealthCheckFunc {
 
             foreach ($TD_Credential in $TD_Credentials) {
 
-                $SST_DummyBTN = SST_CreateButton -SST_UCOBJ $SST_UCOBJ -SST_UCSTYLEOBJ $SST_UCSTYLEOBJ -DeviceTyp $TD_Credential.DeviceTyp -DeviceID $TD_Credential.ID -DeviceIPAddress $TD_Credential.IPAddress
-                #$win = $SST_UCOBJ.FindName($SST_DummyBTN)
+                $SST_DummyBTN = SST_CreateButton -SST_UCOBJ $SST_UCOBJ -SST_UCSTYLEOBJ $SST_UCSTYLEOBJ -UCStyleName "HealthBoardBTNStyle" -DeviceTyp $TD_Credential.DeviceTyp -DeviceID $TD_Credential.ID -DeviceIPAddress $TD_Credential.IPAddress
 
                 $SST_UCOBJ.RegisterName($SST_DummyBTN.Name, $SST_DummyBTN)
 
@@ -79,8 +78,7 @@ function SST_MainHealthCheckFunc {
 
             foreach ($TD_Credential in $TD_Credentials) {
 
-                $SST_DummyBTN = SST_CreateButton -SST_UCOBJ $SST_UCOBJ -SST_UCSTYLEOBJ $SST_UCSTYLEOBJ -DeviceTyp $TD_Credential.DeviceTyp -DeviceID $TD_Credential.ID -DeviceIPAddress $TD_Credential.IPAddress
-                #$win = $SST_UCOBJ.FindName($SST_DummyBTN)
+                $SST_DummyBTN = SST_CreateButton -SST_UCOBJ $SST_UCOBJ -SST_UCSTYLEOBJ $SST_UCSTYLEOBJ -UCStyleName "HealthBoardBTNStyle" -DeviceTyp $TD_Credential.DeviceTyp -DeviceID $TD_Credential.ID -DeviceIPAddress $TD_Credential.IPAddress
 
                 $SST_UCOBJ.RegisterName($SST_DummyBTN.Name, $SST_DummyBTN)
 
