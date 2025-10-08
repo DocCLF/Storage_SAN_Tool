@@ -30,7 +30,6 @@ function SST_GetCredfGUI {
             }
             "PowerHMC" { 
                 $TD_BasicDeviceInfo = SST_DeviceConnecCheck -TD_Selected_Items "no"
-                Write-Host "adad $TD_BasicDeviceInfo"
                 if([string]::IsNullOrEmpty($TD_BasicDeviceInfo)){
                     $TD_ErrorCode = 1
                     #$TD_BTN_AddSSHKey.Background="#FFDDDDDD"
@@ -40,7 +39,7 @@ function SST_GetCredfGUI {
             }
             Default {SST_ToolMessageCollector -TD_ToolMSGCollector "Something went wrong at SST_GetCredfGUI Func or no Device Type was found, please check the promt." -TD_ToolMSGType Warning}
         }
-        $TD_AddaNewDevice="no"
+        #$TD_AddaNewDevice="no"
     }else {
         <# Update Cereds in DG but you must export them new #>
         $TD_BasicDeviceInfo = SST_DeviceConnecCheck -TD_Selected_Items "no"
@@ -77,7 +76,7 @@ function SST_GetCredfGUI {
                 $TD_ExistingCred.MTMCode          =   $TD_BasicDeviceInfo.Prod_MTM;
                 $TD_ExistingCred.ProductDescr     =   $TD_BasicDeviceInfo.ProductDes;
                 $TD_ExistingCred.CurrentFirmware  =   $TD_BasicDeviceInfo.Code_Level;
-                #$TD_ExistingCred.Exportpath       =   "$PSRootPath\Export\";
+                $TD_ExistingCred.Exportpath       =   "$PSRootPath\Export\";
 
             }
             $TD_ExistingCred
@@ -94,13 +93,15 @@ function SST_GetCredfGUI {
         }
     }
     <# can be set to 1 for tests default value is 0 #>
-    if($TD_ErrorCode -eq 0){
+    if($TD_ErrorCode -eq 1){
+        
         $TD_ExistingCreds = $TD_DG_KnownDeviceList.ItemsSource
+        
         <# ForEach is needed if you import ced, because you musst add the pw this was not exported  #>
         [array]$TD_Credentials = foreach ($TD_ExistingCred in $TD_ExistingCreds) {
             
             if($TD_ExistingCred.IPAddress -eq $TD_TB_DeviceIPAddr.Text){
-                SST_ToolMessageCollector -TD_ToolMSGCollector $("This $($TD_TB_DeviceIPAddr.Text) is already in use") -TD_ToolMSGType Warning
+                SST_ToolMessageCollector -TD_ToolMSGCollector $("This $($TD_TB_DeviceIPAddr.Text) is already in use") -TD_ToolMSGType Warning -TD_Shown yes
                 continue
             }
             
@@ -111,21 +112,21 @@ function SST_GetCredfGUI {
             if($TD_CB_DeviceType.Text -eq "Storage"){
                 [int]$TD_CredentialsCount=(($TD_Credentials |Where-Object {$_.DeviceTyp -eq "Storage"}).count + 1)
                 if($TD_Credentials |Where-Object {($_.DeviceTyp -eq "Storage") -and ($_.ID -eq $TD_CredentialsCount)}){$TD_CredentialsCount = $TD_CredentialsCount +1}
-                SST_ToolMessageCollector -TD_ToolMSGCollector "Storage ID is $TD_CredentialsCount" -TD_ToolMSGType Debug
+                SST_ToolMessageCollector -TD_ToolMSGCollector "Storage ID is $TD_CredentialsCount" -TD_ToolMSGType Debug -TD_Shown yes
             }
         }
         if($TD_AddaNewDevice -eq "yes"){
             if($TD_CB_DeviceType.Text -eq "SAN"){   
                 [int]$TD_CredentialsCount= (($TD_Credentials |Where-Object {$_.DeviceTyp -eq "SAN"}).count + 1)
                 if($TD_Credentials |Where-Object {($_.DeviceTyp -eq "SAN") -and ($_.ID -eq $TD_CredentialsCount)}){$TD_CredentialsCount = $TD_CredentialsCount +1}
-                SST_ToolMessageCollector -TD_ToolMSGCollector "SAN ID is $TD_CredentialsCount" -TD_ToolMSGType Debug
+                SST_ToolMessageCollector -TD_ToolMSGCollector "SAN ID is $TD_CredentialsCount" -TD_ToolMSGType Debug -TD_Shown yes
             }
         }
         if($TD_AddaNewDevice -eq "yes"){
             if($TD_CB_DeviceType.Text -eq "PowerHMC"){   
                 [int]$TD_CredentialsCount= (($TD_Credentials |Where-Object {$_.DeviceTyp -eq "PowerHMC"}).count + 1)
                 if($TD_Credentials |Where-Object {($_.DeviceTyp -eq "PowerHMC") -and ($_.ID -eq $TD_CredentialsCount)}){$TD_CredentialsCount = $TD_CredentialsCount +1}
-                SST_ToolMessageCollector -TD_ToolMSGCollector "SAN ID is $TD_CredentialsCount" -TD_ToolMSGType Debug
+                SST_ToolMessageCollector -TD_ToolMSGCollector "SAN ID is $TD_CredentialsCount" -TD_ToolMSGType Debug -TD_Shown yes
             }
         }
         <# needs more tests to be able to use it safely thats why plink is plink and not plink and ssh #>
