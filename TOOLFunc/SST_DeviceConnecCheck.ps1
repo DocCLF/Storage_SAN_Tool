@@ -34,6 +34,7 @@ function SST_DeviceConnecCheck {
                 if($TD_CB_SVCorVF.IsChecked -and ($TD_Selected_DeviceType -eq "Storage")){$TD_UserInputCred = "SVC"};
                 if($TD_CB_SVCorVF.IsChecked -and ($TD_Selected_DeviceType -eq "SAN")){$TD_UserInputCred = "VF"};
                 if(!($TD_CB_SVCorVF.IsChecked)){$TD_UserInputCred = "Nothing"};
+                
              }
             Default {SST_ToolMessageCollector -TD_ToolMSGCollector "Something went wrong at SST_DeviceConnecCheck Func please check the promt or close the gui and write $error in the promt." -TD_ToolMSGType Warning}
         }
@@ -44,21 +45,6 @@ function SST_DeviceConnecCheck {
 
         switch ($TD_Selected_DeviceType) {
             "Storage" { 
-                try {
-                    <# need to be reworked #>
-                    #if($PSVersionTable.PSVersion.Major -ge 7){
-                    #    ssh-keygen.exe -F $TD_Selected_DeviceIPAddr || ssh-keyscan.exe $TD_Selected_DeviceIPAddr >> ~/.ssh/known_hosts
-                    #}else {
-                        ssh-keygen.exe -F $TD_Selected_DeviceIPAddr
-                        ssh-keyscan.exe $TD_Selected_DeviceIPAddr >> ~/.ssh/known_hosts
-                    #}
-                }
-                catch {
-                    Write-Host $_.exception.message
-                    SST_ToolMessageCollector -TD_ToolMSGCollector $_.exception.message -TD_ToolMSGType Error -TD_Shown no
-                    SST_ToolMessageCollector -TD_ToolMSGCollector "Something went wrong by connecting your Storage, with the keycheck by IP: $TD_Selected_DeviceIPAddr ." -TD_ToolMSGType Error -TD_Shown yes
-                }
-                Start-Sleep -Seconds 0.5
                 $TD_BasicDeviceInfos = IBM_BaseStorageInfos -TD_Device_ConnectionTyp $TD_Selected_DeviceConnectionType -TD_Device_DeviceIP $TD_Selected_DeviceIPAddr -TD_Device_UserName $TD_Selected_DeviceUserName -TD_Device_PW $([Net.NetworkCredential]::new('', $TD_Selected_DevicePassword).Password) -TD_Device_SSHKeyPath $TD_Selected_DeviceSSHFile -TD_Storage $TD_UserInputCred
                 <# not the best check but try-catch do not work, i have to check why #>
                 if($TD_BasicDeviceInfos.count -gt 0){
@@ -102,21 +88,7 @@ function SST_DeviceConnecCheck {
                 }
             }
             "SAN" { 
-                try {
-                    <# need to be reworked #>
-                    #if($PSVersionTable.PSVersion.Major -ge 7){
-                    #    ssh-keygen.exe -F $TD_Selected_DeviceIPAddr || ssh-keyscan.exe $TD_Selected_DeviceIPAddr >> ~/.ssh/known_hosts
-                    #}else {
-                        ssh-keygen.exe -F $TD_Selected_DeviceIPAddr
-                        ssh-keyscan.exe $TD_Selected_DeviceIPAddr >> ~/.ssh/known_hosts
-                    #}
-                }
-                catch {
-                    Write-Host $_.exception.message
-                    SST_ToolMessageCollector -TD_ToolMSGCollector $_.exception.message -TD_ToolMSGType Error -TD_Shown no
-                    SST_ToolMessageCollector -TD_ToolMSGCollector "Something went wrong by connecting your SAN, with the keycheck by IP: $TD_Selected_DeviceIPAddr ." -TD_ToolMSGType Error -TD_Shown yes
-                }
-                Start-Sleep -Seconds 0.5
+
                 $TD_BasicDeviceInfos = FOS_BasicSwitchInfos -TD_Device_ConnectionTyp $TD_Selected_DeviceConnectionType -TD_Device_DeviceIP $TD_Selected_DeviceIPAddr -TD_Device_UserName $TD_Selected_DeviceUserName -TD_Device_PW $([Net.NetworkCredential]::new('', $TD_Selected_DevicePassword).Password) -TD_Device_SSHKeyPath $TD_Selected_DeviceSSHFile 
                 
                 switch ($($TD_BasicDeviceInfos.'Brocade Product Name')) {
