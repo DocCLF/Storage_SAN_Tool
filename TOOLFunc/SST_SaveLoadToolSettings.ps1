@@ -133,7 +133,7 @@ function SST_SaveLoadToolSettings {
     
     end {
         if($SST_LoadSettings -and ($null -ne $SST_SavedToolSettings)){
-            SST_ImportCredential -SST_ImportDevicesonStartUp yes -SST_ToInportDeviceInfos $TD_InportedDevices
+            SST_ImportCredential -SST_ImportDevicesonStartUp yes -SST_ToInportDeviceInfos $TD_InportedDevices | Out-Null
         }
     }
 }
