@@ -12,17 +12,19 @@ function SST_ExtensionChecker {
         
         $PSRootPath = Split-Path -Path $PSScriptRoot -Parent
         $Extension = Get-Item -Path "$PSRootPath\Extensions\*" -Exclude *.ps1
-        $SST_STODeviceCred = $SST_UCOBJ.FindName("DG_KnownDeviceList")
 
-        if(((($SST_STODeviceCred.ItemsSource).count -lt 1))-or(($LoadedToolSettings).count -lt 1)-and (($Extension).count -lt 1)){ 
-            $YNExtension = $false
-        }else {
+        if(($Extension).count -ge 1){ 
+            $SST_BTN_PowerBoard = $SST_UCOBJ.FindName("BTN_HMCCollector")
+            if($SST_BTN_PowerBoard.Visibility -ne "visible"){
+                $SST_BTN_PowerBoard.IsEnabled= $true
+                $SST_BTN_PowerBoard.Visibility="visible"
+            }
             $YNExtension = $true
+            SST_ToolMessageCollector -TD_ToolMSGCollector "IBM_PowerMainFunc: $(($Extension).count) Extension are installed" -TD_ToolMSGType Warning -TD_Shown yes
         }
 
         if($YNExtension){
-            $Extension_PRISMTOOL = @(Get-ChildItem -Path $PSRootPath\Extensions\PRISMTOOL_Customer\PRISMCustomerMainFunc.ps1 -ErrorAction SilentlyContinue)
-
+            $Extension_PRISMTOOL = @(Get-ChildItem -Path $PSRootPath\Extensions\PRISMTOOL_Customer\PRISMCustomerMainFunc.ps1 -ErrorAction Continue)
             foreach($import in @($Extension_PRISMTOOL)) {
                 try {
                     . $import.fullname
@@ -31,36 +33,19 @@ function SST_ExtensionChecker {
                     Write-Error -Message "Failed to import function $($import.fullname): $_"
                 }
             }
-
             <# need your tool Cloud DB the set var to $true, Attation is there no saved *clixml the app will crash #>
-            $CloudDB = $true
         }
     }
     
     process {
-        if($YNExtension){
-            
-            $TD_Credentials = $SST_STODeviceCred.ItemsSource |ForEach-Object {$_}
-            
             <#PRISMCustomerMainFunc#>
             <#Cloud is needed#>
             if($CloudDB){
                 <#Cloud is true check if there is a file#>
-                if((Get-ChildItem -Path $PSRootPath\Resources\SavedToolSettings.clixml)){
-                    $PRISMString = Import-Clixml -Path $PSRootPath\Resources\SavedToolSettings.clixml 
-                    Write-Host $PRISMString
-                    PRISMCustomerMainFunc -TD_SecDeviceData $TD_Credentials -LocalDB $true -CloudDB $true -ConnectionString $PRISMString
-                }
+                $PRISMString = Import-Clixml -Path $PSRootPath\Resources\SavedToolSettings.clixml 
+                PRISMCustomerMainFunc -TD_SecDeviceData $LoadedToolSettings -LocalDB $true -CloudDB $true -ConnectionString $PRISMString
             }
             <#PRISMCustomerMainFunc#>
-
-
-
-
-
-
-            
-        }
     }
     end {
         return $YNExtension
