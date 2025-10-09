@@ -35,16 +35,16 @@
         <GroupBox Grid.Row="0" Header="Options" MinWidth="400" Margin="10,10,10,0" HorizontalAlignment="Left" VerticalAlignment="Top">
             <Grid>
                 <WrapPanel>
-                    <Button x:Name="BTN_HMCCollector" Content="HMCScaner" Style="{DynamicResource MainBtnStyle}" ToolTipService.InitialShowDelay="10">
+                    <Button x:Name="BTN_HMCCollector" Content="No Creds" Style="{DynamicResource MainBtnStyle}" ToolTipService.InitialShowDelay="10" Visibility="Collapsed">
                         <Button.ToolTip>
                             <ToolTip>
                                 <TextBlock x:Name="BTN_HMCCollectorTooltip" Text="Only works in conjunction with the PRISMTool"/>
                             </ToolTip>
                         </Button.ToolTip>
                     </Button>
-                    <CheckBox x:Name="CB_PowerBoardHMC" Content="View HMC" IsChecked="True" Margin="10,5,0,2" />
-                    <CheckBox x:Name="CB_PowerBoardSys" Content="View PowerServer" IsChecked="True" Margin="10,5,0,2" />
-                    <CheckBox x:Name="CB_PowerBoardLPAR" Content="View LPAR" IsChecked="True" Margin="10,5,0,2" />
+                    <CheckBox x:Name="CB_PowerBoardHMC" Content="View HMC" IsChecked="True" Margin="10,7,0,2" />
+                    <CheckBox x:Name="CB_PowerBoardSys" Content="View PowerServer" IsChecked="True" Margin="10,7,0,2" />
+                    <CheckBox x:Name="CB_PowerBoardLPAR" Content="View LPAR" IsChecked="True" Margin="10,7,0,2" />
                 </WrapPanel>
             </Grid>
         </GroupBox>
