@@ -183,7 +183,20 @@ $TD_btn_Broc_SAN.add_click({
 })
 $TD_BTN_PowerBoard.add_click({
     $TD_LB_ExpPathMainWindow.Content ="Export Path: $($TD_tb_ExportPath.Text)"
-    if(!($TD_UserControl6.IsLoaded)){$TD_UserContrArea.Children.Add($TD_UserControl6); IBM_PowerMainFunc -PSRootPath $PSRootPath -SST_UCOBJ $TD_UserControl6 -SST_UCSTYLEOBJ $ButtonStyles}
+    if(!($TD_UserControl6.IsLoaded)){
+        $TD_UserContrArea.Children.Add($TD_UserControl6) 
+        IBM_PowerMainFunc -PSRootPath $PSRootPath -SST_MWOBJ $TD_UserControl5 -SST_UCOBJ $TD_UserControl6 -SST_UCSTYLEOBJ $ButtonStyles
+        $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_.DeviceTyp -eq "PowerHMC"}
+        if($TD_Credentials.count -ge 1){
+            $TD_BTN_HMCCollector.Background = "LightGreen"
+            $SST_BTN_PowerBoardTooltip = $TD_UserControl6.FindName("BTN_HMCCollectorTooltip")
+            $SST_BTN_PowerBoardTooltip.Text = "Extension are installed and Credentials are loaded!"
+        }else{
+            $TD_BTN_HMCCollector.Background = "Coral"
+            $SST_BTN_PowerBoardTooltip = $TD_UserControl6.FindName("BTN_HMCCollectorTooltip")
+            $SST_BTN_PowerBoardTooltip.Text = "Extension are installed but no Credentials are loaded!"
+        }
+    }
     $TD_UserContrArea.Children.Remove($TD_UserControl1)
     $TD_UserContrArea.Children.Remove($TD_UserControl2)
     $TD_UserContrArea.Children.Remove($TD_UserControl3)
@@ -508,6 +521,9 @@ $TD_btn_ImportCred.add_click({
         SST_ToolMessageCollector -TD_ToolMSGCollector $("Import failed!") -TD_ToolMSGType Warning -TD_Shown yes
     }else {
         SST_ToolMessageCollector -TD_ToolMSGCollector $("Credentials successfully Import") -TD_ToolMSGType Message -TD_Shown yes
+        $SST_BTN_PowerBoard = $TD_UserControl6.FindName("BTN_HMCCollector")
+        $SST_BTN_PowerBoard.Content="HMC Scanner"
+        $SST_BTN_PowerBoard.IsEnabled=$true
         if($TD_CB_OnlineCheckbyImport.IsChecked){
             $TD_ImportedCredentials | ForEach-Object {
                 SST_DeviceConnecCheck -TD_Selected_Items "yes" -TD_Selected_DeviceType $_.DeviceTyp -TD_Selected_DeviceConnectionType $_.ConnectionTyp -TD_Selected_DeviceIPAddr $_.IPAddress -TD_Selected_DeviceUserName $_.UserName -TD_Selected_DevicePassword $_.Password -TD_Selected_SVCorVF $_.SVCorVF
@@ -1963,7 +1979,17 @@ $TD_btn_FOS_PortBufferShow.add_click({
 #endregion
 
 #region IBM Power
-#tbt
+$TD_BTN_HMCCollector.add_click({
+    if(($TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_.DeviceTyp -eq "PowerHMC"}).count -ge1){
+        $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_}
+        $PRISMString = Import-Clixml -Path $PSRootPath\Resources\SavedToolSettings.clixml 
+        IBM_PowerMainFunc -SST_UCOBJ $TD_UserControl6 -PSRootPath $PSRootPath -SecureData $TD_Credentials -CloudString $PRISMString
+    }else{
+        $TD_BTN_HMCCollector.Content = "No HMC Creds Loaded"
+    }
+    
+    #PRISMCustomerMainFunc -TD_SecDeviceData $TD_Credentials -LocalDB $true -CloudDB $true -ConnectionString $PRISMString
+})
 #endregion
 
 #region Health Check
@@ -2007,7 +2033,7 @@ Get-Variable TD_* |Out-Null
 <# Clean all LogFiles if there older than 90 Days #>
 SST_FileCleanUp
 <# Load Toolsettings if they saved in Resources folder #>
-SST_SaveLoadToolSettings -SST_LoadSettings $true -SST_MWOBJ $MainWindow -SST_UCOBJ $TD_UserControl5
+SST_SaveLoadToolSettings -SST_LoadSettings $true -SST_MWOBJ $MainWindow -SST_UCOBJ $TD_UserControl6
 
 $MainWindow.showDialog()
 $MainWindow.activate()
