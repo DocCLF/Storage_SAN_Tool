@@ -93,7 +93,7 @@ function SST_GetCredfGUI {
         }
     }
     <# can be set to 1 for tests default value is 0 #>
-    if($TD_ErrorCode -eq 1){
+    if($TD_ErrorCode -eq 0){
         
         $TD_ExistingCreds = $TD_DG_KnownDeviceList.ItemsSource
         
