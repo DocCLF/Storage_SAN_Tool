@@ -2,13 +2,12 @@
 ## [Unreleased]
 - History Data 
 - LineCharts
-- PowerServer Support
 - Host "last seen online"
 - Additional support for errors in the event log
 - PBHA and DR Support
 
 All notable changes to this project will be documented in this file.
-# [v1.3.x] - 2025-09-??
+# [v1.3.x] - 2025-10-??
 ### Added 
 - Dashboard for a first fast Overview
 - DB Function local and azure
@@ -16,9 +15,10 @@ All notable changes to this project will be documented in this file.
 - Support for Spectrum Virt Version 9.1.x
 - more Information on some Functions for later Updates
 - rudimentary FOS FW recommendation, requires adjustments later on
-- simple ssh hostkey check
+- simple ssh hostkey check (disabled at the moment come back later for sure)
 - Button at Settingspanel changes from ADD to Update and back when the checkbox for updating the Credentials is activated or not.
 - in Dashboard now Online and Offline Hosts shown
+- PowerServer, HMC etc Support via HMC Scanner
 
 ### Fixed
 - some major and minor bugs in the main function GUI Control
