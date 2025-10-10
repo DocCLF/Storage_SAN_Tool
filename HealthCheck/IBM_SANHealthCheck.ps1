@@ -10,7 +10,6 @@ function IBM_SANHealthCheck {
     }
     
     process {
-        Write-Host $TD_Device_DeviceIP -ForegroundColor Red
         
         $TD_DeviceManufacturer = "Brocade"
         switch ($TD_DeviceManufacturer) {
@@ -125,7 +124,7 @@ function IBM_SANHealthCheck {
                         SST_ToolMessageCollector -TD_ToolMSGCollector "SAN Health Check Func End" -TD_ToolMSGType Debug -TD_Shown no
                     }
                 }
-            "Brocade" 
+            "Cisco" 
                 { 
 
                 }
