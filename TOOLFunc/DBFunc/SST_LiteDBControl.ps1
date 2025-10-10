@@ -30,7 +30,7 @@ function SST_LiteDBControl {
                     $SST_SQliteCreateTBCMD.ExecuteNonQuery()
                 }
                 "StorageHostInfo" { 
-                    $SST_SQLiteTabelQuery ="CREATE TABLE IF NOT EXISTS IBMSTOHostTable (ID INTEGER PRIMARY KEY AUTOINCREMENT, HID INTEGER NOT NULL, Name TEXT NOT NULL, Status TEXT NOT NULL, HostClusterName TEXT, SideName TEXT, STOName TEXT, WWNN TEXT, SerialNumber TEXT, TimeStamp TEXT );" 
+                    $SST_SQLiteTabelQuery ="CREATE TABLE IF NOT EXISTS IBMSTOHostTable (ID INTEGER PRIMARY KEY AUTOINCREMENT, HID INTEGER, Name TEXT NOT NULL, Status TEXT NOT NULL, HostClusterName TEXT, SideName TEXT, STOName TEXT, WWNN TEXT, SerialNumber TEXT, TimeStamp TEXT );" 
                     $SST_SQliteCreateTBCMD.CommandText = $SST_SQLiteTabelQuery
                     $SST_SQliteCreateTBCMD.ExecuteNonQuery()
                 }
