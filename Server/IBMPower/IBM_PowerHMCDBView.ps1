@@ -26,7 +26,7 @@ function IBM_PowerHMCDBView {
                 HMCBaseVersion  = $SST_SQLiteDBReader["HMCSWBaseVersion"]
                 HMCSWFixes = $SST_SQLiteDBReader["HMCSWFixes"]
                 TimeStamp    = $SST_SQLiteDBReader["TimeStamp"]
-                STOIcon = "$PSRootPath\Resources\Icons\ibmstoicon.png"
+                HMCIcon = "$PSRootPath\Resources\Icons\HMCicon.png"
                 ClockIcon96 = "$PSRootPath\Resources\Icons\icons8-clock-96.png"
             }
             $IBMPowerHMCView.Add($IBMPowerHMCsObj)
