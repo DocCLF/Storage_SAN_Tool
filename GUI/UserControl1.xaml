@@ -128,16 +128,16 @@
                                             <RowDefinition />
                                         </Grid.RowDefinitions>
                                         <Grid.ColumnDefinitions>
-                                            <ColumnDefinition MaxWidth="70" />
+                                            <ColumnDefinition MaxWidth="90" />
                                             <ColumnDefinition Width="auto"/>
                                             <ColumnDefinition />
                                         </Grid.ColumnDefinitions>
-                                        <Ellipse Grid.RowSpan="6" Width="65" Height="65" Fill="WhiteSmoke" Stretch="Uniform" >
+                                        <Ellipse Grid.RowSpan="6" Width="65" Height="65" Fill="WhiteSmoke" Stretch="Uniform" Margin="5,0,10,0">
                                             <Ellipse.Effect>
                                                 <DropShadowEffect Direction="320" ShadowDepth="2" Color="LightBlue" BlurRadius="5" />
                                             </Ellipse.Effect>
                                         </Ellipse>
-                                        <Ellipse Grid.RowSpan="6" Width="60" Height="60" >
+                                        <Ellipse Grid.RowSpan="6" Width="60" Height="60" Margin="5,0,10,0">
                                            <Ellipse.Fill>
                                                <ImageBrush ImageSource = "{Binding STOIcon , Mode=TwoWay}" Stretch="Uniform" />
                                            </Ellipse.Fill>
@@ -298,18 +298,18 @@
                                             <RowDefinition />
                                         </Grid.RowDefinitions>
                                         <Grid.ColumnDefinitions>
-                                            <ColumnDefinition MaxWidth="70" />
+                                            <ColumnDefinition MaxWidth="90" />
                                             <ColumnDefinition Width="auto" />
                                             <ColumnDefinition />
                                         </Grid.ColumnDefinitions>
-                                        <Ellipse Grid.RowSpan="6" Width="65" Height="65" Fill="WhiteSmoke" Stretch="Uniform" >
+                                        <Ellipse Grid.RowSpan="6" Width="65" Height="65" Fill="WhiteSmoke" Stretch="Uniform" Margin="5,0,10,0" >
                                             <Ellipse.Effect>
                                                 <DropShadowEffect Direction="320" ShadowDepth="2" Color="LightBlue" BlurRadius="5" />
                                             </Ellipse.Effect>
                                         </Ellipse>
-                                        <Ellipse Grid.RowSpan="6" Width="60" Height="60" >
+                                        <Ellipse Grid.RowSpan="6" Width="60" Height="60" Margin="5,0,10,0">
                                            <Ellipse.Fill>
-                                               <ImageBrush ImageSource = "{Binding STOIcon , Mode=TwoWay}" Stretch="Uniform" />
+                                               <ImageBrush ImageSource = "{Binding PowerIcon , Mode=TwoWay}" Stretch="Uniform" />
                                            </Ellipse.Fill>
                                         </Ellipse>
                                         <TextBlock
@@ -461,16 +461,16 @@
                                             <RowDefinition />
                                         </Grid.RowDefinitions>
                                         <Grid.ColumnDefinitions>
-                                            <ColumnDefinition MaxWidth="70" />
+                                            <ColumnDefinition MaxWidth="90" />
                                             <ColumnDefinition Width="auto"/>
                                             <ColumnDefinition />
                                         </Grid.ColumnDefinitions>
-                                        <Ellipse Grid.RowSpan="6" Width="65" Height="65" Fill="WhiteSmoke" Stretch="Uniform" >
+                                        <Ellipse Grid.RowSpan="6" Width="65" Height="65" Fill="WhiteSmoke" Stretch="Uniform" Margin="5,0,10,0">
                                             <Ellipse.Effect>
                                                 <DropShadowEffect Direction="320" ShadowDepth="2" Color="LightBlue" BlurRadius="5" />
                                             </Ellipse.Effect>
                                         </Ellipse>
-                                        <Ellipse Grid.RowSpan="6" Width="60" Height="60" >
+                                        <Ellipse Grid.RowSpan="6" Width="60" Height="60" Margin="5,0,10,0">
                                            <Ellipse.Fill>
                                                <ImageBrush ImageSource = "{Binding BrocadeIcon , Mode=TwoWay}" Stretch="Uniform" />
                                            </Ellipse.Fill>
@@ -616,7 +616,7 @@
             <CheckBox x:Name="CB_DashBoardOnlineHosts" Content="View Online Hosts" Margin="2" />
             <CheckBox x:Name="CB_DashBoardOfflineHosts" Content="View Offline Hosts" Margin="10,2,0,2" />
         </StackPanel>
-        <GroupBox Grid.Row="6" Header="Online Hosts" MinWidth="400" MaxHeight="280" HorizontalAlignment="Left" Margin="10,5,0,0"  VerticalAlignment="Top" Visibility="{Binding ElementName=CB_DashBoardOnlineHosts, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
+        <GroupBox Grid.Row="6" Header="Online Hosts, Storage View" MinWidth="400" MaxHeight="280" HorizontalAlignment="Left" Margin="10,5,0,0"  VerticalAlignment="Top" Visibility="{Binding ElementName=CB_DashBoardOnlineHosts, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
                 <ScrollViewer Margin="5" VerticalScrollBarVisibility="Auto">
                     <ItemsControl x:Name="IC_DashBoardOnlineHosts">
                         <ItemsControl.ItemTemplate>
@@ -636,16 +636,16 @@
                                                 <RowDefinition />
                                             </Grid.RowDefinitions>
                                             <Grid.ColumnDefinitions>
-                                                <ColumnDefinition MaxWidth="70" />
+                                                <ColumnDefinition MaxWidth="90" />
                                                 <ColumnDefinition />
                                                 <ColumnDefinition />
                                             </Grid.ColumnDefinitions>
-                                            <Ellipse Grid.RowSpan="4" Width="45" Height="45" Fill="WhiteSmoke" Stretch="Uniform" >
+                                            <Ellipse Grid.RowSpan="4" Width="45" Height="45" Fill="WhiteSmoke" Stretch="Uniform" Margin="5,0,10,0">
                                                 <Ellipse.Effect>
                                                     <DropShadowEffect Direction="320" ShadowDepth="2" Color="LightBlue" BlurRadius="5" />
                                                 </Ellipse.Effect>
                                             </Ellipse>
-                                            <Ellipse Grid.RowSpan="4" Width="40" Height="40" >
+                                            <Ellipse Grid.RowSpan="4" Width="40" Height="40" Margin="5,0,10,0">
                                                <Ellipse.Fill>
                                                    <ImageBrush ImageSource = "{Binding HostIcon , Mode=TwoWay}" Stretch="Uniform" />
                                                </Ellipse.Fill>
@@ -757,7 +757,7 @@
                     </ItemsControl>
                 </ScrollViewer>
         </GroupBox>
-        <GroupBox Grid.Row="7" Header="Offline Hosts" MinWidth="400" MaxHeight="280" HorizontalAlignment="Left" Margin="10,5,0,0"  VerticalAlignment="Top" Visibility="{Binding ElementName=CB_DashBoardOfflineHosts, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
+        <GroupBox Grid.Row="7" Header="Offline Hosts, Storage View" MinWidth="400" MaxHeight="280" HorizontalAlignment="Left" Margin="10,5,0,0"  VerticalAlignment="Top" Visibility="{Binding ElementName=CB_DashBoardOfflineHosts, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
                 <ScrollViewer Margin="5" VerticalScrollBarVisibility="Auto">
                     <ItemsControl x:Name="IC_DashBoardOfflineHosts">
                         <ItemsControl.ItemTemplate>
@@ -777,16 +777,16 @@
                                                 <RowDefinition />
                                             </Grid.RowDefinitions>
                                             <Grid.ColumnDefinitions>
-                                                <ColumnDefinition MaxWidth="70" />
+                                                <ColumnDefinition MaxWidth="90" />
                                                 <ColumnDefinition />
                                                 <ColumnDefinition />
                                             </Grid.ColumnDefinitions>
-                                            <Ellipse Grid.RowSpan="4" Width="45" Height="45" Fill="WhiteSmoke" Stretch="Uniform" >
+                                            <Ellipse Grid.RowSpan="4" Width="45" Height="45" Fill="WhiteSmoke" Stretch="Uniform" Margin="5,0,10,0">
                                                 <Ellipse.Effect>
                                                     <DropShadowEffect Direction="320" ShadowDepth="2" Color="LightBlue" BlurRadius="5" />
                                                 </Ellipse.Effect>
                                             </Ellipse>
-                                            <Ellipse Grid.RowSpan="4" Width="40" Height="40" >
+                                            <Ellipse Grid.RowSpan="4" Width="40" Height="40" Margin="5,0,10,0">
                                                <Ellipse.Fill>
                                                    <ImageBrush ImageSource = "{Binding HostIcon , Mode=TwoWay}" Stretch="Uniform" />
                                                </Ellipse.Fill>
