@@ -81,7 +81,7 @@
                                         </Ellipse>
                                         <Ellipse Grid.RowSpan="6" Width="60" Height="60" >
                                            <Ellipse.Fill>
-                                               <ImageBrush ImageSource = "{Binding STOIcon , Mode=TwoWay}" Stretch="Uniform" />
+                                               <ImageBrush ImageSource = "{Binding HMCIcon , Mode=TwoWay}" Stretch="Uniform" />
                                            </Ellipse.Fill>
                                         </Ellipse>
                                                     <TextBlock
@@ -198,7 +198,7 @@
                                         </Ellipse>
                                         <Ellipse Grid.RowSpan="6" Width="60" Height="60" >
                                            <Ellipse.Fill>
-                                               <ImageBrush ImageSource = "{Binding STOIcon , Mode=TwoWay}" Stretch="Uniform" />
+                                               <ImageBrush ImageSource = "{Binding PowerIcon , Mode=TwoWay}" Stretch="Uniform" />
                                            </Ellipse.Fill>
                                         </Ellipse>
                                         <TextBlock
