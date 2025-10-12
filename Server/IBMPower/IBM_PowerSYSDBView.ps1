@@ -28,7 +28,7 @@ function IBM_PowerSYSDBView {
                 PWRSYSIPLActivatedLevel  = $SST_SQLiteDBReader["PowerSysIPLActivatedLevel"]
                 PWRSYSCoDEvent = $SST_SQLiteDBReader["PowerSysCoDEvent"]
                 TimeStamp    = $SST_SQLiteDBReader["TimeStamp"]
-                STOIcon = "$PSRootPath\Resources\Icons\ibmstoicon.png"
+                PowerIcon = "$PSRootPath\Resources\Icons\powericon01.png"
                 ClockIcon96 = "$PSRootPath\Resources\Icons\icons8-clock-96.png"
             }
             $IBMPowerSYSView.Add($IBMPowerSYSsObj)
