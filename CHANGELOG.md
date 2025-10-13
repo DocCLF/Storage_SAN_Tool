@@ -19,6 +19,7 @@ All notable changes to this project will be documented in this file.
 - Button at Settingspanel changes from ADD to Update and back when the checkbox for updating the Credentials is activated or not.
 - in Dashboard now Online and Offline Hosts shown
 - PowerServer, HMC etc Support via HMC Scanner
+- integration for PROFI Cockpit
 
 ### Fixed
 - some major and minor bugs in the main function GUI Control
