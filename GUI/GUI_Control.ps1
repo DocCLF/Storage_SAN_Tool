@@ -15,7 +15,11 @@ Add-Type -AssemblyName PresentationFramework, PresentationCore, System.Windows.F
 <# Create the xaml Files / Base of GUI Mainwindow #>
 function Storage_SAN_Tool {
 [CmdletBinding()]
-
+    param (
+        [Parameter(ValueFromPipeline)]
+        [ValidateSet("DEFAULT","SAN","CONFIG","HEALTH","STORAGE","POWER")]
+        $CockpitView
+    )
 #$ErrorActionPreference="SilentlyContinue"
 
 $inputXAML=Get-Content -Raw -Path "$PSScriptRoot\MainWindow.xaml"
@@ -238,6 +242,7 @@ $TD_BTN_RefreshUC1.add_click({
 
     <#wenn refresh sollte der Counter auf 0 gestellt werden #>
     $TD_TB_ALLHostCount,$TD_TB_OfflHostCount,$TD_TB_OnlinelHostCount | ForEach-Object {$_.Text="0"}
+    $TD_TB_NKNResOne,$TD_TB_NKNResTwo,$TD_TB_NKNResThree | ForEach-Object {$_.Text=$null}
 
     $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_.DeviceTyp -eq "Storage"}
     $TD_Credentials | ForEach-Object {
@@ -2035,7 +2040,18 @@ SST_FileCleanUp
 <# Load Toolsettings if they saved in Resources folder #>
 SST_SaveLoadToolSettings -SST_LoadSettings $true -SST_MWOBJ $MainWindow -SST_UCOBJ $TD_UserControl6
 
+switch ($CockpitView) {
+    "DEFAULT" { $TD_UserContrArea.Children.Add($TD_UserControl1) }
+    "STORAGE" { $TD_UserContrArea.Children.Add($TD_UserControl2) }
+    "SAN" { $TD_UserContrArea.Children.Add($TD_UserControl3) }
+    "POWER" { $TD_UserContrArea.Children.Add($TD_UserControl6) }
+    "HEALTH" { $TD_UserContrArea.Children.Add($TD_UserControl4) }
+    "CONFIG" { $TD_UserContrArea.Children.Add($TD_UserControl5) }
+    Default {$null}
+}
+
 $MainWindow.showDialog()
+
 $MainWindow.activate()
 
 }
