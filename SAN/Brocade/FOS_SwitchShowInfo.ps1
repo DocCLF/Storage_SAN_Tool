@@ -118,7 +118,8 @@ function FOS_SwitchShowInfo {
                                 $FOS_SWsh.State = $FOS_SWshState
                                 $FOS_SWsh.PortConnect = $FOS_NPIV_Info
                                 $FOS_NPIV_Info_temp = $FOS_NPIV_Info
-                                }
+                                $FOS_SwBasicPortDetails += $FOS_SWsh
+                            }
                         }
                     }else {
                         $FOS_PortConnect_Infos = plink $TD_Device_UserName@$TD_Device_DeviceIP -pw $TD_Device_PW -batch "portshow $($FOS_SWsh.Port)"
@@ -132,10 +133,12 @@ function FOS_SwitchShowInfo {
                                 $FOS_SWsh.State = $FOS_SWshState
                                 $FOS_SWsh.PortConnect = $FOS_NPIV_Info
                                 $FOS_NPIV_Info_temp = $FOS_NPIV_Info
+                                $FOS_SwBasicPortDetails += $FOS_SWsh
                             }
                         }
                     }
                 }else{
+                    
                    $FOS_SwBasicPortDetails += $FOS_SWsh
                 }
                 
