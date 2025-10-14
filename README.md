@@ -29,6 +29,9 @@ Example:
 <img width="680" height="106" alt="image" src="https://github.com/user-attachments/assets/2fbb75f3-088f-4564-aedd-403fd207674b" />
 
 Depending on your system settings, different messages may be displayed, so it may be necessary to take the following measures.
+
+Starting with version 1.3.x, it is necessary to unlock the DB files!
+
 Shown here in a PowerShell 5.1 session, but this can be adopted for PowerShell 7 with customized paths.
 Please note that this is an administrative session!
 
