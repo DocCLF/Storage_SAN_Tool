@@ -117,7 +117,7 @@ function FOS_BasicSwitchInfos {
 
         foreach ($lineUp in $FOS_MainInformation) {
             if($lineUp -match '^Index'){break}
-            $FOS_SwGeneralInfos.Add('Fabric OS',(($lineUp| Select-String -Pattern 'FOS\s+([v?][\d]\.[\d+]\.[\d].*)$').Matches.Groups[1].Value))
+            $FOS_SwGeneralInfos.Add('Fabric OS',(($lineUp| Select-String -Pattern 'FOS\s+([v?][\d+]\.[\d+]\.[\d].*)$').Matches.Groups[1].Value))
             $FOS_SwGeneralInfos.Add('Fabric OSLV',$FOS_SwitchOSVersion)
             $FOS_SwGeneralInfos.Add('Ethernet IP Address',(($lineUp| Select-String -Pattern 'Ethernet IP Address:\s+([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3})').Matches.Groups[1].Value))
             $FOS_SwGeneralInfos.Add('Ethernet Subnet mask',(($lineUp| Select-String -Pattern 'Ethernet Subnet mask:\s+([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3})').Matches.Groups[1].Value))
