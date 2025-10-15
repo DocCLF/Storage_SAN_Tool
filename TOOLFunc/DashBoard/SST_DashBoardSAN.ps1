@@ -31,10 +31,52 @@ function SST_DashBoardSAN {
             }
             $DashBoardSANDeviceView.Add($DashBoardSANsObj)
         }
+        
         $SST_SQLiteDBReader.Close()
         $TD_IC_DashBoardSANDevice.ItemsSource = $DashBoardSANDeviceView
 
         $TD_TB_SANDEVCount.Text = $DeviceCounter
+
+        foreach ($SAN in $DashBoardSANDeviceView){
+            if($SAN.SerialNumber -ne $SerialNumberOld){
+                
+                if($TD_TB_SANFOSOne.Text -eq ""){
+                    $TD_TB_SANFOSOne.Text = "$($SAN.CodeLevel) / $($SAN.CodeLevelLV) / v9.2.x"
+                    $TD_TB_SANFOSOne.Visibility = "visible"
+                    if($($SAN.CodeLevelLV) -like "*$($SAN.CodeLevel)*"){
+                        $TD_TB_SANFOSOne.Foreground = "Green"
+                    }else {
+                        $TD_TB_SANFOSOne.Foreground = "DarkOrange"
+                    }
+                }elseif ($TD_TB_SANFOSTwo.Text -eq "") {
+                    $TD_TB_SANFOSTwo.Text = "$($SAN.CodeLevel) / $($SAN.CodeLevelLV) / v9.2.x"
+                    $TD_TB_SANFOSTwo.Visibility = "visible"
+                    if($($SAN.CodeLevelLV) -like "*$($SAN.CodeLevel)*"){
+                        $TD_TB_SANFOSTwo.Foreground = "Green"
+                    }else {
+                        $TD_TB_SANFOSTwo.Foreground = "DarkOrange"
+                    }
+                }elseif ($TD_TB_SANFOSThree.Text -eq "") {
+                    $TD_TB_SANFOSThree.Text = "$($SAN.CodeLevel) / $($SAN.CodeLevelLV) / v9.2.x"
+                    $TD_TB_SANFOSThree.Visibility = "visible"
+                    if($($SAN.CodeLevelLV) -like "*$($SAN.CodeLevel)*"){
+                        $TD_TB_SANFOSThree.Foreground = "Green"
+                    }else {
+                        $TD_TB_SANFOSThree.Foreground = "DarkOrange"
+                    }
+                }else{
+                    $TD_TB_SANFOSFour.Text = "$($SAN.CodeLevel) / $($SAN.CodeLevelLV) / v9.2.x"
+                    $TD_TB_SANFOSFour.Visibility = "visible"
+                    if($($SAN.CodeLevelLV) -like "*$($SAN.CodeLevel)*"){
+                        $TD_TB_SANFOSFour.Foreground = "Green"
+                    }else {
+                        $TD_TB_SANFOSFour.Foreground = "DarkOrange"
+                    }
+                }
+                $SerialNumberOld = $SAN.SerialNumber
+            }
+        }
+
     }
     
     end {
