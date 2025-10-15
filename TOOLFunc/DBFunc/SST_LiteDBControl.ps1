@@ -228,14 +228,18 @@ function SST_LiteDBControl {
             "SANPortInfo" {
                 foreach ($SST_CollectedInformation in $SST_CollectedInformations){
                     $SST_SQliteInsertCMD.CommandText ="INSERT INTO IBMSANPortInfoTable (Port, State, Speed, PortConnect, SwitchWWN, TimeStamp) VALUES (@Port, @State, @Speed, @PortConnect, @SwitchWWN, @TimeStamp);"
-                    $SST_SQliteInsertCMD.Parameters.AddWithValue("@Port", $SST_CollectedInformation.'Swicht Name') | Out-Null
-                    $SST_SQliteInsertCMD.Parameters.AddWithValue("@State", $SST_CollectedInformation.'Switch State') | Out-Null
-                    $SST_SQliteInsertCMD.Parameters.AddWithValue("@Speed", $SST_CollectedInformation.'Fabric OS') | Out-Null
-                    $SST_SQliteInsertCMD.Parameters.AddWithValue("@PortConnect", $SST_CollectedInformation.'Fabric OSLV') | Out-Null
-                    $SST_SQliteInsertCMD.Parameters.AddWithValue("@SwitchWWN", $SST_CollectedInformation.'Brocade Product Name') | Out-Null
+                    $SST_SQliteInsertCMD.Parameters.AddWithValue("@Port", $SST_CollectedInformation.Port) | Out-Null
+                    $SST_SQliteInsertCMD.Parameters.AddWithValue("@State", $SST_CollectedInformation.State) | Out-Null
+                    $SST_SQliteInsertCMD.Parameters.AddWithValue("@Speed", $SST_CollectedInformation.Speed) | Out-Null
+                    $SST_SQliteInsertCMD.Parameters.AddWithValue("@PortConnect", $SST_CollectedInformation.PortConnect) | Out-Null
+                    $SST_SQliteInsertCMD.Parameters.AddWithValue("@SwitchWWN", $SST_CollectedInformation.SwitchWWN) | Out-Null
                     $SST_SQliteInsertCMD.Parameters.AddWithValue("@TimeStamp", $TimeStamp) | Out-Null
                 
                     # In DB speichern 
+                    $SST_SQliteInsertCMD.ExecuteNonQuery()
+
+                    # Then automatically clean up for this exact switch
+                    $SST_SQliteInsertCMD.CommandText ="DELETE FROM IBMSANPortInfoTable WHERE ID NOT IN (SELECT ID FROM (SELECT ID FROM IBMSANPortInfoTable AS t WHERE (SELECT COUNT(*) FROM IBMSANPortInfoTable AS x WHERE x.SwitchWWN = t.SwitchWWN AND x.Port = t.Port AND datetime(x.TimeStamp) >= datetime(t.TimeStamp) ) <= 2 ));" 
                     $SST_SQliteInsertCMD.ExecuteNonQuery()
                 }
             }
