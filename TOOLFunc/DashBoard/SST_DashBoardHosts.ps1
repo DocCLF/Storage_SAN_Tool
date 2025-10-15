@@ -18,7 +18,7 @@ function SST_DashBoardHosts {
     
     process {
 
-        #ID, HID, Name, Status, HostClusterName, SideName, TimeStamp FROM IBMSTOHostTable
+        #ID, HID, Name, Status, HostClusterName, SideName, WWNN, TimeStamp FROM IBMSTOHostTable
         if($SST_IBMHostDeviceCounter -lt 1){
             [int]$SST_OfflineHost = 0
             while ($SST_SQLiteDBReader.Read()) {
@@ -29,6 +29,7 @@ function SST_DashBoardHosts {
                     HostClusterName = $SST_SQLiteDBReader["HostClusterName"]
                     SideName = $SST_SQLiteDBReader["SideName"]
                     STOName = $SST_SQLiteDBReader["STOName"]
+                    WWNN = $SST_SQLiteDBReader["WWNN"]
                     HostIcon = "$PSRootPath\Resources\Icons\icons8-server-96.png"
                     TimeStamp    = $SST_SQLiteDBReader["TimeStamp"]
                     ClockIcon96 = "$PSRootPath\Resources\Icons\icons8-clock-96.png"
@@ -59,6 +60,7 @@ function SST_DashBoardHosts {
             $SST_OnlineHosts = $SST_IBMHostDeviceCounter - $SST_OfflineHost
             $TD_TB_OnlinelHostCount.Text = "$SST_OnlineHosts"
         }
+        
     }
     
     end {
