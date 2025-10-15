@@ -36,7 +36,7 @@ function SST_DashBoardMain {
         try {
             $DashBoardHostsView = [System.Collections.Generic.List[object]]::new()
             $SST_SQLiteSTODashBoardQuery = $null
-            $SST_SQLiteSTODashBoardQuery = " SELECT ID, HID, Name, Status, HostClusterName, STOName, SideName, TimeStamp FROM IBMSTOHostTable d WHERE TimeStamp = ( SELECT MAX(TimeStamp) FROM IBMSTOHostTable WHERE HID = d.HID ) AND Status = 'offline' ORDER BY HID; "
+            $SST_SQLiteSTODashBoardQuery = " SELECT ID, HID, Name, Status, HostClusterName, STOName, SideName, WWNN, TimeStamp FROM IBMSTOHostTable d WHERE TimeStamp = ( SELECT MAX(TimeStamp) FROM IBMSTOHostTable WHERE HID = d.HID ) AND Status = 'offline' ORDER BY HID; "
             SST_DashBoardHosts -STOHWCollection $SST_SQLiteSTODashBoardQuery -SST_IBMHostDeviceCounter 0 -SQLReader $SST_SQliteReadCMD
             #$SST_SQLiteDBReader.Close()
         }
@@ -53,13 +53,13 @@ function SST_DashBoardMain {
         }
         catch {
             Write-Host $_.Exception.Message
-            SST_ToolMessageCollector -TD_ToolMSGCollector "There is something wrong, mybe there is no IBMSANHWTable Table" -TD_ToolMSGType Warning -TD_Shown yes
+            SST_ToolMessageCollector -TD_ToolMSGCollector "There is something wrong, mybe there is no IBMSTOHostTable Table" -TD_ToolMSGType Warning -TD_Shown yes
         }
 
         try {
             $DashBoardHostsView = [System.Collections.Generic.List[object]]::new()
             $SST_SQLiteSTODashBoardQuery = $null
-            $SST_SQLiteSTODashBoardQuery = " SELECT ID, HID, Name, Status, HostClusterName, STOName, SideName, TimeStamp FROM IBMSTOHostTable d WHERE TimeStamp = ( SELECT MAX(TimeStamp) FROM IBMSTOHostTable WHERE HID = d.HID ) AND Status IN ('online', 'degraded') ORDER BY HID; "
+            $SST_SQLiteSTODashBoardQuery = " SELECT ID, HID, Name, Status, HostClusterName, STOName, SideName, WWNN, TimeStamp FROM IBMSTOHostTable d WHERE TimeStamp = ( SELECT MAX(TimeStamp) FROM IBMSTOHostTable WHERE HID = d.HID ) AND Status IN ('online', 'degraded') ORDER BY HID; "
             SST_DashBoardHosts -STOHWCollection $SST_SQLiteSTODashBoardQuery -SST_IBMHostDeviceCounter 0 -SQLReader $SST_SQliteReadCMD -HostStatus "online"
             #$SST_SQLiteDBReader.Close()
         }
@@ -108,7 +108,7 @@ function SST_DashBoardMain {
         }
         catch {
             Write-Host $_.Exception.Message
-            SST_ToolMessageCollector -TD_ToolMSGCollector "There is something wrong, mybe there is no IBMSTOHostTable Table" -TD_ToolMSGType Warning -TD_Shown yes
+            SST_ToolMessageCollector -TD_ToolMSGCollector "There is something wrong, mybe there is no IBMSTOEventsTable Table" -TD_ToolMSGType Warning -TD_Shown yes
         }
         #endregion
         #region Power Systems
