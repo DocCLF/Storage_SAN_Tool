@@ -68,7 +68,8 @@ function FOS_SwitchShowInfo {
         Write-Debug -Message "Process Func GET_SwitchShowInfo |$(Get-Date)`n "
         <# fill the var with a dummy #>
         $FOS_PortConnect = "empty"
-
+        <# get Switch wwn for DB and PortCheck #>
+        $FOS_switchWwn = ($FOS_linebyLine |Select-String -Pattern '^switchWwn:\s+([\w\:]{20,24})' -AllMatches).Matches.Groups.Value[1]
         foreach($FOS_linebyLine in $FOS_SwShowArry_temp){
 
             <# Only collect data up to the next section, marked by frames #>
@@ -76,7 +77,9 @@ function FOS_SwitchShowInfo {
     
             # Build the Portsection of switchshow
             if($FOS_linebyLine -match '^\s+\d+'){   # (\d+\.\d\w|\d+)
-                $FOS_SWsh = "" | Select-Object Index,Port,Address,Media,Speed,State,Proto,PortConnect
+                $PortStateInfo = $null
+                $FOS_SWsh = "" | Select-Object Index,Port,Address,Media,Speed,State,Proto,PortConnect,SwitchWWN,PortStateInfo
+                $FOS_SWsh.SwitchWWN = $FOS_switchWwn
                 <# Port index is a number between 0 and the maximum number of supported ports on the platform. The port index identifies the port number relative to the switch. #>
                 $FOS_SWsh.Index = ($FOS_linebyLine |Select-String -Pattern '^\s+(\d+)' -AllMatches).Matches.Groups.Value[1]
                 $FOS_SWshIndex = $FOS_SWsh.Index
@@ -92,6 +95,10 @@ function FOS_SwitchShowInfo {
                 <# Port state information #>
                 $FOS_SWsh.State = ($FOS_linebyLine |Select-String -Pattern '(\w+_\w+|\w+)\s+(FC)' -AllMatches).Matches.Groups.Value[1]
                 $FOS_SWshState = $FOS_SWsh.State
+                $PortStateInfo = SST_FOSDBFunc -SwitchWWN $FOS_switchWwn -SwitchPort $FOS_SWshPort -SwitchPortState $FOS_SWshState
+                if(!([string]::IsNullOrWhiteSpace($PortStateInfo))){
+                    $FOS_SWsh.PortStateInfo = $PortStateInfo
+                }
                 <# Protocol support by GbE port. #>
                 $FOS_SWsh.Proto = ($FOS_linebyLine |Select-String -Pattern '(\w+_\w+|\w+)\s+(FC)' -AllMatches).Matches.Groups.Value[2]
                 <# WWPN or other Infos #>
