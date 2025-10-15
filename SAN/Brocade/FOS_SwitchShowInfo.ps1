@@ -69,7 +69,7 @@ function FOS_SwitchShowInfo {
         <# fill the var with a dummy #>
         $FOS_PortConnect = "empty"
         <# get Switch wwn for DB and PortCheck #>
-        $FOS_switchWwn = ($FOS_linebyLine |Select-String -Pattern '^switchWwn:\s+([\w\:]{20,24})' -AllMatches).Matches.Groups.Value[1]
+        $FOS_switchWwn = ($FOS_MainInformation |Select-String -Pattern '^switchWwn:\s+([\w\:]{20,24})' -AllMatches).Matches.Groups.Value[1]
         foreach($FOS_linebyLine in $FOS_SwShowArry_temp){
 
             <# Only collect data up to the next section, marked by frames #>
