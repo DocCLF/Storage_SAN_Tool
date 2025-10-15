@@ -106,7 +106,13 @@ function SST_LiteDBControl {
                     $SST_SQliteInsertCMD.Parameters.AddWithValue("@DeviceWWNN", $SST_CollectedInformation.DeviceWWNN) | Out-Null
                     $SST_SQliteInsertCMD.Parameters.AddWithValue("@TimeStamp", $TimeStamp) | Out-Null
 
-                    # In DB speichern 
+                    # DB save 
+                    $SST_SQliteInsertCMD.ExecuteNonQuery()
+
+                    $SST_SQliteInsertCMD.ExecuteNonQuery()
+
+                    # Delete | Keep only the 512 most recent entries after TimeStamp
+                    $SST_SQliteInsertCMD.CommandText = "DELETE FROM IBMSTODriveTable WHERE ID NOT IN ( SELECT ID FROM IBMSTODriveTable ORDER BY TimeStamp DESC LIMIT 512 );"
                     $SST_SQliteInsertCMD.ExecuteNonQuery()
                 }
              }
@@ -134,7 +140,11 @@ function SST_LiteDBControl {
                     $SST_SQliteInsertCMD.Parameters.AddWithValue("@PhysicalFC", $SST_CollectedInformation.'PhysicalFreeCapacity') | Out-Null
                     $SST_SQliteInsertCMD.Parameters.AddWithValue("@TimeStamp", $TimeStamp) | Out-Null
  
-                    # In DB speichern 
+                    # DB save
+                    $SST_SQliteInsertCMD.ExecuteNonQuery()
+
+                    # Delete | Keep only the 512 most recent entries after TimeStamp
+                    $SST_SQliteInsertCMD.CommandText = "DELETE FROM IBMSTOHWTable WHERE ID NOT IN ( SELECT ID FROM IBMSTOHWTable ORDER BY TimeStamp DESC LIMIT 512 );"
                     $SST_SQliteInsertCMD.ExecuteNonQuery()
                 }
             }
@@ -151,7 +161,11 @@ function SST_LiteDBControl {
                     $SST_SQliteInsertCMD.Parameters.AddWithValue("@SerialNumber", $SST_CollectedInformation.SerialNumber) | Out-Null
                     $SST_SQliteInsertCMD.Parameters.AddWithValue("@TimeStamp", $TimeStamp) | Out-Null
  
-                    # In DB speichern 
+                    # DB save 
+                    $SST_SQliteInsertCMD.ExecuteNonQuery()
+
+                    # Delete | Keep only the 512 most recent entries after TimeStamp
+                    $SST_SQliteInsertCMD.CommandText = "DELETE FROM IBMSTOHostTable WHERE ID NOT IN ( SELECT ID FROM IBMSTOHostTable ORDER BY TimeStamp DESC LIMIT 512 );"
                     $SST_SQliteInsertCMD.ExecuteNonQuery()
                 }
             }
@@ -172,7 +186,7 @@ function SST_LiteDBControl {
                     $SST_SQliteInsertCMD.Parameters.AddWithValue("@SerialNumber", $SST_CollectedInformation.SerialNumber) | Out-Null
                     $SST_SQliteInsertCMD.Parameters.AddWithValue("@TimeStamp", $TimeStamp) | Out-Null
  
-                    # In DB speichern 
+                    # DB save
                     $SST_SQliteInsertCMD.ExecuteNonQuery()
 
                     # Delete | Keep only the 500 most recent entries after TimeStamp
@@ -201,10 +215,10 @@ function SST_LiteDBControl {
                     $SST_SQliteInsertCMD.Parameters.AddWithValue("@SerialNumber", $SST_CollectedInformation.NodeSN) | Out-Null
                     $SST_SQliteInsertCMD.Parameters.AddWithValue("@TimeStamp", $TimeStamp) | Out-Null
 
-                    # In DB speichern 
+                    # DB save
                     $SST_SQliteInsertCMD.ExecuteNonQuery()
 
-                    # Delete | Keep only the 500 most recent entries after TimeStamp
+                    # Delete | Keep only the 1000 most recent entries after TimeStamp
                     $SST_SQliteInsertCMD.CommandText = "DELETE FROM IBMSTOFCPortStatsTable WHERE ID NOT IN ( SELECT ID FROM IBMSTOFCPortStatsTable ORDER BY TimeStamp DESC LIMIT 1000 );"
                     $SST_SQliteInsertCMD.ExecuteNonQuery()
                 }
@@ -221,7 +235,11 @@ function SST_LiteDBControl {
                     $SST_SQliteInsertCMD.Parameters.AddWithValue("@SerialNumber", $SST_CollectedInformation.'Serial Num') | Out-Null
                     $SST_SQliteInsertCMD.Parameters.AddWithValue("@TimeStamp", $TimeStamp) | Out-Null
                 
-                    # In DB speichern 
+                    # DB save 
+                    $SST_SQliteInsertCMD.ExecuteNonQuery()
+
+                    # Delete | Keep only the 64 most recent entries after TimeStamp
+                    $SST_SQliteInsertCMD.CommandText = "DELETE FROM IBMSANHWTable WHERE ID NOT IN ( SELECT ID FROM IBMSANHWTable ORDER BY TimeStamp DESC LIMIT 64 );"
                     $SST_SQliteInsertCMD.ExecuteNonQuery()
                 }
             }
@@ -235,7 +253,7 @@ function SST_LiteDBControl {
                     $SST_SQliteInsertCMD.Parameters.AddWithValue("@SwitchWWN", $SST_CollectedInformation.SwitchWWN) | Out-Null
                     $SST_SQliteInsertCMD.Parameters.AddWithValue("@TimeStamp", $TimeStamp) | Out-Null
                 
-                    # In DB speichern 
+                    # DB save 
                     $SST_SQliteInsertCMD.ExecuteNonQuery()
 
                     # Then automatically clean up for this exact switch
@@ -256,7 +274,11 @@ function SST_LiteDBControl {
                     $SST_SQliteInsertCMD.Parameters.AddWithValue("@HMCSWFixes", $SST_CollectedInformation.HMCSWFixes) | Out-Null
                     $SST_SQliteInsertCMD.Parameters.AddWithValue("@TimeStamp", $TimeStamp) | Out-Null
                 
-                    # In DB speichern 
+                    # DB save 
+                    $SST_SQliteInsertCMD.ExecuteNonQuery()
+
+                    # Delete | Keep only the 64 most recent entries after TimeStamp
+                    $SST_SQliteInsertCMD.CommandText = "DELETE FROM PowerHMC WHERE ID NOT IN ( SELECT ID FROM PowerHMC ORDER BY TimeStamp DESC LIMIT 64 );"
                     $SST_SQliteInsertCMD.ExecuteNonQuery()
                 }
             }
@@ -274,7 +296,12 @@ function SST_LiteDBControl {
                     $SST_SQliteInsertCMD.Parameters.AddWithValue("@PowerSysIPLActivatedLevel", $SST_CollectedInformation.IPLActivatedLevel) | Out-Null
                     $SST_SQliteInsertCMD.Parameters.AddWithValue("@PowerSysCoDEvent", $SST_CollectedInformation.CoDEvent) | Out-Null
                     $SST_SQliteInsertCMD.Parameters.AddWithValue("@TimeStamp", $TimeStamp) | Out-Null
-                    # In DB speichern 
+                    
+                    # DB save 
+                    $SST_SQliteInsertCMD.ExecuteNonQuery()
+
+                    # Delete | Keep only the 128 most recent entries after TimeStamp
+                    $SST_SQliteInsertCMD.CommandText = "DELETE FROM PowerSysSummary WHERE ID NOT IN ( SELECT ID FROM PowerSysSummary ORDER BY TimeStamp DESC LIMIT 128 );"
                     $SST_SQliteInsertCMD.ExecuteNonQuery()
                 }
             }
@@ -291,7 +318,11 @@ function SST_LiteDBControl {
                     $SST_SQliteInsertCMD.Parameters.AddWithValue("@LPARManagedSystemSN", $SST_CollectedInformation.ManagedSystemSN) | Out-Null
                     $SST_SQliteInsertCMD.Parameters.AddWithValue("@TimeStamp", $TimeStamp) | Out-Null
                 
-                    # In DB speichern 
+                    # DB save 
+                    $SST_SQliteInsertCMD.ExecuteNonQuery()
+
+                    # Delete | Keep only the 1024 most recent entries after TimeStamp
+                    $SST_SQliteInsertCMD.CommandText = "DELETE FROM LPARSummary WHERE ID NOT IN ( SELECT ID FROM LPARSummary ORDER BY TimeStamp DESC LIMIT 1024 );"
                     $SST_SQliteInsertCMD.ExecuteNonQuery()
                 }
             }
