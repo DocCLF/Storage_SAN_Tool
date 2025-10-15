@@ -2,7 +2,7 @@ function SST_LiteDBControl {
     [CmdletBinding()]
     param (
         [Parameter(ValueFromPipeline)]
-        [ValidateSet("StorageDrive","StorageBase","StorageHostInfo","StorageEventLog","SANBase","FCPortStats","PowerHMC","PowerSysSummary","LPARSummary")]
+        [ValidateSet("StorageDrive","StorageBase","StorageHostInfo","StorageEventLog","SANBase","SANPortInfo","FCPortStats","PowerHMC","PowerSysSummary","LPARSummary")]
         $SST_InfoType,
         $SST_NewDBObject =$null,
         [array]$SST_CollectedInformations,
@@ -51,6 +51,11 @@ function SST_LiteDBControl {
                 }
                 "SANBase" { 
                     $SST_SQLiteTabelQuery ="CREATE TABLE IF NOT EXISTS IBMSANHWTable (ID INTEGER PRIMARY KEY AUTOINCREMENT, Name TEXT NOT NULL, Status TEXT NOT NULL, BrocadeProdName TEXT, MTM TEXT, SerialNumber TEXT, CodeLevel TEXT, CodeLevelLV TEXT, TimeStamp TEXT );" 
+                    $SST_SQliteCreateTBCMD.CommandText = $SST_SQLiteTabelQuery
+                    $SST_SQliteCreateTBCMD.ExecuteNonQuery()
+                }
+                "SANPortInfo" { 
+                    $SST_SQLiteTabelQuery ="CREATE TABLE IF NOT EXISTS IBMSANPortInfoTable (ID INTEGER PRIMARY KEY AUTOINCREMENT, Port TEXT, State TEXT, Speed TEXT, PortConnect TEXT, SwitchWWN TEXT, TimeStamp TEXT );" 
                     $SST_SQliteCreateTBCMD.CommandText = $SST_SQLiteTabelQuery
                     $SST_SQliteCreateTBCMD.ExecuteNonQuery()
                 }
@@ -214,6 +219,20 @@ function SST_LiteDBControl {
                     $SST_SQliteInsertCMD.Parameters.AddWithValue("@BrocadeProdName", $SST_CollectedInformation.'Brocade Product Name') | Out-Null
                     $SST_SQliteInsertCMD.Parameters.AddWithValue("@MTM", $SST_CollectedInformation.'MTM') | Out-Null
                     $SST_SQliteInsertCMD.Parameters.AddWithValue("@SerialNumber", $SST_CollectedInformation.'Serial Num') | Out-Null
+                    $SST_SQliteInsertCMD.Parameters.AddWithValue("@TimeStamp", $TimeStamp) | Out-Null
+                
+                    # In DB speichern 
+                    $SST_SQliteInsertCMD.ExecuteNonQuery()
+                }
+            }
+            "SANPortInfo" {
+                foreach ($SST_CollectedInformation in $SST_CollectedInformations){
+                    $SST_SQliteInsertCMD.CommandText ="INSERT INTO IBMSANPortInfoTable (Port, State, Speed, PortConnect, SwitchWWN, TimeStamp) VALUES (@Port, @State, @Speed, @PortConnect, @SwitchWWN, @TimeStamp);"
+                    $SST_SQliteInsertCMD.Parameters.AddWithValue("@Port", $SST_CollectedInformation.'Swicht Name') | Out-Null
+                    $SST_SQliteInsertCMD.Parameters.AddWithValue("@State", $SST_CollectedInformation.'Switch State') | Out-Null
+                    $SST_SQliteInsertCMD.Parameters.AddWithValue("@Speed", $SST_CollectedInformation.'Fabric OS') | Out-Null
+                    $SST_SQliteInsertCMD.Parameters.AddWithValue("@PortConnect", $SST_CollectedInformation.'Fabric OSLV') | Out-Null
+                    $SST_SQliteInsertCMD.Parameters.AddWithValue("@SwitchWWN", $SST_CollectedInformation.'Brocade Product Name') | Out-Null
                     $SST_SQliteInsertCMD.Parameters.AddWithValue("@TimeStamp", $TimeStamp) | Out-Null
                 
                     # In DB speichern 
