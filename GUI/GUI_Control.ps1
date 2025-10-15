@@ -243,6 +243,7 @@ $TD_BTN_RefreshUC1.add_click({
     <#wenn refresh sollte der Counter auf 0 gestellt werden #>
     $TD_TB_ALLHostCount,$TD_TB_OfflHostCount,$TD_TB_OnlinelHostCount | ForEach-Object {$_.Text="0"}
     $TD_TB_NKNResOne,$TD_TB_NKNResTwo,$TD_TB_NKNResThree | ForEach-Object {$_.Text=$null}
+    $TD_TB_SANFOSOne,$TD_TB_SANFOSTwo,$TD_TB_SANFOSThree,$TD_TB_SANFOSFour | ForEach-Object {$_.Text=$null}
 
     $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_.DeviceTyp -eq "Storage"}
     $TD_Credentials | ForEach-Object {
