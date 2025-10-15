@@ -54,12 +54,12 @@ function IBM_HostInfo {
     
     process {
         $iCounter=0;
-        $TD_HostBaseTemp = "" | Select-Object HostID,HostName,PortCount,Type,Status,SiteName,HostClusterName,Protocol,StatusPolicy,StatusSite,WWPNOne,NodeLoggedInCountOne,StateOne,WWPNTwo,NodeLoggedInCountTwo,StateTwo,WWPNThree,NodeLoggedInCountThree,StateThree,WWPNFour,NodeLoggedInCountFour,StateFour,STOName,WWNN,SerialNumber
+        $TD_HostBaseTemp = "" | Select-Object HostID,HostName,PortCount,Type,Status,HostStateInfo,SiteName,HostClusterName,Protocol,StatusPolicy,StatusSite,WWPNOne,NodeLoggedInCountOne,StateOne,WWPNTwo,NodeLoggedInCountTwo,StateTwo,WWPNThree,NodeLoggedInCountThree,StateThree,WWPNFour,NodeLoggedInCountFour,StateFour,STOName,WWNN,SerialNumber
         [array]$CollectedHostInfo = foreach($TD_CollectInfo in $TD_CollectInfos){
             if([string]::IsNullOrWhiteSpace($TD_CollectInfo) -or ($iCounter -gt ($TD_CollectInfos.Count - 2)) ){
                 $TD_HostBaseTemp;
                 $iCounter++
-                $TD_HostBaseTemp = "" | Select-Object HostID,HostName,PortCount,Type,Status,SiteName,HostClusterName,Protocol,StatusPolicy,StatusSite,WWPNOne,NodeLoggedInCountOne,StateOne,WWPNTwo,NodeLoggedInCountTwo,StateTwo,WWPNThree,NodeLoggedInCountThree,StateThree,WWPNFour,NodeLoggedInCountFour,StateFour,STOName,WWNN,SerialNumber
+                $TD_HostBaseTemp = "" | Select-Object HostID,HostName,PortCount,Type,Status,HostStateInfo,SiteName,HostClusterName,Protocol,StatusPolicy,StatusSite,WWPNOne,NodeLoggedInCountOne,StateOne,WWPNTwo,NodeLoggedInCountTwo,StateTwo,WWPNThree,NodeLoggedInCountThree,StateThree,WWPNFour,NodeLoggedInCountFour,StateFour,STOName,WWNN,SerialNumber
                 continue
             }
             $TD_HostBaseTemp.HostID = ($TD_CollectInfo|Select-String -Pattern '^id:(\d+)' -AllMatches).Matches.Groups[1].Value
@@ -111,7 +111,7 @@ function IBM_HostInfo {
             $TD_HostBaseTemp.SerialNumber = $TD_FSBaseSerialNumber
             $TD_HostBaseTemp.STOName = $TD_STOName
             $iCounter++
-            
+            $TD_HostBaseTemp.HostStateInfo = SST_IBMDBFunc -STOWWN $TD_EventSplitInfoWWNN -STOHostID $TD_HostBaseTemp.HostID  -STOHostState $TD_HostBaseTemp.Status
             $ProgCounter++
             Write-ProgressBar -ProgressBar $ProgressBar -Activity "Collect data for Device $($TD_Line_ID) $($TD_Device_DeviceName)" -PercentComplete (($ProgCounter/$TD_CollectInfos.Count) * 100)
         }
