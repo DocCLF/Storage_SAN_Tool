@@ -1201,6 +1201,7 @@
                                 <DataGridTextColumn Width="auto" Header="Port Count" Binding="{Binding PortCount}" IsReadOnly="True"/>
                                 <DataGridTextColumn Width="auto" Header="Type" Binding="{Binding Type}" IsReadOnly="True"/>
                                 <DataGridTextColumn Width="auto" Header="Status" Binding="{Binding Status}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="HostStateInfo" Binding="{Binding HostStateInfo}" IsReadOnly="True"/>
                                 <DataGridTextColumn Width="auto" Header="SiteName" Binding="{Binding SiteName}" IsReadOnly="True"/>
                                 <DataGridTextColumn Width="auto" Header="Host Cluster Name" Binding="{Binding HostClusterName}" IsReadOnly="True"/>
                                 <DataGridTextColumn Width="auto" Header="Protocol" Binding="{Binding Protocol}" IsReadOnly="True"/>
@@ -1302,6 +1303,7 @@
                                 <DataGridTextColumn Width="auto" Header="Port Count" Binding="{Binding PortCount}" IsReadOnly="True"/>
                                 <DataGridTextColumn Width="auto" Header="Type" Binding="{Binding Type}" IsReadOnly="True"/>
                                 <DataGridTextColumn Width="auto" Header="Status" Binding="{Binding Status}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="HostStateInfo" Binding="{Binding HostStateInfo}" IsReadOnly="True"/>
                                 <DataGridTextColumn Width="auto" Header="SiteName" Binding="{Binding SiteName}" IsReadOnly="True"/>
                                 <DataGridTextColumn Width="auto" Header="Host Cluster Name" Binding="{Binding HostClusterName}" IsReadOnly="True"/>
                                 <DataGridTextColumn Width="auto" Header="Protocol" Binding="{Binding Protocol}" IsReadOnly="True"/>
@@ -1403,6 +1405,7 @@
                                 <DataGridTextColumn Width="auto" Header="Port Count" Binding="{Binding PortCount}" IsReadOnly="True"/>
                                 <DataGridTextColumn Width="auto" Header="Type" Binding="{Binding Type}" IsReadOnly="True"/>
                                 <DataGridTextColumn Width="auto" Header="Status" Binding="{Binding Status}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="HostStateInfo" Binding="{Binding HostStateInfo}" IsReadOnly="True"/>
                                 <DataGridTextColumn Width="auto" Header="SiteName" Binding="{Binding SiteName}" IsReadOnly="True"/>
                                 <DataGridTextColumn Width="auto" Header="Host Cluster Name" Binding="{Binding HostClusterName}" IsReadOnly="True"/>
                                 <DataGridTextColumn Width="auto" Header="Protocol" Binding="{Binding Protocol}" IsReadOnly="True"/>
@@ -1504,6 +1507,7 @@
                                 <DataGridTextColumn Width="auto" Header="Port Count" Binding="{Binding PortCount}" IsReadOnly="True"/>
                                 <DataGridTextColumn Width="auto" Header="Type" Binding="{Binding Type}" IsReadOnly="True"/>
                                 <DataGridTextColumn Width="auto" Header="Status" Binding="{Binding Status}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="HostStateInfo" Binding="{Binding HostStateInfo}" IsReadOnly="True"/>
                                 <DataGridTextColumn Width="auto" Header="SiteName" Binding="{Binding SiteName}" IsReadOnly="True"/>
                                 <DataGridTextColumn Width="auto" Header="Host Cluster Name" Binding="{Binding HostClusterName}" IsReadOnly="True"/>
                                 <DataGridTextColumn Width="auto" Header="Protocol" Binding="{Binding Protocol}" IsReadOnly="True"/>
@@ -1605,6 +1609,7 @@
                                 <DataGridTextColumn Width="auto" Header="Port Count" Binding="{Binding PortCount}" IsReadOnly="True"/>
                                 <DataGridTextColumn Width="auto" Header="Type" Binding="{Binding Type}" IsReadOnly="True"/>
                                 <DataGridTextColumn Width="auto" Header="Status" Binding="{Binding Status}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="HostStateInfo" Binding="{Binding HostStateInfo}" IsReadOnly="True"/>
                                 <DataGridTextColumn Width="auto" Header="SiteName" Binding="{Binding SiteName}" IsReadOnly="True"/>
                                 <DataGridTextColumn Width="auto" Header="Host Cluster Name" Binding="{Binding HostClusterName}" IsReadOnly="True"/>
                                 <DataGridTextColumn Width="auto" Header="Protocol" Binding="{Binding Protocol}" IsReadOnly="True"/>
@@ -1706,6 +1711,7 @@
                                 <DataGridTextColumn Width="auto" Header="Port Count" Binding="{Binding PortCount}" IsReadOnly="True"/>
                                 <DataGridTextColumn Width="auto" Header="Type" Binding="{Binding Type}" IsReadOnly="True"/>
                                 <DataGridTextColumn Width="auto" Header="Status" Binding="{Binding Status}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="HostStateInfo" Binding="{Binding HostStateInfo}" IsReadOnly="True"/>
                                 <DataGridTextColumn Width="auto" Header="SiteName" Binding="{Binding SiteName}" IsReadOnly="True"/>
                                 <DataGridTextColumn Width="auto" Header="Host Cluster Name" Binding="{Binding HostClusterName}" IsReadOnly="True"/>
                                 <DataGridTextColumn Width="auto" Header="Protocol" Binding="{Binding Protocol}" IsReadOnly="True"/>
@@ -1807,6 +1813,7 @@
                                 <DataGridTextColumn Width="auto" Header="Port Count" Binding="{Binding PortCount}" IsReadOnly="True"/>
                                 <DataGridTextColumn Width="auto" Header="Type" Binding="{Binding Type}" IsReadOnly="True"/>
                                 <DataGridTextColumn Width="auto" Header="Status" Binding="{Binding Status}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="HostStateInfo" Binding="{Binding HostStateInfo}" IsReadOnly="True"/>
                                 <DataGridTextColumn Width="auto" Header="SiteName" Binding="{Binding SiteName}" IsReadOnly="True"/>
                                 <DataGridTextColumn Width="auto" Header="Host Cluster Name" Binding="{Binding HostClusterName}" IsReadOnly="True"/>
                                 <DataGridTextColumn Width="auto" Header="Protocol" Binding="{Binding Protocol}" IsReadOnly="True"/>
@@ -1908,6 +1915,7 @@
                                 <DataGridTextColumn Width="auto" Header="Port Count" Binding="{Binding PortCount}" IsReadOnly="True"/>
                                 <DataGridTextColumn Width="auto" Header="Type" Binding="{Binding Type}" IsReadOnly="True"/>
                                 <DataGridTextColumn Width="auto" Header="Status" Binding="{Binding Status}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="HostStateInfo" Binding="{Binding HostStateInfo}" IsReadOnly="True"/>
                                 <DataGridTextColumn Width="auto" Header="SiteName" Binding="{Binding SiteName}" IsReadOnly="True"/>
                                 <DataGridTextColumn Width="auto" Header="Host Cluster Name" Binding="{Binding HostClusterName}" IsReadOnly="True"/>
                                 <DataGridTextColumn Width="auto" Header="Protocol" Binding="{Binding Protocol}" IsReadOnly="True"/>
