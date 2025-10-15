@@ -2228,6 +2228,7 @@
                                 <DataGridTextColumn Width="auto" Header="State" Binding ="{Binding State}" IsReadOnly="True"/>
                                 <DataGridTextColumn Width="auto" Header="Proto" Binding ="{Binding Proto}" IsReadOnly="True"/>  
                                 <DataGridTextColumn Width="auto" Header="PortConnect" Binding ="{Binding PortConnect}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="PortStateInfo" Binding ="{Binding PortStateInfo}" IsReadOnly="True" Visibility="{Binding ElementName=PortStateInfo, Path=HasItems, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}"/>
                             </DataGrid.Columns>
                         </DataGrid>
                     </StackPanel>
