@@ -2,9 +2,9 @@
 ## [Unreleased]
 - History Data 
 - LineCharts
-- Host "last seen online"
 - Additional support for errors in the event log
 - PBHA and DR Support
+
 
 All notable changes to this project will be documented in this file.
 # [v1.3.x] - 2025-10-??
@@ -13,12 +13,16 @@ All notable changes to this project will be documented in this file.
 - DB Function local and azure
 - Function to save and load the Toolsettings on startup, incl. saved Devices
 - Support for Spectrum Virt Version 9.1.x
+- Support for FOS 10.x
 - more Information on some Functions for later Updates
 - rudimentary FOS FW recommendation, requires adjustments later on
 - simple ssh hostkey check (disabled at the moment come back later for sure)
 - Button at Settingspanel changes from ADD to Update and back when the checkbox for updating the Credentials is activated or not.
 - in Dashboard now Online and Offline Hosts shown
 - PowerServer, HMC etc Support via HMC Scanner
+- SANPort changes are now displayed via message and color of the respective port.
+- Host Status changes are now displayed via message and color of the respective Host from a storage perspective.
+- SAN firmware is now also displayed in the dashboard overview.
 - integration for PROFI Cockpit
 
 ### Fixed
@@ -50,6 +54,7 @@ All notable changes to this project will be documented in this file.
 - better recognition of FW relevance in Drive Info
 - updated SAN-HW and add MTMs
 - complete revision of the health check
+- Installation instructions for the SST module
 
 
 # [v1.2.1] - 2025-04-22
