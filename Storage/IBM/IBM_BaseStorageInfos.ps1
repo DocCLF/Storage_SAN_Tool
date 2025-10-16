@@ -63,7 +63,7 @@ function IBM_BaseStorageInfos {
             }else {
                 $TD_FSBaseTemp.Serial_Number = $TD_FSBaseBackEndSerial_Number
             }
-            $TD_FSBaseTemp.Config_Node = ($TD_FSBaseInfo|Select-String -Pattern '\d+:([a-zA-Z0-9-_]+):(yes|no):' -AllMatches).Matches.Groups[2].Value
+            $TD_FSBaseTemp.Config_Node = ($TD_FSBaseInfo|Select-String -Pattern '\d+:([\w\-]+):(yes|no):' -AllMatches).Matches.Groups[2].Value
             $TD_FSBaseTemp.SideID = ($TD_FSBaseInfo|Select-String -Pattern ':(\d+|):([a-zA-Z0-9-_]+)$' -AllMatches).Matches.Groups[1].Value
             $TD_FSBaseTemp.SideName = ($TD_FSBaseInfo|Select-String -Pattern ':(\d+|):([a-zA-Z0-9-_]+)$' -AllMatches).Matches.Groups[2].Value
             $TD_FSBaseTemp.Prod_MTM = ($TD_BaseInformations|Select-String -Pattern '^product_mtm:([a-zA-Z0-9-]+)' -AllMatches).Matches.Groups[1].Value
