@@ -87,7 +87,7 @@ function FOS_SwitchShowInfo {
                 $FOS_SWsh.Port = ($FOS_linebyLine |Select-String -Pattern '^\s+\d+\s+(\d+)' -AllMatches).Matches.Groups.Value[1]
                 $FOS_SWshPort = $FOS_SWsh.Port
                 <# The 24-bit Address Identifier. #>
-                $FOS_SWsh.Address = ($FOS_linebyLine |Select-String -Pattern '([0-9a-z]+)\s+(id|--|cu)\s+' -AllMatches).Matches.Groups.Value[1]
+                $FOS_SWsh.Address = ($FOS_linebyLine |Select-String -Pattern '([\w]+)\s+(id|--|cu)\s+' -AllMatches).Matches.Groups.Value[1]
                 <# Media types means module types #>
                 $FOS_SWsh.Media = ($FOS_linebyLine |Select-String -Pattern '\s+(id|--|cu)\s+' -AllMatches).Matches.Groups.Value[1]
                 <# The speed of the port. #>
@@ -95,7 +95,7 @@ function FOS_SwitchShowInfo {
                 <# Port state information #>
                 $FOS_SWsh.State = ($FOS_linebyLine |Select-String -Pattern '(\w+_\w+|\w+)\s+(FC)' -AllMatches).Matches.Groups.Value[1]
                 $FOS_SWshState = $FOS_SWsh.State
-                $PortStateInfo = SST_FOSDBFunc -SwitchWWN $FOS_switchWwn -SwitchPort $FOS_SWshPort -SwitchPortState $FOS_SWshState
+                
                 if(!([string]::IsNullOrWhiteSpace($PortStateInfo))){
                     $FOS_SWsh.PortStateInfo = $PortStateInfo
                 }
@@ -148,7 +148,9 @@ function FOS_SwitchShowInfo {
                     
                    $FOS_SwBasicPortDetails += $FOS_SWsh
                 }
-                
+                if($FOS_SWsh.Address -ne "virtuell"){
+                    $PortStateInfo = SST_FOSDBFunc -SwitchWWN $FOS_switchWwn -SwitchPort $FOS_SWshPort -SwitchPortState $FOS_SWshState
+                }
             }
             # if the Portnumber is not empty and there is a SFP pluged in, push the Port in the FOS_usedPorts array
             if(($FOS_SWsh.Port -ne "") -and ($FOS_SWsh.Media -eq "id")){$FOS_usedPorts += $FOS_SWsh.Port}
