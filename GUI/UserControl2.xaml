@@ -1190,7 +1190,7 @@
                                             <Setter Property="Background" Value="yellow" />
                                         </DataTrigger>
                                         <DataTrigger Binding="{Binding Status}" Value="offline">
-                                            <Setter Property="Background" Value="red" />
+                                            <Setter Property="Background" Value="Orange" />
                                         </DataTrigger>
                                     </Style.Triggers>
                                 </Style>
@@ -1201,7 +1201,20 @@
                                 <DataGridTextColumn Width="auto" Header="Port Count" Binding="{Binding PortCount}" IsReadOnly="True"/>
                                 <DataGridTextColumn Width="auto" Header="Type" Binding="{Binding Type}" IsReadOnly="True"/>
                                 <DataGridTextColumn Width="auto" Header="Status" Binding="{Binding Status}" IsReadOnly="True"/>
-                                <DataGridTextColumn Width="auto" Header="HostStateInfo" Binding="{Binding HostStateInfo}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="HostStateInfo" Binding="{Binding HostStateInfo}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding HostStateInfo}" Value="no change">
+                                                    <Setter Property="Background" Value="LightGreen" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                            <Setter Property="Background" Value="OrangeRed" />
+                                            <Setter Property="ToolTip" Value="Shows the change from the last check to the current one." />
+                                            <Setter Property="ToolTipService.InitialShowDelay" Value="10" />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
                                 <DataGridTextColumn Width="auto" Header="SiteName" Binding="{Binding SiteName}" IsReadOnly="True"/>
                                 <DataGridTextColumn Width="auto" Header="Host Cluster Name" Binding="{Binding HostClusterName}" IsReadOnly="True"/>
                                 <DataGridTextColumn Width="auto" Header="Protocol" Binding="{Binding Protocol}" IsReadOnly="True"/>
@@ -1209,6 +1222,7 @@
                                     <DataGridTextColumn.CellStyle>
                                         <Style TargetType="DataGridCell">
                                             <Setter Property="ToolTip" Value="Displays the connectivity requirements that are used to calculate the host status. The value is either complete or redundant." />
+                                            <Setter Property="ToolTipService.InitialShowDelay" Value="10" />
                                         </Style>
                                     </DataGridTextColumn.CellStyle>
                                 </DataGridTextColumn>
@@ -1218,6 +1232,7 @@
                                     <DataGridTextColumn.CellStyle>
                                         <Style TargetType="DataGridCell">
                                             <Setter Property="ToolTip" Value="Indicates the number of nodes the WWPN or NQN is logged in to." />
+                                            <Setter Property="ToolTipService.InitialShowDelay" Value="10" />
                                         </Style>
                                     </DataGridTextColumn.CellStyle>
                                 </DataGridTextColumn>
@@ -1225,6 +1240,7 @@
                                     <DataGridTextColumn.CellStyle>
                                         <Style TargetType="DataGridCell">
                                             <Setter Property="ToolTip" Value="Indicates the state of the WWPN login. The values are: Offline, Online, Active" />
+                                            <Setter Property="ToolTipService.InitialShowDelay" Value="10" />
                                         </Style>
                                     </DataGridTextColumn.CellStyle>
                                 </DataGridTextColumn>
@@ -1233,6 +1249,7 @@
                                     <DataGridTextColumn.CellStyle>
                                         <Style TargetType="DataGridCell">
                                             <Setter Property="ToolTip" Value="Indicates the number of nodes the WWPN or NQN is logged in to." />
+                                            <Setter Property="ToolTipService.InitialShowDelay" Value="10" />
                                         </Style>
                                     </DataGridTextColumn.CellStyle>
                                 </DataGridTextColumn>
@@ -1240,6 +1257,7 @@
                                     <DataGridTextColumn.CellStyle>
                                         <Style TargetType="DataGridCell">
                                             <Setter Property="ToolTip" Value="Indicates the state of the WWPN login. The values are: Offline, Online, Active" />
+                                            <Setter Property="ToolTipService.InitialShowDelay" Value="10" />
                                         </Style>
                                     </DataGridTextColumn.CellStyle>
                                 </DataGridTextColumn>
@@ -1248,6 +1266,7 @@
                                     <DataGridTextColumn.CellStyle>
                                         <Style TargetType="DataGridCell">
                                             <Setter Property="ToolTip" Value="Indicates the number of nodes the WWPN or NQN is logged in to." />
+                                            <Setter Property="ToolTipService.InitialShowDelay" Value="10" />
                                         </Style>
                                     </DataGridTextColumn.CellStyle>
                                 </DataGridTextColumn>
@@ -1255,6 +1274,7 @@
                                     <DataGridTextColumn.CellStyle>
                                         <Style TargetType="DataGridCell">
                                             <Setter Property="ToolTip" Value="Indicates the state of the WWPN login. The values are: Offline, Online, Active" />
+                                            <Setter Property="ToolTipService.InitialShowDelay" Value="10" />
                                         </Style>
                                     </DataGridTextColumn.CellStyle>
                                 </DataGridTextColumn>
@@ -1263,6 +1283,7 @@
                                     <DataGridTextColumn.CellStyle>
                                         <Style TargetType="DataGridCell">
                                             <Setter Property="ToolTip" Value="Indicates the number of nodes the WWPN or NQN is logged in to." />
+                                            <Setter Property="ToolTipService.InitialShowDelay" Value="10" />
                                         </Style>
                                     </DataGridTextColumn.CellStyle>
                                 </DataGridTextColumn>
@@ -1270,6 +1291,7 @@
                                     <DataGridTextColumn.CellStyle>
                                         <Style TargetType="DataGridCell">
                                             <Setter Property="ToolTip" Value="Indicates the state of the WWPN login. The values are: Offline, Online, Active" />
+                                            <Setter Property="ToolTipService.InitialShowDelay" Value="10" />
                                         </Style>
                                     </DataGridTextColumn.CellStyle>
                                 </DataGridTextColumn>
@@ -1292,7 +1314,7 @@
                                             <Setter Property="Background" Value="yellow" />
                                         </DataTrigger>
                                         <DataTrigger Binding="{Binding Status}" Value="offline">
-                                            <Setter Property="Background" Value="red" />
+                                            <Setter Property="Background" Value="Orange" />
                                         </DataTrigger>
                                     </Style.Triggers>
                                 </Style>
@@ -1303,7 +1325,19 @@
                                 <DataGridTextColumn Width="auto" Header="Port Count" Binding="{Binding PortCount}" IsReadOnly="True"/>
                                 <DataGridTextColumn Width="auto" Header="Type" Binding="{Binding Type}" IsReadOnly="True"/>
                                 <DataGridTextColumn Width="auto" Header="Status" Binding="{Binding Status}" IsReadOnly="True"/>
-                                <DataGridTextColumn Width="auto" Header="HostStateInfo" Binding="{Binding HostStateInfo}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="HostStateInfo" Binding="{Binding HostStateInfo}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding HostStateInfo}" Value="no change">
+                                                    <Setter Property="Background" Value="LightGreen" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                            <Setter Property="Background" Value="OrangeRed" />
+                                            <Setter Property="ToolTip" Value="Shows the change from the last check to the current one." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
                                 <DataGridTextColumn Width="auto" Header="SiteName" Binding="{Binding SiteName}" IsReadOnly="True"/>
                                 <DataGridTextColumn Width="auto" Header="Host Cluster Name" Binding="{Binding HostClusterName}" IsReadOnly="True"/>
                                 <DataGridTextColumn Width="auto" Header="Protocol" Binding="{Binding Protocol}" IsReadOnly="True"/>
@@ -1394,7 +1428,7 @@
                                             <Setter Property="Background" Value="yellow" />
                                         </DataTrigger>
                                         <DataTrigger Binding="{Binding Status}" Value="offline">
-                                            <Setter Property="Background" Value="red" />
+                                            <Setter Property="Background" Value="Orange" />
                                         </DataTrigger>
                                     </Style.Triggers>
                                 </Style>
@@ -1405,7 +1439,19 @@
                                 <DataGridTextColumn Width="auto" Header="Port Count" Binding="{Binding PortCount}" IsReadOnly="True"/>
                                 <DataGridTextColumn Width="auto" Header="Type" Binding="{Binding Type}" IsReadOnly="True"/>
                                 <DataGridTextColumn Width="auto" Header="Status" Binding="{Binding Status}" IsReadOnly="True"/>
-                                <DataGridTextColumn Width="auto" Header="HostStateInfo" Binding="{Binding HostStateInfo}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="HostStateInfo" Binding="{Binding HostStateInfo}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding HostStateInfo}" Value="no change">
+                                                    <Setter Property="Background" Value="LightGreen" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                            <Setter Property="Background" Value="OrangeRed" />
+                                            <Setter Property="ToolTip" Value="Shows the change from the last check to the current one." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
                                 <DataGridTextColumn Width="auto" Header="SiteName" Binding="{Binding SiteName}" IsReadOnly="True"/>
                                 <DataGridTextColumn Width="auto" Header="Host Cluster Name" Binding="{Binding HostClusterName}" IsReadOnly="True"/>
                                 <DataGridTextColumn Width="auto" Header="Protocol" Binding="{Binding Protocol}" IsReadOnly="True"/>
@@ -1496,7 +1542,7 @@
                                             <Setter Property="Background" Value="yellow" />
                                         </DataTrigger>
                                         <DataTrigger Binding="{Binding Status}" Value="offline">
-                                            <Setter Property="Background" Value="red" />
+                                            <Setter Property="Background" Value="Orange" />
                                         </DataTrigger>
                                     </Style.Triggers>
                                 </Style>
@@ -1507,7 +1553,19 @@
                                 <DataGridTextColumn Width="auto" Header="Port Count" Binding="{Binding PortCount}" IsReadOnly="True"/>
                                 <DataGridTextColumn Width="auto" Header="Type" Binding="{Binding Type}" IsReadOnly="True"/>
                                 <DataGridTextColumn Width="auto" Header="Status" Binding="{Binding Status}" IsReadOnly="True"/>
-                                <DataGridTextColumn Width="auto" Header="HostStateInfo" Binding="{Binding HostStateInfo}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="HostStateInfo" Binding="{Binding HostStateInfo}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding HostStateInfo}" Value="no change">
+                                                    <Setter Property="Background" Value="LightGreen" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                            <Setter Property="Background" Value="OrangeRed" />
+                                            <Setter Property="ToolTip" Value="Shows the change from the last check to the current one." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
                                 <DataGridTextColumn Width="auto" Header="SiteName" Binding="{Binding SiteName}" IsReadOnly="True"/>
                                 <DataGridTextColumn Width="auto" Header="Host Cluster Name" Binding="{Binding HostClusterName}" IsReadOnly="True"/>
                                 <DataGridTextColumn Width="auto" Header="Protocol" Binding="{Binding Protocol}" IsReadOnly="True"/>
@@ -1598,7 +1656,7 @@
                                             <Setter Property="Background" Value="yellow" />
                                         </DataTrigger>
                                         <DataTrigger Binding="{Binding Status}" Value="offline">
-                                            <Setter Property="Background" Value="red" />
+                                            <Setter Property="Background" Value="Orange" />
                                         </DataTrigger>
                                     </Style.Triggers>
                                 </Style>
@@ -1609,7 +1667,19 @@
                                 <DataGridTextColumn Width="auto" Header="Port Count" Binding="{Binding PortCount}" IsReadOnly="True"/>
                                 <DataGridTextColumn Width="auto" Header="Type" Binding="{Binding Type}" IsReadOnly="True"/>
                                 <DataGridTextColumn Width="auto" Header="Status" Binding="{Binding Status}" IsReadOnly="True"/>
-                                <DataGridTextColumn Width="auto" Header="HostStateInfo" Binding="{Binding HostStateInfo}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="HostStateInfo" Binding="{Binding HostStateInfo}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding HostStateInfo}" Value="no change">
+                                                    <Setter Property="Background" Value="LightGreen" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                            <Setter Property="Background" Value="OrangeRed" />
+                                            <Setter Property="ToolTip" Value="Shows the change from the last check to the current one." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
                                 <DataGridTextColumn Width="auto" Header="SiteName" Binding="{Binding SiteName}" IsReadOnly="True"/>
                                 <DataGridTextColumn Width="auto" Header="Host Cluster Name" Binding="{Binding HostClusterName}" IsReadOnly="True"/>
                                 <DataGridTextColumn Width="auto" Header="Protocol" Binding="{Binding Protocol}" IsReadOnly="True"/>
@@ -1700,7 +1770,7 @@
                                             <Setter Property="Background" Value="yellow" />
                                         </DataTrigger>
                                         <DataTrigger Binding="{Binding Status}" Value="offline">
-                                            <Setter Property="Background" Value="red" />
+                                            <Setter Property="Background" Value="Orange" />
                                         </DataTrigger>
                                     </Style.Triggers>
                                 </Style>
@@ -1711,7 +1781,19 @@
                                 <DataGridTextColumn Width="auto" Header="Port Count" Binding="{Binding PortCount}" IsReadOnly="True"/>
                                 <DataGridTextColumn Width="auto" Header="Type" Binding="{Binding Type}" IsReadOnly="True"/>
                                 <DataGridTextColumn Width="auto" Header="Status" Binding="{Binding Status}" IsReadOnly="True"/>
-                                <DataGridTextColumn Width="auto" Header="HostStateInfo" Binding="{Binding HostStateInfo}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="HostStateInfo" Binding="{Binding HostStateInfo}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding HostStateInfo}" Value="no change">
+                                                    <Setter Property="Background" Value="LightGreen" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                            <Setter Property="Background" Value="OrangeRed" />
+                                            <Setter Property="ToolTip" Value="Shows the change from the last check to the current one." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
                                 <DataGridTextColumn Width="auto" Header="SiteName" Binding="{Binding SiteName}" IsReadOnly="True"/>
                                 <DataGridTextColumn Width="auto" Header="Host Cluster Name" Binding="{Binding HostClusterName}" IsReadOnly="True"/>
                                 <DataGridTextColumn Width="auto" Header="Protocol" Binding="{Binding Protocol}" IsReadOnly="True"/>
@@ -1802,7 +1884,7 @@
                                             <Setter Property="Background" Value="yellow" />
                                         </DataTrigger>
                                         <DataTrigger Binding="{Binding Status}" Value="offline">
-                                            <Setter Property="Background" Value="red" />
+                                            <Setter Property="Background" Value="Orange" />
                                         </DataTrigger>
                                     </Style.Triggers>
                                 </Style>
@@ -1813,7 +1895,19 @@
                                 <DataGridTextColumn Width="auto" Header="Port Count" Binding="{Binding PortCount}" IsReadOnly="True"/>
                                 <DataGridTextColumn Width="auto" Header="Type" Binding="{Binding Type}" IsReadOnly="True"/>
                                 <DataGridTextColumn Width="auto" Header="Status" Binding="{Binding Status}" IsReadOnly="True"/>
-                                <DataGridTextColumn Width="auto" Header="HostStateInfo" Binding="{Binding HostStateInfo}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="HostStateInfo" Binding="{Binding HostStateInfo}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding HostStateInfo}" Value="no change">
+                                                    <Setter Property="Background" Value="LightGreen" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                            <Setter Property="Background" Value="OrangeRed" />
+                                            <Setter Property="ToolTip" Value="Shows the change from the last check to the current one." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
                                 <DataGridTextColumn Width="auto" Header="SiteName" Binding="{Binding SiteName}" IsReadOnly="True"/>
                                 <DataGridTextColumn Width="auto" Header="Host Cluster Name" Binding="{Binding HostClusterName}" IsReadOnly="True"/>
                                 <DataGridTextColumn Width="auto" Header="Protocol" Binding="{Binding Protocol}" IsReadOnly="True"/>
@@ -1904,7 +1998,7 @@
                                             <Setter Property="Background" Value="yellow" />
                                         </DataTrigger>
                                         <DataTrigger Binding="{Binding Status}" Value="offline">
-                                            <Setter Property="Background" Value="red" />
+                                            <Setter Property="Background" Value="Orange" />
                                         </DataTrigger>
                                     </Style.Triggers>
                                 </Style>
@@ -1915,7 +2009,19 @@
                                 <DataGridTextColumn Width="auto" Header="Port Count" Binding="{Binding PortCount}" IsReadOnly="True"/>
                                 <DataGridTextColumn Width="auto" Header="Type" Binding="{Binding Type}" IsReadOnly="True"/>
                                 <DataGridTextColumn Width="auto" Header="Status" Binding="{Binding Status}" IsReadOnly="True"/>
-                                <DataGridTextColumn Width="auto" Header="HostStateInfo" Binding="{Binding HostStateInfo}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="HostStateInfo" Binding="{Binding HostStateInfo}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding HostStateInfo}" Value="no change">
+                                                    <Setter Property="Background" Value="LightGreen" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                            <Setter Property="Background" Value="OrangeRed" />
+                                            <Setter Property="ToolTip" Value="Shows the change from the last check to the current one." />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
                                 <DataGridTextColumn Width="auto" Header="SiteName" Binding="{Binding SiteName}" IsReadOnly="True"/>
                                 <DataGridTextColumn Width="auto" Header="Host Cluster Name" Binding="{Binding HostClusterName}" IsReadOnly="True"/>
                                 <DataGridTextColumn Width="auto" Header="Protocol" Binding="{Binding Protocol}" IsReadOnly="True"/>
