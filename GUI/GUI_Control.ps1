@@ -790,14 +790,14 @@ $TD_btn_IBM_DriveInfo.add_click({
             }
 
             switch ($TD_DevCounter) {
-                {($_ -eq 1)} { $TD_IC_STODriveViewOne.ItemsSource = $TD_DriveInfo; $TD_UserControl1.Dispatcher.Invoke([System.Action]{},"Render") }
-                {($_ -eq 2)} { $TD_IC_STODriveViewTwo.ItemsSource = $TD_DriveInfo; $TD_UserControl1.Dispatcher.Invoke([System.Action]{},"Render")  }
-                {($_ -eq 3)} { $TD_IC_STODriveViewThree.ItemsSource = $TD_DriveInfo; $TD_UserControl1.Dispatcher.Invoke([System.Action]{},"Render")  }
-                {($_ -eq 4)} { $TD_IC_STODriveViewFour.ItemsSource = $TD_DriveInfo; $TD_UserControl1.Dispatcher.Invoke([System.Action]{},"Render")  }
-                {($_ -eq 5)} { $TD_IC_STODriveViewFive.ItemsSource = $TD_DriveInfo; $TD_UserControl1.Dispatcher.Invoke([System.Action]{},"Render")  }
-                {($_ -eq 6)} { $TD_IC_STODriveViewix.ItemsSource = $TD_DriveInfo; $TD_UserControl1.Dispatcher.Invoke([System.Action]{},"Render")  }
-                {($_ -eq 7)} { $TD_IC_STODriveViewSeven.ItemsSource = $TD_DriveInfo; $TD_UserControl1.Dispatcher.Invoke([System.Action]{},"Render")  }
-                {($_ -eq 8)} { $TD_IC_STODriveViewEight.ItemsSource = $TD_DriveInfo; $TD_UserControl1.Dispatcher.Invoke([System.Action]{},"Render")  }
+                {($_ -eq 1)} { $TD_IC_STODriveViewOne.ItemsSource = $TD_DriveInfo }
+                {($_ -eq 2)} { $TD_IC_STODriveViewTwo.ItemsSource = $TD_DriveInfo  }
+                {($_ -eq 3)} { $TD_IC_STODriveViewThree.ItemsSource = $TD_DriveInfo  }
+                {($_ -eq 4)} { $TD_IC_STODriveViewFour.ItemsSource = $TD_DriveInfo }
+                {($_ -eq 5)} { $TD_IC_STODriveViewFive.ItemsSource = $TD_DriveInfo }
+                {($_ -eq 6)} { $TD_IC_STODriveViewix.ItemsSource = $TD_DriveInfo }
+                {($_ -eq 7)} { $TD_IC_STODriveViewSeven.ItemsSource = $TD_DriveInfo }
+                {($_ -eq 8)} { $TD_IC_STODriveViewEight.ItemsSource = $TD_DriveInfo }
                 Default { SST_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong, please check the prompt output first and then the log files.") -TD_ToolMSGType Error }
             }
 
@@ -818,7 +818,7 @@ $TD_btn_IBM_FCPortStats.add_click({
     CheckBoxReseter
     $TD_stp_PoolVolumeInfo,$TD_stp_IBM_IPPortInfo,$TD_stp_IBM_HostInfo,$TD_stp_StorageEventLog,$TD_stp_DriveInfo,$TD_stp_HostVolInfo,$TD_stp_BackUpConfig,$TD_stp_BaseStorageInfo,$TD_stp_IBM_FCPortInfo,$TD_stp_PolicyBased_Rep,$TD_stp_StorageAuditLog,$TD_stp_CleanUpDump | ForEach-Object {$_.Visibility="Collapsed"}
     $TD_UserControl1.Dispatcher.Invoke([System.Action]{},"Render")
-    
+
     $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_.DeviceTyp -eq "Storage"}
 
     $TD_dg_FCPortStatsOne,$TD_dg_FCPortStatsTwo,$TD_dg_FCPortStatsThree,$TD_dg_FCPortStatsFour,$TD_dg_FCPortStatsFive,$TD_dg_FCPortStatsSix,$TD_dg_FCPortStatsSeven,$TD_dg_FCPortStatsEight |ForEach-Object {
@@ -1275,7 +1275,12 @@ $TD_btn_FOS_SwitchShow.add_click({
         [array]$FOS_SwitchShow = FOS_SwitchShowInfo -TD_Line_ID $_.ID -TD_Device_ConnectionTyp $_.ConnectionTyp -TD_Device_UserName $_.UserName -TD_Device_DeviceName $_.DeviceName -TD_Device_DeviceIP $_.IPAddress -TD_Device_PW $([Net.NetworkCredential]::new('', $_.Password).Password) -TD_Device_SSHKeyPath $_.SSHKeyPath -TD_Exportpath $TD_tb_ExportPath.Text
         
         try {
-            SST_LiteDBControl -SST_InfoType "SANPortInfo" -SST_CollectedInformations $FOS_SwitchShow
+            $FOS_SwitchShowDB = $FOS_SwitchShow |ForEach-Object {
+                if($_.Address -ne "virtuell"){
+                    return $_
+                }
+            }
+            SST_LiteDBControl -SST_InfoType "SANPortInfo" -SST_CollectedInformations $FOS_SwitchShowDB
         }
         catch {
             <#Do this if a terminating exception happens#>
