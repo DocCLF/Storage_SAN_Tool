@@ -603,6 +603,8 @@ $TD_btn_IBM_Eventlog.add_click({
 
 $TD_btn_IBM_CatAuditLog.add_click({
     CheckBoxReseter
+    $TD_stp_PoolVolumeInfo,$TD_stp_IBM_IPPortInfo,$TD_stp_IBM_HostInfo,$TD_stp_FCPortStats,$TD_stp_DriveInfo,$TD_stp_StorageEventLog,$TD_stp_HostVolInfo,$TD_stp_BackUpConfig,$TD_stp_BaseStorageInfo,$TD_stp_IBM_FCPortInfo,$TD_stp_PolicyBased_Rep,$TD_stp_CleanUpDump | ForEach-Object {$_.Visibility="Collapsed"}
+    $TD_UserControl1.Dispatcher.Invoke([System.Action]{},"Render")
     $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_.DeviceTyp -eq "Storage"}
 
     $TD_dg_StorageAuditLogOne,$TD_dg_StorageAuditLogTwo,$TD_dg_StorageAuditLogThree,$TD_dg_StorageAuditLogFour,$TD_dg_StorageAuditLogFive,$TD_dg_StorageAuditLogSix,$TD_dg_StorageAuditLogSeven,$TD_dg_StorageAuditLogEight |ForEach-Object {
@@ -626,8 +628,6 @@ $TD_btn_IBM_CatAuditLog.add_click({
     }
 
     if($TD_UCRefresh){$TD_UserControl1.Dispatcher.Invoke([System.Action]{},"Render");$TD_UCRefresh=$false}
-
-    $TD_stp_PoolVolumeInfo,$TD_stp_IBM_IPPortInfo,$TD_stp_IBM_HostInfo,$TD_stp_FCPortStats,$TD_stp_DriveInfo,$TD_stp_StorageEventLog,$TD_stp_HostVolInfo,$TD_stp_BackUpConfig,$TD_stp_BaseStorageInfo,$TD_stp_IBM_FCPortInfo,$TD_stp_PolicyBased_Rep,$TD_stp_CleanUpDump | ForEach-Object {$_.Visibility="Collapsed"}
 
     $TD_stp_StorageAuditLog.Visibility="Visible" 
 
@@ -755,8 +755,10 @@ $TD_btn_ClearFilterHVM.Add_Click({
 
 $TD_btn_IBM_DriveInfo.add_click({
     CheckBoxReseter
+    $TD_stp_PoolVolumeInfo,$TD_stp_IBM_IPPortInfo,$TD_stp_IBM_HostInfo,$TD_stp_FCPortStats,$TD_stp_StorageEventLog,$TD_stp_HostVolInfo,$TD_stp_BackUpConfig,$TD_stp_BaseStorageInfo,$TD_stp_IBM_FCPortInfo,$TD_stp_PolicyBased_Rep,$TD_stp_StorageAuditLog,$TD_stp_CleanUpDump | ForEach-Object {$_.Visibility="Collapsed"}
+    $TD_UserControl1.Dispatcher.Invoke([System.Action]{},"Render")
     $TD_lb_DriveInfoOne,$TD_lb_DriveInfoTwo,$TD_lb_DriveInfoThree,$TD_lb_DriveInfoFour,$TD_lb_DriveInfoFive,$TD_lb_DriveInfoSix,$TD_lb_DriveInfoSeven,$TD_lb_DriveInfoEight  |ForEach-Object {
-        $_.Visibility = "Hidden"
+        $_.Visibility = "Collapsed"
     }
 
     $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_.DeviceTyp -eq "Storage"}
@@ -788,14 +790,14 @@ $TD_btn_IBM_DriveInfo.add_click({
             }
 
             switch ($TD_DevCounter) {
-                {($_ -eq 1)} { $TD_IC_STODriveViewOne.ItemsSource = $TD_DriveInfo }
-                {($_ -eq 2)} { $TD_IC_STODriveViewTwo.ItemsSource = $TD_DriveInfo }
-                {($_ -eq 3)} { $TD_IC_STODriveViewThree.ItemsSource = $TD_DriveInfo }
-                {($_ -eq 4)} { $TD_IC_STODriveViewFour.ItemsSource = $TD_DriveInfo }
-                {($_ -eq 5)} { $TD_IC_STODriveViewFive.ItemsSource = $TD_DriveInfo }
-                {($_ -eq 6)} { $TD_IC_STODriveViewix.ItemsSource = $TD_DriveInfo }
-                {($_ -eq 7)} { $TD_IC_STODriveViewSeven.ItemsSource = $TD_DriveInfo }
-                {($_ -eq 8)} { $TD_IC_STODriveViewEight.ItemsSource = $TD_DriveInfo }
+                {($_ -eq 1)} { $TD_IC_STODriveViewOne.ItemsSource = $TD_DriveInfo; $TD_UserControl1.Dispatcher.Invoke([System.Action]{},"Render") }
+                {($_ -eq 2)} { $TD_IC_STODriveViewTwo.ItemsSource = $TD_DriveInfo; $TD_UserControl1.Dispatcher.Invoke([System.Action]{},"Render")  }
+                {($_ -eq 3)} { $TD_IC_STODriveViewThree.ItemsSource = $TD_DriveInfo; $TD_UserControl1.Dispatcher.Invoke([System.Action]{},"Render")  }
+                {($_ -eq 4)} { $TD_IC_STODriveViewFour.ItemsSource = $TD_DriveInfo; $TD_UserControl1.Dispatcher.Invoke([System.Action]{},"Render")  }
+                {($_ -eq 5)} { $TD_IC_STODriveViewFive.ItemsSource = $TD_DriveInfo; $TD_UserControl1.Dispatcher.Invoke([System.Action]{},"Render")  }
+                {($_ -eq 6)} { $TD_IC_STODriveViewix.ItemsSource = $TD_DriveInfo; $TD_UserControl1.Dispatcher.Invoke([System.Action]{},"Render")  }
+                {($_ -eq 7)} { $TD_IC_STODriveViewSeven.ItemsSource = $TD_DriveInfo; $TD_UserControl1.Dispatcher.Invoke([System.Action]{},"Render")  }
+                {($_ -eq 8)} { $TD_IC_STODriveViewEight.ItemsSource = $TD_DriveInfo; $TD_UserControl1.Dispatcher.Invoke([System.Action]{},"Render")  }
                 Default { SST_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong, please check the prompt output first and then the log files.") -TD_ToolMSGType Error }
             }
 
@@ -808,14 +810,15 @@ $TD_btn_IBM_DriveInfo.add_click({
 
     if($TD_UCRefresh){$TD_UserControl1.Dispatcher.Invoke([System.Action]{},"Render");$TD_UCRefresh=$false}
 
-    $TD_stp_PoolVolumeInfo,$TD_stp_IBM_IPPortInfo,$TD_stp_IBM_HostInfo,$TD_stp_FCPortStats,$TD_stp_StorageEventLog,$TD_stp_HostVolInfo,$TD_stp_BackUpConfig,$TD_stp_BaseStorageInfo,$TD_stp_IBM_FCPortInfo,$TD_stp_PolicyBased_Rep,$TD_stp_StorageAuditLog,$TD_stp_CleanUpDump | ForEach-Object {$_.Visibility="Collapsed"}
-
     $TD_stp_DriveInfo.Visibility="Visible" 
 
 })
 
 $TD_btn_IBM_FCPortStats.add_click({
-
+    CheckBoxReseter
+    $TD_stp_PoolVolumeInfo,$TD_stp_IBM_IPPortInfo,$TD_stp_IBM_HostInfo,$TD_stp_StorageEventLog,$TD_stp_DriveInfo,$TD_stp_HostVolInfo,$TD_stp_BackUpConfig,$TD_stp_BaseStorageInfo,$TD_stp_IBM_FCPortInfo,$TD_stp_PolicyBased_Rep,$TD_stp_StorageAuditLog,$TD_stp_CleanUpDump | ForEach-Object {$_.Visibility="Collapsed"}
+    $TD_UserControl1.Dispatcher.Invoke([System.Action]{},"Render")
+    
     $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_.DeviceTyp -eq "Storage"}
 
     $TD_dg_FCPortStatsOne,$TD_dg_FCPortStatsTwo,$TD_dg_FCPortStatsThree,$TD_dg_FCPortStatsFour,$TD_dg_FCPortStatsFive,$TD_dg_FCPortStatsSix,$TD_dg_FCPortStatsSeven,$TD_dg_FCPortStatsEight |ForEach-Object {
@@ -849,14 +852,15 @@ $TD_btn_IBM_FCPortStats.add_click({
 
     if($TD_UCRefresh){$TD_UserControl1.Dispatcher.Invoke([System.Action]{},"Render");$TD_UCRefresh=$false}
 
-    $TD_stp_PoolVolumeInfo,$TD_stp_IBM_IPPortInfo,$TD_stp_IBM_HostInfo,$TD_stp_StorageEventLog,$TD_stp_DriveInfo,$TD_stp_HostVolInfo,$TD_stp_BackUpConfig,$TD_stp_BaseStorageInfo,$TD_stp_IBM_FCPortInfo,$TD_stp_PolicyBased_Rep,$TD_stp_StorageAuditLog,$TD_stp_CleanUpDump | ForEach-Object {$_.Visibility="Collapsed"}
-
     $TD_stp_FCPortStats.Visibility="Visible" 
     
 })
 
 $TD_btn_IBM_FCPortInfo.add_click({
     CheckBoxReseter
+    $TD_stp_PoolVolumeInfo,$TD_stp_IBM_IPPortInfo,$TD_stp_IBM_HostInfo,$TD_stp_FCPortStats,$TD_stp_DriveInfo,$TD_stp_HostVolInfo,$TD_stp_BackUpConfig,$TD_stp_BaseStorageInfo,$TD_stp_StorageEventLog,$TD_stp_PolicyBased_Rep,$TD_stp_StorageAuditLog,$TD_stp_CleanUpDump | ForEach-Object {$_.Visibility="Collapsed"}
+    $TD_UserControl1.Dispatcher.Invoke([System.Action]{},"Render")
+
     $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_.DeviceTyp -eq "Storage"}
 
     $TD_dg_FCPortInfoOne,$TD_dg_FCPortInfoTwo,$TD_dg_FCPortInfoThree,$TD_dg_FCPortInfoFour,$TD_dg_FCPortInfoFive,$TD_dg_FCPortInfoSix,$TD_dg_FCPortInfoSeven,$TD_dg_FCPortInfoEight |ForEach-Object {
@@ -880,8 +884,6 @@ $TD_btn_IBM_FCPortInfo.add_click({
     }
 
     if($TD_UCRefresh){$TD_UserControl1.Dispatcher.Invoke([System.Action]{},"Render");$TD_UCRefresh=$false}
-
-    $TD_stp_PoolVolumeInfo,$TD_stp_IBM_IPPortInfo,$TD_stp_IBM_HostInfo,$TD_stp_FCPortStats,$TD_stp_DriveInfo,$TD_stp_HostVolInfo,$TD_stp_BackUpConfig,$TD_stp_BaseStorageInfo,$TD_stp_StorageEventLog,$TD_stp_PolicyBased_Rep,$TD_stp_StorageAuditLog,$TD_stp_CleanUpDump | ForEach-Object {$_.Visibility="Collapsed"}
 
     $TD_stp_IBM_FCPortInfo.Visibility="Visible"
     
@@ -950,6 +952,9 @@ $TD_btn_FilterPBR.add_click({
 
 $TD_btn_IBM_BaseStorageInfo.add_click({
     CheckBoxReseter
+    $TD_stp_PoolVolumeInfo,$TD_stp_IBM_IPPortInfo,$TD_stp_IBM_HostInfo,$TD_stp_FCPortStats,$TD_stp_DriveInfo,$TD_stp_HostVolInfo,$TD_stp_BackUpConfig,$TD_stp_StorageEventLog,$TD_stp_IBM_FCPortInfo,$TD_stp_PolicyBased_Rep,$TD_stp_StorageAuditLog,$TD_stp_CleanUpDump | ForEach-Object {$_.Visibility="Collapsed"}
+    $TD_UserControl1.Dispatcher.Invoke([System.Action]{},"Render")
+
     $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_.DeviceTyp -eq "Storage"}
 
     $TD_dg_BaseStorageInfoOne,$TD_dg_BaseStorageInfoTwo,$TD_dg_BaseStorageInfoThree,$TD_dg_BaseStorageInfoFour,$TD_dg_BaseStorageInfoFive,$TD_dg_BaseStorageInfoSix,$TD_dg_BaseStorageInfoSeven,$TD_dg_BaseStorageInfoEight |ForEach-Object {
@@ -1010,13 +1015,14 @@ $TD_btn_IBM_BaseStorageInfo.add_click({
 
     if($TD_UCRefresh){$TD_UserControl1.Dispatcher.Invoke([System.Action]{},"Render");$TD_UCRefresh=$false}
 
-    $TD_stp_PoolVolumeInfo,$TD_stp_IBM_IPPortInfo,$TD_stp_IBM_HostInfo,$TD_stp_FCPortStats,$TD_stp_DriveInfo,$TD_stp_HostVolInfo,$TD_stp_BackUpConfig,$TD_stp_StorageEventLog,$TD_stp_IBM_FCPortInfo,$TD_stp_PolicyBased_Rep,$TD_stp_StorageAuditLog,$TD_stp_CleanUpDump | ForEach-Object {$_.Visibility="Collapsed"}
-    
     $TD_stp_BaseStorageInfo.Visibility="Visible"
 })
 
 $TD_btn_IBM_PoolVolumeInfo.add_click({
     CheckBoxReseter
+    $TD_stp_BaseStorageInfo,$TD_stp_IBM_IPPortInfo,$TD_stp_IBM_HostInfo,$TD_stp_FCPortStats,$TD_stp_DriveInfo,$TD_stp_HostVolInfo,$TD_stp_BackUpConfig,$TD_stp_StorageEventLog,$TD_stp_IBM_FCPortInfo,$TD_stp_PolicyBased_Rep,$TD_stp_StorageAuditLog,$TD_stp_CleanUpDump | ForEach-Object {$_.Visibility="Collapsed"}
+    $TD_UserControl1.Dispatcher.Invoke([System.Action]{},"Render")
+
     $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_.DeviceTyp -eq "Storage"}
 
     $TD_dg_ExpandMDiskInfoOne,$TD_dg_ExpandMDiskInfoTwo,$TD_dg_ExpandMDiskInfoThree,$TD_dg_ExpandMDiskInfoFour,$TD_dg_ExpandMDiskInfoFive,$TD_dg_ExpandMDiskInfoSix,$TD_dg_ExpandMDiskInfoSeven,$TD_dg_ExpandMDiskInfoEight |ForEach-Object {
@@ -1059,14 +1065,14 @@ $TD_btn_IBM_PoolVolumeInfo.add_click({
 
     if($TD_UCRefresh){$TD_UserControl1.Dispatcher.Invoke([System.Action]{},"Render");$TD_UCRefresh=$false}
 
-    $TD_stp_BaseStorageInfo,$TD_stp_IBM_IPPortInfo,$TD_stp_IBM_HostInfo,$TD_stp_FCPortStats,$TD_stp_DriveInfo,$TD_stp_HostVolInfo,$TD_stp_BackUpConfig,$TD_stp_StorageEventLog,$TD_stp_IBM_FCPortInfo,$TD_stp_PolicyBased_Rep,$TD_stp_StorageAuditLog,$TD_stp_CleanUpDump | ForEach-Object {$_.Visibility="Collapsed"}
-    
     $TD_stp_PoolVolumeInfo.Visibility="Visible"
 })
 
 $TD_btn_IBM_CleanUpDumps.add_click({
     $ErrorActionPreference="Continue"
     CheckBoxReseter
+    $TD_stp_PoolVolumeInfo,$TD_stp_IBM_IPPortInfo,$TD_stp_IBM_HostInfo,$TD_stp_FCPortStats,$TD_stp_DriveInfo,$TD_stp_HostVolInfo,$TD_stp_BackUpConfig,$TD_stp_BaseStorageInfo,$TD_stp_IBM_FCPortInfo,$TD_stp_PolicyBased_Rep,$TD_stp_StorageAuditLog | ForEach-Object {$_.Visibility="Collapsed"}
+
     $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_.DeviceTyp -eq "Storage"}
 
     $TD_Credentials | ForEach-Object {
@@ -1084,7 +1090,6 @@ $TD_btn_IBM_CleanUpDumps.add_click({
             Default { SST_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong, please check the prompt output first and then the log files.") -TD_ToolMSGType Error }
         }
     }
-    $TD_stp_PoolVolumeInfo,$TD_stp_IBM_IPPortInfo,$TD_stp_IBM_HostInfo,$TD_stp_FCPortStats,$TD_stp_DriveInfo,$TD_stp_HostVolInfo,$TD_stp_BackUpConfig,$TD_stp_BaseStorageInfo,$TD_stp_IBM_FCPortInfo,$TD_stp_PolicyBased_Rep,$TD_stp_StorageAuditLog | ForEach-Object {$_.Visibility="Collapsed"}
 
     $TD_stp_CleanUpDump.Visibility="Visible"
 })
@@ -1132,6 +1137,9 @@ $TD_btn_IBM_BackUpConfig.add_click({
 
 $TD_btn_IBM_HostInfo.add_click({
     CheckBoxReseter
+    $TD_stp_PoolVolumeInfo,$TD_stp_IBM_IPPortInfo,$TD_stp_HostVolInfo,$TD_stp_FCPortStats,$TD_stp_DriveInfo,$TD_stp_StorageEventLog,$TD_stp_BackUpConfig,$TD_stp_BaseStorageInfo,$TD_stp_IBM_FCPortInfo,$TD_stp_PolicyBased_Rep,$TD_stp_StorageAuditLog,$TD_stp_CleanUpDump | ForEach-Object {$_.Visibility="Collapsed"}
+    $TD_UserControl1.Dispatcher.Invoke([System.Action]{},"Render")
+
     $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_.DeviceTyp -eq "Storage"}
 
 
@@ -1165,14 +1173,15 @@ $TD_btn_IBM_HostInfo.add_click({
 
     if($TD_UCRefresh){$TD_UserControl1.Dispatcher.Invoke([System.Action]{},"Render");$TD_UCRefresh=$false}
 
-    $TD_stp_PoolVolumeInfo,$TD_stp_IBM_IPPortInfo,$TD_stp_HostVolInfo,$TD_stp_FCPortStats,$TD_stp_DriveInfo,$TD_stp_StorageEventLog,$TD_stp_BackUpConfig,$TD_stp_BaseStorageInfo,$TD_stp_IBM_FCPortInfo,$TD_stp_PolicyBased_Rep,$TD_stp_StorageAuditLog,$TD_stp_CleanUpDump | ForEach-Object {$_.Visibility="Collapsed"}
-
     $TD_stp_IBM_HostInfo.Visibility="Visible" 
 
 })
 
 $TD_btn_IBM_IPPortInfo.add_click({
     CheckBoxReseter
+    $TD_stp_PoolVolumeInfo,$TD_stp_IBM_FCPortInfo,$TD_stp_IBM_HostInfo,$TD_stp_FCPortStats,$TD_stp_DriveInfo,$TD_stp_HostVolInfo,$TD_stp_BackUpConfig,$TD_stp_BaseStorageInfo,$TD_stp_StorageEventLog,$TD_stp_PolicyBased_Rep,$TD_stp_StorageAuditLog,$TD_stp_CleanUpDump | ForEach-Object {$_.Visibility="Collapsed"}
+    $TD_UserControl1.Dispatcher.Invoke([System.Action]{},"Render")
+
     $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_.DeviceTyp -eq "Storage"}
 
     $TD_dg_IPPortInfoOne,$TD_dg_IPPortInfoTwo,$TD_dg_IPPortInfoThree,$TD_dg_IPPortInfoFour,$TD_dg_IPPortInfoFive,$TD_dg_IPPortInfoSix,$TD_dg_IPPortInfoSeven,$TD_dg_IPPortInfoEight |ForEach-Object {
@@ -1196,8 +1205,6 @@ $TD_btn_IBM_IPPortInfo.add_click({
     }
 
     if($TD_UCRefresh){$TD_UserControl1.Dispatcher.Invoke([System.Action]{},"Render");$TD_UCRefresh=$false}
-
-    $TD_stp_PoolVolumeInfo,$TD_stp_IBM_FCPortInfo,$TD_stp_IBM_HostInfo,$TD_stp_FCPortStats,$TD_stp_DriveInfo,$TD_stp_HostVolInfo,$TD_stp_BackUpConfig,$TD_stp_BaseStorageInfo,$TD_stp_StorageEventLog,$TD_stp_PolicyBased_Rep,$TD_stp_StorageAuditLog,$TD_stp_CleanUpDump | ForEach-Object {$_.Visibility="Collapsed"}
 
     $TD_stp_IBM_IPPortInfo.Visibility="Visible"
     
