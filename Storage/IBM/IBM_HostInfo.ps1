@@ -59,6 +59,7 @@ function IBM_HostInfo {
             if([string]::IsNullOrWhiteSpace($TD_CollectInfo) -or ($iCounter -gt ($TD_CollectInfos.Count - 2)) ){
                 $TD_HostBaseTemp;
                 $iCounter++
+                $TD_HostBaseTemp.HostStateInfo = SST_IBMDBFunc -STOWWN $TD_EventSplitInfoWWNN -STOHostID $TD_HostBaseTemp.HostID -STOHostName $TD_HostBaseTemp.HostName -STOHostState $TD_HostBaseTemp.Status
                 $TD_HostBaseTemp = "" | Select-Object HostID,HostName,PortCount,Type,Status,HostStateInfo,SiteName,HostClusterName,Protocol,StatusPolicy,StatusSite,WWPNOne,NodeLoggedInCountOne,StateOne,WWPNTwo,NodeLoggedInCountTwo,StateTwo,WWPNThree,NodeLoggedInCountThree,StateThree,WWPNFour,NodeLoggedInCountFour,StateFour,STOName,WWNN,SerialNumber
                 continue
             }
@@ -111,7 +112,7 @@ function IBM_HostInfo {
             $TD_HostBaseTemp.SerialNumber = $TD_FSBaseSerialNumber
             $TD_HostBaseTemp.STOName = $TD_STOName
             $iCounter++
-            $TD_HostBaseTemp.HostStateInfo = SST_IBMDBFunc -STOWWN $TD_EventSplitInfoWWNN -STOHostID $TD_HostBaseTemp.HostID  -STOHostState $TD_HostBaseTemp.Status
+            
             $ProgCounter++
             Write-ProgressBar -ProgressBar $ProgressBar -Activity "Collect data for Device $($TD_Line_ID) $($TD_Device_DeviceName)" -PercentComplete (($ProgCounter/$TD_CollectInfos.Count) * 100)
         }
