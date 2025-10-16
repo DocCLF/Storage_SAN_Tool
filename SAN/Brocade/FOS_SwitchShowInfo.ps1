@@ -95,10 +95,6 @@ function FOS_SwitchShowInfo {
                 <# Port state information #>
                 $FOS_SWsh.State = ($FOS_linebyLine |Select-String -Pattern '(\w+_\w+|\w+)\s+(FC)' -AllMatches).Matches.Groups.Value[1]
                 $FOS_SWshState = $FOS_SWsh.State
-                
-                if(!([string]::IsNullOrWhiteSpace($PortStateInfo))){
-                    $FOS_SWsh.PortStateInfo = $PortStateInfo
-                }
                 <# Protocol support by GbE port. #>
                 $FOS_SWsh.Proto = ($FOS_linebyLine |Select-String -Pattern '(\w+_\w+|\w+)\s+(FC)' -AllMatches).Matches.Groups.Value[2]
                 <# WWPN or other Infos #>
@@ -111,6 +107,12 @@ function FOS_SwitchShowInfo {
                 }
                 
                 if($FOS_SWsh.PortConnect -like "*NPIV*"){
+                    if($FOS_SWsh.Address -ne "virtuell"){
+                        $PortStateInfo = SST_FOSDBFunc -SwitchWWN $FOS_switchWwn -SwitchPort $FOS_SWshPort -SwitchPortState $FOS_SWshState
+                        if(!([string]::IsNullOrWhiteSpace($PortStateInfo))){
+                            $FOS_SWsh.PortStateInfo = $PortStateInfo
+                        }
+                    }
                     $FOS_SwBasicPortDetails += $FOS_SWsh
                     <# need a better way to connect #>
                     if($TD_Device_ConnectionTyp -eq "ssh"){
@@ -145,12 +147,15 @@ function FOS_SwitchShowInfo {
                         }
                     }
                 }else{
-                    
+                    if($FOS_SWsh.Address -ne "virtuell"){
+                        $PortStateInfo = SST_FOSDBFunc -SwitchWWN $FOS_switchWwn -SwitchPort $FOS_SWshPort -SwitchPortState $FOS_SWshState
+                        if(!([string]::IsNullOrWhiteSpace($PortStateInfo))){
+                            $FOS_SWsh.PortStateInfo = $PortStateInfo
+                        }
+                    }
                    $FOS_SwBasicPortDetails += $FOS_SWsh
                 }
-                if($FOS_SWsh.Address -ne "virtuell"){
-                    $PortStateInfo = SST_FOSDBFunc -SwitchWWN $FOS_switchWwn -SwitchPort $FOS_SWshPort -SwitchPortState $FOS_SWshState
-                }
+
             }
             # if the Portnumber is not empty and there is a SFP pluged in, push the Port in the FOS_usedPorts array
             if(($FOS_SWsh.Port -ne "") -and ($FOS_SWsh.Media -eq "id")){$FOS_usedPorts += $FOS_SWsh.Port}
