@@ -39,6 +39,7 @@
                     SelectedValuePath="Content"
                     ToolTip="Selcet your FOS-Version"
                     Style="{DynamicResource MainComboBoxStyle}">
+                    <ComboBoxItem >FOS 10.x</ComboBoxItem>
                     <ComboBoxItem IsSelected="True">FOS 9.x</ComboBoxItem>
                     <ComboBoxItem >FOS 8.x</ComboBoxItem>
                     <ComboBoxItem >FOS 7.x</ComboBoxItem>
@@ -2212,6 +2213,7 @@
                                     <DataGridTextColumn.CellStyle>
                                         <Style TargetType="DataGridCell">
                                             <Setter Property="ToolTip" Value="The port index identifies the port number relative to the switch." />
+                                            <Setter Property="ToolTipService.InitialShowDelay" Value="10" />
                                         </Style>
                                     </DataGridTextColumn.CellStyle>
                                 </DataGridTextColumn>
@@ -2220,6 +2222,7 @@
                                     <DataGridTextColumn.CellStyle>
                                         <Style TargetType="DataGridCell">
                                             <Setter Property="ToolTip" Value="The 24-bit Address Identifier." />
+                                            <Setter Property="ToolTipService.InitialShowDelay" Value="10" />
                                         </Style>
                                     </DataGridTextColumn.CellStyle>
                                 </DataGridTextColumn>
@@ -2228,7 +2231,19 @@
                                 <DataGridTextColumn Width="auto" Header="State" Binding ="{Binding State}" IsReadOnly="True"/>
                                 <DataGridTextColumn Width="auto" Header="Proto" Binding ="{Binding Proto}" IsReadOnly="True"/>  
                                 <DataGridTextColumn Width="auto" Header="PortConnect" Binding ="{Binding PortConnect}" IsReadOnly="True"/>
-                                <DataGridTextColumn Width="auto" Header="PortStateInfo" Binding ="{Binding PortStateInfo}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="PortStateInfo" Binding ="{Binding PortStateInfo}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding PortStateInfo}" Value="no change">
+                                                    <Setter Property="Background" Value="LightGreen" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                            <Setter Property="ToolTip" Value="Shows the change from the last check to the current one." />
+                                            <Setter Property="ToolTipService.InitialShowDelay" Value="10" />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
                             </DataGrid.Columns>
                         </DataGrid>
                     </StackPanel>
@@ -2254,10 +2269,11 @@
                                 </Style>
                             </DataGrid.RowStyle>
                             <DataGrid.Columns>
-                                <DataGridTextColumn Width="auto" Header="Index" Binding ="{Binding Index}" IsReadOnly="True">
+                                <DataGridTextColumn Width="auto" Header="Index"  Binding ="{Binding Index}" IsReadOnly="True">
                                     <DataGridTextColumn.CellStyle>
                                         <Style TargetType="DataGridCell">
                                             <Setter Property="ToolTip" Value="The port index identifies the port number relative to the switch." />
+                                            <Setter Property="ToolTipService.InitialShowDelay" Value="10" />
                                         </Style>
                                     </DataGridTextColumn.CellStyle>
                                 </DataGridTextColumn>
@@ -2266,6 +2282,7 @@
                                     <DataGridTextColumn.CellStyle>
                                         <Style TargetType="DataGridCell">
                                             <Setter Property="ToolTip" Value="The 24-bit Address Identifier." />
+                                            <Setter Property="ToolTipService.InitialShowDelay" Value="10" />
                                         </Style>
                                     </DataGridTextColumn.CellStyle>
                                 </DataGridTextColumn>
@@ -2274,7 +2291,19 @@
                                 <DataGridTextColumn Width="auto" Header="State" Binding ="{Binding State}" IsReadOnly="True"/>
                                 <DataGridTextColumn Width="auto" Header="Proto" Binding ="{Binding Proto}" IsReadOnly="True"/>  
                                 <DataGridTextColumn Width="auto" Header="PortConnect" Binding ="{Binding PortConnect}" IsReadOnly="True"/>
-                                <DataGridTextColumn Width="auto" Header="PortStateInfo" Binding ="{Binding PortStateInfo}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="PortStateInfo" Binding ="{Binding PortStateInfo}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding PortStateInfo}" Value="no change">
+                                                    <Setter Property="Background" Value="LightGreen" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                            <Setter Property="ToolTip" Value="Shows the change from the last check to the current one." />
+                                            <Setter Property="ToolTipService.InitialShowDelay" Value="10" />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
                             </DataGrid.Columns>
                         </DataGrid>
                     </StackPanel>
@@ -2300,10 +2329,11 @@
                                 </Style>
                             </DataGrid.RowStyle>
                             <DataGrid.Columns>
-                                <DataGridTextColumn Width="auto" Header="Index" Binding ="{Binding Index}" IsReadOnly="True">
+                                <DataGridTextColumn Width="auto" Header="Index"  Binding ="{Binding Index}" IsReadOnly="True">
                                     <DataGridTextColumn.CellStyle>
                                         <Style TargetType="DataGridCell">
                                             <Setter Property="ToolTip" Value="The port index identifies the port number relative to the switch." />
+                                            <Setter Property="ToolTipService.InitialShowDelay" Value="10" />
                                         </Style>
                                     </DataGridTextColumn.CellStyle>
                                 </DataGridTextColumn>
@@ -2312,6 +2342,7 @@
                                     <DataGridTextColumn.CellStyle>
                                         <Style TargetType="DataGridCell">
                                             <Setter Property="ToolTip" Value="The 24-bit Address Identifier." />
+                                            <Setter Property="ToolTipService.InitialShowDelay" Value="10" />
                                         </Style>
                                     </DataGridTextColumn.CellStyle>
                                 </DataGridTextColumn>
@@ -2320,7 +2351,19 @@
                                 <DataGridTextColumn Width="auto" Header="State" Binding ="{Binding State}" IsReadOnly="True"/>
                                 <DataGridTextColumn Width="auto" Header="Proto" Binding ="{Binding Proto}" IsReadOnly="True"/>  
                                 <DataGridTextColumn Width="auto" Header="PortConnect" Binding ="{Binding PortConnect}" IsReadOnly="True"/>
-                                <DataGridTextColumn Width="auto" Header="PortStateInfo" Binding ="{Binding PortStateInfo}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="PortStateInfo" Binding ="{Binding PortStateInfo}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding PortStateInfo}" Value="no change">
+                                                    <Setter Property="Background" Value="LightGreen" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                            <Setter Property="ToolTip" Value="Shows the change from the last check to the current one." />
+                                            <Setter Property="ToolTipService.InitialShowDelay" Value="10" />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
                             </DataGrid.Columns>
                         </DataGrid>
                     </StackPanel>
@@ -2346,10 +2389,11 @@
                                 </Style>
                             </DataGrid.RowStyle>
                             <DataGrid.Columns>
-                                <DataGridTextColumn Width="auto" Header="Index" Binding ="{Binding Index}" IsReadOnly="True">
+                                <DataGridTextColumn Width="auto" Header="Index"  Binding ="{Binding Index}" IsReadOnly="True">
                                     <DataGridTextColumn.CellStyle>
                                         <Style TargetType="DataGridCell">
                                             <Setter Property="ToolTip" Value="The port index identifies the port number relative to the switch." />
+                                            <Setter Property="ToolTipService.InitialShowDelay" Value="10" />
                                         </Style>
                                     </DataGridTextColumn.CellStyle>
                                 </DataGridTextColumn>
@@ -2358,6 +2402,7 @@
                                     <DataGridTextColumn.CellStyle>
                                         <Style TargetType="DataGridCell">
                                             <Setter Property="ToolTip" Value="The 24-bit Address Identifier." />
+                                            <Setter Property="ToolTipService.InitialShowDelay" Value="10" />
                                         </Style>
                                     </DataGridTextColumn.CellStyle>
                                 </DataGridTextColumn>
@@ -2366,7 +2411,19 @@
                                 <DataGridTextColumn Width="auto" Header="State" Binding ="{Binding State}" IsReadOnly="True"/>
                                 <DataGridTextColumn Width="auto" Header="Proto" Binding ="{Binding Proto}" IsReadOnly="True"/>  
                                 <DataGridTextColumn Width="auto" Header="PortConnect" Binding ="{Binding PortConnect}" IsReadOnly="True"/>
-                                <DataGridTextColumn Width="auto" Header="PortStateInfo" Binding ="{Binding PortStateInfo}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="PortStateInfo" Binding ="{Binding PortStateInfo}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding PortStateInfo}" Value="no change">
+                                                    <Setter Property="Background" Value="LightGreen" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                            <Setter Property="ToolTip" Value="Shows the change from the last check to the current one." />
+                                            <Setter Property="ToolTipService.InitialShowDelay" Value="10" />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
                             </DataGrid.Columns>
                         </DataGrid>
                     </StackPanel>
@@ -2392,10 +2449,11 @@
                                 </Style>
                             </DataGrid.RowStyle>
                             <DataGrid.Columns>
-                                <DataGridTextColumn Width="auto" Header="Index" Binding ="{Binding Index}" IsReadOnly="True">
+                                <DataGridTextColumn Width="auto" Header="Index"  Binding ="{Binding Index}" IsReadOnly="True">
                                     <DataGridTextColumn.CellStyle>
                                         <Style TargetType="DataGridCell">
                                             <Setter Property="ToolTip" Value="The port index identifies the port number relative to the switch." />
+                                            <Setter Property="ToolTipService.InitialShowDelay" Value="10" />
                                         </Style>
                                     </DataGridTextColumn.CellStyle>
                                 </DataGridTextColumn>
@@ -2404,6 +2462,7 @@
                                     <DataGridTextColumn.CellStyle>
                                         <Style TargetType="DataGridCell">
                                             <Setter Property="ToolTip" Value="The 24-bit Address Identifier." />
+                                            <Setter Property="ToolTipService.InitialShowDelay" Value="10" />
                                         </Style>
                                     </DataGridTextColumn.CellStyle>
                                 </DataGridTextColumn>
@@ -2412,7 +2471,19 @@
                                 <DataGridTextColumn Width="auto" Header="State" Binding ="{Binding State}" IsReadOnly="True"/>
                                 <DataGridTextColumn Width="auto" Header="Proto" Binding ="{Binding Proto}" IsReadOnly="True"/>  
                                 <DataGridTextColumn Width="auto" Header="PortConnect" Binding ="{Binding PortConnect}" IsReadOnly="True"/>
-                                <DataGridTextColumn Width="auto" Header="PortStateInfo" Binding ="{Binding PortStateInfo}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="PortStateInfo" Binding ="{Binding PortStateInfo}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding PortStateInfo}" Value="no change">
+                                                    <Setter Property="Background" Value="LightGreen" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                            <Setter Property="ToolTip" Value="Shows the change from the last check to the current one." />
+                                            <Setter Property="ToolTipService.InitialShowDelay" Value="10" />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
                             </DataGrid.Columns>
                         </DataGrid>
                     </StackPanel>
@@ -2438,10 +2509,11 @@
                                 </Style>
                             </DataGrid.RowStyle>
                             <DataGrid.Columns>
-                                <DataGridTextColumn Width="auto" Header="Index" Binding ="{Binding Index}" IsReadOnly="True">
+                                <DataGridTextColumn Width="auto" Header="Index"  Binding ="{Binding Index}" IsReadOnly="True">
                                     <DataGridTextColumn.CellStyle>
                                         <Style TargetType="DataGridCell">
                                             <Setter Property="ToolTip" Value="The port index identifies the port number relative to the switch." />
+                                            <Setter Property="ToolTipService.InitialShowDelay" Value="10" />
                                         </Style>
                                     </DataGridTextColumn.CellStyle>
                                 </DataGridTextColumn>
@@ -2450,6 +2522,7 @@
                                     <DataGridTextColumn.CellStyle>
                                         <Style TargetType="DataGridCell">
                                             <Setter Property="ToolTip" Value="The 24-bit Address Identifier." />
+                                            <Setter Property="ToolTipService.InitialShowDelay" Value="10" />
                                         </Style>
                                     </DataGridTextColumn.CellStyle>
                                 </DataGridTextColumn>
@@ -2458,7 +2531,19 @@
                                 <DataGridTextColumn Width="auto" Header="State" Binding ="{Binding State}" IsReadOnly="True"/>
                                 <DataGridTextColumn Width="auto" Header="Proto" Binding ="{Binding Proto}" IsReadOnly="True"/>  
                                 <DataGridTextColumn Width="auto" Header="PortConnect" Binding ="{Binding PortConnect}" IsReadOnly="True"/>
-                                <DataGridTextColumn Width="auto" Header="PortStateInfo" Binding ="{Binding PortStateInfo}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="PortStateInfo" Binding ="{Binding PortStateInfo}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding PortStateInfo}" Value="no change">
+                                                    <Setter Property="Background" Value="LightGreen" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                            <Setter Property="ToolTip" Value="Shows the change from the last check to the current one." />
+                                            <Setter Property="ToolTipService.InitialShowDelay" Value="10" />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
                             </DataGrid.Columns>
                         </DataGrid>
                     </StackPanel>
@@ -2484,10 +2569,11 @@
                                 </Style>
                             </DataGrid.RowStyle>
                             <DataGrid.Columns>
-                                <DataGridTextColumn Width="auto" Header="Index" Binding ="{Binding Index}" IsReadOnly="True">
+                                <DataGridTextColumn Width="auto" Header="Index"  Binding ="{Binding Index}" IsReadOnly="True">
                                     <DataGridTextColumn.CellStyle>
                                         <Style TargetType="DataGridCell">
                                             <Setter Property="ToolTip" Value="The port index identifies the port number relative to the switch." />
+                                            <Setter Property="ToolTipService.InitialShowDelay" Value="10" />
                                         </Style>
                                     </DataGridTextColumn.CellStyle>
                                 </DataGridTextColumn>
@@ -2496,6 +2582,7 @@
                                     <DataGridTextColumn.CellStyle>
                                         <Style TargetType="DataGridCell">
                                             <Setter Property="ToolTip" Value="The 24-bit Address Identifier." />
+                                            <Setter Property="ToolTipService.InitialShowDelay" Value="10" />
                                         </Style>
                                     </DataGridTextColumn.CellStyle>
                                 </DataGridTextColumn>
@@ -2504,7 +2591,19 @@
                                 <DataGridTextColumn Width="auto" Header="State" Binding ="{Binding State}" IsReadOnly="True"/>
                                 <DataGridTextColumn Width="auto" Header="Proto" Binding ="{Binding Proto}" IsReadOnly="True"/>  
                                 <DataGridTextColumn Width="auto" Header="PortConnect" Binding ="{Binding PortConnect}" IsReadOnly="True"/>
-                                <DataGridTextColumn Width="auto" Header="PortStateInfo" Binding ="{Binding PortStateInfo}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="PortStateInfo" Binding ="{Binding PortStateInfo}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding PortStateInfo}" Value="no change">
+                                                    <Setter Property="Background" Value="LightGreen" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                            <Setter Property="ToolTip" Value="Shows the change from the last check to the current one." />
+                                            <Setter Property="ToolTipService.InitialShowDelay" Value="10" />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
                             </DataGrid.Columns>
                         </DataGrid>
                     </StackPanel>
@@ -2530,10 +2629,11 @@
                                 </Style>
                             </DataGrid.RowStyle>
                             <DataGrid.Columns>
-                                <DataGridTextColumn Width="auto" Header="Index" Binding ="{Binding Index}" IsReadOnly="True">
+                                <DataGridTextColumn Width="auto" Header="Index"  Binding ="{Binding Index}" IsReadOnly="True">
                                     <DataGridTextColumn.CellStyle>
                                         <Style TargetType="DataGridCell">
                                             <Setter Property="ToolTip" Value="The port index identifies the port number relative to the switch." />
+                                            <Setter Property="ToolTipService.InitialShowDelay" Value="10" />
                                         </Style>
                                     </DataGridTextColumn.CellStyle>
                                 </DataGridTextColumn>
@@ -2542,6 +2642,7 @@
                                     <DataGridTextColumn.CellStyle>
                                         <Style TargetType="DataGridCell">
                                             <Setter Property="ToolTip" Value="The 24-bit Address Identifier." />
+                                            <Setter Property="ToolTipService.InitialShowDelay" Value="10" />
                                         </Style>
                                     </DataGridTextColumn.CellStyle>
                                 </DataGridTextColumn>
@@ -2550,7 +2651,19 @@
                                 <DataGridTextColumn Width="auto" Header="State" Binding ="{Binding State}" IsReadOnly="True"/>
                                 <DataGridTextColumn Width="auto" Header="Proto" Binding ="{Binding Proto}" IsReadOnly="True"/>  
                                 <DataGridTextColumn Width="auto" Header="PortConnect" Binding ="{Binding PortConnect}" IsReadOnly="True"/>
-                                <DataGridTextColumn Width="auto" Header="PortStateInfo" Binding ="{Binding PortStateInfo}" IsReadOnly="True"/>
+                                <DataGridTextColumn Width="auto" Header="PortStateInfo" Binding ="{Binding PortStateInfo}" IsReadOnly="True">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding PortStateInfo}" Value="no change">
+                                                    <Setter Property="Background" Value="LightGreen" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                            <Setter Property="ToolTip" Value="Shows the change from the last check to the current one." />
+                                            <Setter Property="ToolTipService.InitialShowDelay" Value="10" />
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
                             </DataGrid.Columns>
                         </DataGrid>
                     </StackPanel>
