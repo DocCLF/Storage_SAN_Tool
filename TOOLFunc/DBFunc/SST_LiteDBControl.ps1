@@ -128,7 +128,7 @@ function SST_LiteDBControl {
                     $SST_SQliteInsertCMD.Parameters.AddWithValue("@IOgroupName", $SST_CollectedInformation.IO_group_Name) | Out-Null
                     $SST_SQliteInsertCMD.Parameters.AddWithValue("@SerialNumber", $SST_CollectedInformation.Serial_Number) | Out-Null
                     $SST_SQliteInsertCMD.Parameters.AddWithValue("@CodeLevel", $SST_CollectedInformation.Code_Level) | Out-Null
-                    $SST_SQliteInsertCMD.Parameters.AddWithValue("@ConfigNode", $SST_CollectedInformation.ConfigNode) | Out-Null
+                    $SST_SQliteInsertCMD.Parameters.AddWithValue("@ConfigNode", $SST_CollectedInformation.Config_Node) | Out-Null
                     $SST_SQliteInsertCMD.Parameters.AddWithValue("@SideID", $SST_CollectedInformation.SideID) | Out-Null
                     $SST_SQliteInsertCMD.Parameters.AddWithValue("@SideName", $SST_CollectedInformation.SideName) | Out-Null
                     $SST_SQliteInsertCMD.Parameters.AddWithValue("@ProdMTM", $SST_CollectedInformation.Prod_MTM) | Out-Null
@@ -257,7 +257,7 @@ function SST_LiteDBControl {
                     $SST_SQliteInsertCMD.ExecuteNonQuery()
 
                     # Then automatically clean up for this exact switch
-                    $SST_SQliteInsertCMD.CommandText ="DELETE FROM IBMSANPortInfoTable WHERE ID NOT IN (SELECT ID FROM (SELECT ID FROM IBMSANPortInfoTable AS t WHERE (SELECT COUNT(*) FROM IBMSANPortInfoTable AS x WHERE x.SwitchWWN = t.SwitchWWN AND x.Port = t.Port AND datetime(x.TimeStamp) >= datetime(t.TimeStamp) ) <= 2 ));" 
+                    $SST_SQliteInsertCMD.CommandText ="DELETE FROM IBMSANPortInfoTable WHERE ID NOT IN (SELECT ID FROM (SELECT ID FROM IBMSANPortInfoTable AS t WHERE (SELECT COUNT(*) FROM IBMSANPortInfoTable AS x WHERE x.SwitchWWN = t.SwitchWWN AND x.Port = t.Port AND datetime(x.TimeStamp) >= datetime(t.TimeStamp) ) <= 1 ));" 
                     $SST_SQliteInsertCMD.ExecuteNonQuery()
                 }
             }
