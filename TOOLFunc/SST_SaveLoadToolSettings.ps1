@@ -17,8 +17,7 @@ function SST_SaveLoadToolSettings {
             $SST_SavedToolSettings = Get-Item -Path "$PSRootPath\Resources\SavedToolSettings.clixml" -ErrorAction SilentlyContinue
         }
         catch {
-            Write-Debug -Message $_.Exception.Message
-            SST_ToolMessageCollector -TD_ToolMSGCollector $_.Exception.Message -TD_ToolMSGType Error -TD_Shown no
+            SST_ToolMessageCollector -TD_ToolMSGCollector $("SaveLoadToolSettings $($_.Exception.Message)") -TD_ToolMSGType Error -TD_Shown no
             $TD_BTN_LoadToolSettings.Background="LightCoral"
             $SST_SavedToolSettings = $null
         }
@@ -26,8 +25,7 @@ function SST_SaveLoadToolSettings {
             $TD_DBisActive = Get-Item -Path "$PSRootPath\Resources\DBFolder\SSTLocalDB.db" -ErrorAction SilentlyContinue
         }
         catch {
-            Write-Debug -Message $_.Exception.Message
-            SST_ToolMessageCollector -TD_ToolMSGCollector $_.Exception.Message -TD_ToolMSGType Error -TD_Shown yes
+            SST_ToolMessageCollector -TD_ToolMSGCollector $("SaveLoadToolSettings $($_.Exception.Message)") -TD_ToolMSGType Error -TD_Shown yes
         }
     }
     
@@ -56,8 +54,7 @@ function SST_SaveLoadToolSettings {
                 }
                 catch {
                     <#Do this if a terminating exception happens#>
-                    Write-Debug -Message $_.Exception.Message
-                    SST_ToolMessageCollector -TD_ToolMSGCollector $_.Exception.Message -TD_ToolMSGType Error -TD_Shown yes
+                    SST_ToolMessageCollector -TD_ToolMSGCollector $("Settings import failed: $($_.Exception.Message)") -TD_ToolMSGType Error -TD_Shown yes
                 }
             }
             try {
@@ -66,8 +63,7 @@ function SST_SaveLoadToolSettings {
                 $TD_BTN_SaveToolSettings.Background="LightGreen"
             }
             catch {
-                Write-Debug -Message $_.Exception.Message
-                SST_ToolMessageCollector -TD_ToolMSGCollector $_.Exception.Message -TD_ToolMSGType Error -TD_Shown yes
+                SST_ToolMessageCollector -TD_ToolMSGCollector $("Settings have NOT been saved in Resources folder: $($_.Exception.Message)") -TD_ToolMSGType Error -TD_Shown yes
                 $TD_BTN_SaveToolSettings.Background="LightCoral"
             }
         }
@@ -113,8 +109,7 @@ function SST_SaveLoadToolSettings {
                 
             }
             catch {
-                Write-Debug -Message $_.Exception.Message
-                SST_ToolMessageCollector -TD_ToolMSGCollector $_.Exception.Message -TD_ToolMSGType Error -TD_Shown yes
+                SST_ToolMessageCollector -TD_ToolMSGCollector $("LoadSettings have a Problem: $($_.Exception.Message)") -TD_ToolMSGType Error -TD_Shown yes
                 $TD_BTN_LoadToolSettings.Background="LightCoral"
             }
 
