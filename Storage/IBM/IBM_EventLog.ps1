@@ -46,7 +46,7 @@ function IBM_EventLog {
     }
 
     process{
-        SST_ToolMessageCollector -TD_ToolMSGCollector "Start EventLog Block" -TD_ToolMSGType Debug -TD_Shown "no"
+        SST_ToolMessageCollector -TD_ToolMSGCollector "Start EventLog Block" -TD_ToolMSGType Debug -TD_Shown no
         $TD_EventSplitInfoWWNN = ($TD_CollectEventInfo|Select-String -Pattern '\.([0-9a-zA-Z]{14,18})\.' -AllMatches).Matches.Groups[1].Value
         if($TD_Storage -eq "SVC"){
             $TD_FSBaseSerialNumber = ($TD_CollectEventInfo|Select-String -Pattern '\.(\w{6,8})\.(|\d+)\.(|\d+)\.(|\w{6,8})' -AllMatches).Matches.Groups[1].Value
