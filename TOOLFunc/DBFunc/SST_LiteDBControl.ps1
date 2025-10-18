@@ -74,14 +74,14 @@ function SST_LiteDBControl {
                     $SST_SQliteCreateTBCMD.CommandText = $SST_SQLiteTabelQuery
                     $SST_SQliteCreateTBCMD.ExecuteNonQuery()
                 }
-                Default {SST_ToolMessageCollector -TD_ToolMSGCollector "Something went wrong at LocalDB in combination with $SST_InfoType" -TD_ToolMSGType Message -TD_Shown no}
+                Default {SST_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong at LocalDB in combination with $SST_InfoType") -TD_ToolMSGType Message -TD_Shown no}
             }
 
-            SST_ToolMessageCollector -TD_ToolMSGCollector "LocalDB is ready and loaded" -TD_ToolMSGType Message -TD_Shown no
+            SST_ToolMessageCollector -TD_ToolMSGCollector $("LocalDB is ready and loaded") -TD_ToolMSGType Message -TD_Shown no
         }
         catch {
-            Write-Host $_.exception.message
-            SST_ToolMessageCollector -TD_ToolMSGCollector "$($_.exception.message)" -TD_ToolMSGType Error -TD_Shown yes
+            Write-Debug $_.exception.message
+            SST_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong at LocalDB $($_.exception.message)") -TD_ToolMSGType Error -TD_Shown yes
         }
     }
     
@@ -326,7 +326,7 @@ function SST_LiteDBControl {
                     $SST_SQliteInsertCMD.ExecuteNonQuery()
                 }
             }
-            Default {SST_ToolMessageCollector -TD_ToolMSGCollector "Something went wrong during saving the $SST_InfoType data in the local db." -TD_ToolMSGType Error -TD_Shown yes}
+            Default {SST_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong during saving the $SST_InfoType data in the local db.") -TD_ToolMSGType Error -TD_Shown yes}
         }
 
     }
