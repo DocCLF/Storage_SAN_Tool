@@ -20,7 +20,7 @@ function SST_ExtensionChecker {
                 $SST_BTN_PowerBoard.Visibility="visible"
             }
             $YNExtension = $true
-            SST_ToolMessageCollector -TD_ToolMSGCollector "IBM_PowerMainFunc: $(($Extension).count) Extension are installed" -TD_ToolMSGType Warning -TD_Shown yes
+            SST_ToolMessageCollector -TD_ToolMSGCollector $("IBM_PowerMainFunc: $(($Extension).count) Extension are installed") -TD_ToolMSGType Warning -TD_Shown yes
         }
 
         if($YNExtension){
@@ -30,7 +30,7 @@ function SST_ExtensionChecker {
                     . $import.fullname
                 }
                 catch {
-                    Write-Error -Message "Failed to import function $($import.fullname): $_"
+                    SST_ToolMessageCollector -TD_ToolMSGCollector $("Failed to import function $($import.fullname): $_") -TD_ToolMSGType Warning -TD_Shown yes
                 }
             }
             <# need your tool Cloud DB the set var to $true, Attation is there no saved *clixml the app will crash #>
