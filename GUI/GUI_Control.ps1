@@ -21,7 +21,7 @@ function Storage_SAN_Tool {
         $CockpitView
     )
 #$ErrorActionPreference="SilentlyContinue"
-
+SST_ToolMessageCollector -TD_ToolMSGCollector "Start reading Storage_SAN_Tool func" -TD_ToolMSGType Message -TD_Shown no
 $inputXAML=Get-Content -Raw -Path "$PSScriptRoot\MainWindow.xaml"
 [xml]$MainXAML=$inputXAML -replace 'mc:Ignorable="d"','' -replace "x:N","N" -replace "^<Win.*","<Window"
 [System.Xml.XmlNodeReader] $Mainreader = $MainXAML
@@ -35,6 +35,7 @@ $TextBoxStyle = [Windows.Markup.XamlReader]::Parse((Get-Content -Path "$PSRootPa
 $MainWindow.Resources.MergedDictionaries.Add( $TextBoxStyle )
 $ButtonStyles = [Windows.Markup.XamlReader]::Parse((Get-Content -Path "$PSRootPath\Resources\Styles\ButtonStyle.xaml" -Raw))
 $MainWindow.Resources.MergedDictionaries.Add( $ButtonStyles )
+SST_ToolMessageCollector -TD_ToolMSGCollector "Load MainWindo Resources done" -TD_ToolMSGType Message -TD_Shown no
 
 <# PowerShell WPF XAML simple data binding datacontext #>
 class DashBoardIMG {
@@ -107,7 +108,9 @@ foreach($file in $UserCxamlFile){
             $TD_UserControl6=[Windows.Markup.XamlReader]::Load($Userreader)
             $UserXAML6.SelectNodes("//*[@Name]") | ForEach-Object {Set-Variable -Name "TD_$($_.Name)" -Value $TD_UserControl6.FindName($_.Name) }
          }
-        Default { Write-Host "Something did not work, start the application in debug mod and/or check the log file." -ForegroundColor Red; Start-Sleep -Seconds 5; exit }
+        Default { SST_ToolMessageCollector -TD_ToolMSGCollector "Create UserControl $fileName had a problem" -TD_ToolMSGType Error -TD_Shown no
+            Write-Host "Something did not work, start the application in debug mod and/or check the log file." -ForegroundColor Red; Start-Sleep -Seconds 5; exit 
+        }
     }
 }
 
@@ -121,7 +124,7 @@ foreach($file in $UserCxamlFile){
                 $TD_tb_ExportPath.Text = $TD_ExportFolderCreated.Name
             }
             catch {
-                SST_ToolMessageCollector -TD_ToolMSGCollector $_.Exception.Message -TD_ToolMSGType Error
+                SST_ToolMessageCollector -TD_ToolMSGCollector "BasicToolPreparation ExportFolderPath $($_.Exception.Message)" -TD_ToolMSGType Error -TD_Shown no
             }
 
         }else{
@@ -131,7 +134,7 @@ foreach($file in $UserCxamlFile){
     }
     catch {
         <#Do this if a terminating exception happens#>
-        SST_ToolMessageCollector -TD_ToolMSGCollector $_.Exception.Message -TD_ToolMSGType Error
+        SST_ToolMessageCollector -TD_ToolMSGCollector "BasicToolPreparation ExportFolderPath $($_.Exception.Message)" -TD_ToolMSGType Error -TD_Shown no
         Write-Error -Message $_.Exception.Message
         #$TD_tb_Exportpath.Text = $_.Exception.Message
     }
@@ -151,9 +154,11 @@ foreach($file in $UserCxamlFile){
         param ()
         $TD_CB_STO_DG1,$TD_CB_STO_DG2,$TD_CB_STO_DG3,$TD_CB_STO_DG4,$TD_CB_STO_DG5,$TD_CB_STO_DG6,$TD_CB_STO_DG7,$TD_CB_STO_DG8 | ForEach-Object {if($_.IsChecked=$true){$_.IsChecked=$false; $_.Visibility="Collapsed";}}
     }
+    SST_ToolMessageCollector -TD_ToolMSGCollector "BasicToolPreparation done" -TD_ToolMSGType Message -TD_Shown no
 #endregion
 
 #region Menu Button
+SST_ToolMessageCollector -TD_ToolMSGCollector "Load Menu Button" -TD_ToolMSGType Message -TD_Shown no
 <# Button Area Menu #>
 $TD_btn_Dashboard.add_click({
     $TD_LB_ExpPathMainWindow.Content ="Export Path: $($TD_tb_ExportPath.Text)"
@@ -287,6 +292,7 @@ $TD_BTN_RefreshUC1.add_click({
 #endregion
 
 #region Settings Button
+SST_ToolMessageCollector -TD_ToolMSGCollector "Load Settings Button" -TD_ToolMSGType Message -TD_Shown no
 $TD_BTN_SaveToolSettings.add_click({
     SST_SaveLoadToolSettings -SST_SaveSettings $true 
 })
@@ -296,6 +302,7 @@ $TD_BTN_LoadToolSettings.add_click({
 #endregion
 
 #region PRISM
+SST_ToolMessageCollector -TD_ToolMSGCollector "Load PRISM" -TD_ToolMSGType Message -TD_Shown no
 $TD_BTN_SaveConnectionStringPRISM.add_click({
     $TD_BTN_SaveConnectionStringPRISM.Background="#FFDDDDDD"
     SST_SaveLoadToolSettings -SST_SaveSettings $true
@@ -312,8 +319,7 @@ $TD_BTN_SaveConnectionStringPRISM.add_click({
             $SQLConnection.Open()
         }
         catch {
-            Write-Debug -Message $_.Exception.Message
-            SST_ToolMessageCollector -TD_ToolMSGCollector $_.Exception.Message -TD_ToolMSGType Error -TD_Shown yes
+            SST_ToolMessageCollector -TD_ToolMSGCollector "PRISM $($_.Exception.Message)" -TD_ToolMSGType Error -TD_Shown yes
             $TD_LB_ConnectionStringLabelPRISM.Content = "$($_.Exception.Message)"
             $TD_BTN_SaveConnectionStringPRISM.Background = "Coral"
             $TD_BTN_ChangeConnectionStringPRISM.Visibility = "Visible"
@@ -334,8 +340,7 @@ $TD_BTN_ConnetionToPRISM.add_click({
     }
     catch {
         <#Do this if a terminating exception happens#>
-        Write-Debug -Message $_.Exception.Message
-        SST_ToolMessageCollector -TD_ToolMSGCollector $_.Exception.Message -TD_ToolMSGType Error -TD_Shown yes
+        SST_ToolMessageCollector -TD_ToolMSGCollector "PRISM $($_.Exception.Message)" -TD_ToolMSGType Error -TD_Shown yes
     }
      
     $ConnectionStringPRISM = [System.Net.NetworkCredential]::new("", $SST_LoadedToolSettings.ConnectionStringPRISM).Password
@@ -345,8 +350,7 @@ $TD_BTN_ConnetionToPRISM.add_click({
         $SQLConnection.Open()
     }
     catch {
-        Write-Debug -Message $_.Exception.Message
-        SST_ToolMessageCollector -TD_ToolMSGCollector $_.Exception.Message -TD_ToolMSGType Error -TD_Shown yes
+        SST_ToolMessageCollector -TD_ToolMSGCollector "PRISM Status $($SQLConnection.Open()) Info: $($_.Exception.Message)" -TD_ToolMSGType Error -TD_Shown yes
         $TD_LB_TestConnectionPRISM.Foreground = "Coral"
         $TD_BTN_ConnetionToPRISM.Background ="Coral"
     }
@@ -377,9 +381,11 @@ $TD_BTN_SendDataToPRISM.add_click({
     SST_PRISMDBControl
     #Start-Process pwsh -ArgumentList '-NoExit -ExecutionPolicy Bypass -Command "& { . ''D:\GitRePo\Storage_SAN_Tool\TOOLFunc\SST_PRISMDBControl.ps1''; SST_PRISMDBControl}"'
 })
+SST_ToolMessageCollector -TD_ToolMSGCollector "Load PRISM done" -TD_ToolMSGType Message -TD_Shown no
 #endregion
 
 #region LocalDB
+SST_ToolMessageCollector -TD_ToolMSGCollector "Load LocalDB" -TD_ToolMSGType Message -TD_Shown no
 $TD_BTN_ActivateDB.add_click({
     try {
         $PSRootPath = Split-Path -Path $PSScriptRoot -Parent
@@ -389,7 +395,7 @@ $TD_BTN_ActivateDB.add_click({
     }
     catch {
         Write-Host $_.exception.message
-        SST_ToolMessageCollector -TD_ToolMSGCollector "$($_.exception.message)" -TD_ToolMSGType Error -TD_Shown yes
+        SST_ToolMessageCollector -TD_ToolMSGCollector "LocalDB $($_.exception.message)" -TD_ToolMSGType Error -TD_Shown yes
         $TD_BTN_DeleteDB.Visibility = "Visible"
         $TD_BTN_DeleteDB.Background = "Coral"
     }
@@ -409,19 +415,20 @@ $TD_BTN_DeleteDB.add_click({
             $SST_SQLiteCon.Dispose()
             
         }
-        SST_ToolMessageCollector -TD_ToolMSGCollector "This action deletes the $($TD_DBtoDelete.Name)" -TD_ToolMSGType Warning -TD_Shown yes
-        Remove-Item -Path "$PSRootPath\Resources\DBFolder\SSTLocalDB.db" -Confirm:$false -Force -ErrorAction Continue #SilentlyContinue
-        SST_ToolMessageCollector -TD_ToolMSGCollector "$($TD_DBtoDelete.Name) are deleted" -TD_ToolMSGType Message -TD_Shown yes
+        SST_ToolMessageCollector -TD_ToolMSGCollector "LocalDB: This action deletes the $($TD_DBtoDelete.Name)" -TD_ToolMSGType Warning -TD_Shown yes
+        Remove-Item -Path "$PSRootPath\Resources\DBFolder\SSTLocalDB.db" -Confirm:$false -Force -ErrorAction Continue 
+        SST_ToolMessageCollector -TD_ToolMSGCollector "LocalDB: $($TD_DBtoDelete.Name) are deleted" -TD_ToolMSGType Message -TD_Shown yes
         $TD_BTN_ActivateDB.Visibility = "Visible"
         $TD_BTN_DeleteDB.Visibility="Collapsed"
     }
     catch {
         Write-Host $_.exception.message
-        SST_ToolMessageCollector -TD_ToolMSGCollector "$($_.exception.message)" -TD_ToolMSGType Error -TD_Shown yes
+        SST_ToolMessageCollector -TD_ToolMSGCollector "LocalDB: $($_.exception.message)" -TD_ToolMSGType Error -TD_Shown yes
         $TD_BTN_DeleteDB.Visibility = "Visible"
         $TD_BTN_DeleteDB.Background = "Coral"
     }
 })
+SST_ToolMessageCollector -TD_ToolMSGCollector "Load LocalDB" -TD_ToolMSGType Message -TD_Shown no
 #endregion
 
 <# The ssh settings are deactivated for the time being and a better implementation should be sought. #>
@@ -490,8 +497,10 @@ $TD_BTN_DeleteDB.add_click({
 #region AddDeviceCred
 $TD_TBTN_SaveCredtoDG.add_click({
     if($TD_CB_CredUpdate.IsChecked){
+        SST_ToolMessageCollector -TD_ToolMSGCollector "Cred Update" -TD_ToolMSGType Message -TD_Shown no
         $TD_CredfGUIArray = SST_GetCredfGUI -TD_AddaNewDevice "no"
     }else{
+        SST_ToolMessageCollector -TD_ToolMSGCollector "Cred AddaNewDevice" -TD_ToolMSGType Message TD_Shown no
         $TD_CredfGUIArray = SST_GetCredfGUI -TD_AddaNewDevice "yes"
         Start-Sleep -Seconds 0.3
         if(!([string]::IsNullOrEmpty($TD_CredfGUIArray))){
@@ -562,6 +571,8 @@ $TD_DG_KnownDeviceList.add_SelectionChanged({
 #endregion
 
 #region IBM Storage Button
+SST_ToolMessageCollector -TD_ToolMSGCollector $("Begin IBM Storage Button") -TD_ToolMSGType Message -TD_Shown no
+
 $TD_btn_IBM_Eventlog.add_click({
     CheckBoxReseter
     $TD_stp_PoolVolumeInfo,$TD_stp_IBM_IPPortInfo,$TD_stp_IBM_HostInfo,$TD_stp_FCPortStats,$TD_stp_DriveInfo,$TD_stp_HostVolInfo,$TD_stp_BackUpConfig,$TD_stp_BaseStorageInfo,$TD_stp_IBM_FCPortInfo,$TD_stp_PolicyBased_Rep,$TD_stp_StorageAuditLog,$TD_stp_CleanUpDump | ForEach-Object {$_.Visibility="Collapsed"}
@@ -591,7 +602,7 @@ $TD_btn_IBM_Eventlog.add_click({
             {($_ -eq 6)} { $TD_lb_StorageEventLogSix.ItemsSource = $TD_IBM_EventLogShow }  
             {($_ -eq 7)} { $TD_lb_StorageEventLogSeven.ItemsSource = $TD_IBM_EventLogShow }
             {($_ -eq 8)} { $TD_lb_StorageEventLogEight.ItemsSource = $TD_IBM_EventLogShow }
-            Default { SST_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong, please check the prompt output first and then the log files.") -TD_ToolMSGType Error }
+            Default { SST_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong at EventLog, please check the prompt output first and then the log files.") -TD_ToolMSGType Error }
         }
     }
 
@@ -622,7 +633,7 @@ $TD_btn_IBM_CatAuditLog.add_click({
             {($_ -eq 6)} { $TD_dg_StorageAuditLogSix.ItemsSource = $TD_CatAuditLog  }
             {($_ -eq 7)} { $TD_dg_StorageAuditLogSeven.ItemsSource = $TD_CatAuditLog}
             {($_ -eq 8)} { $TD_dg_StorageAuditLogEight.ItemsSource = $TD_CatAuditLog}
-            Default { SST_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong, please check the prompt output first and then the log files.") -TD_ToolMSGType Error }
+            Default { SST_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong at CatAuditLog, please check the prompt output first and then the log files.") -TD_ToolMSGType Error -TD_Shown no}
         }
         $TD_CatAuditLog | Export-Csv -Path $PSRootPath\ToolLog\ToolTEMP\$($_.ID)_$($_.DeviceName)_IBM_CatAuditLog_$(Get-Date -Format "yyyy-MM-dd")_Temp.csv
     }
@@ -652,7 +663,7 @@ $TD_btn_IBM_HostVolumeMap.add_click({
             {($_ -eq 6)} { $TD_dg_HostVolInfoSix.ItemsSource = $TD_Host_Volume_Map  }
             {($_ -eq 7)} { $TD_dg_HostVolInfoSeven.ItemsSource = $TD_Host_Volume_Map}
             {($_ -eq 8)} { $TD_dg_HostVolInfoEight.ItemsSource = $TD_Host_Volume_Map}
-            Default { SST_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong, please check the prompt output first and then the log files.") -TD_ToolMSGType Error }
+            Default { SST_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong at Host_Volume_Map, please check the prompt output first and then the log files.") -TD_ToolMSGType Error -TD_Shown no}
         }
         $TD_Host_Volume_Map | Export-Csv -Path $PSRootPath\ToolLog\ToolTEMP\$($_.ID)_$($_.DeviceName)_Host_Vol_Map_$(Get-Date -Format "yyyy-MM-dd")_Temp.csv
     }
@@ -685,7 +696,7 @@ $TD_btn_FilterHVM.Add_Click({
             6 { $TD_Host_Volume_Map = $TD_dg_HostVolInfoSix.ItemsSource }
             7 { $TD_Host_Volume_Map = $TD_dg_HostVolInfoSeven.ItemsSource }
             8 { $TD_Host_Volume_Map = $TD_dg_HostVolInfoEight.ItemsSource }
-            Default {SST_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong, there are no or wrong Data in $($TD_CollectVolInfo.count) found.") -TD_ToolMSGType Error -TD_Shown yes}
+            Default {SST_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong at filter View for Host Volume Map, there are no or wrong Data found.") -TD_ToolMSGType Error -TD_Shown yes}
         }
         if($TD_Host_Volume_Map.Count -ne $TD_CollectVolInfo.Count){
             $TD_Host_Volume_Map = $TD_CollectVolInfo }
@@ -707,7 +718,7 @@ $TD_btn_FilterHVM.Add_Click({
                 6 { $TD_dg_HostVolInfoSix.ItemsSource = $WPF_dataGrid }
                 7 { $TD_dg_HostVolInfoSeven.ItemsSource = $WPF_dataGrid }
                 8 { $TD_dg_HostVolInfoEight.ItemsSource = $WPF_dataGrid }
-                Default {SST_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong, please check the the Filter or Datapath.") -TD_ToolMSGType Error -TD_Shown yes}
+                Default {SST_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong at filter View for Host Volume Map, please check the the Filter or Datapath.") -TD_ToolMSGType Error -TD_Shown yes}
             }
             
         }
@@ -740,13 +751,13 @@ $TD_btn_ClearFilterHVM.Add_Click({
             6 { $TD_dg_HostVolInfoSix.ItemsSource = $TD_CollectVolInfo }
             7 { $TD_dg_HostVolInfoSeven.ItemsSource = $TD_CollectVolInfo }
             8 { $TD_dg_HostVolInfoEight.ItemsSource = $TD_CollectVolInfo }
-            Default {SST_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong, ID $($TD_Filter_DG) or DeviceName $($TD_Credentials.DeviceName) can not be found") -TD_ToolMSGType Error}
+            Default {SST_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong at ClearFilterHVM, ID $($TD_Filter_DG) or DeviceName $($TD_Credentials.DeviceName) can not be found") -TD_ToolMSGType Error -TD_Shown yes}
         }
             
         }
     catch {
         <#Do this if a terminating exception happens#>
-        SST_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong, please check the prompt output first and then the log files.") -TD_ToolMSGType Error
+        SST_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong at ClearFilterHVM, please check the prompt output first and then the log files.") -TD_ToolMSGType Error -TD_Shown yes
         SST_ToolMessageCollector -TD_ToolMSGCollector $_.Exception.Message -TD_ToolMSGType Error
         $TD_lb_ErrorMsgHVM.Visibility="visible"
         $TD_lb_ErrorMsgHVM.Content = $_.Exception.Message
@@ -798,7 +809,7 @@ $TD_btn_IBM_DriveInfo.add_click({
                 {($_ -eq 6)} { $TD_IC_STODriveViewix.ItemsSource = $TD_DriveInfo }
                 {($_ -eq 7)} { $TD_IC_STODriveViewSeven.ItemsSource = $TD_DriveInfo }
                 {($_ -eq 8)} { $TD_IC_STODriveViewEight.ItemsSource = $TD_DriveInfo }
-                Default { SST_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong, please check the prompt output first and then the log files.") -TD_ToolMSGType Error }
+                Default { SST_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong at DriveInfo DeviceID $TD_DevCounter, please check the prompt output first and then the log files.") -TD_ToolMSGType Error -TD_Shown yes }
             }
 
             $TD_DriveInfo | Export-Csv -Path $PSRootPath\ToolLog\ToolTEMP\$($_.ID)_$($_.DeviceName)_DriveInfo_$(Get-Date -Format "yyyy-MM-dd")_Temp.csv
@@ -845,7 +856,7 @@ $TD_btn_IBM_FCPortStats.add_click({
             {($_ -eq 6)} { $TD_dg_FCPortStatsSix.ItemsSource = $TD_FCPortStatsClean }
             {($_ -eq 7)} { $TD_dg_FCPortStatsSeven.ItemsSource = $TD_FCPortStatsClean }
             {($_ -eq 8)} { $TD_dg_FCPortStatsEight.ItemsSource = $TD_FCPortStatsClean }
-            Default { SST_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong, please check the prompt output first and then the log files.") -TD_ToolMSGType Error }
+            Default { SST_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong at FCPortStats DeviceID $($_.ID), please check the prompt output first and then the log files.") -TD_ToolMSGType Error -TD_Shown yes }
         }
         $TD_FCPortStatsClean | Export-Csv -Path $PSRootPath\ToolLog\ToolTEMP\$($_.ID)_$($_.DeviceName)_FCPortStats_$(Get-Date -Format "yyyy-MM-dd")_Temp.csv
     }
@@ -878,7 +889,7 @@ $TD_btn_IBM_FCPortInfo.add_click({
             {($_ -eq 6)} { $TD_dg_FCPortInfoSix.ItemsSource = $TD_FCPortInfo }
             {($_ -eq 7)} { $TD_dg_FCPortInfoSeven.ItemsSource = $TD_FCPortInfo }
             {($_ -eq 8)} { $TD_dg_FCPortInfoEight.ItemsSource = $TD_FCPortInfo }
-            Default { SST_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong, please check the prompt output first and then the log files.") -TD_ToolMSGType Error }
+            Default { SST_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong at FCPortInfo DeviceID $($_.ID), please check the prompt output first and then the log files.") -TD_ToolMSGType Error  -TD_Shown yes }
         }
         $TD_FCPortInfo | Export-Csv -Path $PSRootPath\ToolLog\ToolTEMP\$($_.ID)_$($_.DeviceName)_FCPortInfo_$(Get-Date -Format "yyyy-MM-dd")_Temp.csv
     }
@@ -920,7 +931,7 @@ $TD_btn_FilterPBR.add_click({
                     {($_ -eq 6)} { $TD_dg_ReplicationPolicySix.ItemsSource = $TD_PolicyBased_Rep }
                     {($_ -eq 7)} { $TD_dg_ReplicationPolicySeven.ItemsSource = $TD_PolicyBased_Rep }
                     {($_ -eq 8)} { $TD_dg_ReplicationPolicyEight.ItemsSource = $TD_PolicyBased_Rep }
-                    Default { SST_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong, please check the prompt output first and then the log files.") -TD_ToolMSGType Error }
+                    Default { SST_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong at PolicyBased_Rep DeviceID $($_.ID), please check the prompt output first and then the log files.") -TD_ToolMSGType Error -TD_Shown yes }
                 }
             }
         }
@@ -941,7 +952,7 @@ $TD_btn_FilterPBR.add_click({
                     {($_ -eq 6)} { $TD_dg_VolumeGrpReplicationSix.ItemsSource = $TD_VolumeGroupRep }
                     {($_ -eq 7)} { $TD_dg_VolumeGrpReplicationSeven.ItemsSource = $TD_VolumeGroupRep }
                     {($_ -eq 8)} { $TD_dg_VolumeGrpReplicationEight.ItemsSource = $TD_VolumeGroupRep }
-                    Default { SST_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong, please check the prompt output first and then the log files.") -TD_ToolMSGType Error }
+                    Default { SST_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong at PolicyBased_Rep DeviceID $($_.ID), please check the prompt output first and then the log files.") -TD_ToolMSGType Error -TD_Shown yes}
                 }
             }
          }
@@ -989,7 +1000,7 @@ $TD_btn_IBM_BaseStorageInfo.add_click({
             {($_ -eq 6)} { $TD_dg_BaseStorageInfoSix.ItemsSource = $TD_BaseStorageInfo }
             {($_ -eq 7)} { $TD_dg_BaseStorageInfoSeven.ItemsSource = $TD_BaseStorageInfo }
             {($_ -eq 8)} { $TD_dg_BaseStorageInfoEight.ItemsSource = $TD_BaseStorageInfo }
-            Default { SST_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong, please check the prompt output first and then the log files.") -TD_ToolMSGType Error }
+            Default { SST_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong at BaseStorageInfos DeviceID $($_.ID), please check the prompt output first and then the log files.") -TD_ToolMSGType Error -TD_Shown yes }
         }
         $TD_BaseStorageInfo | Export-Csv -Path $PSRootPath\ToolLog\ToolTEMP\$($_.ID)_$($_.DeviceName)_BaseStorageInfo_$(Get-Date -Format "yyyy-MM-dd")_Temp.csv
     }
@@ -1008,7 +1019,7 @@ $TD_btn_IBM_BaseStorageInfo.add_click({
             {($_ -eq 6)} { $TD_dg_IPQuorumInfoSix.ItemsSource = $TD_IPQuorumInfo ;  }
             {($_ -eq 7)} { $TD_dg_IPQuorumInfoSeven.ItemsSource = $TD_IPQuorumInfo; }
             {($_ -eq 8)} { $TD_dg_IPQuorumInfoEight.ItemsSource = $TD_IPQuorumInfo; }
-            Default { SST_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong, please check the prompt output first and then the log files.") -TD_ToolMSGType Error }
+            Default { SST_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong at IPQuorum DeviceID $($_.ID), please check the prompt output first and then the log files.") -TD_ToolMSGType Error -TD_Shown yes }
         }
         $TD_IPQuorumInfo | Export-Csv -Path $PSRootPath\ToolLog\ToolTEMP\$($_.ID)_$($_.DeviceName)_IPQuorumInfo_$(Get-Date -Format "yyyy-MM-dd")_Temp.csv
     }
@@ -1040,7 +1051,7 @@ $TD_btn_IBM_PoolVolumeInfo.add_click({
             {($_ -eq 6)} { $TD_dg_ExpandMDiskInfoSix.ItemsSource = $TD_ExpandMDiskInfo }
             {($_ -eq 7)} { $TD_dg_ExpandMDiskInfoSeven.ItemsSource = $TD_ExpandMDiskInfo }
             {($_ -eq 8)} { $TD_dg_ExpandMDiskInfoEight.ItemsSource = $TD_ExpandMDiskInfo }
-            Default { SST_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong, please check the prompt output first and then the log files.") -TD_ToolMSGType Error }
+            Default { SST_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong at MDiskInfo DeviceID $($_.ID), please check the prompt output first and then the log files.") -TD_ToolMSGType Error -TD_Shown yes }
         }
         $TD_ExpandMDiskInfo | Export-Csv -Path $PSRootPath\ToolLog\ToolTEMP\$($_.ID)_$($_.DeviceName)_ExpandMDiskInfo_$(Get-Date -Format "yyyy-MM-dd")_Temp.csv
     }
@@ -1058,7 +1069,7 @@ $TD_btn_IBM_PoolVolumeInfo.add_click({
             {($_ -eq 6)} { $TD_dg_ExpandVolumeInfoSix.ItemsSource = $TD_ExpandVolumeInfo }
             {($_ -eq 7)} { $TD_dg_ExpandVolumeInfoSeven.ItemsSource = $TD_ExpandVolumeInfo }
             {($_ -eq 8)} { $TD_dg_ExpandVolumeInfoEight.ItemsSource = $TD_ExpandVolumeInfo }
-            Default { SST_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong, please check the prompt output first and then the log files.") -TD_ToolMSGType Error }
+            Default { SST_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong at VolumeInfo DeviceID $($_.ID), please check the prompt output first and then the log files.") -TD_ToolMSGType Error -TD_Shown yes }
         }
         $TD_ExpandVolumeInfo | Export-Csv -Path $PSRootPath\ToolLog\ToolTEMP\$($_.ID)_$($_.DeviceName)_ExpandVolumeInfo_$(Get-Date -Format "yyyy-MM-dd")_Temp.csv
     }
@@ -1087,7 +1098,7 @@ $TD_btn_IBM_CleanUpDumps.add_click({
             {($_ -eq 6)} { $TD_tb_CleanUpDumpInfoSix.Text = $TD_CleanUpDumpInfo }
             {($_ -eq 7)} { $TD_tb_CleanUpDumpInfoSeven.Text = $TD_CleanUpDumpInfo }
             {($_ -eq 8)} { $TD_tb_CleanUpDumpInfoEight.Text = $TD_CleanUpDumpInfo }
-            Default { SST_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong, please check the prompt output first and then the log files.") -TD_ToolMSGType Error }
+            Default { SST_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong at CleanUpDumps DeviceID $($_.ID), please check the prompt output first and then the log files.") -TD_ToolMSGType Error -TD_Shown yes }
         }
     }
 
@@ -1111,7 +1122,7 @@ $TD_btn_IBM_BackUpConfig.add_click({
             {($_ -eq 6)} { $TD_tb_BackUpInfoDeviceSix.Text = $TD_StorageBackUpInfo }
             {($_ -eq 7)} { $TD_tb_BackUpInfoDeviceSeven.Text = $TD_StorageBackUpInfo }
             {($_ -eq 8)} { $TD_tb_BackUpInfoDeviceEight.Text = $TD_StorageBackUpInfo }
-            Default { SST_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong, please check the prompt output first and then the log files.") -TD_ToolMSGType Error }
+            Default { SST_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong at BackUpConfig DeviceID $($_.ID), please check the prompt output first and then the log files.") -TD_ToolMSGType Error -TD_Shown yes}
         }
         $TD_StorageBackUpInfo | Export-Csv -Path $PSRootPath\ToolLog\ToolTEMP\$($_.ID)_$($_.DeviceName)_BaseStorageInfo_$(Get-Date -Format "yyyy-MM-dd")_Temp.csv
     }    
@@ -1125,8 +1136,8 @@ $TD_btn_IBM_BackUpConfig.add_click({
     }
     catch {
         <#Do this if a terminating exception happens#>
-        SST_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong, please check the prompt output first and then the log files.") -TD_ToolMSGType Error
-        SST_ToolMessageCollector -TD_ToolMSGCollector $_.Exception.Message -TD_ToolMSGType Error 
+        SST_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong at BackUpConfig ExportFiles, please check the prompt output first and then the log files.") -TD_ToolMSGType Error -TD_Shown yes
+        SST_ToolMessageCollector -TD_ToolMSGCollector "BackUpConfig $($_.Exception.Message)" -TD_ToolMSGType Error 
         $TD_tb_BackUpFileErrorInfo.Text = $_.Exception.Message
     }
 
@@ -1166,7 +1177,7 @@ $TD_btn_IBM_HostInfo.add_click({
             {($_ -eq 6)} { $TD_dg_CollectedHostInfoSix.ItemsSource = $TD_Collected_HostInfoResult   }
             {($_ -eq 7)} { $TD_dg_CollectedHostInfoSeven.ItemsSource = $TD_Collected_HostInfoResult }
             {($_ -eq 8)} { $TD_dg_CollectedHostInfoEight.ItemsSource = $TD_Collected_HostInfoResult }
-            Default { SST_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong, please check the prompt output first and then the log files.") -TD_ToolMSGType Error }
+            Default { SST_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong at HostInfo DeviceID $($_.ID), please check the prompt output first and then the log files.") -TD_ToolMSGType Error -TD_Shown yes }
         }
         $TD_Collected_HostInfoResult | Export-Csv -Path $PSRootPath\ToolLog\ToolTEMP\$($_.ID)_$($_.DeviceName)_Collected_HostInfo_$(Get-Date -Format "yyyy-MM-dd")_Temp.csv
     }
@@ -1199,7 +1210,7 @@ $TD_btn_IBM_IPPortInfo.add_click({
             {($_ -eq 6)} { $TD_dg_IPPortInfoSix.ItemsSource = $TD_IPPortInfo }
             {($_ -eq 7)} { $TD_dg_IPPortInfoSeven.ItemsSource = $TD_IPPortInfo }
             {($_ -eq 8)} { $TD_dg_IPPortInfoEight.ItemsSource = $TD_IPPortInfo }
-            Default { SST_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong, please check the prompt output first and then the log files.") -TD_ToolMSGType Error }
+            Default { SST_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong at IPPortInfo DeviceID $($_.ID), please check the prompt output first and then the log files.") -TD_ToolMSGType Error -TD_Shown yes}
         }
         $TD_IPPortInfo | Export-Csv -Path $PSRootPath\ToolLog\ToolTEMP\$($_.ID)_$($_.DeviceName)_IPPortInfo_$(Get-Date -Format "yyyy-MM-dd")_Temp.csv
     }
@@ -1209,9 +1220,11 @@ $TD_btn_IBM_IPPortInfo.add_click({
     $TD_stp_IBM_IPPortInfo.Visibility="Visible"
     
 })
+SST_ToolMessageCollector -TD_ToolMSGCollector $("Endregion IBM Storage Button.") -TD_ToolMSGType Message -TD_Shown no
 #endregion
 
 #region SAN Button
+SST_ToolMessageCollector -TD_ToolMSGCollector $("Region Begin SAN Button.") -TD_ToolMSGType Message -TD_Shown no
 $TD_btn_FOS_BasicSwitchInfo.add_click({
 
     $TD_LB_sanBasicSwitchInfoOne,$TD_LB_sanBasicSwitchInfoTwo,$TD_LB_sanBasicSwitchInfoThree,$TD_LB_sanBasicSwitchInfoFour,$TD_LB_sanBasicSwitchInfoFive,$TD_LB_sanBasicSwitchInfoSix,$TD_LB_sanBasicSwitchInfoSeven,$TD_LB_sanBasicSwitchInfoEight |ForEach-Object {
@@ -1234,8 +1247,7 @@ $TD_btn_FOS_BasicSwitchInfo.add_click({
         }
         catch {
             <#Do this if a terminating exception happens#>
-            Write-Host $_.exception.message
-            SST_ToolMessageCollector -TD_ToolMSGCollector "LiteDB - $($_.exception.message)" -TD_ToolMSGType Error -TD_Shown no
+            SST_ToolMessageCollector -TD_ToolMSGCollector "LiteDB SANBase - $($_.exception.message)" -TD_ToolMSGType Error -TD_Shown no
         }
         switch ($_.ID) {
             {($_ -eq 1)} { $TD_dg_sanBasicSwitchInfoOne.ItemsSource = $FOS_BasicSwitch }
@@ -1246,7 +1258,7 @@ $TD_btn_FOS_BasicSwitchInfo.add_click({
             {($_ -eq 6)} { $TD_dg_sanBasicSwitchInfoSix.ItemsSource = $FOS_BasicSwitch }
             {($_ -eq 7)} { $TD_dg_sanBasicSwitchInfoSeven.ItemsSource = $FOS_BasicSwitch }
             {($_ -eq 8)} { $TD_dg_sanBasicSwitchInfoEight.ItemsSource = $FOS_BasicSwitch }
-            Default { SST_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong, please check the prompt output first and then the log files.") -TD_ToolMSGType Error }
+            Default { SST_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong at BasicSwitchInfos DeviceID $($_.ID), please check the prompt output first and then the log files.") -TD_ToolMSGType Error -TD_Shown yes}
         }
         $FOS_BasicSwitch | Export-Csv -Path $PSRootPath\ToolLog\ToolTEMP\$($_.ID)_$($_.DeviceName)_FOS_BasicSwitchInfos_$(Get-Date -Format "yyyy-MM-dd")_Temp.csv
     }
@@ -1284,8 +1296,7 @@ $TD_btn_FOS_SwitchShow.add_click({
         }
         catch {
             <#Do this if a terminating exception happens#>
-            Write-Host $_.exception.message
-            SST_ToolMessageCollector -TD_ToolMSGCollector "LiteDB - $($_.exception.message)" -TD_ToolMSGType Error -TD_Shown no
+            SST_ToolMessageCollector -TD_ToolMSGCollector "LiteDB SANPortInfo - $($_.exception.message)" -TD_ToolMSGType Error -TD_Shown no
         }
 
         switch ($_.ID) {
@@ -1297,7 +1308,7 @@ $TD_btn_FOS_SwitchShow.add_click({
             {($_ -eq 6)} { $TD_DG_SwitchShowSix.ItemsSource = $FOS_SwitchShow }
             {($_ -eq 7)} { $TD_DG_SwitchShowSeven.ItemsSource = $FOS_SwitchShow }
             {($_ -eq 8)} { $TD_DG_SwitchShowEight.ItemsSource = $FOS_SwitchShow }
-            Default { SST_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong, please check the prompt output first and then the log files.") -TD_ToolMSGType Error }
+            Default { SST_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong at SwitchShowInfo DeviceID $($_.ID), please check the prompt output first and then the log files.") -TD_ToolMSGType Error -TD_Shown yes}
         }
         $FOS_SwitchShow | Export-Csv -Path $PSRootPath\ToolLog\ToolTEMP\$($_.ID)_$($_.DeviceName)_FOS_SwitchShowInfo_$(Get-Date -Format "yyyy-MM-dd")_Temp.csv
     }
@@ -1309,7 +1320,7 @@ $TD_btn_FOS_SwitchShow.add_click({
     $TD_stp_sanSwitchShow.Visibility="Visible"
 
 })
-<# filter View for Host Volume Map #>
+<# filter View for FilterSANSwShow #>
 <# to keep this file clean :D export the following lines to a func in one if the next Version #>
 $TD_btn_FilterSANSwShow.Add_Click({
     [string]$filter= $TD_tb_FilterWordSANSwShow.Text
@@ -1327,7 +1338,7 @@ $TD_btn_FilterSANSwShow.Add_Click({
             6 { $FOS_SwitchShow = $TD_DG_SwitchShowSix.ItemsSource }
             7 { $FOS_SwitchShow = $TD_DG_SwitchShowSeven.ItemsSource }
             8 { $FOS_SwitchShow = $TD_DG_SwitchShowEight.ItemsSource }
-            Default {SST_ToolMessageCollector -TD_ToolMSGCollector "Something went wrong at Switchshow" -TD_ToolMSGType Error -TD_Shown yes}
+            Default {SST_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong at FilterSANSwShow with Filter  $($TD_SANFilter_DG_Colum), please check the prompt output first and then the log files.") -TD_ToolMSGType Error -TD_Shown yes}
         }
         if($FOS_SwitchShow.Count -ne $TD_CollectVolInfo.Count){
             $FOS_SwitchShow = $TD_CollectVolInfo }
@@ -1338,7 +1349,7 @@ $TD_btn_FilterSANSwShow.Add_Click({
                 "Speed" { [array]$WPF_dataGrid = $FOS_SwitchShow | Where-Object { $_.Speed -Match $filter } }
                 "State" { [array]$WPF_dataGrid = $FOS_SwitchShow | Where-Object { $_.State -Match $filter } }
                 "PortConnect" { [array]$WPF_dataGrid = $FOS_SwitchShow | Where-Object { $_.PortConnect -Match $filter } }
-                Default {SST_ToolMessageCollector -TD_ToolMSGCollector "Something went wrong at Switchshow" -TD_ToolMSGType Error -TD_Shown yes}
+                Default {SST_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong at FilterSANSwShow with Filter $($ColumFilter), please check the prompt output first and then the log files.") -TD_ToolMSGType Error -TD_Shown yes}
             }
 
             switch ($TD_SANFilter_DG_Colum) {
@@ -1350,12 +1361,12 @@ $TD_btn_FilterSANSwShow.Add_Click({
                 6 { $TD_DG_SwitchShowSix.ItemsSource = $WPF_dataGrid }
                 7 { $TD_DG_SwitchShowSeven.ItemsSource = $WPF_dataGrid }
                 8 { $TD_DG_SwitchShowEight.ItemsSource = $WPF_dataGrid }
-                Default {SST_ToolMessageCollector -TD_ToolMSGCollector "Something went wrong at Switchshow" -TD_ToolMSGType Error -TD_Shown yes}
+                Default {SST_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong at FilterSANSwShow with Filter $($TD_SANFilter_DG_Colum), please check the prompt output first and then the log files.") -TD_ToolMSGType Error -TD_Shown yes}
             }
         }
     catch {
         <#Do this if a terminating exception happens#>
-        SST_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong, please check the prompt output first and then the log files.") -TD_ToolMSGType Error -TD_Shown yes
+        SST_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong at FilterSANSwShow, $($_.Exception.Message)") -TD_ToolMSGType Error -TD_Shown yes
         SST_ToolMessageCollector -TD_ToolMSGCollector $_.Exception.Message -TD_ToolMSGType Error
         $TD_lb_ErrorMsgSANSwShow.Content = $_.Exception.Message
     }
@@ -1378,14 +1389,13 @@ $TD_btn_ClearFilterSANSwShow.Add_Click({
             6 { $TD_DG_SwitchShowSix.ItemsSource = $TD_CollectVolInfo }
             7 { $TD_DG_SwitchShowSeven.ItemsSource = $TD_CollectVolInfo }
             8 { $TD_DG_SwitchShowEight.ItemsSource = $TD_CollectVolInfo }
-            Default {SST_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong, ID $($TD_SANFilter_DG) or DeviceName $($TD_Credentials.DeviceName) can not be found") -TD_ToolMSGType Error}
+            Default {SST_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong, ID $($TD_SANFilter_DG) or DeviceName $($TD_Credentials.DeviceName) can not be found") -TD_ToolMSGType Error -TD_Shown yes}
         }
             
         }
     catch {
         <#Do this if a terminating exception happens#>
-        SST_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong, please check the prompt output first and then the log files.") -TD_ToolMSGType Error
-        SST_ToolMessageCollector -TD_ToolMSGCollector $_.Exception.Message -TD_ToolMSGType Error
+        SST_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong at ClearFilterSANSwShow, $($_.Exception.Message)") -TD_ToolMSGType Error -TD_Shown yes
         $lb_ErrorMsgSANSwShow.Visibility="visible"
         $lb_ErrorMsgSANSwShow.Content = $_.Exception.Message
     }
@@ -1458,7 +1468,7 @@ $TD_btn_FOS_ZoneDetailsShow.add_click({
     $TD_stp_sanZoneDetailsShow.Visibility="Visible"
 
 })
-<# filter View for Host Volume Map #>
+<# filter View for FilterFabricOne #>
 <# to keep this file clean :D export the following lines to a func in one if the next Version #>
 $TD_btn_FilterFabricOne.Add_Click({
     [string]$FOS_filter= $TD_tb_FilterFabricOne.Text
@@ -1473,15 +1483,14 @@ $TD_btn_FilterFabricOne.Add_Click({
                 "Zone" { [array]$WPF_dataGrid = $TD_FOS_ZoneShow | Where-Object { $_.Zone -Match $FOS_filter } }
                 "WWPN" { [array]$WPF_dataGrid = $TD_FOS_ZoneShow | Where-Object { $_.WWPN -Match $FOS_filter } }
                 "Alias" { [array]$WPF_dataGrid = $TD_FOS_ZoneShow | Where-Object { $_.Alias -Match $FOS_filter } }
-                Default {SST_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong, please check the prompt output first and then the log files.") -TD_ToolMSGType Error}
+                Default {SST_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong at FilterFabricOne with $TD_Filter_DG_Colum") -TD_ToolMSGType Error -TD_Shown yes}
             }
             
             $TD_dg_ZoneDetailsOne.ItemsSource = $WPF_dataGrid
         }
     catch {
         <#Do this if a terminating exception happens#>
-        SST_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong, please check the prompt output first and then the log files.") -TD_ToolMSGType Error
-        SST_ToolMessageCollector -TD_ToolMSGCollector $_.Exception.Message -TD_ToolMSGType Error
+        SST_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong at FilterFabricOne, $($_.Exception.Message)") -TD_ToolMSGType Error -TD_Shown yes
     }
 })
 
@@ -1498,15 +1507,14 @@ $TD_btn_FilterFabricTwo.Add_Click({
                 "Zone" { [array]$WPF_dataGrid = $TD_FOS_ZoneShow | Where-Object { $_.Zone -Match $FOS_filter } }
                 "WWPN" { [array]$WPF_dataGrid = $TD_FOS_ZoneShow | Where-Object { $_.WWPN -Match $FOS_filter } }
                 "Alias" { [array]$WPF_dataGrid = $TD_FOS_ZoneShow | Where-Object { $_.Alias -Match $FOS_filter } }
-                Default {SST_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong, please check the prompt output first and then the log files.") -TD_ToolMSGType Error}
+                Default {SST_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong at FilterFabricTwo with $TD_Filter_DG_Colum") -TD_ToolMSGType Error -TD_Shown yes}
             }
             
             $TD_dg_ZoneDetailsTwo.ItemsSource = $WPF_dataGrid
         }
     catch {
         <#Do this if a terminating exception happens#>
-        SST_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong, please check the prompt output first and then the log files.") -TD_ToolMSGType Error
-        SST_ToolMessageCollector -TD_ToolMSGCollector $_.Exception.Message -TD_ToolMSGType Error
+        SST_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong at FilterFabricTwo, $($_.Exception.Message)") -TD_ToolMSGType Error -TD_Shown yes
     }
 })
 
@@ -1535,7 +1543,7 @@ $TD_btn_FOS_PortLicenseShow.add_click({
             {($_ -eq 6)} {$TD_TB_SANInfoSix.Visibility="Visible";  $TD_TB_SANInfoSix.Text = (Out-String -InputObject $TD_FOS_PortLicenseShow)}
             {($_ -eq 7)} {$TD_TB_SANInfoSeven.Visibility="Visible";  $TD_TB_SANInfoSeven.Text = (Out-String -InputObject $TD_FOS_PortLicenseShow) }
             {($_ -eq 8)} {$TD_TB_SANInfoEight.Visibility="Visible";  $TD_TB_SANInfoEight.Text = (Out-String -InputObject $TD_FOS_PortLicenseShow)}
-            Default { SST_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong, please check the prompt output first and then the log files.") -TD_ToolMSGType Error }
+            Default { SST_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong at PortLicenseShowInfo DeviceID $($_.ID), please check the prompt output first and then the log files.") -TD_ToolMSGType Error -TD_Shown yes}
         }
         $TD_FOS_PortLicenseShow | Export-Csv -Path $PSRootPath\ToolLog\ToolTEMP\$($_.ID)_$($_.DeviceName)_FOS_PortLicenseShowInfo_$(Get-Date -Format "yyyy-MM-dd")_Temp.csv
     }
@@ -1573,7 +1581,7 @@ $TD_btn_FOS_SensorShow.add_click({
             {($_ -eq 6)} { $TD_tb_SensorInfoSix.Visibility="Visible"; $TD_tb_SensorInfoSix.Text = (Out-String -InputObject $TD_FOS_SensorShow) }
             {($_ -eq 7)} { $TD_tb_SensorInfoSeven.Visibility="Visible"; $TD_tb_SensorInfoSeven.Text = (Out-String -InputObject $TD_FOS_SensorShow) }
             {($_ -eq 8)} { $TD_tb_SensorInfoEight.Visibility="Visible"; $TD_tb_SensorInfoEight.Text = (Out-String -InputObject $TD_FOS_SensorShow) }
-            Default { SST_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong, please check the prompt output first and then the log files.") -TD_ToolMSGType Error }
+            Default { SST_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong at SensorShow DeviceID $($_.ID), please check the prompt output first and then the log files.") -TD_ToolMSGType Error -TD_Shown yes}
         }
         $TD_FOS_SensorShow | Export-Csv -Path $PSRootPath\ToolLog\ToolTEMP\$($_.ID)_$($_.DeviceName)_FOS_SensorShow_$(Get-Date -Format "yyyy-MM-dd")_Temp.csv
     }
@@ -1610,7 +1618,7 @@ $TD_btn_FOS_PortErrorShow.add_click({
             {($_ -eq 6)} { $TD_DG_PortErrorShowSix.ItemsSource = $TD_FOS_PortErrShow }
             {($_ -eq 7)} { $TD_DG_PortErrorShowSeven.ItemsSource = $TD_FOS_PortErrShow }
             {($_ -eq 8)} { $TD_DG_PortErrorShowEight.ItemsSource = $TD_FOS_PortErrShow }
-            Default { SST_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong, please check the prompt output first and then the log files.") -TD_ToolMSGType Error }
+            Default { SST_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong at PortErrShowInfos DeviceID $($_.ID), please check the prompt output first and then the log files.") -TD_ToolMSGType Error -TD_Shown yes}
         }
         $TD_FOS_PortErrShow | Export-Csv -Path $PSRootPath\ToolLog\ToolTEMP\$($_.ID)_$($_.DeviceName)_FOS_PortErrShowInfo_$(Get-Date -Format "yyyy-MM-dd")_Temp.csv
     }
@@ -1646,7 +1654,7 @@ $TD_btn_FOS_SFPHealthShow.add_click({
             {($_ -eq 6)} { $TD_dg_SFPShowSix.ItemsSource = $TD_FOS_SFPDetailsShow }
             {($_ -eq 7)} { $TD_dg_SFPShowSeven.ItemsSource = $TD_FOS_SFPDetailsShow }
             {($_ -eq 8)} { $TD_dg_SFPShowEight.ItemsSource = $TD_FOS_SFPDetailsShow }
-            Default { SST_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong, please check the prompt output first and then the log files.") -TD_ToolMSGType Error }
+            Default { SST_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong at SFPDetails DeviceID $($_.ID), please check the prompt output first and then the log files.") -TD_ToolMSGType Error -TD_Shown yes}
         }
         $TD_FOS_SFPDetailsShow | Export-Csv -Path $PSRootPath\ToolLog\ToolTEMP\$($_.ID)_$($_.DeviceName)_FOS_SFPDetails_$(Get-Date -Format "yyyy-MM-dd")_Temp.csv
     }
@@ -1678,7 +1686,7 @@ $TD_btn_StatsClear.add_click({
                     }
                     catch {
                         <#Do this if a terminating exception happens#>
-                        SST_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong $TD_FOS_StatsClear, please check the prompt output first and then the log files.") -TD_ToolMSGType Error
+                        SST_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong $TD_FOS_StatsClear Nbr. 1") -TD_ToolMSGType Error
                         Write-Host $_.Exception.Message
                         #$TD_tb_BackUpInfoDeviceOne.Text = $_.Exception.Message
                     }
@@ -1689,7 +1697,7 @@ $TD_btn_StatsClear.add_click({
                     }
                     catch {
                         <#Do this if a terminating exception happens#>
-                        SST_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong $TD_FOS_StatsClear, please check the prompt output first and then the log files.") -TD_ToolMSGType Error
+                        SST_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong $TD_FOS_StatsClear Nbr. 1") -TD_ToolMSGType Error
                         Write-Host $_.Exception.Message
                         #$TD_tb_BackUpInfoDeviceOne.Text = $_.Exception.Message
                     }
@@ -1715,7 +1723,7 @@ $TD_btn_StatsClear.add_click({
                     }
                     catch {
                         <#Do this if a terminating exception happens#>
-                        SST_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong $TD_FOS_StatsClear, please check the prompt output first and then the log files.") -TD_ToolMSGType Error
+                        SST_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong $TD_FOS_StatsClear Nbr. 2") -TD_ToolMSGType Error
                         Write-Host $_.Exception.Message
                         #$TD_tb_BackUpInfoDeviceOne.Text = $_.Exception.Message
                     }
@@ -1726,7 +1734,7 @@ $TD_btn_StatsClear.add_click({
                     }
                     catch {
                         <#Do this if a terminating exception happens#>
-                        SST_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong $TD_FOS_StatsClear, please check the prompt output first and then the log files.") -TD_ToolMSGType Error
+                        SST_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong $TD_FOS_StatsClear Nbr. 2") -TD_ToolMSGType Error
                         Write-Host $_.Exception.Message
                         #$TD_tb_BackUpInfoDeviceOne.Text = $_.Exception.Message
                     }
@@ -1752,7 +1760,7 @@ $TD_btn_StatsClear.add_click({
                     }
                     catch {
                         <#Do this if a terminating exception happens#>
-                        SST_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong $TD_FOS_StatsClear, please check the prompt output first and then the log files.") -TD_ToolMSGType Error
+                        SST_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong $TD_FOS_StatsClear Nbr. 3") -TD_ToolMSGType Error
                         Write-Host $_.Exception.Message
                         #$TD_tb_BackUpInfoDeviceOne.Text = $_.Exception.Message
                     }
@@ -1763,7 +1771,7 @@ $TD_btn_StatsClear.add_click({
                     }
                     catch {
                         <#Do this if a terminating exception happens#>
-                        SST_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong $TD_FOS_StatsClear, please check the prompt output first and then the log files.") -TD_ToolMSGType Error
+                        SST_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong $TD_FOS_StatsClear Nbr. 3") -TD_ToolMSGType Error
                         Write-Host $_.Exception.Message
                         #$TD_tb_BackUpInfoDeviceOne.Text = $_.Exception.Message
                     }
@@ -1789,7 +1797,7 @@ $TD_btn_StatsClear.add_click({
                     }
                     catch {
                         <#Do this if a terminating exception happens#>
-                        SST_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong $TD_FOS_StatsClear, please check the prompt output first and then the log files.") -TD_ToolMSGType Error
+                        SST_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong $TD_FOS_StatsClear Nbr. 4") -TD_ToolMSGType Error
                         Write-Host $_.Exception.Message
                         #$TD_tb_BackUpInfoDeviceOne.Text = $_.Exception.Message
                     }
@@ -1800,7 +1808,7 @@ $TD_btn_StatsClear.add_click({
                     }
                     catch {
                         <#Do this if a terminating exception happens#>
-                        SST_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong $TD_FOS_StatsClear, please check the prompt output first and then the log files.") -TD_ToolMSGType Error
+                        SST_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong $TD_FOS_StatsClear Nbr. 4") -TD_ToolMSGType Error
                         Write-Host $_.Exception.Message
                         #$TD_tb_BackUpInfoDeviceOne.Text = $_.Exception.Message
                     }
@@ -1826,7 +1834,7 @@ $TD_btn_StatsClear.add_click({
                     }
                     catch {
                         <#Do this if a terminating exception happens#>
-                        SST_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong $TD_FOS_StatsClear, please check the prompt output first and then the log files.") -TD_ToolMSGType Error
+                        SST_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong $TD_FOS_StatsClear Nbr. 5") -TD_ToolMSGType Error
                         Write-Host $_.Exception.Message
                         #$TD_tb_BackUpInfoDeviceOne.Text = $_.Exception.Message
                     }
@@ -1837,7 +1845,7 @@ $TD_btn_StatsClear.add_click({
                     }
                     catch {
                         <#Do this if a terminating exception happens#>
-                        SST_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong $TD_FOS_StatsClear, please check the prompt output first and then the log files.") -TD_ToolMSGType Error
+                        SST_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong $TD_FOS_StatsClear Nbr. 5") -TD_ToolMSGType Error
                         Write-Host $_.Exception.Message
                         #$TD_tb_BackUpInfoDeviceOne.Text = $_.Exception.Message
                     }
@@ -1863,7 +1871,7 @@ $TD_btn_StatsClear.add_click({
                     }
                     catch {
                         <#Do this if a terminating exception happens#>
-                        SST_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong $TD_FOS_StatsClear, please check the prompt output first and then the log files.") -TD_ToolMSGType Error
+                        SST_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong $TD_FOS_StatsClear Nbr. 6") -TD_ToolMSGType Error
                         Write-Host $_.Exception.Message
                         #$TD_tb_BackUpInfoDeviceOne.Text = $_.Exception.Message
                     }
@@ -1874,7 +1882,7 @@ $TD_btn_StatsClear.add_click({
                     }
                     catch {
                         <#Do this if a terminating exception happens#>
-                        SST_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong $TD_FOS_StatsClear, please check the prompt output first and then the log files.") -TD_ToolMSGType Error
+                        SST_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong $TD_FOS_StatsClear Nbr. 6") -TD_ToolMSGType Error
                         Write-Host $_.Exception.Message
                         #$TD_tb_BackUpInfoDeviceOne.Text = $_.Exception.Message
                     }
@@ -1900,7 +1908,7 @@ $TD_btn_StatsClear.add_click({
                     }
                     catch {
                         <#Do this if a terminating exception happens#>
-                        SST_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong $TD_FOS_StatsClear, please check the prompt output first and then the log files.") -TD_ToolMSGType Error
+                        SST_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong $TD_FOS_StatsClear Nbr. 7") -TD_ToolMSGType Error
                         Write-Host $_.Exception.Message
                         #$TD_tb_BackUpInfoDeviceOne.Text = $_.Exception.Message
                     }
@@ -1911,7 +1919,7 @@ $TD_btn_StatsClear.add_click({
                     }
                     catch {
                         <#Do this if a terminating exception happens#>
-                        SST_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong $TD_FOS_StatsClear, please check the prompt output first and then the log files.") -TD_ToolMSGType Error
+                        SST_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong $TD_FOS_StatsClear Nbr. 7") -TD_ToolMSGType Error
                         Write-Host $_.Exception.Message
                         #$TD_tb_BackUpInfoDeviceOne.Text = $_.Exception.Message
                     }
@@ -1937,7 +1945,7 @@ $TD_btn_StatsClear.add_click({
                     }
                     catch {
                         <#Do this if a terminating exception happens#>
-                        SST_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong $TD_FOS_StatsClear, please check the prompt output first and then the log files.") -TD_ToolMSGType Error
+                        SST_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong $TD_FOS_StatsClear Nbr. 8") -TD_ToolMSGType Error
                         Write-Host $_.Exception.Message
                         #$TD_tb_BackUpInfoDeviceOne.Text = $_.Exception.Message
                     }
@@ -1948,7 +1956,7 @@ $TD_btn_StatsClear.add_click({
                     }
                     catch {
                         <#Do this if a terminating exception happens#>
-                        SST_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong $TD_FOS_StatsClear, please check the prompt output first and then the log files.") -TD_ToolMSGType Error
+                        SST_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong $TD_FOS_StatsClear Nbr. 8") -TD_ToolMSGType Error
                         Write-Host $_.Exception.Message
                         #$TD_tb_BackUpInfoDeviceOne.Text = $_.Exception.Message
                     }
@@ -1964,7 +1972,7 @@ $TD_btn_StatsClear.add_click({
                     $TD_FOS_StatsClearDone = $false
                 }
             }
-            Default {SST_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong, please check the prompt output first and then the log files.") -TD_ToolMSGType Error}
+            Default {SST_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong at StatsClear DeviceID $($TD_Credential.ID), please check the prompt output first and then the log files.") -TD_ToolMSGType Error -TD_Shown yes}
         }
     }
 })
@@ -1992,7 +2000,7 @@ $TD_btn_FOS_PortBufferShow.add_click({
             {($_ -eq 6)} { $TD_DG_PortBufferShowSix.ItemsSource = $TD_FOS_PortbufferShow }
             {($_ -eq 7)} { $TD_DG_PortBufferShowSeven.ItemsSource = $TD_FOS_PortbufferShow }
             {($_ -eq 8)} { $TD_DG_PortBufferShowEight.ItemsSource = $TD_FOS_PortbufferShow }
-            Default { SST_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong, please check the prompt output first and then the log files.") -TD_ToolMSGType Error }
+            Default { SST_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong at PortbufferShowInfo DeviceID $($_.ID), please check the prompt output first and then the log files.") -TD_ToolMSGType Error -TD_Shown yes}
         }
         $TD_FOS_PortbufferShow | Export-Csv -Path $PSRootPath\ToolLog\ToolTEMP\$($_.ID)_$($_.DeviceName)_FOS_PortbufferShowInfo_$(Get-Date -Format "yyyy-MM-dd")_Temp.csv
     }
@@ -2004,16 +2012,19 @@ $TD_btn_FOS_PortBufferShow.add_click({
     $TD_stp_sanPortBufferShow.Visibility="Visible"
 
 })
+SST_ToolMessageCollector -TD_ToolMSGCollector $("Endregion SAN Button.") -TD_ToolMSGType Message -TD_Shown no
 #endregion
 
 #region IBM Power
 $TD_BTN_HMCCollector.add_click({
+    SST_ToolMessageCollector -TD_ToolMSGCollector $("Region IBM Power Button.") -TD_ToolMSGType Message -TD_Shown no
     if(($TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_.DeviceTyp -eq "PowerHMC"}).count -ge1){
         $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_}
         $PRISMString = Import-Clixml -Path $PSRootPath\Resources\SavedToolSettings.clixml 
         IBM_PowerMainFunc -SST_UCOBJ $TD_UserControl6 -PSRootPath $PSRootPath -SecureData $TD_Credentials -CloudString $PRISMString
     }else{
         $TD_BTN_HMCCollector.Content = "No HMC Creds Loaded"
+        SST_ToolMessageCollector -TD_ToolMSGCollector $("No HMC Creds Loaded") -TD_ToolMSGType Message -TD_Shown yes
     }
     
     #PRISMCustomerMainFunc -TD_SecDeviceData $TD_Credentials -LocalDB $true -CloudDB $true -ConnectionString $PRISMString
@@ -2039,28 +2050,30 @@ $TD_BTN_HMCCollector.add_click({
 #endregion
 
 if(!([string]::IsNullOrWhiteSpace($(Get-ChildItem -Path $PSRootPath\Resources\DBFolder\*.db).Name))){
+    SST_ToolMessageCollector -TD_ToolMSGCollector $("Start DashBoardMain from GUI Control") -TD_ToolMSGType Message -TD_Shown no
     SST_DashBoardMain -MainPath $PSRootPath -SST_UCOBJ $TD_UserControl1
 }
 $TD_btn_CloseAll.add_click({
     <#CleanUp before close #>
     try {
         Remove-Item -Path $PSRootPath\ToolLog\ToolTEMP\* -Filter '*_Temp.csv' -Force -ErrorAction SilentlyContinue
-        Write-Debug -Message "Remove Files from TEMP-Folder, done."
+        SST_ToolMessageCollector -TD_ToolMSGCollector $("Remove Files from TEMP-Folder, done.") -TD_ToolMSGType Message -TD_Shown no
     }
     catch {
         <#Do this if a terminating exception happens#>
-        Write-Debug -Message "Remove Files fail."
-        Write-Debug -Message $_.Exception.Message
+        SST_ToolMessageCollector -TD_ToolMSGCollector $("Remove Files fail: $($_.Exception.Message)") -TD_ToolMSGType Error -TD_Shown no
     }
     Write-Debug -Message "Close the appl via CloseBtn"
     $MainWindow.Close()
 })
 
-<# muss nicht angezeigt werden kann aber #>
+<# does not have to be displayed but can be #>
 Get-Variable TD_* |Out-Null
 <# Clean all LogFiles if there older than 90 Days #>
+SST_ToolMessageCollector -TD_ToolMSGCollector $("Call SST_FileCleanUp Func from GUI Control") -TD_ToolMSGType Message -TD_Shown no
 SST_FileCleanUp
 <# Load Toolsettings if they saved in Resources folder #>
+SST_ToolMessageCollector -TD_ToolMSGCollector $("Start Load Toolsettings if they saved in Resources folder") -TD_ToolMSGType Message -TD_Shown no
 SST_SaveLoadToolSettings -SST_LoadSettings $true -SST_MWOBJ $MainWindow -SST_UCOBJ $TD_UserControl6
 
 switch ($CockpitView) {
@@ -2070,9 +2083,10 @@ switch ($CockpitView) {
     "POWER" { $TD_UserContrArea.Children.Add($TD_UserControl6) }
     "HEALTH" { $TD_UserContrArea.Children.Add($TD_UserControl4) }
     "CONFIG" { $TD_UserContrArea.Children.Add($TD_UserControl5) }
-    Default {$null}
+    Default {SST_ToolMessageCollector -TD_ToolMSGCollector $("Start Tool with Usercontrol $CockpitView ") -TD_ToolMSGType Error -TD_Shown no}
 }
 
+SST_ToolMessageCollector -TD_ToolMSGCollector $("End of SST GUI Control file.") -TD_ToolMSGType Message -TD_Shown no
 $MainWindow.showDialog()
 
 $MainWindow.activate()
