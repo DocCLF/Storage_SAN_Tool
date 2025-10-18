@@ -36,7 +36,7 @@ function SST_ToolMessageCollector {
     $TD_MSGpresenter.Message = $TD_ToolMSGCollector
 
     [array]$TD_MSG_GUIpresenter += $TD_MSGpresenter |Sort-Object
-    <#present all msg #>
+    <#present all msg #> 
     switch ($TD_Shown) {
         "no" { Write-Debug -Message "$TD_ToolMSGCollector $TD_ToolMSGType" }
         "yes" { $TD_dg_ToolWindowForDebug.ItemsSource = $TD_MSG_GUIpresenter }
@@ -45,12 +45,12 @@ function SST_ToolMessageCollector {
     }
 
     <# Example: Get-Date -UFormat "%d%m%Y" - Res: 14012025 #>
-    Out-File -FilePath $PSRootPath\ToolLog\SST_$(Get-Date -UFormat "%d%m%Y") -InputObject $TD_MSGpresenter -Append -Width 1000
+    Out-File -FilePath $PSRootPath\ToolLog\SST_$(Get-Date -UFormat "%d%m%Y").log -InputObject $TD_MSGpresenter -Append -Width 1000
     
     #$TD_tb_ToolWindowForDebug.Text = $TD_MSG_GUIpresenter
     # the following line as switch case with the different options red,yellow etc.
     #$TD_tb_ToolWindowForDebug.Foreground="Red"
     <# refresh the gui #>
-    $TD_UserControl4.Dispatcher.Invoke([System.Action]{},"Render")
+    #$TD_UserControl4.Dispatcher.Invoke([System.Action]{},"Render")
 
 }
