@@ -34,7 +34,7 @@ function SST_DashBoardMain {
             #$SST_SQLiteDBReader.Close()
         }
         catch {
-            Write-Host $_.Exception.Message
+            Write-Debug $_.Exception.Message
             SST_ToolMessageCollector -TD_ToolMSGCollector "There is something wrong, mybe there is no IBMSTOHWTable Table" -TD_ToolMSGType Warning -TD_Shown yes
         }
         #endregion
@@ -47,7 +47,7 @@ function SST_DashBoardMain {
             #$SST_SQLiteDBReader.Close()
         }
         catch {
-            Write-Host $_.Exception.Message
+            Write-Debug $_.Exception.Message
             SST_ToolMessageCollector -TD_ToolMSGCollector "There is something wrong, mybe there is no IBMSTOHostTable Table" -TD_ToolMSGType Warning -TD_Shown yes
         }
 
@@ -58,7 +58,7 @@ function SST_DashBoardMain {
             #$SST_SQLiteDBReader.Close()
         }
         catch {
-            Write-Host $_.Exception.Message
+            Write-Debug $_.Exception.Message
             SST_ToolMessageCollector -TD_ToolMSGCollector "There is something wrong, mybe there is no IBMSTOHostTable Table" -TD_ToolMSGType Warning -TD_Shown yes
         }
 
@@ -70,7 +70,7 @@ function SST_DashBoardMain {
             #$SST_SQLiteDBReader.Close()
         }
         catch {
-            Write-Host $_.Exception.Message
+            Write-Debug $_.Exception.Message
             SST_ToolMessageCollector -TD_ToolMSGCollector "There is something wrong, mybe there is no IBMSTOHostTable Table" -TD_ToolMSGType Warning -TD_Shown yes
         }
         #endregion
@@ -83,7 +83,7 @@ function SST_DashBoardMain {
             #$SST_SQLiteDBReader.Close()
         }
         catch {
-            Write-Host $_.Exception.Message
+            Write-Debug $_.Exception.Message
             SST_ToolMessageCollector -TD_ToolMSGCollector "There is something wrong, mybe there is no IBMSANHWTable Table" -TD_ToolMSGType Warning -TD_Shown yes
         }
         #endregion
@@ -99,7 +99,7 @@ function SST_DashBoardMain {
             $SST_SQLiteDBReader.Close()
         }
         catch {
-            Write-Host $_.Exception.Message
+            Write-Debug $_.Exception.Message
             SST_ToolMessageCollector -TD_ToolMSGCollector "There is something wrong, mybe there is no IBMSTODriveTable Table" -TD_ToolMSGType Warning -TD_Shown yes
         }
         #endregion
@@ -113,7 +113,7 @@ function SST_DashBoardMain {
             $SST_SQLiteDBReader.Close()
         }
         catch {
-            Write-Host $_.Exception.Message
+            Write-Debug $_.Exception.Message
             SST_ToolMessageCollector -TD_ToolMSGCollector "There is something wrong, mybe there is no IBMSTOEventsTable Table" -TD_ToolMSGType Warning -TD_Shown yes
         }
         #endregion
@@ -124,7 +124,7 @@ function SST_DashBoardMain {
             IBM_PowerSYSDBView -HMCCollection $SST_SQLiteHMCQuery -SQLReader $SST_SQliteReadCMD -UCOBJ $SST_UCOBJ
         }
         catch {
-            Write-Host $_.Exception.Message
+            Write-Debug $_.Exception.Message
             SST_ToolMessageCollector -TD_ToolMSGCollector "There is something wrong, mybe there is no PowerSysSummary Table" -TD_ToolMSGType Warning -TD_Shown yes
         }
         #endregion
