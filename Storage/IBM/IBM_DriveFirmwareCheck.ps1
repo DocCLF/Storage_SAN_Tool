@@ -65,9 +65,7 @@ function IBM_DriveFirmwareCheck {
         catch {
             <#Do this if a terminating exception happens#>
             Write-Debug -Message "Something went wrong"
-            SST_ToolMessageCollector -TD_ToolMSGCollector "There is a problem with the online check of the software status." -TD_ToolMSGType Error
-            SST_ToolMessageCollector -TD_ToolMSGCollector "$($_.Exception.Message)" -TD_ToolMSGType Error
-            Write-Debug -Message $_.Exception.Message
+            SST_ToolMessageCollector -TD_ToolMSGCollector "There is a problem with the online check of the software status $($_.Exception.Message)" -TD_ToolMSGType Error
             $IBM_WebStoDRIVESWInofs ="nothing in here"
         }
 
@@ -125,8 +123,8 @@ function IBM_DriveFirmwareCheck {
                 }
             }
         }
-        SST_ToolMessageCollector -TD_ToolMSGCollector "$IBM_DriveProdID ------ $IBM_DriveCurrentFW ------ $IBM_LocSpecVirtSW" -TD_ToolMSGType Debug -TD_Shown no
-        Write-Debug -Message $IBM_LocSpecVirtSW
+        SST_ToolMessageCollector -TD_ToolMSGCollector $("$IBM_DriveProdID ------ $IBM_DriveCurrentFW ------ $IBM_LocSpecVirtSW") -TD_ToolMSGType Debug -TD_Shown no
+        
         if([string]::IsNullOrEmpty($IBM_LocSpecVirtSW)){
             $IBM_LocSpecVirtSW = "unknown"
         }
