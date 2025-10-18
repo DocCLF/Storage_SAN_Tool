@@ -82,7 +82,7 @@ function IBM_PolicyBased_Rep {
                     Write-ProgressBar -ProgressBar $ProgressBar -Activity "Collect data for Device $($TD_Line_ID) $($TD_Device_DeviceName)" -PercentComplete (($ProgCounter/$TD_PolicyRepInformations.Count) * 100)
                 }
              }
-            Default {SST_ToolMessageCollector -TD_ToolMSGCollector "Something went wrong please try again or contact tool support" -TD_ToolMSGType Error}
+            Default {SST_ToolMessageCollector -TD_ToolMSGCollector "Something went wrong at VolumeGroupReplication please try again or contact tool support" -TD_ToolMSGType Error -TD_Shown yes}
         }
     }
     
@@ -95,13 +95,13 @@ function IBM_PolicyBased_Rep {
                 switch ($TD_RepInfoChose) {
                     "lsreplicationpolicy" { $TD_ReplicationPolicy | Export-Csv -Path $TD_Exportpath\$($TD_Line_ID)_$($TD_Device_DeviceName)_ReplicationPolicy_$(Get-Date -Format "yyyy-MM-dd").csv -NoTypeInformation }
                     "lsvolumegroupreplication" { $TD_VolumeGroupRep | Export-Csv -Path $TD_Exportpath\$($TD_Line_ID)_$($TD_Device_DeviceName)_VolumeGroupRep_$(Get-Date -Format "yyyy-MM-dd").csv -NoTypeInformation }
-                    Default {SST_ToolMessageCollector -TD_ToolMSGCollector "Something went wrong please try again or contact tool support" -TD_ToolMSGType Error}
+                    Default {SST_ToolMessageCollector -TD_ToolMSGCollector "Something went wrong at VolumeGroupReplication export $TD_RepInfoChose" -TD_ToolMSGType Error}
                 }
             }else {
                 switch ($TD_RepInfoChose) {
                     "lsreplicationpolicy" { $TD_ReplicationPolicy | Export-Csv -Path $TD_Exportpath\$($TD_Line_ID)_$($TD_Device_DeviceName)_ReplicationPolicy_$(Get-Date -Format "yyyy-MM-dd").csv -NoTypeInformation }
                     "lsvolumegroupreplication" { $TD_VolumeGroupRep | Export-Csv -Path $TD_Exportpath\$($TD_Line_ID)_$($TD_Device_DeviceName)_VolumeGroupRep_$(Get-Date -Format "yyyy-MM-dd").csv -NoTypeInformation }
-                    Default {SST_ToolMessageCollector -TD_ToolMSGCollector "Something went wrong please try again or contact tool support" -TD_ToolMSGType Error}
+                    Default {SST_ToolMessageCollector -TD_ToolMSGCollector "Something went wrong at VolumeGroupReplication export $TD_RepInfoChose" -TD_ToolMSGType Error}
                 }
             }
         }else {
@@ -109,14 +109,14 @@ function IBM_PolicyBased_Rep {
             switch ($TD_RepInfoChose) {
                 "lsreplicationpolicy" { return $TD_ReplicationPolicy }
                 "lsvolumegroupreplication" { return $TD_VolumeGroupRep }
-                Default {SST_ToolMessageCollector -TD_ToolMSGCollector "Something went wrong please try again or contact tool support" -TD_ToolMSGType Error}
+                Default {SST_ToolMessageCollector -TD_ToolMSGCollector "Something went wrong at VolumeGroupReplication $TD_RepInfoChose" -TD_ToolMSGType Error -TD_Shown yes}
             }
         }
 
         switch ($TD_RepInfoChose) {
             "lsreplicationpolicy" { return $TD_ReplicationPolicy }
             "lsvolumegroupreplication" { return $TD_VolumeGroupRep }
-            Default {SST_ToolMessageCollector -TD_ToolMSGCollector "Something went wrong please try again or contact tool support" -TD_ToolMSGType Error}
+            Default {SST_ToolMessageCollector -TD_ToolMSGCollector "Something went wrong at VolumeGroupReplication $TD_RepInfoChose" -TD_ToolMSGType Error -TD_Shown yes}
         }
 
     }
