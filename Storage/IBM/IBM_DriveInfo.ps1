@@ -64,17 +64,8 @@ function IBM_DriveInfo {
         [int]$ProgCounter=0
         <# Connect to Device and get all needed Data #>
         if($TD_Storage -eq "FSystem"){
-            #if($TD_Device_ConnectionTyp -eq "ssh"){
-            #    $TD_CollectInfos = ssh -i $($TD_Device_SSHKeyPath) $TD_Device_UserName@$TD_Device_DeviceIP 'lsnodecanister -nohdr -delim : && lsnodecanister -nohdr |while read id name IO_group_id;do lsnodecanister $id;echo;done && lsdrive -nohdr |while read id name IO_group_id;do lsdrive $id ;echo;done'
-            #}else {
-                $TD_CollectInfos = plink $TD_Device_UserName@$TD_Device_DeviceIP -pw $TD_Device_PW -batch 'lsnodecanister -nohdr -delim : && lsnodecanister -nohdr |while read id name IO_group_id;do lsnodecanister $id;echo;done && lsdrive -nohdr |while read id name IO_group_id;do lsdrive $id ;echo;done'
-           # }
-        }#else {
-            <# Action when all if and elseif conditions are false #>
-        #    $TD_lb_DriveErrorInfo.Visibility = "Visible"; $TD_lb_DriveErrorInfo.Content = "An SVC has no hard drives or FlashCore Modules."
-        #}
-        #$TD_CollectInfos = Get-Content -Path "C:\Users\mailt\Documents\lsdrive.txt"
-        Write-Debug -Message "Number of Lines: $($TD_CollectInfos.count) "
+            $TD_CollectInfos = plink $TD_Device_UserName@$TD_Device_DeviceIP -pw $TD_Device_PW -batch 'lsnodecanister -nohdr -delim : && lsnodecanister -nohdr |while read id name IO_group_id;do lsnodecanister $id;echo;done && lsdrive -nohdr |while read id name IO_group_id;do lsdrive $id ;echo;done'
+        }
         $TD_TempNodeInfo = "" | Select-Object SerialNumber,WWNN
         0..$TD_CollectInfos.count |ForEach-Object {
             if($TD_CollectInfos[$_] -match ':([0-9a-zA-Z]{16}):'){
