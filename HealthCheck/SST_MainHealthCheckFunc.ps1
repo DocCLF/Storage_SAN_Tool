@@ -38,7 +38,7 @@ function SST_MainHealthCheckFunc {
 
         }
         catch {
-            SST_ToolMessageCollector -TD_ToolMSGCollector $_.Exception.Message -TD_ToolMSGType Error -TD_Shown yes       
+            SST_ToolMessageCollector -TD_ToolMSGCollector $("Create Storage Button in MainHealthCheckFunc $($_.Exception.Message)") -TD_ToolMSGType Error -TD_Shown yes       
         }
        
         try {
@@ -66,7 +66,7 @@ function SST_MainHealthCheckFunc {
             }
         }
         catch {
-            SST_ToolMessageCollector -TD_ToolMSGCollector $_.Exception.Message -TD_ToolMSGType Error -TD_Shown yes       
+            SST_ToolMessageCollector -TD_ToolMSGCollector $("Create SAN Button in MainHealthCheckFunc $($_.Exception.Message)") -TD_ToolMSGType Error -TD_Shown yes       
         }
 
         try {
@@ -94,7 +94,7 @@ function SST_MainHealthCheckFunc {
             }
         }
         catch {
-            SST_ToolMessageCollector -TD_ToolMSGCollector $_.Exception.Message -TD_ToolMSGType Error -TD_Shown yes       
+            SST_ToolMessageCollector -TD_ToolMSGCollector $("Create Server Button in MainHealthCheckFunc $($_.Exception.Message)") -TD_ToolMSGType Error -TD_Shown yes       
         }
     }
     
