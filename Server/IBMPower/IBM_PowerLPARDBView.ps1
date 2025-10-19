@@ -26,9 +26,21 @@ function IBM_PowerLPARDBView {
                 LPARManagedSystemName  = $SST_SQLiteDBReader["LPARManagedSystemName"]
                 LPARManagedSystemSN = $SST_SQLiteDBReader["LPARManagedSystemSN"]
                 TimeStamp    = $SST_SQLiteDBReader["TimeStamp"]
-                STOIcon = "$PSRootPath\Resources\Icons\ibmstoicon.png"
+                LPARIcon = "$PSRootPath\Resources\Icons\powericon01.png"
                 ClockIcon96 = "$PSRootPath\Resources\Icons\icons8-clock-96.png"
             }
+            switch ($IBMPowerLPARsObj.LPAROSVersion) {
+                {$_ -like "*400*"}  { $IBMPowerLPARsObj.LPARIcon = "$PSRootPath\Resources\Icons\IBMiicon.png" }
+                {$_ -like "*AIX*"}  { $IBMPowerLPARsObj.LPARIcon = "$PSRootPath\Resources\Icons\AIXicon.png" }
+                {$_ -like "*Linux/Red*"}  { $IBMPowerLPARsObj.LPARIcon = "$PSRootPath\Resources\Icons\RedHatLinuxicon.png" }
+                {$_ -like "*Linux/SLES*"}  { $IBMPowerLPARsObj.LPARIcon = "$PSRootPath\Resources\Icons\SLESicon.png" }
+                Default {
+                    if($IBMPowerLPARsObj.LPAREnvironment -eq "os400"){
+                        $IBMPowerLPARsObj.LPARIcon = "$PSRootPath\Resources\Icons\IBMiicon.png"
+                    }
+                }
+            }
+ 
             $IBMPowerLPARView.Add($IBMPowerLPARsObj)
         }
         $SST_SQLiteDBReader.Close()
