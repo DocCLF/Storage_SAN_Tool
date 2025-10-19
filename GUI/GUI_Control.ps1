@@ -2018,7 +2018,7 @@ SST_ToolMessageCollector -TD_ToolMSGCollector $("Endregion SAN Button.") -TD_Too
 #region IBM Power
 $TD_BTN_HMCCollector.add_click({
     SST_ToolMessageCollector -TD_ToolMSGCollector $("Region IBM Power Button.") -TD_ToolMSGType Message -TD_Shown no
-    if(($TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_.DeviceTyp -eq "PowerHMC"}).count -ge1){
+    if(($TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_.DeviceTyp -eq "PowerHMC"}).count -ge 1){
         $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_}
         $PRISMString = Import-Clixml -Path $PSRootPath\Resources\SavedToolSettings.clixml 
         IBM_PowerMainFunc -SST_UCOBJ $TD_UserControl6 -PSRootPath $PSRootPath -SecureData $TD_Credentials -CloudString $PRISMString
