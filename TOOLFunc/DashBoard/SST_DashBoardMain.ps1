@@ -125,7 +125,7 @@ function SST_DashBoardMain {
         }
         catch {
             Write-Debug $_.Exception.Message
-            SST_ToolMessageCollector -TD_ToolMSGCollector "There is something wrong, mybe there is no PowerSysSummary Table" -TD_ToolMSGType Warning -TD_Shown yes
+            SST_ToolMessageCollector -TD_ToolMSGCollector "There is something wrong, mybe there is no PowerSysSummary Table $($_.Exception.Message)" -TD_ToolMSGType Warning -TD_Shown yes
         }
         #endregion
     }
