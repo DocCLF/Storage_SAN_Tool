@@ -2083,7 +2083,7 @@ switch ($CockpitView) {
     "POWER" { $TD_UserContrArea.Children.Add($TD_UserControl6) }
     "HEALTH" { $TD_UserContrArea.Children.Add($TD_UserControl4) }
     "CONFIG" { $TD_UserContrArea.Children.Add($TD_UserControl5) }
-    Default {SST_ToolMessageCollector -TD_ToolMSGCollector $("Start Tool with Usercontrol $CockpitView ") -TD_ToolMSGType Error -TD_Shown no}
+    Default {SST_ToolMessageCollector -TD_ToolMSGCollector $("Start Tool with Usercontrol $CockpitView ") -TD_ToolMSGType Message -TD_Shown no}
 }
 
 SST_ToolMessageCollector -TD_ToolMSGCollector $("End of SST GUI Control file.") -TD_ToolMSGType Message -TD_Shown no
