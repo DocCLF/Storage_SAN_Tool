@@ -53,7 +53,7 @@
                 <ItemsControl x:Name="IC_IBMPowerHMCObjView">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
-                            <Button Style="{DynamicResource DashBoardBTNStyle}" Margin="0,5,5,5" MaxWidth="500" IsEnabled="True" ToolTipService.InitialShowDelay="10">
+                            <Button Style="{DynamicResource DashBoardBTNStyle}" Margin="0,5,5,5" Width="300" IsEnabled="True" ToolTipService.InitialShowDelay="10">
                                 <Grid Margin="5">
                                     <Grid.RowDefinitions>
                                         <RowDefinition MaxHeight="150"/>
@@ -170,7 +170,7 @@
                 <ItemsControl x:Name="IC_IBMPowerSysObjView">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
-                            <Button Style="{DynamicResource DashBoardBTNStyle}" Margin="0,5,5,5" MaxWidth="500" IsEnabled="True" ToolTipService.InitialShowDelay="10">
+                            <Button Style="{DynamicResource DashBoardBTNStyle}" Margin="0,5,5,5" Width="420" IsEnabled="True" ToolTipService.InitialShowDelay="10">
                                 <Grid Margin="5">
                                     <Grid.RowDefinitions>
                                         <RowDefinition MaxHeight="150"/>
@@ -328,12 +328,12 @@
                 </ItemsControl>
             </ScrollViewer>
         </GroupBox>
-        <GroupBox Grid.Row="3" Header="LPAR Info" MinWidth="820" HorizontalAlignment="Left" Margin="10,10,0,0"  VerticalAlignment="Top" Visibility="{Binding ElementName=CB_PowerBoardLPAR, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
-            <ScrollViewer Margin="5" VerticalScrollBarVisibility="Auto">
+        <GroupBox Grid.Row="3" Header="LPAR Info" MinWidth="820" MaxHeight="800" HorizontalAlignment="Left" Margin="10,10,0,0"  VerticalAlignment="Top" Visibility="{Binding ElementName=CB_PowerBoardLPAR, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
+            <ScrollViewer Margin="5" VerticalScrollBarVisibility="auto">
                 <ItemsControl x:Name="IC_IBMPowerLPARObjView">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
-                            <Button Style="{DynamicResource DashBoardBTNStyle}" Margin="0,5,5,5" MaxWidth="500" IsEnabled="True" ToolTipService.InitialShowDelay="10">
+                            <Button Style="{DynamicResource DashBoardBTNStyle}" Margin="0,5,5,5" Width="420" IsEnabled="True" ToolTipService.InitialShowDelay="10">
                                 <Grid Margin="5">
                                     <Grid.RowDefinitions>
                                         <RowDefinition MaxHeight="150"/>
@@ -361,7 +361,7 @@
                                         </Ellipse>
                                         <Ellipse Grid.RowSpan="6" Width="60" Height="60" >
                                            <Ellipse.Fill>
-                                               <ImageBrush ImageSource = "{Binding STOIcon , Mode=TwoWay}" Stretch="Uniform" />
+                                               <ImageBrush ImageSource = "{Binding LPARIcon , Mode=TwoWay}" Stretch="Uniform" />
                                            </Ellipse.Fill>
                                         </Ellipse>
                                                     <TextBlock
@@ -370,14 +370,15 @@
                                                         HorizontalAlignment="Left"
                                                         VerticalAlignment="Center"
                                                         Text="Name:" 
-                                                        Margin="3,0"/>
+                                                        Margin="3,5"/>
                                                     <TextBlock
                                                         Grid.Column="2"
                                                         Style="{DynamicResource DashBoardTB1}"
                                                         HorizontalAlignment="Left"
                                                         VerticalAlignment="Center"
                                                         Text="{Binding LPARName}"
-                                                        Margin="0"/>
+                                                        Margin="0,5"
+                                                        TextWrapping="Wrap"/>
                                                     <TextBlock
                                                         Grid.Row="1"
                                                         Grid.Column="1"
@@ -393,7 +394,22 @@
                                                         HorizontalAlignment="Left"
                                                         VerticalAlignment="Center"
                                                         Text="{Binding LPARStatus}"
-                                                        Margin="0"/>
+                                                        Margin="0">
+                                                        <TextBlock.Style>
+                                                            <Style TargetType="TextBlock">
+                                                                <Style.Triggers>
+                                                                    <Trigger Property ="Text" Value="Running">
+                                                                        <Setter Property= "Foreground" Value="green"/>
+                                                                        <Setter Property= "FontWeight" Value="Bold"/>
+                                                                    </Trigger>
+                                                                    <Trigger Property ="Text" Value="Not Activated">
+                                                                        <Setter Property= "Foreground" Value="orange"/>
+                                                                        <Setter Property= "FontWeight" Value="Bold"/>
+                                                                    </Trigger>
+                                                                </Style.Triggers>
+                                                            </Style>
+                                                        </TextBlock.Style>
+                                                    </TextBlock>
                                                     <TextBlock
                                                         Grid.Row="2"
                                                         Grid.Column="1"
@@ -417,7 +433,7 @@
                                                         HorizontalAlignment="Left"
                                                         VerticalAlignment="Center"
                                                         Text="OS Version:" 
-                                                        Margin="3,0"/>
+                                                        Margin="3,5"/>
                                                     <TextBlock
                                                         Grid.Row="3"
                                                         Grid.Column="2"
@@ -425,7 +441,8 @@
                                                         HorizontalAlignment="Left"
                                                         VerticalAlignment="Center"
                                                         Text="{Binding LPAROSVersion}"
-                                                        Margin="0"/>
+                                                        Margin="0,5"
+                                                        TextWrapping="Wrap"/>
                                                     <TextBlock
                                                         Grid.Row="4"
                                                         Grid.Column="1"
