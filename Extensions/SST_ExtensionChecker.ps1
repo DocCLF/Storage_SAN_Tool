@@ -20,7 +20,7 @@ function SST_ExtensionChecker {
                 $SST_BTN_PowerBoard.Visibility="visible"
             }
             $YNExtension = $true
-            SST_ToolMessageCollector -TD_ToolMSGCollector $("IBM_PowerMainFunc: $(($Extension).count) Extension are installed") -TD_ToolMSGType Warning -TD_Shown yes
+            SST_ToolMessageCollector -TD_ToolMSGCollector $("IBM_PowerMainFunc: $(($Extension).count) Extension are installed") -TD_ToolMSGType Message -TD_Shown yes
         }
 
         if($YNExtension){
@@ -39,11 +39,20 @@ function SST_ExtensionChecker {
     
     process {
             <#PRISMCustomerMainFunc#>
+            SST_ToolMessageCollector -TD_ToolMSGCollector $("Extension: $YNExtension ,Cloud: $CloudDB") -TD_ToolMSGType Message -TD_Shown no
             <#Cloud is needed#>
             if($CloudDB){
                 <#Cloud is true check if there is a file#>
                 $PRISMString = Import-Clixml -Path $PSRootPath\Resources\SavedToolSettings.clixml 
-                PRISMCustomerMainFunc -TD_SecDeviceData $LoadedToolSettings -LocalDB $true -CloudDB $true -ConnectionString $PRISMString
+                try {
+                    Get-Command PRISMCustomerMainFunc 
+                    PRISMCustomerMainFunc -TD_SecDeviceData $LoadedToolSettings -LocalDB $true -CloudDB $true -ConnectionString $PRISMString
+                }
+                catch {
+                    <#Do this if a terminating exception happens#>
+                    SST_ToolMessageCollector -TD_ToolMSGCollector $("PRISMCustomerMainFunc is not loaded $($_.exception.message)") -TD_ToolMSGType Warning -TD_Shown yes
+                }
+                
             }
             <#PRISMCustomerMainFunc#>
     }
