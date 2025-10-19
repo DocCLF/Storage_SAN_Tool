@@ -77,7 +77,7 @@ function SST_LiteDBControl {
                 Default {SST_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong at LocalDB in combination with $SST_InfoType") -TD_ToolMSGType Message -TD_Shown no}
             }
 
-            SST_ToolMessageCollector -TD_ToolMSGCollector $("LocalDB is ready and loaded") -TD_ToolMSGType Message -TD_Shown no
+            SST_ToolMessageCollector -TD_ToolMSGCollector $("LocalDB is ready and loaded, SST_InfoType $SST_InfoType") -TD_ToolMSGType Message -TD_Shown no
         }
         catch {
             Write-Debug $_.exception.message
