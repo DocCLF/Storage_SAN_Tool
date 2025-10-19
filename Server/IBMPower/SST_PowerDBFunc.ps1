@@ -78,7 +78,7 @@ function SST_PowerDBFunc {
             "LPARGUIInfo" { 
                 try {
                     $SST_SQLiteHMCQuery = $null
-                    $SST_SQLiteHMCQuery = "SELECT ID, LPARName, LPARID, LPARStatus, LPAREnvironment, LPAROSVersion, LPARRMCIP, LPARManagedSystemName, LPARManagedSystemSN, TimeStamp FROM LPARSummary d WHERE TimeStamp = ( SELECT MAX(TimeStamp) FROM LPARSummary WHERE LPARID = d.LPARID ) GROUP BY LPARID ORDER BY ID; "
+                    $SST_SQLiteHMCQuery = "SELECT ID, LPARName, LPARID, LPARStatus, LPAREnvironment, LPAROSVersion, LPARRMCIP, LPARManagedSystemName, LPARManagedSystemSN, TimeStamp FROM LPARSummary d WHERE TimeStamp = ( SELECT MAX(TimeStamp) FROM LPARSummary WHERE LPARName = d.LPARName ) GROUP BY LPARName ORDER BY ID; "
                     IBM_PowerLPARDBView -HMCCollection $SST_SQLiteHMCQuery -SQLReader $SST_SQliteReadCMD -UCOBJ $UCOBJ
                 }
                 catch {
