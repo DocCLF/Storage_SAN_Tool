@@ -48,7 +48,7 @@
                 </WrapPanel>
             </Grid>
         </GroupBox>
-        <GroupBox Grid.Row="1" Header="HMC Info" MinWidth="820" HorizontalAlignment="Left" Margin="10,10,0,0"  VerticalAlignment="Top" Visibility="{Binding ElementName=CB_PowerBoardHMC, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
+        <GroupBox Grid.Row="1" Header="HMC Info" MinWidth="320" HorizontalAlignment="Left" Margin="10,10,0,0"  VerticalAlignment="Top" Visibility="{Binding ElementName=CB_PowerBoardHMC, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
             <ScrollViewer Margin="5" VerticalScrollBarVisibility="Auto">
                 <ItemsControl x:Name="IC_IBMPowerHMCObjView">
                     <ItemsControl.ItemTemplate>
