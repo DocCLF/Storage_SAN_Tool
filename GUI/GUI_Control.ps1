@@ -117,7 +117,7 @@ foreach($file in $UserCxamlFile){
 #region BasicToolPreparation
     try {
         $TD_ExporttoOD = [Environment]::GetFolderPath("mydocuments")
-        $ExportFolderPath="$TD_ExporttoOD\StorageSANKit"
+        $ExportFolderPath="$TD_ExporttoOD\StorageSANTool"
         If(!(Test-Path -Path $ExportFolderPath)){
             try {
                 $TD_ExportFolderCreated = New-Item $ExportFolderPath -ItemType Directory -ErrorAction Stop
@@ -194,16 +194,17 @@ $TD_BTN_PowerBoard.add_click({
     $TD_LB_ExpPathMainWindow.Content ="Export Path: $($TD_tb_ExportPath.Text)"
     if(!($TD_UserControl6.IsLoaded)){
         $TD_UserContrArea.Children.Add($TD_UserControl6) 
-        IBM_PowerMainFunc -PSRootPath $PSRootPath -SST_MWOBJ $TD_UserControl5 -SST_UCOBJ $TD_UserControl6 -SST_UCSTYLEOBJ $ButtonStyles
         $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_.DeviceTyp -eq "PowerHMC"}
         if($TD_Credentials.count -ge 1){
+            IBM_PowerMainFunc -PSRootPath $PSRootPath -SST_UCOBJ $TD_UserControl6
             $TD_BTN_HMCCollector.Background = "LightGreen"
+            $TD_BTN_HMCCollector.Content = "HMCScan RDY"
             $SST_BTN_PowerBoardTooltip = $TD_UserControl6.FindName("BTN_HMCCollectorTooltip")
-            $SST_BTN_PowerBoardTooltip.Text = "Extension are installed and Credentials are loaded!"
+            $SST_BTN_PowerBoardTooltip.Text = "HMC Credentials are loaded!"
         }else{
             $TD_BTN_HMCCollector.Background = "Coral"
             $SST_BTN_PowerBoardTooltip = $TD_UserControl6.FindName("BTN_HMCCollectorTooltip")
-            $SST_BTN_PowerBoardTooltip.Text = "Extension are installed but no Credentials are loaded!"
+            $SST_BTN_PowerBoardTooltip.Text = "No HMC Credentials are loaded!"
         }
     }
     $TD_UserContrArea.Children.Remove($TD_UserControl1)
@@ -2020,8 +2021,8 @@ $TD_BTN_HMCCollector.add_click({
     SST_ToolMessageCollector -TD_ToolMSGCollector $("Region IBM Power Button.") -TD_ToolMSGType Message -TD_Shown no
     if(($TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_.DeviceTyp -eq "PowerHMC"}).count -ge 1){
         $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_}
-        $PRISMString = Import-Clixml -Path $PSRootPath\Resources\SavedToolSettings.clixml 
-        IBM_PowerMainFunc -SST_UCOBJ $TD_UserControl6 -PSRootPath $PSRootPath -SecureData $TD_Credentials -CloudString $PRISMString
+         
+        IBM_PowerMainFunc -SST_UCOBJ $TD_UserControl6 -PSRootPath $PSRootPath -SecureData $TD_Credentials 
     }else{
         $TD_BTN_HMCCollector.Content = "No HMC Creds Loaded"
         SST_ToolMessageCollector -TD_ToolMSGCollector $("No HMC Creds Loaded") -TD_ToolMSGType Message -TD_Shown yes
