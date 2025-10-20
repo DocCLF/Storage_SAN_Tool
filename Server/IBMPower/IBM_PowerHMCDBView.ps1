@@ -7,6 +7,7 @@ function IBM_PowerHMCDBView {
     )
     
     begin {     
+        
         $TD_IC_IBMPowerHMCObjView = $UCOBJ.FindName("IC_IBMPowerHMCObjView")
         $SQLReader.CommandText = $HMCCollection
         $SST_SQLiteDBReader = $SQLReader.ExecuteReader()
