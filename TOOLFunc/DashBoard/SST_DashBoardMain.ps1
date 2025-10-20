@@ -9,11 +9,11 @@ function SST_DashBoardMain {
     
     begin {
 
-        $Extension = Get-Item -Path "$MainPath\Extensions\*" -Exclude *.ps1
-        
-        if(($Extension).count -lt 1){ 
-            $TD_CB_DashBoardPWR.IsChecked=$false
-        }
+        #$Extension = Get-Item -Path "$MainPath\Extensions\*" -Exclude *.ps1
+        #
+        #if(($Extension).count -lt 1){ 
+        #    $TD_CB_DashBoardPWR.IsChecked=$false
+        #}
         
         $SST_ConnectionString = "Data Source=$MainPath\Resources\DBFolder\SSTLocalDB.db;Version=3;"
         $SST_SQLiteCon = New-Object System.Data.SQLite.SQLiteConnection $SST_ConnectionString
