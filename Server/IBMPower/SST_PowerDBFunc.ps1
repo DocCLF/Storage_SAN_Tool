@@ -86,7 +86,7 @@ function SST_PowerDBFunc {
                     SST_ToolMessageCollector -TD_ToolMSGCollector "There is something wrong, mybe there is no LPARSummary Table" -TD_ToolMSGType Warning -TD_Shown yes
                 }
             }
-            Default {}
+            Default {SST_ToolMessageCollector -TD_ToolMSGCollector "There is something wrong, with IBMPowerOperatorDB" -TD_ToolMSGType Warning -TD_Shown yes}
         }
 
 
