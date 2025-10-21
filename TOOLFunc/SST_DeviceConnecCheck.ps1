@@ -8,7 +8,8 @@ function SST_DeviceConnecCheck {
         $TD_Selected_DeviceUserName,
         $TD_Selected_DevicePassword,
         $TD_Selected_DeviceSSHFile,
-        $TD_Selected_SVCorVF
+        $TD_Selected_SVCorVF,
+        $CockpitView
     )
     
     begin {
@@ -156,7 +157,7 @@ function SST_DeviceConnecCheck {
     }
     
     end {
-        if($TD_Selected_Items -eq "no"){
+        if(($TD_Selected_Items -eq "no")-or ($CockpitView -eq "JobMode")){
             return $TD_BasicDeviceInfo
         }
     }
