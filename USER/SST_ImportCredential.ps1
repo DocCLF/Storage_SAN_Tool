@@ -4,7 +4,8 @@ function SST_ImportCredential {
         [Parameter(ValueFromPipeline)]
         [ValidateSet("yes","no")]
         [string]$SST_ImportDevicesonStartUp = "no",
-        $SST_ToInportDeviceInfos
+        $SST_ToInportDeviceInfos,
+        $CockpitView
     )
     if($SST_ImportDevicesonStartUp -eq "no"){
         $TD_ImportCredentialObjs = SST_OpenFile_from_Directory
@@ -24,8 +25,17 @@ function SST_ImportCredential {
     <# if the TD_CB_OnlineCheckbyImport is checked this part will connect to the devices #>
     if(($TD_CB_OnlineCheckbyImport.IsChecked)-and($SST_ImportDevicesonStartUp -eq "yes")){
         $TD_ExportCredtoDG | ForEach-Object {
-            SST_DeviceConnecCheck -TD_Selected_Items "yes" -TD_Selected_DeviceType $_.DeviceTyp -TD_Selected_DeviceConnectionType $_.ConnectionTyp -TD_Selected_DeviceIPAddr $_.IPAddress -TD_Selected_DeviceUserName $_.UserName -TD_Selected_DevicePassword $_.Password -TD_Selected_SVCorVF $_.SVCorVF
-            Start-Sleep -Seconds 0.5
+            if($null -eq $CockpitView){
+                Write-Host "$CockpitView ? -> JobMode"
+                SST_DeviceConnecCheck -TD_Selected_Items "yes" -TD_Selected_DeviceType $_.DeviceTyp -TD_Selected_DeviceConnectionType $_.ConnectionTyp -TD_Selected_DeviceIPAddr $_.IPAddress -TD_Selected_DeviceUserName $_.UserName -TD_Selected_DevicePassword $_.Password -TD_Selected_SVCorVF $_.SVCorVF
+                Start-Sleep -Seconds 0.5
+            }elseif ($CockpitView -eq "JobMode") {
+                <# Action when this condition is true #>
+                $DeviceInfoJobMode = $null
+                $DeviceInfoJobMode = SST_DeviceConnecCheck -TD_Selected_Items "yes" -TD_Selected_DeviceType $_.DeviceTyp -TD_Selected_DeviceConnectionType $_.ConnectionTyp -TD_Selected_DeviceIPAddr $_.IPAddress -TD_Selected_DeviceUserName $_.UserName -TD_Selected_DevicePassword $_.Password -TD_Selected_SVCorVF $_.SVCorVF -CockpitView $CockpitView
+
+                Write-Host "$DeviceInfoJobMode"
+            }
         }
     }
 
