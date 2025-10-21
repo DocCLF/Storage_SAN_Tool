@@ -13,7 +13,7 @@ function IBM_PowerMainFunc {
     }
     
     process {
-
+        SST_ToolMessageCollector -TD_ToolMSGCollector "Process Block IBM_PowerMainFunc - SecData Loaded: $($SecureData.count)" -TD_ToolMSGType Message -TD_Shown no
         if($SecureData.count -ge 1){
             
             $SST_BTN_PowerBoard.IsEnabled= $true
