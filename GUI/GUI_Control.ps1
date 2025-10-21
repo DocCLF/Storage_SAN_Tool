@@ -17,8 +17,8 @@ function Storage_SAN_Tool {
 [CmdletBinding()]
     param (
         [Parameter(ValueFromPipeline)]
-        [ValidateSet("DEFAULT","SAN","CONFIG","HEALTH","STORAGE","POWER")]
-        $CockpitView
+        [ValidateSet("DEFAULT","SAN","CONFIG","HEALTH","STORAGE","POWER","JobMode")]
+        $CockpitView = $null
     )
 #$ErrorActionPreference="SilentlyContinue"
 SST_ToolMessageCollector -TD_ToolMSGCollector "Start reading Storage_SAN_Tool func" -TD_ToolMSGType Message -TD_Shown no
@@ -194,9 +194,9 @@ $TD_BTN_PowerBoard.add_click({
     $TD_LB_ExpPathMainWindow.Content ="Export Path: $($TD_tb_ExportPath.Text)"
     if(!($TD_UserControl6.IsLoaded)){
         $TD_UserContrArea.Children.Add($TD_UserControl6) 
+        IBM_PowerMainFunc -PSRootPath $PSRootPath -SST_UCOBJ $TD_UserControl6
         $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_.DeviceTyp -eq "PowerHMC"}
         if($TD_Credentials.count -ge 1){
-            IBM_PowerMainFunc -PSRootPath $PSRootPath -SST_UCOBJ $TD_UserControl6
             $TD_BTN_HMCCollector.Background = "LightGreen"
             $TD_BTN_HMCCollector.Content = "HMCScan RDY"
             $SST_BTN_PowerBoardTooltip = $TD_UserControl6.FindName("BTN_HMCCollectorTooltip")
@@ -541,6 +541,7 @@ $TD_btn_ImportCred.add_click({
         $SST_BTN_PowerBoard.Content="HMC Scanner"
         $SST_BTN_PowerBoard.IsEnabled=$true
         if($TD_CB_OnlineCheckbyImport.IsChecked){
+            Write-Host ($TD_CB_OnlineCheckbyImport.IsChecked) $CockpitView
             $TD_ImportedCredentials | ForEach-Object {
                 SST_DeviceConnecCheck -TD_Selected_Items "yes" -TD_Selected_DeviceType $_.DeviceTyp -TD_Selected_DeviceConnectionType $_.ConnectionTyp -TD_Selected_DeviceIPAddr $_.IPAddress -TD_Selected_DeviceUserName $_.UserName -TD_Selected_DevicePassword $_.Password -TD_Selected_SVCorVF $_.SVCorVF
                 Start-Sleep -Seconds 0.5
@@ -2075,7 +2076,7 @@ SST_ToolMessageCollector -TD_ToolMSGCollector $("Call SST_FileCleanUp Func from 
 SST_FileCleanUp
 <# Load Toolsettings if they saved in Resources folder #>
 SST_ToolMessageCollector -TD_ToolMSGCollector $("Start Load Toolsettings if they saved in Resources folder") -TD_ToolMSGType Message -TD_Shown no
-SST_SaveLoadToolSettings -SST_LoadSettings $true -SST_MWOBJ $MainWindow -SST_UCOBJ $TD_UserControl6
+SST_SaveLoadToolSettings -SST_LoadSettings $true -SST_MWOBJ $MainWindow -SST_UCOBJ $TD_UserControl6 -CockpitView $CockpitView
 
 switch ($CockpitView) {
     "DEFAULT" { $TD_UserContrArea.Children.Add($TD_UserControl1) }
@@ -2084,6 +2085,7 @@ switch ($CockpitView) {
     "POWER" { $TD_UserContrArea.Children.Add($TD_UserControl6) }
     "HEALTH" { $TD_UserContrArea.Children.Add($TD_UserControl4) }
     "CONFIG" { $TD_UserContrArea.Children.Add($TD_UserControl5) }
+    "JobMode" {}
     Default {SST_ToolMessageCollector -TD_ToolMSGCollector $("Start Tool with Usercontrol $CockpitView ") -TD_ToolMSGType Message -TD_Shown no}
 }
 
