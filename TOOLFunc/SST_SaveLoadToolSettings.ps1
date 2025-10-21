@@ -4,6 +4,7 @@ function SST_SaveLoadToolSettings {
         [bool]$SST_LoadSettings = $false,
         [bool]$SST_SaveSettings = $false,
         $SST_SavedToolSettings = $null,
+        $CockpitView,
         $SST_MWOBJ,
         $SST_UCOBJ
     )
@@ -128,7 +129,7 @@ function SST_SaveLoadToolSettings {
     
     end {
         if($SST_LoadSettings -and ($null -ne $SST_SavedToolSettings)){
-            SST_ImportCredential -SST_ImportDevicesonStartUp yes -SST_ToInportDeviceInfos $TD_InportedDevices | Out-Null
+            SST_ImportCredential -SST_ImportDevicesonStartUp yes -SST_ToInportDeviceInfos $TD_InportedDevices -CockpitView $CockpitView | Out-Null
         }
     }
 }
