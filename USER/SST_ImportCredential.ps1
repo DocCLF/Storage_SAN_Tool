@@ -26,15 +26,11 @@ function SST_ImportCredential {
     if(($TD_CB_OnlineCheckbyImport.IsChecked)-and($SST_ImportDevicesonStartUp -eq "yes")){
         $TD_ExportCredtoDG | ForEach-Object {
             if($null -eq $CockpitView){
-                Write-Host "$CockpitView ? -> JobMode"
                 SST_DeviceConnecCheck -TD_Selected_Items "yes" -TD_Selected_DeviceType $_.DeviceTyp -TD_Selected_DeviceConnectionType $_.ConnectionTyp -TD_Selected_DeviceIPAddr $_.IPAddress -TD_Selected_DeviceUserName $_.UserName -TD_Selected_DevicePassword $_.Password -TD_Selected_SVCorVF $_.SVCorVF
                 Start-Sleep -Seconds 0.5
             }elseif ($CockpitView -eq "JobMode") {
                 <# Action when this condition is true #>
-                $DeviceInfoJobMode = $null
-                $DeviceInfoJobMode = SST_DeviceConnecCheck -TD_Selected_Items "yes" -TD_Selected_DeviceType $_.DeviceTyp -TD_Selected_DeviceConnectionType $_.ConnectionTyp -TD_Selected_DeviceIPAddr $_.IPAddress -TD_Selected_DeviceUserName $_.UserName -TD_Selected_DevicePassword $_.Password -TD_Selected_SVCorVF $_.SVCorVF -CockpitView $CockpitView
-
-                Write-Host "$DeviceInfoJobMode"
+                SST_JobMode -SecData $_
             }
         }
     }
