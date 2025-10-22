@@ -978,7 +978,7 @@ $TD_btn_IBM_BaseStorageInfo.add_click({
         [array]$TD_BaseStorageInfo = IBM_BaseStorageInfos -TD_Line_ID $_.ID -TD_Device_ConnectionTyp $_.ConnectionTyp -TD_Device_UserName $_.UserName -TD_Device_DeviceIP $_.IPAddress -TD_Device_DeviceName $_.DeviceName -TD_Device_PW $([Net.NetworkCredential]::new('', $_.Password).Password) -TD_Storage $_.SVCorVF -TD_Exportpath $TD_tb_ExportPath.Text
         #$TD_SystemInfo = IBM_SystemInfo -TD_Line_ID $_.ID -TD_Device_ConnectionTyp $_.ConnectionTyp -TD_Device_UserName $_.UserName -TD_Device_DeviceIP $_.IPAddress -TD_Device_DeviceName $_.DeviceName -TD_Device_PW $([Net.NetworkCredential]::new('', $_.Password).Password) -TD_BaseStorageInfoSN $TD_BaseStorageInfo.Serial_Number -TD_BaseStorageInfoMTM $TD_BaseStorageInfo.Prod_MTM
         try {
-            SST_LiteDBControl -SST_InfoType "StorageBase" -SST_CollectedInformations $TD_BaseStorageInfo,$TD_SystemInfo
+            SST_LiteDBControl -SST_InfoType "StorageBase" -SST_CollectedInformations $TD_BaseStorageInfo
         }
         catch {
             <#Do this if a terminating exception happens#>
@@ -2085,7 +2085,19 @@ switch ($CockpitView) {
     "POWER" { $TD_UserContrArea.Children.Add($TD_UserControl6) }
     "HEALTH" { $TD_UserContrArea.Children.Add($TD_UserControl4) }
     "CONFIG" { $TD_UserContrArea.Children.Add($TD_UserControl5) }
-    "JobMode" {}
+    "JobMode" {
+        try {
+            Remove-Item -Path $PSRootPath\ToolLog\ToolTEMP\* -Filter '*_Temp.csv' -Force -ErrorAction SilentlyContinue
+            SST_ToolMessageCollector -TD_ToolMSGCollector $("Remove Files from TEMP-Folder, done.") -TD_ToolMSGType Message -TD_Shown no
+        }
+        catch {
+            <#Do this if a terminating exception happens#>
+            SST_ToolMessageCollector -TD_ToolMSGCollector $("Remove Files fail: $($_.Exception.Message)") -TD_ToolMSGType Error -TD_Shown no
+        }
+        Write-Debug -Message "Close the appl via CloseBtn"
+        $MainWindow.Close()
+        Exit
+    }
     Default {SST_ToolMessageCollector -TD_ToolMSGCollector $("Start Tool with Usercontrol $CockpitView ") -TD_ToolMSGType Message -TD_Shown no}
 }
 
