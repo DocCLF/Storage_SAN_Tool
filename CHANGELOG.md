@@ -24,6 +24,8 @@ All notable changes to this project will be documented in this file.
 - Host Status changes are now displayed via message and color of the respective Host from a storage perspective.
 - SAN firmware is now also displayed in the dashboard overview.
 - integration for PROFI Cockpit
+- a JobMode* that allows the tool to run as a task without a GUI, e.g., via Windows Task Scheduler.
+    * this requires an additional *ps1 or batch file to be created, which can then be used to access the tool from the Task Scheduler.
 
 ### Fixed
 - some major and minor bugs in the main function GUI Control
