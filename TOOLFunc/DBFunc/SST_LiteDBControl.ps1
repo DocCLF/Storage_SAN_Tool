@@ -111,8 +111,8 @@ function SST_LiteDBControl {
 
                     $SST_SQliteInsertCMD.ExecuteNonQuery()
 
-                    # Delete | Keep only the 512 most recent entries after TimeStamp
-                    $SST_SQliteInsertCMD.CommandText = "DELETE FROM IBMSTODriveTable WHERE ID NOT IN ( SELECT ID FROM IBMSTODriveTable ORDER BY TimeStamp DESC LIMIT 512 );"
+                    # Delete | Keep only the 256 most recent entries after TimeStamp
+                    $SST_SQliteInsertCMD.CommandText = "DELETE FROM IBMSTODriveTable WHERE ID NOT IN ( SELECT ID FROM IBMSTODriveTable ORDER BY TimeStamp DESC LIMIT 256 );"
                     $SST_SQliteInsertCMD.ExecuteNonQuery()
                 }
              }
@@ -143,8 +143,8 @@ function SST_LiteDBControl {
                     # DB save
                     $SST_SQliteInsertCMD.ExecuteNonQuery()
 
-                    # Delete | Keep only the 512 most recent entries after TimeStamp
-                    $SST_SQliteInsertCMD.CommandText = "DELETE FROM IBMSTOHWTable WHERE ID NOT IN ( SELECT ID FROM IBMSTOHWTable ORDER BY TimeStamp DESC LIMIT 512 );"
+                    # Delete | Keep only the 128 most recent entries after TimeStamp
+                    $SST_SQliteInsertCMD.CommandText = "DELETE FROM IBMSTOHWTable WHERE ID NOT IN ( SELECT ID FROM IBMSTOHWTable ORDER BY TimeStamp DESC LIMIT 128 );"
                     $SST_SQliteInsertCMD.ExecuteNonQuery()
                 }
             }
@@ -164,8 +164,8 @@ function SST_LiteDBControl {
                     # DB save 
                     $SST_SQliteInsertCMD.ExecuteNonQuery()
 
-                    # Delete | Keep only the 512 most recent entries after TimeStamp
-                    $SST_SQliteInsertCMD.CommandText = "DELETE FROM IBMSTOHostTable WHERE ID NOT IN ( SELECT ID FROM IBMSTOHostTable ORDER BY TimeStamp DESC LIMIT 512 );"
+                    # Delete | Keep only the 128 most recent entries after TimeStamp
+                    $SST_SQliteInsertCMD.CommandText = "DELETE FROM IBMSTOHostTable WHERE ID NOT IN ( SELECT ID FROM IBMSTOHostTable ORDER BY TimeStamp DESC LIMIT 128 );"
                     $SST_SQliteInsertCMD.ExecuteNonQuery()
                 }
             }
@@ -238,8 +238,8 @@ function SST_LiteDBControl {
                     # DB save 
                     $SST_SQliteInsertCMD.ExecuteNonQuery()
 
-                    # Delete | Keep only the 64 most recent entries after TimeStamp
-                    $SST_SQliteInsertCMD.CommandText = "DELETE FROM IBMSANHWTable WHERE ID NOT IN ( SELECT ID FROM IBMSANHWTable ORDER BY TimeStamp DESC LIMIT 64 );"
+                    # Delete | Keep only the 16 most recent entries after TimeStamp
+                    $SST_SQliteInsertCMD.CommandText = "DELETE FROM IBMSANHWTable WHERE ID NOT IN ( SELECT ID FROM IBMSANHWTable ORDER BY TimeStamp DESC LIMIT 16 );"
                     $SST_SQliteInsertCMD.ExecuteNonQuery()
                 }
             }
