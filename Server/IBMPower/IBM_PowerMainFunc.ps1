@@ -18,9 +18,19 @@ function IBM_PowerMainFunc {
             
             $SST_BTN_PowerBoard.IsEnabled= $true
             $SST_BTN_PowerBoard.Visibility="visible"
-            $SecureData | ForEach-Object {
-                if($_.DeviceTyp -match "PowerHMC"){
-                    IBM_PowerHMCScanner -HMCIP $_.IPAddress -HMCUser $_.UserName -HMCPass $([Net.NetworkCredential]::new('', $_.Password).Password) -Debug
+            if($PSVersionTable.PSVersion.Major -ge 7){
+                $SecureData | ForEach-Object {
+                    if($_.DeviceTyp -match "PowerHMC"){
+
+                        IBM_PowerHMCScanner -HMCIP $_.IPAddress -HMCUser $_.UserName -HMCPass $([Net.NetworkCredential]::new('', $_.Password).Password) -Debug
+                    }
+                }
+            }else {
+               $SecureData | ForEach-Object {
+                    if($_.DeviceTyp -match "PowerHMC"){
+
+                        IBM_PowerHMCScanner -HMCIP $_.IPAddress -HMCUser $_.UserName -HMCPass $([Net.NetworkCredential]::new('', $_.Password).Password)
+                    }
                 }
             }
             
