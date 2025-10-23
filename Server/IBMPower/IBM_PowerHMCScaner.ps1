@@ -13,43 +13,52 @@ function IBM_PowerHMCScanner {
     
     begin {
         Write-Debug -Message "Start Beginn Block"
+        SST_ToolMessageCollector -TD_ToolMSGCollector "HMCScanerFunc Start Beginn Block" -TD_ToolMSGType Message -TD_Shown yes
         
         try {
-            $PT_TempDirHMCScaner = Get-Item -Path $PSScriptRoot\HMCScanerTEMP -ErrorAction Break
+            $PT_TempDirHMCScaner = Get-Item -Path $PSScriptRoot\HMCScanerTEMP -ErrorAction Stop
             if(!(Get-Item -Path $PSScriptRoot\HMCScanerTEMP\HMCScannerTool)){
                 New-Item -Path $PSScriptRoot\HMCScanerTEMP\ -ItemType Directory -Name HMCScannerTool -Confirm:$false -Force
                 Write-Debug -Message "Create Directory HMCScannerTool"
             }
             if(Get-ChildItem -Path $PSScriptRoot\HMCScanerTEMP\hmc*.zip){
-                $TP_HMCScanerTool = Get-ChildItem -Path $PSScriptRoot\HMCScanerTEMP\hmc*.zip -ErrorAction Break
+                $TP_HMCScanerTool = Get-ChildItem -Path $PSScriptRoot\HMCScanerTEMP\hmc*.zip -ErrorAction Stop
                 Write-Debug -Message "The $($TP_HMCScanerTool.Name) was found and we move on"
-                Expand-Archive -Path $PSScriptRoot\HMCScanerTEMP\$($TP_HMCScanerTool.Name) -DestinationPath $PSScriptRoot\HMCScanerTEMP\HMCScannerTool\ -Confirm:$false -Force
+                Expand-Archive -Path $PSScriptRoot\HMCScanerTEMP\$($TP_HMCScanerTool.Name) -DestinationPath $PSScriptRoot\HMCScanerTEMP\HMCScannerTool\ -Confirm:$false Stop
                 Write-Debug -Message "Remove-Item $($TP_HMCScanerTool.Name) is not needed"
                 Start-Sleep -Seconds 0.5
                 Remove-Item -Path $PSScriptRoot\HMCScanerTEMP\$($TP_HMCScanerTool.Name) -Confirm:$false -Force
                 Write-Debug -Message "Expand $($TP_HMCScanerTool.Name) and found the *.bat, we move on"
             }
-            Get-ChildItem -Path $PSScriptRoot\HMCScanerTEMP\HMCScannerTool\hmcS*.bat -ErrorAction Break
+            Get-ChildItem -Path $PSScriptRoot\HMCScanerTEMP\HMCScannerTool\hmcS*.bat -ErrorAction Stop
         }
         catch {
             <#Do this if a terminating exception happens#>
-            Write-Host -Message $_.Exception.Message
+            SST_ToolMessageCollector -TD_ToolMSGCollector "HMCScanerFunc $($_.exception.message)" -TD_ToolMSGType Error -TD_Shown yes
+            Write-Error -Message $_.Exception.Message
         }
         
         Write-Debug -Message "Start using HMCScanerTool"
         try {
-            $PT_GetCMDID = Start-Process -FilePath $PSScriptRoot\HMCScanerTEMP\HMCScannerTool\hmcScanner.bat -ArgumentList "$HMCIP $HMCUser -p $HMCPass -dir $PSScriptRoot\HMCScanerTEMP" -Confirm:$false -PassThru -ErrorAction Break
-            Wait-Process -Id $PT_GetCMDID.Id
-            Write-Debug -Message "Collected all Date from HMC and push them into a folder named $HMCIP"
-            if(Get-ChildItem -Path $PSScriptRoot\HMCScanerTEMP\$HMCIP){
-                Write-Host "All files can be found here: $PSScriptRoot\HMCScanerTEMP\$HMCIP "
+            if($PSVersionTable.PSVersion.Major -ge 7){
+                $PT_GetCMDID = Start-Process -FilePath $PSScriptRoot\HMCScanerTEMP\HMCScannerTool\hmcScanner.bat -ArgumentList "$HMCIP $HMCUser -p $HMCPass -dir $PSScriptRoot\HMCScanerTEMP" -Confirm:$false -PassThru -ErrorAction Continue
+                Wait-Process -Id $PT_GetCMDID.Id
             }else {
-                Write-Host "There is something wrong -.-"
+                $PT_GetCMDID = Start-Process -FilePath $PSScriptRoot\HMCScanerTEMP\HMCScannerTool\hmcScanner.bat -ArgumentList "$HMCIP $HMCUser -p $HMCPass -dir $PSScriptRoot\HMCScanerTEMP" -PassThru -ErrorAction Continue
+                Wait-Process -Id $PT_GetCMDID.Id
+            }
+            Write-Debug -Message "Collected all Date from HMC and push them into a folder named $HMCIP"
+            SST_ToolMessageCollector -TD_ToolMSGCollector "Collected all Date from HMC and push them into a folder named $HMCIP" -TD_ToolMSGType Message -TD_Shown yes
+            if(Get-ChildItem -Path $PSScriptRoot\HMCScanerTEMP\$HMCIP){
+                Write-Debug -Message "All files can be found here: $PSScriptRoot\HMCScanerTEMP\$HMCIP "
+            }else {
+                Write-Error -Message "There is something wrong -.-"
             }
         }
         catch {
             <#Do this if a terminating exception happens#>
-            Write-Host -Message $_.Exception.Message
+            SST_ToolMessageCollector -TD_ToolMSGCollector "HMCScanerFunc $($_.exception.message)" -TD_ToolMSGType Error -TD_Shown yes
+            Write-Error -Message -Message $_.Exception.Message
         }
     }
     
@@ -57,7 +66,7 @@ function IBM_PowerHMCScanner {
         try {
             Write-Debug -Message "Start with Process Block"
             <#get all files #>
-            $PT_AllTXTFiles = Get-ChildItem -Path "$PSScriptRoot\HMCScanerTEMP\$($HMCIP)\*.txt" -ErrorAction Break
+            $PT_AllTXTFiles = Get-ChildItem -Path "$PSScriptRoot\HMCScanerTEMP\$($HMCIP)\*.txt" -ErrorAction Continue
             <# Get the contents of the required files for the next step #>
             foreach($PT_AllTXTFile in $PT_AllTXTFiles){
                 if(($PT_AllTXTFile.Name -like "lshmc-*")-or$PT_AllTXTFile.Name -like "system_data*"){
@@ -141,12 +150,13 @@ function IBM_PowerHMCScanner {
         }
         catch {
             <#Do this if a terminating exception happens#>
-            Write-Host -Message $_.Exception.Message
+            SST_ToolMessageCollector -TD_ToolMSGCollector "HMCScanerFunc $($_.exception.message)" -TD_ToolMSGType Error -TD_Shown yes
         }
     }
     
     end {
         Write-Debug -Message "Start the end block and export all data to $PSScriptRoot\HMCScanerTEMP\"
+        SST_ToolMessageCollector -TD_ToolMSGCollector "Start the end block and export all data to $PSScriptRoot\HMCScanerTEMP\" -TD_ToolMSGType Message -TD_Shown yes
         <# export all Data #>
         try {
             $PT_HMCData | Export-Csv -Path $PSScriptRoot\HMCScanerTEMP\CustomerHMCData.csv -NoTypeInformation -ErrorAction Continue
@@ -158,8 +168,15 @@ function IBM_PowerHMCScanner {
 
         <# CleanUp for the next run #>
         Write-Debug -Message "Delete $HMCIP Folder"
-        Remove-Item -Path $PSScriptRoot\HMCScanerTEMP\$HMCIP -Recurse -Confirm:$false -Force
-        Remove-Item -Path $PSScriptRoot\HMCScanerTEMP\$HMCIP*_scan.* -Confirm:$false -Force
-        Remove-Item -Path $PSScriptRoot\hmcScanner-*.log -Confirm:$false -Force
+        SST_ToolMessageCollector -TD_ToolMSGCollector "Delete $HMCIP Folder" -TD_ToolMSGType Message -TD_Shown yes
+        if($PSVersionTable.PSVersion.Major -ge 7){
+            Remove-Item -Path $PSScriptRoot\HMCScanerTEMP\$HMCIP -Recurse -Confirm:$false -Force
+            Remove-Item -Path $PSScriptRoot\HMCScanerTEMP\$HMCIP*_scan.* -Confirm:$false -Force
+            Remove-Item -Path $PSScriptRoot\hmcScanner-*.log -Confirm:$false -Force
+        }else {
+            Remove-Item -Path $PSScriptRoot\HMCScanerTEMP\$HMCIP -Recurse -Force
+            Remove-Item -Path $PSScriptRoot\HMCScanerTEMP\$HMCIP*_scan.* -Force
+            Remove-Item -Path $PSScriptRoot\hmcScanner-*.log -Force
+        }
     }
 }
