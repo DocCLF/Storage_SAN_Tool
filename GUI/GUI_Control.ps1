@@ -195,16 +195,27 @@ $TD_BTN_PowerBoard.add_click({
     if(!($TD_UserControl6.IsLoaded)){
         $TD_UserContrArea.Children.Add($TD_UserControl6) 
         IBM_PowerMainFunc -PSRootPath $PSRootPath -SST_UCOBJ $TD_UserControl6
-        $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_.DeviceTyp -eq "PowerHMC"}
-        if($TD_Credentials.count -ge 1){
-            $TD_BTN_HMCCollector.Background = "LightGreen"
-            $TD_BTN_HMCCollector.Content = "HMCScan RDY"
-            $SST_BTN_PowerBoardTooltip = $TD_UserControl6.FindName("BTN_HMCCollectorTooltip")
-            $SST_BTN_PowerBoardTooltip.Text = "HMC Credentials are loaded!"
-        }else{
-            $TD_BTN_HMCCollector.Background = "Coral"
-            $SST_BTN_PowerBoardTooltip = $TD_UserControl6.FindName("BTN_HMCCollectorTooltip")
-            $SST_BTN_PowerBoardTooltip.Text = "No HMC Credentials are loaded!"
+        if($PSVersionTable.PSVersion.Major -ge 7){
+            $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_.DeviceTyp -eq "PowerHMC"}
+            if($TD_Credentials.count -ge 1){
+                $TD_BTN_HMCCollector.Background = "LightGreen"
+                $TD_BTN_HMCCollector.Content = "HMCScan RDY"
+                $SST_BTN_PowerBoardTooltip = $TD_UserControl6.FindName("BTN_HMCCollectorTooltip")
+                $SST_BTN_PowerBoardTooltip.Text = "HMC Credentials are loaded!"
+            }else{
+                $TD_BTN_HMCCollector.Background = "Coral"
+                $SST_BTN_PowerBoardTooltip = $TD_UserControl6.FindName("BTN_HMCCollectorTooltip")
+                $SST_BTN_PowerBoardTooltip.Text = "No HMC Credentials are loaded!"
+            }
+        }else {
+            <# Action when all if and elseif conditions are false #>
+            $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_}
+            if($TD_Credentials.count -ge 1){
+                $TD_BTN_HMCCollector.Background = "LightGreen"
+                $TD_BTN_HMCCollector.Content = "HMCScan RDY"
+                $SST_BTN_PowerBoardTooltip = $TD_UserControl6.FindName("BTN_HMCCollectorTooltip")
+                $SST_BTN_PowerBoardTooltip.Text = "Credentials are loaded, please check that HMC login details are included.!"
+            }
         }
     }
     $TD_UserContrArea.Children.Remove($TD_UserControl1)
@@ -2020,16 +2031,15 @@ SST_ToolMessageCollector -TD_ToolMSGCollector $("Endregion SAN Button.") -TD_Too
 #region IBM Power
 $TD_BTN_HMCCollector.add_click({
     SST_ToolMessageCollector -TD_ToolMSGCollector $("Region IBM Power Button.") -TD_ToolMSGType Message -TD_Shown no
-    if(($TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_.DeviceTyp -eq "PowerHMC"}).count -ge 1){
+
+    if(($TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_}).count -ge 1){
         $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_}
-         
         IBM_PowerMainFunc -SST_UCOBJ $TD_UserControl6 -PSRootPath $PSRootPath -SecureData $TD_Credentials 
     }else{
         $TD_BTN_HMCCollector.Content = "No HMC Creds Loaded"
         SST_ToolMessageCollector -TD_ToolMSGCollector $("No HMC Creds Loaded") -TD_ToolMSGType Message -TD_Shown yes
     }
-    
-    #PRISMCustomerMainFunc -TD_SecDeviceData $TD_Credentials -LocalDB $true -CloudDB $true -ConnectionString $PRISMString
+
 })
 #endregion
 
