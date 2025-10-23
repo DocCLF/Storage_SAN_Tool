@@ -24,12 +24,10 @@ By default, these files are blocked to protect the computer from untrusted files
     $HealthCheck_Functions = @(Get-ChildItem -Path $PSScriptRoot\HealthCheck\*.ps1 -ErrorAction SilentlyContinue)
     Unblock-File -Path $PSScriptRoot\GUI\*.ps1 -Confirm:$false
     $GUI_Functions = @(Get-ChildItem -Path $PSScriptRoot\GUI\*.ps1 -ErrorAction SilentlyContinue)
-    Unblock-File -Path $PSScriptRoot\Extensions\*.ps1 -Confirm:$false
-    $Extension_Functions = @(Get-ChildItem -Path $PSScriptRoot\Extensions\*.ps1 -ErrorAction SilentlyContinue)
 
     $FoundErrors = @(
 
-        foreach($import in @($DBFunc_Functions + $DashBoard_Functions + $TOOL_Functions + $USER_Functions + $IBMPower_Functions + $IBMStorage_Functions + $FOSBrocade_Functions + $HealthCheck_Functions + $GUI_Functions + $Extension_Functions)) {
+        foreach($import in @($DBFunc_Functions + $DashBoard_Functions + $TOOL_Functions + $USER_Functions + $IBMPower_Functions + $IBMStorage_Functions + $FOSBrocade_Functions + $HealthCheck_Functions + $GUI_Functions)) {
             try {
                . $import.fullname
             }
