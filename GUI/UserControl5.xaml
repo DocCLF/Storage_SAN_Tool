@@ -75,7 +75,7 @@
                             </Style>
                         </Label.Style>
                     </Label>
-                    <PasswordBox x:Name="TB_DevicePassword" MaxLength="32" MinWidth="100" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Margin="2" Height="30">
+                    <PasswordBox x:Name="TB_DevicePassword" MaxLength="64" MinWidth="100" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Margin="2" Height="30">
                         <PasswordBox.Style>
                             <Style TargetType="PasswordBox">
                                 <Style.Triggers>
