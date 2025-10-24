@@ -512,7 +512,7 @@ $TD_TBTN_SaveCredtoDG.add_click({
         SST_ToolMessageCollector -TD_ToolMSGCollector "Cred Update" -TD_ToolMSGType Message -TD_Shown no
         $TD_CredfGUIArray = SST_GetCredfGUI -TD_AddaNewDevice "no"
     }else{
-        SST_ToolMessageCollector -TD_ToolMSGCollector "Cred AddaNewDevice" -TD_ToolMSGType Message TD_Shown no
+        SST_ToolMessageCollector -TD_ToolMSGCollector "Cred AddaNewDevice" -TD_ToolMSGType Message -TD_Shown no
         $TD_CredfGUIArray = SST_GetCredfGUI -TD_AddaNewDevice "yes"
         Start-Sleep -Seconds 0.3
         if(!([string]::IsNullOrEmpty($TD_CredfGUIArray))){
@@ -1273,7 +1273,13 @@ $TD_btn_FOS_BasicSwitchInfo.add_click({
             {($_ -eq 8)} { $TD_dg_sanBasicSwitchInfoEight.ItemsSource = $FOS_BasicSwitch }
             Default { SST_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong at BasicSwitchInfos DeviceID $($_.ID), please check the prompt output first and then the log files.") -TD_ToolMSGType Error -TD_Shown yes}
         }
-        $FOS_BasicSwitch | Export-Csv -Path $PSRootPath\ToolLog\ToolTEMP\$($_.ID)_$($_.DeviceName)_FOS_BasicSwitchInfos_$(Get-Date -Format "yyyy-MM-dd")_Temp.csv
+        try {
+            $FOS_BasicSwitch | Export-Csv -Path $PSRootPath\ToolLog\ToolTEMP\$($_.ID)_$($_.DeviceName)_FOS_BasicSwitchInfos_$(Get-Date -Format "yyyy-MM-dd")_Temp.csv -ErrorAction SilentlyContinue
+        }
+        catch {
+            SST_ToolMessageCollector -TD_ToolMSGCollector "FOS_BasicSwitchInfos in GUI Func - $($_.exception.message)" -TD_ToolMSGType Error -TD_Shown no
+        }
+        
     }
 
     if($TD_UCRefresh){$TD_UserControl1.Dispatcher.Invoke([System.Action]{},"Render");$TD_UCRefresh=$false}
