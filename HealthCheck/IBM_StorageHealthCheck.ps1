@@ -110,7 +110,7 @@ function IBM_StorageHealthCheck {
                             }
                         }
                         $i=0
-
+                        $UCOBJ.Dispatcher.Invoke([System.Action]{},"Render")
                         #endregion
 
                         #region Storage_HS_VolumeCheck
@@ -137,7 +137,7 @@ function IBM_StorageHealthCheck {
                             #}
                         }
                         $i=0
-
+                        $UCOBJ.Dispatcher.Invoke([System.Action]{},"Render")
                         #endregion
 
                         #region Storage_HS_IPQuorumCheck
@@ -152,6 +152,7 @@ function IBM_StorageHealthCheck {
                             $QuorumErrorMsg = "Your current quorum configuration differs from the default and does not`n seem to have the minimum number of 3 quorum devices, please check this!"
                             SST_CreateHealthLayout -SST_UCOBJ $UCOBJ -SST_MainStackPName "$IBMSTODeviceMainSTPName" -SST_GridFuncName "IBMIPQuorumCheckFunc$DeviceIDPlaceHolder" -SST_LabelVisuResultsofCheck $QuorumErrorMsg -SST_LabelColorForCheck "red" -SST_StackPFuncName "FuncIBMQuorumCheckStackPN$DeviceIDPlaceHolder" -SST_StackPResultsName "ResultsIBMQuorumCheckStackPN$DeviceIDPlaceHolder" -SST_LabelNameHelper "$("IBMSTOQuorumkCheck$DeviceIDPlaceHolder"+"_"+$i)" -SST_DeviceID $DeviceIDPlaceHolder -SST_LabelVisuNameofCheck "QuorumCheck" -DataGridOption $false
                         }
+                        $UCOBJ.Dispatcher.Invoke([System.Action]{},"Render")
                         #endregion
                         #region Storage_HS_UserCheck
                         [array]$TD_IBM_UserCheck = IBM_UserInfo -TD_Line_ID $_.ID -TD_Device_ConnectionTyp $_.ConnectionTyp -TD_Device_UserName $_.UserName -TD_Device_DeviceIP $_.IPAddress -TD_Device_DeviceName $_.DeviceName -TD_Device_PW $([Net.NetworkCredential]::new('', $_.Password).Password) -TD_Device_SSHKeyPath $_.SSHKeyPath -TD_Storage $TD_Credential.SVCorVF -TD_Export "no"
@@ -169,6 +170,7 @@ function IBM_StorageHealthCheck {
                             }
                         }
                         $i=0
+                        $UCOBJ.Dispatcher.Invoke([System.Action]{},"Render")
                         #endregion
 
                         #region Storage_HS_StorSecuCheck
@@ -188,6 +190,7 @@ function IBM_StorageHealthCheck {
                             $SecurityStatusErrorMsgText = "There is a problem, please check your storage system settings!"
                             SST_CreateHealthLayout -SST_UCOBJ $UCOBJ -SST_MainStackPName "$IBMSTODeviceMainSTPName" -SST_GridFuncName "IBMSecurityFunc$DeviceIDPlaceHolder" -SST_LabelVisuResultsofCheck $SecurityStatusErrorMsgText -SST_LabelColorForCheck "red" -SST_StackPFuncName "FuncIBMSecurityStackPN$DeviceIDPlaceHolder" -SST_StackPResultsName "ResultsIBMSecurityStackPN$DeviceIDPlaceHolder" -SST_LabelNameHelper "$("IBMSTOSecurityCheck$DeviceIDPlaceHolder"+"_"+$i)" -SST_DeviceID $DeviceIDPlaceHolder -SST_LabelVisuNameofCheck "StorageSecurity"
                         }
+                        $UCOBJ.Dispatcher.Invoke([System.Action]{},"Render")
                         #endregion
                         SST_ToolMessageCollector -TD_ToolMSGCollector "Storage Health Check Func End" -TD_ToolMSGType Debug -TD_Shown no
                     }
