@@ -42,6 +42,7 @@ All notable changes to this project will be documented in this file.
 - Checkbox was automatically checked if the access data needed to be updated. 
 - ID matching problem when updating Credentials
 - not all virtual WWPNs were displayed in the SwitchShow panel.
+- a problem where passwords with special characters could cause issues.
 
 ### Changed
 - some Basis Functions like StorageBaseInfo, DriveInfo, SANBaseInfo and so on 
