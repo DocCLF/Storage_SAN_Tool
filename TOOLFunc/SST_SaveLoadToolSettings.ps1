@@ -45,7 +45,7 @@ function SST_SaveLoadToolSettings {
                 $SST_ExportToolSettings.LocalDB = $false
             }
             if(!([string]::IsNullOrEmpty($TD_TB_ConnectionStringPRISM.Password))){
-                $SST_ExportToolSettings.ConnectionStringPRISM = ConvertTo-SecureString $($TD_TB_ConnectionStringPRISM.Password) -AsPlainText -Force
+                $SST_ExportToolSettings.ConnectionStringPRISM = ConvertTo-SecureString -String ([string]$($TD_TB_ConnectionStringPRISM.Password)) -AsPlainText -Force
                 $SST_ExportToolSettings.CustomerNumber = $TD_TB_CustomerNumberPRISM.Text
             }else {
                 try {
