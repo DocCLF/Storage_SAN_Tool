@@ -59,6 +59,7 @@ function SST_DeviceConnecCheck {
 
                     switch ($TD_BasicDeviceInfos.Prod_MTM[0]) {
                         {$_ -like "2078-324"} { $TD_BInfo.ProductDes = "V5030 Gen2" }
+                        {$_ -like "2072-3N*" -or $_ -like "2078-2N*"} { $TD_BInfo.ProductDes = "FlashSystem 5000" }
                         {$_ -like "4680-3*"}  { $TD_BInfo.ProductDes = "FlashSystem 5045" }
                         {$_ -like "2077-4H4" -or $_ -like "2078-4H4" }  { $TD_BInfo.ProductDes = "FlashSystem 5100" }
                         {$_ -like "4662-6H2" -or $_ -like "4662-UH6" }  { $TD_BInfo.ProductDes = "FlashSystem 5200" }
