@@ -29,7 +29,7 @@ function SST_DeviceConnecCheck {
                 $TD_Selected_DeviceConnectionType = $TD_CB_DeviceConnectionType.Text
                 $TD_Selected_DeviceIPAddr = $TD_TB_DeviceIPAddr.Text
                 $TD_Selected_DeviceUserName = $TD_TB_DeviceUserName.Text
-                $TD_Selected_DevicePassword = $TD_TB_DevicePassword.Password
+                $TD_Selected_DevicePassword = [string]$TD_TB_DevicePassword.Password
                 $TD_Selected_DeviceSSHFile = $TD_TB_PathtoSSHKeyNotVisibil.Text="$($TD_ImportaddsshkeyObj.FileName)"
                 $TD_Selected_DeviceType = $TD_CB_DeviceType.Text
                 if($TD_CB_SVCorVF.IsChecked -and ($TD_Selected_DeviceType -eq "Storage")){$TD_UserInputCred = "SVC"};
