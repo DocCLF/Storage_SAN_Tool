@@ -73,7 +73,7 @@ function IBM_SANHealthCheck {
                         if(!([String]::IsNullOrEmpty($FOS_PortLicenseShowInfo))){
                             SST_CreateHealthLayout -SST_UCOBJ $UCOBJ -SST_MainStackPName "$BROSANDeviceMainSTPName" -SST_GridFuncName "BROSANPortLicenseFunc$DeviceIDPlaceHolder" -SST_LabelVisuResultsofCheck $("Status: Done ") -SST_LabelColorForCheck "green" -SST_StackPFuncName "FuncBROSANPortLicenseStackPN$DeviceIDPlaceHolder" -SST_StackPResultsName "ResultsBROSANPortLicenseStackPN$DeviceIDPlaceHolder" -SST_LabelNameHelper "$("BROSANPortLicenseCheck$DeviceIDPlaceHolder"+"_"+$i)" -SST_DeviceID $DeviceIDPlaceHolder -SST_LabelVisuNameofCheck "LicenseCheck" -SST_MainStackPWith $MainWith
                         }
-                        
+                        $UCOBJ.Dispatcher.Invoke([System.Action]{},"Render")
                         #endregion
 
                         #region FOS_SensorShow
@@ -83,7 +83,7 @@ function IBM_SANHealthCheck {
                         if(!([String]::IsNullOrEmpty($FOS_SensorShow))){
                             SST_CreateHealthLayout -SST_UCOBJ $UCOBJ -SST_MainStackPName "$BROSANDeviceMainSTPName" -SST_GridFuncName "BROSANSensorShowFunc$DeviceIDPlaceHolder" -SST_LabelVisuResultsofCheck $("Status: Done ") -SST_LabelColorForCheck "green" -SST_StackPFuncName "FuncBROSANSensorShowStackPN$DeviceIDPlaceHolder" -SST_StackPResultsName "ResultsBROSANSensorShowStackPN$DeviceIDPlaceHolder" -SST_LabelNameHelper "$("BROSANSensorShowCheck$DeviceIDPlaceHolder"+"_"+$i)" -SST_DeviceID $DeviceIDPlaceHolder -SST_LabelVisuNameofCheck "SensorCheck" -SST_MainStackPWith $MainWith
                         }
-                        
+                        $UCOBJ.Dispatcher.Invoke([System.Action]{},"Render")
                         #endregion
 
                         #region FOS_SFPDetails
@@ -101,6 +101,7 @@ function IBM_SANHealthCheck {
                             SST_CreateHealthLayout -SST_UCOBJ $UCOBJ -SST_MainStackPName "$BROSANDeviceMainSTPName" -SST_GridFuncName "BROSANSFPDetailsFunc$DeviceIDPlaceHolder" -SST_LabelVisuResultsofCheck $("Status: Done ") -SST_LabelColorForCheck "green" -SST_StackPFuncName "FuncBROSANSFPDetailsStackPN$DeviceIDPlaceHolder" -SST_StackPResultsName "ResultsBROSANSFPDetailsStackPN$DeviceIDPlaceHolder" -SST_LabelNameHelper "$("BROSANSFPDetailsCheck$DeviceIDPlaceHolder"+"_"+$i)" -SST_DeviceID $DeviceIDPlaceHolder -SST_LabelVisuNameofCheck "SFPDetails" -SST_MainStackPWith $MainWith
                         }
                         $i=0
+                        $UCOBJ.Dispatcher.Invoke([System.Action]{},"Render")
                         #endregion
 
                         #region FOS_SwitchShowInfo
@@ -110,7 +111,7 @@ function IBM_SANHealthCheck {
                         if(!([String]::IsNullOrEmpty($FOS_SwitchShowInfo))){
                             SST_CreateHealthLayout -SST_UCOBJ $UCOBJ -SST_MainStackPName "$BROSANDeviceMainSTPName" -SST_GridFuncName "BROSANSwitchShowFunc$DeviceIDPlaceHolder" -SST_LabelVisuResultsofCheck $("Status: Done ") -SST_LabelColorForCheck "green" -SST_StackPFuncName "FuncBROSANSwitchShowStackPN$DeviceIDPlaceHolder" -SST_StackPResultsName "ResultsBROSANSwitchShowStackPN$DeviceIDPlaceHolder" -SST_LabelNameHelper "$("BROSANSwitchShowCheck$DeviceIDPlaceHolder"+"_"+$i)" -SST_DeviceID $DeviceIDPlaceHolder -SST_LabelVisuNameofCheck "SwitchShow" -SST_MainStackPWith $MainWith
                         }
-
+                        $UCOBJ.Dispatcher.Invoke([System.Action]{},"Render")
                         #endregion
 
                         #region FOS_ZoneDetails
@@ -120,6 +121,7 @@ function IBM_SANHealthCheck {
                         if(!([String]::IsNullOrEmpty($FOS_ZoneDetails))){
                             SST_CreateHealthLayout -SST_UCOBJ $UCOBJ -SST_MainStackPName "$BROSANDeviceMainSTPName" -SST_GridFuncName "BROSANZoneDetailsFunc$DeviceIDPlaceHolder" -SST_LabelVisuResultsofCheck $("Status: Done ") -SST_LabelColorForCheck "green" -SST_StackPFuncName "FuncBROSANZoneDetailsStackPN$DeviceIDPlaceHolder" -SST_StackPResultsName "ResultsBROSANZoneDetailsStackPN$DeviceIDPlaceHolder" -SST_LabelNameHelper "$("BROSANZoneDetailsCheck$DeviceIDPlaceHolder"+"_"+$i)" -SST_DeviceID $DeviceIDPlaceHolder -SST_LabelVisuNameofCheck "ZoneDetails" -SST_MainStackPWith $MainWith
                         }
+                        $UCOBJ.Dispatcher.Invoke([System.Action]{},"Render")
                         #endregion
                         SST_ToolMessageCollector -TD_ToolMSGCollector "SAN Health Check Func End" -TD_ToolMSGType Debug -TD_Shown no
                     }
