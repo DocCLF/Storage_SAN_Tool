@@ -69,7 +69,7 @@ function SST_GetCredfGUI {
                 $TD_ExistingCred.DeviceName       =   $TD_BasicDeviceInfo.DeviceName;
                 $TD_ExistingCred.UserName         =   $TD_TB_DeviceUserName.Text;
                 <# The PwLine needs a better Option #>
-                $TD_ExistingCred.Password         =   ConvertTo-SecureString $TD_TB_DevicePassword.Password -AsPlainText -Force;
+                $TD_ExistingCred.Password         =   ConvertTo-SecureString -string ([string]$TD_TB_DevicePassword.Password) -AsPlainText -Force;
                 $TD_ExistingCred.SSHKeyPath       =   $TD_TB_PathtoSSHKeyNotVisibil.Text;
                 if($TD_CB_SVCorVF.IsChecked -and ($TD_CB_DeviceType.Text -eq "Storage")){$TD_ExistingCred.SVCorVF = "SVC"}else{if($TD_CB_DeviceType.Text -eq "Storage"){$TD_ExistingCred.SVCorVF = "FSystem"}};
                 if($TD_CB_SVCorVF.IsChecked -and ($TD_CB_DeviceType.Text -eq "SAN")){$TD_ExistingCred.SVCorVF = "VF"}else{if($TD_CB_DeviceType.Text -eq "SAN"){$TD_ExistingCred.SVCorVF = ""}};
@@ -140,7 +140,7 @@ function SST_GetCredfGUI {
         $TD_UserInputCred.DeviceName       =   $TD_BasicDeviceInfo.DeviceName;
         $TD_UserInputCred.UserName         =   $TD_TB_DeviceUserName.Text;
         <# The PwLine needs a better Option #>
-        $TD_UserInputCred.Password         =   ConvertTo-SecureString $TD_TB_DevicePassword.Password -AsPlainText -Force;
+        $TD_UserInputCred.Password         =   ConvertTo-SecureString -String ([string]$TD_TB_DevicePassword.Password) -AsPlainText -Force;
         $TD_UserInputCred.SSHKeyPath       =   $TD_TB_PathtoSSHKeyNotVisibil.Text;
         if($TD_CB_SVCorVF.IsChecked -and ($TD_CB_DeviceType.Text -eq "Storage")){$TD_UserInputCred.SVCorVF = "SVC"}else{if($TD_CB_DeviceType.Text -eq "Storage"){$TD_UserInputCred.SVCorVF = "FSystem"}};
         if($TD_CB_SVCorVF.IsChecked -and ($TD_CB_DeviceType.Text -eq "SAN")){$TD_UserInputCred.SVCorVF = "VF"}else{if($TD_CB_DeviceType.Text -eq "SAN"){$TD_UserInputCred.SVCorVF = ""}};
