@@ -27,7 +27,8 @@
     <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="15,5,0,0">
         <RadioButton x:Name="StorageCheckboxHealth" Content="Storage" Margin="5" FontSize="14" VerticalAlignment="Center" VerticalContentAlignment="Center"/>
         <RadioButton x:Name="SANCheckboxHealth"  Content="SAN" Margin="5" FontSize="14" VerticalAlignment="Center" VerticalContentAlignment="Center" />
-        <RadioButton x:Name="ServerCheckboxHealth" Content="Server" Margin="5" FontSize="14" VerticalAlignment="Center" VerticalContentAlignment="Center"/>
+        <!-- Health Check for Server incoming in the next Version 1.4.x or 1.5.x-->
+        <!--<RadioButton x:Name="ServerCheckboxHealth" Content="Server" Margin="5" FontSize="14" VerticalAlignment="Center" VerticalContentAlignment="Center"/> -->
     </StackPanel>
     <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" >
         <Grid>
