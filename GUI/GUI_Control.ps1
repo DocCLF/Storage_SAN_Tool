@@ -799,7 +799,7 @@ $TD_btn_IBM_DriveInfo.add_click({
             }
             catch {
                 <#Do this if a terminating exception happens#>
-                Write-Host $_.exception.message
+                Write-Debug -Message $_.exception.message
                 SST_ToolMessageCollector -TD_ToolMSGCollector "LiteDB - $_.exception.message" -TD_ToolMSGType Error -TD_Shown no
             }
             try {
@@ -807,7 +807,7 @@ $TD_btn_IBM_DriveInfo.add_click({
             }
             catch {
                 <#Do this if a terminating exception happens#>
-                Write-Host $_.exception.message
+                Write-Debug -Message $_.exception.message
                 SST_ToolMessageCollector -TD_ToolMSGCollector "PRISMDB - $_.exception.message" -TD_ToolMSGType Error -TD_Shown no
             }
 
@@ -855,7 +855,7 @@ $TD_btn_IBM_FCPortStats.add_click({
         }
         catch {
             <#Do this if a terminating exception happens#>
-            Write-Host $_.exception.message
+            Write-Debug -Message $_.exception.message
             SST_ToolMessageCollector -TD_ToolMSGCollector "LiteDB - FCPortStats - $_.exception.message" -TD_ToolMSGType Error -TD_Shown no
         }
         switch ($_.ID) {
@@ -991,7 +991,7 @@ $TD_btn_IBM_BaseStorageInfo.add_click({
         }
         catch {
             <#Do this if a terminating exception happens#>
-            Write-Host $_.exception.message
+            Write-Debug -Message $_.exception.message
             SST_ToolMessageCollector -TD_ToolMSGCollector "LiteDB - $($_.exception.message)" -TD_ToolMSGType Error -TD_Shown no
         }
         try {
@@ -999,7 +999,7 @@ $TD_btn_IBM_BaseStorageInfo.add_click({
         }
         catch {
             <#Do this if a terminating exception happens#>
-            Write-Host $_.exception.message
+            Write-Debug -Message $_.exception.message
             SST_ToolMessageCollector -TD_ToolMSGCollector "PRISMDB - $($_.exception.message)" -TD_ToolMSGType Error -TD_Shown no
         }
         switch ($_.ID) {
