@@ -259,6 +259,7 @@ $TD_BTN_RefreshUC1.add_click({
     $TD_TB_ALLHostCount,$TD_TB_OfflHostCount,$TD_TB_OnlinelHostCount | ForEach-Object {$_.Text="0"}
     $TD_TB_NKNResOne,$TD_TB_NKNResTwo,$TD_TB_NKNResThree | ForEach-Object {$_.Text=$null}
     $TD_TB_SANFOSOne,$TD_TB_SANFOSTwo,$TD_TB_SANFOSThree,$TD_TB_SANFOSFour | ForEach-Object {$_.Text=$null}
+    $TD_TB_STOHostStatusChangedOne,$TD_TB_STOHostStatusChangedTwo,$TD_TB_STOHostStatusChangedThree,$TD_TB_STOHostStatusChangedFour,$TD_TB_STOHostStatusChangedFive | ForEach-Object {$_.Text=""}
 
     $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_.DeviceTyp -eq "Storage"}
     $TD_Credentials | ForEach-Object {
@@ -1171,6 +1172,7 @@ $TD_btn_IBM_HostInfo.add_click({
 
     $TD_Credentials | ForEach-Object {
         [array]$TD_Collected_HostInfoResult = IBM_HostInfo -TD_Line_ID $_.ID -TD_Device_ConnectionTyp $_.ConnectionTyp -TD_Device_UserName $_.UserName -TD_Device_DeviceIP $_.IPAddress -TD_Device_DeviceName $_.DeviceName -TD_Device_PW $([Net.NetworkCredential]::new('', $_.Password).Password) -TD_Storage $_.SVCorVF -TD_Exportpath $TD_tb_ExportPath.Text
+        $TD_Collected_HostInfoResult = $TD_Collected_HostInfoResult | Where-Object { -not [string]::IsNullOrWhiteSpace($_.HostName) }
         try {
             SST_LiteDBControl -SST_InfoType "StorageHostInfo" -SST_CollectedInformations $TD_Collected_HostInfoResult
         }
