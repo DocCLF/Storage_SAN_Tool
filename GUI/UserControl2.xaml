@@ -143,7 +143,8 @@
         </GroupBox>
         <ScrollViewer Grid.Column="1" Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
             <Grid>
-                <StackPanel x:Name="stp_StorageEventLog" Orientation="Vertical" Margin="2" Visibility="{Binding ElementName=btn_IBM_Eventlog, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
+                <WrapPanel x:Name="stp_StorageEventLog" MaxWidth="1600" Margin="2" Visibility="{Binding ElementName=btn_IBM_Eventlog, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
+                    <StackPanel Orientation="Vertical">
                     <Label x:Name="lb_StoEventLogOne" Content="Device 1" Visibility="{Binding ElementName=CB_STO_DG1, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}" FontSize="12" Style="{DynamicResource MainLabelStyle}" Margin="2,5,0,5" />   
                     <DataGrid x:Name="lb_StorageEventLogOne" AutoGenerateColumns="False" Margin="5,0,5,5" MaxHeight="480" Visibility="{Binding ElementName=CB_STO_DG1, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
                             <DataGrid.Style>
@@ -219,6 +220,8 @@
                                 </DataGridTextColumn>
                             </DataGrid.Columns>
                     </DataGrid>
+                    </StackPanel>
+                    <StackPanel Orientation="Vertical">
                     <Label x:Name="lb_StoEventLogTwo" Content="Device 2" Visibility="{Binding ElementName=CB_STO_DG2, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}" FontSize="12" Style="{DynamicResource MainLabelStyle}" Margin="2,5,0,5" />
                     <DataGrid x:Name="lb_StorageEventLogTwo" AutoGenerateColumns="False" Margin="5,0,5,5" MaxHeight="480" Visibility="{Binding ElementName=CB_STO_DG2, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
                             <DataGrid.Style>
@@ -294,6 +297,8 @@
                                 </DataGridTextColumn>
                             </DataGrid.Columns>
                     </DataGrid>
+                    </StackPanel>
+                    <StackPanel Orientation="Vertical">
                     <Label x:Name="lb_StoEventLogThree" Content="Device 3" Visibility="{Binding ElementName=CB_STO_DG3, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}" FontSize="12" Style="{DynamicResource MainLabelStyle}" Margin="2,5,0,5" />
                     <DataGrid x:Name="lb_StorageEventLogThree" AutoGenerateColumns="False" Margin="5,0,5,5" MaxHeight="480" Visibility="{Binding ElementName=CB_STO_DG3, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
                             <DataGrid.Style>
@@ -369,6 +374,8 @@
                                 </DataGridTextColumn>
                             </DataGrid.Columns>
                     </DataGrid>
+                    </StackPanel>
+                    <StackPanel Orientation="Vertical">
                     <Label x:Name="lb_StoEventLogFour" Content="Device 4" Visibility="{Binding ElementName=CB_STO_DG4, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}" FontSize="12" Style="{DynamicResource MainLabelStyle}" Margin="2,5,0,5" />
                     <DataGrid x:Name="lb_StorageEventLogFour" AutoGenerateColumns="False" Margin="5,0,5,5" MaxHeight="480" Visibility="{Binding ElementName=CB_STO_DG4, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
                             <DataGrid.Style>
@@ -444,6 +451,8 @@
                                 </DataGridTextColumn>
                             </DataGrid.Columns>
                     </DataGrid>
+                    </StackPanel>
+                    <StackPanel Orientation="Vertical">
                     <Label x:Name="lb_StoEventLogFive" Content="Device 5" Visibility="{Binding ElementName=CB_STO_DG5, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}" FontSize="12" Style="{DynamicResource MainLabelStyle}" Margin="2,5,0,5" />
                     <DataGrid x:Name="lb_StorageEventLogFive" AutoGenerateColumns="False" Margin="5,0,5,5" MaxHeight="480" Visibility="{Binding ElementName=CB_STO_DG5, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
                             <DataGrid.Style>
@@ -519,6 +528,8 @@
                                 </DataGridTextColumn>
                             </DataGrid.Columns>
                     </DataGrid>
+                    </StackPanel>
+                    <StackPanel Orientation="Vertical">
                     <Label x:Name="lb_StoEventLogSix" Content="Device 6" Visibility="{Binding ElementName=CB_STO_DG6, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}" FontSize="12" Style="{DynamicResource MainLabelStyle}" Margin="2,5,0,5" />
                     <DataGrid x:Name="lb_StorageEventLogSix" AutoGenerateColumns="False" Margin="5,0,5,5" MaxHeight="480" Visibility="{Binding ElementName=CB_STO_DG6, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
                             <DataGrid.Style>
@@ -594,6 +605,8 @@
                                 </DataGridTextColumn>
                             </DataGrid.Columns>
                     </DataGrid>
+                    </StackPanel>
+                    <StackPanel Orientation="Vertical">
                     <Label x:Name="lb_StoEventLogSeven" Content="Device 7" Visibility="{Binding ElementName=CB_STO_DG7, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}" FontSize="12" Style="{DynamicResource MainLabelStyle}" Margin="2,5,0,5" />
                     <DataGrid x:Name="lb_StorageEventLogSeven" AutoGenerateColumns="False" Margin="5,0,5,5" MaxHeight="480" Visibility="{Binding ElementName=CB_STO_DG7, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
                             <DataGrid.Style>
@@ -669,6 +682,8 @@
                                 </DataGridTextColumn>
                             </DataGrid.Columns>
                     </DataGrid>
+                    </StackPanel>
+                    <StackPanel Orientation="Vertical">
                     <Label x:Name="lb_StoEventLogEight" Content="Device 8" Visibility="{Binding ElementName=CB_STO_DG8, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}" FontSize="12" Style="{DynamicResource MainLabelStyle}" Margin="2,5,0,5" />
                     <DataGrid x:Name="lb_StorageEventLogEight" AutoGenerateColumns="False" Margin="5,0,5,5" MaxHeight="480" Visibility="{Binding ElementName=CB_STO_DG8, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
                             <DataGrid.Style>
@@ -744,7 +759,8 @@
                                 </DataGridTextColumn>
                             </DataGrid.Columns>
                     </DataGrid>
-                </StackPanel>
+                    </StackPanel>
+                </WrapPanel>
                 <StackPanel x:Name="stp_StorageAuditLog" Orientation="Vertical" Margin="2" Visibility="{Binding ElementName=btn_IBM_CatAuditLog, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
                     <Label x:Name="lb_StorageAuditLogOne" Content="Device 1" Visibility="{Binding ElementName=CB_STO_DG1, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}" FontSize="12" Style="{DynamicResource MainLabelStyle}" Margin="2,5,0,5" />
                     <DataGrid Name="dg_StorageAuditLogOne" AutoGenerateColumns="False" Margin="5,5,5,5" MaxHeight="480" Visibility="{Binding ElementName=CB_STO_DG1, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
