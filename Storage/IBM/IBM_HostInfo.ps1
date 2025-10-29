@@ -50,6 +50,10 @@ function IBM_HostInfo {
             $TD_FSBaseSerialNumber = ($TD_CollectInfos|Select-String -Pattern '\.\d+\.\d+\.(\w{6,8})\.' -AllMatches).Matches.Groups[1].Value
         }
         $TD_CollectInfos = $TD_CollectInfos | Select-Object -SkipLast 6
+
+        if([string]::IsNullOrWhiteSpace($TD_Device_DeviceName)){
+            $TD_Device_DeviceName = $TD_STOName
+        }
     }
     
     process {
