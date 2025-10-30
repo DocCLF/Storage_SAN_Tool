@@ -35,8 +35,8 @@ function IBM_PowerMainFunc {
             }
             
             $CustomerHMCData = Import-Csv -Path $PSScriptRoot\HMCScanerTEMP\CustomerHMCData.csv -ErrorAction Continue
-            SST_ToolMessageCollector -TD_ToolMSGCollector "CustomerHMCData - $($CustomerHMCData.count)" -TD_ToolMSGType Message -TD_Shown no
-            if(($CustomerHMCData).count -gt 0){
+            SST_ToolMessageCollector -TD_ToolMSGCollector "CustomerHMCData are empty - $(!([string]::IsNullOrWhiteSpace($CustomerHMCData)))" -TD_ToolMSGType Message -TD_Shown no
+            if(!([string]::IsNullOrWhiteSpace($CustomerHMCData))){
                 try {
                     SST_LiteDBControl -SST_InfoType "PowerHMC" -SST_CollectedInformations $CustomerHMCData
                 }
