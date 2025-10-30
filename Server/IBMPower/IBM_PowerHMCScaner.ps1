@@ -97,6 +97,7 @@ function IBM_PowerHMCScanner {
             $PT_HMCData.HMCSWBuildLevel = ($PT_LSHMCVV|Select-String -Pattern 'HMC Build level ([\w\d]+)' -AllMatches).Matches.Groups[1].Value
             $PT_HMCData.HMCSWBaseVersion = ($PT_LSHMCVV|Select-String -Pattern 'base_version=([\w\d\-\.]+)' -AllMatches).Matches.Groups[1].Value
             $PT_HMCData.HMCSWFixes = $null
+            $PT_HMCData | Export-Csv -Path $PSScriptRoot\HMCScanerTEMP\CustomerHMCData.csv -NoTypeInformation
             <# create the SystemSummary#>
             Write-Debug -Message "Collect all SystemSummarys"
             foreach($PT_Sys_Data in $PT_Sys_Datas) {
@@ -161,17 +162,6 @@ function IBM_PowerHMCScanner {
     }
     
     end {
-        Write-Debug -Message "Start the end block and export all data to $PSScriptRoot\HMCScanerTEMP\"
-        SST_ToolMessageCollector -TD_ToolMSGCollector "Start the end block and export all data to $PSScriptRoot\HMCScanerTEMP\" -TD_ToolMSGType Message -TD_Shown yes
-        <# export all Data #>
-        try {
-            $PT_HMCData | Export-Csv -Path $PSScriptRoot\HMCScanerTEMP\CustomerHMCData.csv -NoTypeInformation -ErrorAction Continue
-        }
-        catch {
-            <#Do this if a terminating exception happens#>
-            Write-Host -Message $_.Exception.Message
-        }
-
         <# CleanUp for the next run #>
         Write-Debug -Message "Delete $HMCIP Folder"
         SST_ToolMessageCollector -TD_ToolMSGCollector "Delete $HMCIP Folder" -TD_ToolMSGType Message -TD_Shown yes
