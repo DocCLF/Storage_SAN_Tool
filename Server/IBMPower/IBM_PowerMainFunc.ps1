@@ -33,50 +33,59 @@ function IBM_PowerMainFunc {
                     }
                 }
             }
-            
-            $CustomerHMCData = Import-Csv -Path $PSScriptRoot\HMCScanerTEMP\CustomerHMCData.csv -ErrorAction Continue
-            SST_ToolMessageCollector -TD_ToolMSGCollector "CustomerHMCData are empty - $(!([string]::IsNullOrWhiteSpace($CustomerHMCData)))" -TD_ToolMSGType Message -TD_Shown no
-            if(!([string]::IsNullOrWhiteSpace($CustomerHMCData))){
-                try {
-                    SST_LiteDBControl -SST_InfoType "PowerHMC" -SST_CollectedInformations $CustomerHMCData
-                }
-                catch {
-                    <#Do this if a terminating exception happens#>
-                    Write-Host $_.exception.message
-                    SST_ToolMessageCollector -TD_ToolMSGCollector "LiteDB - $($_.exception.message)" -TD_ToolMSGType Error -TD_Shown no
-                }
-            }
-
-            $CustomerHMCScannerLPARSummary = Import-Csv -Path $PSScriptRoot\HMCScanerTEMP\CustomerHMCScannerLPARSummary.csv -ErrorAction Continue
-            SST_ToolMessageCollector -TD_ToolMSGCollector "CustomerHMCScannerLPARSummary - $($CustomerHMCScannerLPARSummary.count)" -TD_ToolMSGType Message -TD_Shown no
-            if(($CustomerHMCScannerLPARSummary).count -gt 0){
-                try {
-                    SST_LiteDBControl -SST_InfoType "LPARSummary" -SST_CollectedInformations $CustomerHMCScannerLPARSummary
-                }
-                catch {
-                    <#Do this if a terminating exception happens#>
-                    Write-Host $_.exception.message
-                    SST_ToolMessageCollector -TD_ToolMSGCollector "LiteDB - $($_.exception.message)" -TD_ToolMSGType Error -TD_Shown no
+            if(Test-Path "$PSScriptRoot\HMCScanerTEMP\CustomerHMCData.csv"){
+                $CustomerHMCData = Import-Csv -Path $PSScriptRoot\HMCScanerTEMP\CustomerHMCData.csv -ErrorAction Continue
+                SST_ToolMessageCollector -TD_ToolMSGCollector "CustomerHMCData are empty - $(!([string]::IsNullOrWhiteSpace($CustomerHMCData)))" -TD_ToolMSGType Message -TD_Shown no
+                if(!([string]::IsNullOrWhiteSpace($CustomerHMCData))){
+                    try {
+                        SST_LiteDBControl -SST_InfoType "PowerHMC" -SST_CollectedInformations $CustomerHMCData
+                    }
+                    catch {
+                        <#Do this if a terminating exception happens#>
+                        Write-Host $_.exception.message
+                        SST_ToolMessageCollector -TD_ToolMSGCollector "LiteDB - $($_.exception.message)" -TD_ToolMSGType Error -TD_Shown no
+                    }
                 }
             }
-
-            $CustomerHMCScannerSysSummary = Import-Csv -Path $PSScriptRoot\HMCScanerTEMP\CustomerHMCScannerSysSummary.csv -ErrorAction Continue
-            SST_ToolMessageCollector -TD_ToolMSGCollector "CustomerHMCScannerSysSummary - $($CustomerHMCScannerSysSummary.count)" -TD_ToolMSGType Message -TD_Shown no
-            if(($CustomerHMCScannerSysSummary).count -gt 0){
-                try {
-                    SST_LiteDBControl -SST_InfoType "PowerSysSummary" -SST_CollectedInformations $CustomerHMCScannerSysSummary
+            if(Test-Path "$PSScriptRoot\HMCScanerTEMP\CustomerHMCScannerLPARSummary.csv"){
+                $CustomerHMCScannerLPARSummary = Import-Csv -Path $PSScriptRoot\HMCScanerTEMP\CustomerHMCScannerLPARSummary.csv -ErrorAction Continue
+                SST_ToolMessageCollector -TD_ToolMSGCollector "CustomerHMCScannerLPARSummary - $($CustomerHMCScannerLPARSummary.count)" -TD_ToolMSGType Message -TD_Shown no
+                if(($CustomerHMCScannerLPARSummary).count -gt 0){
+                    try {
+                        SST_LiteDBControl -SST_InfoType "LPARSummary" -SST_CollectedInformations $CustomerHMCScannerLPARSummary
+                    }
+                    catch {
+                        <#Do this if a terminating exception happens#>
+                        Write-Host $_.exception.message
+                        SST_ToolMessageCollector -TD_ToolMSGCollector "LiteDB - $($_.exception.message)" -TD_ToolMSGType Error -TD_Shown no
+                    }
                 }
-                catch {
-                    <#Do this if a terminating exception happens#>
-                    Write-Host $_.exception.message
-                    SST_ToolMessageCollector -TD_ToolMSGCollector "LiteDB - $($_.exception.message)" -TD_ToolMSGType Error -TD_Shown no
+            }
+            if(Test-Path "$PSScriptRoot\HMCScanerTEMP\CustomerHMCScannerSysSummary.csv"){
+                $CustomerHMCScannerSysSummary = Import-Csv -Path $PSScriptRoot\HMCScanerTEMP\CustomerHMCScannerSysSummary.csv -ErrorAction Continue
+                SST_ToolMessageCollector -TD_ToolMSGCollector "CustomerHMCScannerSysSummary - $($CustomerHMCScannerSysSummary.count)" -TD_ToolMSGType Message -TD_Shown no
+                if(($CustomerHMCScannerSysSummary).count -gt 0){
+                    try {
+                        SST_LiteDBControl -SST_InfoType "PowerSysSummary" -SST_CollectedInformations $CustomerHMCScannerSysSummary
+                    }
+                    catch {
+                        <#Do this if a terminating exception happens#>
+                        Write-Host $_.exception.message
+                        SST_ToolMessageCollector -TD_ToolMSGCollector "LiteDB - $($_.exception.message)" -TD_ToolMSGType Error -TD_Shown no
+                    }
                 }
             }
             try {
-                Remove-Item -Path $PSScriptRoot\HMCScanerTEMP\CustomerHMCData.csv -Confirm:$false
-                Remove-Item -Path $PSScriptRoot\HMCScanerTEMP\CustomerHMCScannerLPARSummary.csv -Confirm:$false
-                Remove-Item -Path $PSScriptRoot\HMCScanerTEMP\CustomerHMCScannerSysSummary.csv -Confirm:$false
-                 SST_ToolMessageCollector -TD_ToolMSGCollector "Remove CustomerHMCData, CustomerHMCScannerLPARSummary, CustomerHMCScannerSysSummary " -TD_ToolMSGType Message -TD_Shown yes
+                if(Test-Path "$PSScriptRoot\HMCScanerTEMP\CustomerHMCData.csv"){
+                    Remove-Item -Path $PSScriptRoot\HMCScanerTEMP\CustomerHMCData.csv -Confirm:$false
+                }
+                if(Test-Path "$PSScriptRoot\HMCScanerTEMP\CustomerHMCScannerLPARSummary.csv"){
+                    Remove-Item -Path $PSScriptRoot\HMCScanerTEMP\CustomerHMCScannerLPARSummary.csv -Confirm:$false
+                }
+                if(Test-Path "$PSScriptRoot\HMCScanerTEMP\CustomerHMCScannerSysSummary.csv"){
+                    Remove-Item -Path $PSScriptRoot\HMCScanerTEMP\CustomerHMCScannerSysSummary.csv -Confirm:$false
+                }
+                SST_ToolMessageCollector -TD_ToolMSGCollector "Remove CustomerHMCData, CustomerHMCScannerLPARSummary, CustomerHMCScannerSysSummary " -TD_ToolMSGType Message -TD_Shown yes
             }
             catch {
                 <#Do this if a terminating exception happens#>
