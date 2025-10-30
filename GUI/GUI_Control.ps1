@@ -2038,7 +2038,7 @@ SST_ToolMessageCollector -TD_ToolMSGCollector $("Endregion SAN Button.") -TD_Too
 #region IBM Power
 $TD_BTN_HMCCollector.add_click({
     SST_ToolMessageCollector -TD_ToolMSGCollector $("Region IBM Power Button.") -TD_ToolMSGType Message -TD_Shown no
-    if (Get-Item -Path "$PSScriptRoot\Server\IBMPower\HMCScanerTEMP" -ErrorAction SilentlyContinue){
+    if (Get-Item -Path "$PSRootPath\Server\IBMPower\HMCScanerTEMP" -ErrorAction SilentlyContinue){
         if(($TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_}).count -ge 1){
             $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_}
             IBM_PowerMainFunc -SST_UCOBJ $TD_UserControl6 -PSRootPath $PSRootPath -SecureData $TD_Credentials 
