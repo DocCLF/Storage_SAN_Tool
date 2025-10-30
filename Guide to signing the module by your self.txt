@@ -50,13 +50,16 @@ Copyright (C) Microsoft Corporation. Alle Rechte vorbehalten.
 
     Option B – Automatically via PowerShell
     $mypwd = Get-Credential -UserName "Enter password below" -Message "Enter an export password for the PFX file"
-    Import-PfxCertificate -FilePath "$env:USERPROFILE\Desktop\MyCodeSigningCert.cer" -CertStoreLocation "Cert:\LocalMachine\Root" -Password $mypwd.Password
+    Import-PfxCertificate -FilePath "$env:USERPROFILE\Desktop\MyCodeSigningCert.pfx" -CertStoreLocation "Cert:\LocalMachine\Root" -Password $mypwd.Password
     !!! (If you don't have admin access to LocalMachine, Cert:\CurrentUser\Root will also work.) !!!
 
 5) Use the certificate for signing
     Now you can sign everything with your Sign-Module.ps1 script:
     PS C:\<PathtoModulRootFolder\Storage_SAN_Tool> . .\Sign-Module.ps1 -CertificateName "MyCodeSigningCert"
-
+    * It may be necessary to execute the following command once, as Sign-Module.ps1 is also not signed.
+        Set-ExecutionPolicy -ExecutionPolicy Bypass -Scope Process
+        and then repeat: PS C:\<PathtoModulRootFolder\Storage_SAN_Tool> . .\Sign-Module.ps1 -CertificateName "MyCodeSigningCert"
+        
     The script signs:
     All .ps1 files in your function folders
     Your .psm1 files
