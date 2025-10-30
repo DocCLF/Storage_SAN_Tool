@@ -41,10 +41,16 @@ function IBM_PowerHMCScanner {
         Write-Debug -Message "Start using HMCScanerTool"
         try {
             if($PSVersionTable.PSVersion.Major -ge 7){
-                $PT_GetCMDID = Start-Process -FilePath $PSScriptRoot\HMCScanerTEMP\HMCScannerTool\hmcScanner.bat -ArgumentList "$HMCIP $HMCUser -p $HMCPass -dir $PSScriptRoot\HMCScanerTEMP" -Confirm:$false -PassThru -ErrorAction Continue
+                <#alternative -ArgumentList
+                @( $HMCIP $HMCUser '-p' $HMCPass '-dir' "$PSScriptRoot\HMCScanerTEMP" )
+                #>
+                $PT_GetCMDID = Start-Process -FilePath $PSScriptRoot\HMCScanerTEMP\HMCScannerTool\hmcScanner.bat -ArgumentList "`"$HMCIP`" `"$HMCUser`" -p `"$HMCPass`" -dir `"$PSScriptRoot\HMCScanerTEMP`"" -Confirm:$false -PassThru -ErrorAction Continue
                 Wait-Process -Id $PT_GetCMDID.Id
             }else {
-                $PT_GetCMDID = Start-Process -FilePath $PSScriptRoot\HMCScanerTEMP\HMCScannerTool\hmcScanner.bat -ArgumentList "$HMCIP $HMCUser -p $HMCPass -dir $PSScriptRoot\HMCScanerTEMP" -PassThru -ErrorAction Continue
+                <#alternative -ArgumentList
+                @( $HMCIP $HMCUser '-p' $HMCPass '-dir' "$PSScriptRoot\HMCScanerTEMP" )
+                #>
+                $PT_GetCMDID = Start-Process -FilePath $PSScriptRoot\HMCScanerTEMP\HMCScannerTool\hmcScanner.bat -ArgumentList "`"$HMCIP`" `"$HMCUser`" -p `"$HMCPass`" -dir `"$PSScriptRoot\HMCScanerTEMP`"" -PassThru -ErrorAction Continue
                 Wait-Process -Id $PT_GetCMDID.Id
             }
             Write-Debug -Message "Collected all Date from HMC and push them into a folder named $HMCIP"
