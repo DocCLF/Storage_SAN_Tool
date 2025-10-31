@@ -1,0 +1,83 @@
+Here is a brief guide to signing the module for environments where this is necessary.
+You can find out whether this is necessary by using the command: Get-ExecutionPolicy -List, which is available in all common PowerShell versions!
+As soon as something with RemoteSigned or similar appears in the output of the Get-ExecutionPolicy -List command, you should follow these instructions!
+I am aware, of course, that there are other options, but these are not known to everyone or, in some cases, not desirable, so I would like to reiterate that this is one possible approach and not the only one.
+
+I am currently working with Version 5.1.x, but these instructions are also available for PWSH7.x.
+
+Windows PowerShell 5.1
+Copyright (C) Microsoft Corporation. Alle Rechte vorbehalten.
+| Step     | Action                               | Result                                 
+| -------  | ----------------------------------   | ---------------------------------------
+| 1️⃣      | Create certificate                   | `CodeSigningCert` in certificate store
+| 2️⃣      | Export `.pfx`                        | For later reuse
+| 3️⃣      | Export `.cer`                        | For distribution to other systems
+| 4️⃣      | Import certificate into root store   | Windows trusts your signatures
+| 5️⃣      | Run `Sign-Module.ps1`                | Module fully signed
+| 6️⃣      | Test ExecutionPolicy “AllSigned”     | Only signed scripts run
+| 7️⃣      | (Optional) Distribution via GPO      | Company-wide trust
+
+1) Create your code signing certificate
+    New-SelfSignedCertificate -DnsName "MyCompanyCodeSign" -Type CodeSigningCert -CertStoreLocation Cert:\CurrentUser\My
+
+    What happens here:
+    A new certificate is created in the user certificate store (Cert:\CurrentUser\My).
+    The certificate is only trusted locally until you import it.
+    “MyCodeSigningCert” is the display name—you can customize it to your name or company name, for example.
+
+2) Export certificate (with private key)
+    $cert = Get-ChildItem Cert:\CurrentUser\My -CodeSigningCert | Where-Object {$_.Subject -match "MyCodeSigningCert"} | Select-Object -First 1
+
+    Export-PfxCertificate -Cert $cert -FilePath "$env:USERPROFILE\Desktop\MyCodeSigningCert.pfx" -Password (Read-Host -AsSecureString "Enter an export password for the PFX file")
+
+    Afterwards, the following will be on your desktop: MyCodeSigningCert.pfx → contains certificate + private key
+
+3) Export certificate (without private key, for trust)
+    To ensure that other computers recognize your module as trustworthy, also export the public certificate:
+    Export-Certificate -Cert $cert -FilePath "$env:USERPROFILE\Desktop\MyCodeSigningCert.cer"
+
+
+4) Establishing trust on your (and other) systems
+    In order for Windows (and PowerShell) to trust your certificate, the public certificate must be imported into the Trusted Root Certification Authorities.
+
+    Option A – Manually (GUI)
+    1. Double-click on MyCodeSigningCert.cer.
+    2. Select Install Certificate.
+    3. Select:
+        Local Computer (admin rights required)
+        Trusted Root Certification Authorities
+    4. Finish → your certificate is now trusted system-wide.
+
+    Option B – Automatically via PowerShell
+    $mypwd = Get-Credential -UserName "Enter password below" -Message "Enter an export password for the PFX file"
+    Import-PfxCertificate -FilePath "$env:USERPROFILE\Desktop\MyCodeSigningCert.pfx" -CertStoreLocation "Cert:\LocalMachine\Root" -Password $mypwd.Password
+    !!! (If you don't have admin access to LocalMachine, Cert:\CurrentUser\Root will also work.) !!!
+
+5) Use the certificate for signing
+    Now you can sign everything with your Sign-Module.ps1 script:
+    PS C:\<PathtoModulRootFolder\Storage_SAN_Tool> . .\Sign-Module.ps1 -CertificateName "MyCodeSigningCert"
+    * It may be necessary to execute the following command once, as Sign-Module.ps1 is also not signed.
+        Set-ExecutionPolicy -ExecutionPolicy Bypass -Scope Process
+        and then repeat: PS C:\<PathtoModulRootFolder\Storage_SAN_Tool> . .\Sign-Module.ps1 -CertificateName "MyCodeSigningCert"
+        
+    The script signs:
+    All .ps1 files in your function folders
+    Your .psm1 files
+    And then checks whether the signatures are valid
+
+6) Test: Set PowerShell to “AllSigned”
+    If you want to test whether everything is working:
+    Set-ExecutionPolicy AllSigned -Scope Process
+
+    PS C:\<PathtoModulRootFolder\Storage_SAN_Tool> Import-Module .\Storage_SAN_Tool.psm1
+
+    If everything is signed correctly → no error.
+    If a file is missing → PowerShell reports which file is unsigned.
+
+7) (Optional) Trusted position in a domain / multiple systems
+    In a corporate environment, the .cer file can be distributed centrally via Group Policy Object (GPO):
+    Path:
+    Computer Configuration → Windows Settings → Security Settings → Public Key Policies → Trusted Root Certification Authorities
+    
+    Add your .cer file there.
+    This will cause all systems to automatically trust your signed modules.

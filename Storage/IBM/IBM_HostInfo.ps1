@@ -36,21 +36,37 @@ function IBM_HostInfo {
         [int]$ProgCounter=0
         $ProgressBar = New-ProgressBar
         
-        if($TD_Device_ConnectionTyp -eq "ssh"){
-            $TD_CollectInfos = ssh -i $($TD_Device_SSHKeyPath) $TD_Device_UserName@$TD_Device_DeviceIP 'lshost -nohdr |while read id name IO_group_id;do lshost -delim : $id ;echo;done'
+        if($TD_Storage -eq "SVC"){
+            $TD_CollectInfos = plink $TD_Device_UserName@$TD_Device_DeviceIP -pw $TD_Device_PW -batch 'lshost -nohdr |while read id name IO_group_id;do lshost -delim : $id ;echo;done && lsnode -delim . -nohdr && lssystem -delim . |grep name'
+        }else {
+            $TD_CollectInfos = plink $TD_Device_UserName@$TD_Device_DeviceIP -pw $TD_Device_PW -batch 'lshost -nohdr |while read id name IO_group_id;do lshost -delim : $id ;echo;done && lsnodecanister -delim . -nohdr && lssystem -delim . |grep name'
+        }
+
+        $TD_EventSplitInfoWWNN = ($TD_CollectInfos|Select-String -Pattern '\.([0-9a-zA-Z]{14,18})\.' -AllMatches).Matches.Groups[1].Value
+        $TD_STOName = ($TD_CollectInfos|Select-String -Pattern '^name\.([\w\-\.]+)' -AllMatches).Matches.Groups[1].Value
+        if($TD_Storage -eq "SVC"){
+            $TD_FSBaseSerialNumber = ($TD_CollectInfos|Select-String -Pattern '\.(\w{6,8})\.(|\d+)\.(|\d+)\.(|\w{6,8})' -AllMatches).Matches.Groups[1].Value
         }else{
-            $TD_CollectInfos = plink $TD_Device_UserName@$TD_Device_DeviceIP -pw $TD_Device_PW -batch 'lshost -nohdr |while read id name IO_group_id;do lshost -delim : $id ;echo;done'
+            $TD_FSBaseSerialNumber = ($TD_CollectInfos|Select-String -Pattern '\.\d+\.\d+\.(\w{6,8})\.' -AllMatches).Matches.Groups[1].Value
+        }
+        $TD_CollectInfos = $TD_CollectInfos | Select-Object -SkipLast 6
+
+        if([string]::IsNullOrWhiteSpace($TD_Device_DeviceName)){
+            $TD_Device_DeviceName = $TD_STOName
         }
     }
     
     process {
         $iCounter=0;
-        $TD_HostBaseTemp = "" | Select-Object HostID,HostName,PortCount,Type,Status,SiteName,HostClusterName,Protocol,StatusPolicy,StatusSite,WWPNOne,NodeLoggedInCountOne,StateOne,WWPNTwo,NodeLoggedInCountTwo,StateTwo,WWPNThree,NodeLoggedInCountThree,StateThree,WWPNFour,NodeLoggedInCountFour,StateFour
+        $TD_HostBaseTemp = "" | Select-Object HostID,HostName,PortCount,Type,Status,HostStateInfo,SiteName,HostClusterName,Protocol,StatusPolicy,StatusSite,WWPNOne,NodeLoggedInCountOne,StateOne,WWPNTwo,NodeLoggedInCountTwo,StateTwo,WWPNThree,NodeLoggedInCountThree,StateThree,WWPNFour,NodeLoggedInCountFour,StateFour,STOName,WWNN,SerialNumber
         [array]$CollectedHostInfo = foreach($TD_CollectInfo in $TD_CollectInfos){
             if([string]::IsNullOrWhiteSpace($TD_CollectInfo) -or ($iCounter -gt ($TD_CollectInfos.Count - 2)) ){
                 $TD_HostBaseTemp;
                 $iCounter++
-                $TD_HostBaseTemp = "" | Select-Object HostID,HostName,PortCount,Type,Status,SiteName,HostClusterName,Protocol,StatusPolicy,StatusSite,WWPNOne,NodeLoggedInCountOne,StateOne,WWPNTwo,NodeLoggedInCountTwo,StateTwo,WWPNThree,NodeLoggedInCountThree,StateThree,WWPNFour,NodeLoggedInCountFour,StateFour
+                if(!([string]::IsNullOrWhiteSpace($TD_HostBaseTemp.HostName))){
+                    $TD_HostBaseTemp.HostStateInfo = SST_IBMDBFunc -STOWWN $TD_EventSplitInfoWWNN -STOHostID $TD_HostBaseTemp.HostID -STOHostName $TD_HostBaseTemp.HostName -STOHostState $TD_HostBaseTemp.Status
+                }
+                $TD_HostBaseTemp = "" | Select-Object HostID,HostName,PortCount,Type,Status,HostStateInfo,SiteName,HostClusterName,Protocol,StatusPolicy,StatusSite,WWPNOne,NodeLoggedInCountOne,StateOne,WWPNTwo,NodeLoggedInCountTwo,StateTwo,WWPNThree,NodeLoggedInCountThree,StateThree,WWPNFour,NodeLoggedInCountFour,StateFour,STOName,WWNN,SerialNumber
                 continue
             }
             $TD_HostBaseTemp.HostID = ($TD_CollectInfo|Select-String -Pattern '^id:(\d+)' -AllMatches).Matches.Groups[1].Value
@@ -98,6 +114,9 @@ function IBM_HostInfo {
                 $TD_HostBaseTemp.NodeLoggedInCountFour = (($TD_CollectInfo|Select-String -Pattern '^node_logged_in_count:(\d+)' -AllMatches).Matches.Groups[1].Value)
                 $TD_HostBaseTemp.StateFour = (($TD_CollectInfo|Select-String -Pattern '^state:(.*)' -AllMatches).Matches.Groups[1].Value)
             }
+            $TD_HostBaseTemp.WWNN = $TD_EventSplitInfoWWNN
+            $TD_HostBaseTemp.SerialNumber = $TD_FSBaseSerialNumber
+            $TD_HostBaseTemp.STOName = $TD_STOName
             $iCounter++
             
             $ProgCounter++

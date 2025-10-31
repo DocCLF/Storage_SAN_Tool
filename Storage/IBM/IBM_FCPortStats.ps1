@@ -44,89 +44,93 @@ function IBM_FCPortStats {
         $ErrorActionPreference="SilentlyContinue"
         $TD_lb_PortStatsErrorInfo.Visibility="Collapsed"
         $TD_PortStats_Overview = @()
-        $NodeList =@()
         [int]$ProgCounter=0
         [int]$i=0
-        $test =@('enclosure_serial_number','panel_name','id','name','WWNN','Nn_stats','type','port','wwpn','lf','lsy','lsi','pspe','itw','icrc','bbcz','tmp','txpwr','rxpwr')
+        #$test =@('enclosure_serial_number','panel_name','id','name','WWNN','Nn_stats','type','port','wwpn','lf','lsy','lsi','pspe','itw','icrc','bbcz','tmp','txpwr','rxpwr')
 
         $ProgressBar = New-ProgressBar
         <# Connect to Device and get all needed Data #>
         if($TD_Storage -eq "FSystem"){
             if($TD_Device_ConnectionTyp -eq "ssh"){
-                $TD_CollectInfos = ssh -i $($TD_Device_SSHKeyPath) $TD_Device_UserName@$TD_Device_DeviceIP 'lsnodecanister -nohdr |while read id name IO_group_id;do lsnodecanister $id;echo;done && lsnodecanister -nohdr |while read id name IO_group_id;do lsportstats -node $id ;echo;done'
+                $TD_CollectInfos = ssh -i $($TD_Device_SSHKeyPath) $TD_Device_UserName@$TD_Device_DeviceIP 'lsnodecanister -delim . -nohdr && lsnodecanister -nohdr |while read id name IO_group_id;do lsportstats -node $id ;echo;done'
             }else{
-                $TD_CollectInfos = plink $TD_Device_UserName@$TD_Device_DeviceIP -pw $TD_Device_PW -batch 'lsnodecanister -nohdr |while read id name IO_group_id;do lsnodecanister $id;echo;done && lsnodecanister -nohdr |while read id name IO_group_id;do lsportstats -node $id ;echo;done'
+                $TD_CollectInfos = plink $TD_Device_UserName@$TD_Device_DeviceIP -pw $TD_Device_PW -batch 'lsnodecanister -delim . -nohdr && lsnodecanister -nohdr |while read id name IO_group_id;do lsportstats -node $id ;echo;done'
             }
         }else {
             if($TD_Device_ConnectionTyp -eq "ssh"){
-                $TD_CollectInfos = ssh -i $($TD_Device_SSHKeyPath) $TD_Device_UserName@$TD_Device_DeviceIP 'lsnode -nohdr |while read id name IO_group_id;do lsnode $id;echo;done && lsnode -nohdr |while read id name IO_group_id;do lsportstats -node $id ;echo;done'
+                $TD_CollectInfos = ssh -i $($TD_Device_SSHKeyPath) $TD_Device_UserName@$TD_Device_DeviceIP 'lsnode -delim . -nohdr && lsnode -nohdr |while read id name IO_group_id;do lsportstats -node $id ;echo;done'
             }else{
-                $TD_CollectInfos = plink $TD_Device_UserName@$TD_Device_DeviceIP -pw $TD_Device_PW -batch 'lsnode -nohdr |while read id name IO_group_id;do lsnode $id;echo;done && lsnode -nohdr |while read id name IO_group_id;do lsportstats -node $id ;echo;done'
+                $TD_CollectInfos = plink $TD_Device_UserName@$TD_Device_DeviceIP -pw $TD_Device_PW -batch 'lsnode -delim . -nohdr && lsnode -nohdr |while read id name IO_group_id;do lsportstats -node $id ;echo;done'
             }
         }
+
+        0..$TD_CollectInfos.Count |ForEach-Object{
+            if($TD_CollectInfos[$_] -match 'Nn_stats_'){
+                if([string]::IsNullOrEmpty($NodeBasicInfos)){
+                    $NodeBasicInfos = $TD_CollectInfos |Select-Object -First $_
+                }
+            }
+        }
+        foreach ($NodeBasicInfo in $NodeBasicInfos){
+            if($TD_Storage -eq "SVC"){
+                $NodeSN = ($NodeBasicInfo|Select-String -Pattern '\.(\w{6,8})\.(|\d+)\.(|\d+)\.(|\w{6,8})' -AllMatches).Matches.Groups[1].Value
+            }else{
+                $NodeSN = ($NodeBasicInfo|Select-String -Pattern '\.\d+\.\d+\.(\w{6,8})\.' -AllMatches).Matches.Groups[1].Value
+            }
+            [array]$NodeList += [PSCustomObject]@{
+                NodeID = ($NodeBasicInfo|Select-String -Pattern '^(\d+)\.' -AllMatches).Matches.Groups[1].Value
+                NodeSN = $NodeSN
+                NodeName = ($NodeBasicInfo|Select-String -Pattern '^\d+\.([\w\-]+)\.' -AllMatches).Matches.Groups[1].Value
+                NodeWWNN = ($NodeBasicInfo|Select-String -Pattern '\.([0-9a-zA-Z]{14,18})\.' -AllMatches).Matches.Groups[1].Value
+            }
+        }
+        $NodePortStatsInfos = $TD_CollectInfos |Select-Object -Skip ($NodeBasicInfos.Count)
     }
 
     process {
-        foreach($TD_CollectInfo in $TD_CollectInfos){
-            if(Select-String -InputObject $TD_CollectInfo -Pattern $test){ 
-                <# Node Info#>
-                [int]$TD_NodeID = ($TD_CollectInfo|Select-String -Pattern '^id\s+(\d+)' -AllMatches).Matches.Groups[1].Value
-                #[string]$TD_NodeSN = ($TD_CollectInfo|Select-String -Pattern '^enclosure_serial_number\s([A-Za-z0-9]+)' -AllMatches).Matches.Groups[1].Value
-                [string]$TD_NodeName = ($TD_CollectInfo|Select-String -Pattern '^name\s([a-zA-Z0-9-_]+)' -AllMatches).Matches.Groups[1].Value
-                [string]$TD_NodeWWNN = ($TD_CollectInfo|Select-String -Pattern '^WWNN\s([0-9A-F]+)' -AllMatches).Matches.Groups[1].Value
-                #[string]$TD_NodeSN = ($TD_CollectInfo|Select-String -Pattern '^panel_name\s([A-Za-z0-9]+)' -AllMatches).Matches.Groups[1].Value
-                [string]$TD_NodeStatsID = ($TD_CollectInfo|Select-String -Pattern '^Nn_stats_([A-Za-z0-9]+)' -AllMatches).Matches.Groups[1].Value
-                if($TD_NodeWWNN -ne ""){
-                    Write-Debug -Message $TD_NodeSN
-                    $TD_Node =[PSCustomObject]@{
-                        NodeID = $TD_NodeID
-                        #NodeSN = $TD_NodeSN
-                        NodeName = $TD_NodeName
-                        NodeWWNN = $TD_NodeWWNN
-                    }
-                    $NodeList += $TD_Node
-                    $TD_NodeWWNN = ""
-                }
-                if($NodeList.Count -ge 1 -and $TD_NodeStatsID -ne ""){
-                    $TD_NodeStatsID = ""
-                    $TD_PortStatsSplitInfos = "" | Select-Object NodeID,NodeSN,NodeName,NodeWWNN,CardType,CardID,PortID,WWPN,LinkFailure,LoseSync,LoseSig,PSErrCount,InvTransErr,CRCErr,ZeroBtB,SFPTemp,TXPwr,RXPwr
-                    [int]$TD_PortStatsSplitInfos.NodeID = $NodeList.NodeID[$i]
-                    #[string]$TD_PortStatsSplitInfos.NodeSN = $NodeList.NodeSN[$i]
-                    [string]$TD_PortStatsSplitInfos.NodeName = $NodeList.NodeName[$i]
-                    [string]$TD_PortStatsSplitInfos.NodeWWNN = $NodeList.NodeWWNN[$i]
-                    Write-Debug -Message $NodeList.NodeName[$i]
-                    Write-Debug -Message $TD_NodeStatsID
-                    $i++
-                }
-                <# Card Info #>
-                [string]$TD_PortStatsSplitInfos.CardType = ($TD_CollectInfo|Select-String -Pattern '^typ.*(FC)' -AllMatches).Matches.Groups[1].Value
-                [string]$TD_PortStatsSplitInfos.CardID = (($TD_CollectInfo|Select-String -Pattern '^type_id.*(\d)' -AllMatches).Matches.Value).Trim('type_id="')
-                [string]$TD_PortStatsSplitInfos.PortID = (($TD_CollectInfo|Select-String -Pattern 'port\sid.*(\d)' -AllMatches).Matches.Value).Trim('port id="')
-                [string]$TD_PortStatsSplitInfos.WWPN = (($TD_CollectInfo|Select-String -Pattern 'wwpn.*0x([0-9a-f]+)' -AllMatches).Matches.Groups[1].Value)
-                <# diagnostics data #>
-                <# Block 1#>
-                [int]$TD_PortStatsSplitInfos.LinkFailure = ($TD_CollectInfo|Select-String -Pattern 'lf="(\d+)"' -AllMatches).Matches.Groups[1].Value
-                [int]$TD_PortStatsSplitInfos.LoseSync = ($TD_CollectInfo|Select-String -Pattern 'lsy="(\d+)"' -AllMatches).Matches.Groups[1].Value
-                [int]$TD_PortStatsSplitInfos.LoseSig = ($TD_CollectInfo|Select-String -Pattern 'lsi="(\d+)"' -AllMatches).Matches.Groups[1].Value
-                [int]$TD_PortStatsSplitInfos.PSErrCount = ($TD_CollectInfo|Select-String -Pattern 'pspe="(\d+)"' -AllMatches).Matches.Groups[1].Value
-                <# Block 2#>
-                [int]$TD_PortStatsSplitInfos.InvTransErr = ($TD_CollectInfo|Select-String -Pattern 'itw="(\d+)"' -AllMatches).Matches.Groups[1].Value
-                [int]$TD_PortStatsSplitInfos.CRCErr = ($TD_CollectInfo|Select-String -Pattern 'icrc="(\d+)"' -AllMatches).Matches.Groups[1].Value
-                [int]$TD_PortStatsSplitInfos.ZeroBtB = ($TD_CollectInfo|Select-String -Pattern 'bbcz="(\d+)"' -AllMatches).Matches.Groups[1].Value
-                <# Block 3#>
-                [int]$TD_PortStatsSplitInfos.SFPTemp = ($TD_CollectInfo|Select-String -Pattern 'tmp="(\d+)"' -AllMatches).Matches.Groups[1].Value
-                [int]$TD_PortStatsSplitInfos.TXPwr = ($TD_CollectInfo|Select-String -Pattern 'txpwr="(\d+)"' -AllMatches).Matches.Groups[1].Value
-                [int]$TD_PortStatsSplitInfos.RXPwr = ($TD_CollectInfo|Select-String -Pattern 'rxpwr="(\d+)"' -AllMatches).Matches.Groups[1].Value
+
+        foreach($TD_CollectInfo in $NodePortStatsInfos){
+            [string]$TD_NodeStatsID
+            if($NodeList.Count -ge 1 -and ($TD_CollectInfo -match 'Nn_stats_')){
+                $TD_PortStatsSplitInfos = "" | Select-Object NodeID,NodeSN,NodeName,NodeWWNN,CardType,CardID,PortID,WWPN,LinkFailure,LoseSync,LoseSig,PSErrCount,InvTransErr,CRCErr,ZeroBtB,SFPTemp,TXPwr,RXPwr
+                [int]$TD_PortStatsSplitInfos.NodeID = $NodeList.NodeID[$i]
+                [string]$TD_PortStatsSplitInfos.NodeSN = $NodeList.NodeSN[$i]
+                [string]$TD_PortStatsSplitInfos.NodeName = $NodeList.NodeName[$i]
+                [string]$TD_PortStatsSplitInfos.NodeWWNN = $NodeList.NodeWWNN[$i]
+                $NodeSNTemp = $NodeList.NodeSN[$i]
+                $NodeWWNNTemp = $NodeList.NodeWWNN[$i]
+                $NodeNameTemp = $NodeList.NodeName[$i]
+                $i++
             }
-            if(([String]::IsNullOrEmpty($TD_CollectInfo)) -or $TD_CollectInfo -eq "/>"){
+            [string]$TD_PortStatsSplitInfos.NodeSN = $NodeSNTemp
+            [string]$TD_PortStatsSplitInfos.NodeWWNN = $NodeWWNNTemp
+            <# Card Info #>
+            [string]$TD_PortStatsSplitInfos.CardType = ($TD_CollectInfo|Select-String -Pattern '^typ.*(FC)' -AllMatches).Matches.Groups[1].Value
+            [string]$TD_PortStatsSplitInfos.CardID = (($TD_CollectInfo|Select-String -Pattern '^type_id.*(\d)' -AllMatches).Matches.Value).Trim('type_id="')
+            [string]$TD_PortStatsSplitInfos.PortID = (($TD_CollectInfo|Select-String -Pattern 'port\sid.*(\d)' -AllMatches).Matches.Value).Trim('port id="')
+            [string]$TD_PortStatsSplitInfos.WWPN = (($TD_CollectInfo|Select-String -Pattern 'wwpn.*0x([0-9a-f]+)' -AllMatches).Matches.Groups[1].Value)
+            <# diagnostics data #>
+            <# Block 1#>
+            [int]$TD_PortStatsSplitInfos.LinkFailure = ($TD_CollectInfo|Select-String -Pattern 'lf="(\d+)"' -AllMatches).Matches.Groups[1].Value
+            [int]$TD_PortStatsSplitInfos.LoseSync = ($TD_CollectInfo|Select-String -Pattern 'lsy="(\d+)"' -AllMatches).Matches.Groups[1].Value
+            [int]$TD_PortStatsSplitInfos.LoseSig = ($TD_CollectInfo|Select-String -Pattern 'lsi="(\d+)"' -AllMatches).Matches.Groups[1].Value
+            [int]$TD_PortStatsSplitInfos.PSErrCount = ($TD_CollectInfo|Select-String -Pattern 'pspe="(\d+)"' -AllMatches).Matches.Groups[1].Value
+            <# Block 2#>
+            [int]$TD_PortStatsSplitInfos.InvTransErr = ($TD_CollectInfo|Select-String -Pattern 'itw="(\d+)"' -AllMatches).Matches.Groups[1].Value
+            [int]$TD_PortStatsSplitInfos.CRCErr = ($TD_CollectInfo|Select-String -Pattern 'icrc="(\d+)"' -AllMatches).Matches.Groups[1].Value
+            [int]$TD_PortStatsSplitInfos.ZeroBtB = ($TD_CollectInfo|Select-String -Pattern 'bbcz="(\d+)"' -AllMatches).Matches.Groups[1].Value
+            <# Block 3#>
+            [int]$TD_PortStatsSplitInfos.SFPTemp = ($TD_CollectInfo|Select-String -Pattern 'tmp="(\d+)"' -AllMatches).Matches.Groups[1].Value
+            [int]$TD_PortStatsSplitInfos.TXPwr = ($TD_CollectInfo|Select-String -Pattern 'txpwr="(\d+)"' -AllMatches).Matches.Groups[1].Value
+            [int]$TD_PortStatsSplitInfos.RXPwr = ($TD_CollectInfo|Select-String -Pattern 'rxpwr="(\d+)"' -AllMatches).Matches.Groups[1].Value
+            if($TD_CollectInfo -eq "/>"){
                 if($TD_PortStatsSplitInfos.CardType -ne "FC"){continue}
                 $TD_PortStats_Overview += $TD_PortStatsSplitInfos
-                $TD_NodeWWNN = ""
-                $TD_PortStatsSplitInfos = "" | Select-Object CardType,CardID,PortID,WWPN,LinkFailure,LoseSync,LoseSig,PSErrCount,InvTransErr,CRCErr,ZeroBtB,SFPTemp,TXPwr,RXPwr
+                $TD_PortStatsSplitInfos = "" | Select-Object NodeSN,NodeWWNN,CardType,CardID,PortID,WWPN,LinkFailure,LoseSync,LoseSig,PSErrCount,InvTransErr,CRCErr,ZeroBtB,SFPTemp,TXPwr,RXPwr
             }
             <# Progressbar  #>
             $ProgCounter++
-            Write-ProgressBar -ProgressBar $ProgressBar -Activity "Collect data for Device $($TD_Line_ID) $($TD_Device_DeviceName)" -PercentComplete (($ProgCounter/$TD_CollectInfos.Count) * 100)
+            Write-ProgressBar -ProgressBar $ProgressBar -Activity "Collect data for Device $($NodeNameTemp)" -PercentComplete (($ProgCounter/$NodePortStatsInfos.Count) * 100)
         }
     }
 

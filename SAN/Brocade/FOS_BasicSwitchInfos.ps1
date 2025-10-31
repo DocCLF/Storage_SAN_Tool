@@ -59,10 +59,31 @@ function FOS_BasicSwitchInfos {
             {$_ -like "183*"}  { $FOS_SwHw = "Brocade G620" }
             {$_ -like "173*"}  { $FOS_SwHw = "Brocade G630" }
             {$_ -like "184*"}  { $FOS_SwHw = "Brocade G630" }
-            {$_ -like "178*"}  { $FOS_SwHw = "Brocade 7810 Extension Switch" }
+            {$_ -like "178*"}  { $FOS_SwHw = "Brocade 7810 Ext. Switch" }
             {$_ -like "181*"}  { $FOS_SwHw = "Brocade G720" }
             {$_ -like "189*"}  { $FOS_SwHw = "Brocade G730" }
+            {$_ -like "190*"}  { $FOS_SwHw = "Brocade 7850 Ext. Switch" }
+            {$_ -like "191*"}  { $FOS_SwHw = "Brocade G710" }
             Default {$FOS_SwHw = "Unknown Type"}
+        }
+
+        switch (($FOS_MainInformation | Select-String -Pattern 'Part\sNum:\s+(\w+)$' |ForEach-Object {$_.Matches.Groups[1].Value})) {
+            {$_ -like "*8960*P64"}  { $FOS_HWMTM = "8960-P64" }
+            {$_ -like "*8960*R64"}  { $FOS_HWMTM = "8960-R64" }
+            {$_ -like "*8960*P96"}  { $FOS_HWMTM = "8960-P96" }
+            {$_ -like "*8960*R96"}  { $FOS_HWMTM = "8960-R96" }
+            {$_ -like "*8969*F24"}  { $FOS_HWMTM = "8969-F24" }
+            {$_ -like "*8960*F64"}  { $FOS_HWMTM = "8960-F64 V1" }
+            {$_ -like "*8960*N64"}  { $FOS_HWMTM = "8960-N64 V1" }
+            {$_ -like "*8960*F65"}  { $FOS_HWMTM = "8960-F65 V2" }
+            {$_ -like "*8960*N65"}  { $FOS_HWMTM = "8960-N65 V2" }
+            {$_ -like "*8960*F97"}  { $FOS_HWMTM = "8960-F97" }
+            {$_ -like "*8960*N97"}  { $FOS_HWMTM = "8960-N97" }
+            {$_ -like "*8960*F96"}  { $FOS_HWMTM = "8960-F96" }
+            {$_ -like "*8960*N96"}  { $FOS_HWMTM = "8960-N96" }
+            {$_ -like "*2498*F48"}  { $FOS_HWMTM = "2498-F48" }
+            {$_ -like "*2498*F24"}  { $FOS_HWMTM = "2498-F24" }
+            Default {$FOS_HWMTM = "Unknown Type"}
         }
     }
     
@@ -89,11 +110,15 @@ function FOS_BasicSwitchInfos {
         }
 
         $FOS_SwGeneralInfos.Add('Brocade Product Name',$FOS_SwHw)
+        $FOS_SwGeneralInfos.Add('MTM',$FOS_HWMTM)
         $FOS_SwGeneralInfos.Add('Serial Num',$FOS_LoSw_CFG[0])
+
+        $FOS_SwitchOSVersion= FOS_SwitchFW -SwitchData $FOS_MainInformation
 
         foreach ($lineUp in $FOS_MainInformation) {
             if($lineUp -match '^Index'){break}
-            $FOS_SwGeneralInfos.Add('Fabric OS',(($lineUp| Select-String -Pattern 'FOS\s+([v?][\d]\.[\d+]\.[\d].*)$').Matches.Groups[1].Value))
+            $FOS_SwGeneralInfos.Add('Fabric OS',(($lineUp| Select-String -Pattern 'FOS\s+([v?][\d+]\.[\d+]\.[\d].*)$').Matches.Groups[1].Value))
+            $FOS_SwGeneralInfos.Add('Fabric OSLV',$FOS_SwitchOSVersion)
             $FOS_SwGeneralInfos.Add('Ethernet IP Address',(($lineUp| Select-String -Pattern 'Ethernet IP Address:\s+([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3})').Matches.Groups[1].Value))
             $FOS_SwGeneralInfos.Add('Ethernet Subnet mask',(($lineUp| Select-String -Pattern 'Ethernet Subnet mask:\s+([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3})').Matches.Groups[1].Value))
             $FOS_SwGeneralInfos.Add('Gateway IP Address',(($lineUp| Select-String -Pattern 'Gateway IP Address:\s+([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3})').Matches.Groups[1].Value))

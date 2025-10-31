@@ -68,7 +68,8 @@ function FOS_SwitchShowInfo {
         Write-Debug -Message "Process Func GET_SwitchShowInfo |$(Get-Date)`n "
         <# fill the var with a dummy #>
         $FOS_PortConnect = "empty"
-
+        <# get Switch wwn for DB and PortCheck #>
+        $FOS_switchWwn = ($FOS_MainInformation |Select-String -Pattern '^switchWwn:\s+([\w\:]{20,24})' -AllMatches).Matches.Groups.Value[1]
         foreach($FOS_linebyLine in $FOS_SwShowArry_temp){
 
             <# Only collect data up to the next section, marked by frames #>
@@ -76,7 +77,9 @@ function FOS_SwitchShowInfo {
     
             # Build the Portsection of switchshow
             if($FOS_linebyLine -match '^\s+\d+'){   # (\d+\.\d\w|\d+)
-                $FOS_SWsh = "" | Select-Object Index,Port,Address,Media,Speed,State,Proto,PortConnect
+                $PortStateInfo = $null
+                $FOS_SWsh = "" | Select-Object Index,Port,Address,Media,Speed,State,Proto,PortConnect,SwitchWWN,PortStateInfo
+                $FOS_SWsh.SwitchWWN = $FOS_switchWwn
                 <# Port index is a number between 0 and the maximum number of supported ports on the platform. The port index identifies the port number relative to the switch. #>
                 $FOS_SWsh.Index = ($FOS_linebyLine |Select-String -Pattern '^\s+(\d+)' -AllMatches).Matches.Groups.Value[1]
                 $FOS_SWshIndex = $FOS_SWsh.Index
@@ -84,7 +87,7 @@ function FOS_SwitchShowInfo {
                 $FOS_SWsh.Port = ($FOS_linebyLine |Select-String -Pattern '^\s+\d+\s+(\d+)' -AllMatches).Matches.Groups.Value[1]
                 $FOS_SWshPort = $FOS_SWsh.Port
                 <# The 24-bit Address Identifier. #>
-                $FOS_SWsh.Address = ($FOS_linebyLine |Select-String -Pattern '([0-9a-z]+)\s+(id|--|cu)\s+' -AllMatches).Matches.Groups.Value[1]
+                $FOS_SWsh.Address = ($FOS_linebyLine |Select-String -Pattern '([\w]+)\s+(id|--|cu)\s+' -AllMatches).Matches.Groups.Value[1]
                 <# Media types means module types #>
                 $FOS_SWsh.Media = ($FOS_linebyLine |Select-String -Pattern '\s+(id|--|cu)\s+' -AllMatches).Matches.Groups.Value[1]
                 <# The speed of the port. #>
@@ -104,13 +107,19 @@ function FOS_SwitchShowInfo {
                 }
                 
                 if($FOS_SWsh.PortConnect -like "*NPIV*"){
+                    if($FOS_SWsh.Address -ne "virtuell"){
+                        $PortStateInfo = SST_FOSDBFunc -SwitchWWN $FOS_switchWwn -SwitchPort $FOS_SWshPort -SwitchPortState $FOS_SWshState
+                        if(!([string]::IsNullOrWhiteSpace($PortStateInfo))){
+                            $FOS_SWsh.PortStateInfo = $PortStateInfo
+                        }
+                    }
+                    $FOS_SwBasicPortDetails += $FOS_SWsh
                     <# need a better way to connect #>
                     if($TD_Device_ConnectionTyp -eq "ssh"){
                         $FOS_MainInformation = ssh -i $($TD_Device_SSHKeyPath) $TD_Device_UserName@$TD_Device_DeviceIP "portshow $($FOS_SWsh.Port)"
                         foreach($FOS_PortConnect_Info in $FOS_PortConnect_Infos){
                             $FOS_NPIV_Info = ($FOS_PortConnect_Info |Select-String -Pattern '^\s+(([0-9a-f]{2}:){7}[0-9a-f]{2})' -AllMatches).Matches.Groups.Value[1]
                             if($FOS_NPIV_Info -ne $FOS_NPIV_Info_temp){
-                                $FOS_SwBasicPortDetails += $FOS_SWsh
                                 $FOS_SWsh = "" | Select-Object Index,Port,Address,Media,Speed,State,Proto,PortConnect
                                 $FOS_SWsh.Index = $FOS_SWshIndex
                                 $FOS_SWsh.Port = $FOS_SWshPort
@@ -118,14 +127,14 @@ function FOS_SwitchShowInfo {
                                 $FOS_SWsh.State = $FOS_SWshState
                                 $FOS_SWsh.PortConnect = $FOS_NPIV_Info
                                 $FOS_NPIV_Info_temp = $FOS_NPIV_Info
-                                }
+                                $FOS_SwBasicPortDetails += $FOS_SWsh
+                            }
                         }
                     }else {
                         $FOS_PortConnect_Infos = plink $TD_Device_UserName@$TD_Device_DeviceIP -pw $TD_Device_PW -batch "portshow $($FOS_SWsh.Port)"
                         foreach($FOS_PortConnect_Info in $FOS_PortConnect_Infos){
                             $FOS_NPIV_Info = ($FOS_PortConnect_Info |Select-String -Pattern '^\s+(([0-9a-f]{2}:){7}[0-9a-f]{2})' -AllMatches).Matches.Groups.Value[1]
                             if($FOS_NPIV_Info -ne $FOS_NPIV_Info_temp){
-                                $FOS_SwBasicPortDetails += $FOS_SWsh
                                 $FOS_SWsh = "" | Select-Object Index,Port,Address,Media,Speed,State,Proto,PortConnect
                                 $FOS_SWsh.Index = $FOS_SWshIndex
                                 $FOS_SWsh.Port = $FOS_SWshPort
@@ -133,13 +142,20 @@ function FOS_SwitchShowInfo {
                                 $FOS_SWsh.State = $FOS_SWshState
                                 $FOS_SWsh.PortConnect = $FOS_NPIV_Info
                                 $FOS_NPIV_Info_temp = $FOS_NPIV_Info
-                                }
+                                $FOS_SwBasicPortDetails += $FOS_SWsh
+                            }
                         }
                     }
                 }else{
+                    if($FOS_SWsh.Address -ne "virtuell"){
+                        $PortStateInfo = SST_FOSDBFunc -SwitchWWN $FOS_switchWwn -SwitchPort $FOS_SWshPort -SwitchPortState $FOS_SWshState
+                        if(!([string]::IsNullOrWhiteSpace($PortStateInfo))){
+                            $FOS_SWsh.PortStateInfo = $PortStateInfo
+                        }
+                    }
                    $FOS_SwBasicPortDetails += $FOS_SWsh
                 }
-                
+
             }
             # if the Portnumber is not empty and there is a SFP pluged in, push the Port in the FOS_usedPorts array
             if(($FOS_SWsh.Port -ne "") -and ($FOS_SWsh.Media -eq "id")){$FOS_usedPorts += $FOS_SWsh.Port}

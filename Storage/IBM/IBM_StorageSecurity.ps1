@@ -34,11 +34,11 @@ function IBM_StorageSecurity {
     
     process {
         $TD_lsSecSettings = $TD_DeviceInformation | ForEach-Object {
-            $TD_SecSettingsInfo = "" | Select-Object AttributeName,ConfiguredValue,RecommendedValue
+            $TD_SecSettingsInfo = "" | Select-Object Key,Value,RecommendedValue
             # Split name into Attribute and Value
             $Spliter = $_ -split ':'
-            $TD_SecSettingsInfo.AttributeName = $Spliter[0]
-            $TD_SecSettingsInfo.ConfiguredValue = $Spliter[1]
+            $TD_SecSettingsInfo.Key = $Spliter[0]
+            $TD_SecSettingsInfo.Value = $Spliter[1]
             switch ($Spliter) {
                 "sslprotocol"                           { $TD_SecSettingsInfo.RecommendedValue = 5 }
                 "sshprotocol"                           { $TD_SecSettingsInfo.RecommendedValue = 3 }

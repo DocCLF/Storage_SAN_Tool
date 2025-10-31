@@ -34,7 +34,7 @@ function IBM_BackUpConfig {
     }
 
     process{
-        Write-Debug -Message "IBM_BackUpConfig Process block |$(Get-Date)"
+        SST_ToolMessageCollector -TD_ToolMSGCollector "IBM_BackUpConfig Process block" -TD_ToolMSGType Debug
         
         Write-ProgressBar -ProgressBar $ProgressBar -Activity "Collect data for Device $($TD_Line_ID) $($TD_Device_DeviceName) please wait this can take some seconds" -PercentComplete (($ProgCounter/50) * 100)
         Start-Sleep -Seconds 0.5
@@ -54,7 +54,7 @@ function IBM_BackUpConfig {
 
     end {
         Close-ProgressBar -ProgressBar $ProgressBar
-        SST_ToolMessageCollector -TD_ToolMSGCollector "BM_BackUpConfig End block" -TD_ToolMSGType Debug
+        SST_ToolMessageCollector -TD_ToolMSGCollector "IBM_BackUpConfig End block" -TD_ToolMSGType Debug
         return $TD_BUResault
         Clear-Variable TD* -Scope Global
     }

@@ -1,6 +1,68 @@
 # Change Log
+## [Unreleased]
+- History Data 
+- LineCharts
+- Additional support for errors in the event log
+- PBHA and DR Support
+
 
 All notable changes to this project will be documented in this file.
+# [v1.3.135] - 2025-10-31
+### Added 
+- Dashboard for a first fast Overview
+- DB Function local and azure
+- Function to save and load the Toolsettings on startup, incl. saved Devices
+- Support for Spectrum Virt Version 9.1.x
+- Support for FOS 10.x
+- more Information on some Functions for later Updates
+- rudimentary FOS FW recommendation, requires adjustments later on
+- Button at Settingspanel changes from ADD to Update and back when the checkbox for updating the Credentials is activated or not.
+- in Dashboard now Online and Offline Hosts shown
+- PowerServer, HMC etc Support via HMC Scanner
+    * If you want to implement this yourself, you must add the following folder to the Server\IBMPower folder: HMCScanerTEMP\HMCScannerTool 
+      so that the path ultimately looks like this: Storage_SAN_Tool\Server\IBMPower\HMCScanerTEMP\HMCScannerTool
+    * This structure is necessary so that the tool can store and delete temp files in \HMCScanerTEMP.
+    * The unzipped HMCScanner Tool from IBM is then placed in this HMCScannerTool section.
+- SANPort changes are now displayed via message and color of the respective port.
+- Host Status changes are now displayed via message and color of the respective Host from a storage perspective.
+- SAN firmware is now also displayed in the dashboard overview.
+- integration for PROFI Cockpit
+- a JobMode* that allows the tool to run as a task without a GUI, e.g., via Windows Task Scheduler.
+    * this requires an additional *ps1 or batch file to be created, which can then be used to access the tool from the Task Scheduler.
+- a guide and Sign-Module.ps1 to sign the module itself (you need a PowerShell console with administrator rights)
+
+### Fixed
+- some major and minor bugs in the main function GUI Control
+- minor bugs in the SST_DeviceConnecCheck where, among other things, IDs were assigned twice.
+- minor bugs in all *xaml Files
+- Drive Function and GUI has been revised
+- some small mistakes in SST_ImportCredential Function
+- minor bug at Eventlog Function where Disciption was not displayed
+- minor bug at the DashBoard where capacity was not displayed correctly
+- major bug in the Cleanup Function, which could lead to the unintentionally necessary files being additionally deleted
+- Storage Device Counter in Dashboard
+- WWNN error where it was possible that a name was displayed instead of the WWNN 
+- the failure that the firmware was not correctly compared with the new firmware, which led to confusion.
+- Checkbox was automatically checked if the access data needed to be updated. 
+- ID matching problem when updating Credentials
+- not all virtual WWPNs were displayed in the SwitchShow panel.
+- a problem where passwords with special characters could cause issues.
+
+### Changed
+- some Basis Functions like StorageBaseInfo, DriveInfo, SANBaseInfo and so on 
+- Code cleanup performed in various places
+- folder and code structure revised
+- DB from LiteDB to SQLite
+- the Fabric OS Matrix at Switch Info
+- some samll things in FW Check for Drives and SV-Software
+- Eventlog Counter form 14 to 28 days in the past
+- Significantly improved performance at ZoneShow
+- ACK removed from the device data grid in the settings
+- better recognition of FW relevance in Drive Info
+- updated SAN-HW and add MTMs
+- complete revision of the health check
+- Installation instructions for the SST module
+
 
 # [v1.2.1] - 2025-04-22
 ### Added

@@ -1,0 +1,3 @@
+Automatic Versions check via github oder gallery
+Interface zu anderen Tools bereitstellen
+Collector (?)

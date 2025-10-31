@@ -8,10 +8,13 @@ function SST_DeviceConnecCheck {
         $TD_Selected_DeviceUserName,
         $TD_Selected_DevicePassword,
         $TD_Selected_DeviceSSHFile,
-        $TD_Selected_SVCorVF
+        $TD_Selected_SVCorVF,
+        $CockpitView
     )
     
     begin {
+        $ErrorActionPreference="SilentlyContinue"
+        
         switch ($TD_Selected_Items) {
             "yes" { 
                 $TD_Selected_DeviceType
@@ -26,12 +29,13 @@ function SST_DeviceConnecCheck {
                 $TD_Selected_DeviceConnectionType = $TD_CB_DeviceConnectionType.Text
                 $TD_Selected_DeviceIPAddr = $TD_TB_DeviceIPAddr.Text
                 $TD_Selected_DeviceUserName = $TD_TB_DeviceUserName.Text
-                $TD_Selected_DevicePassword = $TD_TB_DevicePassword.Password
+                $TD_Selected_DevicePassword = [string]$TD_TB_DevicePassword.Password
                 $TD_Selected_DeviceSSHFile = $TD_TB_PathtoSSHKeyNotVisibil.Text="$($TD_ImportaddsshkeyObj.FileName)"
                 $TD_Selected_DeviceType = $TD_CB_DeviceType.Text
                 if($TD_CB_SVCorVF.IsChecked -and ($TD_Selected_DeviceType -eq "Storage")){$TD_UserInputCred = "SVC"};
                 if($TD_CB_SVCorVF.IsChecked -and ($TD_Selected_DeviceType -eq "SAN")){$TD_UserInputCred = "VF"};
-                if(!($TD_CB_SVCorVF.IsChecked)){$TD_UserInputCred = ""};
+                if(!($TD_CB_SVCorVF.IsChecked)){$TD_UserInputCred = "Nothing"};
+                
              }
             Default {SST_ToolMessageCollector -TD_ToolMSGCollector "Something went wrong at SST_DeviceConnecCheck Func please check the promt or close the gui and write $error in the promt." -TD_ToolMSGType Warning}
         }
@@ -54,7 +58,9 @@ function SST_DeviceConnecCheck {
                     }
 
                     switch ($TD_BasicDeviceInfos.Prod_MTM[0]) {
-                        {$_ -like "2078-324"}  { $TD_BInfo.ProductDes = "V5030 Gen2" }
+                        {$_ -like "2078-324"} { $TD_BInfo.ProductDes = "V5030 Gen2" }
+                        {$_ -like "2072-3N*" -or $_ -like "2078-2N*"} { $TD_BInfo.ProductDes = "FlashSystem 5000" }
+                        {$_ -like "4680-3*"}  { $TD_BInfo.ProductDes = "FlashSystem 5045" }
                         {$_ -like "2077-4H4" -or $_ -like "2078-4H4" }  { $TD_BInfo.ProductDes = "FlashSystem 5100" }
                         {$_ -like "4662-6H2" -or $_ -like "4662-UH6" }  { $TD_BInfo.ProductDes = "FlashSystem 5200" }
                         {$_ -like "4662-7H2"}  { $TD_BInfo.ProductDes = "FlashSystem 5300" }
@@ -84,12 +90,25 @@ function SST_DeviceConnecCheck {
                 }
             }
             "SAN" { 
+
                 $TD_BasicDeviceInfos = FOS_BasicSwitchInfos -TD_Device_ConnectionTyp $TD_Selected_DeviceConnectionType -TD_Device_DeviceIP $TD_Selected_DeviceIPAddr -TD_Device_UserName $TD_Selected_DeviceUserName -TD_Device_PW $([Net.NetworkCredential]::new('', $TD_Selected_DevicePassword).Password) -TD_Device_SSHKeyPath $TD_Selected_DeviceSSHFile 
+                
+                switch ($($TD_BasicDeviceInfos.'Brocade Product Name')) {
+                    {$_ -like "Brocade G720"}  { $FOS_HWMTM = "8960-P/R64" }
+                    {$_ -like "Brocade G730"}  { $FOS_HWMTM = "8960-P/R96" }
+                    {$_ -like "Brocade G610"}  { $FOS_HWMTM = "8969-F24" }
+                    {$_ -like "Brocade G620"}  { $FOS_HWMTM = "8960-F/N65 V2" }
+                    {$_ -like "Brocade G630"}  { $FOS_HWMTM = "8960-F/N97" }
+                    {$_ -like "Brocade 6510"}  { $FOS_HWMTM = "2498-F48" }
+                    {$_ -like "Brocade 6505"}  { $FOS_HWMTM = "2498-F24" }
+                    Default {$FOS_HWMTM = "Unknown Type"}
+                }
+                
                 if($TD_BasicDeviceInfos.count -gt 0){
                     $TD_BInfo = "" | Select-Object DeviceName,ProductDes,Prod_MTM,Code_Level
                     $TD_BInfo.DeviceName = $TD_BasicDeviceInfos.'Swicht Name'
                     $TD_BInfo.ProductDes = $TD_BasicDeviceInfos.'Brocade Product Name'
-                    $TD_BInfo.Prod_MTM = "unknown"
+                    $TD_BInfo.Prod_MTM = $TD_BasicDeviceInfos.'MTM'
                     $TD_BInfo.Code_Level = $TD_BasicDeviceInfos.'Fabric OS'
                     $TD_BasicDeviceInfo += $TD_BInfo
                     SST_ToolMessageCollector -TD_ToolMSGCollector "Added SAN Device to the List" -TD_ToolMSGType Message
@@ -97,6 +116,13 @@ function SST_DeviceConnecCheck {
                     SST_ToolMessageCollector -TD_ToolMSGCollector "Something went wrong, no data could be received from SAN device." -TD_ToolMSGType Error
                     break
                 }
+            }
+            "PowerHMC" {
+                $TD_BInfo = "" | Select-Object DeviceName,ProductDes
+                $TD_BInfo.DeviceName = "HMC"
+                $TD_BInfo.ProductDes = "PowerHMC"
+                $TD_BasicDeviceInfo += $TD_BInfo
+                SST_ToolMessageCollector -TD_ToolMSGCollector "It's a HMC is okay" -TD_ToolMSGType Message
             }
             Default {SST_ToolMessageCollector -TD_ToolMSGCollector "Something went wrong at SST_DeviceConnecCheck Func or no Device Type was found, please check the promt." -TD_ToolMSGType Warning}
         }
@@ -132,7 +158,7 @@ function SST_DeviceConnecCheck {
     }
     
     end {
-        if($TD_Selected_Items -eq "no"){
+        if(($TD_Selected_Items -eq "no")-or ($CockpitView -eq "JobMode")){
             return $TD_BasicDeviceInfo
         }
     }
