@@ -7,7 +7,7 @@
 
 
 All notable changes to this project will be documented in this file.
-# [v1.3.x] - 2025-10-??
+# [v1.3.135] - 2025-10-31
 ### Added 
 - Dashboard for a first fast Overview
 - DB Function local and azure
@@ -16,16 +16,20 @@ All notable changes to this project will be documented in this file.
 - Support for FOS 10.x
 - more Information on some Functions for later Updates
 - rudimentary FOS FW recommendation, requires adjustments later on
-- simple ssh hostkey check (disabled at the moment come back later for sure)
 - Button at Settingspanel changes from ADD to Update and back when the checkbox for updating the Credentials is activated or not.
 - in Dashboard now Online and Offline Hosts shown
 - PowerServer, HMC etc Support via HMC Scanner
+    * If you want to implement this yourself, you must add the following folder to the Server\IBMPower folder: HMCScanerTEMP\HMCScannerTool 
+      so that the path ultimately looks like this: Storage_SAN_Tool\Server\IBMPower\HMCScanerTEMP\HMCScannerTool
+    * This structure is necessary so that the tool can store and delete temp files in \HMCScanerTEMP.
+    * The unzipped HMCScanner Tool from IBM is then placed in this HMCScannerTool section.
 - SANPort changes are now displayed via message and color of the respective port.
 - Host Status changes are now displayed via message and color of the respective Host from a storage perspective.
 - SAN firmware is now also displayed in the dashboard overview.
 - integration for PROFI Cockpit
 - a JobMode* that allows the tool to run as a task without a GUI, e.g., via Windows Task Scheduler.
     * this requires an additional *ps1 or batch file to be created, which can then be used to access the tool from the Task Scheduler.
+- a guide and Sign-Module.ps1 to sign the module itself (you need a PowerShell console with administrator rights)
 
 ### Fixed
 - some major and minor bugs in the main function GUI Control
@@ -48,7 +52,7 @@ All notable changes to this project will be documented in this file.
 - some Basis Functions like StorageBaseInfo, DriveInfo, SANBaseInfo and so on 
 - Code cleanup performed in various places
 - folder and code structure revised
-- DB from LiteDB to MYSql
+- DB from LiteDB to SQLite
 - the Fabric OS Matrix at Switch Info
 - some samll things in FW Check for Drives and SV-Software
 - Eventlog Counter form 14 to 28 days in the past
