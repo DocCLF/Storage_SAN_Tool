@@ -1,9 +1,10 @@
 # Foreword/personal comment
 
-<ins>Before connecting to your devices</ins> with the tool for the first time, it has proven useful to do this beforehand from a PowerShell console via putty in order to save the host key properly.
+<ins>Before connecting to your devices</ins> with the tool for the first time,<br/> it has proven useful to do this beforehand from a PowerShell console via putty in order to save the host key properly.
 Although it is possible to have the tool do this itself, in my opinion this is not efficient or clean enough, so it will only be included in a later version.
-<ins>**SSH via key is currently not supported!**</ins>
-I am aware that not everyone likes this or that the use of plink with user/password prompts seems too insecure, 
+
+<ins>**SSH via key is currently not supported!**</ins><br/>
+I am aware that not everyone likes this or that the use of plink with user/password prompts seems too insecure, <br/>
 which is why I strongly recommend <ins>**ONLY using MONITORING USERS**</ins>, which are completely sufficient for this module!
 
 
