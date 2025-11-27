@@ -18,32 +18,32 @@
             <RowDefinition Height="auto" />
             <RowDefinition Height="auto" MinHeight="40"/>
         </Grid.RowDefinitions>
-        <StackPanel Orientation="Horizontal" Margin="5" >
+        <StackPanel Orientation="Horizontal" Margin="20,5,5,5" >
             <!--Storage FS & SVC-->
             <Button x:Name="BTN_Dashboard" Content="Dashboard" Style="{DynamicResource MainBtnStyle}"/>
             <!--Storage FS & SVC-->
-            <Button x:Name="btn_IBM_SV" Content="IBM Spectrum Virtualize" Style="{DynamicResource MainBtnStyle}"/>
+            <Button x:Name="BTN_IBMSpectrVirt" Content="IBM Spectrum Virtualize" Style="{DynamicResource MainBtnStyle}"/>
             <!--IBM Power-->
             <Button x:Name="BTN_PowerBoard" Content="IBM Power Board" Style="{DynamicResource MainBtnStyle}" ToolTipService.InitialShowDelay="10" />
             <!--Brocade SAN-->
-            <Button x:Name="btn_Broc_SAN"  Content="Brocade SAN" Style="{DynamicResource MainBtnStyle}" />
+            <Button x:Name="BTN_BrocSAN"  Content="Brocade SAN" Style="{DynamicResource MainBtnStyle}" />
             <!--Brocade SAN-->
             <!-- Placeholder for later use -->
             <!--Health-->
-            <Button x:Name="btn_Stor_San" Content="Health Check" Style="{DynamicResource MainBtnStyle}" /> 
+            <Button x:Name="BTN_STOSANHealth" Content="Health Check" Style="{DynamicResource MainBtnStyle}" /> 
             <!--Settings-->
-            <Button x:Name="btn_Settings" Content="Tool Settings" Style="{DynamicResource MainBtnStyle}" />
+            <Button x:Name="BTN_ToolSettings" Content="Tool Settings" Style="{DynamicResource MainBtnStyle}" />
             <Label x:Name="LB_ExpPathMainWindow" Content="Export Path :" Style="{DynamicResource MainLabelStyle}" Margin="25,5,0,5" Padding="3"/>
         </StackPanel>
         <!--CloseAll GUI-->
-        <Button x:Name="btn_CloseAll" Content="Exit" Style="{DynamicResource MainBtnStyle}" Margin="5,5,25,5" HorizontalAlignment="Right" Background="LightCoral"/>
+        <Button x:Name="BTN_CloseGUI" Content="Exit" Style="{DynamicResource MainBtnStyle}" Margin="5,5,25,5" HorizontalAlignment="Right" Background="LightCoral"/>
         <Grid Grid.Row="1" x:Name="UserContrArea" > 
             <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" >
                 <Image x:Name="LogoImage" Margin="30,0,30,0" /> 
             </StackPanel>
         </Grid>
         <GroupBox Grid.Row="2" Grid.ColumnSpan="2" Header="Tool Window for Debug and Message" Margin="10" Background="WhiteSmoke" Visibility="{Binding ElementName=cb_DebugModOnOff, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
-            <DataGrid x:Name="dg_ToolWindowForDebug" AutoGenerateColumns="False" Margin="2" MaxHeight="150">
+            <DataGrid x:Name="DG_ToolEventsWindow" AutoGenerateColumns="False" Margin="2" MaxHeight="150">
                 <DataGrid.Style>
                     <Style TargetType="DataGrid">
                         <Style.Triggers>
@@ -73,9 +73,9 @@
             </DataGrid>
         </GroupBox>
         <StackPanel Grid.Row="3" Orientation="Horizontal" VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="0,0,20,0" Height="34">
-            <Label Content="Debug Modus?" FontSize="12" FontWeight="Bold" VerticalContentAlignment="Center"/>
-            <CheckBox x:Name="cb_DebugModOnOff" VerticalAlignment="Center" Margin="2"/>
-            <Label Grid.Row="3" Content="v1.3.135" FontSize="12" FontWeight="Bold" Foreground="Coral" VerticalContentAlignment="Center" />
+            <Label Content="Tool Events?" FontSize="12" FontWeight="Bold" VerticalContentAlignment="Center"/>
+            <CheckBox x:Name="CB_ToolEvents" VerticalAlignment="Center" Margin="2"/>
+            <Label Grid.Row="3" Content="v1.4.0" FontSize="12" FontWeight="Bold" Foreground="Coral" VerticalContentAlignment="Center" />
         </StackPanel>
         <Label Grid.Row="3" Content="Tool-Support: r.glanz@profi-ag.de [or] GitHub: https://github.com/DocCLF/Storage_SAN_Tool" Margin="10,0" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="16" />
         <Image Grid.Row="3" x:Name="LogoImageSmall" Margin="10,10" VerticalAlignment="Bottom" HorizontalAlignment="Left" MaxHeight="30"/>
