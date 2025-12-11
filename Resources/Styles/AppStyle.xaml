@@ -2,19 +2,38 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
     <Style TargetType="Label" x:Key="MainLabelStyle">
-        <Setter Property="Height" Value="25" />
+        <Setter Property="Height" Value="32" />
+        <Setter Property="FontSize" Value="14"/>
         <Setter Property="HorizontalContentAlignment" Value="Center" />
         <Setter Property="VerticalContentAlignment" Value="Center" />
-        <Setter Property="FontSize" Value="14" />
         <Setter Property="FontWeight" Value="Bold" />
     </Style>
 
     <Style TargetType="{x:Type ComboBox}" x:Key="MainComboBoxStyle" >
-        <Setter Property="Height" Value="30" />
-        <Setter Property="Width" Value="125" />
-        <Setter Property="HorizontalContentAlignment" Value="Left" />
-        <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="Height" Value="32" />
+        <Setter Property="Width" Value="160" />
+        <Setter Property="Background" Value="White"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource BorderColor}"/>
+        <Setter Property="Foreground" Value="{DynamicResource PrimaryText}"/>
+        <Setter Property="FontSize" Value="14"/>
         <Setter Property="Margin" Value="5" />
+        <Setter Property="HorizontalContentAlignment" Value="Left" />
+        <Setter Property="VerticalContentAlignment" Value="Center"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="ItemContainerStyle">
+            <Setter.Value>
+                <Style TargetType="ComboBoxItem">
+                    <Setter Property="Background" Value="White"/>
+                    <Setter Property="Foreground" Value="{DynamicResource PrimaryText}"/>
+                    <Setter Property="Padding" Value="4"/>
+                    <Style.Triggers>
+                        <Trigger Property="IsHighlighted" Value="True">
+                            <Setter Property="Background" Value="{DynamicResource AccentColor}"/>
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </Setter.Value>
+        </Setter>
     </Style>
 
 </ResourceDictionary>
