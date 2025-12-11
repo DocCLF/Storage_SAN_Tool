@@ -16,12 +16,6 @@
     </UserControl.Background>
     <UserControl.Resources>
         <ResourceDictionary>
-            <Style x:Key="MainLabelStyle" TargetType="{x:Type Label}">
-                <Setter Property="Height" Value="30" />
-                <Setter Property="HorizontalContentAlignment" Value="Center" />
-                <Setter Property="VerticalContentAlignment" Value="Center" />
-                <Setter Property="Margin" Value="2" />
-            </Style>
             <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
         </ResourceDictionary>
     </UserControl.Resources>
@@ -60,9 +54,9 @@
                         <ComboBoxItem>Classic (UN/PW)</ComboBoxItem>
                     </ComboBox>
                     -->
-                    <Label  Content="Cluster IP:" Style="{DynamicResource MainLabelStyle}"/>
-                    <TextBox x:Name="TB_DeviceIPAddr" MinWidth="100" MaxLength="15" Style="{DynamicResource MainTextBoxStyle}" />
-                    <Label  Content="UserName :" Style="{DynamicResource MainLabelStyle}"/>
+                    <Label x:Name="LB_Cluster"  Content="Cluster IP:" Style="{DynamicResource MainLabelStyle}"/>
+                    <TextBox x:Name="TB_DeviceIPAddr" MinWidth="100" MaxLength="32" Style="{DynamicResource MainTextBoxStyle}" />
+                    <Label  Content="UserName :" FontSize="14" Style="{DynamicResource MainLabelStyle}"/>
                     <TextBox x:Name="TB_DeviceUserName" MaxLength="20" MinWidth="100" Style="{DynamicResource MainTextBoxStyle}" />
                     <Label Content="Password :" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Height="30" Margin="2">
                         <Label.Style>
