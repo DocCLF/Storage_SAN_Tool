@@ -7,7 +7,7 @@
     <SolidColorBrush x:Key="SecondaryText" Color="#6C757D"/>
     <SolidColorBrush x:Key="PrimaryColor" Color="#007BFF"/>
     <!-- Blue -->
-    <SolidColorBrush x:Key="AccentColor" Color="#17A2B8"/>
+    <SolidColorBrush x:Key="AccentColor" Color="#096e7eff"/>
     <!-- Teal -->
     <SolidColorBrush x:Key="BorderColor" Color="#E4E4E4"/>
 
