@@ -9,14 +9,26 @@
         <Setter Property="FontWeight" Value="Bold" />
     </Style>
 
+    <Style TargetType="Label" x:Key="SVCorVFLabelStyle" BasedOn="{StaticResource MainLabelStyle}">
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding ElementName=CB_DeviceType ,Path=SelectedValue}" Value="SAN">
+                <Setter Property="Content" Value="Virtual Fabric?" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding ElementName=CB_DeviceType ,Path=SelectedValue}" Value="Storage">
+                <Setter Property="Content" Value="SVC-Cluster?" />
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+
+
     <Style TargetType="{x:Type ComboBox}" x:Key="MainComboBoxStyle" >
         <Setter Property="Height" Value="32" />
         <Setter Property="Width" Value="160" />
-        <Setter Property="Background" Value="White"/>
+        <Setter Property="Background" Value="{DynamicResource PrimaryBackground}"/>
         <Setter Property="BorderBrush" Value="{DynamicResource BorderColor}"/>
         <Setter Property="Foreground" Value="{DynamicResource PrimaryText}"/>
         <Setter Property="FontSize" Value="14"/>
-        <Setter Property="Margin" Value="5" />
+        <Setter Property="Padding" Value="5"/>
         <Setter Property="HorizontalContentAlignment" Value="Left" />
         <Setter Property="VerticalContentAlignment" Value="Center"/>
         <Setter Property="BorderThickness" Value="1"/>
@@ -28,7 +40,7 @@
                     <Setter Property="Padding" Value="4"/>
                     <Style.Triggers>
                         <Trigger Property="IsHighlighted" Value="True">
-                            <Setter Property="Background" Value="{DynamicResource AccentColor}"/>
+                            <Setter Property="Foreground" Value="Red"/>
                         </Trigger>
                     </Style.Triggers>
                 </Style>
