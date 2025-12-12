@@ -1,18 +1,18 @@
-<# wichtig um die dll auch zu finden #>
+<# Load everything we need  #>
+<# important to find the dll as well #>
 $PSRootPath = Split-Path -Path $PSScriptRoot -Parent
-<# Abfrage der PWSH Version da es nur mit pwsh ab der Version 7 und höher funktioniert #>
-if($PSVersionTable.PSVersion.Major -ge 7){
+<# Query the PWSH version because of the DB files and REST function #>
+if($PSVersionTable.PSVersion.Major -le 7){
     Add-Type -Path "$PSRootPath\Resources\DBFolder\System.Data.SQLite.dll"
     #Add-Type -Path ".\OxyPlot.dll"
     #Add-Type -Path ".\OxyPlot.Wpf.dll"
-}
-if($PSVersionTable.PSVersion.Major -eq 5){
+}else {
     Add-Type -Path "$PSRootPath\Resources\DBFolder\PWSH5\System.Data.SQLite.dll"
 }
+<# Required for WPF, etc. #>
 Add-Type -AssemblyName PresentationFramework, PresentationCore, System.Windows.Forms, WindowsBase
 
-<# Ab hier start des eigentlichen "programms" #>
-<# Create the xaml Files / Base of GUI Mainwindow #>
+<# beginn of the Main part #>
 function Storage_SAN_Tool {
 [CmdletBinding()]
     param (
@@ -20,24 +20,24 @@ function Storage_SAN_Tool {
         [ValidateSet("DEFAULT","SAN","CONFIG","HEALTH","STORAGE","POWER","JobMode")]
         $CockpitView = $null
     )
+#$ErrorActionPreference="SilentlyContinue"
+#region Create Window and UC
 # ------------------------------
 # Load WPF styles BEFORE window
 # ------------------------------
 $StyleFiles = @(
     "$PSRootPath\Resources\Styles\ColorStyle.xaml",
-    "$PSRootPath\Resources\Styles\AppStyle.xaml",
+    "$PSRootPath\Resources\Styles\OtherControlStyle.xaml",
     "$PSRootPath\Resources\Styles\TextBoxStyle.xaml",
     "$PSRootPath\Resources\Styles\ButtonStyle.xaml"
 )
-
 $global:LoadedStyles = @()
 foreach ($file in $styleFiles) {
     $dict = [Windows.Markup.XamlReader]::Parse((Get-Content $file -Raw))
     $global:LoadedStyles += ,$dict
 }
+<# create the MainWindow #>
 
-#$ErrorActionPreference="SilentlyContinue"
-SST_ToolMessageCollector -TD_ToolMSGCollector "Start reading Storage_SAN_Tool func" -TD_ToolMSGType Message -TD_Shown no
 $inputXAML=Get-Content -Raw -Path "$PSScriptRoot\MainWindow.xaml"
 [xml]$MainXAML=$inputXAML -replace 'mc:Ignorable="d"','' -replace "x:N","N" -replace "^<Win.*","<Window"
 [System.Xml.XmlNodeReader] $Mainreader = $MainXAML
@@ -48,13 +48,10 @@ foreach ($style in $global:LoadedStyles) {
 $MainXAML.SelectNodes("//*[@Name]") | ForEach-Object {Set-Variable -Name "TD_$($_.Name)" -Value $MainWindow.FindName($_.Name)}
 
 <# add ResourceDictionary for WPF to App #>
-
-#
 foreach ($file in $StyleFiles){
     $style = [Windows.Markup.XamlReader]::Parse((Get-Content $file -Raw))
     $MainWindow.Resources.MergedDictionaries.Add( $style)
 }
-SST_ToolMessageCollector -TD_ToolMSGCollector "Load MainWindo Resources done" -TD_ToolMSGType Message -TD_Shown no
 
 <# PowerShell WPF XAML simple data binding datacontext #>
 class DashBoardIMG {
@@ -69,9 +66,15 @@ $DashBoardIcons.SAN64B7Icon = "$PSRootPath\Resources\Icons\SAN64B7Icon.png"
 $DashBoardIcons.IBMPower11Icon = "$PSRootPath\Resources\Icons\IBMPower11Icon.png"
 $DashBoardIcons.RefrehIcon96 = "$PSRootPath\Resources\Icons\iconrefresh96.png"
 
+<# PROFI Logo in MainWindow #>
+$TD_LogoImage.Source = "$PSRootPath\Resources\Icons\PROFI_Logo_2022_dark.png"
+$TD_LogoImageSmall.Source = "$PSRootPath\Resources\Icons\PROFI_Logo_2022_dark.png"
+$TD_LogoImageSmall.Visibility = "hidden"
+
 
 <# Create UserControls as basis of Content for MainWindow #>
-$UserCxamlFile = Get-ChildItem "$PSScriptRoot\UserControl*.xaml"
+$TD_AllUserControls = @()
+$UserCxamlFile = Get-ChildItem "$PSScriptRoot\UserControl_*.xaml"
 foreach($file in $UserCxamlFile){
     $fileName = ($file.Name).TrimEnd(".xaml")
     Set-Variable -Name "TD_$($fileName)"
@@ -99,100 +102,61 @@ foreach($file in $UserCxamlFile){
     # --------------------------
     # Set DataContext if needed
     # --------------------------
-    if ($fileName -like "*l1" -or $fileName -like "*l4") {
+    if ($fileName -like "*Dash" -or $fileName -like "*Health") {
         $TD_UserControl.DataContext = $DashBoardIcons
     }
 
+    $TD_AllUserControls += $TD_UserControl
     # --------------------------
     # Assign to global variable for later use
     # --------------------------
-    Set-Variable -Name "TD_$fileName" -Value $TD_UserControl
+    Set-Variable -Name "TD_$fileName" -Value $TD_UserControl 
 }
-
+#endregion
+#region Button
 $TD_BTN_Dashboard.add_click({
     $TD_LB_ExpPathMainWindow.Content ="Export Path: $($TD_tb_ExportPath.Text)"
-    if(!($TD_UserControl1.IsLoaded)){$TD_UserContrArea.Children.Add($TD_UserControl1)}
-    $TD_UserContrArea.Children.Remove($TD_UserControl2)
-    $TD_UserContrArea.Children.Remove($TD_UserControl3)
-    $TD_UserContrArea.Children.Remove($TD_UserControl4)
-    $TD_UserContrArea.Children.Remove($TD_UserControl5)
-    $TD_UserContrArea.Children.Remove($TD_UserControl6)
+    SST_ShowUserControl -MainWindowArea $TD_UserContrArea -ShowUserControl $TD_UserControl_Dash -AllUserControls $TD_AllUserControls
     if($TD_LogoImageSmall.Visibility -eq "hidden"){$TD_LogoImageSmall.Visibility = "visible"}
 })
 $TD_BTN_IBMSpectrVirt.add_click({
     $TD_LB_ExpPathMainWindow.Content ="Export Path: $($TD_tb_ExportPath.Text)"
-    if(!($TD_UserControl2.IsLoaded)){$TD_UserContrArea.Children.Add($TD_UserControl2)}
-    $TD_UserContrArea.Children.Remove($TD_UserControl1)
-    $TD_UserContrArea.Children.Remove($TD_UserControl3)
-    $TD_UserContrArea.Children.Remove($TD_UserControl4)
-    $TD_UserContrArea.Children.Remove($TD_UserControl5)
-    $TD_UserContrArea.Children.Remove($TD_UserControl6)
-    if($TD_LogoImageSmall.Visibility -eq "hidden"){$TD_LogoImageSmall.Visibility = "visible"}
-})
-$TD_BTN_BrocSAN.add_click({
-    $TD_LB_ExpPathMainWindow.Content ="Export Path: $($TD_tb_ExportPath.Text)"
-    if(!($TD_UserControl3.IsLoaded)){$TD_UserContrArea.Children.Add($TD_UserControl3)}
-    $TD_UserContrArea.Children.Remove($TD_UserControl1)
-    $TD_UserContrArea.Children.Remove($TD_UserControl2)
-    $TD_UserContrArea.Children.Remove($TD_UserControl4)
-    $TD_UserContrArea.Children.Remove($TD_UserControl5)
-    $TD_UserContrArea.Children.Remove($TD_UserControl6)
+    SST_ShowUserControl -MainWindowArea $TD_UserContrArea -ShowUserControl $TD_UserControl_IBMSTO -AllUserControls $TD_AllUserControls
     if($TD_LogoImageSmall.Visibility -eq "hidden"){$TD_LogoImageSmall.Visibility = "visible"}
 })
 $TD_BTN_PowerBoard.add_click({
     $TD_LB_ExpPathMainWindow.Content ="Export Path: $($TD_tb_ExportPath.Text)"
-    if(!($TD_UserControl6.IsLoaded)){
-        $TD_UserContrArea.Children.Add($TD_UserControl6) 
-        IBM_PowerMainFunc -PSRootPath $PSRootPath -SST_UCOBJ $TD_UserControl6
-        $SST_BTN_PowerBoardTooltip = $TD_UserControl6.FindName("BTN_HMCCollectorTooltip")
-        if($PSVersionTable.PSVersion.Major -ge 7){
-            $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_.DeviceTyp -eq "PowerHMC"}
-            if($TD_Credentials.count -ge 1){
-                $TD_BTN_HMCCollector.Background = "LightGreen"
-                $TD_BTN_HMCCollector.Content = "HMCScan RDY"
-                $SST_BTN_PowerBoardTooltip.Text = "HMC Credentials are loaded!"
-            }else{
-                $TD_BTN_HMCCollector.Background = "Coral"
-                $SST_BTN_PowerBoardTooltip.Text = "No HMC Credentials are loaded!"
-            }
-        }else {
-            <# Action when all if and elseif conditions are false #>
-            $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_}
-            if($TD_Credentials.count -ge 1){
-                $TD_BTN_HMCCollector.Background = "LightGreen"
-                $TD_BTN_HMCCollector.Content = "HMCScan RDY"
-                $SST_BTN_PowerBoardTooltip.Text = "Credentials are loaded, please check that HMC login details are included.!"
-            }
-        }
-    }
-    $TD_UserContrArea.Children.Remove($TD_UserControl1)
-    $TD_UserContrArea.Children.Remove($TD_UserControl2)
-    $TD_UserContrArea.Children.Remove($TD_UserControl3)
-    $TD_UserContrArea.Children.Remove($TD_UserControl4)
-    $TD_UserContrArea.Children.Remove($TD_UserControl5)
+    SST_ShowUserControl -MainWindowArea $TD_UserContrArea -ShowUserControl $TD_UserControl_PWR -AllUserControls $TD_AllUserControls
+    if($TD_LogoImageSmall.Visibility -eq "hidden"){$TD_LogoImageSmall.Visibility = "visible"}
+})
+$TD_BTN_IBMTape.add_click({
+    $TD_LB_ExpPathMainWindow.Content ="Export Path: $($TD_tb_ExportPath.Text)"
+    SST_ShowUserControl -MainWindowArea $TD_UserContrArea -ShowUserControl $TD_UserControl_IBMTape -AllUserControls $TD_AllUserControls
+    if($TD_LogoImageSmall.Visibility -eq "hidden"){$TD_LogoImageSmall.Visibility = "visible"}
+})
+$TD_BTN_BrocSAN.add_click({
+    $TD_LB_ExpPathMainWindow.Content ="Export Path: $($TD_tb_ExportPath.Text)"
+    SST_ShowUserControl -MainWindowArea $TD_UserContrArea -ShowUserControl $TD_UserControl_BRSAN -AllUserControls $TD_AllUserControls
     if($TD_LogoImageSmall.Visibility -eq "hidden"){$TD_LogoImageSmall.Visibility = "visible"}
 })
 $TD_BTN_STOSANHealth.add_click({
     $TD_LB_ExpPathMainWindow.Content ="Export Path: $($TD_tb_ExportPath.Text)"
-    if(!($TD_UserControl4.IsLoaded)){$TD_UserContrArea.Children.Add($TD_UserControl4); SST_MainHealthCheckFunc -SST_UCOBJ $TD_UserControl4 -SST_UCSTYLEOBJ $ButtonStyles }
-    $TD_UserContrArea.Children.Remove($TD_UserControl1)
-    $TD_UserContrArea.Children.Remove($TD_UserControl2)
-    $TD_UserContrArea.Children.Remove($TD_UserControl3)
-    $TD_UserContrArea.Children.Remove($TD_UserControl5)
-    $TD_UserContrArea.Children.Remove($TD_UserControl6)
+    SST_ShowUserControl -MainWindowArea $TD_UserContrArea -ShowUserControl $TD_UserControl_Health -AllUserControls $TD_AllUserControls
     if($TD_LogoImageSmall.Visibility -eq "hidden"){$TD_LogoImageSmall.Visibility = "visible"}
 })
 $TD_BTN_ToolSettings.add_click({
-    if(!($TD_UserControl5.IsLoaded)){$TD_UserContrArea.Children.Add($TD_UserControl5)}
-    $TD_UserContrArea.Children.Remove($TD_UserControl1)
-    $TD_UserContrArea.Children.Remove($TD_UserControl2)
-    $TD_UserContrArea.Children.Remove($TD_UserControl3)
-    $TD_UserContrArea.Children.Remove($TD_UserControl4)
-    $TD_UserContrArea.Children.Remove($TD_UserControl6)
+    $TD_LB_ExpPathMainWindow.Content ="Export Path: $($TD_tb_ExportPath.Text)"
+    SST_ShowUserControl -MainWindowArea $TD_UserContrArea -ShowUserControl $TD_UserControl_SetUp -AllUserControls $TD_AllUserControls
     if($TD_LogoImageSmall.Visibility -eq "hidden"){$TD_LogoImageSmall.Visibility = "visible"}
 })
+$TD_BTN_CloseGUI.add_click({
+    $MainWindow.Close()
+})
+#endregion
+
+
+#region show MainWindow
 $MainWindow.showDialog()
-
 $MainWindow.activate()
-
+#endregion
 }
