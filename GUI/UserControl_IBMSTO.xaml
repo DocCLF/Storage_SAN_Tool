@@ -1,0 +1,126 @@
+﻿<UserControl 
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+    mc:Ignorable="d" 
+    >
+    <UserControl.Background>
+            <LinearGradientBrush>
+            <GradientStopCollection>
+                <GradientStop Offset="0.1" Color="White" />
+                <GradientStop Offset="0.5" Color="LightGray" />
+                <GradientStop Offset="0.8" Color="White" />
+            </GradientStopCollection>
+        </LinearGradientBrush>
+    </UserControl.Background>
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" >
+    <Grid >
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="auto" />
+            <ColumnDefinition Width="auto" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <StackPanel Grid.Column="0" Grid.RowSpan="4" >
+        <GroupBox Header="For all Versions"  HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,10,0,0">
+            <StackPanel>
+                <!--IBM_BaseStorageInfo-->
+                <ToggleButton
+                x:Name="btn_IBM_BaseStorageInfo"
+                Style="{DynamicResource MainBtnStyle}"
+                Content="Storage Info" 
+                ToolTip="Get basic Storage information"/>
+                <!--IBM_EventLog-->
+                <ToggleButton
+                x:Name="btn_IBM_Eventlog"
+                Style="{DynamicResource MainBtnStyle}"
+                Content="Eventlog" 
+                ToolTip="Get the last 100 Events"/>
+                <!--IBM_CatAuditLog-->
+                <ToggleButton
+                x:Name="btn_IBM_CatAuditLog"
+                Style="{DynamicResource MainBtnStyle}"
+                Content="Audit Log"
+                ToolTip="Get the last 100 in-memory commands of the audit log" /> 
+                <!--IBM_HostVolumeMap-->
+                <ToggleButton
+                x:Name="btn_IBM_HostVolumeMap"
+                Style="{DynamicResource MainBtnStyle}"
+                Content="Host Volume Info" 
+                ToolTip="Get Infos to Host, HostCluster and their Volumes" />
+                <!--IBM_HostInfo-->
+                <ToggleButton
+                x:Name="btn_IBM_HostInfo"
+                Style="{DynamicResource MainBtnStyle}"
+                Content="Hosts Info" 
+                ToolTip="Get Infos to Host, HostCluster only" />
+                <!--IBM_PoolVolumeInfo-->
+                <ToggleButton
+                x:Name="btn_IBM_PoolVolumeInfo"
+                Style="{DynamicResource MainBtnStyle}"
+                Content="Pool+Volume Info" 
+                ToolTip="Get Infos to Pool and Volume only" />
+                <!--IBM_DriveInfo-->
+                <ToggleButton
+                x:Name="btn_IBM_DriveInfo"
+                Style="{DynamicResource MainBtnStyle}"
+                Content="Drive Info"
+                ToolTip="Get the most important information about your Drives" />
+                <!--IBM_FCPortInfo-->
+                <ToggleButton
+                x:Name="btn_IBM_FCPortInfo"
+                Style="{DynamicResource MainBtnStyle}"
+                Content="FC Port Info"
+                ToolTip="Generate a list of host count and login count for each worldwide port names (WWPNs) required to set up Fibre Channel (FC) zoning and to display the current failover status of host IO ports." />
+                <!--IBM_IPPortInfo-->
+                <ToggleButton
+                x:Name="btn_IBM_IPPortInfo"
+                Style="{DynamicResource MainBtnStyle}"
+                Content="IP Port Info"
+                ToolTip="Generate a list the currently configured IP addresses" />
+                <!--IBM_CleanUpDumps-->
+                <ToggleButton
+                x:Name="btn_IBM_CleanUpDumps"
+                Style="{DynamicResource MainBtnStyle}"
+                Content="CleanUp Dumps" 
+                ToolTip="Use the cleardumps command to clear (or delete) the various dump directories on a specified node or node canister."/>
+                <!--IBM_BackUpConfig-->
+                <ToggleButton
+                x:Name="btn_IBM_BackUpConfig"
+                Style="{DynamicResource MainBtnStyle}"
+                Content="BackUp CFG" 
+                ToolTip="Create a config backup and download it with the help of pscp."/>
+            </StackPanel>
+        </GroupBox>
+        <GroupBox Header="From v8.4.x and later"  HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,10,0,0">
+            <StackPanel>
+                <!--IBM_FCPortStats-->
+                <ToggleButton
+                x:Name="btn_IBM_FCPortStats"
+                Style="{DynamicResource MainBtnStyle}"
+                Content="FC Port Stats" 
+                ToolTip="Get an overview of the stats of your FC ports. Requirement v8.4.x and higher!" />
+            </StackPanel>
+        </GroupBox>  
+        <GroupBox Header="From v8.6.x and later"  HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,10,0,0">
+            <StackPanel>
+                <!--IBM_PolicyBased-->
+                <ToggleButton
+                x:Name="btn_IBM_PolicyBased_Rep"
+                Style="{DynamicResource MainBtnStyle}"
+                Content="Policy Based (Beta)" 
+                ToolTip="Get some information about the replication policy and VolGrp replication, only if there in use!" />
+            </StackPanel>
+        </GroupBox>   
+        </StackPanel> 
+    </Grid>
+    </ScrollViewer>
+</UserControl>
