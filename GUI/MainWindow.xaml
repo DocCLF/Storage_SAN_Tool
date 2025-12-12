@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:GUI"
         mc:Ignorable="d"
-        Title="Storage SAN Tool" MinHeight="600" MinWidth="1200" WindowState="Normal" WindowStartupLocation="CenterScreen" >
+        Title="Storage SAN Tool" MinHeight="600" MinWidth="1200" WindowState="Normal" WindowStartupLocation="CenterScreen" ResizeMode="CanResize">
     <Window.Resources>
         <ResourceDictionary>
             <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
@@ -20,23 +20,23 @@
         </Grid.RowDefinitions>
         <StackPanel Orientation="Horizontal" Margin="20,5,5,5" >
             <!--Storage FS & SVC-->
-            <Button x:Name="BTN_Dashboard" Content="Dashboard" Style="{DynamicResource MainBtnStyle}"/>
+            <ToggleButton x:Name="BTN_Dashboard" Content="Dashboard" Style="{DynamicResource MainBtnStyle}"/>
             <!--Storage FS & SVC-->
-            <Button x:Name="BTN_IBMSpectrVirt" Content="IBM Spectrum Virtualize" Style="{DynamicResource MainBtnStyle}"/>
+            <ToggleButton x:Name="BTN_IBMSpectrVirt" Content="IBM Spectrum Virtualize" Style="{DynamicResource MainBtnStyle}"/>
             <!--IBM Power-->
-            <Button x:Name="BTN_PowerBoard" Content="IBM Power Board" Style="{DynamicResource MainBtnStyle}" ToolTipService.InitialShowDelay="10" />
+            <ToggleButton x:Name="BTN_PowerBoard" Content="IBM Power Board" Style="{DynamicResource MainBtnStyle}" ToolTipService.InitialShowDelay="10" />
+            <!--IBM Tape-->
+            <ToggleButton x:Name="BTN_IBMTape"  Content="IBM Tape" Style="{DynamicResource MainBtnStyle}" />
             <!--Brocade SAN-->
-            <Button x:Name="BTN_BrocSAN"  Content="Brocade SAN" Style="{DynamicResource MainBtnStyle}" />
-            <!--Brocade SAN-->
-            <!-- Placeholder for later use -->
+            <ToggleButton x:Name="BTN_BrocSAN"  Content="Brocade SAN" Style="{DynamicResource MainBtnStyle}" />
             <!--Health-->
-            <Button x:Name="BTN_STOSANHealth" Content="Health Check" Style="{DynamicResource MainBtnStyle}" /> 
+            <ToggleButton x:Name="BTN_STOSANHealth" Content="Health Check" Style="{DynamicResource MainBtnStyle}" /> 
             <!--Settings-->
-            <Button x:Name="BTN_ToolSettings" Content="Tool Settings" Style="{DynamicResource MainBtnStyle}" />
+            <ToggleButton x:Name="BTN_ToolSettings" Content="Tool Settings" Style="{DynamicResource MainBtnStyle}" />
             <Label x:Name="LB_ExpPathMainWindow" Content="Export Path :" Style="{DynamicResource MainLabelStyle}" Margin="25,5,0,5" Padding="3"/>
         </StackPanel>
         <!--CloseAll GUI-->
-        <Button x:Name="BTN_CloseGUI" Content="Exit" Style="{DynamicResource MainBtnStyle}" Margin="5,5,25,5" HorizontalAlignment="Right" Background="LightCoral"/>
+        <ToggleButton x:Name="BTN_CloseGUI" Content="Exit" Style="{DynamicResource MainBtnStyle}" Margin="5,5,25,5" HorizontalAlignment="Right" Background="LightCoral"/>
         <Grid Grid.Row="1" x:Name="UserContrArea" > 
             <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" >
                 <Image x:Name="LogoImage" Margin="30,0,30,0" /> 
