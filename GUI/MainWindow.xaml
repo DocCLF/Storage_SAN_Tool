@@ -20,7 +20,7 @@
         </Grid.RowDefinitions>
         <StackPanel Orientation="Horizontal" Margin="20,5,5,5" >
             <!--Storage FS & SVC-->
-            <ToggleButton x:Name="BTN_Dashboard" Content="Dashboard" Style="{DynamicResource MainBtnStyle}"/>
+            <ToggleButton x:Name="BTN_Dashboard" Content="Dashboard" Style="{DynamicResource MainBtnStyle}" />
             <!--Storage FS & SVC-->
             <ToggleButton x:Name="BTN_IBMSpectrVirt" Content="IBM Spectrum Virtualize" Style="{DynamicResource MainBtnStyle}"/>
             <!--IBM Power-->
@@ -31,6 +31,8 @@
             <ToggleButton x:Name="BTN_BrocSAN"  Content="Brocade SAN" Style="{DynamicResource MainBtnStyle}" />
             <!--Health-->
             <ToggleButton x:Name="BTN_STOSANHealth" Content="Health Check" Style="{DynamicResource MainBtnStyle}" /> 
+            <!--Health-->
+            <ToggleButton x:Name="BTN_CustomerBoard" Content="Customer Board" Style="{DynamicResource MainBtnStyle}" Background="#00ff00" Visibility="{Binding ElementName=CB_CustomerYN, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}" />             
             <!--Settings-->
             <ToggleButton x:Name="BTN_ToolSettings" Content="Tool Settings" Style="{DynamicResource MainBtnStyle}" />
             <Label x:Name="LB_ExpPathMainWindow" Content="Export Path :" Style="{DynamicResource MainLabelStyle}" Margin="25,5,0,5" Padding="3"/>
@@ -42,7 +44,7 @@
                 <Image x:Name="LogoImage" Margin="30,0,30,0" /> 
             </StackPanel>
         </Grid>
-        <GroupBox Grid.Row="2" Grid.ColumnSpan="2" Header="Tool Window for Debug and Message" Margin="10" Background="WhiteSmoke" Visibility="{Binding ElementName=cb_DebugModOnOff, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
+        <GroupBox Grid.Row="2" Grid.ColumnSpan="2" Header="Tool Window for Debug and Message" Margin="10" Background="WhiteSmoke" Visibility="{Binding ElementName=CB_ToolEvents, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
             <DataGrid x:Name="DG_ToolEventsWindow" AutoGenerateColumns="False" Margin="2" MaxHeight="150">
                 <DataGrid.Style>
                     <Style TargetType="DataGrid">
@@ -73,9 +75,9 @@
             </DataGrid>
         </GroupBox>
         <StackPanel Grid.Row="3" Orientation="Horizontal" VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="0,0,20,0" Height="34">
-            <Label Content="Tool Events?" FontSize="12" FontWeight="Bold" VerticalContentAlignment="Center"/>
-            <CheckBox x:Name="CB_ToolEvents" VerticalAlignment="Center" Margin="2"/>
-            <Label Grid.Row="3" Content="v1.4.0" FontSize="12" FontWeight="Bold" Foreground="Coral" VerticalContentAlignment="Center" />
+            <CheckBox x:Name="CB_ToolEvents" Content="Tool Events?" Margin="2" VerticalAlignment="Center"/>
+            <CheckBox x:Name="CB_CustomerYN" Content="Customer?" IsChecked="True" Margin="2" VerticalAlignment="Center"/>
+            <Label Content="v1.4.0" FontSize="12" FontWeight="Bold" Foreground="Coral" VerticalContentAlignment="Center" />
         </StackPanel>
         <Label Grid.Row="3" Content="Tool-Support: r.glanz@profi-ag.de [or] GitHub: https://github.com/DocCLF/Storage_SAN_Tool" Margin="10,0" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="16" />
         <Image Grid.Row="3" x:Name="LogoImageSmall" Margin="10,10" VerticalAlignment="Bottom" HorizontalAlignment="Left" MaxHeight="30"/>
