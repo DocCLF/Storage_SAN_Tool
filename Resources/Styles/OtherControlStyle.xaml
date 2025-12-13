@@ -9,6 +9,12 @@
         <Setter Property="FontWeight" Value="Bold" />
     </Style>
 
+    <Style TargetType="Label" x:Key="PRISIMLabelStyle" BasedOn="{StaticResource MainLabelStyle}">
+        <Setter Property="Foreground" Value="Coral" />
+        <Setter Property="Margin" Value="2,0"/>
+        <Setter Property="HorizontalAlignment" Value="Left" />
+    </Style>
+
     <Style TargetType="Label" x:Key="SVCorVFLabelStyle" BasedOn="{StaticResource MainLabelStyle}">
         <Style.Triggers>
             <DataTrigger Binding="{Binding ElementName=CB_DeviceType ,Path=SelectedValue}" Value="SAN">
@@ -19,7 +25,6 @@
             </DataTrigger>
         </Style.Triggers>
     </Style>
-
 
     <Style TargetType="{x:Type ComboBox}" x:Key="MainComboBoxStyle" >
         <Setter Property="Height" Value="32" />
@@ -48,4 +53,17 @@
         </Setter>
     </Style>
 
+    <Style TargetType="{x:Type CheckBox}" x:Key="MainCheckBoxStyle" >
+        <Setter Property="Background" Value="White"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource BorderColor}"/>
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="Margin" Value="2"/>
+        <Setter Property="FontSize" Value="12"/>
+        <Setter Property="LayoutTransform">
+            <Setter.Value>
+                <ScaleTransform ScaleX="1.5" ScaleY="1.5"/>
+            </Setter.Value>
+        </Setter>
+    </Style>
 </ResourceDictionary>
