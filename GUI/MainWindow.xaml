@@ -31,8 +31,8 @@
             <ToggleButton x:Name="BTN_BrocSAN"  Content="Brocade SAN" Style="{DynamicResource MainBtnStyle}" />
             <!--Health-->
             <ToggleButton x:Name="BTN_STOSANHealth" Content="Health Check" Style="{DynamicResource MainBtnStyle}" /> 
-            <!--Health-->
-            <ToggleButton x:Name="BTN_CustomerBoard" Content="Customer Board" Style="{DynamicResource MainBtnStyle}" Background="#00ff00" Visibility="{Binding ElementName=CB_CustomerYN, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}" />             
+            <!--Customer Board-->
+            <ToggleButton x:Name="BTN_CustomerBoard" Content="Customer Board" Style="{DynamicResource CustomerBoardBTNStyle}" Background="#00ff00" />
             <!--Settings-->
             <ToggleButton x:Name="BTN_ToolSettings" Content="Tool Settings" Style="{DynamicResource MainBtnStyle}" />
             <Label x:Name="LB_ExpPathMainWindow" Content="Export Path :" Style="{DynamicResource MainLabelStyle}" Margin="25,5,0,5" Padding="3"/>
@@ -74,7 +74,7 @@
                 </DataGrid.Columns>
             </DataGrid>
         </GroupBox>
-        <StackPanel Grid.Row="3" Orientation="Horizontal" VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="0,0,20,0" Height="34">
+        <StackPanel Grid.Row="3" Orientation="Horizontal" VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="0,0,20,5" Height="34">
             <CheckBox x:Name="CB_ToolEvents" Content="Tool Events?" Margin="2" VerticalAlignment="Center"/>
             <CheckBox x:Name="CB_CustomerYN" Content="Customer?" IsChecked="True" Margin="2" VerticalAlignment="Center"/>
             <Label Content="v1.4.0" FontSize="12" FontWeight="Bold" Foreground="Coral" VerticalContentAlignment="Center" />
