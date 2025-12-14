@@ -17,10 +17,10 @@
 
     <Style TargetType="Label" x:Key="SVCorVFLabelStyle" BasedOn="{StaticResource MainLabelStyle}">
         <Style.Triggers>
-            <DataTrigger Binding="{Binding ElementName=CB_DeviceType ,Path=SelectedValue}" Value="SAN">
+            <DataTrigger Binding="{Binding ElementName=CB_DeviceType ,Path=SelectedValue}" Value="Brocade SAN">
                 <Setter Property="Content" Value="Virtual Fabric?" />
             </DataTrigger>
-            <DataTrigger Binding="{Binding ElementName=CB_DeviceType ,Path=SelectedValue}" Value="Storage">
+            <DataTrigger Binding="{Binding ElementName=CB_DeviceType ,Path=SelectedValue}" Value="IBM Storage">
                 <Setter Property="Content" Value="SVC-Cluster?" />
             </DataTrigger>
         </Style.Triggers>
