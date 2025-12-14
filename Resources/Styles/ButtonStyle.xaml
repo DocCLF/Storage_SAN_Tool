@@ -58,6 +58,14 @@
         </Setter>
     </Style>
 
+    <Style TargetType="ToggleButton" x:Key="ExportCredBTNStyle" BasedOn="{StaticResource MainBtnStyle}">
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding ElementName=TB_CustomerInfoName ,Path=Text}" Value="Customer-Info">
+                <Setter Property="Background" Value="#fc4242"/>
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+
     <Style TargetType="ToggleButton" x:Key="AddUpdateToggleButtonStyle" BasedOn="{StaticResource MainBtnStyle}">
         <Setter Property="Content" Value="ADD" />
         <Setter Property="Background" Value="#DCC7AA" />
@@ -65,6 +73,15 @@
             <DataTrigger Binding="{Binding ElementName=CB_CredUpdate, Path=IsChecked}" Value="True">
                 <Setter Property="Content" Value="Update" />
                 <Setter Property="Background" Value="#F0F6D6" />
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+
+    <Style TargetType="ToggleButton" x:Key="CustomerBoardBTNStyle" BasedOn="{StaticResource MainBtnStyle}">
+        <Setter Property="Visibility" Value="Visible"/>
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding ElementName=CB_CustomerYN, Path=IsChecked}" Value="True">
+                <Setter Property="Visibility" Value="Collapsed"/>
             </DataTrigger>
         </Style.Triggers>
     </Style>
