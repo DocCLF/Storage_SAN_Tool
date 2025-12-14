@@ -157,6 +157,30 @@ $TD_BTN_ToolSettings.add_click({
 $TD_BTN_CloseGUI.add_click({
     $MainWindow.Close()
 })
+$TD_BTN_SaveToolSettings.add_click({
+    #SST_SaveLoadToolSettings -SST_SaveSettings $true 
+})
+$TD_BTN_LoadToolSettings.add_click({
+    #SST_SaveLoadToolSettings -SST_LoadSettings $true
+})
+$TD_BTN_SaveCredtoDG.add_click({
+    if($TD_CB_CredUpdate.IsChecked){
+        #SST_ToolMessageCollector -TD_ToolMSGCollector "Cred Update" -TD_ToolMSGType Message -TD_Shown no
+        $TD_CredfGUIArray = SST_GetCredfGUI -TD_AddaNewDevice "no"
+    }else{
+        #SST_ToolMessageCollector -TD_ToolMSGCollector "Cred AddaNewDevice" -TD_ToolMSGType Message -TD_Shown no
+        $TD_CredfGUIArray = SST_GetCredfGUI -TD_AddaNewDevice "yes"
+        Start-Sleep -Seconds 0.3
+        if(!([string]::IsNullOrEmpty($TD_CredfGUIArray))){
+            $TD_TB_DeviceIPAddr.Text=""
+            $TD_TB_DeviceUserName.Text=""
+            $TD_TB_DevicePassword.Password=""
+            $TD_TB_PathtoSSHKeyNotVisibil.Text=""
+            $TD_CB_SVCorVF.IsChecked=$false
+        }
+    }
+
+})
 #endregion
 
 
