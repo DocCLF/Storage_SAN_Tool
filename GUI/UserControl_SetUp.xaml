@@ -44,8 +44,9 @@
                 </Grid.RowDefinitions>
                 <StackPanel Grid.Row="0" x:Name="STP_GetDeviceCred" Orientation="Horizontal" Margin="2" >
                     <ComboBox x:Name="CB_DeviceType" SelectedIndex="0" SelectedValuePath="Content" Style="{DynamicResource MainComboBoxStyle}" >
-                        <ComboBoxItem>Storage</ComboBoxItem>
-                        <ComboBoxItem>SAN</ComboBoxItem>
+                        <ComboBoxItem>IBM Storage</ComboBoxItem>
+                        <ComboBoxItem>IBM Tape</ComboBoxItem>
+                        <ComboBoxItem>Brocade SAN</ComboBoxItem>
                         <ComboBoxItem>PowerHMC</ComboBoxItem>
                     </ComboBox>
                     <Label x:Name="LB_Cluster"  Content="Cluster IP:" Style="{DynamicResource MainLabelStyle}"/>
@@ -54,42 +55,18 @@
                     <TextBox x:Name="TB_DeviceUserName" MaxLength="20" MinWidth="100" Style="{DynamicResource MainTextBoxStyle}" />
                     <Label Content="Password :" Style="{DynamicResource MainLabelStyle}" />
                     <PasswordBox x:Name="TB_DevicePassword" MaxLength="64" MinWidth="100" Style="{DynamicResource PasswordBoxStyle}" />
-                    <!--
-                        <PasswordBox.Style>
-                            <Style TargetType="PasswordBox">
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding ElementName=CB_DeviceConnectionType, Path=SelectedValue}" Value="Secure Shell (SSH)">
-                                        <Setter Property="Visibility" Value="Collapsed"/>
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </PasswordBox.Style>
-                    </PasswordBox>
-                    -->    
-                    
-                    <TextBox x:Name="TB_PathtoSSHKeyNotVisibil" Text="" Visibility="Collapsed"/>
-                    <!-- The ssh settings are deactivated for the time being and a better implementation should be sought.
-                    <Button x:Name="BTN_AddSSHKey" Content="Add SSH-Key" Height="30" Margin="5" Padding="2" VerticalContentAlignment="Center" HorizontalContentAlignment="center" >
-                        <Button.Style>
-                            <Style TargetType="Button">
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding ElementName=CB_DeviceConnectionType, Path=SelectedValue}" Value="Classic (UN/PW)">
-                                        <Setter Property="Visibility" Value="Collapsed"/>
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </Button.Style>
-                    </Button>
-                    -->
                     <Label x:Name="LB_SVCorVF" Style="{DynamicResource SVCorVFLabelStyle}" />
                     <CheckBox x:Name="CB_SVCorVF" VerticalAlignment="Center" Margin="2" >
-                                                <CheckBox.LayoutTransform>
+                        <CheckBox.LayoutTransform>
                               <ScaleTransform ScaleX="1.5" ScaleY="1.5"/>
                             </CheckBox.LayoutTransform>
                         <CheckBox.Style>
                             <Style TargetType="CheckBox">
                                 <Style.Triggers>
                                     <DataTrigger Binding="{Binding ElementName=CB_DeviceType ,Path=SelectedValue}" Value="PowerHMC">
+                                        <Setter Property="Visibility" Value="Collapsed" />
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding ElementName=CB_DeviceType ,Path=SelectedValue}" Value="IBM Tape">
                                         <Setter Property="Visibility" Value="Collapsed" />
                                     </DataTrigger>
                                 </Style.Triggers>
@@ -138,7 +115,6 @@
                                     <DataGridTextColumn Header="Device Name" Width="Auto"  Binding="{Binding DeviceName}" />
                                     <DataGridTextColumn Header="Login User" Width="Auto"  Binding="{Binding UserName}" />
                                     <DataGridTextColumn Header="Login PW" Binding="{Binding Password}" Visibility="{Binding ElementName=Password, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}"/>
-                                    <DataGridTextColumn Header="PathtoSSHKey" Binding="{Binding SSHKeyPath}" Visibility="{Binding ElementName=SSHKeyPath, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}"/>
                                     <DataGridTextColumn Header="MTM-Code" Width="Auto"  Binding="{Binding MTMCode}" />
                                     <DataGridTextColumn Header="Product" Width="Auto"  Binding="{Binding ProductDescr}" />
                                     <DataGridTextColumn Header="Firmware" Width="Auto"  Binding="{Binding CurrentFirmware}" />
@@ -156,14 +132,26 @@
         </GroupBox>
         <GroupBox Grid.RowSpan="4" Grid.Column="1" Header="Settings" HorizontalAlignment="Left" Margin="10,10,20,0" VerticalAlignment="Top">
             <StackPanel >
-                <GroupBox Header="Saved Credentials" Margin="0,10">
+                <GroupBox Header="Customer Info" Margin="0,10">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="auto" />
+                            <RowDefinition Height="auto" />
+                        </Grid.RowDefinitions>
+                        <StackPanel Orientation="Vertical" Margin="5">
+                            <Label Content="Name or Number" Style="{DynamicResource MainLabelStyle}" HorizontalAlignment="Left"/>
+                            <TextBox x:Name="TB_CustomerInfoName" Text="Customer-Info" MaxLength="20" Width="160" Style="{DynamicResource ExportCredTBStyle}" HorizontalAlignment="Left" />
+                        </StackPanel>
+                    </Grid>
+                </GroupBox>
+                <GroupBox Header="Credentials" Margin="0,10">
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="auto" />
                             <RowDefinition Height="auto" />
                         </Grid.RowDefinitions>
                         <StackPanel Orientation="Horizontal">
-                            <ToggleButton x:Name="btn_ExportCred" Content="Export Credentials" HorizontalAlignment="Left" Style="{DynamicResource MainBtnStyle}"/>
+                            <ToggleButton x:Name="btn_ExportCred" Content="Export Credentials" HorizontalAlignment="Left" Style="{DynamicResource ExportCredBTNStyle}" ToolTip="Credentials can only be saved in combination with the customer name or customer number!"/>
                             <ToggleButton x:Name="btn_ImportCred" Content="Import Credentials" HorizontalAlignment="Left" Style="{DynamicResource MainBtnStyle}"/>
                             <CheckBox x:Name="CB_OnlineCheckbyImport" Margin="22,2,2,2" Style="{DynamicResource MainCheckBoxStyle}" />
                             <Label Content="Device Online check by import" Style="{DynamicResource MainLabelStyle}" />
