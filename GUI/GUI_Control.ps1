@@ -155,13 +155,24 @@ $TD_BTN_ToolSettings.add_click({
     if($TD_LogoImageSmall.Visibility -eq "hidden"){$TD_LogoImageSmall.Visibility = "visible"}
 })
 $TD_BTN_CloseGUI.add_click({
+    <#CleanUp before close #>
+    try {
+        Remove-Item -Path $PSRootPath\ToolLog\ToolTEMP\* -Filter '*_Temp.csv' -Force -ErrorAction SilentlyContinue
+        if(Test-Path -Path "$PSRootPath\Resources\DBFolder\*" -Filter "*.db"){
+            SST_RESTDBControl -SST_InfoType "DeleteStorageToken" | Out-Null
+        }
+    }
+    catch {
+        <#Do this if a terminating exception happens#>
+        #SST_ToolMessageCollector -TD_ToolMSGCollector $("Remove Files fail: $($_.Exception.Message)") -TD_ToolMSGType Error -TD_Shown no
+    }
     $MainWindow.Close()
 })
 $TD_BTN_SaveToolSettings.add_click({
-    #SST_SaveLoadToolSettings -SST_SaveSettings $true 
+    SST_SaveLoadToolSettings -SST_SaveSettings $true 
 })
 $TD_BTN_LoadToolSettings.add_click({
-    #SST_SaveLoadToolSettings -SST_LoadSettings $true
+    SST_SaveLoadToolSettings -SST_LoadSettings $true
 })
 $TD_BTN_SaveCredtoDG.add_click({
     if($TD_CB_CredUpdate.IsChecked){
@@ -170,17 +181,74 @@ $TD_BTN_SaveCredtoDG.add_click({
     }else{
         #SST_ToolMessageCollector -TD_ToolMSGCollector "Cred AddaNewDevice" -TD_ToolMSGType Message -TD_Shown no
         $TD_CredfGUIArray = SST_GetCredfGUI -TD_AddaNewDevice "yes"
-        Start-Sleep -Seconds 0.3
+        Start-Sleep -Seconds 0.5
         if(!([string]::IsNullOrEmpty($TD_CredfGUIArray))){
             $TD_TB_DeviceIPAddr.Text=""
             $TD_TB_DeviceUserName.Text=""
             $TD_TB_DevicePassword.Password=""
-            $TD_TB_PathtoSSHKeyNotVisibil.Text=""
             $TD_CB_SVCorVF.IsChecked=$false
         }
     }
 
 })
+
+<# Button Credentials In-/ Export #>
+$TD_BTN_ExportCred.add_click({
+    if(($TD_BTN_ExportCred.Background -notlike "*FFFC4242")-and($TD_TB_CustomerInfoName.Background -notlike "*FFFA8C8C")){
+        <# Not all needs to exported, if you want to modify the Export got to the SST_ExportCred Func #>
+        $TD_SST_ExportCred = SST_ExportCredential -TD_CollectedCredDatas $TD_DG_KnownDeviceList.ItemsSource
+        <# Save to Dir #>
+        $TD_SaveCred = SST_SaveFile_to_Directory -TD_UserDataObject $TD_SST_ExportCred
+        if([string]::IsNullOrEmpty($TD_SaveCred.FileName)){
+            #SST_ToolMessageCollector -TD_ToolMSGCollector $("Export failed!") -TD_ToolMSGType Warning -TD_Shown yes
+        }else {
+            #SST_ToolMessageCollector -TD_ToolMSGCollector $("Credentials successfully exported to $($TD_SaveCred.FileName)") -TD_ToolMSGType Message -TD_Shown yes
+        }
+    }else {
+        [System.Windows.MessageBox]::Show(
+            "Please enter the customer name or number!", "Invalid input", 'OK', 'Warning'
+        )
+    }
+})
+$TD_btn_ImportCred.add_click({
+    $TD_ImportedCredentials = SST_ImportCredential
+    if($TD_ImportedCredentials.count -lt 1){
+        #SST_ToolMessageCollector -TD_ToolMSGCollector $("Import failed!") -TD_ToolMSGType Warning -TD_Shown yes
+    }else {
+        #SST_ToolMessageCollector -TD_ToolMSGCollector $("Credentials successfully Import") -TD_ToolMSGType Message -TD_Shown yes
+        #$SST_BTN_PowerBoard = $TD_UserControl6.FindName("BTN_HMCCollector")
+        #$SST_BTN_PowerBoard.Content="HMC Scanner"
+        #$SST_BTN_PowerBoard.IsEnabled=$true
+        if($TD_CB_OnlineCheckbyImport.IsChecked){
+            Write-Host ($TD_CB_OnlineCheckbyImport.IsChecked) $CockpitView
+            $TD_ImportedCredentials | ForEach-Object {
+                SST_DeviceConnecCheck -TD_Selected_Items "yes" -TD_Selected_DeviceType $_.DeviceTyp -TD_Selected_DeviceConnectionType $_.ConnectionTyp -TD_Selected_DeviceIPAddr $_.IPAddress -TD_Selected_DeviceUserName $_.UserName -TD_Selected_DevicePassword $_.Password -TD_Selected_SVCorVF $_.SVCorVF
+                Start-Sleep -Seconds 0.5
+            }
+        }
+    }
+})
+<# this part is needed if there are any Updates on the cred in DG #>
+$TD_DG_KnownDeviceList.add_SelectionChanged({
+    <# to prevent the function from being executed more than once #>
+    if(!([string]::IsNullOrWhiteSpace($TD_DG_KnownDeviceList.selecteditem.IPAddress))){
+        if($TD_CB_CredUpdate.IsChecked){
+            $TD_DG_KnownDeviceList | ForEach-Object {
+                $TD_CB_DeviceType.Text = $_.selecteditem.DeviceTyp
+                #if($_.selecteditem.ConnectionTyp -eq "plink"){$TD_CB_DeviceConnectionType.Text = "Classic (UN/PW)"}else{$TD_CB_DeviceConnectionType.Text = "Secure Shell (SSH)"}
+                $TD_TB_DeviceIPAddr.Text = $_.selecteditem.IPAddress
+                $TD_TB_DeviceUserName.Text = $_.selecteditem.UserName
+                if(($_.selecteditem.DeviceTyp -like "*Storage")-and($_.selecteditem.SVCorVF -eq "SVC")){$TD_CB_SVCorVF.IsChecked=$true}else{$TD_CB_SVCorVF.IsChecked=$false}
+                if(($_.selecteditem.DeviceTyp -like "*SAN")-and($_.selecteditem.SVCorVF -eq "VF")){$TD_CB_SVCorVF.IsChecked=$true}else{$TD_CB_SVCorVF.IsChecked=$false}
+                $_.selecteditem | Export-Clixml -Path $PSRootPath\ToolLog\ToolTEMP\UpdateCred.xml
+            }
+
+        }else{
+            SST_DeviceConnecCheck -TD_Selected_Items "yes" -TD_Selected_DeviceType $TD_DG_KnownDeviceList.selecteditem.DeviceTyp -TD_Selected_DeviceConnectionType $TD_DG_KnownDeviceList.selecteditem.ConnectionTyp -TD_Selected_DeviceIPAddr $TD_DG_KnownDeviceList.selecteditem.IPAddress -TD_Selected_DeviceUserName $TD_DG_KnownDeviceList.selecteditem.UserName -TD_Selected_DevicePassword $TD_DG_KnownDeviceList.selecteditem.Password -TD_Selected_SVCorVF $TD_DG_KnownDeviceList.selecteditem.SVCorVF
+        }
+    }
+})
+
 #endregion
 
 
