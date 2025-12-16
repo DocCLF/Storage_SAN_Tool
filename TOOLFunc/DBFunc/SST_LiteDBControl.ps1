@@ -109,8 +109,6 @@ function SST_LiteDBControl {
                     # DB save 
                     $SST_SQliteInsertCMD.ExecuteNonQuery()
 
-                    $SST_SQliteInsertCMD.ExecuteNonQuery()
-
                     # Delete | Keep only the 256 most recent entries after TimeStamp
                     $SST_SQliteInsertCMD.CommandText = "DELETE FROM IBMSTODriveTable WHERE ID NOT IN ( SELECT ID FROM IBMSTODriveTable ORDER BY TimeStamp DESC LIMIT 256 );"
                     $SST_SQliteInsertCMD.ExecuteNonQuery()
