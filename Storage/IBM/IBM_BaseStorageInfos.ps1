@@ -19,18 +19,23 @@ function IBM_BaseStorageInfos {
         $ErrorActionPreference="SilentlyContinue"
         [int]$ProgCounter=0
         $ProgressBar = New-ProgressBar
-        $RESTFileName = "RESTTempInfos_$TD_Storage"+"_"+"$TD_Line_ID"
-        if(Test-Path -Path "$PSScriptRoot\ToolLog\ToolTEMP\$RESTFileName.xml"){
-            $TD_Device_ConnectionTyp = SST_RESTTokenValidation -RESTFileName $RESTFileName
+        $BaseUrl = "https://$TD_Device_DeviceIP"+":7443"
+
+        if(Test-Path -Path "$PSRootPath\Resources\DBFolder\SSTLocalDB.db"){
+            $RESTInfo = SST_RESTDBControl -SST_InfoType "UseStorageToken" -SST_BaseUrl $BaseUrl
+            if(([string]::IsNullOrEmpty($RESTInfo)) -and ($TD_Device_ConnectionTyp -eq "REST")){
+                SST_GetSpectrumToken -TD_Device_UserName $TD_Device_UserName -TD_Device_DeviceIP $TD_Device_DeviceIP -TD_Device_PW $TD_Device_PW
+            }
         }
         if([string]::IsNullOrWhiteSpace($TD_Device_ConnectionTyp)){
-            $TD_Device_ConnectionTyp = SST_GetSpectrumToken -TD_Device_UserName $TD_Device_UserName -TD_Device_DeviceIP $TD_Device_DeviceIP -TD_Device_PW $TD_Device_PW -TD_Device_Typ $TD_Storage -TD_Device_ID $TD_Line_ID
+            $TD_Device_ConnectionTyp = SST_GetSpectrumToken -TD_Device_UserName $TD_Device_UserName -TD_Device_DeviceIP $TD_Device_DeviceIP -TD_Device_PW $TD_Device_PW 
         }
         <# Connect to Device and get all needed Data #>
         switch ($TD_Storage) {
             "SVC" { 
                 if($TD_Device_ConnectionTyp -eq "REST"){
-                    $TD_BaseInformations = SST_SpectrumSystemAPI -Endpoint lsnode -Body $null -RESTFileName $RESTFileName
+                    $STONodeInfo = SST_SpectrumSystemAPI -Endpoint lsnode -Body $null -SST_BaseUrl $BaseUrl -RESTInfo $RESTInfo
+                    $STOSystemInfo = SST_SpectrumSystemAPI -Endpoint lssystem -Body $null -SST_BaseUrl $BaseUrl -RESTInfo $RESTInfo
                 }else {
                     $TD_BaseInformations = plink $TD_Device_UserName@$TD_Device_DeviceIP -pw $TD_Device_PW -batch 'lsnode -delim : && lsnode -nohdr |while read id name IO_group_id;do lsnode -delim : $id ;echo;done && lssystem -delim , |grep name'
                     $TD_BaseInformations = $TD_BaseInformations |Select-Object -Skip 1
@@ -38,7 +43,8 @@ function IBM_BaseStorageInfos {
              }
             Default {
                 if($TD_Device_ConnectionTyp -eq "REST"){
-                    $TD_BaseInformations = SST_SpectrumSystemAPI -Endpoint lsnodecanister -Body $null -RESTFileName $RESTFileName
+                    $STONodeInfo = SST_SpectrumSystemAPI -Endpoint lsnodecanister -Body $null -SST_BaseUrl $BaseUrl -RESTInfo $RESTInfo
+                    $STOSystemInfo = SST_SpectrumSystemAPI -Endpoint lssystem -Body $null -SST_BaseUrl $BaseUrl -RESTInfo $RESTInfo
                 }else {
                     $TD_BaseInformations = plink $TD_Device_UserName@$TD_Device_DeviceIP -pw $TD_Device_PW -batch 'lsnodecanister -delim : && lsnodecanister -nohdr |while read id name IO_group_id;do lsnodecanister -delim : $id ;echo;done && lssystem -delim , |grep name'
                     $TD_BaseInformations = $TD_BaseInformations |Select-Object -Skip 1
@@ -50,12 +56,6 @@ function IBM_BaseStorageInfos {
     process {
 
         if($TD_Device_ConnectionTyp -eq "REST"){
-            if($TD_Storage -eq "SVC"){
-                $STONodeInfo = SST_SpectrumSystemAPI -Endpoint lsnode
-            }else {
-                $STONodeInfo = SST_SpectrumSystemAPI -Endpoint lsnodecanister
-            }
-            $STOSystemInfo = SST_SpectrumSystemAPI -Endpoint lssystem
             [int]$imax = $STONodeInfo.Count
             $TD_StorageInfo = for ($i = 0; $i -le $imax; $i++) {
                 $TD_FSBaseTemp = "" | Select-Object ID,Name,ClusterName,WWNN,Status,IO_group_id,IO_group_Name,Serial_Number,Code_Level,Config_Node,SideID,SideName,Prod_MTM,RecommendedPTF,MDiskTotalCapacity,MDiskFreeCapacity,MDiskUsedCapacity,PhysicalTotalCapacity,PhysicalFreeCapacity,HostUnmap,BackendUnmap,Topology,Layer,QuorumMode
@@ -170,19 +170,12 @@ function IBM_BaseStorageInfos {
                 $TD_StorageInfo | Export-Csv -Path $PSScriptRoot\ToolLog\$($TD_Line_ID)_$($TD_Device_DeviceName)_StorageBaseInfo_$(Get-Date -Format "yyyy-MM-dd").csv -NoTypeInformation
                 SST_ToolMessageCollector -TD_ToolMSGCollector "$PSScriptRoot\ToolLog\$($TD_Line_ID)_$($TD_Device_DeviceName)_StorageBaseInfo_$(Get-Date -Format "yyyy-MM-dd").csv" -TD_ToolMSGType Debug
             }
-        }else {
-            Start-Sleep -Seconds 0.5
-            return $TD_StorageInfo
         }
-        return $TD_StorageInfo#,$TD_Device_ConnectionTyp
-        <# alternative #>
-        #@{
-        #    StorageInfo     = $TD_StorageInfo
-        #    ConnectionTyp   = $TD_Device_ConnectionTyp
-        #}
-        # call them with 
-        # $Results = IBM_BaseStorageInfos 
-        # $Results['StorageInfo']
-        # $Results['ConnectionTyp']
+
+        [PSCustomObject]@{
+            StorageInfo     = $TD_StorageInfo
+            ConnectionTyp   = $TD_Device_ConnectionTyp
+        }
+
     }
 }
