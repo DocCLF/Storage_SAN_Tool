@@ -6,21 +6,20 @@ function SST_SpectrumSystemAPI {
         [string]$Endpoint,
         [ValidateSet("GET","POST","PUT","DELETE")]
         [string]$Method = "POST",
-        [string]$RESTFileName,
+        [string]$BaseUrl,
+        [strint]$RESTInfo,
         [object]$Body
     )
     
     begin {
-        try {
-            $CredImportXML = Import-Clixml -Path "$PSScriptRoot\ToolLog\ToolTEMP\$RESTFileName.xml"
+
+        $Uri = "$BaseUrl/rest/v1/$Endpoint"
+        if([string]::IsNullOrEmpty($RESTInfo)){
+            $RESTToken = SST_RESTDBControl -SST_InfoType "UseStorageToken" -SST_BaseUrl $BaseUrl
         }
-        catch {
-            Write-Host $_.Exception.Message 
-        }
-        $Uri = "$($CredImportXML.BaseUrl)/rest/v1/$Endpoint"
         $Headers = @{
             "accept"       = "application/json"
-            "X-Auth-Token" = "$($CredImportXML.Token)"
+            "X-Auth-Token" = $RESTToken
         }
         $bodyJson = if ($null -ne $Body) { $Body | ConvertTo-Json } else { "" }
     }
