@@ -151,8 +151,8 @@
                             <RowDefinition Height="auto" />
                         </Grid.RowDefinitions>
                         <StackPanel Orientation="Horizontal">
-                            <ToggleButton x:Name="btn_ExportCred" Content="Export Credentials" HorizontalAlignment="Left" Style="{DynamicResource ExportCredBTNStyle}" ToolTip="Credentials can only be saved in combination with the customer name or customer number!"/>
-                            <ToggleButton x:Name="btn_ImportCred" Content="Import Credentials" HorizontalAlignment="Left" Style="{DynamicResource MainBtnStyle}"/>
+                            <ToggleButton x:Name="BTN_ExportCred" Content="Export Credentials" HorizontalAlignment="Left" Style="{DynamicResource ExportCredBTNStyle}" ToolTip="Credentials can only be saved in combination with the customer name or customer number!"/>
+                            <ToggleButton x:Name="BTN_ImportCred" Content="Import Credentials" HorizontalAlignment="Left" Style="{DynamicResource MainBtnStyle}"/>
                             <CheckBox x:Name="CB_OnlineCheckbyImport" Margin="22,2,2,2" Style="{DynamicResource MainCheckBoxStyle}" />
                             <Label Content="Device Online check by import" Style="{DynamicResource MainLabelStyle}" />
                         </StackPanel>
