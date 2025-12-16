@@ -45,10 +45,14 @@ function SST_DeviceConnecCheck {
 
         switch ($TD_Selected_DeviceType) {
             "Storage" { 
-                $TD_BasicDeviceInfos = IBM_BaseStorageInfos -TD_Device_DeviceIP $TD_Selected_DeviceIPAddr -TD_Device_UserName $TD_Selected_DeviceUserName -TD_Device_PW $([Net.NetworkCredential]::new('', $TD_Selected_DevicePassword).Password) -TD_Device_SSHKeyPath $TD_Selected_DeviceSSHFile -TD_Storage $TD_UserInputCred
+                $TD_BasicInfo = IBM_BaseStorageInfos -TD_Device_DeviceIP $TD_Selected_DeviceIPAddr -TD_Device_UserName $TD_Selected_DeviceUserName -TD_Device_PW $([Net.NetworkCredential]::new('', $TD_Selected_DevicePassword).Password) -TD_Device_SSHKeyPath $TD_Selected_DeviceSSHFile -TD_Storage $TD_UserInputCred
                 <# not the best check but try-catch do not work, i have to check why #>
+                $TD_BasicDeviceInfos = $TD_BasicInfo.StorageInfo
+                $TD_BasicDeviceConnection = $TD_BasicInfo.ConnectionTyp
                 if($TD_BasicDeviceInfos.count -gt 0){
-                    $TD_BInfo = "" | Select-Object DeviceName,ProductDes,Prod_MTM,Code_Level
+                    $TD_BInfo = "" | Select-Object ConnectionTyp,DeviceName,ProductDes,Prod_MTM,Code_Level
+                    
+                    $TD_BInfo.ConnectionTyp = $TD_BasicDeviceConnection
 
                     if($TD_BasicDeviceInfos.Name[0] -ne ""){
                         $TD_BInfo.DeviceName = $TD_BasicDeviceInfos.Name[0]
@@ -74,7 +78,7 @@ function SST_DeviceConnecCheck {
                         {$_ -like "2145-SV3"}  { $TD_BInfo.ProductDes = "SVC SV3" }
             
                         Default {
-                            $TD_BInfo.ProductDes = "Unknown Type"
+                            $TD_BInfo.ProductDes = $TD_BasicDeviceInfos.Prod_MTM[0]
                             SST_ToolMessageCollector -TD_ToolMSGCollector "Unknown Storage MTM, please check this MTM Number via google $($TD_BasicDeviceInfos.Prod_MTM[0])" -TD_ToolMSGType Warning
                         }
                     }
@@ -134,7 +138,7 @@ function SST_DeviceConnecCheck {
                     $TD_UserInputCred = "" | Select-Object ID,DeviceTyp,ConnectionTyp,IPAddress,DeviceName,UserName,Password,SSHKeyPath,SVCorVF,MTMCode,ProductDescr,CurrentFirmware,Exportpath
                     $TD_UserInputCred.ID               =   $TD_ExistingCred.ID;
                     $TD_UserInputCred.DeviceTyp        =   $TD_ExistingCred.DeviceTyp;
-                    $TD_UserInputCred.ConnectionTyp    =   $TD_ExistingCred.ConnectionTyp;
+                    $TD_UserInputCred.ConnectionTyp    =   $TD_BasicDeviceInfo.ConnectionTyp;
                     $TD_UserInputCred.IPAddress        =   $TD_ExistingCred.IPAddress;
                     $TD_UserInputCred.DeviceName       =   $TD_BasicDeviceInfo.DeviceName;
                     $TD_UserInputCred.UserName         =   $TD_ExistingCred.UserName;
