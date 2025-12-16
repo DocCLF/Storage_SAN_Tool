@@ -4,16 +4,15 @@ function SST_GetSpectrumToken {
         [Int16]$TD_PSVersion = $PSVersionTable.PSVersion.Major,
         [string]$TD_Device_UserName,
         [string]$TD_Device_DeviceIP,
-        [string]$TD_Device_PW,
-        [string]$TD_Device_Typ,
-        [Int16]$TD_Device_ID
+        [string]$TD_Device_PW
     )
     
     begin {
         <# Write the token to a file in the first phase of 1.4 and later to the DB for release. #>
-        $RESTFileName = "RESTTempInfos_$TD_Device_Typ"+"_"+"$TD_Device_ID"
-        if(Test-Path -Path "$PSScriptRoot\ToolLog\ToolTEMP\$RESTFileName.xml"){
-            Remove-Item -Path "$PSScriptRoot\ToolLog\ToolTEMP\$RESTFileName.xml" -Confirm:$false -Force
+        $BaseUrl = "https://$TD_Device_DeviceIP"+":7443"
+
+        if(!(Test-Path -Path "$PSRootPath\Resources\DBFolder\SSTLocalDB.db")){
+            Break
         }
         <# Build headers (FlashSystem expects X-Auth-Username / X-Auth-Password for this endpoint) #>
         $Headers = @{
@@ -21,7 +20,6 @@ function SST_GetSpectrumToken {
             "X-Auth-Username" = $TD_Device_UserName
             "X-Auth-Password" = $TD_Device_PW
         }
-        $BaseUrl = "https://$TD_Device_DeviceIP"+":7443"
     }
     
     process {
@@ -54,7 +52,7 @@ function SST_GetSpectrumToken {
                     # Restore original callback
                     [System.Net.ServicePointManager]::ServerCertificateValidationCallback = $OldCallback
                 }
-                $FlashAPI_TokenExpiry = $lssecurityInfo.restapi_timeout_mins
+                $FlashAPI_TokenExpiry = (Get-Date).AddMinutes($lssecurityInfo.restapi_timeout_mins)
             }
         }
         catch {
@@ -73,11 +71,15 @@ function SST_GetSpectrumToken {
             Token   = $FlashAPI_Token
             Expires = $FlashAPI_TokenExpiry
         }
-        $RESTInfoObj | Export-Clixml -Path "$PSScriptRoot\ToolLog\ToolTEMP\$RESTFileName.xml"
+        
+        $RESTInfo = SST_RESTDBControl -SST_InfoType "SaveStorageToken" -SST_NewDBObject $RESTInfoObj
+        if([string]::IsNullOrEmpty($RESTInfo)){
+            $FlashAPI_Token = $RESTInfo
+        }
         if([string]::IsNullOrEmpty($FlashAPI_Token)){
-            return "REST"
-        }else {
             return "plink"
+        }else {
+            return "REST"
         }
     }
 }
