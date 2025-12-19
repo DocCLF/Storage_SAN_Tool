@@ -3,18 +3,16 @@ function SST_RESTDBControl {
     param (
         [Parameter(ValueFromPipeline)]
         [ValidateSet("SaveStorageToken","UseStorageToken","DeleteStorageToken")]
-        $SST_InfoType,
+        [string]$SST_InfoType,
         [string]$SST_BaseUrl,
+        [string]$Result,
         $SST_NewDBObject
     )
     
     begin {
         $TimeStamp = Get-Date -UFormat "%Y-%m-%d %R"
-        $PSRootPath = Split-Path -Path $PSScriptRoot -Parent
-        $PSRootPath = Split-Path -Path $PSRootPath -Parent
-
         # Pfad zur Datenbank
-        $SST_ConnectionString = "Data Source=$PSRootPath\Resources\DBFolder\SSTLocalDB.db;Version=3;"
+        $SST_ConnectionString = "Data Source=$PSRootPath\Resources\DBFolder\ToolDB\ToolDB.db;Version=3;"
         # Verbindung öffnen
         $SST_SQLiteCon = New-Object System.Data.SQLite.SQLiteConnection $SST_ConnectionString
         $SST_SQLiteCon.Open()
@@ -26,10 +24,10 @@ function SST_RESTDBControl {
         <# Create Table if not exists #>
         switch ($SST_InfoType) {
             "SaveStorageToken" { 
-                $SST_SQLiteTabelQuery ="CREATE TABLE IF NOT EXISTS STOApiTokens (Id INTEGER PRIMARY KEY AUTOINCREMENT, BaseUrl TEXT NOT NULL,Token TEXT NOT NULL, ExpiresAt TEXT NOT NULL, TimeStamp TEXT) "
+                $SST_SQLiteTabelQuery ="CREATE TABLE IF NOT EXISTS STOApiTokens (BaseUrl TEXT PRIMARY KEY,Token TEXT NOT NULL, ExpiresAt TEXT NOT NULL, TimeStamp TEXT) "
                 $SST_SQliteCreateTBCMD.CommandText = $SST_SQLiteTabelQuery
                 $SST_SQliteCreateTBCMD.ExecuteNonQuery()                
-             }
+            }
             Default {}
         }
 
@@ -76,7 +74,7 @@ function SST_RESTDBControl {
     }
     
     end {
-        return $Result
+        #Verbindung schließen
         $SST_NewDBObject =$null
         $SST_SQLiteCon.Close()
         $SST_SQLiteCon.Dispose()
