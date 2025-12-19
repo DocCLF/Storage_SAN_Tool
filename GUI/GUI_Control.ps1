@@ -11,7 +11,6 @@ if($PSVersionTable.PSVersion.Major -le 7){
 }
 <# Required for WPF, etc. #>
 Add-Type -AssemblyName PresentationFramework, PresentationCore, System.Windows.Forms, WindowsBase
-
 <# beginn of the Main part #>
 function Storage_SAN_Tool {
 [CmdletBinding()]
@@ -52,14 +51,8 @@ foreach ($file in $StyleFiles){
     $style = [Windows.Markup.XamlReader]::Parse((Get-Content $file -Raw))
     $MainWindow.Resources.MergedDictionaries.Add( $style)
 }
-
 <# PowerShell WPF XAML simple data binding datacontext #>
-class DashBoardIMG {
-    [string]$IBMFS73Icon
-    [string]$SAN64B7Icon
-    [string]$IBMPower11Icon
-    [string]$RefrehIcon96
-}
+
 $DashBoardIcons =[DashBoardIMG]::new()
 $DashBoardIcons.IBMFS73Icon = "$PSRootPath\Resources\Icons\IBMFS73Icon.png"
 $DashBoardIcons.SAN64B7Icon = "$PSRootPath\Resources\Icons\SAN64B7Icon.png"
@@ -67,6 +60,7 @@ $DashBoardIcons.IBMPower11Icon = "$PSRootPath\Resources\Icons\IBMPower11Icon.png
 $DashBoardIcons.RefrehIcon96 = "$PSRootPath\Resources\Icons\iconrefresh96.png"
 
 <# PROFI Logo in MainWindow #>
+$MainWindow.DataContext = $DashBoardIcons
 $TD_LogoImage.Source = "$PSRootPath\Resources\Icons\PROFI_Logo_2022_dark.png"
 $TD_LogoImageSmall.Source = "$PSRootPath\Resources\Icons\PROFI_Logo_2022_dark.png"
 $TD_LogoImageSmall.Visibility = "hidden"
@@ -102,7 +96,7 @@ foreach($file in $UserCxamlFile){
     # --------------------------
     # Set DataContext if needed
     # --------------------------
-    if ($fileName -like "*Dash" -or $fileName -like "*Health") {
+    if ($fileName -like "*Dash" -or $fileName -like "*Health" -or $fileName -like "*SetUp") {
         $TD_UserControl.DataContext = $DashBoardIcons
     }
 
@@ -111,6 +105,36 @@ foreach($file in $UserCxamlFile){
     # Assign to global variable for later use
     # --------------------------
     Set-Variable -Name "TD_$fileName" -Value $TD_UserControl 
+}
+#endregion
+#region Tool Prep
+<# Check if the ToolDB is available if not deploy #>
+if(!(Test-Path -Path "$PSRootPath\Resources\DBFolder\ToolDB\ToolDB.db")){
+    try {
+        $SST_ConnectionString = "Data Source=$PSRootPath\Resources\DBFolder\ToolDB\ToolDB.db;Version=3;"
+        $SST_SQLiteCon = New-Object System.Data.SQLite.SQLiteConnection $SST_ConnectionString
+        $SST_SQLiteCon.Open()
+    }
+    catch {
+        Write-Host $_.exception.message
+        #SST_ToolMessageCollector -TD_ToolMSGCollector "LocalDB $($_.exception.message)" -TD_ToolMSGType Error -TD_Shown yes
+    }
+    if($SST_SQLiteCon.State -eq "Open"){ $SST_SQLiteCon.Close() }
+}
+$TD_DataBaseChoice = Get-ChildItem "$PSRootPath\Resources\DBFolder\*" -Filter "*.db" | ForEach-Object {
+    [PSCustomObject]@{
+        Name = $_.Basename
+        Path = $_.FullName
+    }
+}
+if ($TD_DataBaseChoice.Count -lt 1) {
+    $TD_CB_DataBaseChoice.ItemsSource = @("Keine Datenbank gefunden")
+    $TD_CB_DataBaseChoice.IsEnabled = $false
+} else {
+    $TD_CB_DataBaseChoice.ItemsSource = @($TD_DataBaseChoice.Name)
+    $TD_CB_DataBaseChoice.SelectedIndex = 0
+    $TD_BTN_DeleteDB.Visibility = "Visible"
+    $TD_BTN_DeleteDB.Background = "coral"
 }
 #endregion
 #region Button
@@ -154,22 +178,14 @@ $TD_BTN_ToolSettings.add_click({
     SST_ShowUserControl -MainWindowArea $TD_UserContrArea -ShowUserControl $TD_UserControl_SetUp -AllUserControls $TD_AllUserControls
     if($TD_LogoImageSmall.Visibility -eq "hidden"){$TD_LogoImageSmall.Visibility = "visible"}
 })
-$TD_BTN_CloseGUI.add_click({
-    <#CleanUp before close #>
-    try {
-        Remove-Item -Path $PSRootPath\ToolLog\ToolTEMP\* -Filter '*_Temp.csv' -Force -ErrorAction SilentlyContinue
-        if(Test-Path -Path "$PSRootPath\Resources\DBFolder\*" -Filter "*.db"){
-            SST_RESTDBControl -SST_InfoType "DeleteStorageToken" | Out-Null
-        }
-    }
-    catch {
-        <#Do this if a terminating exception happens#>
-        #SST_ToolMessageCollector -TD_ToolMSGCollector $("Remove Files fail: $($_.Exception.Message)") -TD_ToolMSGType Error -TD_Shown no
-    }
-    $MainWindow.Close()
-})
 $TD_BTN_SaveToolSettings.add_click({
-    SST_SaveLoadToolSettings -SST_SaveSettings $true 
+    if(($TD_BTN_ActivateDB.Background -notlike "*FFFC4242")-and($TD_TB_CustomerInfoName.Background -notlike "*FFFA8C8C")){
+        SST_SaveLoadToolSettings -SST_SaveSettings $true 
+    }else {
+        [System.Windows.MessageBox]::Show(
+            "Please enter the customer name or number!", "Invalid input", 'OK', 'Warning'
+        )
+    }
 })
 $TD_BTN_LoadToolSettings.add_click({
     SST_SaveLoadToolSettings -SST_LoadSettings $true
@@ -191,26 +207,19 @@ $TD_BTN_SaveCredtoDG.add_click({
     }
 
 })
-
 <# Button Credentials In-/ Export #>
 $TD_BTN_ExportCred.add_click({
-    if(($TD_BTN_ExportCred.Background -notlike "*FFFC4242")-and($TD_TB_CustomerInfoName.Background -notlike "*FFFA8C8C")){
-        <# Not all needs to exported, if you want to modify the Export got to the SST_ExportCred Func #>
-        $TD_SST_ExportCred = SST_ExportCredential -TD_CollectedCredDatas $TD_DG_KnownDeviceList.ItemsSource
-        <# Save to Dir #>
-        $TD_SaveCred = SST_SaveFile_to_Directory -TD_UserDataObject $TD_SST_ExportCred
-        if([string]::IsNullOrEmpty($TD_SaveCred.FileName)){
-            #SST_ToolMessageCollector -TD_ToolMSGCollector $("Export failed!") -TD_ToolMSGType Warning -TD_Shown yes
-        }else {
-            #SST_ToolMessageCollector -TD_ToolMSGCollector $("Credentials successfully exported to $($TD_SaveCred.FileName)") -TD_ToolMSGType Message -TD_Shown yes
-        }
+    <# Not all needs to exported, if you want to modify the Export got to the SST_ExportCred Func #>
+    $TD_SST_ExportCred = SST_ExportCredential -TD_CollectedCredDatas $TD_DG_KnownDeviceList.ItemsSource
+    <# Save to Dir #>
+    $TD_SaveCred = SST_SaveFile_to_Directory -TD_UserDataObject $TD_SST_ExportCred
+    if([string]::IsNullOrEmpty($TD_SaveCred.FileName)){
+        #SST_ToolMessageCollector -TD_ToolMSGCollector $("Export failed!") -TD_ToolMSGType Warning -TD_Shown yes
     }else {
-        [System.Windows.MessageBox]::Show(
-            "Please enter the customer name or number!", "Invalid input", 'OK', 'Warning'
-        )
+        #SST_ToolMessageCollector -TD_ToolMSGCollector $("Credentials successfully exported to $($TD_SaveCred.FileName)") -TD_ToolMSGType Message -TD_Shown yes
     }
 })
-$TD_btn_ImportCred.add_click({
+$TD_BTN_ImportCred.add_click({
     $TD_ImportedCredentials = SST_ImportCredential
     if($TD_ImportedCredentials.count -lt 1){
         #SST_ToolMessageCollector -TD_ToolMSGCollector $("Import failed!") -TD_ToolMSGType Warning -TD_Shown yes
@@ -226,6 +235,104 @@ $TD_btn_ImportCred.add_click({
                 Start-Sleep -Seconds 0.5
             }
         }
+    }
+})
+$TD_BTN_ActivateDB.add_click({
+    if(($TD_BTN_ActivateDB.Background -notlike "*FFFC4242")-and($TD_TB_CustomerInfoName.Background -notlike "*FFFA8C8C")){
+        $DBName = $TD_TB_CustomerInfoName.Text
+        try {
+            $SST_ConnectionString = "Data Source=$PSRootPath\Resources\DBFolder\$DBName.db;Version=3;"
+            $SST_SQLiteCon = New-Object System.Data.SQLite.SQLiteConnection $SST_ConnectionString
+            $SST_SQLiteCon.Open()
+        }
+        catch {
+            Write-Host $_.exception.message
+            SST_ToolMessageCollector -TD_ToolMSGCollector "LocalDB $($_.exception.message)" -TD_ToolMSGType Error -TD_Shown yes
+        }
+        if(($SST_SQLiteCon.State -eq "Open")-and($SST_SQLiteCon.DataSource -eq "$DBName")){
+            $TD_BTN_DeleteDB.Visibility = "Visible"
+            $TD_BTN_DeleteDB.Background = "coral"
+            $SST_SQLiteCon.Close()
+            $TD_CB_DataBaseChoice.ItemsSource = $null
+            $TD_DataBaseChoice = @(Get-ChildItem "$PSRootPath\Resources\DBFolder\*" -Filter "*.db" | Select-Object -ExpandProperty Basename)
+            $TD_CB_DataBaseChoice.IsEnabled = $true
+            $TD_CB_DataBaseChoice.ItemsSource = $TD_DataBaseChoice
+            $TD_CB_DataBaseChoice.SelectedIndex = 0
+        }
+    }else {
+        [System.Windows.MessageBox]::Show(
+            "Please enter the customer name or number!", "Invalid input", 'OK', 'Warning'
+        )
+    }
+})
+$TD_BTN_DeleteDB.add_click({
+    $DBName = $TD_TB_CustomerInfoName.Text -replace ".db",""
+    try {
+        $TD_DBtoDelete = Get-Item -Path "$PSRootPath\Resources\DBFolder\$DBName.db"
+        if(!([string]::IsNullOrEmpty($TD_DBtoDelete.Name))){
+            $SST_ConnectionString = "Data Source=$PSRootPath\Resources\DBFolder\$DBName.db;Version=3;"
+            $SST_SQLiteCon = New-Object System.Data.SQLite.SQLiteConnection $SST_ConnectionString
+            $SST_SQLiteCon.Close()
+            $SST_SQLiteCon.Dispose()
+        }
+        #SST_ToolMessageCollector -TD_ToolMSGCollector "LocalDB: This action deletes the $($TD_DBtoDelete.Name)" -TD_ToolMSGType Warning -TD_Shown yes
+        Remove-Item -Path "$PSRootPath\Resources\DBFolder\$DBName.db" -Confirm:$false -Force -ErrorAction Continue 
+        #SST_ToolMessageCollector -TD_ToolMSGCollector "LocalDB: $($TD_DBtoDelete.Name) are deleted" -TD_ToolMSGType Message -TD_Shown yes
+        $TD_DataBaseChoice = @(Get-ChildItem "$PSRootPath\Resources\DBFolder\*" -Filter "*.db" | Select-Object -ExpandProperty Basename)
+        
+        if ($TD_DataBaseChoice.Count -lt 1) {
+            $TD_CB_DataBaseChoice.ItemsSource = @("Keine Datenbank gefunden")
+            $TD_CB_DataBaseChoice.SelectedIndex = 0
+            $TD_CB_DataBaseChoice.IsEnabled = $false
+            $TD_BTN_DeleteDB.Visibility = "Collapsed"
+        }else{
+            $TD_CB_DataBaseChoice.ItemsSource = $null
+            $TD_CB_DataBaseChoice.ItemsSource = $TD_DataBaseChoice
+            $TD_CB_DataBaseChoice.SelectedIndex = 0
+        }
+    }
+    catch {
+        Write-Host $_.exception.message
+        #SST_ToolMessageCollector -TD_ToolMSGCollector "LocalDB: $($_.exception.message)" -TD_ToolMSGType Error -TD_Shown yes
+        $TD_BTN_DeleteDB.Visibility = "Visible"
+        $TD_BTN_DeleteDB.Background = "Coral"
+    }
+})
+$TD_BTN_DBRefresh.add_click({
+    $TD_CB_DataBaseChoice.ItemsSource = $null
+    $TD_DataBaseChoice = @(Get-ChildItem "$PSRootPath\Resources\DBFolder\*" -Filter "*.db" | Select-Object -ExpandProperty Basename)
+    if ($TD_DataBaseChoice.Count -eq 0) {
+        $TD_CB_DataBaseChoice.ItemsSource = @("Keine Datenbank gefunden")
+        $TD_CB_DataBaseChoice.SelectedIndex = 0
+        $TD_CB_DataBaseChoice.IsEnabled = $false
+        $TD_BTN_DeleteDB.Visibility = "Collapsed"
+    } else {
+        $TD_CB_DataBaseChoice.ItemsSource = $TD_DataBaseChoice
+        $TD_CB_DataBaseChoice.IsEnabled = $true
+        $TD_CB_DataBaseChoice.SelectedIndex = 0
+    }
+})
+$TD_BTN_CloseGUI.add_click({
+    <#CleanUp before close #>
+    try {
+        Remove-Item -Path $PSRootPath\ToolLog\ToolTEMP\* -Filter '*_Temp.csv' -Force -ErrorAction SilentlyContinue
+        if(Test-Path -Path "$PSRootPath\Resources\DBFolder\*" -Filter "*.db"){
+            #SST_RESTDBControl -SST_InfoType "DeleteStorageToken" | Out-Null
+        }
+    }
+    catch {
+        <#Do this if a terminating exception happens#>
+        #SST_ToolMessageCollector -TD_ToolMSGCollector $("Remove Files fail: $($_.Exception.Message)") -TD_ToolMSGType Error -TD_Shown no
+    }
+    $MainWindow.Close()
+})
+#endregion
+$TD_CB_DataBaseChoice.add_SelectionChanged({
+    if(!([string]::IsNullOrEmpty($TD_CB_DataBaseChoice.SelectedItem))){
+        $CustomerDB = $TD_CB_DataBaseChoice.SelectedItem.tostring()
+        $SST_SavedCustomerSettingsDB = SST_CustomerDB -SST_InfoType "LoadCustomerSetUp" -SST_Customer $CustomerDB
+        $TD_TB_ExportPath.Text = $SST_SavedCustomerSettingsDB.ExportPath
+        $TD_LB_CerdExportPath.Content = $SST_SavedCustomerSettingsDB.ExportPathCredential
     }
 })
 <# this part is needed if there are any Updates on the cred in DG #>
@@ -248,8 +355,6 @@ $TD_DG_KnownDeviceList.add_SelectionChanged({
         }
     }
 })
-
-#endregion
 
 
 #region show MainWindow
