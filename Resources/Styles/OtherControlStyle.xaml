@@ -53,6 +53,15 @@
         </Setter>
     </Style>
 
+    <Style TargetType="{x:Type ComboBox}" x:Key="CustomerBoardCBStyle" BasedOn="{StaticResource MainComboBoxStyle}">
+        <Setter Property="Visibility" Value="Visible"/>
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding CustomerYN}" Value="true">
+                <Setter Property="Visibility" Value="Collapsed"/>
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+
     <Style TargetType="{x:Type CheckBox}" x:Key="MainCheckBoxStyle" >
         <Setter Property="Background" Value="White"/>
         <Setter Property="BorderBrush" Value="{DynamicResource BorderColor}"/>
