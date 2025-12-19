@@ -3,7 +3,7 @@ function SST_LiteDBControl {
     param (
         [Parameter(ValueFromPipeline)]
         [ValidateSet("StorageDrive","StorageBase","StorageHostInfo","StorageEventLog","SANBase","SANPortInfo","FCPortStats","PowerHMC","PowerSysSummary","LPARSummary")]
-        $SST_InfoType,
+        [string]$SST_InfoType,
         $SST_NewDBObject =$null,
         [array]$SST_CollectedInformations,
         [string]$TimeStamp
@@ -13,10 +13,11 @@ function SST_LiteDBControl {
         $TimeStamp = Get-Date -UFormat "%Y-%m-%d %R"
         $PSRootPath = Split-Path -Path $PSScriptRoot -Parent
         $PSRootPath = Split-Path -Path $PSRootPath -Parent
-        
+        $DBName = $TD_TB_CustomerInfoName.Text -replace ".db",""
+
         try {
             # Pfad zur Datenbank
-            $SST_ConnectionString = "Data Source=$PSRootPath\Resources\DBFolder\SSTLocalDB.db;Version=3;"
+            $SST_ConnectionString = "Data Source=$PSRootPath\Resources\DBFolder\$DBName.db;Version=3;"
 
             # Verbindung öffnen
             $SST_SQLiteCon = New-Object System.Data.SQLite.SQLiteConnection $SST_ConnectionString
