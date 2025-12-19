@@ -26,6 +26,9 @@ By default, these files are blocked to protect the computer from untrusted files
     $GUI_Functions = @(Get-ChildItem -Path $PSScriptRoot\GUI\*.ps1 -ErrorAction SilentlyContinue)
 
     $FoundErrors = @(
+        Get-ChildItem "$PSScriptRoot\Resources\PWSHClasses\*.ps1" | ForEach-Object {
+            . $_.FullName
+        }
 
         foreach($import in @($DBFunc_Functions + $DashBoard_Functions + $TOOL_Functions + $USER_Functions + $IBMPower_Functions + $IBMStorage_Functions + $FOSBrocade_Functions + $HealthCheck_Functions + $GUI_Functions)) {
             try {
