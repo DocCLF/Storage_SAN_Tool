@@ -8,17 +8,27 @@ function SST_SaveLoadToolSettings {
     )
     
     begin {
-
         $TD_BTN_SaveToolSettings.Background="#FFDDDDDD"
         $TD_BTN_LoadToolSettings.Background="#FFDDDDDD"
         $PSRootPath = Split-Path -Path $PSScriptRoot -Parent
         try {
-            $SST_SavedToolSettings = Get-Item -Path "$PSRootPath\Resources\SavedToolSettings.clixml" -ErrorAction SilentlyContinue
+            $SST_SavedToolSettingsDB = SST_ToolDB -SST_InfoType "LoadToolSettings"
+            $SST_SavedToolSettingsXML = Get-Item -Path "$PSRootPath\Resources\SavedToolSettings.clixml" -ErrorAction SilentlyContinue
         }
         catch {
             #SST_ToolMessageCollector -TD_ToolMSGCollector $("SaveLoadToolSettings $($_.Exception.Message)") -TD_ToolMSGType Error -TD_Shown no
+            Write-Error $_.Exception.Message
             $TD_BTN_LoadToolSettings.Background="LightCoral"
-            $SST_SavedToolSettings = $null
+            $SST_SavedToolSettingsDB = $null
+            $SST_SavedToolSettingsXML = $null
+        }
+        try {
+            $SST_SavedCustomerSettingsDB = SST_CustomerDB -SST_InfoType "LoadCustomerSetUp"
+        }
+        catch {
+            Write-Error $_.Exception.Message
+            $TD_BTN_LoadToolSettings.Background="yellow"
+            $SST_SavedCustomerSettingsDB = $null
         }
         try {
             $TD_DBisActive = Get-Item -Path "$PSRootPath\Resources\DBFolder\*" -Filter "*.db" -ErrorAction SilentlyContinue
@@ -32,24 +42,32 @@ function SST_SaveLoadToolSettings {
         <# Can be extended with additional parameters at any time #>
 
         if($SST_SaveSettings){
-            $SST_ExportToolSettings = "" | Select-Object ExportPath,LoadSettingsOnStartUp,DevicestoInExport,OnlineCheckbyImport,LocalDB,ConnectionStringPRISM,CustomerNumber
-            $SST_ExportToolSettings.ExportPath = $TD_tb_ExportPath.Text
-            $SST_ExportToolSettings.LoadSettingsOnStartUp = $TD_CB_LoadSettingsatStartUp.IsChecked
-            $SST_ExportToolSettings.DevicestoInExport = $TD_DG_KnownDeviceList.ItemsSource
-            $SST_ExportToolSettings.OnlineCheckbyImport = $TD_CB_OnlineCheckbyImport.IsChecked
-            if(($TD_DBisActive.count -ge 1)-and($PSVersionTable.PSVersion.Major -ge 5)){
-                $SST_ExportToolSettings.LocalDB = $true
-            }else {
-                $SST_ExportToolSettings.LocalDB = $false
-            }
+            <#Save in DB#>  
+            $SST_ExportToolSettingsDB = "" | Select-Object LoadSettingsOnStartUp, OnlineCheckbyImport, PRISMactiv, IsCustomer
+            $SST_ExportToolSettingsDB.LoadSettingsOnStartUp = $TD_CB_LoadSettingsatStartUp.IsChecked
+            $SST_ExportToolSettingsDB.OnlineCheckbyImport = $TD_CB_OnlineCheckbyImport.IsChecked
+            $SST_ExportToolSettingsDB.PRISMactiv = $TD_CB_PRISMConnectOnOff.IsChecked
+            $SST_ExportToolSettingsDB.IsCustomer = $TD_CB_CustomerYN.IsChecked
+            SST_ToolDB -SST_InfoType "SaveToolSettings" -SST_NewDBObject $SST_ExportToolSettingsDB
+
+            $SST_ExportCustomerSettingsDB = "" | Select-Object CustomerName, ExportPath, ExportPathCredential
+            $SST_ExportCustomerSettingsDB.CustomerName = $TD_TB_CustomerInfoName.Text
+            $SST_ExportCustomerSettingsDB.ExportPath = $TD_TB_ExportPath.Text
+            $SST_ExportCustomerSettingsDB.ExportPathCredential = $TD_LB_CerdExportPath.Content
+            SST_CustomerDB -SST_InfoType "SaveCustomerSetUp" -SST_NewDBObject $SST_ExportCustomerSettingsDB
+
+            <#Save in clixml#>
+            $SST_ExportToolSettingsXML = "" | Select-Object DevicestoInExport,ConnectionStringPRISM,CustomerNumber
+            $SST_ExportToolSettingsXML.DevicestoInExport = $TD_DG_KnownDeviceList.ItemsSource
+            
             if(!([string]::IsNullOrEmpty($TD_TB_ConnectionStringPRISM.Password))){
-                $SST_ExportToolSettings.ConnectionStringPRISM = ConvertTo-SecureString -String ([string]$($TD_TB_ConnectionStringPRISM.Password)) -AsPlainText -Force
-                $SST_ExportToolSettings.CustomerNumber = $TD_TB_CustomerNumberPRISM.Text
+                $SST_ExportToolSettingsXML.ConnectionStringPRISM = ConvertTo-SecureString -String ([string]$($TD_TB_ConnectionStringPRISM.Password)) -AsPlainText -Force
+                $SST_ExportToolSettingsXML.CustomerNumber = $TD_TB_CustomerNumberPRISM.Text
             }else {
                 try {
                     $SST_LoadedToolSettings = Import-Clixml -Path "$PSRootPath\Resources\SavedToolSettings.clixml" -ErrorAction SilentlyContinue
-                    $SST_ExportToolSettings.ConnectionStringPRISM = $SST_LoadedToolSettings.ConnectionStringPRISM   
-                    $SST_ExportToolSettings.CustomerNumber = $SST_LoadedToolSettings.CustomerNumber                 
+                    $SST_ExportToolSettingsXML.ConnectionStringPRISM = $SST_LoadedToolSettings.ConnectionStringPRISM   
+                    $SST_ExportToolSettingsXML.CustomerNumber = $SST_LoadedToolSettings.CustomerNumber                 
                 }
                 catch {
                     <#Do this if a terminating exception happens#>
@@ -57,7 +75,7 @@ function SST_SaveLoadToolSettings {
                 }
             }
             try {
-                $SST_ExportToolSettings | Export-Clixml -Path "$PSRootPath\Resources\SavedToolSettings.clixml" -Confirm:$false
+                $SST_ExportToolSettingsXML | Export-Clixml -Path "$PSRootPath\Resources\SavedToolSettings.clixml" -Confirm:$false
                 #SST_ToolMessageCollector -TD_ToolMSGCollector "Settings have been saved in Resources folder." -TD_ToolMSGType Message -TD_Shown yes
                 $TD_BTN_SaveToolSettings.Background="LightGreen"
             }
@@ -66,25 +84,28 @@ function SST_SaveLoadToolSettings {
                 $TD_BTN_SaveToolSettings.Background="LightCoral"
             }
         }
-        if($SST_LoadSettings -and ($null -ne $SST_SavedToolSettings)){
+        if($SST_LoadSettings -and (($null -ne $SST_SavedToolSettingsXML)-and($null -ne $SST_SavedToolSettingsDB))){
             try {
-                $SST_LoadedToolSettings = Import-Clixml -Path "$PSRootPath\Resources\SavedToolSettings.clixml" 
-                if($SST_LoadedToolSettings.LoadSettingsOnStartUp -eq $true){
-                    $TD_tb_ExportPath.Text = $SST_LoadedToolSettings.ExportPath
-                    $TD_LB_ExpPathMainWindow.Content = $SST_LoadedToolSettings.ExportPath
-                    $TD_CB_LoadSettingsatStartUp.IsChecked = $SST_LoadedToolSettings.LoadSettingsOnStartUp
-                    $TD_InportedDevices = $SST_LoadedToolSettings.DevicestoInExport
-                    $TD_CB_OnlineCheckbyImport.IsChecked = $SST_LoadedToolSettings.OnlineCheckbyImport
-                    if(!([string]::IsNullOrEmpty($SST_LoadedToolSettings.ConnectionStringPRISM))){
-                        $TD_TB_CustomerNumberPRISM.Text = $SST_LoadedToolSettings.CustomerNumber
-                        $ConnectionStringPRISM = [System.Net.NetworkCredential]::new("", $SST_LoadedToolSettings.ConnectionStringPRISM).Password
+                $SST_LoadedToolSettingsXML = Import-Clixml -Path "$PSRootPath\Resources\SavedToolSettings.clixml" 
+                if($SST_SavedToolSettingsDB.LoadSettingsOnStartUp -eq $true){
+                    $TD_CB_LoadSettingsatStartUp.IsChecked = $SST_SavedToolSettingsDB.LoadSettingsOnStartUp
+                    if($SST_SavedToolSettingsDB.IsCustomer){
+                        $TD_CB_CustomerYN.IsChecked = $SST_SavedToolSettingsDB.IsCustomer
+                        $TD_TB_CustomerInfoName.Text = $SST_SavedCustomerSettingsDB.CustomerName
+                        $TD_TB_ExportPath.Text = $SST_SavedCustomerSettingsDB.ExportPath
+                        $TD_LB_CerdExportPath.Content = $SST_SavedCustomerSettingsDB.ExportPathCredential
+                    }
+                    $TD_InportedDevices = $SST_LoadedToolSettingsXML.DevicestoInExport
+                    $TD_CB_OnlineCheckbyImport.IsChecked = $SST_SavedToolSettingsDB.OnlineCheckbyImport
+                    $TD_CB_PRISMConnectOnOff.IsChecked = $SST_SavedToolSettingsDB.PRISMactiv
+                    if($SST_SavedToolSettingsDB.PRISMactiv){
+                        $TD_TB_CustomerNumberPRISM.Text = $SST_LoadedToolSettingsXML.CustomerNumber
+                        $ConnectionStringPRISM = [System.Net.NetworkCredential]::new("", $SST_LoadedToolSettingsXML.ConnectionStringPRISM).Password
                         $SQLConnection=New-Object System.Data.SqlClient.SqlConnection
                         $SQLConnection.ConnectionString=$ConnectionStringPRISM
-                        Write-Host "Waiting for the Cloud, no Panik ;)" -ForegroundColor Yellow
                         while ($SQLConnection.State -eq "close") {
                             $SQLConnection.Open()
                         }
-                        Write-Host "Cloud Status is $($SQLConnection.State),Hura.. :)" -ForegroundColor Green
                         if($SQLConnection.State -eq 'Open'){
                             $TD_TB_ConnectionStringPRISM.Visibility = "Collapsed"
                             $TD_BTN_SaveConnectionStringPRISM.Content = "Connection String loaded"
@@ -95,25 +116,28 @@ function SST_SaveLoadToolSettings {
                             <# something should happen if not #>
                         }
                     }
-                    if(($SST_LoadedToolSettings.LocalDB -eq $true)-and($PSVersionTable.PSVersion.Major -ge 5)){
-                        $TD_BTN_ActivateDB.Background = "LightGreen"
-                        $TD_BTN_ActivateDB.Content = "LocalDB active"
-                        $TD_BTN_DeleteDB.Visibility = "Visible"
-                    }
-                    
-                    $TD_BTN_LoadToolSettings.Background="LightGreen"
                     <# check on startup for later use #>
                     #SST_ExtensionChecker -LoadedToolSettings $SST_LoadedToolSettings -SST_MWOBJ $SST_MWOBJ -SST_UCOBJ $TD_UserControl5
+                }else {
+                    if($SST_SavedToolSettingsDB.IsCustomer){
+                        $TD_CB_CustomerYN.IsChecked = $SST_SavedToolSettingsDB.IsCustomer
+                        $TD_TB_CustomerInfoName.Text = $SST_SavedCustomerSettingsDB.CustomerName
+                        $TD_TB_ExportPath.Text = $SST_SavedCustomerSettingsDB.ExportPath
+                        $TD_LB_CerdExportPath.Content = $SST_SavedCustomerSettingsDB.ExportPathCredential
+                    }
+                    $TD_InportedDevices = $SST_LoadedToolSettingsXML.DevicestoInExport
+                    $TD_CB_OnlineCheckbyImport.IsChecked = $SST_SavedToolSettingsDB.OnlineCheckbyImport
+                    $TD_CB_PRISMConnectOnOff.IsChecked = $SST_SavedToolSettingsDB.PRISMactiv
                 }
                 
             }
             catch {
                 #SST_ToolMessageCollector -TD_ToolMSGCollector $("LoadSettings have a Problem: $($_.Exception.Message)") -TD_ToolMSGType Error -TD_Shown yes
-                $TD_BTN_LoadToolSettings.Background="LightCoral"
+                Write-Error $_.Exception.Message
             }
 
         }else {
-            if($null -eq $SST_SavedToolSettings -and $SST_SaveSettings -eq $false){
+            if((($null -ne $SST_SavedToolSettingsXML)-and($null -ne $SST_SavedToolSettingsDB)) -and $SST_SaveSettings -eq $false){
                 #SST_ToolMessageCollector -TD_ToolMSGCollector "No settings have been loaded, check whether the settings have been saved. (File)" -TD_ToolMSGType Warning -TD_Shown yes
                 $TD_BTN_LoadToolSettings.Background="LightCoral"
             }
@@ -126,8 +150,9 @@ function SST_SaveLoadToolSettings {
     }
     
     end {
-        if($SST_LoadSettings -and ($null -ne $SST_SavedToolSettings)){
+        if($SST_LoadSettings -and (($null -ne $SST_SavedToolSettingsXML)-and($null -ne $SST_SavedToolSettingsDB))){
             #SST_ImportCredential -SST_ImportDevicesonStartUp yes -SST_ToInportDeviceInfos $TD_InportedDevices -CockpitView $CockpitView | Out-Null
         }
+        $SST_ExportToolSettingsXML = $null
     }
 }
