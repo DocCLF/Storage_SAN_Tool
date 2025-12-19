@@ -35,7 +35,7 @@
 
     <Style TargetType="TextBox" x:Key="ExportCredTBStyle" BasedOn="{StaticResource MainTextBoxStyle}">
         <Style.Triggers>
-            <DataTrigger Binding="{Binding ElementName=TB_CustomerInfoName ,Path=Text}" Value="Customer-Info">
+            <DataTrigger Binding="{Binding ElementName=TB_CustomerInfoName ,Path=Text}" Value="Keine Datenbank gefunden">
                 <Setter Property="Background" Value="#fa8c8c"/>
             </DataTrigger>
         </Style.Triggers>
