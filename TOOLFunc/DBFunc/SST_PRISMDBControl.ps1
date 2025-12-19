@@ -3,7 +3,7 @@ function SST_PRISMDBControl {
     param (
         [Parameter(ValueFromPipeline)]
         [ValidateSet("StorageDrive","StorageBase","StorageHostInfo","StorageEventLog","SANBase","FCPortStats")]
-        $SST_InfoType,
+        [string]$SST_InfoType,
         $CustomerNumber =$null,
         [bool]$SQLSVRCon = $false,
         [array]$SST_CollectedInformations,
