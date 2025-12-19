@@ -138,9 +138,13 @@
                             <RowDefinition Height="auto" />
                             <RowDefinition Height="auto" />
                         </Grid.RowDefinitions>
-                        <StackPanel Orientation="Vertical" Margin="5">
-                            <Label Content="Name or Number" Style="{DynamicResource MainLabelStyle}" HorizontalAlignment="Left"/>
-                            <TextBox x:Name="TB_CustomerInfoName" Text="Customer-Info" MaxLength="20" Width="160" Style="{DynamicResource ExportCredTBStyle}" HorizontalAlignment="Left" />
+                        <Label Grid.Row="0" Content="Name or Number" Style="{DynamicResource MainLabelStyle}" HorizontalAlignment="Left"/>
+                        <StackPanel Orientation="Horizontal" Grid.Row="1" Margin="5">
+                            <TextBox x:Name="TB_CustomerInfoName" Text="{Binding ElementName=CB_DataBaseChoice, Path=SelectedValue, Mode=OneWay}" MaxLength="20" Width="180" Style="{DynamicResource ExportCredTBStyle}" HorizontalAlignment="Left" />
+                            <ComboBox x:Name="CB_DataBaseChoice" SelectedIndex="0" Margin="10,0,0,0" Width="200" Style="{DynamicResource CustomerBoardCBStyle}" />
+                            <ToggleButton x:name="BTN_DBRefresh" Margin="10,0,0,0" Height="32" Width="32" HorizontalAlignment="center" Background="Transparent" BorderThickness="0" Style="{DynamicResource CustomerBoardBTNStyle}">
+                                <Image Source = "{Binding RefrehIcon96 , Mode=TwoWay}" Stretch="Uniform" VerticalAlignment="Bottom" HorizontalAlignment="Left" MaxHeight="30" />
+                            </ToggleButton>
                         </StackPanel>
                     </Grid>
                 </GroupBox>
@@ -151,12 +155,12 @@
                             <RowDefinition Height="auto" />
                         </Grid.RowDefinitions>
                         <StackPanel Orientation="Horizontal">
-                            <ToggleButton x:Name="BTN_ExportCred" Content="Export Credentials" HorizontalAlignment="Left" Style="{DynamicResource ExportCredBTNStyle}" ToolTip="Credentials can only be saved in combination with the customer name or customer number!"/>
+                            <ToggleButton x:Name="BTN_ExportCred" Content="Export Credentials" HorizontalAlignment="Left" Style="{DynamicResource MainBtnStyle}" ToolTip="Credentials can only be used on this host with this user account!"/>
                             <ToggleButton x:Name="BTN_ImportCred" Content="Import Credentials" HorizontalAlignment="Left" Style="{DynamicResource MainBtnStyle}"/>
                             <CheckBox x:Name="CB_OnlineCheckbyImport" Margin="22,2,2,2" Style="{DynamicResource MainCheckBoxStyle}" />
                             <Label Content="Device Online check by import" Style="{DynamicResource MainLabelStyle}" />
                         </StackPanel>
-                        <Label Grid.Row="1" x:Name="lb_CerdExportPath" Content="Save Path" Style="{DynamicResource MainLabelStyle}" HorizontalAlignment="Left" />
+                        <Label Grid.Row="1" x:Name="LB_CerdExportPath" Content="Save Path" Style="{DynamicResource MainLabelStyle}" HorizontalAlignment="Left" />
                     </Grid>
                 </GroupBox>
                 <GroupBox Header="Export Settings" Margin="0,10">
@@ -167,8 +171,8 @@
                             <ColumnDefinition Width="auto" />
                         </Grid.ColumnDefinitions>
                         <Label Grid.Column="0" Content="Export Path :" Style="{DynamicResource MainLabelStyle}"/>
-                        <TextBox Grid.Column="1" x:Name="tb_ExportPath" Text="" MinWidth="300" MaxWidth="450" HorizontalAlignment="Left" HorizontalContentAlignment="Left" Style="{DynamicResource MainTextBoxStyle}"/>
-                        <ToggleButton Grid.Column="2" x:Name="btn_ChangeExportPath" Content="Change Export Path" HorizontalAlignment="Left" Style="{DynamicResource MainBtnStyle}"/>
+                        <TextBox Grid.Column="1" x:Name="TB_ExportPath" Text="" MinWidth="300" MaxWidth="450" HorizontalAlignment="Left" HorizontalContentAlignment="Left" Style="{DynamicResource MainTextBoxStyle}"/>
+                        <ToggleButton Grid.Column="2" x:Name="BTN_ChangeExportPath" Content="Change Export Path" HorizontalAlignment="Left" Style="{DynamicResource MainBtnStyle}"/>
                     </Grid>
                 </GroupBox>
                 <!-- The ssh settings are deactivated for the time being and a better implementation should be sought. -->
@@ -183,11 +187,11 @@
                             <RowDefinition Height="auto" />
                         </Grid.RowDefinitions>
                         <Label Grid.ColumnSpan="2" Grid.Row="0" x:Name="LB_DBSettings" Visibility="Collapsed" Content="" HorizontalAlignment="Left" Height="30" Style="{DynamicResource MainLabelStyle}" />
-                        <ToggleButton Grid.Column="0" Grid.Row="1" x:Name="BTN_ActivateDB" Content="Use DB" ToolTip="Use DB means no LocalDB has been deployed, green means LocalDB is active" HorizontalAlignment="Left" Style="{DynamicResource MainBtnStyle}"/>
+                        <ToggleButton Grid.Column="0" Grid.Row="1" x:Name="BTN_ActivateDB" Content="Use DB" ToolTip="Red means that no Coustomer Name/Number has been assigned and no data will be saved!" HorizontalAlignment="Left" Style="{DynamicResource ExportCredBTNStyle}"/>
                         <ToggleButton Grid.Column="1" Grid.Row="1" x:Name="BTN_DeleteDB" Visibility="Collapsed" Content="Delete DB" ToolTip="Deletes the local DB file with all data content!" HorizontalAlignment="Left" Style="{DynamicResource MainBtnStyle}"/>
                     </Grid>
                 </GroupBox>
-                <CheckBox x:Name="cb_PRISMConnectOnOff" Content="PROFI PRISM" Style="{DynamicResource MainCheckBoxStyle}"/>
+                <CheckBox x:Name="CB_PRISMConnectOnOff" Content="PROFI PRISM" Style="{DynamicResource MainCheckBoxStyle}"/>
                 <GroupBox Header="PROFI PRISM Connect Settings" Margin="0,10" Visibility="{Binding ElementName=cb_PRISMConnectOnOff, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
                     <Grid>
                         <Grid.ColumnDefinitions>
@@ -219,7 +223,7 @@
                 </GroupBox>
                 <GroupBox Header="Tool Settings" Margin="0,10">
                     <StackPanel Orientation="Horizontal">
-                        <ToggleButton x:Name="BTN_SaveToolSettings" Content="Save Tool Settings" HorizontalAlignment="Left" Style="{DynamicResource MainBtnStyle}"/>
+                        <ToggleButton x:Name="BTN_SaveToolSettings" Content="Save Tool Settings" ToolTip="Red means that no Coustomer Name/Number has been assigned and no data will be saved!" HorizontalAlignment="Left" Style="{DynamicResource ExportCredBTNStyle}"/>
                         <ToggleButton x:Name="BTN_LoadToolSettings" Content="Load Tool Settings" HorizontalAlignment="Left" Style="{DynamicResource MainBtnStyle}"/>
                         <CheckBox x:Name="CB_LoadSettingsatStartUp" Margin="22,2,2,2" Style="{DynamicResource MainCheckBoxStyle}" />
                         <Label Content="Load Settings at StartUp" Style="{DynamicResource MainLabelStyle}" />
