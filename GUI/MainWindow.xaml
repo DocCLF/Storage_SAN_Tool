@@ -18,7 +18,7 @@
             <RowDefinition Height="auto" />
             <RowDefinition Height="auto" MinHeight="40"/>
         </Grid.RowDefinitions>
-        <StackPanel Orientation="Horizontal" Margin="20,5,5,5" >
+        <WrapPanel Orientation="Horizontal" Margin="20,15,300,5" >
             <!--Storage FS & SVC-->
             <ToggleButton x:Name="BTN_Dashboard" Content="Dashboard" Style="{DynamicResource MainBtnStyle}" />
             <!--Storage FS & SVC-->
@@ -36,9 +36,9 @@
             <!--Settings-->
             <ToggleButton x:Name="BTN_ToolSettings" Content="Tool Settings" Style="{DynamicResource MainBtnStyle}" />
             <Label x:Name="LB_ExpPathMainWindow" Content="Export Path :" Style="{DynamicResource MainLabelStyle}" Margin="25,5,0,5" Padding="3"/>
-        </StackPanel>
+        </WrapPanel>
         <!--CloseAll GUI-->
-        <ToggleButton x:Name="BTN_CloseGUI" Content="Exit" Style="{DynamicResource MainBtnStyle}" Margin="5,5,25,5" HorizontalAlignment="Right" Background="LightCoral"/>
+        <ToggleButton x:Name="BTN_CloseGUI" Content="Exit" Style="{DynamicResource MainBtnStyle}" Margin="300,0,25,5" HorizontalAlignment="Right" Background="LightCoral"/>
         <Grid Grid.Row="1" x:Name="UserContrArea" > 
             <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" >
                 <Image x:Name="LogoImage" Margin="30,0,30,0" /> 
