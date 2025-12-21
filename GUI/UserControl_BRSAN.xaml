@@ -1,4 +1,4 @@
-<UserControl 
+<UserControl x:Name="BRSAN"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -92,6 +92,14 @@
                 Style="{DynamicResource MainBtnStyle}"
                 Content="Port Buffer Show" 
                 ToolTip="Get the buffer usage information for a port group or for all port groups in the switch"/>
+            </StackPanel>
+        </GroupBox>
+        <GroupBox Grid.Column="1" Grid.Row="0" Header="Visibility" Margin="10" >
+            <StackPanel Orientation="Horizontal" ToolTip="klick for visibility">
+                <StackPanel x:Name="STP_SANDeviceVisibility" >
+                
+                </StackPanel>
+                <CheckBox x:Name="CB_SelectAllSANCB" Content="Select All" Margin="22,2,2,2" Style="{DynamicResource MainCheckBoxStyle}" HorizontalAlignment="Right" />
             </StackPanel>
         </GroupBox>
     </Grid>
