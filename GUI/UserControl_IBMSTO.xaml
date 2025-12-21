@@ -1,4 +1,4 @@
-﻿<UserControl 
+﻿<UserControl x:Name="IBMSTO"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -121,6 +121,95 @@
             </StackPanel>
         </GroupBox>   
         </StackPanel> 
+        <GroupBox Grid.Column="1" Grid.Row="0" Header="Visibility" Margin="10" >
+            <WrapPanel Orientation="Horizontal" ToolTip="klick for visibility" >
+                <!-- Dynamische Checkboxen -->
+                <ItemsControl ItemsSource="{Binding Main.DeviceToggles}">
+                  <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                      <WrapPanel Orientation="Horizontal"/>
+                    </ItemsPanelTemplate>
+                  </ItemsControl.ItemsPanel>
+
+                  <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                      <CheckBox Content="{Binding Label}"
+                                IsChecked="{Binding IsChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                Style="{DynamicResource MainCheckBoxStyle}"
+                                Margin="2"/>
+                    </DataTemplate>
+                  </ItemsControl.ItemTemplate>
+                </ItemsControl>
+
+                <!-- Select All -->
+                <CheckBox x:Name="CB_SelectAllSTOCB"
+                          Content="Select All"
+                          IsChecked="{Binding Main.SelectAll, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                          Margin="30,2,2,2"
+                          Style="{DynamicResource MainCheckBoxStyle}"
+                          HorizontalAlignment="Right"/>
+            </WrapPanel>
+        </GroupBox>
+        <ItemsControl Grid.Column="1" Grid.Row="1"
+                      ItemsSource="{Binding Main.DeviceToggles}">
+          <ItemsControl.ItemsPanel>
+            <ItemsPanelTemplate>
+              <StackPanel/>
+            </ItemsPanelTemplate>
+          </ItemsControl.ItemsPanel>
+
+          <ItemsControl.ItemTemplate>
+            <DataTemplate>
+              <DataGrid AutoGenerateColumns="False"
+                        ColumnWidth="*"
+                        HorizontalAlignment="Stretch"
+                        Margin="5"
+                        MaxWidth="960"
+                        MaxHeight="460"
+                        ItemsSource="{Binding Rows}"
+                        CanUserAddRows="False"
+                        Visibility="{Binding IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
+
+                <!-- Optional: Header pro Device -->
+                <DataGrid.GroupStyle>
+                  <GroupStyle/>
+                </DataGrid.GroupStyle>
+
+                <DataGrid.RowStyle>
+                  <Style TargetType="DataGridRow">
+                    <Style.Triggers>
+                      <DataTrigger Binding="{Binding Status}" Value="online">
+                        <Setter Property="Background" Value="LightGreen" />
+                      </DataTrigger>
+                      <DataTrigger Binding="{Binding Status}" Value="service">
+                        <Setter Property="Background" Value="Yellow" />
+                      </DataTrigger>
+                      <DataTrigger Binding="{Binding Status}" Value="offline">
+                        <Setter Property="Background" Value="Red" />
+                      </DataTrigger>
+                    </Style.Triggers>
+                  </Style>
+                </DataGrid.RowStyle>
+
+                <DataGrid.Columns>
+                  <DataGridTextColumn Width="auto" Header="NodeID" Binding="{Binding ID}" IsReadOnly="True"/>
+                  <DataGridTextColumn Width="auto" Header="NodeName" Binding="{Binding Name}" IsReadOnly="True"/>
+                  <DataGridTextColumn Width="auto" Header="NodeWWNN" Binding="{Binding WWNN}" IsReadOnly="True"/>
+                  <DataGridTextColumn Width="auto" Header="Status" Binding="{Binding Status}" IsReadOnly="True"/>
+                  <DataGridTextColumn Width="auto" Header="Serial Number" Binding="{Binding Serial_Number}" IsReadOnly="True"/>
+                  <DataGridTextColumn Width="auto" Header="IO_group_id" Binding="{Binding IO_group_id}" IsReadOnly="True"/>
+                  <DataGridTextColumn Width="auto" Header="IO_group_Name" Binding="{Binding IO_group_Name}" IsReadOnly="True"/>
+                  <DataGridTextColumn Width="auto" Header="Code Level" Binding="{Binding Code_Level}" IsReadOnly="True"/>
+                  <DataGridTextColumn Width="auto" Header="Recommended Level" Binding="{Binding RecommendedPTF}" IsReadOnly="True"/>
+                  <DataGridTextColumn Width="auto" Header="Config_Node" Binding="{Binding Config_Node}" IsReadOnly="True"/>
+                  <DataGridTextColumn Width="auto" Header="SideID" Binding="{Binding SideID}" IsReadOnly="True"/>
+                  <DataGridTextColumn Width="auto" Header="Side Name" Binding="{Binding SideName}" IsReadOnly="True"/>
+                </DataGrid.Columns>
+
+              </DataGrid>
+            </DataTemplate>
+          </ItemsControl.ItemTemplate>
+        </ItemsControl>
     </Grid>
     </ScrollViewer>
 </UserControl>
