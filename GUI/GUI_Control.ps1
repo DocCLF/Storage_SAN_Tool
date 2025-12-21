@@ -53,14 +53,15 @@ foreach ($file in $StyleFiles){
 }
 <# PowerShell WPF XAML simple data binding datacontext #>
 
-$DashBoardIcons =[DashBoardIMG]::new()
-$DashBoardIcons.IBMFS73Icon = "$PSRootPath\Resources\Icons\IBMFS73Icon.png"
-$DashBoardIcons.SAN64B7Icon = "$PSRootPath\Resources\Icons\SAN64B7Icon.png"
-$DashBoardIcons.IBMPower11Icon = "$PSRootPath\Resources\Icons\IBMPower11Icon.png"
-$DashBoardIcons.RefrehIcon96 = "$PSRootPath\Resources\Icons\iconrefresh96.png"
+$ViewModel = [RootViewModel]::new()
+$ViewModel.IBMFS73Icon = "$PSRootPath\Resources\Icons\IBMFS73Icon.png"
+$ViewModel.SAN64B7Icon = "$PSRootPath\Resources\Icons\SAN64B7Icon.png"
+$ViewModel.IBMPower11Icon = "$PSRootPath\Resources\Icons\IBMPower11Icon.png"
+$ViewModel.RefrehIcon96 = "$PSRootPath\Resources\Icons\iconrefresh96.png"
+$ViewModel.CustomerYN    = $true
 
 <# PROFI Logo in MainWindow #>
-$MainWindow.DataContext = $DashBoardIcons
+$MainWindow.DataContext = $ViewModel
 $TD_LogoImage.Source = "$PSRootPath\Resources\Icons\PROFI_Logo_2022_dark.png"
 $TD_LogoImageSmall.Source = "$PSRootPath\Resources\Icons\PROFI_Logo_2022_dark.png"
 $TD_LogoImageSmall.Visibility = "hidden"
@@ -97,9 +98,11 @@ foreach($file in $UserCxamlFile){
     # Set DataContext if needed
     # --------------------------
     if ($fileName -like "*Dash" -or $fileName -like "*Health" -or $fileName -like "*SetUp") {
-        $TD_UserControl.DataContext = $DashBoardIcons
+        $TD_UserControl.DataContext = $ViewModel
     }
-
+    if ($fileName -like "*STO") {
+        $TD_UserControl.DataContext = $ViewModel
+    }
     $TD_AllUserControls += $TD_UserControl
     # --------------------------
     # Assign to global variable for later use
@@ -166,6 +169,7 @@ $TD_BTN_BrocSAN.add_click({
 $TD_BTN_STOSANHealth.add_click({
     $TD_LB_ExpPathMainWindow.Content ="Export Path: $($TD_tb_ExportPath.Text)"
     SST_ShowUserControl -MainWindowArea $TD_UserContrArea -ShowUserControl $TD_UserControl_Health -AllUserControls $TD_AllUserControls
+    SST_MainHealthCheckFunc -SST_UCOBJ $TD_UserControl_Health
     if($TD_LogoImageSmall.Visibility -eq "hidden"){$TD_LogoImageSmall.Visibility = "visible"}
 })
 $TD_BTN_CustomerBoard.add_click({
@@ -207,7 +211,6 @@ $TD_BTN_SaveCredtoDG.add_click({
     }
 
 })
-<# Button Credentials In-/ Export #>
 $TD_BTN_ExportCred.add_click({
     <# Not all needs to exported, if you want to modify the Export got to the SST_ExportCred Func #>
     $TD_SST_ExportCred = SST_ExportCredential -TD_CollectedCredDatas $TD_DG_KnownDeviceList.ItemsSource
@@ -325,6 +328,52 @@ $TD_BTN_CloseGUI.add_click({
         #SST_ToolMessageCollector -TD_ToolMSGCollector $("Remove Files fail: $($_.Exception.Message)") -TD_ToolMSGType Error -TD_Shown no
     }
     $MainWindow.Close()
+})
+$TD_btn_IBM_BaseStorageInfo.add_click({
+# $vm = [MainViewModel]::new()
+# $UserControl.DataContext = $vm
+    $vmRoot = $TD_UserControl_IBMSTO.DataContext
+    if (-not $vmRoot) { Write-Host "DataContext ist NULL!" -ForegroundColor Red; return }
+        # dort liegt MainViewModel
+    $vmMain = $vmRoot.Main
+
+    # optional: vorher leeren
+    $vmMain.DeviceToggles.Clear()
+# Beispiel: Device 1 Toggle
+try {
+foreach ($i in 1..5) {    
+    $dev = [DeviceToggle]::new()
+    $dev.Id    = "dev$i "
+    $dev.Label = "FS5200_RZ$i "
+    $dev.IsChecked = $false
+    
+    # Rows hinzufügen (Mapping muss zu BaseStorageRow passen)
+    foreach ($r in 1..3) {
+        $row = [BaseStorageRow]::new()
+        $row.ID = 1
+        $row.Name = "$r-test$i "
+        $row.WWNN = "50:05:07:68:12:00:32:{0:D2}" -f $i
+        $row.Status = if ($r -eq 2 -and ($i % 3 -eq 0)) { "offline" } else { "online" }
+        $row.IO_group_id = 0
+        $row.IO_group_Name = "IO_group_0"
+        $row.Serial_Number = "78A521$i"
+        $row.Code_Level = "v9.1.$i.1"
+        $row.RecommendedPTF = "v9.1.$i.3"
+        $row.Config_Node = "yes"
+        $row.SideID = 0
+        $row.SideName = "tr"
+
+        $dev.Rows.Add($row)
+
+    }
+    
+    $vmMain.DeviceToggles.Add($dev)
+}
+}
+catch {
+    Write-Host $_.Exception.Message
+}
+
 })
 #endregion
 $TD_CB_DataBaseChoice.add_SelectionChanged({
