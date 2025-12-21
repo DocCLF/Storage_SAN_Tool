@@ -1,4 +1,4 @@
-<UserControl 
+<UserControl x:Name="IBMTape"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -20,6 +20,13 @@
         </ResourceDictionary>
     </UserControl.Resources>
     <Grid>
-
+        <GroupBox Header="Visibility" Margin="10" >
+            <StackPanel Orientation="Horizontal" ToolTip="klick for visibility">
+                <StackPanel x:Name="STP_TapeDeviceVisibility" >
+                
+                </StackPanel>
+                <CheckBox x:Name="CB_SelectAllTapeCB" Content="Select All" Margin="22,2,2,2" Style="{DynamicResource MainCheckBoxStyle}" HorizontalAlignment="Right" />
+            </StackPanel>
+        </GroupBox>
     </Grid>
 </UserControl>
