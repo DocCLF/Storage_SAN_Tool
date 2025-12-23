@@ -7,15 +7,18 @@ function SST_SpectrumSystemAPI {
         [ValidateSet("GET","POST","PUT","DELETE")]
         [string]$Method = "POST",
         [string]$BaseUrl,
-        [strint]$RESTInfo,
+        [string]$RESTInfo,
         [object]$Body
     )
     
     begin {
 
         $Uri = "$BaseUrl/rest/v1/$Endpoint"
-        if([string]::IsNullOrEmpty($RESTInfo)){
+        if([string]::IsNullOrWhiteSpace($RESTInfo)){
             $RESTToken = SST_RESTDBControl -SST_InfoType "UseStorageToken" -SST_BaseUrl $BaseUrl
+            
+        }else{
+            $RESTToken = $RESTInfo
         }
         $Headers = @{
             "accept"       = "application/json"
