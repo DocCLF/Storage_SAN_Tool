@@ -34,7 +34,7 @@
             <StackPanel>
                 <!--IBM_BaseStorageInfo-->
                 <ToggleButton
-                x:Name="btn_IBM_BaseStorageInfo"
+                x:Name="BTN_IBM_BaseStorageInfo"
                 Style="{DynamicResource MainBtnStyle}"
                 Content="Storage Info" 
                 ToolTip="Get basic Storage information"/>
