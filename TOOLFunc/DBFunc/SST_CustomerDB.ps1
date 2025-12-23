@@ -1,87 +1,79 @@
 function SST_CustomerDB {
     [CmdletBinding()]
     param (
-        [Parameter(ValueFromPipeline)]
+        [Parameter(Mandatory)]
         [ValidateSet("SaveCustomerSetUp","LoadCustomerSetUp")]
         [string]$SST_InfoType,
+
         [string]$SST_Customer,
         $SST_NewDBObject
     )
-    
-    begin {
-        try {
-            $TimeStamp = Get-Date -UFormat "%Y-%m-%d %R"
-            if(!([string]::IsNullOrEmpty($SST_Customer))){
-                $Customer = $SST_Customer
-            }elseif([string]::IsNullOrEmpty($SST_Customer)){
-                $Customer = $TD_TB_CustomerInfoName.Text
-            }else {
-                $Customer = $SST_NewDBObject.CustomerName
-            }
-            $SST_ConnectionString = "Data Source=$PSRootPath\Resources\DBFolder\ToolDB\ToolDB.db;Version=3;"
-            $SST_SQLiteCon = New-Object System.Data.SQLite.SQLiteConnection $SST_ConnectionString
-            $SST_SQLiteCon.Open()
-        }
-        catch {
-            Write-Error $_.exception.message
-            #SST_ToolMessageCollector -TD_ToolMSGCollector "LocalDB $($_.exception.message)" -TD_ToolMSGType Error -TD_Shown yes
-        }
-    }
-    
-    process {
-        <# Create Table if not exists #>
-        switch ($SST_InfoType) {
-            "SaveCustomerSetUp" { 
-                $SST_SQliteCreateTBCMD = $SST_SQLiteCon.CreateCommand()
-                $SST_SQLiteTabelQuery ="CREATE TABLE IF NOT EXISTS CustomerToolSetUpDB (CustomerName TEXT PRIMARY KEY, ExportPath TEXT, ExportPathCredential TEXT NOT NULL, TimeStamp TEXT) "
-                $SST_SQliteCreateTBCMD.CommandText = $SST_SQLiteTabelQuery
-                $SST_SQliteCreateTBCMD.ExecuteNonQuery()
-                $SST_SQliteCheckTableCMD = $SST_SQLiteCon.CreateCommand()
-                $SST_SQliteCheckTableCMD.CommandText = "SELECT COUNT(*) FROM CustomerToolSetUpDB WHERE CustomerName = @CustomerName"
-                $SST_SQliteCheckTableCMD.Parameters.AddWithValue("@CustomerName", $Customer) | Out-Null
-                $TableCount = [Int16]$SST_SQliteCheckTableCMD.ExecuteScalar()
-                if ($TableCount -eq 0) {
-                    $SST_SQliteInsertDummysCMD = $SST_SQLiteCon.CreateCommand()
-                    $SST_SQliteInsertDummysCMD.CommandText = "INSERT INTO CustomerToolSetUpDB (CustomerName, ExportPath, ExportPathCredential, TimeStamp) VALUES (@CustomerName, '', '', @TimeStamp);"
-                    $SST_SQliteInsertDummysCMD.Parameters.AddWithValue("@CustomerName", $Customer) | Out-Null
-                    $SST_SQliteInsertDummysCMD.Parameters.AddWithValue("@TimeStamp", $TimeStamp) | Out-Null
-                    $SST_SQliteInsertDummysCMD.ExecuteNonQuery() | Out-Null
-                }
-            }
-            "SaveCustomerSetUp" { 
-                $SST_SQliteInsertCMD = $SST_SQLiteCon.CreateCommand()
-                $SST_SQliteInsertCMD.CommandText ="INSERT INTO CustomerToolSetUpDB (CustomerName, ExportPath, ExportPathCredential, TimeStamp) VALUES (@CustomerName, @ExportPath, @ExportPathCredential, @TimeStamp) ON CONFLICT(CustomerName) DO UPDATE SET ExportPath = excluded.ExportPath, ExportPathCredential = excluded.ExportPathCredential, TimeStamp = excluded.TimeStamp ;"
-                $SST_SQliteInsertCMD.Parameters.AddWithValue("@CustomerName", $Customer) | Out-Null
-                $SST_SQliteInsertCMD.Parameters.AddWithValue("@ExportPath", $SST_NewDBObject.ExportPath) | Out-Null
-                $SST_SQliteInsertCMD.Parameters.AddWithValue("@ExportPathCredential", $SST_NewDBObject.ExportPathCredential) | Out-Null
-                $SST_SQliteInsertCMD.Parameters.AddWithValue("@TimeStamp", $TimeStamp) | Out-Null   
-                $SST_SQliteInsertCMD.ExecuteNonQuery() | Out-Null         
-            }
-            "LoadCustomerSetUp" { 
-                $SST_SQliteReadCMD = $SST_SQLiteCon.CreateCommand()
-                $SST_SQliteReadCMD.CommandText = "SELECT * FROM CustomerToolSetUpDB WHERE CustomerName = @CustomerName"
-                $SST_SQliteReadCMD.Parameters.AddWithValue("@CustomerName", $Customer) | Out-Null
 
-                $SST_SQliteReader = $SST_SQliteReadCMD.ExecuteReader()
-                if ($SST_SQliteReader.Read()) {
-                    $CustomerSettingsObj = [pscustomobject]@{
-                        CustomerName            = $SST_SQliteReader["CustomerName"]
-                        ExportPath              = $SST_SQliteReader["ExportPath"]
-                        ExportPathCredential    = $SST_SQliteReader["ExportPathCredential"]
-                        TimeStamp               = $SST_SQliteReader["TimeStamp"]
+    $TimeStamp = Get-Date -Format "yyyy-MM-dd HH:mm"
+
+    if (-not [string]::IsNullOrWhiteSpace($SST_Customer)) {
+        $Customer = $SST_Customer
+    } elseif (-not [string]::IsNullOrWhiteSpace($TD_TB_CustomerInfoName.Text)) {
+        $Customer = $TD_TB_CustomerInfoName.Text
+    } else {
+        $Customer = $SST_NewDBObject.CustomerName
+    }
+    Write-Host "Customer $Customer"
+    $DBPath = Join-Path $PSRootPath "Resources\DBFolder\$Customer.db"
+    $SQLiteConnectionString = "Data Source=$DBPath;Version=3;Pooling=False;"
+
+    $SQLiteDBConnection = New-Object System.Data.SQLite.SQLiteConnection $SQLiteConnectionString
+    $SQLiteCommandCreate = $null
+    $SQLiteCommand = $null
+    $SQLiteReader = $null
+
+    try {
+        $SQLiteDBConnection.Open()
+
+        # Table sicherstellen
+        $SQLiteCommandCreate = $SQLiteDBConnection.CreateCommand()
+        $SQLiteCommandCreate.CommandText = "CREATE TABLE IF NOT EXISTS CustomerToolSetUpDB ( CustomerName TEXT PRIMARY KEY, ExportPath TEXT, ExportPathCredential TEXT NOT NULL, TimeStamp TEXT);"
+        $SQLiteCommandCreate.ExecuteNonQuery() | Out-Null
+
+        switch ($SST_InfoType) {
+
+            "SaveCustomerSetUp" {
+                $SQLiteCommand = $SQLiteDBConnection.CreateCommand()
+                $SQLiteCommand.CommandText = " INSERT INTO CustomerToolSetUpDB (CustomerName, ExportPath, ExportPathCredential, TimeStamp) VALUES (@CustomerName, @ExportPath, @ExportPathCredential, @TimeStamp) ON CONFLICT(CustomerName) DO UPDATE SET ExportPath = excluded.ExportPath, ExportPathCredential = excluded.ExportPathCredential, TimeStamp = excluded.TimeStamp;"
+                $SQLiteCommand.Parameters.AddWithValue("@CustomerName", $Customer) | Out-Null
+                $SQLiteCommand.Parameters.AddWithValue("@ExportPath", ($SST_NewDBObject.ExportPath ?? '')) | Out-Null
+                $SQLiteCommand.Parameters.AddWithValue("@ExportPathCredential", ($SST_NewDBObject.ExportPathCredential ?? '')) | Out-Null
+                $SQLiteCommand.Parameters.AddWithValue("@TimeStamp", $TimeStamp) | Out-Null
+                $SQLiteCommand.ExecuteNonQuery() | Out-Null
+                return
+            }
+
+            "LoadCustomerSetUp" {
+                $SQLiteCommand = $SQLiteDBConnection.CreateCommand()
+                $SQLiteCommand.CommandText = "SELECT CustomerName, ExportPath, ExportPathCredential, TimeStamp FROM CustomerToolSetUpDB WHERE CustomerName = @CustomerName;"
+                $SQLiteCommand.Parameters.AddWithValue("@CustomerName", $Customer) | Out-Null
+
+                $SQLiteReader = $SQLiteCommand.ExecuteReader()
+                if ($SQLiteReader.Read()) {
+                    return [pscustomobject]@{
+                        CustomerName         = $SQLiteReader["CustomerName"]
+                        ExportPath           = $SQLiteReader["ExportPath"]
+                        ExportPathCredential = $SQLiteReader["ExportPathCredential"]
+                        TimeStamp            = $SQLiteReader["TimeStamp"]
                     }
                 }
-                $SST_SQliteReader.Close()
-                return $CustomerSettingsObj
+
+                return $null
             }
-            Default {}
         }
     }
-    
-    end {
-        #Verbindung schließen
-        $SST_NewDBObject =$null
-        $SST_SQLiteCon.Close()
-        $SST_SQLiteCon.Dispose()
+    finally {
+        if ($SQLiteReader)  { $SQLiteReader.Close(); $SQLiteReader.Dispose() }
+        if ($SQLiteCommand) { $SQLiteCommand.Dispose() }
+        if ($SQLiteCommandCreate) { $SQLiteCommandCreate.Dispose() }
+        if ($SQLiteDBConnection) { $SQLiteDBConnection.Close(); $SQLiteDBConnection.Dispose() }
+
+        # wenn du danach Dateien löschen willst, extra gut:
+        [System.Data.SQLite.SQLiteConnection]::ClearAllPools()
     }
 }
