@@ -130,7 +130,7 @@ $TD_DataBaseChoice = Get-ChildItem "$PSRootPath\Resources\DBFolder\*" -Filter "*
         Path = $_.FullName
     }
 }
-if ($TD_DataBaseChoice.Count -lt 1) {
+if ($($TD_DataBaseChoice.Name).Count -lt 1) {
     $TD_CB_DataBaseChoice.ItemsSource = @("Keine Datenbank gefunden")
     $TD_CB_DataBaseChoice.IsEnabled = $false
 } else {
@@ -184,7 +184,13 @@ $TD_BTN_ToolSettings.add_click({
 })
 $TD_BTN_SaveToolSettings.add_click({
     if(($TD_BTN_ActivateDB.Background -notlike "*FFFC4242")-and($TD_TB_CustomerInfoName.Background -notlike "*FFFA8C8C")){
-        SST_SaveLoadToolSettings -SST_SaveSettings $true 
+        try {
+            SST_SaveLoadToolSettings -SST_SaveSettings $true 
+        }
+        catch {
+            <#Do this if a terminating exception happens#>
+        }
+        
     }else {
         [System.Windows.MessageBox]::Show(
             "Please enter the customer name or number!", "Invalid input", 'OK', 'Warning'
@@ -271,35 +277,26 @@ $TD_BTN_ActivateDB.add_click({
 $TD_BTN_DeleteDB.add_click({
     $DBName = $TD_TB_CustomerInfoName.Text -replace ".db",""
     try {
-        $TD_DBtoDelete = Get-Item -Path "$PSRootPath\Resources\DBFolder\$DBName.db"
-        if(!([string]::IsNullOrEmpty($TD_DBtoDelete.Name))){
-            $SST_ConnectionString = "Data Source=$PSRootPath\Resources\DBFolder\$DBName.db;Version=3;"
-            $SST_SQLiteCon = New-Object System.Data.SQLite.SQLiteConnection $SST_ConnectionString
-            $SST_SQLiteCon.Close()
-            $SST_SQLiteCon.Dispose()
-        }
-        #SST_ToolMessageCollector -TD_ToolMSGCollector "LocalDB: This action deletes the $($TD_DBtoDelete.Name)" -TD_ToolMSGType Warning -TD_Shown yes
-        Remove-Item -Path "$PSRootPath\Resources\DBFolder\$DBName.db" -Confirm:$false -Force -ErrorAction Continue 
-        #SST_ToolMessageCollector -TD_ToolMSGCollector "LocalDB: $($TD_DBtoDelete.Name) are deleted" -TD_ToolMSGType Message -TD_Shown yes
+        [System.Data.SQLite.SQLiteConnection]::ClearAllPools()
+        Remove-Item -Path "$PSRootPath\Resources\DBFolder\$DBName.db" -Confirm:$false -Force -ErrorAction SilentlyContinue
         $TD_DataBaseChoice = @(Get-ChildItem "$PSRootPath\Resources\DBFolder\*" -Filter "*.db" | Select-Object -ExpandProperty Basename)
-        
-        if ($TD_DataBaseChoice.Count -lt 1) {
-            $TD_CB_DataBaseChoice.ItemsSource = @("Keine Datenbank gefunden")
-            $TD_CB_DataBaseChoice.SelectedIndex = 0
-            $TD_CB_DataBaseChoice.IsEnabled = $false
-            $TD_BTN_DeleteDB.Visibility = "Collapsed"
-        }else{
+        if([string]::IsNullOrWhiteSpace($TD_DataBaseChoice)){
+            $TD_TB_CustomerInfoName.Text = "Keine Datenbank gefunden"
+        }else {
             $TD_CB_DataBaseChoice.ItemsSource = $null
+            $TD_DataBaseChoice = @(Get-ChildItem "$PSRootPath\Resources\DBFolder\*" -Filter "*.db" | Select-Object -ExpandProperty Basename)
             $TD_CB_DataBaseChoice.ItemsSource = $TD_DataBaseChoice
             $TD_CB_DataBaseChoice.SelectedIndex = 0
+            Write-Host $TD_DataBaseChoice
         }
+        
     }
     catch {
-        Write-Host $_.exception.message
-        #SST_ToolMessageCollector -TD_ToolMSGCollector "LocalDB: $($_.exception.message)" -TD_ToolMSGType Error -TD_Shown yes
-        $TD_BTN_DeleteDB.Visibility = "Visible"
-        $TD_BTN_DeleteDB.Background = "Coral"
+        [System.Data.SQLite.SQLiteConnection]::ClearAllPools()
+        Write-Host $_.Exception.Message
     }
+        #SST_ToolMessageCollector -TD_ToolMSGCollector "LocalDB: $($TD_DBtoDelete.Name) are deleted" -TD_ToolMSGType Message -TD_Shown yes
+        #$TD_DataBaseChoice = @(Get-ChildItem "$PSRootPath\Resources\DBFolder\*" -Filter "*.db" | Select-Object -ExpandProperty Basename)
 })
 $TD_BTN_DBRefresh.add_click({
     $TD_CB_DataBaseChoice.ItemsSource = $null
@@ -329,51 +326,57 @@ $TD_BTN_CloseGUI.add_click({
     }
     $MainWindow.Close()
 })
-$TD_btn_IBM_BaseStorageInfo.add_click({
-# $vm = [MainViewModel]::new()
-# $UserControl.DataContext = $vm
-    $vmRoot = $TD_UserControl_IBMSTO.DataContext
-    if (-not $vmRoot) { Write-Host "DataContext ist NULL!" -ForegroundColor Red; return }
-        # dort liegt MainViewModel
-    $vmMain = $vmRoot.Main
+$TD_BTN_IBM_BaseStorageInfo.add_click({
+    <#Get all Device Cred and count them #>
+    $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_.DeviceTyp -eq "Storage"}
+    <# get the DataConteext of the current View/ means UC and if its nul trow an error #>
+    $UCDataContext = $TD_UserControl_IBMSTO.DataContext
+    if (-not $UCDataContext) { Write-Host "DataContext ist NULL!" -ForegroundColor Red; return }
+    <# if there is a DataContext find th Main Part und put it into UCVMMain#>
+    $UCVMMain = $UCDataContext.Main
+    <# if there a something in, its better to clean it up befor we use it again #>
+    $UCVMMain.DeviceToggles.Clear()
+    $TD_Credentials | ForEach-Object {
+        [array]$TD_BaseStorageInfo = IBM_BaseStorageInfos -TD_Line_ID $_.ID -TD_Device_ConnectionTyp $_.ConnectionTyp -TD_Device_UserName $_.UserName -TD_Device_DeviceIP $_.IPAddress -TD_Device_DeviceName $_.DeviceName -TD_Device_PW $([Net.NetworkCredential]::new('', $_.Password).Password) -TD_Storage $_.SVCorVF -TD_Exportpath $TD_tb_ExportPath.Text
 
-    # optional: vorher leeren
-    $vmMain.DeviceToggles.Clear()
-# Beispiel: Device 1 Toggle
-try {
-foreach ($i in 1..5) {    
-    $dev = [DeviceToggle]::new()
-    $dev.Id    = "dev$i "
-    $dev.Label = "FS5200_RZ$i "
-    $dev.IsChecked = $false
-    
-    # Rows hinzufügen (Mapping muss zu BaseStorageRow passen)
-    foreach ($r in 1..3) {
-        $row = [BaseStorageRow]::new()
-        $row.ID = 1
-        $row.Name = "$r-test$i "
-        $row.WWNN = "50:05:07:68:12:00:32:{0:D2}" -f $i
-        $row.Status = if ($r -eq 2 -and ($i % 3 -eq 0)) { "offline" } else { "online" }
-        $row.IO_group_id = 0
-        $row.IO_group_Name = "IO_group_0"
-        $row.Serial_Number = "78A521$i"
-        $row.Code_Level = "v9.1.$i.1"
-        $row.RecommendedPTF = "v9.1.$i.3"
-        $row.Config_Node = "yes"
-        $row.SideID = 0
-        $row.SideName = "tr"
+        $DeviceBlock = [DeviceToggle]::new()
+        $DeviceBlock.Id = "DeviceBlock$($_.ID)"
+        $DeviceBlock.Label = if([string]::IsNullOrWhiteSpace($TD_BaseStorageInfo.ClusterName)){"$($_.IPAddress)"} else {"$($TD_BaseStorageInfo.ClusterName)"}
+        $DeviceBlock.IsChecked = $false
+        # Rows hinzufÃ¼gen (Mapping muss zu BaseStorageRow passen)
+        foreach ($StorageInfo in $($TD_BaseStorageInfo.StorageInfo)) {
+            if ([string]::IsNullOrWhiteSpace([string]$StorageInfo.ID)) { continue }
+            $DGRow = [BaseStorageRow]::new()
+            $DGRow.ID = $StorageInfo.ID
+            $DGRow.Name = $StorageInfo.Name
+            $DGRow.ClusterName = $StorageInfo.ClusterName
+            $DGRow.WWNN = $StorageInfo.WWNN
+            $DGRow.Status = $StorageInfo.Status
+            $DGRow.IO_group_id = $StorageInfo.IO_group_id
+            $DGRow.IO_group_Name = $StorageInfo.IO_group_Name
+            $DGRow.Prod_MTM = $StorageInfo.Prod_MTM
+            $DGRow.Serial_Number = $StorageInfo.Serial_Number
+            $DGRow.Code_Level = $StorageInfo.Code_Level
+            $DGRow.RecommendedPTF = $StorageInfo.RecommendedPTF
+            $DGRow.Config_Node = $StorageInfo.Config_Node
+            $DGRow.SideID = $StorageInfo.SideID
+            $DGRow.SideName = $StorageInfo.SideName
 
-        $dev.Rows.Add($row)
+            $DGRow.MDiskTotalCapacity = $StorageInfo.MDiskTotalCapacity
+            $DGRow.MDiskFreeCapacity = $StorageInfo.MDiskFreeCapacity
+            $DGRow.MDiskUsedCapacity = $StorageInfo.MDiskUsedCapacity
+            $DGRow.PhysicalTotalCapacity = $StorageInfo.PhysicalTotalCapacity
+            $DGRow.PhysicalFreeCapacity = $StorageInfo.PhysicalFreeCapacity
+            $DGRow.HostUnmap = $StorageInfo.HostUnmap
+            $DGRow.BackendUnmap = $StorageInfo.BackendUnmap
+            $DGRow.Topology = $StorageInfo.Topology
+            $DGRow.Layer = $StorageInfo.Layer
+            $DGRow.QuorumMode = $StorageInfo.QuorumMode
 
+            $DeviceBlock.DGRow.Add($DGRow)
+        }
+        $UCVMMain.DeviceToggles.Add($DeviceBlock)
     }
-    
-    $vmMain.DeviceToggles.Add($dev)
-}
-}
-catch {
-    Write-Host $_.Exception.Message
-}
-
 })
 #endregion
 $TD_CB_DataBaseChoice.add_SelectionChanged({
@@ -382,6 +385,8 @@ $TD_CB_DataBaseChoice.add_SelectionChanged({
         $SST_SavedCustomerSettingsDB = SST_CustomerDB -SST_InfoType "LoadCustomerSetUp" -SST_Customer $CustomerDB
         $TD_TB_ExportPath.Text = $SST_SavedCustomerSettingsDB.ExportPath
         $TD_LB_CerdExportPath.Content = $SST_SavedCustomerSettingsDB.ExportPathCredential
+
+        Write-Host $CustomerDB -ForegroundColor Cyan
     }
 })
 <# this part is needed if there are any Updates on the cred in DG #>
