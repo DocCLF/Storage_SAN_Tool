@@ -6,6 +6,8 @@ The Unblock-File cmdlet lets you open files that were downloaded from the intern
 It unblocks PowerShell script files that were downloaded from the internet so you can run them, even when the PowerShell execution policy is RemoteSigned. 
 By default, these files are blocked to protect the computer from untrusted files.
 #>
+    Unblock-File -Path $PSScriptRoot\TOOLFunc\REST\*.ps1 -Confirm:$false
+    $REST_Functions = @(Get-ChildItem -Path $PSScriptRoot\TOOLFunc\REST\*.ps1 -ErrorAction SilentlyContinue)
     Unblock-File -Path $PSScriptRoot\TOOLFunc\GUIBasics\*.ps1 -Confirm:$false
     $GUIBasics_Functions = @(Get-ChildItem -Path $PSScriptRoot\TOOLFunc\GUIBasics\*.ps1 -ErrorAction SilentlyContinue)
     Unblock-File -Path $PSScriptRoot\TOOLFunc\DBFunc\*.ps1 -Confirm:$false
@@ -29,10 +31,16 @@ By default, these files are blocked to protect the computer from untrusted files
 
     $FoundErrors = @(
         Get-ChildItem "$PSScriptRoot\Resources\PWSHClasses\*.ps1" | ForEach-Object {
-            . $_.FullName
+            if(($_.BaseName -eq "PWSH7Classes")-and($PSVersionTable.PSVersion.Major -gt 6)){
+                #Write-Host $_.BaseName -ForegroundColor Cyan
+                . $_.FullName
+            }elseif (($_.BaseName -eq "PWSH5Classes")-and($PSVersionTable.PSVersion.Major -lt 6)) {
+                #Write-Host $_.BaseName -ForegroundColor Yellow
+                . $_.FullName
+            }
         }
 
-        foreach($import in @($GUIBasics_Functions + $DBFunc_Functions + $DashBoard_Functions + $TOOL_Functions + $USER_Functions + $IBMPower_Functions + $IBMStorage_Functions + $FOSBrocade_Functions + $HealthCheck_Functions + $GUI_Functions)) {
+        foreach($import in @($REST_Functions + $GUIBasics_Functions + $DBFunc_Functions + $DashBoard_Functions + $TOOL_Functions + $USER_Functions + $IBMPower_Functions + $IBMStorage_Functions + $FOSBrocade_Functions + $HealthCheck_Functions + $GUI_Functions)) {
             try {
                . $import.fullname
             }
