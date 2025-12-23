@@ -23,14 +23,6 @@ function SST_SaveLoadToolSettings {
             $SST_SavedToolSettingsXML = $null
         }
         try {
-            $SST_SavedCustomerSettingsDB = SST_CustomerDB -SST_InfoType "LoadCustomerSetUp"
-        }
-        catch {
-            Write-Error $_.Exception.Message
-            $TD_BTN_LoadToolSettings.Background="yellow"
-            $SST_SavedCustomerSettingsDB = $null
-        }
-        try {
             $TD_DBisActive = Get-Item -Path "$PSRootPath\Resources\DBFolder\*" -Filter "*.db" -ErrorAction SilentlyContinue
         }
         catch {
@@ -48,13 +40,24 @@ function SST_SaveLoadToolSettings {
             $SST_ExportToolSettingsDB.OnlineCheckbyImport = $TD_CB_OnlineCheckbyImport.IsChecked
             $SST_ExportToolSettingsDB.PRISMactiv = $TD_CB_PRISMConnectOnOff.IsChecked
             $SST_ExportToolSettingsDB.IsCustomer = $TD_CB_CustomerYN.IsChecked
-            SST_ToolDB -SST_InfoType "SaveToolSettings" -SST_NewDBObject $SST_ExportToolSettingsDB
+            try {
+                SST_ToolDB -SST_InfoType "SaveToolSettings" -SST_NewDBObject $SST_ExportToolSettingsDB
+            }
+            catch {
+                Write-Host $_.Exception.Message -ForegroundColor Yellow
+            }
+            
 
             $SST_ExportCustomerSettingsDB = "" | Select-Object CustomerName, ExportPath, ExportPathCredential
             $SST_ExportCustomerSettingsDB.CustomerName = $TD_TB_CustomerInfoName.Text
             $SST_ExportCustomerSettingsDB.ExportPath = $TD_TB_ExportPath.Text
             $SST_ExportCustomerSettingsDB.ExportPathCredential = $TD_LB_CerdExportPath.Content
-            SST_CustomerDB -SST_InfoType "SaveCustomerSetUp" -SST_NewDBObject $SST_ExportCustomerSettingsDB
+            try {
+                SST_CustomerDB -SST_InfoType "SaveCustomerSetUp" -SST_NewDBObject $SST_ExportCustomerSettingsDB
+            }
+            catch {
+                Write-Host $_.Exception.Message -ForegroundColor Cyan
+            }
 
             <#Save in clixml#>
             $SST_ExportToolSettingsXML = "" | Select-Object DevicestoInExport,ConnectionStringPRISM,CustomerNumber
@@ -84,8 +87,11 @@ function SST_SaveLoadToolSettings {
                 $TD_BTN_SaveToolSettings.Background="LightCoral"
             }
         }
+        Write-Host ($SST_LoadSettings -and (($null -ne $SST_SavedToolSettingsXML)-and($null -ne $SST_SavedToolSettingsDB)))
         if($SST_LoadSettings -and (($null -ne $SST_SavedToolSettingsXML)-and($null -ne $SST_SavedToolSettingsDB))){
             try {
+                $SST_SavedCustomerSettingsDB = SST_CustomerDB -SST_InfoType "LoadCustomerSetUp"
+                Write-Host $SST_SavedCustomerSettingsDB
                 $SST_LoadedToolSettingsXML = Import-Clixml -Path "$PSRootPath\Resources\SavedToolSettings.clixml" 
                 if($SST_SavedToolSettingsDB.LoadSettingsOnStartUp -eq $true){
                     $TD_CB_LoadSettingsatStartUp.IsChecked = $SST_SavedToolSettingsDB.LoadSettingsOnStartUp
