@@ -11,7 +11,7 @@ function SST_GetSpectrumToken {
         <# Write the token to a file in the first phase of 1.4 and later to the DB for release. #>
         $BaseUrl = "https://$TD_Device_DeviceIP"+":7443"
 
-        if(!(Test-Path -Path "$PSRootPath\Resources\DBFolder\SSTLocalDB.db")){
+        if(!(Test-Path -Path "$PSRootPath\Resources\DBFolder\ToolDB\ToolDB.db")){
             Break
         }
         <# Build headers (FlashSystem expects X-Auth-Username / X-Auth-Password for this endpoint) #>
@@ -54,6 +54,7 @@ function SST_GetSpectrumToken {
                 }
                 $FlashAPI_TokenExpiry = (Get-Date).AddMinutes($lssecurityInfo.restapi_timeout_mins)
             }
+            $TokenExpiryinISO = $FlashAPI_TokenExpiry.ToString("o")   # ISO 8601 round-trip
         }
         catch {
             <#Do this if a terminating exception happens#>
@@ -69,17 +70,15 @@ function SST_GetSpectrumToken {
         $RESTInfoObj = [pscustomobject]@{
             BaseUrl = $BaseUrl
             Token   = $FlashAPI_Token
-            Expires = $FlashAPI_TokenExpiry
+            Expires = $TokenExpiryinISO
         }
         
         $RESTInfo = SST_RESTDBControl -SST_InfoType "SaveStorageToken" -SST_NewDBObject $RESTInfoObj
-        if([string]::IsNullOrEmpty($RESTInfo)){
-            $FlashAPI_Token = $RESTInfo
-        }
-        if([string]::IsNullOrEmpty($FlashAPI_Token)){
-            return "plink"
-        }else {
+
+        if($RESTInfo -eq 0){
             return "REST"
+        }else{
+            return "plink"
         }
     }
 }
