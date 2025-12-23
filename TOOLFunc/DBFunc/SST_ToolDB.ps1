@@ -1,82 +1,72 @@
 function SST_ToolDB {
     [CmdletBinding()]
     param (
-        [Parameter(ValueFromPipeline)]
+        [Parameter(Mandatory)]
         [ValidateSet("SaveToolSettings","LoadToolSettings")]
         [string]$SST_InfoType,
+
         $SST_NewDBObject
     )
-    
-    begin {
-        try {
-            $TimeStamp = Get-Date -UFormat "%Y-%m-%d %R"
-            $SST_ConnectionString = "Data Source=$PSRootPath\Resources\DBFolder\ToolDB\ToolDB.db;Version=3;"
-            $SST_SQLiteCon = New-Object System.Data.SQLite.SQLiteConnection $SST_ConnectionString
-            $SST_SQLiteCon.Open()
-        }
-        catch {
-            Write-Error $_.Exception.Message
-            #SST_ToolMessageCollector -TD_ToolMSGCollector "LocalDB $($_.exception.message)" -TD_ToolMSGType Error -TD_Shown yes
-        }
-    }
-    
-    process {
-        switch ($SST_InfoType) {
-            "SaveToolSettings" { 
-                $SST_SQliteCreateTBCMD = $SST_SQLiteCon.CreateCommand()
-                $SST_SQLiteTabelQuery ="CREATE TABLE IF NOT EXISTS ToolSettings (Id INTEGER PRIMARY KEY CHECK (Id = 1), LoadSettingsOnStartUp INTEGER NOT NULL, OnlineCheckbyImport INTEGER NOT NULL, PRISMactiv INTEGER NOT NULL, IsCustomer INTEGER NOT NULL, TimeStamp TEXT) "
-                $SST_SQliteCreateTBCMD.CommandText = $SST_SQLiteTabelQuery
-                $SST_SQliteCreateTBCMD.ExecuteNonQuery()  
-                $SST_SQliteCheckTableCMD = $SST_SQLiteCon.CreateCommand()
-                $SST_SQliteCheckTableCMD.CommandText = "SELECT COUNT(*) FROM ToolSettings WHERE Id = 1"
-                $TableCount = $SST_SQliteCheckTableCMD.ExecuteScalar()
-                if ($TableCount -eq 0) {
-                    $SST_SQliteInsertDummysCMD = $SST_SQLiteCon.CreateCommand()
-                    $SST_SQliteInsertDummysCMD.CommandText = "INSERT INTO ToolSettings (Id, LoadSettingsOnStartUp, OnlineCheckbyImport, PRISMactiv, IsCustomer, TimeStamp) VALUES (1, '0', '0', '0', '0', @TimeStamp);"
-                    $SST_SQliteInsertDummysCMD.Parameters.AddWithValue("@TimeStamp", $TimeStamp)
-                    $SST_SQliteInsertDummysCMD.ExecuteNonQuery() | Out-Null
-                }
-            }
-            Default {}
-        }
+
+    $TimeStamp = Get-Date -Format "yyyy-MM-dd HH:mm"
+
+    $DBPath = Join-Path $PSRootPath "Resources\DBFolder\ToolDB\ToolDB.db"
+    $SQLiteConnectionString = "Data Source=$DBPath;Version=3;Pooling=False;"
+
+    $SQLiteDBConnection = New-Object System.Data.SQLite.SQLiteConnection $SQLiteConnectionString
+    $SQLiteCommandCreate = $null
+    $SQLiteCommand = $null
+    $SQLiteReader = $null
+
+    try {
+        $SQLiteDBConnection.Open()
+
+        # Table sicherstellen
+        $SQLiteCommandCreate = $SQLiteDBConnection.CreateCommand()
+        $SQLiteCommandCreate.CommandText = " CREATE TABLE IF NOT EXISTS ToolSettings ( Id INTEGER PRIMARY KEY CHECK (Id = 1), LoadSettingsOnStartUp INTEGER NOT NULL, OnlineCheckbyImport INTEGER NOT NULL, PRISMactiv INTEGER NOT NULL, IsCustomer INTEGER NOT NULL, TimeStamp TEXT);"
+        $SQLiteCommandCreate.ExecuteNonQuery() | Out-Null
 
         switch ($SST_InfoType) {
-            "SaveToolSettings" { 
-                $SST_SQliteInsertCMD = $SST_SQLiteCon.CreateCommand()
-                $SST_SQliteInsertCMD.CommandText ="UPDATE ToolSettings SET LoadSettingsOnStartUp = @LoadSettingsOnStartUp, OnlineCheckbyImport = @OnlineCheckbyImport, PRISMactiv = @PRISMactiv, IsCustomer = @IsCustomer, TimeStamp = @TimeStamp;"
-                $SST_SQliteInsertCMD.Parameters.AddWithValue("@LoadSettingsOnStartUp", [Int16]$SST_NewDBObject.LoadSettingsOnStartUp)
-                $SST_SQliteInsertCMD.Parameters.AddWithValue("@OnlineCheckbyImport", [Int16]$SST_NewDBObject.OnlineCheckbyImport)
-                $SST_SQliteInsertCMD.Parameters.AddWithValue("@PRISMactiv", [Int16]$SST_NewDBObject.PRISMactiv)
-                $SST_SQliteInsertCMD.Parameters.AddWithValue("@IsCustomer", [Int16]$SST_NewDBObject.IsCustomer)
-                $SST_SQliteInsertCMD.Parameters.AddWithValue("@TimeStamp", $TimeStamp)
-                $SST_SQliteInsertCMD.ExecuteNonQuery() 
-            }
-            "LoadToolSettings" { 
-                $SST_SQliteReadCMD = $SST_SQLiteCon.CreateCommand()
-                $SST_SQliteReadCMD.CommandText = "SELECT * FROM ToolSettings WHERE Id = 1"
 
-                $SST_SQliteReader = $SST_SQliteReadCMD.ExecuteReader()
-                if ($SST_SQliteReader.Read()) {
-                    $SettingsObj = [pscustomobject]@{
-                        LoadSettingsOnStartUp = [bool]$SST_SQliteReader["LoadSettingsOnStartUp"]
-                        OnlineCheckbyImport   = [bool]$SST_SQliteReader["OnlineCheckbyImport"]
-                        PRISMactiv            = [bool]$SST_SQliteReader["PRISMactiv"]
-                        IsCustomer            = [bool]$SST_SQliteReader["IsCustomer"]
-                        TimeStamp            = $SST_SQliteReader["TimeStamp"]
+            "SaveToolSettings" {
+                # UPSERT auf Id=1
+                $SQLiteCommand = $SQLiteDBConnection.CreateCommand()
+                $SQLiteCommand.CommandText = "INSERT INTO ToolSettings (Id, LoadSettingsOnStartUp, OnlineCheckbyImport, PRISMactiv, IsCustomer, TimeStamp) VALUES (1, @LoadSettingsOnStartUp, @OnlineCheckbyImport, @PRISMactiv, @IsCustomer, @TimeStamp) ON CONFLICT(Id) DO UPDATE SET LoadSettingsOnStartUp = excluded.LoadSettingsOnStartUp, OnlineCheckbyImport = excluded.OnlineCheckbyImport, PRISMactiv = excluded.PRISMactiv, IsCustomer = excluded.IsCustomer, TimeStamp = excluded.TimeStamp;"
+                $SQLiteCommand.Parameters.AddWithValue("@LoadSettingsOnStartUp", [int]$SST_NewDBObject.LoadSettingsOnStartUp) | Out-Null
+                $SQLiteCommand.Parameters.AddWithValue("@OnlineCheckbyImport",   [int]$SST_NewDBObject.OnlineCheckbyImport)   | Out-Null
+                $SQLiteCommand.Parameters.AddWithValue("@PRISMactiv",            [int]$SST_NewDBObject.PRISMactiv)            | Out-Null
+                $SQLiteCommand.Parameters.AddWithValue("@IsCustomer",            [int]$SST_NewDBObject.IsCustomer)            | Out-Null
+                $SQLiteCommand.Parameters.AddWithValue("@TimeStamp",             $TimeStamp)                                  | Out-Null
+
+                $SQLiteCommand.ExecuteNonQuery() | Out-Null
+                return
+            }
+
+            "LoadToolSettings" {
+                $SQLiteCommand = $SQLiteDBConnection.CreateCommand()
+                $SQLiteCommand.CommandText = "SELECT LoadSettingsOnStartUp, OnlineCheckbyImport, PRISMactiv, IsCustomer, TimeStamp FROM ToolSettings WHERE Id = 1;"
+
+                $SQLiteReader = $SQLiteCommand.ExecuteReader()
+                if ($SQLiteReader.Read()) {
+                    return [pscustomobject]@{
+                        LoadSettingsOnStartUp = ([int]$SQLiteReader["LoadSettingsOnStartUp"] -ne 0)
+                        OnlineCheckbyImport   = ([int]$SQLiteReader["OnlineCheckbyImport"]   -ne 0)
+                        PRISMactiv            = ([int]$SQLiteReader["PRISMactiv"]            -ne 0)
+                        IsCustomer            = ([int]$SQLiteReader["IsCustomer"]            -ne 0)
+                        TimeStamp             = $SQLiteReader["TimeStamp"]
                     }
                 }
-                $SST_SQliteReader.Close()
-                return $SettingsObj
+                return $null
             }
-            Default {}
         }
-
     }
-    
-    end {
-        #Verbindung schließen
-        $SST_NewDBObject =$null
-        $SST_SQLiteCon.Close()
-        $SST_SQLiteCon.Dispose()
+    finally {
+        if ($SQLiteReader) { $SQLiteReader.Close(); $SQLiteReader.Dispose() }
+        if ($SQLiteCommand) { $SQLiteCommand.Dispose() }
+        if ($SQLiteCommandCreate) { $SQLiteCommandCreate.Dispose() }
+        if ($SQLiteDBConnection) { $SQLiteDBConnection.Close(); $SQLiteDBConnection.Dispose() }
+
+        # extra sicher für spätere Deletes:
+        [System.Data.SQLite.SQLiteConnection]::ClearAllPools()
     }
 }
