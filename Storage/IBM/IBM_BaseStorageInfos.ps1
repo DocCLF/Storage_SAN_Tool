@@ -21,7 +21,7 @@ function IBM_BaseStorageInfos {
         $ProgressBar = New-ProgressBar
         $BaseUrl = "https://$TD_Device_DeviceIP"+":7443"
 
-        if(Test-Path -Path "$PSRootPath\Resources\DBFolder\SSTLocalDB.db"){
+        if(Test-Path -Path "$PSRootPath\Resources\DBFolder\ToolDB\ToolDB.db"){
             $RESTInfo = SST_RESTDBControl -SST_InfoType "UseStorageToken" -SST_BaseUrl $BaseUrl
             if(([string]::IsNullOrEmpty($RESTInfo)) -and ($TD_Device_ConnectionTyp -eq "REST")){
                 SST_GetSpectrumToken -TD_Device_UserName $TD_Device_UserName -TD_Device_DeviceIP $TD_Device_DeviceIP -TD_Device_PW $TD_Device_PW
@@ -34,8 +34,8 @@ function IBM_BaseStorageInfos {
         switch ($TD_Storage) {
             "SVC" { 
                 if($TD_Device_ConnectionTyp -eq "REST"){
-                    $STONodeInfo = SST_SpectrumSystemAPI -Endpoint lsnode -Body $null -SST_BaseUrl $BaseUrl -RESTInfo $RESTInfo
-                    $STOSystemInfo = SST_SpectrumSystemAPI -Endpoint lssystem -Body $null -SST_BaseUrl $BaseUrl -RESTInfo $RESTInfo
+                    $STONodeInfo = SST_SpectrumSystemAPI -Endpoint lsnode -Body $null -BaseUrl $BaseUrl -RESTInfo $RESTInfo
+                    $STOSystemInfo = SST_SpectrumSystemAPI -Endpoint lssystem -Body $null -BaseUrl $BaseUrl -RESTInfo $RESTInfo
                 }else {
                     $TD_BaseInformations = plink $TD_Device_UserName@$TD_Device_DeviceIP -pw $TD_Device_PW -batch 'lsnode -delim : && lsnode -nohdr |while read id name IO_group_id;do lsnode -delim : $id ;echo;done && lssystem -delim , |grep name'
                     $TD_BaseInformations = $TD_BaseInformations |Select-Object -Skip 1
@@ -43,8 +43,8 @@ function IBM_BaseStorageInfos {
              }
             Default {
                 if($TD_Device_ConnectionTyp -eq "REST"){
-                    $STONodeInfo = SST_SpectrumSystemAPI -Endpoint lsnodecanister -Body $null -SST_BaseUrl $BaseUrl -RESTInfo $RESTInfo
-                    $STOSystemInfo = SST_SpectrumSystemAPI -Endpoint lssystem -Body $null -SST_BaseUrl $BaseUrl -RESTInfo $RESTInfo
+                    $STONodeInfo = SST_SpectrumSystemAPI -Endpoint lsnode -Body $null -BaseUrl $BaseUrl -RESTInfo $RESTInfo
+                    $STOSystemInfo = SST_SpectrumSystemAPI -Endpoint lssystem -Body $null -BaseUrl $BaseUrl -RESTInfo $RESTInfo
                 }else {
                     $TD_BaseInformations = plink $TD_Device_UserName@$TD_Device_DeviceIP -pw $TD_Device_PW -batch 'lsnodecanister -delim : && lsnodecanister -nohdr |while read id name IO_group_id;do lsnodecanister -delim : $id ;echo;done && lssystem -delim , |grep name'
                     $TD_BaseInformations = $TD_BaseInformations |Select-Object -Skip 1
