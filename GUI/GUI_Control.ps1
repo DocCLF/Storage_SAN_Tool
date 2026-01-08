@@ -337,8 +337,11 @@ $TD_BTN_IBM_BaseStorageInfo.add_click({
     <# if there a something in, its better to clean it up befor we use it again #>
     $UCVMMain.DeviceToggles.Clear()
     $TD_Credentials | ForEach-Object {
-        [array]$TD_BaseStorageInfo = IBM_BaseStorageInfos -TD_Line_ID $_.ID -TD_Device_ConnectionTyp $_.ConnectionTyp -TD_Device_UserName $_.UserName -TD_Device_DeviceIP $_.IPAddress -TD_Device_DeviceName $_.DeviceName -TD_Device_PW $([Net.NetworkCredential]::new('', $_.Password).Password) -TD_Storage $_.SVCorVF -TD_Exportpath $TD_tb_ExportPath.Text
-
+        [array]$TD_BaseStorageInfo = IBM_RESTBaseStorageInfos -TD_Line_ID $_.ID -TD_Device_ConnectionTyp $_.ConnectionTyp -TD_Device_UserName $_.UserName -TD_Device_DeviceIP $_.IPAddress -TD_Device_PW $([Net.NetworkCredential]::new('', $_.Password).Password) -TD_Exportpath $TD_tb_ExportPath.Text
+        if(($_.ConnectionTyp -eq "plink") -or (($($TD_BaseStorageInfo.StorageInfo).Count -lt 1))){
+            [array]$TD_BaseStorageInfo = IBM_SSHBaseStorageInfos -TD_Line_ID $_.ID -TD_Device_ConnectionTyp $_.ConnectionTyp -TD_Device_UserName $_.UserName -TD_Device_DeviceIP $_.IPAddress -TD_Device_DeviceName $_.DeviceName -TD_Device_PW $([Net.NetworkCredential]::new('', $_.Password).Password) -TD_Exportpath $TD_tb_ExportPath.Text
+        }
+        Write-Host $TD_BaseStorageInfo
         $DeviceBlock = [DeviceToggle]::new()
         $DeviceBlock.Id = "DeviceBlock$($_.ID)"
         $DeviceBlock.Label = if([string]::IsNullOrWhiteSpace($TD_BaseStorageInfo.ClusterName)){"$($_.IPAddress)"} else {"$($TD_BaseStorageInfo.ClusterName)"}
