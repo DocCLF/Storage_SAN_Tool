@@ -166,7 +166,7 @@
                         Margin="5"
                         MaxWidth="960"
                         MaxHeight="460"
-                        ItemsSource="{Binding Rows}"
+                        ItemsSource="{Binding DGRow}"
                         CanUserAddRows="False"
                         Visibility="{Binding IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
 
