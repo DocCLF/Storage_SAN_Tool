@@ -45,7 +45,10 @@ function SST_DeviceConnecCheck {
 
         switch ($TD_Selected_DeviceType) {
             "Storage" { 
-                $TD_BasicInfo = IBM_BaseStorageInfos -TD_Device_DeviceIP $TD_Selected_DeviceIPAddr -TD_Device_UserName $TD_Selected_DeviceUserName -TD_Device_PW $([Net.NetworkCredential]::new('', $TD_Selected_DevicePassword).Password) -TD_Device_SSHKeyPath $TD_Selected_DeviceSSHFile -TD_Storage $TD_UserInputCred
+                $TD_BasicInfo = IBM_RESTBaseStorageInfos -TD_Device_DeviceIP $TD_Selected_DeviceIPAddr -TD_Device_UserName $TD_Selected_DeviceUserName -TD_Device_PW $([Net.NetworkCredential]::new('', $TD_Selected_DevicePassword).Password) -TD_Device_SSHKeyPath $TD_Selected_DeviceSSHFile -TD_Storage $TD_UserInputCred
+                if(($_.ConnectionTyp -eq "plink") -or (($($TD_BaseStorageInfo.StorageInfo).Count -lt 1))){
+                    [array]$TD_BaseStorageInfo = IBM_SSHBaseStorageInfos -TD_Line_ID $_.ID -TD_Device_ConnectionTyp $_.ConnectionTyp -TD_Device_UserName $_.UserName -TD_Device_DeviceIP $_.IPAddress -TD_Device_DeviceName $_.DeviceName -TD_Device_PW $([Net.NetworkCredential]::new('', $_.Password).Password) -TD_Exportpath $TD_tb_ExportPath.Text
+                }
                 <# not the best check but try-catch do not work, i have to check why #>
                 $TD_BasicDeviceInfos = $TD_BasicInfo.StorageInfo
                 $TD_BasicDeviceConnection = $TD_BasicInfo.ConnectionTyp
