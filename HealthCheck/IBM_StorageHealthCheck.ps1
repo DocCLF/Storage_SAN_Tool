@@ -30,7 +30,10 @@ function IBM_StorageHealthCheck {
                         SST_CreateHealthLayout -SST_UCOBJ $UCOBJ -SST_MainStackPName "$IBMSTODeviceMainSTPName" -SST_GridFuncName "IBMSTOBaseInfoFunc$($_.ID)" -SST_StackPFuncName "FuncIBMSTOBaseInfoStackPN$($_.ID)" -SST_LabelVisuNameofCheck "StorageInfo" -SST_StackPResultsName "ResultsIBMSTOBaseInfoStackPN$($_.ID)" -SST_DeviceID $_.ID -DeviceIP $_.IPAddress
                         
                         #region Storage_Base_Info
-                        [array]$TD_BaseStorageInfo = IBM_BaseStorageInfos -TD_Line_ID $_.ID -TD_Device_ConnectionTyp $_.ConnectionTyp -TD_Device_UserName $_.UserName -TD_Device_DeviceIP $_.IPAddress -TD_Device_DeviceName $_.DeviceName -TD_Device_PW $([Net.NetworkCredential]::new('', $_.Password).Password) -TD_Device_SSHKeyPath $_.SSHKeyPath -TD_Export "no"
+                        [array]$TD_BaseStorageInfo = IBM_RESTBaseStorageInfos -TD_Line_ID $_.ID -TD_Device_ConnectionTyp $_.ConnectionTyp -TD_Device_UserName $_.UserName -TD_Device_DeviceIP $_.IPAddress -TD_Device_DeviceName $_.DeviceName -TD_Device_PW $([Net.NetworkCredential]::new('', $_.Password).Password) -TD_Device_SSHKeyPath $_.SSHKeyPath -TD_Export "no"
+                        if(($_.ConnectionTyp -eq "plink") -or (($($TD_BaseStorageInfo.StorageInfo).Count -lt 1))){
+                            [array]$TD_BaseStorageInfo = IBM_SSHBaseStorageInfos -TD_Line_ID $_.ID -TD_Device_ConnectionTyp $_.ConnectionTyp -TD_Device_UserName $_.UserName -TD_Device_DeviceIP $_.IPAddress -TD_Device_DeviceName $_.DeviceName -TD_Device_PW $([Net.NetworkCredential]::new('', $_.Password).Password) -TD_Exportpath $TD_tb_ExportPath.Text
+                        }
                         SST_ToolMessageCollector -TD_ToolMSGCollector "Storage HS_Eventlog" -TD_ToolMSGType Debug -TD_Shown no
                         [int]$i=0
                         $TD_BaseStorageInfo | ForEach-Object{
