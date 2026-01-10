@@ -28,3 +28,57 @@ function Get-VisualDescendants {
         }
     }
 }
+
+# REST/SSH-Fallback + DeviceBlock-Erstellung zentralisieren
+# Helper-Funktion, die pro Device die Daten holt (REST, sonst SSH) und dir direkt einen DeviceToggle zurückgibt.
+function New-DeviceBlock {
+    param(
+        [Parameter(Mandatory)]
+        $Device,
+        [string]$ExportPath,
+        [Parameter(Mandatory)]
+        [object]$RESTFunc,
+        [Parameter(Mandatory)]
+        [object]$SSHFunc
+    )
+
+    # 1) Daten holen (REST -> wenn leer -> SSH)
+    $pw = [Net.NetworkCredential]::new('', $Device.Password).Password
+    
+    $FunResult = & $RESTFunc -TD_Line_ID $Device.ID -TD_Device_UserName $Device.UserName -TD_Device_DeviceIP $Device.IPAddress -TD_Device_PW $pw -TD_Exportpath $ExportPath
+    if (([string]::IsNullOrWhiteSpace($FunResult.StorageInfo.ID))-or(!($FunResult))) {
+        $FunResult = & $SSHFunc -TD_Line_ID $Device.ID -TD_Device_ConnectionTyp $Device.ConnectionTyp -TD_Device_UserName $Device.UserName -TD_Device_DeviceIP $Device.IPAddress -TD_Device_PW $pw -TD_Exportpath $ExportPath
+    }
+
+    # 2) DeviceToggle bauen
+    $DeviceIdent = [DeviceToggle]::new()
+    $DeviceIdent.Id = "DeviceBlock$($Device.ID)"
+
+    # Label robust: ClusterName kann je nach Result-Shape anders sein
+    $cluster = $FunResult.ClusterName
+    $DeviceIdent.Label = if ([string]::IsNullOrWhiteSpace([string]$cluster)) { "$($Device.IPAddress)" } else { "$cluster" }
+
+    $DeviceIdent.IsChecked = $false
+    return @{ DeviceIdent = $DeviceIdent; FuncResult = $FunResult }
+}
+
+# Generischer Mapper: Add-Rows
+function Add-MappedRows {
+    param(
+        [Parameter(Mandatory)] $Collection,
+        [Parameter(Mandatory)] $Source,
+        [Parameter(Mandatory)] [string] $IdProperty,
+        [Parameter(Mandatory)] [hashtable] $Map
+    )
+
+    foreach ($s in @($Source)) {
+        $id = $s.$IdProperty
+        if ([string]::IsNullOrWhiteSpace([string]$id)) { continue }
+
+        $h = @{}
+        foreach ($k in $Map.Keys) {
+            $h[$k] = [string]$s.($Map[$k])
+        }
+        $Collection.Add([pscustomobject]$h) | Out-Null
+    }
+}
