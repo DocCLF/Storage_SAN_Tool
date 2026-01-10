@@ -75,7 +75,7 @@ function SST_GetSpectrumToken {
         
         $RESTInfo = SST_RESTDBControl -SST_InfoType "SaveStorageToken" -SST_NewDBObject $RESTInfoObj
 
-        if($RESTInfo -eq 0){
+        if($RESTInfo -eq "DataSaved"){
             return "REST"
         }else{
             return "plink"
