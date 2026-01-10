@@ -58,7 +58,6 @@ function SST_GetCredfGUI {
         
         [array]$TD_Credentials = foreach ($TD_ExistingCred in $TD_ExistingCreds) {
             if(($TD_ExistingCred.ID -eq $TD_InportCred.ID)-and($TD_ExistingCred.DeviceTyp -eq $TD_InportCred.DeviceTyp)){
-                $TD_CB_DeviceConnectionTypeText="plink"
                 $TD_CredentialsCount = $TD_InportCred.ID;
                 <# Create the Main_CredObj #>
                 $TD_ExistingCred = "" | Select-Object ID,DeviceTyp,ConnectionTyp,IPAddress,DeviceName,UserName,Password,SVCorVF,MTMCode,ProductDescr,CurrentFirmware,Exportpath
@@ -151,10 +150,6 @@ function SST_GetCredfGUI {
         $TD_Credentials += $TD_UserInputCred
         $TD_DG_KnownDeviceList.ItemsSource = $TD_Credentials
 
-        if(($TD_DG_KnownDeviceList.ItemsSource.count -gt 0)-and($TD_CB_DeviceConnectionType.Text -like "Secure*")){
-            $TD_BTN_AddSSHKey.Background="#FFDDDDDD"
-            $TD_BTN_AddSSHKey.Content="Add SSH-Key"
-        }
         $TD_TB_DevicePassword.Password = $null
     }
 
