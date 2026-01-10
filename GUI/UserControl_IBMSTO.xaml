@@ -40,7 +40,7 @@
                 ToolTip="Get basic Storage information"/>
                 <!--IBM_EventLog-->
                 <ToggleButton
-                x:Name="btn_IBM_Eventlog"
+                x:Name="BTN_IBM_Eventlog"
                 Style="{DynamicResource MainBtnStyle}"
                 Content="Eventlog" 
                 ToolTip="Get the last 100 Events"/>
@@ -150,6 +150,7 @@
                           HorizontalAlignment="Right"/>
             </WrapPanel>
         </GroupBox>
+        <!-- IBM_BaseStorageInfo -->
         <ItemsControl Grid.Column="1" Grid.Row="1"
                       ItemsSource="{Binding Main.DeviceToggles}">
           <ItemsControl.ItemsPanel>
@@ -166,7 +167,7 @@
                         Margin="5"
                         MaxWidth="960"
                         MaxHeight="460"
-                        ItemsSource="{Binding DGRow}"
+                        ItemsSource="{Binding BaseRows}"
                         CanUserAddRows="False"
                         Visibility="{Binding IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
 
@@ -204,6 +205,59 @@
                   <DataGridTextColumn Width="auto" Header="Config_Node" Binding="{Binding Config_Node}" IsReadOnly="True"/>
                   <DataGridTextColumn Width="auto" Header="SideID" Binding="{Binding SideID}" IsReadOnly="True"/>
                   <DataGridTextColumn Width="auto" Header="Side Name" Binding="{Binding SideName}" IsReadOnly="True"/>
+                </DataGrid.Columns>
+
+              </DataGrid>
+            </DataTemplate>
+          </ItemsControl.ItemTemplate>
+        </ItemsControl>
+        <!-- IBM_EventLog -->
+        <ItemsControl Grid.Column="1" Grid.Row="1"
+                      ItemsSource="{Binding Main.DeviceToggles}">
+          <ItemsControl.ItemsPanel>
+            <ItemsPanelTemplate>
+              <StackPanel/>
+            </ItemsPanelTemplate>
+          </ItemsControl.ItemsPanel>
+
+          <ItemsControl.ItemTemplate>
+            <DataTemplate>
+              <DataGrid AutoGenerateColumns="False"
+                        ColumnWidth="*"
+                        HorizontalAlignment="Stretch"
+                        Margin="5"
+                        MaxWidth="960"
+                        MaxHeight="460"
+                        ItemsSource="{Binding ELRow}"
+                        CanUserAddRows="False"
+                        Visibility="{Binding IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
+
+                <!-- Optional: Header pro Device -->
+                <DataGrid.GroupStyle>
+                  <GroupStyle/>
+                </DataGrid.GroupStyle>
+
+                <DataGrid.RowStyle>
+                  <Style TargetType="DataGridRow">
+                    <Style.Triggers>
+                      <DataTrigger Binding="{Binding Status}" Value="alert">
+                        <Setter Property="Background" Value="Red" />
+                      </DataTrigger>
+                    </Style.Triggers>
+                  </Style>
+                </DataGrid.RowStyle>
+
+                <DataGrid.Columns>
+                  <DataGridTextColumn Width="auto" Header="SeqID" Binding="{Binding SeqID}" IsReadOnly="True"/>
+                  <DataGridTextColumn Width="auto" Header="LastTime" Binding="{Binding LastTime}" IsReadOnly="True"/>
+                  <DataGridTextColumn Width="auto" Header="ObjectType" Binding="{Binding ObjectType}" IsReadOnly="True"/>
+                  <DataGridTextColumn Width="auto" Header="ObjectID" Binding="{Binding ObjectID}" IsReadOnly="True"/>
+                  <DataGridTextColumn Width="auto" Header="ObjectName" Binding="{Binding ObjectName}" IsReadOnly="True"/>
+                  <DataGridTextColumn Width="auto" Header="CopyID" Binding="{Binding CopyID}" IsReadOnly="True"/>
+                  <DataGridTextColumn Width="auto" Header="Status" Binding="{Binding Status}" IsReadOnly="True"/>
+                  <DataGridTextColumn Width="auto" Header="Fixed" Binding="{Binding Fixed}" IsReadOnly="True"/>
+                  <DataGridTextColumn Width="auto" Header="ErrorCode" Binding="{Binding ErrorCode}" IsReadOnly="True"/>
+                  <DataGridTextColumn Width="auto" Header="Description" Binding="{Binding Description}" IsReadOnly="True"/>
                 </DataGrid.Columns>
 
               </DataGrid>
