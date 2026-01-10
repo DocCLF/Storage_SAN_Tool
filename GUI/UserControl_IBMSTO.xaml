@@ -152,7 +152,8 @@
         </GroupBox>
         <!-- IBM_BaseStorageInfo -->
         <ItemsControl Grid.Column="1" Grid.Row="1"
-                      ItemsSource="{Binding Main.DeviceToggles}">
+                      ItemsSource="{Binding Main.DeviceToggles}"
+                      Style="{DynamicResource ShowWhenBase}">
           <ItemsControl.ItemsPanel>
             <ItemsPanelTemplate>
               <StackPanel/>
@@ -213,7 +214,8 @@
         </ItemsControl>
         <!-- IBM_EventLog -->
         <ItemsControl Grid.Column="1" Grid.Row="1"
-                      ItemsSource="{Binding Main.DeviceToggles}">
+                      ItemsSource="{Binding Main.DeviceToggles}"
+                      Style="{DynamicResource ShowWhenEvents}">
           <ItemsControl.ItemsPanel>
             <ItemsPanelTemplate>
               <StackPanel/>
@@ -228,7 +230,7 @@
                         Margin="5"
                         MaxWidth="960"
                         MaxHeight="460"
-                        ItemsSource="{Binding ELRow}"
+                        ItemsSource="{Binding EventRows}"
                         CanUserAddRows="False"
                         Visibility="{Binding IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
 
@@ -248,7 +250,7 @@
                 </DataGrid.RowStyle>
 
                 <DataGrid.Columns>
-                  <DataGridTextColumn Width="auto" Header="SeqID" Binding="{Binding SeqID}" IsReadOnly="True"/>
+                  <DataGridTextColumn Width="auto" Header="SeqID" Binding="{Binding ID}" IsReadOnly="True"/>
                   <DataGridTextColumn Width="auto" Header="LastTime" Binding="{Binding LastTime}" IsReadOnly="True"/>
                   <DataGridTextColumn Width="auto" Header="ObjectType" Binding="{Binding ObjectType}" IsReadOnly="True"/>
                   <DataGridTextColumn Width="auto" Header="ObjectID" Binding="{Binding ObjectID}" IsReadOnly="True"/>
