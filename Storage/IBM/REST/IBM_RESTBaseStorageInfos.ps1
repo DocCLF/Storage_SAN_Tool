@@ -46,7 +46,7 @@ function IBM_RESTBaseStorageInfos {
             $TD_FSBaseTemp.Status   =   $STONodeInfo.status[$i]
             $TD_FSBaseTemp.IO_group_id   =   $STONodeInfo.IO_group_id[$i]
             $TD_FSBaseTemp.IO_group_Name   =   $STONodeInfo.IO_group_name[$i]
-            $TD_FSBaseTemp.Serial_Number   =   $STONodeInfo.enclosure_serial_number[$i]
+            $TD_FSBaseTemp.Serial_Number   =   if($STONodeInfo.enclosure_serial_number[$i] -eq ""){$STONodeInfo.panel_name[$i]}else{$STONodeInfo.enclosure_serial_number[$i]}
             $TD_FSBaseTemp.Config_Node   =   $STONodeInfo.config_node[$i]
             $TD_FSBaseTemp.SideID   =   $STONodeInfo.site_id[$i]
             $TD_FSBaseTemp.SideName   =   $STONodeInfo.site_name[$i]
