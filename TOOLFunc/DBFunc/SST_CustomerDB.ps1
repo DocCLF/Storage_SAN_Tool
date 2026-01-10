@@ -41,8 +41,8 @@ function SST_CustomerDB {
                 $SQLiteCommand = $SQLiteDBConnection.CreateCommand()
                 $SQLiteCommand.CommandText = " INSERT INTO CustomerToolSetUpDB (CustomerName, ExportPath, ExportPathCredential, TimeStamp) VALUES (@CustomerName, @ExportPath, @ExportPathCredential, @TimeStamp) ON CONFLICT(CustomerName) DO UPDATE SET ExportPath = excluded.ExportPath, ExportPathCredential = excluded.ExportPathCredential, TimeStamp = excluded.TimeStamp;"
                 $SQLiteCommand.Parameters.AddWithValue("@CustomerName", $Customer) | Out-Null
-                $SQLiteCommand.Parameters.AddWithValue("@ExportPath", ($SST_NewDBObject.ExportPath ?? '')) | Out-Null
-                $SQLiteCommand.Parameters.AddWithValue("@ExportPathCredential", ($SST_NewDBObject.ExportPathCredential ?? '')) | Out-Null
+                $SQLiteCommand.Parameters.AddWithValue("@ExportPath", (if ($null -ne $SST_NewDBObject.ExportPath) { $SST_NewDBObject.ExportPath } else { '' })) |Out-Null
+                $SQLiteCommand.Parameters.AddWithValue("@ExportPathCredential", (if ($null -ne $SST_NewDBObject.ExportPathCredential) { $SST_NewDBObject.ExportPathCredential } else { '' })) |Out-Null
                 $SQLiteCommand.Parameters.AddWithValue("@TimeStamp", $TimeStamp) | Out-Null
                 $SQLiteCommand.ExecuteNonQuery() | Out-Null
                 return
