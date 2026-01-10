@@ -40,7 +40,7 @@
                             <TextBlock Text="Overall Status" FontWeight="Bold" HorizontalAlignment="Left"/>
                             <TextBlock x:Name="TB_HealthStatus" Text="Health OK" Foreground="Green" FontWeight="Bold" HorizontalAlignment="Center"/>
                             <Button x:name="BTN_RefreshUC1" Height="50" Width="50" HorizontalAlignment="center" Background="Transparent" BorderThickness="0" >
-                                <Image Source = "{Binding RefrehIcon96 , Mode=TwoWay}" Stretch="Uniform" VerticalAlignment="Bottom" HorizontalAlignment="Left" MaxHeight="30" />
+                                <Image Source = "{Binding RefreshIcon96 , Mode=TwoWay}" Stretch="Uniform" VerticalAlignment="Bottom" HorizontalAlignment="Left" MaxHeight="30" />
                             </Button>
                         </StackPanel>
                     </Label>
