@@ -1,3 +1,4 @@
+
 Add-Type -TypeDefinition @"
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -47,6 +48,21 @@ public class MainViewModel : INotifyPropertyChanged
         }
     }
 
+    // <<< DAS ist die View-Umschaltung >>>
+    private string _selectedView = "Base";
+    public string SelectedView
+    {
+        get { return _selectedView; }
+        set
+        {
+            if (_selectedView != value)
+            {
+                _selectedView = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SelectedView)));
+            }
+        }
+    }
+
     public event PropertyChangedEventHandler PropertyChanged;
 }
 
@@ -57,10 +73,9 @@ public class DeviceToggle : INotifyPropertyChanged
     public string Id { get; set; }
     public string Label { get; set; }
 
-    // Jede Ansicht bekommt EINE Collection (kein Row-Typ nötig)
+    // Pro Ansicht eine Collection (für dein XAML)
     public ObservableCollection<object> BaseRows { get; } = new ObservableCollection<object>();
     public ObservableCollection<object> EventRows { get; } = new ObservableCollection<object>();
-    // später: weitere Views -> weitere Collections (nur 1 Zeile pro View)
 
     public bool IsChecked
     {
