@@ -28,7 +28,8 @@ $StyleFiles = @(
     "$PSRootPath\Resources\Styles\ColorStyle.xaml",
     "$PSRootPath\Resources\Styles\OtherControlStyle.xaml",
     "$PSRootPath\Resources\Styles\TextBoxStyle.xaml",
-    "$PSRootPath\Resources\Styles\ButtonStyle.xaml"
+    "$PSRootPath\Resources\Styles\ButtonStyle.xaml",
+    "$PSRootPath\Resources\Styles\ViewVisibilityStyles.xaml"
 )
 $global:LoadedStyles = @()
 foreach ($file in $styleFiles) {
@@ -338,24 +339,25 @@ $TD_BTN_IBM_BaseStorageInfo.add_click({
     $UCVMMain.DeviceToggles.Clear()
     foreach($TD_Creds in $TD_Credentials){
         $FunctionResult = New-DeviceBlock -Device $TD_Creds -ExportPath $TD_tb_ExportPath.Text -RESTFunc IBM_RESTBaseStorageInfos -SSHFunc IBM_SSHBaseStorageInfos
-
-$mapStorage = @{
-    ID            = 'ID'
-    Name          = 'Name'
-    ClusterName   = 'ClusterName'
-    WWNN          = 'WWNN'
-    Status        = 'Status'
-    IO_group_id   = 'IO_group_id'
-    IO_group_Name = 'IO_group_Name'
-    Prod_MTM      = 'Prod_MTM'
-    Serial_Number = 'Serial_Number'
-    Code_Level    = 'Code_Level'
-    RecommendedPTF = 'RecommendedPTF'
-}
-        
-        Add-MappedRows -Collection $FunctionResult.DeviceIdent.BaseRows -RowType ([BaseStorageRow]) -Source $FunctionResult.FuncResult.StorageInfo -IdProperty 'ID' -Map $mapStorage
+        $mapStorageInfo = @{
+            ID             = 'ID'
+            Name           = 'Name'
+            WWNN           = 'WWNN'
+            Status         = 'Status'
+            IO_group_id    = 'IO_group_id'
+            IO_group_Name  = 'IO_group_Name'
+            Prod_MTM       = 'Prod_MTM'
+            Serial_Number  = 'Serial_Number'
+            Code_Level     = 'Code_Level'
+            RecommendedPTF = 'RecommendedPTF'
+            Config_Node    = 'Config_Node'
+            SideID         = 'SideID'
+            SideName       = 'SideName'
+        } 
+        Add-MappedRows -Collection $FunctionResult.DeviceIdent.BaseRows -Source $FunctionResult.FuncResult.StorageInfo -IdProperty 'ID' -Map $mapStorageInfo
 
         $UCVMMain.DeviceToggles.Add($FunctionResult.DeviceIdent)
+        $UCVMMain.SelectedView = "Base"
     }
 })
 $TD_BTN_IBM_Eventlog.add_click({
@@ -370,10 +372,24 @@ $TD_BTN_IBM_Eventlog.add_click({
     $UCVMMain.DeviceToggles.Clear()
     foreach($TD_Creds in $TD_Credentials){
         $FunctionResult = New-DeviceBlock -Device $TD_Creds -ExportPath $TD_tb_ExportPath.Text -RESTFunc IBM_RESTEventLog -SSHFunc IBM_SSHEventLog
-        
-        Add-Rows -Collection $FunctionResult.DeviceIdent.ELRow -RowType ([EventLogStorageRow]) -Source $FunctionResult.FuncResult -IdProperty 'SeqID'
+        # Links = Propertyname im PSCustomObject (das bindet dein XAML)
+        # Rechts = Propertyname im Source-Objekt
+        $mapStorageEvents = @{
+            ID          = 'SeqID'
+            LastTime    = 'LastTime'
+            ObjectType  = 'ObjectType'
+            ObjectID    = 'ObjectID'
+            ObjectName  = 'ObjectName'
+            CopyID      = 'CopyID'
+            Status      = 'Status'
+            Fixed       = 'Fixed'
+            ErrorCode   = 'ErrorCode'
+            Description = 'Description'
+        }
+        Add-MappedRows -Collection $FunctionResult.DeviceIdent.EventRows -Source $FunctionResult.FuncResult -IdProperty 'SeqID' -Map $mapStorageEvents
 
         $UCVMMain.DeviceToggles.Add($FunctionResult.DeviceIdent)
+        $UCVMMain.SelectedView = "Events"
     }
 })
 #endregion
