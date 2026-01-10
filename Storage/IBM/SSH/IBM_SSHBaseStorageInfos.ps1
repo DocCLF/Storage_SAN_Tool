@@ -20,9 +20,6 @@ function IBM_SSHBaseStorageInfos {
         [int]$ProgCounter=0
         $ProgressBar = New-ProgressBar
 
-        if([string]::IsNullOrWhiteSpace($TD_Device_ConnectionTyp)){
-            $TD_Device_ConnectionTyp = SST_GetSpectrumToken -TD_Device_UserName $TD_Device_UserName -TD_Device_DeviceIP $TD_Device_DeviceIP -TD_Device_PW $TD_Device_PW 
-        }
         <# Connect to Device and get all needed Data #>
         switch ($TD_Storage) {
             "SVC" { 
@@ -87,15 +84,6 @@ function IBM_SSHBaseStorageInfos {
     }
     
     end {
-        if($TD_Line_ID -eq 1){$TD_CB_STO_DG1.Visibility="visible";$TD_LB_STO_DG1.Visibility="visible"; $TD_LB_STO_DG1.Content=$TD_Device_DeviceName}
-        if($TD_Line_ID -eq 2){$TD_CB_STO_DG2.Visibility="visible";$TD_LB_STO_DG2.Visibility="visible"; $TD_LB_STO_DG2.Content=$TD_Device_DeviceName}
-        if($TD_Line_ID -eq 3){$TD_CB_STO_DG3.Visibility="visible";$TD_LB_STO_DG3.Visibility="visible"; $TD_LB_STO_DG3.Content=$TD_Device_DeviceName}
-        if($TD_Line_ID -eq 4){$TD_CB_STO_DG4.Visibility="visible";$TD_LB_STO_DG4.Visibility="visible"; $TD_LB_STO_DG4.Content=$TD_Device_DeviceName}
-        if($TD_Line_ID -eq 5){$TD_CB_STO_DG5.Visibility="visible";$TD_LB_STO_DG5.Visibility="visible"; $TD_LB_STO_DG5.Content=$TD_Device_DeviceName}  
-        if($TD_Line_ID -eq 6){$TD_CB_STO_DG6.Visibility="visible";$TD_LB_STO_DG6.Visibility="visible"; $TD_LB_STO_DG6.Content=$TD_Device_DeviceName}  
-        if($TD_Line_ID -eq 7){$TD_CB_STO_DG7.Visibility="visible";$TD_LB_STO_DG7.Visibility="visible"; $TD_LB_STO_DG7.Content=$TD_Device_DeviceName}
-        if($TD_Line_ID -eq 8){$TD_CB_STO_DG8.Visibility="visible";$TD_LB_STO_DG8.Visibility="visible"; $TD_LB_STO_DG8.Content=$TD_Device_DeviceName}
-
         Close-ProgressBar -ProgressBar $ProgressBar
         if([string]::IsNullOrEmpty($TD_Device_DeviceName)){$TD_Device_DeviceName = $TD_StorageInfo.Name[0]}
         <# export y or n #>
