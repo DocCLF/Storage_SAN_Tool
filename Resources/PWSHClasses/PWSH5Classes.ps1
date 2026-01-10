@@ -1,8 +1,5 @@
-Add-Type -AssemblyName System
-Add-Type -AssemblyName System.Core
-Add-Type -AssemblyName WindowsBase
-Add-Type -AssemblyName PresentationCore
-Add-Type -AssemblyName PresentationFramework
+# Nur einmal pro Session laden
+if (-not ("RootViewModel" -as [type])) {
 
 $cs = @"
 using System;
@@ -11,14 +8,19 @@ using System.ComponentModel;
 
 public class RootViewModel : INotifyPropertyChanged
 {
+    private MainViewModel _main;
+
     public RootViewModel()
     {
-        Main = new MainViewModel();
+        _main = new MainViewModel();
     }
 
-    public MainViewModel Main { get; private set; }
+    public MainViewModel Main
+    {
+        get { return _main; }
+    }
 
-    public string RefrehIcon96 { get; set; }
+    public string RefreshIcon96  { get; set; }
     public string IBMFS73Icon { get; set; }
     public string SAN64B7Icon { get; set; }
     public string IBMPower11Icon { get; set; }
@@ -32,55 +34,102 @@ public class RootViewModel : INotifyPropertyChanged
             if (_customerYN != value)
             {
                 _customerYN = value;
-                var handler = PropertyChanged;
-                if (handler != null) handler(this, new PropertyChangedEventArgs("CustomerYN"));
+                OnPropertyChanged("CustomerYN");
             }
         }
     }
 
     public event PropertyChangedEventHandler PropertyChanged;
+
+    protected void OnPropertyChanged(string name)
+    {
+        var handler = PropertyChanged;
+        if (handler != null)
+            handler(this, new PropertyChangedEventArgs(name));
+    }
 }
 
-public class BaseStorageRow
+public class MainViewModel : INotifyPropertyChanged
 {
-    public string ID { get; set; }
-    public string Name { get; set; }
-    public string ClusterName { get; set; }
-    public string WWNN { get; set; }
-    public string Status { get; set; }
-    public string IO_group_id { get; set; }
-    public string IO_group_Name { get; set; }
-    public string Prod_MTM { get; set; }
-    public string Serial_Number { get; set; }
-    public string Code_Level { get; set; }
-    public string RecommendedPTF { get; set; }
-    public string Config_Node { get; set; }
-    public string SideID { get; set; }
-    public string SideName { get; set; }
-    public string MDiskTotalCapacity { get; set; }
-    public string MDiskFreeCapacity { get; set; }
-    public string MDiskUsedCapacity { get; set; }
-    public string PhysicalTotalCapacity { get; set; }
-    public string PhysicalFreeCapacity { get; set; }
-    public string HostUnmap { get; set; }
-    public string BackendUnmap { get; set; }
-    public string Topology { get; set; }
-    public string Layer { get; set; }
-    public string QuorumMode { get; set; }
+    private ObservableCollection<DeviceToggle> _deviceToggles;
+    private bool _selectAll;
+    private string _selectedView;
+
+    public MainViewModel()
+    {
+        _deviceToggles = new ObservableCollection<DeviceToggle>();
+        _selectedView = "Base";
+    }
+
+    public ObservableCollection<DeviceToggle> DeviceToggles
+    {
+        get { return _deviceToggles; }
+    }
+
+    public bool SelectAll
+    {
+        get { return _selectAll; }
+        set
+        {
+            if (_selectAll != value)
+            {
+                _selectAll = value;
+                OnPropertyChanged("SelectAll");
+
+                foreach (var d in _deviceToggles)
+                    d.IsChecked = _selectAll;
+            }
+        }
+    }
+
+    // View-Umschaltung
+    public string SelectedView
+    {
+        get { return _selectedView; }
+        set
+        {
+            if (_selectedView != value)
+            {
+                _selectedView = value;
+                OnPropertyChanged("SelectedView");
+            }
+        }
+    }
+
+    public event PropertyChangedEventHandler PropertyChanged;
+
+    protected void OnPropertyChanged(string name)
+    {
+        var handler = PropertyChanged;
+        if (handler != null)
+            handler(this, new PropertyChangedEventArgs(name));
+    }
 }
 
 public class DeviceToggle : INotifyPropertyChanged
 {
+    private bool _isChecked;
+    private ObservableCollection<object> _baseRows;
+    private ObservableCollection<object> _eventRows;
+
     public DeviceToggle()
     {
-        DGRow = new ObservableCollection<BaseStorageRow>();
+        _baseRows = new ObservableCollection<object>();
+        _eventRows = new ObservableCollection<object>();
     }
 
-    private bool _isChecked;
     public string Id { get; set; }
     public string Label { get; set; }
 
-    public ObservableCollection<BaseStorageRow> DGRow { get; private set; }
+    public ObservableCollection<object> BaseRows
+    {
+        get { return _baseRows; }
+    }
+
+    public ObservableCollection<object> EventRows
+    {
+        get { return _eventRows; }
+    }
 
     public bool IsChecked
     {
@@ -90,51 +139,28 @@ public class DeviceToggle : INotifyPropertyChanged
             if (_isChecked != value)
             {
                 _isChecked = value;
-                var handler = PropertyChanged;
-                if (handler != null) handler(this, new PropertyChangedEventArgs("IsChecked"));
+                OnPropertyChanged("IsChecked");
             }
         }
     }
 
     public event PropertyChangedEventHandler PropertyChanged;
-}
 
-public class MainViewModel : INotifyPropertyChanged
-{
-    public MainViewModel()
+    protected void OnPropertyChanged(string name)
     {
-        DeviceToggles = new ObservableCollection<DeviceToggle>();
+        var handler = PropertyChanged;
+        if (handler != null)
+            handler(this, new PropertyChangedEventArgs(name));
     }
-
-    public ObservableCollection<DeviceToggle> DeviceToggles { get; private set; }
-
-    private bool _selectAll;
-    public bool SelectAll
-    {
-        get { return _selectAll; }
-        set
-        {
-            if (_selectAll != value)
-            {
-                _selectAll = value;
-
-                var handler = PropertyChanged;
-                if (handler != null) handler(this, new PropertyChangedEventArgs("SelectAll"));
-
-                foreach (var d in DeviceToggles) d.IsChecked = _selectAll;
-            }
-        }
-    }
-
-    public event PropertyChangedEventHandler PropertyChanged;
 }
 "@
 
-try {
-    Add-Type -TypeDefinition $cs -Language CSharp -ErrorAction Stop
-}
-catch {
-    Write-Host "Add-Type (classes.ps1) FEHLER:" -ForegroundColor Red
-    Write-Host $_.Exception.Message -ForegroundColor Red
-    throw
+    try {
+        Add-Type -TypeDefinition $cs -Language CSharp -ErrorAction Stop
+    }
+    catch {
+        Write-Host "Add-Type FEHLER:" -ForegroundColor Red
+        Write-Host $_.Exception.Message -ForegroundColor Red
+        throw
+    }
 }
