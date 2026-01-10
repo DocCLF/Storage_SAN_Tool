@@ -57,7 +57,7 @@ $ViewModel = [RootViewModel]::new()
 $ViewModel.IBMFS73Icon = "$PSRootPath\Resources\Icons\IBMFS73Icon.png"
 $ViewModel.SAN64B7Icon = "$PSRootPath\Resources\Icons\SAN64B7Icon.png"
 $ViewModel.IBMPower11Icon = "$PSRootPath\Resources\Icons\IBMPower11Icon.png"
-$ViewModel.RefrehIcon96 = "$PSRootPath\Resources\Icons\iconrefresh96.png"
+$ViewModel.RefreshIcon96 = "$PSRootPath\Resources\Icons\iconrefresh96.png"
 $ViewModel.CustomerYN    = $true
 
 <# PROFI Logo in MainWindow #>
@@ -336,49 +336,44 @@ $TD_BTN_IBM_BaseStorageInfo.add_click({
     $UCVMMain = $UCDataContext.Main
     <# if there a something in, its better to clean it up befor we use it again #>
     $UCVMMain.DeviceToggles.Clear()
-    $TD_Credentials | ForEach-Object {
-        [array]$TD_BaseStorageInfo = IBM_RESTBaseStorageInfos -TD_Line_ID $_.ID -TD_Device_ConnectionTyp $_.ConnectionTyp -TD_Device_UserName $_.UserName -TD_Device_DeviceIP $_.IPAddress -TD_Device_PW $([Net.NetworkCredential]::new('', $_.Password).Password) -TD_Exportpath $TD_tb_ExportPath.Text
-        if(($_.ConnectionTyp -eq "plink") -or (($($TD_BaseStorageInfo.StorageInfo).Count -lt 1))){
-            [array]$TD_BaseStorageInfo = IBM_SSHBaseStorageInfos -TD_Line_ID $_.ID -TD_Device_ConnectionTyp $_.ConnectionTyp -TD_Device_UserName $_.UserName -TD_Device_DeviceIP $_.IPAddress -TD_Device_DeviceName $_.DeviceName -TD_Device_PW $([Net.NetworkCredential]::new('', $_.Password).Password) -TD_Exportpath $TD_tb_ExportPath.Text
-        }
-        Write-Host $TD_BaseStorageInfo
-        $DeviceBlock = [DeviceToggle]::new()
-        $DeviceBlock.Id = "DeviceBlock$($_.ID)"
-        $DeviceBlock.Label = if([string]::IsNullOrWhiteSpace($TD_BaseStorageInfo.ClusterName)){"$($_.IPAddress)"} else {"$($TD_BaseStorageInfo.ClusterName)"}
-        $DeviceBlock.IsChecked = $false
-        # Rows hinzufÃ¼gen (Mapping muss zu BaseStorageRow passen)
-        foreach ($StorageInfo in $($TD_BaseStorageInfo.StorageInfo)) {
-            if ([string]::IsNullOrWhiteSpace([string]$StorageInfo.ID)) { continue }
-            $DGRow = [BaseStorageRow]::new()
-            $DGRow.ID = $StorageInfo.ID
-            $DGRow.Name = $StorageInfo.Name
-            $DGRow.ClusterName = $StorageInfo.ClusterName
-            $DGRow.WWNN = $StorageInfo.WWNN
-            $DGRow.Status = $StorageInfo.Status
-            $DGRow.IO_group_id = $StorageInfo.IO_group_id
-            $DGRow.IO_group_Name = $StorageInfo.IO_group_Name
-            $DGRow.Prod_MTM = $StorageInfo.Prod_MTM
-            $DGRow.Serial_Number = $StorageInfo.Serial_Number
-            $DGRow.Code_Level = $StorageInfo.Code_Level
-            $DGRow.RecommendedPTF = $StorageInfo.RecommendedPTF
-            $DGRow.Config_Node = $StorageInfo.Config_Node
-            $DGRow.SideID = $StorageInfo.SideID
-            $DGRow.SideName = $StorageInfo.SideName
+    foreach($TD_Creds in $TD_Credentials){
+        $FunctionResult = New-DeviceBlock -Device $TD_Creds -ExportPath $TD_tb_ExportPath.Text -RESTFunc IBM_RESTBaseStorageInfos -SSHFunc IBM_SSHBaseStorageInfos
 
-            $DGRow.MDiskTotalCapacity = $StorageInfo.MDiskTotalCapacity
-            $DGRow.MDiskFreeCapacity = $StorageInfo.MDiskFreeCapacity
-            $DGRow.MDiskUsedCapacity = $StorageInfo.MDiskUsedCapacity
-            $DGRow.PhysicalTotalCapacity = $StorageInfo.PhysicalTotalCapacity
-            $DGRow.PhysicalFreeCapacity = $StorageInfo.PhysicalFreeCapacity
-            $DGRow.HostUnmap = $StorageInfo.HostUnmap
-            $DGRow.BackendUnmap = $StorageInfo.BackendUnmap
-            $DGRow.Topology = $StorageInfo.Topology
-            $DGRow.Layer = $StorageInfo.Layer
-            $DGRow.QuorumMode = $StorageInfo.QuorumMode
+$mapStorage = @{
+    ID            = 'ID'
+    Name          = 'Name'
+    ClusterName   = 'ClusterName'
+    WWNN          = 'WWNN'
+    Status        = 'Status'
+    IO_group_id   = 'IO_group_id'
+    IO_group_Name = 'IO_group_Name'
+    Prod_MTM      = 'Prod_MTM'
+    Serial_Number = 'Serial_Number'
+    Code_Level    = 'Code_Level'
+    RecommendedPTF = 'RecommendedPTF'
+}
+        
+        Add-MappedRows -Collection $FunctionResult.DeviceIdent.BaseRows -RowType ([BaseStorageRow]) -Source $FunctionResult.FuncResult.StorageInfo -IdProperty 'ID' -Map $mapStorage
 
-            $DeviceBlock.DGRow.Add($DGRow)
-        }
-        $UCVMMain.DeviceToggles.Add($DeviceBlock)
+        $UCVMMain.DeviceToggles.Add($FunctionResult.DeviceIdent)
+    }
+})
+$TD_BTN_IBM_Eventlog.add_click({
+    <#Get all Device Cred and count them #>
+    $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_.DeviceTyp -eq "Storage"}
+    <# get the DataConteext of the current View/ means UC and if its nul trow an error #>
+    $UCDataContext = $TD_UserControl_IBMSTO.DataContext
+    if (-not $UCDataContext) { Write-Host "DataContext ist NULL!" -ForegroundColor Red; return }
+    <# if there is a DataContext find th Main Part und put it into UCVMMain#>
+    $UCVMMain = $UCDataContext.Main
+    <# if there a something in, its better to clean it up befor we use it again #>
+    $UCVMMain.DeviceToggles.Clear()
+    foreach($TD_Creds in $TD_Credentials){
+        $FunctionResult = New-DeviceBlock -Device $TD_Creds -ExportPath $TD_tb_ExportPath.Text -RESTFunc IBM_RESTEventLog -SSHFunc IBM_SSHEventLog
+        
+        Add-Rows -Collection $FunctionResult.DeviceIdent.ELRow -RowType ([EventLogStorageRow]) -Source $FunctionResult.FuncResult -IdProperty 'SeqID'
+
+        $UCVMMain.DeviceToggles.Add($FunctionResult.DeviceIdent)
     }
 })
 #endregion
