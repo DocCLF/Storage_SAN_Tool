@@ -111,11 +111,13 @@ public class DeviceToggle : INotifyPropertyChanged
     private bool _isChecked;
     private ObservableCollection<object> _baseRows;
     private ObservableCollection<object> _eventRows;
+    private ObservableCollection<object> _auditLogRows;
 
     public DeviceToggle()
     {
         _baseRows = new ObservableCollection<object>();
         _eventRows = new ObservableCollection<object>();
+        _auditLogRows = new ObservableCollection<object>();
     }
 
     public string Id { get; set; }
@@ -125,12 +127,14 @@ public class DeviceToggle : INotifyPropertyChanged
     {
         get { return _baseRows; }
     }
-
     public ObservableCollection<object> EventRows
     {
         get { return _eventRows; }
     }
-
+    public ObservableCollection<object> AuditLogRows
+    {
+        get { return _auditLogRows; }
+    }
     public bool IsChecked
     {
         get { return _isChecked; }
