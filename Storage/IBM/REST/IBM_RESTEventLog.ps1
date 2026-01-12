@@ -7,8 +7,8 @@ function IBM_RESTEventLog {
         [string]$TD_Device_DeviceIP,
         [string]$TD_Device_PW,
         [string]$TD_Export = "yes",
-        $body = @{alert = "yes"; message = "yes"; monitoring = "yes"; count = "100"; order = "date"}, <# This is the only part you are allowed to change. #>
-        [string]$TD_Exportpath
+        [string]$TD_Exportpath,
+        $body = @{alert = "yes"; message = "yes"; monitoring = "yes"; count = "100"; order = "date"} <# This is the only part you are allowed to change. #>
     )
     
     begin{
@@ -44,7 +44,6 @@ function IBM_RESTEventLog {
     }
 
     process{
-
         [int]$imax = $TD_CollectEventInfo.Count
         [array]$TD_EventCollection = for ($i = 0; $i -le $imax; $i++) {
             <# Node Info#>
