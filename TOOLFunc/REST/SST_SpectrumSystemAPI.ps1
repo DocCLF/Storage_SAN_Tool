@@ -45,8 +45,8 @@ function SST_SpectrumSystemAPI {
             try {
                 $response = Invoke-RestMethod -Uri $Uri -Method $Method -Headers $Headers -ContentType "application/json" -Body $bodyJson -SkipCertificateCheck -SslProtocol Tls12
             } catch {
-                Write-Host "API error when calling $Endpoint :" -ForegroundColor Red
-                Write-Host $_ -ForegroundColor Red
+                Write-Error "API error when calling $Endpoint :" -ForegroundColor Red
+                Write-Error $_ -ForegroundColor Red
                 return $null
             }
         }
