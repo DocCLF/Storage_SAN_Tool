@@ -46,55 +46,55 @@
                 ToolTip="Get the last 100 Events"/>
                 <!--IBM_CatAuditLog-->
                 <ToggleButton
-                x:Name="btn_IBM_CatAuditLog"
+                x:Name="BTN_IBM_CatAuditLog"
                 Style="{DynamicResource MainBtnStyle}"
                 Content="Audit Log"
                 ToolTip="Get the last 100 in-memory commands of the audit log" /> 
                 <!--IBM_HostVolumeMap-->
                 <ToggleButton
-                x:Name="btn_IBM_HostVolumeMap"
+                x:Name="BTN_IBM_HostVolumeMap"
                 Style="{DynamicResource MainBtnStyle}"
                 Content="Host Volume Info" 
                 ToolTip="Get Infos to Host, HostCluster and their Volumes" />
                 <!--IBM_HostInfo-->
                 <ToggleButton
-                x:Name="btn_IBM_HostInfo"
+                x:Name="BTN_IBM_HostInfo"
                 Style="{DynamicResource MainBtnStyle}"
                 Content="Hosts Info" 
                 ToolTip="Get Infos to Host, HostCluster only" />
                 <!--IBM_PoolVolumeInfo-->
                 <ToggleButton
-                x:Name="btn_IBM_PoolVolumeInfo"
+                x:Name="BTN_IBM_PoolVolumeInfo"
                 Style="{DynamicResource MainBtnStyle}"
                 Content="Pool+Volume Info" 
                 ToolTip="Get Infos to Pool and Volume only" />
                 <!--IBM_DriveInfo-->
                 <ToggleButton
-                x:Name="btn_IBM_DriveInfo"
+                x:Name="BTN_IBM_DriveInfo"
                 Style="{DynamicResource MainBtnStyle}"
                 Content="Drive Info"
                 ToolTip="Get the most important information about your Drives" />
                 <!--IBM_FCPortInfo-->
                 <ToggleButton
-                x:Name="btn_IBM_FCPortInfo"
+                x:Name="BTN_IBM_FCPortInfo"
                 Style="{DynamicResource MainBtnStyle}"
                 Content="FC Port Info"
                 ToolTip="Generate a list of host count and login count for each worldwide port names (WWPNs) required to set up Fibre Channel (FC) zoning and to display the current failover status of host IO ports." />
                 <!--IBM_IPPortInfo-->
                 <ToggleButton
-                x:Name="btn_IBM_IPPortInfo"
+                x:Name="BTN_IBM_IPPortInfo"
                 Style="{DynamicResource MainBtnStyle}"
                 Content="IP Port Info"
                 ToolTip="Generate a list the currently configured IP addresses" />
                 <!--IBM_CleanUpDumps-->
                 <ToggleButton
-                x:Name="btn_IBM_CleanUpDumps"
+                x:Name="BTN_IBM_CleanUpDumps"
                 Style="{DynamicResource MainBtnStyle}"
                 Content="CleanUp Dumps" 
                 ToolTip="Use the cleardumps command to clear (or delete) the various dump directories on a specified node or node canister."/>
                 <!--IBM_BackUpConfig-->
                 <ToggleButton
-                x:Name="btn_IBM_BackUpConfig"
+                x:Name="BTN_IBM_BackUpConfig"
                 Style="{DynamicResource MainBtnStyle}"
                 Content="BackUp CFG" 
                 ToolTip="Create a config backup and download it with the help of pscp."/>
@@ -104,7 +104,7 @@
             <StackPanel>
                 <!--IBM_FCPortStats-->
                 <ToggleButton
-                x:Name="btn_IBM_FCPortStats"
+                x:Name="BTN_IBM_FCPortStats"
                 Style="{DynamicResource MainBtnStyle}"
                 Content="FC Port Stats" 
                 ToolTip="Get an overview of the stats of your FC ports. Requirement v8.4.x and higher!" />
@@ -114,7 +114,7 @@
             <StackPanel>
                 <!--IBM_PolicyBased-->
                 <ToggleButton
-                x:Name="btn_IBM_PolicyBased_Rep"
+                x:Name="BTN_IBM_PolicyBased_Rep"
                 Style="{DynamicResource MainBtnStyle}"
                 Content="Policy Based (Beta)" 
                 ToolTip="Get some information about the replication policy and VolGrp replication, only if there in use!" />
@@ -258,6 +258,50 @@
                   <DataGridTextColumn Width="auto" Header="CopyID" Binding="{Binding CopyID}" IsReadOnly="True"/>
                   <DataGridTextColumn Width="auto" Header="Status" Binding="{Binding Status}" IsReadOnly="True"/>
                   <DataGridTextColumn Width="auto" Header="Fixed" Binding="{Binding Fixed}" IsReadOnly="True"/>
+                  <DataGridTextColumn Width="auto" Header="ErrorCode" Binding="{Binding ErrorCode}" IsReadOnly="True"/>
+                  <DataGridTextColumn Width="auto" Header="Description" Binding="{Binding Description}" IsReadOnly="True"/>
+                </DataGrid.Columns>
+
+              </DataGrid>
+            </DataTemplate>
+          </ItemsControl.ItemTemplate>
+        </ItemsControl>
+        <!-- IBM_CatAuditLog -->
+        <ItemsControl Grid.Column="1" Grid.Row="1"
+                      ItemsSource="{Binding Main.DeviceToggles}"
+                      Style="{DynamicResource ShowWhenCatAuditLog}">
+          <ItemsControl.ItemsPanel>
+            <ItemsPanelTemplate>
+              <StackPanel/>
+            </ItemsPanelTemplate>
+          </ItemsControl.ItemsPanel>
+
+          <ItemsControl.ItemTemplate>
+            <DataTemplate>
+              <DataGrid AutoGenerateColumns="False"
+                        ColumnWidth="*"
+                        HorizontalAlignment="Stretch"
+                        Margin="5"
+                        MaxWidth="960"
+                        MaxHeight="460"
+                        ItemsSource="{Binding AuditLogRows}"
+                        CanUserAddRows="False"
+                        Visibility="{Binding IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
+
+                <!-- Optional: Header pro Device -->
+                <DataGrid.GroupStyle>
+                  <GroupStyle/>
+                </DataGrid.GroupStyle>
+
+                <DataGrid.Columns>
+                  <DataGridTextColumn Width="auto" Header="ID" Binding="{Binding AuditSeqNo}" IsReadOnly="True"/>
+                  <DataGridTextColumn Width="auto" Header="TimeStamp" Binding="{Binding TimeStamp}" IsReadOnly="True"/>
+                  <DataGridTextColumn Width="auto" Header="User" Binding="{Binding User}" IsReadOnly="True"/>
+                  <DataGridTextColumn Width="auto" Header="SourcePanel" Binding="{Binding SourcePanel}" IsReadOnly="True"/>
+                  <DataGridTextColumn Width="auto" Header="TargetPanel" Binding="{Binding TargetPanel}" IsReadOnly="True"/>
+                  <DataGridTextColumn Width="auto" Header="SSH_IP" Binding="{Binding SSH_IP}" IsReadOnly="True"/>
+                  <DataGridTextColumn Width="auto" Header="UsedCommand" Binding="{Binding UsedCommand}" IsReadOnly="True"/>
+                  <DataGridTextColumn Width="auto" Header="TwoPersonIntegrity" Binding="{Binding TwoPersonIntegrity}" IsReadOnly="True"/>
                   <DataGridTextColumn Width="auto" Header="ErrorCode" Binding="{Binding ErrorCode}" IsReadOnly="True"/>
                   <DataGridTextColumn Width="auto" Header="Description" Binding="{Binding Description}" IsReadOnly="True"/>
                 </DataGrid.Columns>
