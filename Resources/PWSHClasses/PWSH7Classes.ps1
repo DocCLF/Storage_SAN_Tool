@@ -76,6 +76,7 @@ public class DeviceToggle : INotifyPropertyChanged
     // Pro Ansicht eine Collection (für dein XAML)
     public ObservableCollection<object> BaseRows { get; } = new ObservableCollection<object>();
     public ObservableCollection<object> EventRows { get; } = new ObservableCollection<object>();
+    public ObservableCollection<object> AuditLogRows { get; } = new ObservableCollection<object>();
 
     public bool IsChecked
     {
