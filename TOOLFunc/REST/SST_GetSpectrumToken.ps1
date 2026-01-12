@@ -12,7 +12,7 @@ function SST_GetSpectrumToken {
         $BaseUrl = "https://$TD_Device_DeviceIP"+":7443"
 
         if(!(Test-Path -Path "$PSRootPath\Resources\DBFolder\ToolDB\ToolDB.db")){
-            Break
+            return $null
         }
         <# Build headers (FlashSystem expects X-Auth-Username / X-Auth-Password for this endpoint) #>
         $Headers = @{
