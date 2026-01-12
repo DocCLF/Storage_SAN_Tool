@@ -39,19 +39,19 @@ function IBM_RESTBaseStorageInfos {
         [int]$imax = $STONodeInfo.Count
         $TD_StorageInfo = for ($i = 0; $i -le $imax; $i++) {
             $TD_FSBaseTemp = "" | Select-Object ID,Name,ClusterName,WWNN,Status,IO_group_id,IO_group_Name,Serial_Number,Code_Level,Config_Node,SideID,SideName,Prod_MTM,RecommendedPTF,MDiskTotalCapacity,MDiskFreeCapacity,MDiskUsedCapacity,PhysicalTotalCapacity,PhysicalFreeCapacity,HostUnmap,BackendUnmap,Topology,Layer,QuorumMode
-            $TD_FSBaseTemp.ID   =   $STONodeInfo.id[$i]
-            $TD_FSBaseTemp.Name   =   $STONodeInfo.name[$i]
-            $TD_FSBaseTemp.ClusterName   =   $STOSystemInfo.name
-            $TD_FSBaseTemp.WWNN   =   $STONodeInfo.WWNN[$i]
-            $TD_FSBaseTemp.Status   =   $STONodeInfo.status[$i]
-            $TD_FSBaseTemp.IO_group_id   =   $STONodeInfo.IO_group_id[$i]
-            $TD_FSBaseTemp.IO_group_Name   =   $STONodeInfo.IO_group_name[$i]
-            $TD_FSBaseTemp.Serial_Number   =   if($STONodeInfo.enclosure_serial_number[$i] -eq ""){$STONodeInfo.panel_name[$i]}else{$STONodeInfo.enclosure_serial_number[$i]}
-            $TD_FSBaseTemp.Config_Node   =   $STONodeInfo.config_node[$i]
-            $TD_FSBaseTemp.SideID   =   $STONodeInfo.site_id[$i]
-            $TD_FSBaseTemp.SideName   =   $STONodeInfo.site_name[$i]
-            $TD_FSBaseTemp.Prod_MTM   =   $STOSystemInfo.product_name
-            $TD_FSBaseTemp.Code_Level   =   $STOSystemInfo.code_level
+            $TD_FSBaseTemp.ID               = $STONodeInfo.id[$i]
+            $TD_FSBaseTemp.Name             = $STONodeInfo.name[$i]
+            $TD_FSBaseTemp.ClusterName      = $STOSystemInfo.name
+            $TD_FSBaseTemp.WWNN             = $STONodeInfo.WWNN[$i]
+            $TD_FSBaseTemp.Status           = $STONodeInfo.status[$i]
+            $TD_FSBaseTemp.IO_group_id      = $STONodeInfo.IO_group_id[$i]
+            $TD_FSBaseTemp.IO_group_Name    = $STONodeInfo.IO_group_name[$i]
+            $TD_FSBaseTemp.Serial_Number    = if($STONodeInfo.enclosure_serial_number[$i] -eq ""){$STONodeInfo.panel_name[$i]}else{$STONodeInfo.enclosure_serial_number[$i]}
+            $TD_FSBaseTemp.Config_Node      = $STONodeInfo.config_node[$i]
+            $TD_FSBaseTemp.SideID           = $STONodeInfo.site_id[$i]
+            $TD_FSBaseTemp.SideName         = $STONodeInfo.site_name[$i]
+            $TD_FSBaseTemp.Prod_MTM         = $STOSystemInfo.product_name
+            $TD_FSBaseTemp.Code_Level       = $STOSystemInfo.code_level
             <#try to get a RecommendedPTF level#>
             if ((![string]::IsNullOrEmpty($TD_FSBaseTemp.Prod_MTM))-and(![string]::IsNullOrEmpty($TD_FSBaseTemp.Code_Level))){
                 if(($TD_FSBaseTemp.Code_Level)-ne($TD_FSBaseTempCode_Level)){
@@ -62,16 +62,16 @@ function IBM_RESTBaseStorageInfos {
                     [string]$TD_FSBaseTemp.RecommendedPTF = $TD_SpectrVirtuFWInfos.RecommendedPTF
                 }
             }
-            $TD_FSBaseTemp.MDiskTotalCapacity   =   $STOSystemInfo.total_mdisk_capacity
-            $TD_FSBaseTemp.MDiskFreeCapacity   =   $STOSystemInfo.total_free_space
-            $TD_FSBaseTemp.MDiskUsedCapacity   =   $STOSystemInfo.total_used_capacity
-            $TD_FSBaseTemp.PhysicalTotalCapacity   =   $STOSystemInfo.physical_capacity
-            $TD_FSBaseTemp.PhysicalFreeCapacity   =   $STOSystemInfo.physical_free_capacity
-            $TD_FSBaseTemp.HostUnmap   =   $STOSystemInfo.host_unmap
-            $TD_FSBaseTemp.BackendUnmap   =   $STOSystemInfo.backend_unmap
-            $TD_FSBaseTemp.Topology   =   $STOSystemInfo.topology
-            $TD_FSBaseTemp.Layer   =   $STOSystemInfo.layer
-            $TD_FSBaseTemp.QuorumMode   =   $STOSystemInfo.quorum_mode
+            $TD_FSBaseTemp.MDiskTotalCapacity       = $STOSystemInfo.total_mdisk_capacity
+            $TD_FSBaseTemp.MDiskFreeCapacity        = $STOSystemInfo.total_free_space
+            $TD_FSBaseTemp.MDiskUsedCapacity        = $STOSystemInfo.total_used_capacity
+            $TD_FSBaseTemp.PhysicalTotalCapacity    = $STOSystemInfo.physical_capacity
+            $TD_FSBaseTemp.PhysicalFreeCapacity     = $STOSystemInfo.physical_free_capacity
+            $TD_FSBaseTemp.HostUnmap                = $STOSystemInfo.host_unmap
+            $TD_FSBaseTemp.BackendUnmap             = $STOSystemInfo.backend_unmap
+            $TD_FSBaseTemp.Topology                 = $STOSystemInfo.topology
+            $TD_FSBaseTemp.Layer                    = $STOSystemInfo.layer
+            $TD_FSBaseTemp.QuorumMode               = $STOSystemInfo.quorum_mode
             $TD_FSBaseTemp
             $ProgCounter++
             Write-ProgressBar -ProgressBar $ProgressBar -Activity "Collect data for Device $($TD_Line_ID) $($STONodeInfo.name[$i])" -PercentComplete (($ProgCounter/$imax) * 100)
