@@ -28,7 +28,7 @@ function IBM_RESTVDiskAnalysis {
         }
         Clear-Variable -Name TD_Device_PW -Force
         if($TD_Device_ConnectionTyp -eq "REST"){
-            $TD_DeviceInformation = SST_SpectrumSystemAPI -Endpoint catauditlog -Body $null -BaseUrl $BaseUrl -RESTInfo $RESTInfo
+            $TD_DeviceInformation = SST_SpectrumSystemAPI -Endpoint lsvdiskanalysis -Body $null -BaseUrl $BaseUrl -RESTInfo $RESTInfo
             $STONodeInfo = SST_SpectrumSystemAPI -Endpoint lsnode -Body $null -BaseUrl $BaseUrl -RESTInfo $RESTInfo
         }else {
             <#switch to the ssh version and leave this func #>
