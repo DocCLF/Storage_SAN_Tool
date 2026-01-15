@@ -49,17 +49,17 @@ function IBM_RESTEventLog {
             <# Node Info#>
             $TD_EventSplitInfo = "" | Select-Object SeqID,LastTime,ObjectType,ObjectID,ObjectName,CopyID,Status,Fixed,ErrorCode,Description,WWNN,SerialNumber
 
-            $TD_EventSplitInfo.SeqID = $TD_CollectEventInfo.sequence_number[$i]
-            $TD_EventSplitInfo.LastTime = $TD_CollectEventInfo.last_timestamp[$i]
-            $TD_EventSplitInfo.ObjectType = $TD_CollectEventInfo.object_type[$i]
-            $TD_EventSplitInfo.ObjectID = $TD_CollectEventInfo.object_id[$i]
-            $TD_EventSplitInfo.ObjectName = $TD_CollectEventInfo.object_name[$i]
-            $TD_EventSplitInfo.CopyID = $TD_CollectEventInfo.copy_id[$i]
-            $TD_EventSplitInfo.Status = $TD_CollectEventInfo.status[$i]
-            $TD_EventSplitInfo.Fixed = $TD_CollectEventInfo.fixed[$i]
-            $TD_EventSplitInfo.ErrorCode = $TD_CollectEventInfo.error_code[$i]
-            $TD_EventSplitInfo.Description = $TD_CollectEventInfo.description[$i]
-            $TD_EventSplitInfo.WWNN = $IBMSTOWWNN
+            $TD_EventSplitInfo.SeqID        = $TD_CollectEventInfo.sequence_number[$i]
+            $TD_EventSplitInfo.LastTime     = $TD_CollectEventInfo.last_timestamp[$i]
+            $TD_EventSplitInfo.ObjectType   = $TD_CollectEventInfo.object_type[$i]
+            $TD_EventSplitInfo.ObjectID     = $TD_CollectEventInfo.object_id[$i]
+            $TD_EventSplitInfo.ObjectName   = $TD_CollectEventInfo.object_name[$i]
+            $TD_EventSplitInfo.CopyID       = $TD_CollectEventInfo.copy_id[$i]
+            $TD_EventSplitInfo.Status       = $TD_CollectEventInfo.status[$i]
+            $TD_EventSplitInfo.Fixed        = $TD_CollectEventInfo.fixed[$i]
+            $TD_EventSplitInfo.ErrorCode    = $TD_CollectEventInfo.error_code[$i]
+            $TD_EventSplitInfo.Description  = $TD_CollectEventInfo.description[$i]
+            $TD_EventSplitInfo.WWNN         = $IBMSTOWWNN
             $TD_EventSplitInfo.SerialNumber = $IBMSTOSN
 
             $TD_EventSplitInfo
