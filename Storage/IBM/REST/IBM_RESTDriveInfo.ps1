@@ -88,8 +88,8 @@ function IBM_RESTDriveInfo {
             $TD_DriveSplitInfos.PhysicalCapacity       = $TD_DriveIDInformation.physical_capacity[$i]
             $TD_DriveSplitInfos.PhysicalUsedCapacity   = $TD_DriveIDInformation.physical_used_capacity[$i]
             $TD_DriveSplitInfos.EffectiveUsedCapacity  = $TD_DriveIDInformation.effective_used_capacity[$i]
-            $TD_DriveSplitInfos.WWNN = $IBMSTOWWNN
-            $TD_DriveSplitInfos.SerialNumber = $IBMSTOSN
+            $TD_DriveSplitInfos.WWNN            = $IBMSTOWWNN
+            $TD_DriveSplitInfos.SerialNumber    = $IBMSTOSN
 
             $TD_DriveSplitInfos
 
