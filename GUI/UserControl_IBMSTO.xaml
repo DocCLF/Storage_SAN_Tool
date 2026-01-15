@@ -81,11 +81,6 @@
                 Content="FC Port Info"
                 ToolTip="Generate a list of host count and login count for each worldwide port names (WWPNs) required to set up Fibre Channel (FC) zoning and to display the current failover status of host IO ports." />
                 <!--IBM_IPPortInfo-->
-                <ToggleButton
-                x:Name="BTN_IBM_IPPortInfo"
-                Style="{DynamicResource MainBtnStyle}"
-                Content="IP Port Info"
-                ToolTip="Generate a list the currently configured IP addresses" />
                 <!--IBM_CleanUpDumps-->
                 <ToggleButton
                 x:Name="BTN_IBM_CleanUpDumps"
@@ -198,12 +193,12 @@
                   <DataGridTextColumn Width="auto" Header="NodeName" Binding="{Binding Name}" IsReadOnly="True"/>
                   <DataGridTextColumn Width="auto" Header="NodeWWNN" Binding="{Binding WWNN}" IsReadOnly="True"/>
                   <DataGridTextColumn Width="auto" Header="Status" Binding="{Binding Status}" IsReadOnly="True"/>
-                  <DataGridTextColumn Width="auto" Header="Serial Number" Binding="{Binding Serial_Number}" IsReadOnly="True"/>
+                  <DataGridTextColumn Width="auto" Header="Serial Number" Binding="{Binding SerialNumber}" IsReadOnly="True"/>
                   <DataGridTextColumn Width="auto" Header="IO_group_id" Binding="{Binding IO_group_id}" IsReadOnly="True"/>
                   <DataGridTextColumn Width="auto" Header="IO_group_Name" Binding="{Binding IO_group_Name}" IsReadOnly="True"/>
-                  <DataGridTextColumn Width="auto" Header="Code Level" Binding="{Binding Code_Level}" IsReadOnly="True"/>
+                  <DataGridTextColumn Width="auto" Header="Code Level" Binding="{Binding CodeLevel}" IsReadOnly="True"/>
                   <DataGridTextColumn Width="auto" Header="Recommended Level" Binding="{Binding RecommendedPTF}" IsReadOnly="True"/>
-                  <DataGridTextColumn Width="auto" Header="Config_Node" Binding="{Binding Config_Node}" IsReadOnly="True"/>
+                  <DataGridTextColumn Width="auto" Header="Config_Node" Binding="{Binding ConfigNode}" IsReadOnly="True"/>
                   <DataGridTextColumn Width="auto" Header="SideID" Binding="{Binding SideID}" IsReadOnly="True"/>
                   <DataGridTextColumn Width="auto" Header="Side Name" Binding="{Binding SideName}" IsReadOnly="True"/>
                 </DataGrid.Columns>
