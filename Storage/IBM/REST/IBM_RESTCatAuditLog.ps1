@@ -62,8 +62,8 @@ function IBM_RESTCatAuditLog {
             $TD_CatAuditLog.Origin              = $TD_CatAuditLogInfo.origin[$i]
             $TD_CatAuditLog.TwoPersonIntegrity  = $TD_CatAuditLogInfo.two_person_integrity_promoted[$i]
 
-            $TD_CatAuditLog.WWNN = $IBMSTOWWNN
-            $TD_CatAuditLog.SerialNumber = $IBMSTOSN
+            $TD_CatAuditLog.WWNN            = $IBMSTOWWNN
+            $TD_CatAuditLog.SerialNumber    = $IBMSTOSN
 
 
             $TD_CatAuditLog
