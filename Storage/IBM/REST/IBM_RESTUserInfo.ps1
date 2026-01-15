@@ -49,17 +49,17 @@ function IBM_RESTUserInfo {
             <# Node Info#>
             $TD_Userinfo = "" | Select-Object ID,User_Name,Password,SSH_Key,Remote,UserGrp_ID,UserGrp_Name,Owner_ID,Owner_Name,Locked,PW_Change_required,WWNN,SerialNumber
 
-            $TD_Userinfo.ID      = $TD_DeviceInformation.id[$i]
-            $TD_Userinfo.User_Name           = $TD_DeviceInformation.name[$i]
-            $TD_Userinfo.Password               = $TD_DeviceInformation.password[$i]
-            $TD_Userinfo.SSH_Key             = $TD_DeviceInformation.ssh_key[$i]
-            $TD_Userinfo.Remote     = $TD_DeviceInformation.remote[$i]
-            $TD_Userinfo.UserGrp_ID   = $TD_DeviceInformation.usergrp_id[$i]
-            $TD_Userinfo.UserGrp_Name           = $TD_DeviceInformation.usergrp_name[$i]
-            $TD_Userinfo.Owner_ID       = $TD_DeviceInformation.owner_id[$i]
+            $TD_Userinfo.ID                 = $TD_DeviceInformation.id[$i]
+            $TD_Userinfo.User_Name          = $TD_DeviceInformation.name[$i]
+            $TD_Userinfo.Password           = $TD_DeviceInformation.password[$i]
+            $TD_Userinfo.SSH_Key            = $TD_DeviceInformation.ssh_key[$i]
+            $TD_Userinfo.Remote             = $TD_DeviceInformation.remote[$i]
+            $TD_Userinfo.UserGrp_ID         = $TD_DeviceInformation.usergrp_id[$i]
+            $TD_Userinfo.UserGrp_Name       = $TD_DeviceInformation.usergrp_name[$i]
+            $TD_Userinfo.Owner_ID           = $TD_DeviceInformation.owner_id[$i]
             $TD_Userinfo.Owner_Name         = $TD_DeviceInformation.owner_name[$i]
-            $TD_Userinfo.Locked           = $TD_DeviceInformation.locked[$i]
-            $TD_Userinfo.PW_Change_required         = $TD_DeviceInformation.password_change_required[$i]
+            $TD_Userinfo.Locked             = $TD_DeviceInformation.locked[$i]
+            $TD_Userinfo.PW_Change_required = $TD_DeviceInformation.password_change_required[$i]
 
             $TD_Userinfo.WWNN = $IBMSTOWWNN
             $TD_Userinfo.SerialNumber = $IBMSTOSN
