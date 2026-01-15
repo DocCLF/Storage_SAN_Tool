@@ -350,10 +350,10 @@ $TD_BTN_IBM_BaseStorageInfo.add_click({
             IO_group_id    = 'IO_group_id'
             IO_group_Name  = 'IO_group_Name'
             Prod_MTM       = 'Prod_MTM'
-            Serial_Number  = 'Serial_Number'
-            Code_Level     = 'Code_Level'
+            Serial_Number  = 'SerialNumber'
+            Code_Level     = 'CodeLevel'
             RecommendedPTF = 'RecommendedPTF'
-            Config_Node    = 'Config_Node'
+            Config_Node    = 'ConfigNode'
             SideID         = 'SideID'
             SideName       = 'SideName'
         } 
