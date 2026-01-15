@@ -96,8 +96,8 @@ function IBM_RESTMDiskInfo {
             $TD_MDiskInfo.ProvisioningPolicyName             = $TD_DeviceInformation.provisioning_policy_name[$i]
             $TD_MDiskInfo.ReplicationPoolLinkUID             = $TD_DeviceInformation.replication_pool_link_uid[$i]
 
-            $TD_MDiskInfo.WWNN = $IBMSTOWWNN
-            $TD_MDiskInfo.SerialNumber = $IBMSTOSN
+            $TD_MDiskInfo.WWNN          = $IBMSTOWWNN
+            $TD_MDiskInfo.SerialNumber  = $IBMSTOSN
 
             $TD_MDiskInfo
 
