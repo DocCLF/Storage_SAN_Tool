@@ -61,7 +61,7 @@ function IBM_RESTIPQuorum {
             $TD_QuorumInfo.SiteID           = $TD_DeviceInformation.site_id[$i]
             $TD_QuorumInfo.SiteName         = $TD_DeviceInformation.site_name[$i]
 
-            $TD_QuorumInfo.WWNN = $IBMSTOWWNN
+            $TD_QuorumInfo.WWNN         = $IBMSTOWWNN
             $TD_QuorumInfo.SerialNumber = $IBMSTOSN
 
             $TD_QuorumInfo
