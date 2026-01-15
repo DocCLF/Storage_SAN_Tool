@@ -38,7 +38,7 @@ function IBM_RESTBaseStorageInfos {
     process {
         [int]$imax = $STONodeInfo.Count
         $TD_StorageInfo = for ($i = 0; $i -le $imax; $i++) {
-            $TD_FSBaseTemp = "" | Select-Object ID,Name,ClusterName,WWNN,Status,IO_group_id,IO_group_Name,Serial_Number,Code_Level,Config_Node,SideID,SideName,Prod_MTM,RecommendedPTF,MDiskTotalCapacity,MDiskFreeCapacity,MDiskUsedCapacity,PhysicalTotalCapacity,PhysicalFreeCapacity,HostUnmap,BackendUnmap,Topology,Layer,QuorumMode
+            $TD_FSBaseTemp = "" | Select-Object ID,Name,ClusterName,WWNN,Status,IO_group_id,IO_group_Name,SerialNumber,CodeLevel,ConfigNode,SideID,SideName,Prod_MTM,RecommendedPTF,MDiskTotalCapacity,MDiskFreeCapacity,MDiskUsedCapacity,PhysicalTotalCapacity,PhysicalFreeCapacity,HostUnmap,BackendUnmap,Topology,Layer,QuorumMode
             $TD_FSBaseTemp.ID               = $STONodeInfo.id[$i]
             $TD_FSBaseTemp.Name             = $STONodeInfo.name[$i]
             $TD_FSBaseTemp.ClusterName      = $STOSystemInfo.name
@@ -46,12 +46,12 @@ function IBM_RESTBaseStorageInfos {
             $TD_FSBaseTemp.Status           = $STONodeInfo.status[$i]
             $TD_FSBaseTemp.IO_group_id      = $STONodeInfo.IO_group_id[$i]
             $TD_FSBaseTemp.IO_group_Name    = $STONodeInfo.IO_group_name[$i]
-            $TD_FSBaseTemp.Serial_Number    = if($STONodeInfo.enclosure_serial_number[$i] -eq ""){$STONodeInfo.panel_name[$i]}else{$STONodeInfo.enclosure_serial_number[$i]}
-            $TD_FSBaseTemp.Config_Node      = $STONodeInfo.config_node[$i]
+            $TD_FSBaseTemp.SerialNumber    = if($STONodeInfo.enclosure_serial_number[$i] -eq ""){$STONodeInfo.panel_name[$i]}else{$STONodeInfo.enclosure_serial_number[$i]}
+            $TD_FSBaseTemp.ConfigNode      = $STONodeInfo.config_node[$i]
             $TD_FSBaseTemp.SideID           = $STONodeInfo.site_id[$i]
             $TD_FSBaseTemp.SideName         = $STONodeInfo.site_name[$i]
             $TD_FSBaseTemp.Prod_MTM         = $STOSystemInfo.product_name
-            $TD_FSBaseTemp.Code_Level       = $STOSystemInfo.code_level
+            $TD_FSBaseTemp.CodeLevel       = $STOSystemInfo.code_level
             <#try to get a RecommendedPTF level#>
             if ((![string]::IsNullOrEmpty($TD_FSBaseTemp.Prod_MTM))-and(![string]::IsNullOrEmpty($TD_FSBaseTemp.Code_Level))){
                 if(($TD_FSBaseTemp.Code_Level)-ne($TD_FSBaseTempCode_Level)){
