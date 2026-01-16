@@ -305,6 +305,189 @@
             </DataTemplate>
           </ItemsControl.ItemTemplate>
         </ItemsControl>
+        <!-- IBM_HostVolumeMap -->
+        <ItemsControl Grid.Column="1" Grid.Row="1"
+                      ItemsSource="{Binding Main.DeviceToggles}"
+                      Style="{DynamicResource ShowWhenHostVolumeMap}">
+          <ItemsControl.ItemsPanel>
+            <ItemsPanelTemplate>
+              <StackPanel/>
+            </ItemsPanelTemplate>
+          </ItemsControl.ItemsPanel>
+
+          <ItemsControl.ItemTemplate>
+            <DataTemplate>
+              <DataGrid AutoGenerateColumns="False"
+                        ColumnWidth="*"
+                        HorizontalAlignment="Stretch"
+                        Margin="5"
+                        MaxWidth="960"
+                        MaxHeight="460"
+                        ItemsSource="{Binding HostVolumeMapRows}"
+                        CanUserAddRows="False"
+                        Visibility="{Binding IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
+
+                <!-- Optional: Header pro Device -->
+                <DataGrid.GroupStyle>
+                  <GroupStyle/>
+                </DataGrid.GroupStyle>
+                <DataGrid.Columns>
+                    <DataGridTextColumn Width="auto" Header="HostID" Binding="{Binding HostID}" IsReadOnly="True"/>
+                    <DataGridTextColumn Width="auto" Header="HostName" Binding="{Binding HostName}" IsReadOnly="True"/>
+                    <DataGridTextColumn Width="auto" Header="HostClusterID" Binding="{Binding HostClusterID}" IsReadOnly="True"/>
+                    <DataGridTextColumn Width="auto" Header="HostCluster" Binding="{Binding HostCluster}" IsReadOnly="True"/>
+                    <DataGridTextColumn Width="auto" Header="VolumeID" Binding="{Binding VolumeID}" IsReadOnly="True"/>
+                    <DataGridTextColumn Width="auto" Header="VolumeName" Binding="{Binding VolumeName}" IsReadOnly="True"/>
+                    <DataGridTextColumn Width="auto" Header="UID" Binding="{Binding UID}" IsReadOnly="True"/>
+                    <DataGridTextColumn Width="auto" Header="Capacity" Binding="{Binding Capacity}" IsReadOnly="True"/>
+                </DataGrid.Columns>
+              </DataGrid>
+            </DataTemplate>
+          </ItemsControl.ItemTemplate>
+        </ItemsControl>
+        <!-- IBM_Host -->
+        <ItemsControl Grid.Column="1" Grid.Row="1"
+                      ItemsSource="{Binding Main.DeviceToggles}"
+                      Style="{DynamicResource ShowWhenHost}">
+          <ItemsControl.ItemsPanel>
+            <ItemsPanelTemplate>
+              <StackPanel/>
+            </ItemsPanelTemplate>
+          </ItemsControl.ItemsPanel>
+
+          <ItemsControl.ItemTemplate>
+            <DataTemplate>
+              <DataGrid AutoGenerateColumns="False"
+                        ColumnWidth="*"
+                        HorizontalAlignment="Stretch"
+                        Margin="5"
+                        MaxWidth="960"
+                        MaxHeight="460"
+                        ItemsSource="{Binding HostRows}"
+                        CanUserAddRows="False"
+                        Visibility="{Binding IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
+
+                <!-- Optional: Header pro Device -->
+                <DataGrid.GroupStyle>
+                  <GroupStyle/>
+                </DataGrid.GroupStyle>
+                  <DataGrid.RowStyle>
+                      <Style TargetType="DataGridRow">
+                          <Style.Triggers>
+                              <DataTrigger Binding="{Binding Status}" Value="degraded">
+                                  <Setter Property="Background" Value="yellow" />
+                              </DataTrigger>
+                              <DataTrigger Binding="{Binding Status}" Value="offline">
+                                  <Setter Property="Background" Value="Orange" />
+                              </DataTrigger>
+                          </Style.Triggers>
+                      </Style>
+                  </DataGrid.RowStyle>
+                  <DataGrid.Columns> 
+                      <DataGridTextColumn Width="auto" Header="Host ID"       Binding="{Binding HostID}" IsReadOnly="True"/>
+                      <DataGridTextColumn Width="auto" Header="Host Name"     Binding="{Binding HostName}" IsReadOnly="True"/>
+                      <DataGridTextColumn Width="auto" Header="Port Count"    Binding="{Binding PortCount}" IsReadOnly="True"/>
+                      <DataGridTextColumn Width="auto" Header="Type"          Binding="{Binding Type}" IsReadOnly="True"/>
+                      <DataGridTextColumn Width="auto" Header="Status"        Binding="{Binding Status}" IsReadOnly="True"/>
+                      <DataGridTextColumn Width="auto" Header="HostStateInfo" Binding="{Binding HostStateInfo}" IsReadOnly="True">
+                          <DataGridTextColumn.CellStyle>
+                              <Style TargetType="DataGridCell">
+                                  <Style.Triggers>
+                                      <DataTrigger Binding="{Binding HostStateInfo}" Value="no change">
+                                          <Setter Property="Background" Value="LightGreen" />
+                                      </DataTrigger>
+                                  </Style.Triggers>
+                                  <Setter Property="Background" Value="OrangeRed" />
+                                  <Setter Property="ToolTip" Value="Shows the change from the last check to the current one." />
+                                  <Setter Property="ToolTipService.InitialShowDelay" Value="10" />
+                              </Style>
+                          </DataGridTextColumn.CellStyle>
+                      </DataGridTextColumn>
+                      <DataGridTextColumn Width="auto" Header="SiteName" Binding="{Binding SiteName}" IsReadOnly="True"/>
+                      <DataGridTextColumn Width="auto" Header="Host Cluster Name" Binding="{Binding HostClusterName}" IsReadOnly="True"/>
+                      <DataGridTextColumn Width="auto" Header="Protocol" Binding="{Binding Protocol}" IsReadOnly="True"/>
+                      <DataGridTextColumn Width="auto" Header="StatusPolicy" Binding="{Binding StatusPolicy}" IsReadOnly="True">
+                          <DataGridTextColumn.CellStyle>
+                              <Style TargetType="DataGridCell">
+                                  <Setter Property="ToolTip" Value="Displays the connectivity requirements that are used to calculate the host status. The value is either complete or redundant." />
+                                  <Setter Property="ToolTipService.InitialShowDelay" Value="10" />
+                              </Style>
+                          </DataGridTextColumn.CellStyle>
+                      </DataGridTextColumn>
+                      <DataGridTextColumn Width="auto" Header="StatusSite" Binding="{Binding StatusSite}" IsReadOnly="True"/>
+                      <DataGridTextColumn Width="auto" Header="WWPN" Binding="{Binding WWPNOne}" IsReadOnly="True"/>
+                      <DataGridTextColumn Width="auto" Header="Node LoggedIn" Binding="{Binding NodeLoggedInCountOne}" IsReadOnly="True">
+                          <DataGridTextColumn.CellStyle>
+                              <Style TargetType="DataGridCell">
+                                  <Setter Property="ToolTip" Value="Indicates the number of nodes the WWPN or NQN is logged in to." />
+                                  <Setter Property="ToolTipService.InitialShowDelay" Value="10" />
+                              </Style>
+                          </DataGridTextColumn.CellStyle>
+                      </DataGridTextColumn>
+                      <DataGridTextColumn Width="auto" Header="Node State" Binding="{Binding StateOne}" IsReadOnly="True">
+                          <DataGridTextColumn.CellStyle>
+                              <Style TargetType="DataGridCell">
+                                  <Setter Property="ToolTip" Value="Indicates the state of the WWPN login. The values are: Offline, Online, Active" />
+                                  <Setter Property="ToolTipService.InitialShowDelay" Value="10" />
+                              </Style>
+                          </DataGridTextColumn.CellStyle>
+                      </DataGridTextColumn>
+                      <DataGridTextColumn Width="auto" Header="WWPN" Binding="{Binding WWPNTwo}" IsReadOnly="True"/>
+                      <DataGridTextColumn Width="auto" Header="Node LoggedIn" Binding="{Binding NodeLoggedInCountTwo}" IsReadOnly="True">
+                          <DataGridTextColumn.CellStyle>
+                              <Style TargetType="DataGridCell">
+                                  <Setter Property="ToolTip" Value="Indicates the number of nodes the WWPN or NQN is logged in to." />
+                                  <Setter Property="ToolTipService.InitialShowDelay" Value="10" />
+                              </Style>
+                          </DataGridTextColumn.CellStyle>
+                      </DataGridTextColumn>
+                      <DataGridTextColumn Width="auto" Header="Node State" Binding="{Binding StateTwo}" IsReadOnly="True">
+                          <DataGridTextColumn.CellStyle>
+                              <Style TargetType="DataGridCell">
+                                  <Setter Property="ToolTip" Value="Indicates the state of the WWPN login. The values are: Offline, Online, Active" />
+                                  <Setter Property="ToolTipService.InitialShowDelay" Value="10" />
+                              </Style>
+                          </DataGridTextColumn.CellStyle>
+                      </DataGridTextColumn>
+                      <DataGridTextColumn Width="auto" Header="WWPN" Binding="{Binding WWPNThree}" IsReadOnly="True"/>
+                      <DataGridTextColumn Width="auto" Header="Node LoggedIn" Binding="{Binding NodeLoggedInCountThree}" IsReadOnly="True">
+                          <DataGridTextColumn.CellStyle>
+                              <Style TargetType="DataGridCell">
+                                  <Setter Property="ToolTip" Value="Indicates the number of nodes the WWPN or NQN is logged in to." />
+                                  <Setter Property="ToolTipService.InitialShowDelay" Value="10" />
+                              </Style>
+                          </DataGridTextColumn.CellStyle>
+                      </DataGridTextColumn>
+                      <DataGridTextColumn Width="auto" Header="Node State" Binding="{Binding StateThree}" IsReadOnly="True">
+                          <DataGridTextColumn.CellStyle>
+                              <Style TargetType="DataGridCell">
+                                  <Setter Property="ToolTip" Value="Indicates the state of the WWPN login. The values are: Offline, Online, Active" />
+                                  <Setter Property="ToolTipService.InitialShowDelay" Value="10" />
+                              </Style>
+                          </DataGridTextColumn.CellStyle>
+                      </DataGridTextColumn>
+                      <DataGridTextColumn Width="auto" Header="WWPN" Binding="{Binding WWPNFour}" IsReadOnly="True"/>
+                      <DataGridTextColumn Width="auto" Header="Node LoggedIn" Binding="{Binding NodeLoggedInCountFour}" IsReadOnly="True">
+                          <DataGridTextColumn.CellStyle>
+                              <Style TargetType="DataGridCell">
+                                  <Setter Property="ToolTip" Value="Indicates the number of nodes the WWPN or NQN is logged in to." />
+                                  <Setter Property="ToolTipService.InitialShowDelay" Value="10" />
+                              </Style>
+                          </DataGridTextColumn.CellStyle>
+                      </DataGridTextColumn>
+                      <DataGridTextColumn Width="auto" Header="Node State" Binding="{Binding StateFour}" IsReadOnly="True">
+                          <DataGridTextColumn.CellStyle>
+                              <Style TargetType="DataGridCell">
+                                  <Setter Property="ToolTip" Value="Indicates the state of the WWPN login. The values are: Offline, Online, Active" />
+                                  <Setter Property="ToolTipService.InitialShowDelay" Value="10" />
+                              </Style>
+                          </DataGridTextColumn.CellStyle>
+                      </DataGridTextColumn>
+                  </DataGrid.Columns>
+              </DataGrid>
+            </DataTemplate>
+          </ItemsControl.ItemTemplate>
+        </ItemsControl>
     </Grid>
     </ScrollViewer>
 </UserControl>
