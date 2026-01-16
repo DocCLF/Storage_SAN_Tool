@@ -77,6 +77,8 @@ public class DeviceToggle : INotifyPropertyChanged
     public ObservableCollection<object> BaseRows { get; } = new ObservableCollection<object>();
     public ObservableCollection<object> EventRows { get; } = new ObservableCollection<object>();
     public ObservableCollection<object> AuditLogRows { get; } = new ObservableCollection<object>();
+    public ObservableCollection<object> HostVolumeMapRows { get; } = new ObservableCollection<object>();
+    public ObservableCollection<object> HostRows { get; } = new ObservableCollection<object>();
 
     public bool IsChecked
     {
