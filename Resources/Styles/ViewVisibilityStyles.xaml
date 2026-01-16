@@ -30,4 +30,24 @@
             </DataTrigger>
         </Style.Triggers>
     </Style>
+
+    <!-- Nur sichtbar, wenn Main.SelectedView == HostVolumeMap -->
+    <Style x:Key="ShowWhenHostVolumeMap" TargetType="ItemsControl">
+        <Setter Property="Visibility" Value="Collapsed"/>
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding Main.SelectedView}" Value="HostVolumeMap">
+                <Setter Property="Visibility" Value="Visible"/>
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+
+    <!-- Nur sichtbar, wenn Main.SelectedView == HostMap -->
+    <Style x:Key="ShowWhenHost" TargetType="ItemsControl">
+        <Setter Property="Visibility" Value="Collapsed"/>
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding Main.SelectedView}" Value="HostMap">
+                <Setter Property="Visibility" Value="Visible"/>
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
 </ResourceDictionary>
