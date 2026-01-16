@@ -50,7 +50,8 @@ function IBM_RESTHostInfo {
             <# Host Info#> 
             <# HostStateInfo is this part where is check if the host state is different as at the last check see ssh func hostinfo #>
             $TD_HostBaseTemp = "" | Select-Object ID,HostName,PortCount,Type,IOGrpCount,Status,SiteID,SiteName,HostStateInfo,HostClusterID,HostClusterName,Protocol,StatusPolicy,StatusSite,`
-                                    WWPNOne,NodeLoggedInCountOne,StateOne,WWPNTwo,NodeLoggedInCountTwo,StateTwo,WWPNThree,NodeLoggedInCountThree,StateThree,WWPNFour,NodeLoggedInCountFour,StateFour,STOName,WWNN,SerialNumber
+                                    WWPNOne,NodeLoggedInCountOne,StateOne,WWPNTwo,NodeLoggedInCountTwo,StateTwo,WWPNThree,NodeLoggedInCountThree,StateThree,WWPNFour,NodeLoggedInCountFour,StateFour,`
+                                    OwnerID,OwnerName,PortsetID,PortsetName,WWNN,SerialNumber
             $TD_HostBaseTemp.ID                 = $TD_HostIDInformation.id[$i]
             $TD_HostBaseTemp.HostName           = $TD_HostIDInformation.name[$i]
             $TD_HostBaseTemp.PortCount          = $TD_HostIDInformation.port_count[$i]
