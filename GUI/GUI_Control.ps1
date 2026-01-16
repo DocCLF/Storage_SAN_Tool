@@ -406,7 +406,7 @@ $TD_BTN_IBM_CatAuditLog.add_click({
     <# if there a something in, its better to clean it up befor we use it again #>
     $UCVMMain.DeviceToggles.Clear()
     foreach($TD_Creds in $TD_Credentials){
-        $FunctionResult = New-DeviceBlock -Device $TD_Creds -ExportPath $TD_tb_ExportPath.Text -RESTFunc IBM_RESTEventLog -SSHFunc IBM_SSHCatAuditLog
+        $FunctionResult = New-DeviceBlock -Device $TD_Creds -ExportPath $TD_tb_ExportPath.Text -RESTFunc IBM_RESTCatAuditLog -SSHFunc IBM_SSHCatAuditLog
         # Links = Propertyname im PSCustomObject (das bindet dein XAML)
         # Rechts = Propertyname im Source-Objekt
         $mapCatAuditLog = @{
@@ -429,12 +429,93 @@ $TD_BTN_IBM_CatAuditLog.add_click({
         $UCVMMain.SelectedView = "CatAuditLog"
     }
 })
-$TD_BTN_IBM_HostVolumeMap.add_click({})
-$TD_BTN_IBM_HostInfo.add_click({})
+$TD_BTN_IBM_HostVolumeMap.add_click({
+    <#Get all Device Cred and count them #>
+    $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_.DeviceTyp -eq "Storage"}
+    <# get the DataConteext of the current View/ means UC and if its nul trow an error #>
+    $UCDataContext = $TD_UserControl_IBMSTO.DataContext
+    if (-not $UCDataContext) { Write-Host "DataContext ist NULL!" -ForegroundColor Red; return }
+    <# if there is a DataContext find th Main Part und put it into UCVMMain#>
+    $UCVMMain = $UCDataContext.Main
+    <# if there a something in, its better to clean it up befor we use it again #>
+    $UCVMMain.DeviceToggles.Clear()
+    foreach($TD_Creds in $TD_Credentials){
+        $FunctionResult = New-DeviceBlock -Device $TD_Creds -ExportPath $TD_tb_ExportPath.Text -RESTFunc IBM_RESTHost_Volume_Map -SSHFunc IBM_SSHHost_Volume_Map
+        # Links = Propertyname im PSCustomObject (das bindet dein XAML)
+        # Rechts = Propertyname im Source-Objekt
+        $mapHostVolumeMap = @{
+            HostID          = 'HostID'  
+            HostName        = 'HostName'
+            HostClusterID   = 'HostClusterID'
+            HostCluster     = 'HostCluster'   
+            MappingType     = 'MappingType' 
+            VolumeID        = 'VolumeID'
+            VolumeName      = 'VolumeName'
+            UID             = 'UID'      
+            Capacity        = 'Capacity'    
+        }
+        Add-MappedRows -Collection $FunctionResult.DeviceIdent.HostVolumeMapRows -Source $FunctionResult.FuncResult -IdProperty 'HostID' -Map $mapHostVolumeMap
+
+        $UCVMMain.DeviceToggles.Add($FunctionResult.DeviceIdent)
+        $UCVMMain.SelectedView = "HostVolumeMap"
+    }
+})
+$TD_BTN_IBM_HostInfo.add_click({
+    <#Get all Device Cred and count them #>
+    $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_.DeviceTyp -eq "Storage"}
+    <# get the DataConteext of the current View/ means UC and if its nul trow an error #>
+    $UCDataContext = $TD_UserControl_IBMSTO.DataContext
+    if (-not $UCDataContext) { Write-Host "DataContext ist NULL!" -ForegroundColor Red; return }
+    <# if there is a DataContext find th Main Part und put it into UCVMMain#>
+    $UCVMMain = $UCDataContext.Main
+    <# if there a something in, its better to clean it up befor we use it again #>
+    $UCVMMain.DeviceToggles.Clear()
+    foreach($TD_Creds in $TD_Credentials){
+        $FunctionResult = New-DeviceBlock -Device $TD_Creds -ExportPath $TD_tb_ExportPath.Text -RESTFunc IBM_RESTHostInfo -SSHFunc IBM_SSHHostInfo
+        # Links = Propertyname im PSCustomObject (das bindet dein XAML)
+        # Rechts = Propertyname im Source-Objekt
+        $mapHost = @{
+            HostID                  = 'ID'  
+            HostName                = 'HostName'
+            PortCount               = 'PortCount'
+            Type                    = 'Type'  
+            IOGrpCount              = 'IOGrpCount'  <# not to display #>
+            Status                  = 'Status'
+            SiteID                  = 'SiteID'      <# not to display #>
+            SiteName                = 'SiteName'    
+            HostStateInfo           = 'HostStateInfo'      
+            HostClusterID           = 'HostClusterID'   <# not to display #>
+            HostClusterName         = 'HostClusterName'  
+            Protocol                = 'Protocol'
+            StatusPolicy            = 'StatusPolicy'
+            StatusSite              = 'StatusSite'  
+            WWPNOne                 = 'WWPNOne'
+            NodeLoggedInCountOne    = 'NodeLoggedInCountOne'
+            StateOne                = 'StateOne'   
+            WWPNTwo                 = 'WWPNTwo' 
+            NodeLoggedInCountTwo    = 'NodeLoggedInCountTwo'
+            StateTwo                = 'StateTwo'
+            WWPNThree               = 'WWPNThree'      
+            NodeLoggedInCountThree  = 'NodeLoggedInCountThree' 
+            StateThree              = 'StateThree'
+            WWPNFour                = 'WWPNFour'
+            NodeLoggedInCountFour   = 'NodeLoggedInCountFour'   
+            StateFour               = 'StateFour' 
+            OwnerID                 = 'OwnerID'     <# not to display #>
+            OwnerName               = 'OwnerName'   <# not to display #>
+            PortsetID               = 'PortsetID'   <# not to display #>
+            PortsetName             = 'PortsetName' <# not to display #>
+        }
+        Add-MappedRows -Collection $FunctionResult.DeviceIdent.HostRows -Source $FunctionResult.FuncResult -IdProperty 'ID' -Map $mapHost
+
+        $UCVMMain.DeviceToggles.Add($FunctionResult.DeviceIdent)
+        $UCVMMain.SelectedView = "HostMap"
+    }
+})
 $TD_BTN_IBM_PoolVolumeInfo.add_click({})
 $TD_BTN_IBM_DriveInfo.add_click({})
 $TD_BTN_IBM_FCPortInfo.add_click({})
-$TD_BTN_IBM_IPPortInfo.add_click({})
+#$TD_BTN_IBM_IPPortInfo.add_click({})
 $TD_BTN_IBM_CleanUpDumps.add_click({})
 $TD_BTN_IBM_BackUpConfig.add_click({})
 $TD_BTN_IBM_FCPortStats.add_click({})
