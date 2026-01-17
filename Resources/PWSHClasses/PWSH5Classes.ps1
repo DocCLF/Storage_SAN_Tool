@@ -114,6 +114,7 @@ public class DeviceToggle : INotifyPropertyChanged
     private ObservableCollection<object> _auditLogRows;
     private ObservableCollection<object> _hostVolumeMapRows;
     private ObservableCollection<object> _hostRows;
+    private ObservableCollection<object> _iPQuorumRows;
 
     public DeviceToggle()
     {
@@ -122,6 +123,7 @@ public class DeviceToggle : INotifyPropertyChanged
         _auditLogRows = new ObservableCollection<object>();
         _hostVolumeMapRows = new ObservableCollection<object>();
         _hostRows = new ObservableCollection<object>();
+        _iPQuorumRows = new ObservableCollection<object>();
     }
 
     public string Id { get; set; }
@@ -130,6 +132,10 @@ public class DeviceToggle : INotifyPropertyChanged
     public ObservableCollection<object> BaseRows
     {
         get { return _baseRows; }
+    }
+    public ObservableCollection<object> IPQuorumRows
+    {
+        get { return _iPQuorumRows; }
     }
     public ObservableCollection<object> EventRows
     {
