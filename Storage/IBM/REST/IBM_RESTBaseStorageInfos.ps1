@@ -18,14 +18,18 @@ function IBM_RESTBaseStorageInfos {
         $BaseUrl = "https://$TD_Device_DeviceIP"+":7443"
         if(Test-Path -Path "$PSRootPath\Resources\DBFolder\ToolDB\ToolDB.db"){
             $RESTInfo = SST_RESTDBControl -SST_InfoType "UseStorageToken" -SST_BaseUrl $BaseUrl
+            
             if(([string]::IsNullOrEmpty($RESTInfo)) -and ($TD_Device_ConnectionTyp -eq "REST")){
-                SST_GetSpectrumToken -TD_Device_UserName $TD_Device_UserName -TD_Device_DeviceIP $TD_Device_DeviceIP -TD_Device_PW $TD_Device_PW
+                
+                $TD_Device_ConnectionTyp = SST_GetSpectrumToken -TD_Device_UserName $TD_Device_UserName -TD_Device_DeviceIP $TD_Device_DeviceIP -TD_Device_PW $TD_Device_PW
             }
         }
+        
         if([string]::IsNullOrWhiteSpace($TD_Device_ConnectionTyp)){
             $TD_Device_ConnectionTyp = SST_GetSpectrumToken -TD_Device_UserName $TD_Device_UserName -TD_Device_DeviceIP $TD_Device_DeviceIP -TD_Device_PW $TD_Device_PW 
         }
         Clear-Variable -Name TD_Device_PW -Force
+        
         if($TD_Device_ConnectionTyp -eq "REST"){
             $STONodeInfo = SST_SpectrumSystemAPI -Endpoint lsnode -Body $null -BaseUrl $BaseUrl -RESTInfo $RESTInfo
             $STOSystemInfo = SST_SpectrumSystemAPI -Endpoint lssystem -Body $null -BaseUrl $BaseUrl -RESTInfo $RESTInfo
@@ -38,7 +42,7 @@ function IBM_RESTBaseStorageInfos {
     process {
         [int]$imax = $STONodeInfo.Count
         $TD_StorageInfo = for ($i = 0; $i -le $imax; $i++) {
-            $TD_FSBaseTemp = "" | Select-Object ID,Name,ClusterName,WWNN,Status,IO_group_id,IO_group_Name,SerialNumber,CodeLevel,ConfigNode,SideID,SideName,Prod_MTM,RecommendedPTF,MDiskTotalCapacity,MDiskFreeCapacity,MDiskUsedCapacity,PhysicalTotalCapacity,PhysicalFreeCapacity,HostUnmap,BackendUnmap,Topology,Layer,QuorumMode
+            $TD_FSBaseTemp = "" | Select-Object RowID,ID,Name,ClusterName,WWNN,Status,IO_group_id,IO_group_Name,SerialNumber,CodeLevel,ConfigNode,SideID,SideName,Prod_MTM,RecommendedPTF,MDiskTotalCapacity,MDiskFreeCapacity,MDiskUsedCapacity,PhysicalTotalCapacity,PhysicalFreeCapacity,HostUnmap,BackendUnmap,Topology,Layer,QuorumMode
             $TD_FSBaseTemp.ID               = $STONodeInfo.id[$i]
             $TD_FSBaseTemp.Name             = $STONodeInfo.name[$i]
             $TD_FSBaseTemp.ClusterName      = $STOSystemInfo.name
@@ -72,6 +76,7 @@ function IBM_RESTBaseStorageInfos {
             $TD_FSBaseTemp.Topology                 = $STOSystemInfo.topology
             $TD_FSBaseTemp.Layer                    = $STOSystemInfo.layer
             $TD_FSBaseTemp.QuorumMode               = $STOSystemInfo.quorum_mode
+            $TD_FSBaseTemp.RowID                    = "$($TD_FSBaseTemp.SerialNumber)$($TD_FSBaseTemp.ID)"
             $TD_FSBaseTemp
             $ProgCounter++
             Write-ProgressBar -ProgressBar $ProgressBar -Activity "Collect data for Device $($TD_Line_ID) $($STONodeInfo.name[$i])" -PercentComplete (($ProgCounter/$imax) * 100)
