@@ -20,7 +20,7 @@ function IBM_RESTHostInfo {
         if(Test-Path -Path "$PSRootPath\Resources\DBFolder\ToolDB\ToolDB.db"){
             $RESTInfo = SST_RESTDBControl -SST_InfoType "UseStorageToken" -SST_BaseUrl $BaseUrl
             if(([string]::IsNullOrEmpty($RESTInfo)) -and ($TD_Device_ConnectionTyp -eq "REST")){
-                SST_GetSpectrumToken -TD_Device_UserName $TD_Device_UserName -TD_Device_DeviceIP $TD_Device_DeviceIP -TD_Device_PW $TD_Device_PW
+                $TD_Device_ConnectionTyp = SST_GetSpectrumToken -TD_Device_UserName $TD_Device_UserName -TD_Device_DeviceIP $TD_Device_DeviceIP -TD_Device_PW $TD_Device_PW
             }
         }
         if([string]::IsNullOrWhiteSpace($TD_Device_ConnectionTyp)){
@@ -45,26 +45,27 @@ function IBM_RESTHostInfo {
 
     process{
         [int]$imax = $TD_DeviceInformation.Count
-        [array]$CollectedHostInfo = for ($i = 0; $i -le $imax; $i++) {
-            $TD_HostIDInformation = SST_SpectrumSystemAPI -Endpoint lshost/$TD_DeviceInformation.id[$i] -Body $null -BaseUrl $BaseUrl -RESTInfo $RESTInfo
+        [array]$CollectedHostInfo = for ($i = 0; $i -lt $imax; $i++) {
+            $TD_HostIDInformation = SST_SpectrumSystemAPI -Endpoint lshost/$($TD_DeviceInformation.id[$i]) -Body $null -BaseUrl $BaseUrl -RESTInfo $RESTInfo
+            
             <# Host Info#> 
             <# HostStateInfo is this part where is check if the host state is different as at the last check see ssh func hostinfo #>
-            $TD_HostBaseTemp = "" | Select-Object ID,HostName,PortCount,Type,IOGrpCount,Status,SiteID,SiteName,HostStateInfo,HostClusterID,HostClusterName,Protocol,StatusPolicy,StatusSite,`
+            $TD_HostBaseTemp = "" | Select-Object RowID,ID,HostName,PortCount,Type,IOGrpCount,Status,SiteID,SiteName,HostStateInfo,HostClusterID,HostClusterName,Protocol,StatusPolicy,StatusSite,`
                                     WWPNOne,NodeLoggedInCountOne,StateOne,WWPNTwo,NodeLoggedInCountTwo,StateTwo,WWPNThree,NodeLoggedInCountThree,StateThree,WWPNFour,NodeLoggedInCountFour,StateFour,`
                                     OwnerID,OwnerName,PortsetID,PortsetName,WWNN,SerialNumber
-            $TD_HostBaseTemp.ID                 = $TD_HostIDInformation.id[$i]
-            $TD_HostBaseTemp.HostName           = $TD_HostIDInformation.name[$i]
-            $TD_HostBaseTemp.PortCount          = $TD_HostIDInformation.port_count[$i]
-            $TD_HostBaseTemp.Type               = $TD_HostIDInformation.type[$i]
-            $TD_HostBaseTemp.IOGrpCount         = $TD_HostIDInformation.iogrp_count[$i]
-            $TD_HostBaseTemp.Status             = $TD_HostIDInformation.status[$i]
-            $TD_HostBaseTemp.SiteID             = $TD_HostIDInformation.site_id[$i]
-            $TD_HostBaseTemp.SiteName           = $TD_HostIDInformation.site_name[$i]
-            $TD_HostBaseTemp.HostClusterID      = $TD_HostIDInformation.host_cluster_id[$i]
-            $TD_HostBaseTemp.HostClusterName    = $TD_HostIDInformation.host_cluster_name[$i]
-            $TD_HostBaseTemp.Protocol           = $TD_HostIDInformation.protocol[$i]
-            $TD_HostBaseTemp.StatusPolicy       = $TD_HostIDInformation.status_policy[$i]
-            $TD_HostBaseTemp.StatusSite         = $TD_HostIDInformation.status_site[$i]
+            $TD_HostBaseTemp.ID                 = $TD_HostIDInformation.id
+            $TD_HostBaseTemp.HostName           = $TD_HostIDInformation.name
+            $TD_HostBaseTemp.PortCount          = $TD_HostIDInformation.port_count
+            $TD_HostBaseTemp.Type               = $TD_HostIDInformation.type
+            $TD_HostBaseTemp.IOGrpCount         = $TD_HostIDInformation.iogrp_count
+            $TD_HostBaseTemp.Status             = $TD_HostIDInformation.status
+            $TD_HostBaseTemp.SiteID             = $TD_HostIDInformation.site_id
+            $TD_HostBaseTemp.SiteName           = $TD_HostIDInformation.site_name
+            $TD_HostBaseTemp.HostClusterID      = $TD_HostIDInformation.host_cluster_id
+            $TD_HostBaseTemp.HostClusterName    = $TD_HostIDInformation.host_cluster_name
+            $TD_HostBaseTemp.Protocol           = $TD_HostIDInformation.protocol
+            $TD_HostBaseTemp.StatusPolicy       = $TD_HostIDInformation.status_policy
+            $TD_HostBaseTemp.StatusSite         = $TD_HostIDInformation.status_site
 
             for ($nbr = 0; $nbr -lt $($TD_HostIDInformation.nodes).count; $nbr++) {
                 if($nbr -eq 0){
@@ -85,13 +86,15 @@ function IBM_RESTHostInfo {
                     $TD_HostBaseTemp.StateFour              = $TD_HostIDInformation.nodes.state[$nbr]
                 }
             }
-            $TD_HostBaseTemp.OwnerID           = $TD_HostIDInformation.owner_id[$i]
-            $TD_HostBaseTemp.OwnerName         = $TD_HostIDInformation.owner_name[$i]
-            $TD_HostBaseTemp.PortsetID         = $TD_HostIDInformation.portset_id[$i]
-            $TD_HostBaseTemp.PortsetName       = $TD_HostIDInformation.portset_name[$i]
+            $TD_HostBaseTemp.OwnerID           = $TD_HostIDInformation.owner_id
+            $TD_HostBaseTemp.OwnerName         = $TD_HostIDInformation.owner_name
+            $TD_HostBaseTemp.PortsetID         = $TD_HostIDInformation.portset_id
+            $TD_HostBaseTemp.PortsetName       = $TD_HostIDInformation.portset_name
 
             $TD_HostBaseTemp.WWNN = $IBMSTOWWNN
             $TD_HostBaseTemp.SerialNumber = $IBMSTOSN
+            $TD_HostBaseTemp.RowID = "$IBMSTOSN|$($TD_HostBaseTemp.ID)"
+
 
             $TD_HostBaseTemp
 
@@ -102,7 +105,7 @@ function IBM_RESTHostInfo {
     }
     
     end {
-
+        
         Close-ProgressBar -ProgressBar $ProgressBar
         <# export y or n #>
         if($TD_Export -eq "yes"){
