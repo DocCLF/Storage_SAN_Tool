@@ -157,11 +157,12 @@
 
           <ItemsControl.ItemTemplate>
             <DataTemplate>
+            <StackPanel>
               <DataGrid AutoGenerateColumns="False"
                         ColumnWidth="*"
                         HorizontalAlignment="Stretch"
                         Margin="5"
-                        MaxWidth="960"
+                        MaxWidth="1024"
                         MaxHeight="460"
                         ItemsSource="{Binding BaseRows}"
                         CanUserAddRows="False"
@@ -220,8 +221,55 @@
                   <DataGridTextColumn Width="auto" Header="SideID" Binding ="{Binding SideID}" IsReadOnly="True"/>
                   <DataGridTextColumn Width="auto" Header="Side Name" Binding ="{Binding SideName}" IsReadOnly="True"/>
                 </DataGrid.Columns>
+              </DataGrid>
+              <!-- Label zwischen den Grids -->
+              <Label Content="Quorum Info"
+                     Style="{DynamicResource MainLabelStyle}"
+                     Margin="5,8,5,0"
+                     Visibility="{Binding IsChecked, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+          
+              <!-- IP Quorum Grid -->
+              <DataGrid AutoGenerateColumns="False"
+                        ColumnWidth="*"
+                        HorizontalAlignment="Stretch"
+                        Margin="5"
+                        MaxWidth="1024"
+                        MaxHeight="460"
+                        ItemsSource="{Binding IPQuorumRows}"
+                        CanUserAddRows="False"
+                        Visibility="{Binding IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
+
+                <!-- Optional: Header pro Device -->
+                <DataGrid.GroupStyle>
+                  <GroupStyle/>
+                </DataGrid.GroupStyle>
+
+                             <DataGrid.CellStyle>
+                                <Style TargetType="DataGridCell">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding Status}" Value="Online">
+                                            <Setter Property="Background" Value="LightGreen" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding Status}" Value="Offline">
+                                            <Setter Property="Background" Value="yellow" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGrid.CellStyle>
+
+                <DataGrid.Columns>
+                    <DataGridTextColumn Width="auto" Header="QuorumIndex"  Binding ="{Binding QuorumIndex}" IsReadOnly="True"/>
+                    <DataGridTextColumn Width="auto" Header="Status" Binding ="{Binding Status}" IsReadOnly="True"/>
+                    <DataGridTextColumn Width="auto" Header="ID"  Binding ="{Binding ID}" IsReadOnly="True"/>  
+                    <DataGridTextColumn Width="auto" Header="Name" Binding ="{Binding Name}" IsReadOnly="True"/>  
+                    <DataGridTextColumn Width="auto" Header="Active" Binding ="{Binding Active}" IsReadOnly="True"/> 
+                    <DataGridTextColumn Width="auto" Header="Object Type" Binding ="{Binding ObjectType}" IsReadOnly="True"/>
+                    <DataGridTextColumn Width="auto" Header="Override" Binding ="{Binding Override}" IsReadOnly="True"/> 
+                    <DataGridTextColumn Width="auto" Header="Site Name" Binding ="{Binding SideName}" IsReadOnly="True"/>
+                </DataGrid.Columns>
 
               </DataGrid>
+              </StackPanel>
             </DataTemplate>
           </ItemsControl.ItemTemplate>
         </ItemsControl>
