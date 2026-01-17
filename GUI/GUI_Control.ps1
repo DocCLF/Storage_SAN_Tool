@@ -320,6 +320,7 @@ $TD_BTN_CloseGUI.add_click({
         Remove-Item -Path $PSRootPath\ToolLog\ToolTEMP\* -Filter '*_Temp.csv' -Force -ErrorAction SilentlyContinue
         if(Test-Path -Path "$PSRootPath\Resources\DBFolder\*" -Filter "*.db"){
             #SST_RESTDBControl -SST_InfoType "DeleteStorageToken" | Out-Null
+            SST_RESTDBControl -SST_InfoType "DeleteStorageToken"
         }
     }
     catch {
@@ -341,7 +342,9 @@ $TD_BTN_IBM_BaseStorageInfo.add_click({
     <# if there a something in, its better to clean it up befor we use it again #>
     $UCVMMain.DeviceToggles.Clear()
     foreach($TD_Creds in $TD_Credentials){
-        $FunctionResult = New-DeviceBlock -Device $TD_Creds -ExportPath $TD_tb_ExportPath.Text -RESTFunc IBM_RESTBaseStorageInfos -SSHFunc IBM_SSHBaseStorageInfos
+        $baseResult  = New-DeviceBlock -Device $TD_Creds -ExportPath $TD_tb_ExportPath.Text -RESTFunc IBM_RESTBaseStorageInfos -SSHFunc IBM_SSHBaseStorageInfos
+        
+        $dev = $baseResult.DeviceIdent
         $mapStorageInfo = @{
             ID             = 'ID'
             Name           = 'Name'
@@ -357,9 +360,26 @@ $TD_BTN_IBM_BaseStorageInfo.add_click({
             SideID         = 'SideID'
             SideName       = 'SideName'
         } 
-        Add-MappedRows -Collection $FunctionResult.DeviceIdent.BaseRows -Source $FunctionResult.FuncResult.StorageInfo -IdProperty 'ID' -Map $mapStorageInfo
+        Add-MappedRows -Collection $dev.BaseRows -Source $baseResult.FuncResult.StorageInfo -IdProperty 'RowID' -Map $mapStorageInfo
 
-        $UCVMMain.DeviceToggles.Add($FunctionResult.DeviceIdent)
+        #$FunctionResult = $null
+        $ipqResult  = RestThenSshForCombiView -Device $TD_Creds -ExportPath $TD_tb_ExportPath.Text -RESTFunc IBM_RESTIPQuorum -SSHFunc IBM_SSHIPQuorum
+        $mapIPQuorum = @{
+            QuorumIndex    = 'QuorumIndex'
+            ID             = 'ID'
+            Name           = 'Name'
+            Status         = 'Status'
+            ControllerID   = 'ControllerID'
+            ControllerName = 'ControllerName'
+            Active         = 'Active'
+            ObjectType     = 'ObjectType'
+            Override       = 'Override'
+            SideID         = 'SideID'
+            SideName       = 'SideName'
+        } 
+        Add-MappedRows -Collection $dev.IPQuorumRows -Source $ipqResult -IdProperty 'RowID' -Map $mapIPQuorum
+
+        $UCVMMain.DeviceToggles.Add($dev)
         $UCVMMain.SelectedView = "Base"
     }
 })
@@ -389,7 +409,7 @@ $TD_BTN_IBM_Eventlog.add_click({
             ErrorCode   = 'ErrorCode'
             Description = 'Description'
         }
-        Add-MappedRows -Collection $FunctionResult.DeviceIdent.EventRows -Source $FunctionResult.FuncResult -IdProperty 'SeqID' -Map $mapStorageEvents
+        Add-MappedRows -Collection $FunctionResult.DeviceIdent.EventRows -Source $FunctionResult.FuncResult -IdProperty 'RowID' -Map $mapStorageEvents
 
         $UCVMMain.DeviceToggles.Add($FunctionResult.DeviceIdent)
         $UCVMMain.SelectedView = "Events"
@@ -423,7 +443,7 @@ $TD_BTN_IBM_CatAuditLog.add_click({
             Origin              = 'Origin'      <# not to display #>
             TwoPersonIntegrity  = 'TwoPersonIntegrity'
         }
-        Add-MappedRows -Collection $FunctionResult.DeviceIdent.AuditLogRows -Source $FunctionResult.FuncResult -IdProperty 'AuditSeqNo' -Map $mapCatAuditLog
+        Add-MappedRows -Collection $FunctionResult.DeviceIdent.AuditLogRows -Source $FunctionResult.FuncResult -IdProperty 'RowID' -Map $mapCatAuditLog
 
         $UCVMMain.DeviceToggles.Add($FunctionResult.DeviceIdent)
         $UCVMMain.SelectedView = "CatAuditLog"
@@ -448,13 +468,14 @@ $TD_BTN_IBM_HostVolumeMap.add_click({
             HostName        = 'HostName'
             HostClusterID   = 'HostClusterID'
             HostCluster     = 'HostCluster'   
-            MappingType     = 'MappingType' 
+            MappingType     = 'MappingType' <# not to display #>
+            SCSIID          = 'SCSIID'      <# not to display #>
             VolumeID        = 'VolumeID'
             VolumeName      = 'VolumeName'
             UID             = 'UID'      
             Capacity        = 'Capacity'    
         }
-        Add-MappedRows -Collection $FunctionResult.DeviceIdent.HostVolumeMapRows -Source $FunctionResult.FuncResult -IdProperty 'HostID' -Map $mapHostVolumeMap
+        Add-MappedRows -Collection $FunctionResult.DeviceIdent.HostVolumeMapRows -Source $FunctionResult.FuncResult -IdProperty 'RowID' -Map $mapHostVolumeMap
 
         $UCVMMain.DeviceToggles.Add($FunctionResult.DeviceIdent)
         $UCVMMain.SelectedView = "HostVolumeMap"
@@ -472,6 +493,7 @@ $TD_BTN_IBM_HostInfo.add_click({
     $UCVMMain.DeviceToggles.Clear()
     foreach($TD_Creds in $TD_Credentials){
         $FunctionResult = New-DeviceBlock -Device $TD_Creds -ExportPath $TD_tb_ExportPath.Text -RESTFunc IBM_RESTHostInfo -SSHFunc IBM_SSHHostInfo
+
         # Links = Propertyname im PSCustomObject (das bindet dein XAML)
         # Rechts = Propertyname im Source-Objekt
         $mapHost = @{
@@ -506,7 +528,7 @@ $TD_BTN_IBM_HostInfo.add_click({
             PortsetID               = 'PortsetID'   <# not to display #>
             PortsetName             = 'PortsetName' <# not to display #>
         }
-        Add-MappedRows -Collection $FunctionResult.DeviceIdent.HostRows -Source $FunctionResult.FuncResult -IdProperty 'ID' -Map $mapHost
+        Add-MappedRows -Collection $FunctionResult.DeviceIdent.HostRows -Source $FunctionResult.FuncResult -IdProperty 'RowID' -Map $mapHost
 
         $UCVMMain.DeviceToggles.Add($FunctionResult.DeviceIdent)
         $UCVMMain.SelectedView = "HostMap"
