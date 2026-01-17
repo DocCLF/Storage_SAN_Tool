@@ -37,7 +37,7 @@ function IBM_SSHBaseStorageInfos {
     process {
         $TD_SystemInfo = IBM_SystemInfo -TD_Line_ID $TD_Line_ID -TD_Device_ConnectionTyp $TD_Device_ConnectionTyp -TD_Device_UserName $TD_Device_UserName -TD_Device_DeviceIP $TD_Device_DeviceIP -TD_Device_PW $TD_Device_PW
         $TD_StorageInfo = foreach($TD_FSBaseInfo in $TD_BaseInformations){
-            $TD_FSBaseTemp = "" | Select-Object ID,Name,ClusterName,WWNN,Status,IO_group_id,IO_group_Name,Serial_Number,Code_Level,Config_Node,SideID,SideName,Prod_MTM,RecommendedPTF,MDiskTotalCapacity,MDiskFreeCapacity,MDiskUsedCapacity,PhysicalTotalCapacity,PhysicalFreeCapacity,HostUnmap,BackendUnmap,Topology,Layer,QuorumMode
+            $TD_FSBaseTemp = "" | Select-Object ID,Name,ClusterName,WWNN,Status,IO_group_id,IO_group_Name,SerialNumber,CodeLevel,ConfigNode,SideID,SideName,Prod_MTM,RecommendedPTF,MDiskTotalCapacity,MDiskFreeCapacity,MDiskUsedCapacity,PhysicalTotalCapacity,PhysicalFreeCapacity,HostUnmap,BackendUnmap,Topology,Layer,QuorumMode
             $TD_FSBaseTemp.ID = ($TD_FSBaseInfo|Select-String -Pattern '^(\d+):' -AllMatches).Matches.Groups[1].Value
             $TD_FSBaseTemp.Name = ($TD_FSBaseInfo|Select-String -Pattern '^\d+:([a-zA-Z0-9-_]+):' -AllMatches).Matches.Groups[1].Value
             $TD_FSBaseTemp.ClusterName = ($TD_BaseInformations|Select-String -Pattern '^name\,([\w\-]+)' -AllMatches).Matches.Groups[1].Value
@@ -48,20 +48,20 @@ function IBM_SSHBaseStorageInfos {
             $TD_FSBaseBackEndSerial_Number = ($TD_FSBaseInfo|Select-String -Pattern ':\d+:\d+:([a-zA-Z0-9]+):' -AllMatches).Matches.Groups[1].Value
             $TD_FSBaseSVCSerialNumber = ($TD_FSBaseInfo|Select-String -Pattern ':(\w{6,8}):(|\d+):(|\d+):(|\w{6,8}):' -AllMatches).Matches.Groups[1].Value
             if($TD_Storage -eq "SVC"){
-               $TD_FSBaseTemp.Serial_Number = $TD_FSBaseSVCSerialNumber
+               $TD_FSBaseTemp.SerialNumber = $TD_FSBaseSVCSerialNumber
             }else {
-                $TD_FSBaseTemp.Serial_Number = $TD_FSBaseBackEndSerial_Number
+                $TD_FSBaseTemp.SerialNumber = $TD_FSBaseBackEndSerial_Number
             }
-            $TD_FSBaseTemp.Config_Node = ($TD_FSBaseInfo|Select-String -Pattern '\d+:([\w\-]+):(yes|no):' -AllMatches).Matches.Groups[2].Value
+            $TD_FSBaseTemp.ConfigNode = ($TD_FSBaseInfo|Select-String -Pattern '\d+:([\w\-]+):(yes|no):' -AllMatches).Matches.Groups[2].Value
             $TD_FSBaseTemp.SideID = ($TD_FSBaseInfo|Select-String -Pattern ':(\d+|):([a-zA-Z0-9-_]+)$' -AllMatches).Matches.Groups[1].Value
             $TD_FSBaseTemp.SideName = ($TD_FSBaseInfo|Select-String -Pattern ':(\d+|):([a-zA-Z0-9-_]+)$' -AllMatches).Matches.Groups[2].Value
             $TD_FSBaseTemp.Prod_MTM = ($TD_BaseInformations|Select-String -Pattern '^product_mtm:([a-zA-Z0-9-]+)' -AllMatches).Matches.Groups[1].Value
-            $TD_FSBaseTemp.Code_Level = ($TD_BaseInformations|Select-String -Pattern '^code_level:(\d+.\d+.\d+.\d+)' -AllMatches).Matches.Groups[1].Value
-            if ((![string]::IsNullOrEmpty($TD_FSBaseTemp.Prod_MTM))-and(![string]::IsNullOrEmpty($TD_FSBaseTemp.Code_Level))){
-                if(($TD_FSBaseTemp.Code_Level)-ne($TD_FSBaseTempCode_Level)){
-                    $TD_SpectrVirtuFWInfos = IBM_StorageSWCheck -IBM_CurrentSpectrVirtuFW $TD_FSBaseTemp.Code_Level -IBM_ProdMTM $TD_FSBaseTemp.Prod_MTM
-                    $TD_FSBaseTempCode_Level = $TD_FSBaseTemp.Code_Level
-                    Write-Debug -Message $TD_FSBaseTemp.Code_Level $TD_SpectrVirtuFWInfos
+            $TD_FSBaseTemp.CodeLevel = ($TD_BaseInformations|Select-String -Pattern '^code_level:(\d+.\d+.\d+.\d+)' -AllMatches).Matches.Groups[1].Value
+            if ((![string]::IsNullOrEmpty($TD_FSBaseTemp.Prod_MTM))-and(![string]::IsNullOrEmpty($TD_FSBaseTemp.CodeLevel))){
+                if(($TD_FSBaseTemp.CodeLevel)-ne($TD_FSBaseTempCode_Level)){
+                    $TD_SpectrVirtuFWInfos = IBM_StorageSWCheck -IBM_CurrentSpectrVirtuFW $TD_FSBaseTemp.CodeLevel -IBM_ProdMTM $TD_FSBaseTemp.Prod_MTM
+                    $TD_FSBaseTempCode_Level = $TD_FSBaseTemp.CodeLevel
+                    Write-Debug -Message $TD_FSBaseTemp.CodeLevel $TD_SpectrVirtuFWInfos
                     [string]$TD_FSBaseTemp.RecommendedPTF = $TD_SpectrVirtuFWInfos.RecommendedPTF
                 }else {
                     [string]$TD_FSBaseTemp.RecommendedPTF = $TD_SpectrVirtuFWInfos.RecommendedPTF
