@@ -20,7 +20,7 @@ function IBM_RESTHost_Volume_Map {
         if(Test-Path -Path "$PSRootPath\Resources\DBFolder\ToolDB\ToolDB.db"){
             $RESTInfo = SST_RESTDBControl -SST_InfoType "UseStorageToken" -SST_BaseUrl $BaseUrl
             if(([string]::IsNullOrEmpty($RESTInfo)) -and ($TD_Device_ConnectionTyp -eq "REST")){
-                SST_GetSpectrumToken -TD_Device_UserName $TD_Device_UserName -TD_Device_DeviceIP $TD_Device_DeviceIP -TD_Device_PW $TD_Device_PW
+                $TD_Device_ConnectionTyp = SST_GetSpectrumToken -TD_Device_UserName $TD_Device_UserName -TD_Device_DeviceIP $TD_Device_DeviceIP -TD_Device_PW $TD_Device_PW
             }
         }
         if([string]::IsNullOrWhiteSpace($TD_Device_ConnectionTyp)){
@@ -45,24 +45,26 @@ function IBM_RESTHost_Volume_Map {
 
     process{
         [int]$imax = $TD_DeviceInformation.Count
-        [array]$TD_Mappingresault = for ($i = 0; $i -le $imax; $i++) {
+        [array]$TD_Mappingresault = for ($i = 0; $i -lt $imax; $i++) {
 
-            $TD_SplitInfos = "" | Select-Object HostID,HostName,HostClusterID,HostCluster,MappingType,VolumeID,VolumeName,UID,Capacity,WWNN,SerialNumber
-            $TD_SplitInfos.HostID                 = $TD_DeviceInformation.id[$i]
-            $TD_SplitInfos.HostName          = $TD_DeviceInformation.name[$i]
-            $TD_SplitInfos.VolumeID           = $TD_DeviceInformation.vdisk_id[$i]
-            $TD_SplitInfos.VolumeName            = $TD_DeviceInformation.vdisk_name[$i]
-            $TD_SplitInfos.UID             = $TD_DeviceInformation.vdisk_UID[$i]
-            $TD_SplitInfos.MappingType         = $TD_DeviceInformation.mapping_type[$i]
-            $TD_SplitInfos.HostClusterID       = $TD_DeviceInformation.host_cluster_id[$i]
-            $TD_SplitInfos.HostCluster           = $TD_DeviceInformation.host_cluster_name[$i]
-            $TD_VdiskInfo = SST_SpectrumSystemAPI -Endpoint lshostvdiskmap/$TD_DeviceInformation.vdisk_id[$i] -Body $null -BaseUrl $BaseUrl -RESTInfo $RESTInfo
-            if($TD_SplitInfos.UID -eq $TD_VdiskInfo.VdiskUID){
+            $TD_SplitInfos = "" | Select-Object RowID,HostID,HostName,HostClusterID,HostCluster,MappingType,SCSIID,VolumeID,VolumeName,UID,Capacity,WWNN,SerialNumber
+            $TD_SplitInfos.HostID           = $TD_DeviceInformation.id[$i]
+            $TD_SplitInfos.HostName         = $TD_DeviceInformation.name[$i]
+            $TD_SplitInfos.SCSIID           = $TD_DeviceInformation.SCSI_id[$i]
+            $TD_SplitInfos.VolumeID         = $TD_DeviceInformation.vdisk_id[$i]
+            $TD_SplitInfos.VolumeName       = $TD_DeviceInformation.vdisk_name[$i]
+            $TD_SplitInfos.UID              = $TD_DeviceInformation.vdisk_UID[$i]
+            $TD_SplitInfos.MappingType      = $TD_DeviceInformation.mapping_type[$i]
+            $TD_SplitInfos.HostClusterID    = $TD_DeviceInformation.host_cluster_id[$i]
+            $TD_SplitInfos.HostCluster      = $TD_DeviceInformation.host_cluster_name[$i]
+            $TD_VdiskInfo = SST_SpectrumSystemAPI -Endpoint lsvdisk/$($TD_SplitInfos.VolumeID) -Body $null -BaseUrl $BaseUrl -RESTInfo $RESTInfo
+            if ($TD_VdiskInfo.vdisk_UID -contains $TD_SplitInfos.UID) {
                 $TD_SplitInfos.Capacity = $TD_VdiskInfo.capacity
             }
 
             $TD_SplitInfos.WWNN = $IBMSTOWWNN
             $TD_SplitInfos.SerialNumber = $IBMSTOSN
+            $TD_SplitInfos.RowID          = "$IBMSTOSN|$($TD_SplitInfos.HostID)"
 
             $TD_SplitInfos
 
@@ -73,6 +75,7 @@ function IBM_RESTHost_Volume_Map {
     }
         
     end{
+        #$TD_Mappingresault | Select-Object -First 5 | Format-List * | Out-String | Write-Host
 
         <# if update is clicked update the right list #>
         if($TD_RefreshView -eq "Update"){
