@@ -20,7 +20,7 @@ function IBM_RESTIPQuorum {
         if(Test-Path -Path "$PSRootPath\Resources\DBFolder\ToolDB\ToolDB.db"){
             $RESTInfo = SST_RESTDBControl -SST_InfoType "UseStorageToken" -SST_BaseUrl $BaseUrl
             if(([string]::IsNullOrEmpty($RESTInfo)) -and ($TD_Device_ConnectionTyp -eq "REST")){
-                SST_GetSpectrumToken -TD_Device_UserName $TD_Device_UserName -TD_Device_DeviceIP $TD_Device_DeviceIP -TD_Device_PW $TD_Device_PW
+                $TD_Device_ConnectionTyp = SST_GetSpectrumToken -TD_Device_UserName $TD_Device_UserName -TD_Device_DeviceIP $TD_Device_DeviceIP -TD_Device_PW $TD_Device_PW
             }
         }
         if([string]::IsNullOrWhiteSpace($TD_Device_ConnectionTyp)){
@@ -45,9 +45,9 @@ function IBM_RESTIPQuorum {
 
     process{
         [int]$imax = $TD_DeviceInformation.Count
-        [array]$TD_Quorum = for ($i = 0; $i -le $imax; $i++) {
+        [array]$TD_Quorum = for ($i = 0; $i -lt $imax; $i++) {
             <# Node Info#>
-            $TD_QuorumInfo = "" | Select-Object QuorumIndex,Status,ID,Name,ControllerID,ControllerName,Active,ObjectType,Override,SiteID,SiteName,WWNN,SerialNumber
+            $TD_QuorumInfo = "" | Select-Object RowID,QuorumIndex,Status,ID,Name,ControllerID,ControllerName,Active,ObjectType,Override,SideID,SideName,WWNN,SerialNumber
 
             $TD_QuorumInfo.QuorumIndex      = $TD_DeviceInformation.quorum_index[$i]
             $TD_QuorumInfo.Status           = $TD_DeviceInformation.status[$i]
@@ -58,11 +58,12 @@ function IBM_RESTIPQuorum {
             $TD_QuorumInfo.Active           = $TD_DeviceInformation.active[$i]
             $TD_QuorumInfo.ObjectType       = $TD_DeviceInformation.object_type[$i]
             $TD_QuorumInfo.Override         = $TD_DeviceInformation.override[$i]
-            $TD_QuorumInfo.SiteID           = $TD_DeviceInformation.site_id[$i]
-            $TD_QuorumInfo.SiteName         = $TD_DeviceInformation.site_name[$i]
+            $TD_QuorumInfo.SideID           = $TD_DeviceInformation.site_id[$i]
+            $TD_QuorumInfo.SideName         = $TD_DeviceInformation.site_name[$i]
 
             $TD_QuorumInfo.WWNN         = $IBMSTOWWNN
             $TD_QuorumInfo.SerialNumber = $IBMSTOSN
+            $TD_QuorumInfo.RowID       = "$IBMSTOSN|$($TD_QuorumInfo.QuorumIndex)"
 
             $TD_QuorumInfo
 
