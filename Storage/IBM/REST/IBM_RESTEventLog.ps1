@@ -18,18 +18,20 @@ function IBM_RESTEventLog {
         $BaseUrl = "https://$TD_Device_DeviceIP"+":7443"
         if(Test-Path -Path "$PSRootPath\Resources\DBFolder\ToolDB\ToolDB.db"){
             $RESTInfo = SST_RESTDBControl -SST_InfoType "UseStorageToken" -SST_BaseUrl $BaseUrl
+
             if(([string]::IsNullOrEmpty($RESTInfo)) -and ($TD_Device_ConnectionTyp -eq "REST")){
-                SST_GetSpectrumToken -TD_Device_UserName $TD_Device_UserName -TD_Device_DeviceIP $TD_Device_DeviceIP -TD_Device_PW $TD_Device_PW
+                
+                $TD_Device_ConnectionTyp = SST_GetSpectrumToken -TD_Device_UserName $TD_Device_UserName -TD_Device_DeviceIP $TD_Device_DeviceIP -TD_Device_PW $TD_Device_PW
             }
         }
+
         if([string]::IsNullOrWhiteSpace($TD_Device_ConnectionTyp)){
             $TD_Device_ConnectionTyp = SST_GetSpectrumToken -TD_Device_UserName $TD_Device_UserName -TD_Device_DeviceIP $TD_Device_DeviceIP -TD_Device_PW $TD_Device_PW 
         }
         Clear-Variable -Name TD_Device_PW -Force
-        
         if($TD_Device_ConnectionTyp -eq "REST"){
             $STONodeInfo = SST_SpectrumSystemAPI -Endpoint lsnode -Body $null -BaseUrl $BaseUrl -RESTInfo $RESTInfo
-            $TD_CollectEventInfo = SST_SpectrumSystemAPI -Endpoint leseventlog -Body $body -BaseUrl $BaseUrl -RESTInfo $RESTInfo
+            $TD_CollectEventInfo = SST_SpectrumSystemAPI -Endpoint lseventlog -Body $body -BaseUrl $BaseUrl -RESTInfo $RESTInfo
         }else {
             <#switch to the ssh version and leave this func #>
             return $null
@@ -45,12 +47,12 @@ function IBM_RESTEventLog {
 
     process{
         [int]$imax = $TD_CollectEventInfo.Count
-        [array]$TD_EventCollection = for ($i = 0; $i -le $imax; $i++) {
+        [array]$TD_EventCollection = for ($i = 0; $i -lt $imax; $i++) {
             <# Node Info#>
-            $TD_EventSplitInfo = "" | Select-Object SeqID,LastTime,ObjectType,ObjectID,ObjectName,CopyID,Status,Fixed,ErrorCode,Description,WWNN,SerialNumber
+            $TD_EventSplitInfo = "" | Select-Object RowID,SeqID,LastTime,ObjectType,ObjectID,ObjectName,CopyID,Status,Fixed,ErrorCode,Description,WWNN,SerialNumber
 
             $TD_EventSplitInfo.SeqID        = $TD_CollectEventInfo.sequence_number[$i]
-            $TD_EventSplitInfo.LastTime     = $TD_CollectEventInfo.last_timestamp[$i]
+            $TD_EventSplitInfo.LastTime     = (Convert-SpectrumTimestamp $TD_CollectEventInfo.last_timestamp[$i]).ToString("yyyy/MM/dd HH:mm:ss")
             $TD_EventSplitInfo.ObjectType   = $TD_CollectEventInfo.object_type[$i]
             $TD_EventSplitInfo.ObjectID     = $TD_CollectEventInfo.object_id[$i]
             $TD_EventSplitInfo.ObjectName   = $TD_CollectEventInfo.object_name[$i]
@@ -61,6 +63,7 @@ function IBM_RESTEventLog {
             $TD_EventSplitInfo.Description  = $TD_CollectEventInfo.description[$i]
             $TD_EventSplitInfo.WWNN         = $IBMSTOWWNN
             $TD_EventSplitInfo.SerialNumber = $IBMSTOSN
+            $TD_EventSplitInfo.RowID          = "$IBMSTOSN|$($TD_EventSplitInfo.SeqID)"
 
             $TD_EventSplitInfo
 
@@ -74,6 +77,7 @@ function IBM_RESTEventLog {
         Close-ProgressBar -ProgressBar $ProgressBar
         <# returns the hashtable for further processing, not mandatory but the safe way #>
         Write-Debug -Message "IBM_EventLog End block |$(Get-Date) `n"
+        $TD_EventCollection = $TD_EventCollection | Sort-Object @{ Expression = { $_.LastTime }; Descending = $true }
         <# export y or n #>
         if($TD_Export -eq "yes"){
             if([string]$TD_Exportpath -ne "$PSRootPath\ToolLog\"){
