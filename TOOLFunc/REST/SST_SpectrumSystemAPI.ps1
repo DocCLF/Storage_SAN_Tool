@@ -14,6 +14,7 @@ function SST_SpectrumSystemAPI {
     begin {
 
         $Uri = "$BaseUrl/rest/v1/$Endpoint"
+        Write-Host "$Uri"
         if([string]::IsNullOrWhiteSpace($RESTInfo)){
             $RESTToken = SST_RESTDBControl -SST_InfoType "UseStorageToken" -SST_BaseUrl $BaseUrl
             
@@ -24,12 +25,13 @@ function SST_SpectrumSystemAPI {
             "accept"       = "application/json"
             "X-Auth-Token" = $RESTToken
         }
-        $bodyJson = if ($null -ne $Body) { $Body | ConvertTo-Json } else { "" }
+        $bodyJson = if ($null -ne $Body) { $Body | ConvertTo-Json -Depth 10 -Compress } else { "" }
     }
     
     process {
         if($TD_PSVersion -eq 5){
             # Save old callback
+            [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
             $OldCallback = [System.Net.ServicePointManager]::ServerCertificateValidationCallback
             # Disable certificate validation
             [System.Net.ServicePointManager]::ServerCertificateValidationCallback = { $true }
@@ -52,7 +54,9 @@ function SST_SpectrumSystemAPI {
         }
     }
     
-    end {
-        return $response
-    }
+end {
+  # optional debug:
+  #$response | Select-Object -First 5 | Format-List * | Out-String | Write-Host
+  return $response
+}
 }
