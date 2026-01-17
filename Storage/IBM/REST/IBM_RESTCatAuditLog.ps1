@@ -20,7 +20,7 @@ function IBM_RESTCatAuditLog {
         if(Test-Path -Path "$PSRootPath\Resources\DBFolder\ToolDB\ToolDB.db"){
             $RESTInfo = SST_RESTDBControl -SST_InfoType "UseStorageToken" -SST_BaseUrl $BaseUrl
             if(([string]::IsNullOrEmpty($RESTInfo)) -and ($TD_Device_ConnectionTyp -eq "REST")){
-                SST_GetSpectrumToken -TD_Device_UserName $TD_Device_UserName -TD_Device_DeviceIP $TD_Device_DeviceIP -TD_Device_PW $TD_Device_PW
+                $TD_Device_ConnectionTyp = SST_GetSpectrumToken -TD_Device_UserName $TD_Device_UserName -TD_Device_DeviceIP $TD_Device_DeviceIP -TD_Device_PW $TD_Device_PW
             }
         }
         if([string]::IsNullOrWhiteSpace($TD_Device_ConnectionTyp)){
@@ -45,12 +45,12 @@ function IBM_RESTCatAuditLog {
 
     process{
         [int]$imax = $TD_CatAuditLogInfo.Count
-        [array]$TD_AuditLog = for ($i = 0; $i -le $imax; $i++) {
+        [array]$TD_AuditLog = for ($i = 0; $i -lt $imax; $i++) {
             <# Node Info#>
-            $TD_CatAuditLog = "" | Select-Object AuditSeqNo,TimeStamp,User,Challenge,SourcePanel,TargetPanel,SSH_IP,Result,ResObjID,UsedCommand,Origin,TwoPersonIntegrity,WWNN,SerialNumber
+            $TD_CatAuditLog = "" | Select-Object RowID,AuditSeqNo,TimeStamp,User,Challenge,SourcePanel,TargetPanel,SSH_IP,Result,ResObjID,UsedCommand,Origin,TwoPersonIntegrity,WWNN,SerialNumber
 
             $TD_CatAuditLog.AuditSeqNo          = $TD_CatAuditLogInfo.audit_seq_no[$i]
-            $TD_CatAuditLog.TimeStamp           = $TD_CatAuditLogInfo.timestamp[$i]
+            $TD_CatAuditLog.TimeStamp           = (Convert-SpectrumTimestamp $TD_CatAuditLogInfo.timestamp[$i]).ToString("yyyy/MM/dd HH:mm:ss")
             $TD_CatAuditLog.User                = $TD_CatAuditLogInfo.cluster_user[$i]
             $TD_CatAuditLog.Challenge           = $TD_CatAuditLogInfo.challenge[$i]
             $TD_CatAuditLog.SourcePanel         = $TD_CatAuditLogInfo.source_panel[$i]
@@ -64,6 +64,7 @@ function IBM_RESTCatAuditLog {
 
             $TD_CatAuditLog.WWNN            = $IBMSTOWWNN
             $TD_CatAuditLog.SerialNumber    = $IBMSTOSN
+            $TD_CatAuditLog.RowID          = "$IBMSTOSN|$($TD_CatAuditLog.AuditSeqNo)"
 
 
             $TD_CatAuditLog
@@ -76,7 +77,7 @@ function IBM_RESTCatAuditLog {
     end {
 
         Close-ProgressBar -ProgressBar $ProgressBar
-
+        $TD_AuditLog = $TD_AuditLog | Sort-Object @{ Expression = { $_.LastTime }; Descending = $true }
         if($TD_Export -eq "yes"){
             if([string]$TD_Exportpath -ne "$PSCommandPath\ToolLog\"){
                 $TD_AuditLog | Export-Csv -Path $TD_Exportpath\$($TD_Line_ID)_$($TD_Device_DeviceName)_AuditLog_Result_$(Get-Date -Format "yyyy-MM-dd").csv -NoTypeInformation
