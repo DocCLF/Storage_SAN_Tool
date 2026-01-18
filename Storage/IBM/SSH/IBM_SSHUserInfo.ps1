@@ -29,8 +29,9 @@ function IBM_SSHUserInfo {
     }
     
     process {
+        <# WWNN,SerialNumber are missing #>
         $TD_UserInfoResault = foreach($TD_User in $TD_UserInformation){
-            $TD_Userinfo = "" | Select-Object ID,User_Name,Password,SSH_Key,Remote,UserGrp_ID,UserGrp_Name,Owner_ID,Owner_Name,Locked,PW_Change_required,WWNN,SerialNumber
+            $TD_Userinfo = "" | Select-Object RowID,ID,User_Name,Password,SSH_Key,Remote,UserGrp_ID,UserGrp_Name,Owner_ID,Owner_Name,Locked,PW_Change_required,WWNN,SerialNumber
             $TD_Userinfo.User_Name = ($TD_User|Select-String -Pattern '^\d+:([a-zA-Z0-9-_\.]+)' -AllMatches).Matches.Groups[1].Value
             $TD_Userinfo.Password = ($TD_User|Select-String -Pattern ':(yes|no):(yes|no):(yes|no):' -AllMatches).Matches.Groups[1].Value
             $TD_Userinfo.SSH_Key = ($TD_User|Select-String -Pattern ':(yes|no):(yes|no):(yes|no):' -AllMatches).Matches.Groups[2].Value
@@ -38,7 +39,7 @@ function IBM_SSHUserInfo {
             $TD_Userinfo.UserGrp_Name = ($TD_User|Select-String -Pattern ':(yes|no):\d+:([a-zA-Z0-9-_]+):' -AllMatches).Matches.Groups[2].Value
             $TD_Userinfo.Locked = ($TD_User|Select-String -Pattern ':(no|auto|manual):(yes|no)$' -AllMatches).Matches.Groups[1].Value
             $TD_Userinfo.PW_Change_required = ($TD_User|Select-String -Pattern ':(no|auto|manual):(yes|no)$' -AllMatches).Matches.Groups[2].Value
-
+            $TD_Userinfo.RowID = "$($TD_Userinfo.User_Name)|$($TD_Userinfo.UserGrp_Name)"
             $TD_Userinfo
 
             <# Progressbar  #>
