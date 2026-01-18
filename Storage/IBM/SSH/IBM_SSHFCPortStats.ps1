@@ -92,7 +92,7 @@ function IBM_SSHFCPortStats {
         foreach($TD_CollectInfo in $NodePortStatsInfos){
             [string]$TD_NodeStatsID
             if($NodeList.Count -ge 1 -and ($TD_CollectInfo -match 'Nn_stats_')){
-                $TD_PortStatsSplitInfos = "" | Select-Object NodeID,SerialNumber,NodeName,WWNN,CardType,CardID,PortID,WWPN,LinkFailure,LoseSync,LoseSig,PSErrCount,InvTransErr,CRCErr,ZeroBtB,SFPTemp,TXPwr,TXPwrlow,RXPwr,RXPwrlow
+                $TD_PortStatsSplitInfos = "" | Select-Object RowID,NodeID,SerialNumber,NodeName,WWNN,CardType,CardID,PortID,WWPN,LinkFailure,LoseSync,LoseSig,PSErrCount,InvTransErr,CRCErr,ZeroBtB,SFPTemp,TXPwr,TXPwrlow,RXPwr,RXPwrlow
                 [int]$TD_PortStatsSplitInfos.NodeID = $NodeList.NodeID[$i]
                 [string]$TD_PortStatsSplitInfos.SerialNumber = $NodeList.SerialNumber[$i]
                 [string]$TD_PortStatsSplitInfos.NodeName = $NodeList.NodeName[$i]
@@ -123,10 +123,11 @@ function IBM_SSHFCPortStats {
             [int]$TD_PortStatsSplitInfos.SFPTemp = ($TD_CollectInfo|Select-String -Pattern 'tmp="(\d+)"' -AllMatches).Matches.Groups[1].Value
             [int]$TD_PortStatsSplitInfos.TXPwr = ($TD_CollectInfo|Select-String -Pattern 'txpwr="(\d+)"' -AllMatches).Matches.Groups[1].Value
             [int]$TD_PortStatsSplitInfos.RXPwr = ($TD_CollectInfo|Select-String -Pattern 'rxpwr="(\d+)"' -AllMatches).Matches.Groups[1].Value
+            $TD_PortStatsSplitInfos.RowID = "$($TD_PortStatsSplitInfos.SerialNumber)|$($TD_PortStatsSplitInfos.PortID)"
             if($TD_CollectInfo -eq "/>"){
                 if($TD_PortStatsSplitInfos.CardType -ne "FC"){continue}
                 $TD_PortStats_Overview += $TD_PortStatsSplitInfos
-                $TD_PortStatsSplitInfos = "" | Select-Object SerialNumber,WWNN,CardType,CardID,PortID,WWPN,LinkFailure,LoseSync,LoseSig,PSErrCount,InvTransErr,CRCErr,ZeroBtB,SFPTemp,TXPwr,TXPwrlow,RXPwr,RXPwrlow
+                $TD_PortStatsSplitInfos = "" | Select-Object RowID,SerialNumber,WWNN,CardType,CardID,PortID,WWPN,LinkFailure,LoseSync,LoseSig,PSErrCount,InvTransErr,CRCErr,ZeroBtB,SFPTemp,TXPwr,TXPwrlow,RXPwr,RXPwrlow
             }
             <# Progressbar  #>
             $ProgCounter++
