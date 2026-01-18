@@ -28,10 +28,11 @@ function IBM_SSHIPQuorum {
     }
     
     process {
+        <# WWNN,SerialNumber are missing #>
         switch ($TD_DeviceInformation.Count) {
             {($_ -ge 3)} { 
                 $TD_Quorum = foreach($TD_Line in $TD_DeviceInformation) {
-                    $TD_QuorumInfo = "" | Select-Object QuorumIndex,Status,ID,Name,Active,ObjectType,Override,SiteName
+                    $TD_QuorumInfo = "" | Select-Object RowID,QuorumIndex,Status,ID,Name,Active,ObjectType,Override,SiteName
                     $TD_QuorumInfo.QuorumIndex = ($TD_Line|Select-String -Pattern '^(\d+):'-AllMatches).Matches.Groups[1].Value
                     $TD_QuorumInfo.Status = ($TD_Line|Select-String -Pattern '^\d+:(online|offline|degraded):'-AllMatches).Matches.Groups[1].Value
                     $TD_QuorumInfo.ID = ($TD_Line|Select-String -Pattern '^\d+:(online|offline|degraded):(\d+|):'-AllMatches).Matches.Groups[2].Value
@@ -43,7 +44,7 @@ function IBM_SSHIPQuorum {
                     <# if SpVirtSoftware 8.7.x more in Field present there are new Infos to get.
                         application_type, metadata_backup, partner_system_name,... etc
                     #>
-
+                    $TD_QuorumInfo.RowID       = "$($TD_QuorumInfo.ID)|$($TD_QuorumInfo.QuorumIndex)"
                     $TD_QuorumInfo
                     <# Progressbar  #>
                     $ProgCounter++
