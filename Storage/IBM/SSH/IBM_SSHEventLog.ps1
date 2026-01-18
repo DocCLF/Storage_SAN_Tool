@@ -56,7 +56,7 @@ function IBM_SSHEventLog {
 
         [array]$TD_EventCollection = foreach($EventLine in $TD_CollectEventInfo){
             <# Node Info#>
-            $TD_EventSplitInfo = "" | Select-Object SeqID,LastTime,ObjectType,ObjectID,ObjectName,CopyID,Status,Fixed,ErrorCode,Description,WWNN,SerialNumber
+            $TD_EventSplitInfo = "" | Select-Object RowID,SeqID,LastTime,ObjectType,ObjectID,ObjectName,CopyID,Status,Fixed,ErrorCode,Description,WWNN,SerialNumber
             if([string]::IsNullOrWhiteSpace($(($EventLine|Select-String -Pattern '^(\d+)\:' -AllMatches).Matches.Groups[1].Value))){continue}
             $TD_EventSplitInfo.SeqID = ($EventLine|Select-String -Pattern '^(\d+)\:' -AllMatches).Matches.Groups[1].Value
             $TD_Timestamp = ($EventLine|Select-String -Pattern '^(\d+):(\d+)' -AllMatches).Matches.Groups[2].Value
@@ -84,6 +84,7 @@ function IBM_SSHEventLog {
             $TD_EventSplitInfo.Description = ($EventLine|Select-String -Pattern '([\w\s\,\/]+)$' -AllMatches).Matches.Groups[1].Value
             $TD_EventSplitInfo.WWNN = $TD_EventSplitInfoWWNN
             $TD_EventSplitInfo.SerialNumber = $TD_FSBaseSerialNumber
+            $TD_EventSplitInfo.RowID = "$($TD_EventSplitInfo.SerialNumber)|$($TD_EventSplitInfo.SeqID)"
 
             $TD_EventSplitInfo
 
