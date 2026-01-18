@@ -29,8 +29,9 @@ function IBM_SSHMDiskInfo {
     }
     
     process {
+        <# WWNN,SerialNumber are missing #>
         $TD_MDiskInfoResault = foreach ($TD_MDisk in $TD_MDiskInformation){
-            $TD_MDiskInfo = "" | Select-Object ID,Name,Status,MDdiskCount,VdiskCount,Capacity,ExtentSize,FreeCapacity,VirtualCapacity,UsedCapacity,RealCapacity,`
+            $TD_MDiskInfo = "" | Select-Object RowID,ID,Name,Status,MDiskCount,VdiskCount,Capacity,ExtentSize,FreeCapacity,VirtualCapacity,UsedCapacity,RealCapacity,`
                                             Overallocation,Warning,EasyTier,EasyTierStatus,CompressionActive,CompressionVirtualCapacity,CompressionCompressedCapacity,CompressionUncompressedCapacity,ParentMdiskGrpID,ParentMdiskGrpName,ChildMdiskGrpCount,`
                                             ChildMdiskGrpCapacity,Type,Encrypt,OwnerType,OwnerID,OwnerName,SiteID,SiteName,DataReduction,UsedCapacityBeforeReduction,UsedCapacityAfterReduction,`
                                             OverheadCapacity,DeduplicationCapacitySaving,ReclaimableCapacity,EasyTierFCMOverAllocationMax,ProvisioningPolicyID,ProvisioningPolicyName,ReplicationPoolLinkUID,WWNN,SerialNumber
@@ -38,7 +39,7 @@ function IBM_SSHMDiskInfo {
             $TD_MDiskInfo.ID = ($TD_MDisk|Select-String -Pattern '^(\d+)' -AllMatches).Matches.Groups[1].Value
             $TD_MDiskInfo.Name = ($TD_MDisk|Select-String -Pattern '^\d+:([a-zA-Z0-9-_]+):' -AllMatches).Matches.Groups[1].Value
             $TD_MDiskInfo.Status = ($TD_MDisk|Select-String -Pattern '\d+:([a-zA-Z0-9-_]+):(online|offline|excluded|degraded|degraded_paths|degraded_ports):' -AllMatches).Matches.Groups[2].Value
-            $TD_MDiskInfo.MDdiskCount = ($TD_MDisk|Select-String -Pattern ':(\d+):\d+:[\d.]+[GB|TB]+:' -AllMatches).Matches.Groups[1].Value
+            $TD_MDiskInfo.MDiskCount = ($TD_MDisk|Select-String -Pattern ':(\d+):\d+:[\d.]+[GB|TB]+:' -AllMatches).Matches.Groups[1].Value
             $TD_MDiskInfo.VDiskCount = ($TD_MDisk|Select-String -Pattern ':\d+:(\d+):[\d.]+[GB|TB]+:' -AllMatches).Matches.Groups[1].Value
             $TD_MDiskInfo.Capacity = ($TD_MDisk|Select-String -Pattern ':\d+:\d+:([\d.]+[GB|TB]+)' -AllMatches).Matches.Groups[1].Value
             $TD_MDiskInfo.ExtentSize = ($TD_MDisk|Select-String -Pattern ':[\d.]+[GB|TB]+:(16|32|64|128|256|512|1024|2048|4096|8192):' -AllMatches).Matches.Groups[1].Value
@@ -47,7 +48,7 @@ function IBM_SSHMDiskInfo {
             $TD_MDiskInfo.UsedCapacity = ($TD_MDisk|Select-String -Pattern '\d+:([\d.]+[MB|GB|TB]+):([\d.]+[MB|GB|TB]+):([\d.]+[MB|GB|TB]+):([\d.]+[MB|GB|TB]+):\d+' -AllMatches).Matches.Groups[3].Value
             $TD_MDiskInfo.RealCapacity = ($TD_MDisk|Select-String -Pattern '\d+:([\d.]+[MB|GB|TB]+):([\d.]+[MB|GB|TB]+):([\d.]+[MB|GB|TB]+):([\d.]+[MB|GB|TB]+):\d+' -AllMatches).Matches.Groups[4].Value
             $TD_MDiskInfo.Overallocation = ($TD_MDisk|Select-String -Pattern '\d+:[\d.]+[MB|GB|TB]+:[\d.]+[MB|GB|TB]+:[\d.]+[MB|GB|TB]+:[\d.]+[MB|GB|TB]+:(\d+)' -AllMatches).Matches.Groups[1].Value
-
+            $TD_MDiskInfo.RowID = "$($TD_MDiskInfo.ID)|$($TD_MDiskInfo.VDiskCount)"
             $TD_MDiskInfo
 
             <# Progressbar  #>
