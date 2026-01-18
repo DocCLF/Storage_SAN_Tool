@@ -96,61 +96,62 @@ function IBM_SSHDriveInfo {
         }
 
         <# Drive Info #>
-        $TD_DriveSplitInfos = "" | Select-Object DriveID,DriveStatus,DriveCap,ProductID,FWlev,LatestDriveFW,Slot,PhyDriveCap,PhyUsedDriveCap,EffeUsedDriveCap,FWlevStatus,DeviceSN,DeviceWWNN
+        $TD_DriveSplitInfos = "" | Select-Object RowID,ID,Status,Capacity,ProductID,FirmwareLevel,LatestFirmwareLevel,SlotID,PhysicalCapacity,PhysicalUsedCapacity,EffectiveUsedCapacity,FirmwareLevelStatus,SerialNumber,WWNN
         foreach($TD_CollectInfo in $TD_CollectInfosTemp){
-            [int]$TD_DriveSplitInfos.DriveID = ($TD_CollectInfo|Select-String -Pattern '^id\s+(\d+)' -AllMatches).Matches.Groups[1].Value
-            [string]$TD_DriveSplitInfos.DriveStatus = ($TD_CollectInfo|Select-String -Pattern '^status\s+(online|offline|degraded)' -AllMatches).Matches.Groups[1].Value
-            [string]$TD_DriveSplitInfos.DriveCap = ($TD_CollectInfo|Select-String -Pattern '^capacity\s+(\d+\.\d+\w+)' -AllMatches).Matches.Groups[1].Value
+            [int]$TD_DriveSplitInfos.ID = ($TD_CollectInfo|Select-String -Pattern '^id\s+(\d+)' -AllMatches).Matches.Groups[1].Value
+            [string]$TD_DriveSplitInfos.Status = ($TD_CollectInfo|Select-String -Pattern '^status\s+(online|offline|degraded)' -AllMatches).Matches.Groups[1].Value
+            [string]$TD_DriveSplitInfos.Capacity = ($TD_CollectInfo|Select-String -Pattern '^capacity\s+(\d+\.\d+\w+)' -AllMatches).Matches.Groups[1].Value
             [string]$TD_DriveSplitInfos.ProductID = ($TD_CollectInfo|Select-String -Pattern '^product_id\s+([A-Z0-9]+)' -AllMatches).Matches.Groups[1].Value
-            [string]$TD_DriveSplitInfos.FWlev = ($TD_CollectInfo|Select-String -Pattern '^firmware_level\s+([A-Z0-9_]+)' -AllMatches).Matches.Groups[1].Value
-            [string]$TD_DriveSplitInfos.Slot = ($TD_CollectInfo|Select-String -Pattern '^slot_id\s+(\d+)' -AllMatches).Matches.Groups[1].Value
-            [string]$TD_DriveSplitInfos.PhyDriveCap = ($TD_CollectInfo|Select-String -Pattern '^physical_capacity\s+(\d+\.\d+\w+)' -AllMatches).Matches.Groups[1].Value
-            [string]$TD_DriveSplitInfos.PhyUsedDriveCap = ($TD_CollectInfo|Select-String -Pattern '^physical_used_capacity\s+(\d+\.\d+\w+)' -AllMatches).Matches.Groups[1].Value
-            [string]$TD_DriveSplitInfos.EffeUsedDriveCap = ($TD_CollectInfo|Select-String -Pattern '^effective_used_capacity\s+(\d+\.\d+\w+)' -AllMatches).Matches.Groups[1].Value
+            [string]$TD_DriveSplitInfos.FirmwareLevel = ($TD_CollectInfo|Select-String -Pattern '^firmware_level\s+([A-Z0-9_]+)' -AllMatches).Matches.Groups[1].Value
+            [string]$TD_DriveSplitInfos.SlotID = ($TD_CollectInfo|Select-String -Pattern '^slot_id\s+(\d+)' -AllMatches).Matches.Groups[1].Value
+            [string]$TD_DriveSplitInfos.PhysicalCapacity = ($TD_CollectInfo|Select-String -Pattern '^physical_capacity\s+(\d+\.\d+\w+)' -AllMatches).Matches.Groups[1].Value
+            [string]$TD_DriveSplitInfos.PhysicalUsedCapacity = ($TD_CollectInfo|Select-String -Pattern '^physical_used_capacity\s+(\d+\.\d+\w+)' -AllMatches).Matches.Groups[1].Value
+            [string]$TD_DriveSplitInfos.EffectiveUsedCapacity = ($TD_CollectInfo|Select-String -Pattern '^effective_used_capacity\s+(\d+\.\d+\w+)' -AllMatches).Matches.Groups[1].Value
 
-            if ((![string]::IsNullOrEmpty($TD_DriveSplitInfos.ProductID))-and(![string]::IsNullOrEmpty($TD_DriveSplitInfos.FWlev))-and(![string]::IsNullOrEmpty($TD_NodeSplitInfo.ProdName))){
+            if ((![string]::IsNullOrEmpty($TD_DriveSplitInfos.ProductID))-and(![string]::IsNullOrEmpty($TD_DriveSplitInfos.FirmwareLevel))-and(![string]::IsNullOrEmpty($TD_NodeSplitInfo.ProdName))){
                 if(($TD_DriveSplitInfos.ProductID)-ne($TD_DriveSplitInfosProductID)){
-                    [string]$TD_LatestDriveFW = IBM_DriveFirmwareCheck -IBM_DriveProdID $TD_DriveSplitInfos.ProductID -IBM_DriveCurrentFW $TD_DriveSplitInfos.FWlev -IBM_ProdMTM $TD_NodeSplitInfo.ProdName
+                    [string]$TD_LatestDriveFW = IBM_DriveFirmwareCheck -IBM_DriveProdID $TD_DriveSplitInfos.ProductID -IBM_DriveCurrentFW $TD_DriveSplitInfos.FirmwareLevel -IBM_ProdMTM $TD_NodeSplitInfo.ProdName
                     $TD_DriveSplitInfosProductID = $TD_DriveSplitInfos.ProductID
                     
-                    Write-Debug -Message $TD_DriveSplitInfos.FWlev $TD_LatestDriveFW
-                    if($TD_LatestDriveFW -like "*$($TD_DriveSplitInfos.FWlev)*"){
-                        [string]$TD_DriveSplitInfos.FWlevStatus = "LightGreen"
+                    Write-Debug -Message $TD_DriveSplitInfos.FirmwareLevel $TD_LatestDriveFW
+                    if($TD_LatestDriveFW -like "*$($TD_DriveSplitInfos.FirmwareLevel)*"){
+                        [string]$TD_DriveSplitInfos.FirmwareLevelStatus = "LightGreen"
                         [string]$TD_DriveSplitInfos.LatestDriveFW = $TD_LatestDriveFW
                     }elseif ($TD_LatestDriveFW -eq "unknown") {
-                        [string]$TD_DriveSplitInfos.FWlevStatus = "LightGray"
-                        [string]$TD_DriveSplitInfos.LatestDriveFW = $TD_LatestDriveFW
+                        [string]$TD_DriveSplitInfos.FirmwareLevelStatus = "LightGray"
+                        [string]$TD_DriveSplitInfos.LatestFirmwareLevel = $TD_LatestDriveFW
                     }else {    
-                        [string]$TD_DriveSplitInfos.FWlevStatus = "Lightyellow"
-                        [string]$TD_DriveSplitInfos.LatestDriveFW = $TD_LatestDriveFW
+                        [string]$TD_DriveSplitInfos.FirmwareLevelStatus = "Lightyellow"
+                        [string]$TD_DriveSplitInfos.LatestFirmwareLevel = $TD_LatestDriveFW
                     }
                 }else {
-                    if($TD_LatestDriveFW -like "*$($TD_DriveSplitInfos.FWlev)*" ){
-                        [string]$TD_DriveSplitInfos.FWlevStatus = "LightGreen"
-                        [string]$TD_DriveSplitInfos.LatestDriveFW = $TD_LatestDriveFW
+                    if($TD_LatestDriveFW -like "*$($TD_DriveSplitInfos.FirmwareLevel)*" ){
+                        [string]$TD_DriveSplitInfos.FirmwareLevelStatus = "LightGreen"
+                        [string]$TD_DriveSplitInfos.LatestFirmwareLevel = $TD_LatestDriveFW
                     }elseif ($TD_LatestDriveFW -eq "unknown") {
-                        [string]$TD_DriveSplitInfos.FWlevStatus = "LightGray"
-                        [string]$TD_DriveSplitInfos.LatestDriveFW = $TD_LatestDriveFW
+                        [string]$TD_DriveSplitInfos.FirmwareLevelStatus = "LightGray"
+                        [string]$TD_DriveSplitInfos.LatestFirmwareLevel = $TD_LatestDriveFW
                     }else {    
-                        [string]$TD_DriveSplitInfos.FWlevStatus = "Lightyellow"
-                        [string]$TD_DriveSplitInfos.LatestDriveFW = $TD_LatestDriveFW
+                        [string]$TD_DriveSplitInfos.FirmwareLevelStatus = "Lightyellow"
+                        [string]$TD_DriveSplitInfos.LatestFirmwareLevel = $TD_LatestDriveFW
                     }
                 }
             }
-            [string]$TD_DriveSplitInfos.DeviceWWNN = $TD_TempNodeInfo.WWNN
-            [string]$TD_DriveSplitInfos.DeviceSN = $TD_TempNodeInfo.SerialNumber
+            [string]$TD_DriveSplitInfos.WWNN = $TD_TempNodeInfo.WWNN
+            [string]$TD_DriveSplitInfos.SerialNumber = $TD_TempNodeInfo.SerialNumber
+            $TD_DriveSplitInfos.RowID = "$($TD_DriveSplitInfos.SerialNumber)|$($TD_DriveSplitInfos.DriveID)"
             <# Not the best option but for the first stepp ok #>
             if($TD_TransProt -eq "nvme"){
                 if (![string]::IsNullOrEmpty($TD_DriveSplitInfos.EffeUsedDriveCap)){
                     $TD_DriveOverview += $TD_DriveSplitInfos
                     Write-Debug -Message  $TD_DriveOverview
-                    $TD_DriveSplitInfos = "" | Select-Object DriveID,DriveStatus,DriveCap,ProductID,FWlev,LatestDriveFW,Slot,PhyDriveCap,PhyUsedDriveCap,EffeUsedDriveCap,FWlevStatus,DeviceSN,DeviceWWNN
+                    $TD_DriveSplitInfos = "" | Select-Object RowID,ID,Status,Capacity,ProductID,FirmwareLevel,LatestFirmwareLevel,SlotID,PhysicalCapacity,PhysicalUsedCapacity,EffectiveUsedCapacity,FirmwareLevelStatus,SerialNumber,WWNN
                 }
             }else{
                 if (![string]::IsNullOrEmpty($TD_DriveSplitInfos.PhyDriveCap)){
                     $TD_DriveOverview += $TD_DriveSplitInfos
                     Write-Debug -Message  $TD_DriveOverview
-                    $TD_DriveSplitInfos = "" | Select-Object DriveID,DriveStatus,DriveCap,ProductID,FWlev,LatestDriveFW,Slot,PhyDriveCap,PhyUsedDriveCap,EffeUsedDriveCap,FWlevStatus,DeviceSN,DeviceWWNN
+                    $TD_DriveSplitInfos = "" | Select-Object RowID,ID,Status,Capacity,ProductID,FirmwareLevel,LatestFirmwareLevel,SlotID,PhysicalCapacity,PhysicalUsedCapacity,EffectiveUsedCapacity,FirmwareLevelStatus,SerialNumber,WWNN
                 }
             }
 
