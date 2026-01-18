@@ -115,6 +115,10 @@ public class DeviceToggle : INotifyPropertyChanged
     private ObservableCollection<object> _hostVolumeMapRows;
     private ObservableCollection<object> _hostRows;
     private ObservableCollection<object> _iPQuorumRows;
+    private ObservableCollection<object> _mDiskRows;
+    private ObservableCollection<object> _volumeRows;
+    private ObservableCollection<object> _driveRows;
+    private ObservableCollection<object> _fCPortRows;
 
     public DeviceToggle()
     {
@@ -124,6 +128,10 @@ public class DeviceToggle : INotifyPropertyChanged
         _hostVolumeMapRows = new ObservableCollection<object>();
         _hostRows = new ObservableCollection<object>();
         _iPQuorumRows = new ObservableCollection<object>();
+        _mDiskRows = new ObservableCollection<object>();
+        _volumeRows = new ObservableCollection<object>();
+        _driveRows = new ObservableCollection<object>();
+        _fCPortRows = new ObservableCollection<object>();
     }
 
     public string Id { get; set; }
@@ -152,6 +160,22 @@ public class DeviceToggle : INotifyPropertyChanged
     public ObservableCollection<object> HostRows
     {
         get { return _hostRows; }
+    }
+    public ObservableCollection<object> MDiskRows
+    {
+        get { return _mDiskRows; }
+    }
+    public ObservableCollection<object> VolumeRows
+    {
+        get { return _volumeRows; }
+    }
+    public ObservableCollection<object> DriveRows
+    {
+        get { return _driveRows; }
+    }
+    public ObservableCollection<object> FCPortRows
+    {
+        get { return _fCPortRows; }
     }
     public bool IsChecked
     {
