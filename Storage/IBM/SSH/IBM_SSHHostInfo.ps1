@@ -57,7 +57,7 @@ function IBM_SSHHostInfo {
     
     process {
         $iCounter=0;
-        $TD_HostBaseTemp = "" | Select-Object HostID,HostName,PortCount,Type,Status,HostStateInfo,SiteName,HostClusterName,Protocol,StatusPolicy,StatusSite,WWPNOne,NodeLoggedInCountOne,StateOne,WWPNTwo,NodeLoggedInCountTwo,StateTwo,WWPNThree,NodeLoggedInCountThree,StateThree,WWPNFour,NodeLoggedInCountFour,StateFour,STOName,WWNN,SerialNumber
+        $TD_HostBaseTemp = "" | Select-Object RowID,ID,HostName,PortCount,Type,Status,HostStateInfo,SiteName,HostClusterName,Protocol,StatusPolicy,StatusSite,WWPNOne,NodeLoggedInCountOne,StateOne,WWPNTwo,NodeLoggedInCountTwo,StateTwo,WWPNThree,NodeLoggedInCountThree,StateThree,WWPNFour,NodeLoggedInCountFour,StateFour,STOName,WWNN,SerialNumber
         [array]$CollectedHostInfo = foreach($TD_CollectInfo in $TD_CollectInfos){
             if([string]::IsNullOrWhiteSpace($TD_CollectInfo) -or ($iCounter -gt ($TD_CollectInfos.Count - 2)) ){
                 $TD_HostBaseTemp;
@@ -65,7 +65,7 @@ function IBM_SSHHostInfo {
                 if(!([string]::IsNullOrWhiteSpace($TD_HostBaseTemp.HostName))){
                     $TD_HostBaseTemp.HostStateInfo = SST_IBMDBFunc -STOWWN $TD_EventSplitInfoWWNN -STOHostID $TD_HostBaseTemp.HostID -STOHostName $TD_HostBaseTemp.HostName -STOHostState $TD_HostBaseTemp.Status
                 }
-                $TD_HostBaseTemp = "" | Select-Object ID,HostName,PortCount,Type,IOGrpCount,Status,HostStateInfo,SiteID,SiteName,HostClusterID,HostClusterName,Protocol,StatusPolicy,StatusSite,WWPNOne,NodeLoggedInCountOne,StateOne,WWPNTwo,NodeLoggedInCountTwo,StateTwo,WWPNThree,NodeLoggedInCountThree,StateThree,WWPNFour,NodeLoggedInCountFour,StateFour,STOName,WWNN,SerialNumber
+                $TD_HostBaseTemp = "" | Select-Object RowID,ID,HostName,PortCount,Type,IOGrpCount,Status,HostStateInfo,SiteID,SiteName,HostClusterID,HostClusterName,Protocol,StatusPolicy,StatusSite,WWPNOne,NodeLoggedInCountOne,StateOne,WWPNTwo,NodeLoggedInCountTwo,StateTwo,WWPNThree,NodeLoggedInCountThree,StateThree,WWPNFour,NodeLoggedInCountFour,StateFour,STOName,WWNN,SerialNumber
                 continue    
             }
             $TD_HostBaseTemp.ID = ($TD_CollectInfo|Select-String -Pattern '^id:(\d+)' -AllMatches).Matches.Groups[1].Value
@@ -116,6 +116,7 @@ function IBM_SSHHostInfo {
             $TD_HostBaseTemp.WWNN = $TD_EventSplitInfoWWNN
             $TD_HostBaseTemp.SerialNumber = $TD_FSBaseSerialNumber
             $TD_HostBaseTemp.STOName = $TD_STOName
+            $TD_HostBaseTemp.RowID = "$($TD_HostBaseTemp.SerialNumber)|$($TD_HostBaseTemp.ID)"
             $iCounter++
             
             $ProgCounter++
