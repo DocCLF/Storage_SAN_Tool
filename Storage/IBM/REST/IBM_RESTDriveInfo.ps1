@@ -20,7 +20,7 @@ function IBM_RESTDriveInfo {
         if(Test-Path -Path "$PSRootPath\Resources\DBFolder\ToolDB\ToolDB.db"){
             $RESTInfo = SST_RESTDBControl -SST_InfoType "UseStorageToken" -SST_BaseUrl $BaseUrl
             if(([string]::IsNullOrEmpty($RESTInfo)) -and ($TD_Device_ConnectionTyp -eq "REST")){
-                SST_GetSpectrumToken -TD_Device_UserName $TD_Device_UserName -TD_Device_DeviceIP $TD_Device_DeviceIP -TD_Device_PW $TD_Device_PW
+                $TD_Device_ConnectionTyp = SST_GetSpectrumToken -TD_Device_UserName $TD_Device_UserName -TD_Device_DeviceIP $TD_Device_DeviceIP -TD_Device_PW $TD_Device_PW
             }
         }
         if([string]::IsNullOrWhiteSpace($TD_Device_ConnectionTyp)){
@@ -46,50 +46,51 @@ function IBM_RESTDriveInfo {
 
     process{
         [int]$imax = $TD_DeviceInformation.Count
-        [array]$TD_DriveOverview = for ($i = 0; $i -le $imax; $i++) {
-            $TD_DriveIDInformation = SST_SpectrumSystemAPI -Endpoint lsdrive/$TD_DeviceInformation.id[$i] -Body $null -BaseUrl $BaseUrl -RESTInfo $RESTInfo
-            $TD_DriveSplitInfos = "" | Select-Object ID,Status,ErrorSequenceNumber,Use,TechType,UID,Capacity,BlockSize,VendorID,ProductID,FRUPartNumber,FRUIdentity,`
-                                        RPM,FirmwareLevel,MdiskID,MdiskName,MemberID,EnclosureID,SlotID,NodeID,NodeName,QuorumID,Port1Status,`
+        [array]$TD_DriveOverview = for ($i = 0; $i -lt $imax; $i++) {
+            $TD_DriveIDInformation = SST_SpectrumSystemAPI -Endpoint lsdrive/$($TD_DeviceInformation.id[$i]) -Body $null -BaseUrl $BaseUrl -RESTInfo $RESTInfo
+            $TD_DriveSplitInfos = "" | Select-Object RowID,ID,Status,ErrorSequenceNumber,Use,TechType,UID,Capacity,BlockSize,VendorID,ProductID,FRUPartNumber,FRUIdentity,`
+                                        RPM,FirmwareLevel,LatestFirmwareLevel,FirmwareLevelStatus,MdiskID,MdiskName,MemberID,EnclosureID,SlotID,NodeID,NodeName,QuorumID,Port1Status,`
                                         Port2Status,ErrorSequenceNumber,ProtectionEnabled,AutoManage,DriveClassID,ReplacementDate,TransportProtocol,Compressed,PhysicalCapacity,PhysicalUsedCapacity,EffectiveUsedCapacity,WWNN,SerialNumber
             #   ID,Status,ErrorSequenceNumber,Use,TechType,UID,Capacity,BlockSize,VendorID,ProductID,FRUPartNumber,FRUIdentity
-            $TD_DriveSplitInfos.ID                     = $TD_DriveIDInformation.id[$i]
-            $TD_DriveSplitInfos.Status                 = $TD_DriveIDInformation.status[$i]
-            $TD_DriveSplitInfos.ErrorSequenceNumber    = $TD_DriveIDInformation.error_sequence_number[$i]
-            $TD_DriveSplitInfos.Use                    = $TD_DriveIDInformation.use[$i]
-            $TD_DriveSplitInfos.TechType               = $TD_DriveIDInformation.tech_type[$i]
-            $TD_DriveSplitInfos.UID                    = $TD_DriveIDInformation.UID[$i]
-            $TD_DriveSplitInfos.Capacity               = $TD_DriveIDInformation.capacity[$i]
-            $TD_DriveSplitInfos.BlockSize              = $TD_DriveIDInformation.block_size[$i]
-            $TD_DriveSplitInfos.VendorID               = $TD_DriveIDInformation.vendor_id[$i]
-            $TD_DriveSplitInfos.ProductID              = $TD_DriveIDInformation.product_id[$i]
-            $TD_DriveSplitInfos.FRUPartNumber          = $TD_DriveIDInformation.FRU_part_number[$i]
-            $TD_DriveSplitInfos.FRUIdentity            = $TD_DriveIDInformation.FRU_identity[$i]
+            $TD_DriveSplitInfos.ID                     = $TD_DriveIDInformation.id
+            $TD_DriveSplitInfos.Status                 = $TD_DriveIDInformation.status
+            $TD_DriveSplitInfos.ErrorSequenceNumber    = $TD_DriveIDInformation.error_sequence_number
+            $TD_DriveSplitInfos.Use                    = $TD_DriveIDInformation.use
+            $TD_DriveSplitInfos.TechType               = $TD_DriveIDInformation.tech_type
+            $TD_DriveSplitInfos.UID                    = $TD_DriveIDInformation.UID
+            $TD_DriveSplitInfos.Capacity               = $TD_DriveIDInformation.capacity
+            $TD_DriveSplitInfos.BlockSize              = $TD_DriveIDInformation.block_size
+            $TD_DriveSplitInfos.VendorID               = $TD_DriveIDInformation.vendor_id
+            $TD_DriveSplitInfos.ProductID              = $TD_DriveIDInformation.product_id
+            $TD_DriveSplitInfos.FRUPartNumber          = $TD_DriveIDInformation.FRU_part_number
+            $TD_DriveSplitInfos.FRUIdentity            = $TD_DriveIDInformation.FRU_identity
             #   RPM,FirmwareLevel,MdiskID,MdiskName,MemberID,EnclosureID,SlotID,NodeID,NodeName,QuorumID,Port1Status    
-            $TD_DriveSplitInfos.RPM                    = $TD_DriveIDInformation.RPM[$i]
-            $TD_DriveSplitInfos.FirmwareLevel          = $TD_DriveIDInformation.firmware_level[$i]
-            $TD_DriveSplitInfos.MdiskID                = $TD_DriveIDInformation.mdisk_id[$i]
-            $TD_DriveSplitInfos.MdiskName              = $TD_DriveIDInformation.mdisk_name[$i]
-            $TD_DriveSplitInfos.MemberID               = $TD_DriveIDInformation.member_id[$i]
-            $TD_DriveSplitInfos.EnclosureID            = $TD_DriveIDInformation.enclosure_id[$i]
-            $TD_DriveSplitInfos.SlotID                 = $TD_DriveIDInformation.slot_id[$i]
-            $TD_DriveSplitInfos.NodeID                 = $TD_DriveIDInformation.node_id[$i]
-            $TD_DriveSplitInfos.NodeName               = $TD_DriveIDInformation.node_name[$i]
-            $TD_DriveSplitInfos.QuorumID               = $TD_DriveIDInformation.quorum_id[$i]
-            $TD_DriveSplitInfos.Port1Status            = $TD_DriveIDInformation.port_1_status[$i]
+            $TD_DriveSplitInfos.RPM                    = $TD_DriveIDInformation.RPM
+            $TD_DriveSplitInfos.FirmwareLevel          = $TD_DriveIDInformation.firmware_level
+            $TD_DriveSplitInfos.MdiskID                = $TD_DriveIDInformation.mdisk_id
+            $TD_DriveSplitInfos.MdiskName              = $TD_DriveIDInformation.mdisk_name
+            $TD_DriveSplitInfos.MemberID               = $TD_DriveIDInformation.member_id
+            $TD_DriveSplitInfos.EnclosureID            = $TD_DriveIDInformation.enclosure_id
+            $TD_DriveSplitInfos.SlotID                 = $TD_DriveIDInformation.slot_id
+            $TD_DriveSplitInfos.NodeID                 = $TD_DriveIDInformation.node_id
+            $TD_DriveSplitInfos.NodeName               = $TD_DriveIDInformation.node_name
+            $TD_DriveSplitInfos.QuorumID               = $TD_DriveIDInformation.quorum_id
+            $TD_DriveSplitInfos.Port1Status            = $TD_DriveIDInformation.port_1_status
             #   Port2Status,ErrorSequenceNumber,ProtectionEnabled,AutoManage,DriveClassID,ReplacementDate,TransportProtocol,Compressed,PhysicalCapacity,PhysicalUsedCapacity,EffectiveUsedCapacity,WWNN,SerialNumber 
-            $TD_DriveSplitInfos.Port2Status            = $TD_DriveIDInformation.port_2_status[$i]
-            $TD_DriveSplitInfos.ErrorSequenceNumber    = $TD_DriveIDInformation.interface_speed[$i]
-            $TD_DriveSplitInfos.ProtectionEnabled      = $TD_DriveIDInformation.protection_enabled[$i]
-            $TD_DriveSplitInfos.AutoManage             = $TD_DriveIDInformation.auto_manage[$i]
-            $TD_DriveSplitInfos.DriveClassID           = $TD_DriveIDInformation.drive_class_id[$i]
-            $TD_DriveSplitInfos.ReplacementDate        = $TD_DriveIDInformation.replacement_date[$i]
-            $TD_DriveSplitInfos.TransportProtocol      = $TD_DriveIDInformation.transport_protocol[$i]
-            $TD_DriveSplitInfos.Compressed             = $TD_DriveIDInformation.compressed[$i]
-            $TD_DriveSplitInfos.PhysicalCapacity       = $TD_DriveIDInformation.physical_capacity[$i]
-            $TD_DriveSplitInfos.PhysicalUsedCapacity   = $TD_DriveIDInformation.physical_used_capacity[$i]
-            $TD_DriveSplitInfos.EffectiveUsedCapacity  = $TD_DriveIDInformation.effective_used_capacity[$i]
+            $TD_DriveSplitInfos.Port2Status            = $TD_DriveIDInformation.port_2_status
+            $TD_DriveSplitInfos.ErrorSequenceNumber    = $TD_DriveIDInformation.interface_speed
+            $TD_DriveSplitInfos.ProtectionEnabled      = $TD_DriveIDInformation.protection_enabled
+            $TD_DriveSplitInfos.AutoManage             = $TD_DriveIDInformation.auto_manage
+            $TD_DriveSplitInfos.DriveClassID           = $TD_DriveIDInformation.drive_class_id
+            $TD_DriveSplitInfos.ReplacementDate        = $TD_DriveIDInformation.replacement_date
+            $TD_DriveSplitInfos.TransportProtocol      = $TD_DriveIDInformation.transport_protocol
+            $TD_DriveSplitInfos.Compressed             = $TD_DriveIDInformation.compressed
+            $TD_DriveSplitInfos.PhysicalCapacity       = $TD_DriveIDInformation.physical_capacity
+            $TD_DriveSplitInfos.PhysicalUsedCapacity   = $TD_DriveIDInformation.physical_used_capacity
+            $TD_DriveSplitInfos.EffectiveUsedCapacity  = $TD_DriveIDInformation.effective_used_capacity
             $TD_DriveSplitInfos.WWNN            = $IBMSTOWWNN
             $TD_DriveSplitInfos.SerialNumber    = $IBMSTOSN
+            $TD_DriveSplitInfos.RowID          = "$IBMSTOSN|$($TD_DriveSplitInfos.ID)"
 
             $TD_DriveSplitInfos
 
