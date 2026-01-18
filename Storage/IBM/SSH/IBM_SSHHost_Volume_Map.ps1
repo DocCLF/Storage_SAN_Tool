@@ -68,10 +68,11 @@ function IBM_SSHHost_Volume_Map {
         $TD_HostInfos = $TD_CollectVolInfo | Select-Object -First (($TD_CollectVolInfo.count)-($TD_Resaults.Count)-1)
     }
     process{
+        <# WWNN,SerialNumber are missing #>
         $ProgressBar = New-ProgressBar
         $TD_Mappingresault = foreach($line in $TD_HostInfos){
             <# creates the objects for the array #>
-            $TD_SplitInfos = "" | Select-Object HostID,HostName,HostClusterID,HostCluster,MappingType,VolumeID,VolumeName,UID,Capacity,WWNN,SerialNumber
+            $TD_SplitInfos = "" | Select-Object RowID,HostID,HostName,HostClusterID,HostCluster,MappingType,VolumeID,VolumeName,UID,Capacity,WWNN,SerialNumber
             if($i -ge 1){
                 $TD_SplitInfos.HostID = ($line | Select-String -Pattern '^(\d+):([a-zA-Z0-9_-]+)' -AllMatches).Matches.Groups[1].Value
                 $TD_SplitInfos.HostName = ($line | Select-String -Pattern '^(\d+):([a-zA-Z0-9_-]+)' -AllMatches).Matches.Groups[2].Value
@@ -86,6 +87,7 @@ function IBM_SSHHost_Volume_Map {
                         $TD_SplitInfos.Capacity = ($_ | Select-String -Pattern '(\d+\.\d+[B-T]+)' -AllMatches).Matches.Groups[1].Value
                     }
                 }
+                $TD_SplitInfos.RowID = "$($TD_SplitInfos.UID)|$($TD_SplitInfos.HostID)"
                 <#
                     Is required to avoid empty lines and to ensure that only the required data is made available.
                     A better option is currently being tested 
