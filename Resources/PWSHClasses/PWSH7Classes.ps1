@@ -80,6 +80,10 @@ public class DeviceToggle : INotifyPropertyChanged
     public ObservableCollection<object> HostVolumeMapRows { get; } = new ObservableCollection<object>();
     public ObservableCollection<object> HostRows { get; } = new ObservableCollection<object>();
     public ObservableCollection<object> IPQuorumRows { get; } = new ObservableCollection<object>();
+    public ObservableCollection<object> MDiskRows { get; } = new ObservableCollection<object>();
+    public ObservableCollection<object> VolumeRows { get; } = new ObservableCollection<object>();
+    public ObservableCollection<object> DriveRows { get; } = new ObservableCollection<object>();
+    public ObservableCollection<object> FCPortRows { get; } = new ObservableCollection<object>();
 
     public bool IsChecked   
     {
