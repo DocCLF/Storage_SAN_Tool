@@ -534,9 +534,125 @@ $TD_BTN_IBM_HostInfo.add_click({
         $UCVMMain.SelectedView = "HostMap"
     }
 })
-$TD_BTN_IBM_PoolVolumeInfo.add_click({})
-$TD_BTN_IBM_DriveInfo.add_click({})
-$TD_BTN_IBM_FCPortInfo.add_click({})
+$TD_BTN_IBM_PoolVolumeInfo.add_click({
+    <#Get all Device Cred and count them #>
+    $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_.DeviceTyp -eq "Storage"}
+    <# get the DataConteext of the current View/ means UC and if its nul trow an error #>
+    $UCDataContext = $TD_UserControl_IBMSTO.DataContext
+    if (-not $UCDataContext) { Write-Host "DataContext ist NULL!" -ForegroundColor Red; return }
+    <# if there is a DataContext find th Main Part und put it into UCVMMain#>
+    $UCVMMain = $UCDataContext.Main
+    <# if there a something in, its better to clean it up befor we use it again #>
+    $UCVMMain.DeviceToggles.Clear()
+    foreach($TD_Creds in $TD_Credentials){
+        $MDiskResult  = New-DeviceBlock -Device $TD_Creds -ExportPath $TD_tb_ExportPath.Text -RESTFunc IBM_RESTMDiskInfo -SSHFunc IBM_SSHMDiskInfo
+        $dev = $baseResult.DeviceIdent
+        $mapMDiskInfo = @{
+            ID             = 'ID'
+            Name           = 'Name'
+            Status         = 'Status'
+            MDiskCount     = 'MDiskCount'
+            VdiskCount     = 'VdiskCount'
+            Capacity       = 'Capacity'
+            ExtentSize     = 'ExtentSize'
+            FreeCapacity   = 'FreeCapacity'
+            VirtualCapacity= 'VirtualCapacity'
+            UsedCapacity   = 'UsedCapacity'
+            RealCapacity   = 'RealCapacity'
+            Overallocation = 'Overallocation'
+        } 
+        Add-MappedRows -Collection $dev.MDiskRows -Source $MDiskResult.FuncResult -IdProperty 'RowID' -Map $mapMDiskInfo
+
+        #$FunctionResult = $null
+        $VolumeResult  = RestThenSshForCombiView -Device $TD_Creds -ExportPath $TD_tb_ExportPath.Text -RESTFunc IBM_RESTVolumeInfo -SSHFunc IBM_SSHVolumeInfo
+        $mapVolumeInfo = @{
+            Name           = 'Name'
+            IOGroupName    = 'IOGroupName'
+            Status         = 'Status'
+            MdiskName      = 'MdiskGrpName'
+            Capacity       = 'Capacity'
+            VdiskUID       = 'VdiskUID'
+            OwnerID        = 'OwnerID'
+            OwnerName      = 'OwnerName'
+            Function       = 'Function'
+            VolumeType     = 'VolumeType'
+            HAType         = 'HAType'       <# not to display #>
+        } 
+        Add-MappedRows -Collection $dev.VolumeRows -Source $VolumeResult -IdProperty 'RowID' -Map $mapVolumeInfo
+
+        $UCVMMain.DeviceToggles.Add($dev)
+        $UCVMMain.SelectedView = "PoolVolumeInfo"
+    }
+})
+$TD_BTN_IBM_DriveInfo.add_click({
+    <#Get all Device Cred and count them #>
+    $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_.DeviceTyp -eq "Storage"}
+    <# get the DataConteext of the current View/ means UC and if its nul trow an error #>
+    $UCDataContext = $TD_UserControl_IBMSTO.DataContext
+    if (-not $UCDataContext) { Write-Host "DataContext ist NULL!" -ForegroundColor Red; return }
+    <# if there is a DataContext find th Main Part und put it into UCVMMain#>
+    $UCVMMain = $UCDataContext.Main
+    <# if there a something in, its better to clean it up befor we use it again #>
+    $UCVMMain.DeviceToggles.Clear()
+    foreach($TD_Creds in $TD_Credentials){
+        $FunctionResult = New-DeviceBlock -Device $TD_Creds -ExportPath $TD_tb_ExportPath.Text -RESTFunc IBM_RESTDriveInfo -SSHFunc IBM_SSHDriveInfo
+        # Links = Propertyname im PSCustomObject (das bindet dein XAML)
+        # Rechts = Propertyname im Source-Objekt
+        $mapDrive = @{
+            ID                      = 'ID'  
+            Status                  = 'Status'
+            Capacity                = 'Capacity'
+            ProductID               = 'ProductID'  
+            FirmwareLevel           = 'FirmwareLevel'  
+            LatestFirmwareLevel     = 'LatestFirmwareLevel'
+            SlotID                  = 'SlotID'      
+            PhysicalCapacity        = 'PhysicalCapacity'    
+            PhysicalUsedCapacity    = 'PhysicalUsedCapacity'      
+            EffectiveUsedCapacity   = 'EffectiveUsedCapacity'   
+            FirmwareLevelStatus     = 'FirmwareLevelStatus'  
+        }
+        Add-MappedRows -Collection $FunctionResult.DeviceIdent.DriveRows -Source $FunctionResult.FuncResult -IdProperty 'RowID' -Map $mapDrive
+
+        $UCVMMain.DeviceToggles.Add($FunctionResult.DeviceIdent)
+        $UCVMMain.SelectedView = "DriveMap"
+    }
+})
+$TD_BTN_IBM_FCPortInfo.add_click({
+    <#Get all Device Cred and count them #>
+    $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_.DeviceTyp -eq "Storage"}
+    <# get the DataConteext of the current View/ means UC and if its nul trow an error #>
+    $UCDataContext = $TD_UserControl_IBMSTO.DataContext
+    if (-not $UCDataContext) { Write-Host "DataContext ist NULL!" -ForegroundColor Red; return }
+    <# if there is a DataContext find th Main Part und put it into UCVMMain#>
+    $UCVMMain = $UCDataContext.Main
+    <# if there a something in, its better to clean it up befor we use it again #>
+    $UCVMMain.DeviceToggles.Clear()
+    foreach($TD_Creds in $TD_Credentials){
+        $FunctionResult = New-DeviceBlock -Device $TD_Creds -ExportPath $TD_tb_ExportPath.Text -RESTFunc IBM_RESTFCPortInfo -SSHFunc IBM_SSHFCPortInfo
+        # Links = Propertyname im PSCustomObject (das bindet dein XAML)
+        # Rechts = Propertyname im Source-Objekt
+        $mapFCPort = @{
+            ID              = 'ID'
+            CardID          = 'CardID'
+            CardPortID      = 'CardPortID'
+            Speed           = 'Speed'
+            Status          = 'Status'
+            WWPN            = 'WWPN'
+            WWNN            = 'WWNN'
+            NodeName        = 'NodeName'
+            HostIOPermitted = 'HostIOPermitted'
+            Virtualized     = 'Virtualized'
+            Protocol        = 'Protocol'
+            HostCount       = 'HostCount'
+            ActiveLoginCount = 'ActiveLoginCount'
+            Attachment      = 'Attachment'
+        }
+        Add-MappedRows -Collection $FunctionResult.DeviceIdent.FCPortRows -Source $FunctionResult.FuncResult -IdProperty 'RowID' -Map $mapFCPort
+
+        $UCVMMain.DeviceToggles.Add($FunctionResult.DeviceIdent)
+        $UCVMMain.SelectedView = "FCPort"
+    }
+})
 #$TD_BTN_IBM_IPPortInfo.add_click({})
 $TD_BTN_IBM_CleanUpDumps.add_click({})
 $TD_BTN_IBM_BackUpConfig.add_click({})
