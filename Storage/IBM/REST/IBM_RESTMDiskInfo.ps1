@@ -20,7 +20,7 @@ function IBM_RESTMDiskInfo {
         if(Test-Path -Path "$PSRootPath\Resources\DBFolder\ToolDB\ToolDB.db"){
             $RESTInfo = SST_RESTDBControl -SST_InfoType "UseStorageToken" -SST_BaseUrl $BaseUrl
             if(([string]::IsNullOrEmpty($RESTInfo)) -and ($TD_Device_ConnectionTyp -eq "REST")){
-                SST_GetSpectrumToken -TD_Device_UserName $TD_Device_UserName -TD_Device_DeviceIP $TD_Device_DeviceIP -TD_Device_PW $TD_Device_PW
+                $TD_Device_ConnectionTyp = SST_GetSpectrumToken -TD_Device_UserName $TD_Device_UserName -TD_Device_DeviceIP $TD_Device_DeviceIP -TD_Device_PW $TD_Device_PW
             }
         }
         if([string]::IsNullOrWhiteSpace($TD_Device_ConnectionTyp)){
@@ -45,9 +45,9 @@ function IBM_RESTMDiskInfo {
 
     process{
         [int]$imax = $TD_DeviceInformation.Count
-        [array]$TD_MDiskInfoResault = for ($i = 0; $i -le $imax; $i++) {
+        [array]$TD_MDiskInfoResault = for ($i = 0; $i -lt $imax; $i++) {
             <# Node Info#>
-            $TD_MDiskInfo = "" | Select-Object ID,Name,Status,MDdiskCount,VdiskCount,Capacity,ExtentSize,FreeCapacity,VirtualCapacity,UsedCapacity,RealCapacity,`
+            $TD_MDiskInfo = "" | Select-Object RowID,ID,Name,Status,MDiskCount,VdiskCount,Capacity,ExtentSize,FreeCapacity,VirtualCapacity,UsedCapacity,RealCapacity,`
                                             Overallocation,Warning,EasyTier,EasyTierStatus,CompressionActive,CompressionVirtualCapacity,CompressionCompressedCapacity,CompressionUncompressedCapacity,ParentMdiskGrpID,ParentMdiskGrpName,ChildMdiskGrpCount,`
                                             ChildMdiskGrpCapacity,Type,Encrypt,OwnerType,OwnerID,OwnerName,SiteID,SiteName,DataReduction,UsedCapacityBeforeReduction,UsedCapacityAfterReduction,`
                                             OverheadCapacity,DeduplicationCapacitySaving,ReclaimableCapacity,EasyTierFCMOverAllocationMax,ProvisioningPolicyID,ProvisioningPolicyName,ReplicationPoolLinkUID,WWNN,SerialNumber
@@ -55,7 +55,7 @@ function IBM_RESTMDiskInfo {
             $TD_MDiskInfo.ID                                 = $TD_DeviceInformation.id[$i]
             $TD_MDiskInfo.Name                               = $TD_DeviceInformation.name[$i]
             $TD_MDiskInfo.Status                             = $TD_DeviceInformation.status[$i]
-            $TD_MDiskInfo.MDdiskCount                         = $TD_DeviceInformation.mdisk_count[$i]
+            $TD_MDiskInfo.MDiskCount                         = $TD_DeviceInformation.mdisk_count[$i]
             $TD_MDiskInfo.VdiskCount                         = $TD_DeviceInformation.vdisk_count[$i]
             $TD_MDiskInfo.Capacity                           = $TD_DeviceInformation.capacity[$i]
             $TD_MDiskInfo.ExtentSize                         = $TD_DeviceInformation.extent_size[$i]
@@ -98,6 +98,7 @@ function IBM_RESTMDiskInfo {
 
             $TD_MDiskInfo.WWNN          = $IBMSTOWWNN
             $TD_MDiskInfo.SerialNumber  = $IBMSTOSN
+            $TD_MDiskInfo.RowID          = "$IBMSTOSN|$($TD_MDiskInfo.ID)"
 
             $TD_MDiskInfo
 
