@@ -28,19 +28,20 @@ function IBM_SSHVolumeInfo {
     }
     
     process {
+        <# WWNN,SerialNumber are missing #>
         $TD_VDiskFuncResault = foreach($TD_VDisk in $TD_VDiskInformation){
-            $TD_VDiskinfo = "" | Select-Object Volume_Name,IO_Group,Status,Pool,Capacity,Volume_UID,PreferredNodeID,PreferredNodeName,VolFunc,HAType
-            $TD_VDiskinfo.Volume_Name = ($TD_VDisk|Select-String -Pattern '^\d+:([a-zA-Z0-9-_]+):' -AllMatches).Matches.Groups[1].Value
-            $TD_VDiskinfo.IO_Group = ($TD_VDisk|Select-String -Pattern '^\d+:([a-zA-Z0-9-_]+):\d+:([a-zA-Z0-9-_]+):' -AllMatches).Matches.Groups[2].Value
+            $TD_VDiskinfo = "" | Select-Object RowID,Name,IOGroupName,Status,MdiskGrpName,Capacity,VdiskUID,OwnerID,OwnerName,Function,HAType
+            $TD_VDiskinfo.Name = ($TD_VDisk|Select-String -Pattern '^\d+:([a-zA-Z0-9-_]+):' -AllMatches).Matches.Groups[1].Value
+            $TD_VDiskinfo.IOGroupName = ($TD_VDisk|Select-String -Pattern '^\d+:([a-zA-Z0-9-_]+):\d+:([a-zA-Z0-9-_]+):' -AllMatches).Matches.Groups[2].Value
             $TD_VDiskinfo.Status = ($TD_VDisk|Select-String -Pattern ':(online|offline|deleting|degraded):' -AllMatches).Matches.Groups[1].Value
             $TD_VDiskinfo.Pool = ($TD_VDisk|Select-String -Pattern ':(online|offline|deleting|degraded):\d+:([a-zA-Z0-9-_]+):' -AllMatches).Matches.Groups[2].Value
             $TD_VDiskinfo.Capacity = ($TD_VDisk|Select-String -Pattern ':(online|offline|deleting|degraded):\d+:[a-zA-Z0-9-_]+:(\d+.\d+[A-Z]+):' -AllMatches).Matches.Groups[2].Value
-            $TD_VDiskinfo.Volume_UID = ($TD_VDisk|Select-String -Pattern '(many|\d+|):([0-9a-zA-Z-_]+|):(\d+|):([0-9a-zA-Z-_]+|):(yes|no):([0-9A-F]+):\d+:\d+' -AllMatches).Matches.Groups[6].Value
-            $TD_VDiskinfo.PreferredNodeID = ($TD_VDisk|Select-String -Pattern ':(balanced|active|inactive|measured):(\d+|):([0-9a-zA-Z-_]+|)::(\d+):' -AllMatches).Matches.Groups[4].Value
-            $TD_VDiskinfo.PreferredNodeName = ($TD_VDisk|Select-String -Pattern ':([0-9A-F]{16,32}):(no|yes):(\d+|):(\d+|):([0-9a-zA-Z-_]+):' -AllMatches).Matches.Groups[5].Value
-            $TD_VDiskinfo.VolFunc = ($TD_VDisk|Select-String -Pattern ':(master_change|master|aux_change|aux):' -AllMatches).Matches.Groups[1].Value
+            $TD_VDiskinfo.VdiskUID = ($TD_VDisk|Select-String -Pattern '(many|\d+|):([0-9a-zA-Z-_]+|):(\d+|):([0-9a-zA-Z-_]+|):(yes|no):([0-9A-F]+):\d+:\d+' -AllMatches).Matches.Groups[6].Value
+            $TD_VDiskinfo.OwnerID = ($TD_VDisk|Select-String -Pattern ':(balanced|active|inactive|measured):(\d+|):([0-9a-zA-Z-_]+|)::(\d+):' -AllMatches).Matches.Groups[4].Value
+            $TD_VDiskinfo.OwnerName = ($TD_VDisk|Select-String -Pattern ':([0-9A-F]{16,32}):(no|yes):(\d+|):(\d+|):([0-9a-zA-Z-_]+):' -AllMatches).Matches.Groups[5].Value
+            $TD_VDiskinfo.Function = ($TD_VDisk|Select-String -Pattern ':(master_change|master|aux_change|aux):' -AllMatches).Matches.Groups[1].Value
             $TD_VDiskinfo.HAType = ($TD_VDisk|Select-String -Pattern ':(master_change|master|aux_change|aux):(hyperswap|)' -AllMatches).Matches.Groups[2].Value
-            
+            $TD_VDiskinfo.RowID = "$($TD_VDiskinfo.VdiskUID)|$($TD_VDiskinfo.OwnerID)"
             If([String]::IsNullOrEmpty($TD_VDiskinfo.VolFunc)){
                 $TD_VDiskinfo.VolFunc="none"
             }
