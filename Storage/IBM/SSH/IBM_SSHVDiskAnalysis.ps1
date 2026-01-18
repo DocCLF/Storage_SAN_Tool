@@ -33,8 +33,9 @@ function IBM_SSHVDiskAnalysis {
     }
     
     process {
+        <# WWNN,SerialNumber are missing #>
         $TD_VDiskFuncResault = foreach($TD_VDisk in $TD_VDiskAnalysInformations){
-            $TD_VDiskinfo = "" | Select-Object ID,Name,State,AnalysisTime,Capacity,ThinSize,ThinSavings,ThinSavingsRatio,CompressedSize,CompressionSavings,CompressionSavingsRatio,TotalSavings,TotalSavingsRatio,MarginOfError
+            $TD_VDiskinfo = "" | Select-Object RowID,ID,Name,State,AnalysisTime,Capacity,ThinSize,ThinSavings,ThinSavingsRatio,CompressedSize,CompressionSavings,CompressionSavingsRatio,TotalSavings,TotalSavingsRatio,MarginOfError
             $TD_VDiskinfo.ID = ($TD_VDisk|Select-String -Pattern '^\d+:([a-zA-Z0-9-_]+):' -AllMatches).Matches.Groups[1].Value
             $TD_VDiskinfo.Name = ($TD_VDisk|Select-String -Pattern '^\d+:([a-zA-Z0-9-_]+):' -AllMatches).Matches.Groups[1].Value
             $TD_VDiskinfo.State = ($TD_VDisk|Select-String -Pattern ':(idle|active|estimated|sparse|canceling|automatic|):' -AllMatches).Matches.Groups[1].Value
@@ -49,7 +50,7 @@ function IBM_SSHVDiskAnalysis {
             $TD_VDiskinfo.TotalSavings = ($TD_VDisk|Select-String -Pattern ':([0-9A-F]{16,32}):(no|yes):(\d+|):(\d+|):([0-9a-zA-Z-_]+):' -AllMatches).Matches.Groups[5].Value
             $TD_VDiskinfo.TotalSavingsRatio = ($TD_VDisk|Select-String -Pattern ':(master_change|master|aux_change|aux):' -AllMatches).Matches.Groups[1].Value
             $TD_VDiskinfo.MarginOfError = ($TD_VDisk|Select-String -Pattern ':(master_change|master|aux_change|aux):(hyperswap|)' -AllMatches).Matches.Groups[2].Value
-            
+            $TD_VDiskinfo.RowID = "$($TD_VDiskinfo.ID)|$($TD_VDiskinfo.Name)"
             If([String]::IsNullOrEmpty($TD_VDiskinfo.VolFunc)){
                 $TD_VDiskinfo.VolFunc="none"
             }
