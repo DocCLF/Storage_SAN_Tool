@@ -42,7 +42,8 @@ function IBM_SSHFCPortInfo {
     
     process {
         $TD_FCPortInfoResault = foreach($TD_FCPortMore in $TD_TargetPortInfos){
-            $TD_FCPortInfo = "" | Select-Object ID,CardID,CardPortID,Speed,Status,WWPN,WWNN,NodeName,HostIOPermitted,Virtualized,Protocol,HostCount,ActiveLoginCount,Attachment,SerialNumber
+            <# SerialNumber is missing #>
+            $TD_FCPortInfo = "" | Select-Object RowID,ID,CardID,CardPortID,Speed,Status,WWPN,WWNN,NodeName,HostIOPermitted,Virtualized,Protocol,HostCount,ActiveLoginCount,Attachment,SerialNumber
             #Infos from lstargetportfc
             $TD_FCPortInfo.ID = ($TD_FCPortMore|Select-String -Pattern '^(\d+):' -AllMatches).Matches.Groups[1].Value
             $TD_FCPortInfo.WWPN = ($TD_FCPortMore|Select-String -Pattern '^\d+:([0-9A-z]+):' -AllMatches).Matches.Groups[1].Value
@@ -74,6 +75,7 @@ function IBM_SSHFCPortInfo {
                     $TD_FCPortInfo.Attachment = ($TD_FCPort|Select-String -Pattern ':(active|inactive_configured|inactive_unconfigured|disabled):(switch|none|[a-zA-Z]+):' -AllMatches).Matches.Groups[2].Value
                 }
             }
+            $TD_FCPortInfo.RowID = "$($TD_FCPortInfo.WWNN)|$($TD_FCPortInfo.ID)"
             $TD_FCPortInfo
 
             <# Progressbar  #>
