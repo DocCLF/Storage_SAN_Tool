@@ -10,7 +10,6 @@
             </DataTrigger>
         </Style.Triggers>
     </Style>
-
     <!-- Nur sichtbar, wenn Main.SelectedView == Events -->
     <Style x:Key="ShowWhenEvents" TargetType="ItemsControl">
         <Setter Property="Visibility" Value="Collapsed"/>
@@ -46,6 +45,35 @@
         <Setter Property="Visibility" Value="Collapsed"/>
         <Style.Triggers>
             <DataTrigger Binding="{Binding Main.SelectedView}" Value="HostMap">
+                <Setter Property="Visibility" Value="Visible"/>
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+
+    <!-- Nur sichtbar, wenn Main.SelectedView == PoolVolumeInfo -->
+    <Style x:Key="ShowWhenPoolVolumeInfo" TargetType="ItemsControl">
+        <Setter Property="Visibility" Value="Collapsed"/>
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding Main.SelectedView}" Value="PoolVolumeInfo">
+                <Setter Property="Visibility" Value="Visible"/>
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+
+    <!-- Nur sichtbar, wenn Main.SelectedView == PoolVolumeInfo -->
+    <Style x:Key="ShowWhenDriveInfo" TargetType="ItemsControl">
+        <Setter Property="Visibility" Value="Collapsed"/>
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding Main.SelectedView}" Value="DriveMap">
+                <Setter Property="Visibility" Value="Visible"/>
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+    <!-- Nur sichtbar, wenn Main.SelectedView == PoolVolumeInfo -->
+    <Style x:Key="ShowWhenFCPort" TargetType="ItemsControl">
+        <Setter Property="Visibility" Value="Collapsed"/>
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding Main.SelectedView}" Value="FCPort">
                 <Setter Property="Visibility" Value="Visible"/>
             </DataTrigger>
         </Style.Triggers>
