@@ -29,6 +29,7 @@ function IBM_RESTFCPortInfo {
         Clear-Variable -Name TD_Device_PW -Force
         if($TD_Device_ConnectionTyp -eq "REST"){
             $TD_DeviceInformation = SST_SpectrumSystemAPI -Endpoint lstargetportfc -Body $null -BaseUrl $BaseUrl -RESTInfo $RESTInfo
+            $TD_SecondDeviceInformation = SST_SpectrumSystemAPI -Endpoint lsportfc -Body $null -BaseUrl $BaseUrl -RESTInfo $RESTInfo
             $STONodeInfo = SST_SpectrumSystemAPI -Endpoint lsnode -Body $null -BaseUrl $BaseUrl -RESTInfo $RESTInfo
         }else {
             <#switch to the ssh version and leave this func #>
@@ -45,29 +46,41 @@ function IBM_RESTFCPortInfo {
 
     process{
         [int]$imax = $TD_DeviceInformation.Count
+        [int]$inbr = $TD_SecondDeviceInformation.Count
         [array]$TD_FCPortInfoResault = for ($i = 0; $i -lt $imax; $i++) {
             <# Node Info#>
-            $TD_FCPortInfo = "" | Select-Object RowID,ID,CardID,CardPortID,Speed,Status,WWPN,WWNN,NodeName,HostIOPermitted,Virtualized,Protocol,HostCount,ActiveLoginCount,Attachment,SerialNumber
+            $TD_FCPortInfo = "" | Select-Object RowID,ID,CardID,CardPortID,PortID,Speed,Status,WWPN,WWNN,NodeName,HostIOPermitted,Virtualized,Protocol,HostCount,ActiveLoginCount,Attachment,SerialNumber
             <# Infos from lstargetportfc #>
             $TD_FCPortInfo.ID                 = $TD_DeviceInformation.id[$i]
             $TD_FCPortInfo.WWPN               = $TD_DeviceInformation.WWPN[$i]
             $TD_FCPortInfo.WWNN               = $TD_DeviceInformation.WWNN[$i]
+            $TD_FCPortInfo.PortID             = $TD_DeviceInformation.port_id[$i]
             $TD_FCPortInfo.HostIOPermitted    = $TD_DeviceInformation.host_io_permitted[$i]
             $TD_FCPortInfo.Virtualized        = $TD_DeviceInformation.virtualized[$i]
             $TD_FCPortInfo.Protocol           = $TD_DeviceInformation.protocol[$i]
             $TD_FCPortInfo.HostCount          = $TD_DeviceInformation.host_count[$i]
             $TD_FCPortInfo.ActiveLoginCount   = $TD_DeviceInformation.active_login_count[$i]
-            $TD_SecondDeviceInformation = SST_SpectrumSystemAPI -Endpoint lsportfc/$($TD_FCPortInfo.ID) -Body $null -BaseUrl $BaseUrl -RESTInfo $RESTInfo
-            <# Infos from lsportfc #>
-            if(($TD_SecondDeviceInformation.WWPN) -contains $TD_FCPortInfo.WWPN){
-                $TD_FCPortInfo.CardID             = $TD_SecondDeviceInformation.adapter_location
-                $TD_FCPortInfo.CardPortID         = $TD_SecondDeviceInformation.adapter_location
-                $TD_FCPortInfo.Speed              = $TD_SecondDeviceInformation.port_speed
-                $TD_FCPortInfo.Status             = $TD_SecondDeviceInformation.status
-                $TD_FCPortInfo.NodeName           = $TD_SecondDeviceInformation.node_name
-                $TD_FCPortInfo.Attachment         = $TD_SecondDeviceInformation.attachment
-            }
+            
+            $TD_FCPortInfoWWNN = $($TD_FCPortInfo.WWNN).Substring($TD_FCPortInfo.WWNN.Length -4)
 
+            for ($ni = 0; $ni -lt $inbr; $ni++) {
+                
+                $TD_LSPortFCWWPN = $($TD_SecondDeviceInformation.WWPN[$ni])
+                $TD_LSPortFCWWPNEnd = $TD_LSPortFCWWPN.Substring($TD_LSPortFCWWPN.Length -4)
+                
+                <# Infos from lsportfc #>
+                if($TD_FCPortInfoWWNN -ne $TD_LSPortFCWWPNEnd){continue}
+                if($TD_FCPortInfo.WWPN -eq $TD_LSPortFCWWPN){[bool]$TD_WWPNaEqual = $true}
+
+                if(($TD_WWPNaEqual)-and ($($TD_FCPortInfo.PortID) -eq $($TD_SecondDeviceInformation.port_id[$ni]))){
+                    $TD_FCPortInfo.CardID             = $TD_SecondDeviceInformation.adapter_location[$ni]
+                    $TD_FCPortInfo.CardPortID         = $TD_SecondDeviceInformation.adapter_location[$ni]
+                    $TD_FCPortInfo.Speed              = $TD_SecondDeviceInformation.port_speed[$ni]
+                    $TD_FCPortInfo.Status             = $TD_SecondDeviceInformation.status[$ni]
+                    $TD_FCPortInfo.NodeName           = $TD_SecondDeviceInformation.node_name[$ni]
+                    $TD_FCPortInfo.Attachment         = $TD_SecondDeviceInformation.attachment[$ni]
+                }
+            }
             $TD_FCPortInfo.SerialNumber = $IBMSTOSN
             $TD_FCPortInfo.RowID        = "$IBMSTOSN|$($TD_FCPortInfo.WWNN)"
             $TD_FCPortInfo
