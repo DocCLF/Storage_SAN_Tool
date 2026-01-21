@@ -38,20 +38,25 @@ function IBM_RESTFCPortStats {
 
     process{
         [int]$imax = $STONodeInfo.Count
-        for ($i = 0; $i -le $imax; $i++) {
-            $body = @{node = "$($STONodeInfo.id[$i])"}
+        [array]$TD_PortStats_Overview = for ($i = 0; $i -lt $imax; $i++) {
+
             $NodeID = $STONodeInfo.id[$i]
+            $body = @{node = "$($NodeID)"}
+            $IBMSTOName = $STONodeInfo.name[$i]
             $IBMSTOWWNN = $STONodeInfo.WWNN[$i]
             $IBMSTOSN = if($STONodeInfo.enclosure_serial_number[$i] -eq ""){$STONodeInfo.panel_name[$i]}else{$STONodeInfo.enclosure_serial_number[$i]}
-            $TD_DeviceInformation = SST_SpectrumSystemAPI -Endpoint lsportstats -Body $body -BaseUrl $BaseUrl -RESTInfo $RESTInfo
-            [int]$iNodemax = $TD_DeviceInformation.Count
-            [array]$TD_PortStats_Overview = for ($ndr = 0; $ndr -le $iNodemax; $ndr++) {
-                $TD_PortStatsSplitInfos = "" | Select-Object NodeID,SerialNumber,NodeName,WWNN,CardType,CardID,PortID,WWPN,LinkFailure,LoseSync,LoseSig,PSErrCount,InvTransErr,CRCErr,ZeroBtB,SFPTemp,TXPwr,TXPwrlow,RXPwr,RXPwrlow
 
+            $TD_DeviceInformation = SST_SpectrumSystemAPI -Endpoint lsportstats -Body $body -BaseUrl $BaseUrl -RESTInfo $RESTInfo
+            Write-Host  $IBMSTOName $NodeID -ForegroundColor Green
+            [int]$iNodemax = $TD_DeviceInformation.Count 
+            for ($ndr = 0; $ndr -lt $iNodemax; $ndr++) {
+                if($($TD_DeviceInformation.type[$ndr]) -ne "FC"){continue}
+                $TD_PortStatsSplitInfos = "" | Select-Object RowID,NodeID,SerialNumber,NodeName,WWNN,CardType,CardID,PortID,WWPN,LinkFailure,LoseSync,LoseSig,PSErrCount,InvTransErr,CRCErr,ZeroBtB,SFPTemp,TXPwr,TXPwrlow,RXPwr,RXPwrlow
+                Write-Host  $IBMSTOName $NodeID -ForegroundColor Yellow                   
                 $TD_PortStatsSplitInfos.CardType    = $TD_DeviceInformation.type[$ndr]
                 $TD_PortStatsSplitInfos.CardID      = $TD_DeviceInformation.type_id[$ndr]
                 $TD_PortStatsSplitInfos.PortID      = $TD_DeviceInformation.'port id'[$ndr]
-                $TD_PortStatsSplitInfos.WWPN        = $TD_DeviceInformation.wwpn[$ndr] -replace '0x',''
+                $TD_PortStatsSplitInfos.WWPN        = $TD_DeviceInformation.fc_wwpn[$ndr] -replace '0x',''
                 $TD_PortStatsSplitInfos.LinkFailure = $TD_DeviceInformation.lf[$ndr]
                 $TD_PortStatsSplitInfos.LoseSync    = $TD_DeviceInformation.lsy[$ndr]
                 $TD_PortStatsSplitInfos.LoseSig     = $TD_DeviceInformation.lsi[$ndr]
@@ -66,9 +71,10 @@ function IBM_RESTFCPortStats {
                 $TD_PortStatsSplitInfos.RXPwrlow    = $TD_DeviceInformation.rxpwrlt[$ndr]
 
                 $TD_PortStatsSplitInfos.NodeID          = $NodeID
+                $TD_PortStatsSplitInfos.NodeName        = $IBMSTOName
                 $TD_PortStatsSplitInfos.WWNN            = $IBMSTOWWNN
                 $TD_PortStatsSplitInfos.SerialNumber    = $IBMSTOSN
-
+                $TD_PortStatsSplitInfos.RowID           = "$($IBMSTOSN)|$($TD_PortStatsSplitInfos.ID)"
                 $TD_PortStatsSplitInfos
 
                 <# Progressbar  #>
