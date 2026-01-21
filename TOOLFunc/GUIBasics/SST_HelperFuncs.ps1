@@ -36,44 +36,43 @@ function New-DeviceBlock {
         [Parameter(Mandatory)]
         $Device,
         [string]$ExportPath,
-        [Parameter(Mandatory)]
         [object]$RESTFunc,
-        [Parameter(Mandatory)]
         [object]$SSHFunc
     )
 
+    $FunResult = $null
     [bool]$FallbacktoSSH = $false
     # 1) Daten holen (REST -> wenn leer -> SSH) StorageInfo
     $pw = [Net.NetworkCredential]::new('', $Device.Password).Password
-    
-    $FunResult = & $RESTFunc -TD_Line_ID $Device.ID -TD_Device_UserName $Device.UserName -TD_Device_DeviceIP $Device.IPAddress -TD_Device_PW $pw -TD_Exportpath $ExportPath
+    if($RESTFunc){
+        $FunResult = & $RESTFunc -TD_Line_ID $Device.ID -TD_Device_UserName $Device.UserName -TD_Device_DeviceIP $Device.IPAddress -TD_Device_PW $pw -TD_Exportpath $ExportPath
 
-    $items = @($FunResult)  # normalisiert null/single/multi
+        $items = @($FunResult)  # normalisiert null/single/multi
 
-    if ($items.Count -eq 0) {
-        $FallbacktoSSH = $true
-    }
-    # optional: wenn es wirklich ein "Einzelobjekt mit StorageInfo" ist:
-    elseif ($items.Count -eq 1 -and ($items[0].PSObject.Properties.Name -contains 'StorageInfo')) {
-        if ($null -eq $items[0].StorageInfo -or [string]::IsNullOrWhiteSpace([string]$items[0].StorageInfo.ID)) {
+        if ($items.Count -eq 0) {
             $FallbacktoSSH = $true
         }
+        # optional: wenn es wirklich ein "Einzelobjekt mit StorageInfo" ist:
+        elseif ($items.Count -eq 1 -and ($items[0].PSObject.Properties.Name -contains 'StorageInfo')) {
+            if ($null -eq $items[0].StorageInfo -or [string]::IsNullOrWhiteSpace([string]$items[0].StorageInfo.ID)) {
+                $FallbacktoSSH = $true
+            }
+        }
+    }else{
+        $FallbacktoSSH = $true
     }
 
-        if ($FallbacktoSSH) {
-            $FunResult = & $SSHFunc -TD_Line_ID $Device.ID -TD_Device_ConnectionTyp $Device.ConnectionTyp -TD_Device_UserName $Device.UserName -TD_Device_DeviceIP $Device.IPAddress -TD_Device_PW $pw -TD_Exportpath $ExportPath
-        }
-
-        # 2) DeviceToggle bauen
-        $DeviceIdent = [DeviceToggle]::new()
-        $DeviceIdent.Id = "DeviceBlock$($Device.ID)"
-
-        # Label robust: ClusterName kann je nach Result-Shape anders sein
-        $cluster = $FunResult.ClusterName
-        $DeviceIdent.Label = if ([string]::IsNullOrWhiteSpace([string]$cluster)) { "$($Device.IPAddress)" } else { "$cluster" }
-
-        $DeviceIdent.IsChecked = $false
-        return @{ DeviceIdent = $DeviceIdent; FuncResult = $FunResult }
+    if ($FallbacktoSSH) {
+        $FunResult = & $SSHFunc -TD_Line_ID $Device.ID -TD_Device_ConnectionTyp $Device.ConnectionTyp -TD_Device_UserName $Device.UserName -TD_Device_DeviceIP $Device.IPAddress -TD_Device_PW $pw -TD_Exportpath $ExportPath
+    }
+    # 2) DeviceToggle bauen
+    $DeviceIdent = [DeviceToggle]::new()
+    $DeviceIdent.Id = "DeviceBlock$($Device.ID)"
+    # Label robust: ClusterName kann je nach Result-Shape anders sein
+    $cluster = $FunResult.ClusterName
+    $DeviceIdent.Label = if ([string]::IsNullOrWhiteSpace([string]$cluster)) { "$($Device.IPAddress)" } else { "$cluster" }
+    $DeviceIdent.IsChecked = $false
+    return @{ DeviceIdent = $DeviceIdent; FuncResult = $FunResult }
 }
 
 #c&p need for doubel view, is a bit diff as New-devBlock
