@@ -41,7 +41,7 @@ function IBM_RESTBaseStorageInfos {
     
     process {
         [int]$imax = $STONodeInfo.Count
-        $TD_StorageInfo = for ($i = 0; $i -le $imax; $i++) {
+        $TD_StorageInfo = for ($i = 0; $i -lt $imax; $i++) {
             $TD_FSBaseTemp = "" | Select-Object RowID,ID,Name,ClusterName,WWNN,Status,IO_group_id,IO_group_Name,SerialNumber,CodeLevel,ConfigNode,SideID,SideName,Prod_MTM,RecommendedPTF,MDiskTotalCapacity,MDiskFreeCapacity,MDiskUsedCapacity,PhysicalTotalCapacity,PhysicalFreeCapacity,HostUnmap,BackendUnmap,Topology,Layer,QuorumMode
             $TD_FSBaseTemp.ID               = $STONodeInfo.id[$i]
             $TD_FSBaseTemp.Name             = $STONodeInfo.name[$i]
@@ -76,7 +76,7 @@ function IBM_RESTBaseStorageInfos {
             $TD_FSBaseTemp.Topology                 = $STOSystemInfo.topology
             $TD_FSBaseTemp.Layer                    = $STOSystemInfo.layer
             $TD_FSBaseTemp.QuorumMode               = $STOSystemInfo.quorum_mode
-            $TD_FSBaseTemp.RowID                    = "$($TD_FSBaseTemp.SerialNumber)$($TD_FSBaseTemp.ID)"
+            $TD_FSBaseTemp.RowID                    = "$($TD_FSBaseTemp.SerialNumber)|$($TD_FSBaseTemp.ID)"
             $TD_FSBaseTemp
             $ProgCounter++
             Write-ProgressBar -ProgressBar $ProgressBar -Activity "Collect data for Device $($TD_Line_ID) $($STONodeInfo.name[$i])" -PercentComplete (($ProgCounter/$imax) * 100)
