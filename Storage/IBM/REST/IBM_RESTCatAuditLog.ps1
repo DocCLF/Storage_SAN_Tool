@@ -35,7 +35,7 @@ function IBM_RESTCatAuditLog {
             return $null
         }
         [int]$imax = $STONodeInfo.Count
-        for ($i = 0; $i -le $imax; $i++) {
+        for ($i = 0; $i -lt $imax; $i++) {
             if($STONodeInfo.config_node[$i] -eq "yes"){
                 $IBMSTOWWNN = $STONodeInfo.WWNN[$i]
                 $IBMSTOSN = if($STONodeInfo.enclosure_serial_number[$i] -eq ""){$STONodeInfo.panel_name[$i]}else{$STONodeInfo.enclosure_serial_number[$i]}
