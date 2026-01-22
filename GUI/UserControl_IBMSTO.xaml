@@ -745,7 +745,7 @@
             </DataTemplate>
           </ItemsControl.ItemTemplate>
         </ItemsControl>
-        <!-- IBM_IPPortInfo -->
+        <!-- IBM_FCPortInfo -->
         <ItemsControl Grid.Column="1" Grid.Row="1"
                       ItemsSource="{Binding Main.DeviceToggles}"
                       Style="{DynamicResource ShowWhenFCPort}">
@@ -856,6 +856,160 @@
                     </DataGridTextColumn>
                 </DataGrid.Columns>
               </DataGrid>
+            </DataTemplate>
+          </ItemsControl.ItemTemplate>
+        </ItemsControl>
+        <!-- IBM_FCPortStats -->
+        <ItemsControl Grid.Column="1" Grid.Row="1"
+                      ItemsSource="{Binding Main.DeviceToggles}"
+                      Style="{DynamicResource ShowWhenFCPortStats}">
+          <ItemsControl.ItemsPanel>
+            <ItemsPanelTemplate>
+              <StackPanel/>
+            </ItemsPanelTemplate>
+          </ItemsControl.ItemsPanel>
+
+          <ItemsControl.ItemTemplate>
+            <DataTemplate>
+              <DataGrid AutoGenerateColumns="False"
+                        ColumnWidth="*"
+                        HorizontalAlignment="Stretch"
+                        Margin="5"
+                        MaxWidth="960"
+                        MaxHeight="460"
+                        ItemsSource="{Binding FCPortStatsRows}"
+                        CanUserAddRows="False"
+                        Visibility="{Binding IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
+
+                <!-- Optional: Header pro Device -->
+                <DataGrid.GroupStyle>
+                  <GroupStyle/>
+                </DataGrid.GroupStyle>
+                <DataGrid.Columns>
+                    <DataGridTextColumn Width="auto" Header="NodeID"  Binding ="{Binding NodeID}" IsReadOnly="True"/>
+                    <!-- <DataGridTextColumn Width="auto" Header="NodeSN" Binding ="{Binding NodeSN}" IsReadOnly="True"/> -->
+                    <DataGridTextColumn Width="auto" Header="NodeName" Binding ="{Binding NodeName}" IsReadOnly="True"/>
+                    <!-- <DataGridTextColumn Width="auto" Header="NodeWWNN"  Binding ="{Binding NodeWWNN}" IsReadOnly="True"/> -->
+                    <DataGridTextColumn Width="auto" Header="CardType" Binding ="{Binding CardType}" IsReadOnly="True"/>  
+                    <!-- <DataGridTextColumn Width="auto" Header="CardID" Binding ="{Binding CardID}" IsReadOnly="True"/> -->
+                    <DataGridTextColumn Width="auto" Header="PortID" Binding ="{Binding PortID}" IsReadOnly="True"/>
+                    <DataGridTextColumn Width="auto" Header="WWPN" Binding ="{Binding WWPN}" IsReadOnly="True"/>  
+                    <DataGridTextColumn Width="auto" Header="LinkFailure" Binding ="{Binding LinkFailure}" IsReadOnly="True">
+                        <DataGridTextColumn.CellStyle>
+                            <Style TargetType="DataGridCell">
+                                <Setter Property="ToolTip" Value="Indicates the link failure error count." />
+                            </Style>
+                        </DataGridTextColumn.CellStyle>
+                    </DataGridTextColumn>
+                    <DataGridTextColumn Width="auto" Header="LoseSync" Binding ="{Binding LoseSync}" IsReadOnly="True">
+                        <DataGridTextColumn.CellStyle>
+                            <Style TargetType="DataGridCell">
+                                <Setter Property="ToolTip" Value="Indicates the loss of sync error count." />
+                            </Style>
+                        </DataGridTextColumn.CellStyle>
+                    </DataGridTextColumn>
+                    <DataGridTextColumn Width="auto" Header="LoseSig" Binding ="{Binding LoseSig}" IsReadOnly="True">
+                        <DataGridTextColumn.CellStyle>
+                            <Style TargetType="DataGridCell">
+                                <Setter Property="ToolTip" Value="Indicates the loss of signal error count." />
+                            </Style>
+                        </DataGridTextColumn.CellStyle>
+                    </DataGridTextColumn>
+                    <DataGridTextColumn Width="auto" Header="PSErrCount" Binding ="{Binding PSErrCount}" IsReadOnly="True"/> 
+                    <DataGridTextColumn Width="auto" Header="InvTransErr" Binding ="{Binding InvTransErr}" IsReadOnly="True"/>  
+                    <DataGridTextColumn Width="auto" Header="CRCErr" Binding ="{Binding CRCErr}" IsReadOnly="True">
+                        <DataGridTextColumn.CellStyle>
+                            <Style TargetType="DataGridCell">
+                                <Setter Property="ToolTip" Value="Indicates the invalid CRC error count." />
+                            </Style>
+                        </DataGridTextColumn.CellStyle>
+                    </DataGridTextColumn>
+                    <DataGridTextColumn Width="auto" Header="ZeroBtB" Binding ="{Binding ZeroBtB}" IsReadOnly="True">
+                        <DataGridTextColumn.CellStyle>
+                            <Style TargetType="DataGridCell">
+                                <Setter Property="ToolTip" Value="Indicates the zero buffer-buffer credit timer in microseconds (µs)." />
+                            </Style>
+                        </DataGridTextColumn.CellStyle>
+                    </DataGridTextColumn>
+                    <DataGridTextColumn Width="auto" Header="SFPTemp" Binding ="{Binding SFPTemp}" IsReadOnly="True">
+                        <DataGridTextColumn.CellStyle>
+                            <Style TargetType="DataGridCell">
+                                <Setter Property="ToolTip" Value="SFP temperature high alarm threshold = 85" />
+                            </Style>
+                        </DataGridTextColumn.CellStyle>
+                    </DataGridTextColumn>
+                    <DataGridTextColumn Width="auto" Header="TXPwr" Binding ="{Binding TXPwr}" IsReadOnly="True">
+                        <DataGridTextColumn.CellStyle>
+                            <Style TargetType="DataGridCell">
+                                <Setter Property="ToolTip" Value="TX power low alarm threshold = 126" />
+                            </Style>
+                        </DataGridTextColumn.CellStyle>
+                    </DataGridTextColumn>
+                    <DataGridTextColumn Width="auto" Header="RXPwr" Binding ="{Binding RXPwr}" IsReadOnly="True">
+                        <DataGridTextColumn.CellStyle>
+                            <Style TargetType="DataGridCell">
+                                <Setter Property="ToolTip" Value="RX power low alarm threshold = 31" />
+                            </Style>
+                        </DataGridTextColumn.CellStyle>
+                    </DataGridTextColumn>
+                </DataGrid.Columns>
+              </DataGrid>
+            </DataTemplate>
+          </ItemsControl.ItemTemplate>
+        </ItemsControl>
+        <!-- IBM_CleanUpDumps -->
+        <ItemsControl Grid.Column="1" Grid.Row="1"
+                      ItemsSource="{Binding Main.DeviceToggles}"
+                      Style="{DynamicResource ShowWhenDumpInfo}">
+          <ItemsControl.ItemsPanel>
+            <ItemsPanelTemplate>
+              <StackPanel/>
+            </ItemsPanelTemplate>
+          </ItemsControl.ItemsPanel>
+
+          <ItemsControl.ItemTemplate>
+            <DataTemplate>
+                <StackPanel>
+                  <Label Content="{Binding DumpInfoTitle}"
+                         Style="{DynamicResource MainLabelStyle}"
+                         Margin="5,8,5,0"
+                         Visibility="{Binding IsChecked, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+
+                  <TextBlock Text="{Binding DumpInfoText}"
+                             TextWrapping="Wrap"
+                             MaxWidth ="400"
+                             Style="{DynamicResource MainTextblockStyle}"
+                             Margin="5,8,5,0"
+                             Visibility="{Binding IsChecked, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                </StackPanel>
+            </DataTemplate>
+          </ItemsControl.ItemTemplate>
+        </ItemsControl>
+        <!-- IBM_BackUpInfo -->
+        <ItemsControl Grid.Column="1" Grid.Row="1"
+                      ItemsSource="{Binding Main.DeviceToggles}"
+                      Style="{DynamicResource ShowWhenBackUpInfo}">
+          <ItemsControl.ItemsPanel>
+            <ItemsPanelTemplate>
+              <StackPanel/>
+            </ItemsPanelTemplate>
+          </ItemsControl.ItemsPanel>
+
+          <ItemsControl.ItemTemplate>
+            <DataTemplate>
+                <StackPanel>
+                  <Label Content="{Binding BackUpInfoTitle}"
+                         Style="{DynamicResource MainLabelStyle}"
+                         Margin="5,8,5,0"
+                         Visibility="{Binding IsChecked, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+
+                  <TextBlock Text="{Binding BackUpInfoText}"
+                             TextWrapping="Wrap"
+                             MaxWidth ="400"
+                             Style="{DynamicResource MainTextblockStyle}"
+                             Margin="5,8,5,0"
+                             Visibility="{Binding IsChecked, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                </StackPanel>
             </DataTemplate>
           </ItemsControl.ItemTemplate>
         </ItemsControl>
