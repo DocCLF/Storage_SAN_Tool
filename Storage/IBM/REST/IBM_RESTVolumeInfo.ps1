@@ -35,7 +35,7 @@ function IBM_RESTVolumeInfo {
             return $null
         }
         [int]$imax = $STONodeInfo.Count
-        for ($i = 0; $i -le $imax; $i++) {
+        for ($i = 0; $i -lt $imax; $i++) {
             if($STONodeInfo.config_node[$i] -eq "yes"){
                 $IBMSTOWWNN = $STONodeInfo.WWNN[$i]
                 $IBMSTOSN = if($STONodeInfo.enclosure_serial_number[$i] -eq ""){$STONodeInfo.panel_name[$i]}else{$STONodeInfo.enclosure_serial_number[$i]}
@@ -45,9 +45,9 @@ function IBM_RESTVolumeInfo {
 
     process{
         [int]$imax = $TD_DeviceInformation.Count
-        [array]$TD_VDiskFuncResault = for ($i = 0; $i -le $imax; $i++) {
+        $TD_VDiskFuncResault = for ($i = 0; $i -lt $imax; $i++) {
             <# Node Info#>
-            $TD_VDiskinfo = "" | Select-Object ID,Name,IOGroupID,IOGroupName,Status,MdiskGrpID,MdiskGrpName,Capacity,Type,FCID,FCName,`
+            $TD_VDiskinfo = "" | Select-Object RowID,ID,Name,IOGroupID,IOGroupName,Status,MdiskGrpID,MdiskGrpName,Capacity,Type,FCID,FCName,`
                                             RCID,RCName,VdiskUID,FCMapCount,CopyCount,FastWriteState,SECopyCount,RCChange,CompressedCopyCount,ParentMdiskGrpID,ParentMdiskGrpName,`
                                             OwnerID,OwnerName,Formatting,Encrypt,VolumeID,VolumeName,Function,VolumeGroupID,VolumeGroupName,Protocol,isSnapshot,`
                                             SnapshotCount,VolumeType,ReplicationMode,isSafeguardedSnapshot,SafeguardedSnapshotCount,WWNN,SerialNumber
@@ -97,7 +97,7 @@ function IBM_RESTVolumeInfo {
 
             $TD_VDiskinfo.WWNN           = $IBMSTOWWNN
             $TD_VDiskinfo.SerialNumber   = $IBMSTOSN
-
+            $TD_VDiskinfo.RowID          = "$IBMSTOSN|$($TD_VDiskinfo.VdiskUID)"
             $TD_VDiskinfo
 
             <# Progressbar  #>
