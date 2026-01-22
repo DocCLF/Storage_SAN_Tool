@@ -35,7 +35,7 @@ function IBM_RESTMDiskInfo {
             return $null
         }
         [int]$imax = $STONodeInfo.Count
-        for ($i = 0; $i -le $imax; $i++) {
+        for ($i = 0; $i -lt $imax; $i++) {
             if($STONodeInfo.config_node[$i] -eq "yes"){
                 $IBMSTOWWNN = $STONodeInfo.WWNN[$i]
                 $IBMSTOSN = if($STONodeInfo.enclosure_serial_number[$i] -eq ""){$STONodeInfo.panel_name[$i]}else{$STONodeInfo.enclosure_serial_number[$i]}
@@ -45,7 +45,7 @@ function IBM_RESTMDiskInfo {
 
     process{
         [int]$imax = $TD_DeviceInformation.Count
-        [array]$TD_MDiskInfoResault = for ($i = 0; $i -lt $imax; $i++) {
+        $TD_MDiskInfoResault = for ($i = 0; $i -lt $imax; $i++) {
             <# Node Info#>
             $TD_MDiskInfo = "" | Select-Object RowID,ID,Name,Status,MDiskCount,VdiskCount,Capacity,ExtentSize,FreeCapacity,VirtualCapacity,UsedCapacity,RealCapacity,`
                                             Overallocation,Warning,EasyTier,EasyTierStatus,CompressionActive,CompressionVirtualCapacity,CompressionCompressedCapacity,CompressionUncompressedCapacity,ParentMdiskGrpID,ParentMdiskGrpName,ChildMdiskGrpCount,`
@@ -123,6 +123,7 @@ function IBM_RESTMDiskInfo {
             <# output on the promt #>
             return $TD_MDiskInfoResault
         }
+        
         return $TD_MDiskInfoResault
     }
 }
