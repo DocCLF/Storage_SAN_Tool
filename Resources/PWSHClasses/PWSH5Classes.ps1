@@ -109,6 +109,7 @@ public class MainViewModel : INotifyPropertyChanged
 public class DeviceToggle : INotifyPropertyChanged
 {
     private bool _isChecked;
+
     private ObservableCollection<object> _baseRows;
     private ObservableCollection<object> _eventRows;
     private ObservableCollection<object> _auditLogRows;
@@ -119,6 +120,15 @@ public class DeviceToggle : INotifyPropertyChanged
     private ObservableCollection<object> _volumeRows;
     private ObservableCollection<object> _driveRows;
     private ObservableCollection<object> _fCPortRows;
+    private ObservableCollection<object> _fCPortStatsRows;
+
+    // === NEU: DumpInfo ===
+    private ObservableCollection<object> _dumpInfoRows;
+    private string _dumpInfoTitle;
+    private string _dumpInfoText;
+    private ObservableCollection<object> _backUpInfoRows;
+    private string _backUpInfoTitle;
+    private string _backUpInfoText;
 
     public DeviceToggle()
     {
@@ -132,51 +142,89 @@ public class DeviceToggle : INotifyPropertyChanged
         _volumeRows = new ObservableCollection<object>();
         _driveRows = new ObservableCollection<object>();
         _fCPortRows = new ObservableCollection<object>();
+        _fCPortStatsRows = new ObservableCollection<object>();
+
+        // NEU
+        _dumpInfoRows = new ObservableCollection<object>();
+        _dumpInfoTitle = "";
+        _dumpInfoText = "";
+        _backUpInfoRows = new ObservableCollection<object>();
+        _backUpInfoTitle = "";
+        _backUpInfoText = "";
     }
 
     public string Id { get; set; }
     public string Label { get; set; }
 
-    public ObservableCollection<object> BaseRows
+    public ObservableCollection<object> BaseRows { get { return _baseRows; } }
+    public ObservableCollection<object> IPQuorumRows { get { return _iPQuorumRows; } }
+    public ObservableCollection<object> EventRows { get { return _eventRows; } }
+    public ObservableCollection<object> AuditLogRows { get { return _auditLogRows; } }
+    public ObservableCollection<object> HostVolumeMapRows { get { return _hostVolumeMapRows; } }
+    public ObservableCollection<object> HostRows { get { return _hostRows; } }
+    public ObservableCollection<object> MDiskRows { get { return _mDiskRows; } }
+    public ObservableCollection<object> VolumeRows { get { return _volumeRows; } }
+    public ObservableCollection<object> DriveRows { get { return _driveRows; } }
+    public ObservableCollection<object> FCPortRows { get { return _fCPortRows; } }
+    public ObservableCollection<object> FCPortStatsRows { get { return _fCPortStatsRows; } }
+
+
+    public ObservableCollection<object> DumpInfoRows { get { return _dumpInfoRows; } }
+    public ObservableCollection<object> BackUpInfoRows { get { return _backUpInfoRows; } }
+
+    // === NEU: dynamische Headline ===
+    public string DumpInfoTitle
     {
-        get { return _baseRows; }
+        get { return _dumpInfoTitle; }
+        set
+        {
+            if (_dumpInfoTitle != value)
+            {
+                _dumpInfoTitle = value;
+                OnPropertyChanged("DumpInfoTitle");
+            }
+        }
     }
-    public ObservableCollection<object> IPQuorumRows
+    public string BackUpInfoTitle
     {
-        get { return _iPQuorumRows; }
+        get { return _backUpInfoTitle; }
+        set
+        {
+            if (_backUpInfoTitle != value)
+            {
+                _backUpInfoTitle = value;
+                OnPropertyChanged("BackUpInfoTitle");
+            }
+        }
     }
-    public ObservableCollection<object> EventRows
+
+    // === NEU: Text für TextBlock ===
+    public string DumpInfoText
     {
-        get { return _eventRows; }
+        get { return _dumpInfoText; }
+        set
+        {
+            if (_dumpInfoText != value)
+            {
+                _dumpInfoText = value;
+                OnPropertyChanged("DumpInfoText");
+            }
+        }
     }
-    public ObservableCollection<object> AuditLogRows
+
+    public string BackUpInfoText
     {
-        get { return _auditLogRows; }
+        get { return _backUpInfoText; }
+        set
+        {
+            if (_backUpInfoText != value)
+            {
+                _backUpInfoText = value;
+                OnPropertyChanged("BackUpInfoText");
+            }
+        }
     }
-    public ObservableCollection<object> HostVolumeMapRows
-    {
-        get { return _hostVolumeMapRows; }
-    }
-    public ObservableCollection<object> HostRows
-    {
-        get { return _hostRows; }
-    }
-    public ObservableCollection<object> MDiskRows
-    {
-        get { return _mDiskRows; }
-    }
-    public ObservableCollection<object> VolumeRows
-    {
-        get { return _volumeRows; }
-    }
-    public ObservableCollection<object> DriveRows
-    {
-        get { return _driveRows; }
-    }
-    public ObservableCollection<object> FCPortRows
-    {
-        get { return _fCPortRows; }
-    }
+
     public bool IsChecked
     {
         get { return _isChecked; }
