@@ -61,7 +61,7 @@ function New-DeviceBlock {
     }else{
         $FallbacktoSSH = $true
     }
-
+     
     if ($FallbacktoSSH) {
         $FunResult = & $SSHFunc -TD_Line_ID $Device.ID -TD_Device_ConnectionTyp $Device.ConnectionTyp -TD_Device_UserName $Device.UserName -TD_Device_DeviceIP $Device.IPAddress -TD_Device_PW $pw -TD_Exportpath $ExportPath
     }
@@ -92,7 +92,7 @@ function RestThenSshForCombiView {
     $pw = [Net.NetworkCredential]::new('', $Device.Password).Password
     
     $FunResult = & $RESTFunc -TD_Line_ID $Device.ID -TD_Device_UserName $Device.UserName -TD_Device_DeviceIP $Device.IPAddress -TD_Device_PW $pw -TD_Exportpath $ExportPath
-
+    
     $items = @($FunResult)  # normalisiert null/single/multi
 
     if ($items.Count -eq 0) {
@@ -104,11 +104,11 @@ function RestThenSshForCombiView {
             $FallbacktoSSH = $true
         }
     }
-
+   
     if ($FallbacktoSSH) {
         $FunResult = & $SSHFunc -TD_Line_ID $Device.ID -TD_Device_ConnectionTyp $Device.ConnectionTyp -TD_Device_UserName $Device.UserName -TD_Device_DeviceIP $Device.IPAddress -TD_Device_PW $pw -TD_Exportpath $ExportPath
     }
-  
+    
     return $FunResult
 }
 
@@ -124,7 +124,7 @@ function Add-MappedRows {
     foreach ($s in @($Source)) {
         $id = $s.$IdProperty
         if ([string]::IsNullOrWhiteSpace([string]$id)) { continue }
-
+        
         $h = @{}
         foreach ($k in $Map.Keys) {
             $h[$k] = [string]$s.($Map[$k])
