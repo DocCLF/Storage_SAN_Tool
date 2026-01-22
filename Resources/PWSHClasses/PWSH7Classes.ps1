@@ -1,4 +1,3 @@
-
 Add-Type -TypeDefinition @"
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -48,7 +47,6 @@ public class MainViewModel : INotifyPropertyChanged
         }
     }
 
-    // <<< DAS ist die View-Umschaltung >>>
     private string _selectedView = "Base";
     public string SelectedView
     {
@@ -84,8 +82,68 @@ public class DeviceToggle : INotifyPropertyChanged
     public ObservableCollection<object> VolumeRows { get; } = new ObservableCollection<object>();
     public ObservableCollection<object> DriveRows { get; } = new ObservableCollection<object>();
     public ObservableCollection<object> FCPortRows { get; } = new ObservableCollection<object>();
+    public ObservableCollection<object> FCPortStatsRows { get; } = new ObservableCollection<object>();
 
-    public bool IsChecked   
+    public ObservableCollection<object> DumpInfoRows { get; } = new ObservableCollection<object>();
+    public ObservableCollection<object> BackUpInfoRows { get; } = new ObservableCollection<object>();
+
+    // === NEU: Headline + Text für Lösung 1 ===
+    private string _dumpInfoTitle;
+    public string DumpInfoTitle
+    {
+        get { return _dumpInfoTitle; }
+        set
+        {
+            if (_dumpInfoTitle != value)
+            {
+                _dumpInfoTitle = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(DumpInfoTitle)));
+            }
+        }
+    }
+
+    private string _dumpInfoText;
+    public string DumpInfoText
+    {
+        get { return _dumpInfoText; }
+        set
+        {
+            if (_dumpInfoText != value)
+            {
+                _dumpInfoText = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(DumpInfoText)));
+            }
+        }
+    }
+   private string _backUpInfoTitle;
+    public string BackUpInfoTitle
+    {
+        get { return _backUpInfoTitle; }
+        set
+        {
+            if (_backUpInfoTitle != value)
+            {
+                _backUpInfoTitle = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(BackUpInfoTitle)));
+            }
+        }
+    }
+
+    private string _backUpInfoText;
+    public string BackUpInfoText
+    {
+        get { return _backUpInfoText; }
+        set
+        {
+            if (_backUpInfoText != value)
+            {
+                _backUpInfoText = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(BackUpInfoText)));
+            }
+        }
+    }
+
+    public bool IsChecked
     {
         get { return _isChecked; }
         set
