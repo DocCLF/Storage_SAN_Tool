@@ -47,7 +47,7 @@ function IBM_RESTFCPortStats {
             $IBMSTOSN = if($STONodeInfo.enclosure_serial_number[$i] -eq ""){$STONodeInfo.panel_name[$i]}else{$STONodeInfo.enclosure_serial_number[$i]}
 
             $TD_DeviceInformation = SST_SpectrumSystemAPI -Endpoint lsportstats -Body $body -BaseUrl $BaseUrl -RESTInfo $RESTInfo
-            Write-Host  $IBMSTOName $NodeID -ForegroundColor Green
+            
             [int]$iNodemax = $TD_DeviceInformation.Count 
             for ($ndr = 0; $ndr -lt $iNodemax; $ndr++) {
                 if($($TD_DeviceInformation.type[$ndr]) -ne "FC"){continue}
