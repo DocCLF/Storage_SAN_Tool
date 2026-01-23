@@ -576,8 +576,8 @@ $TD_BTN_IBM_PoolVolumeInfo.add_click({
             MdiskGrpName   = 'MdiskGrpName'
             Capacity       = 'Capacity'
             VdiskUID       = 'VdiskUID'
-            OwnerID        = 'OwnerID'
-            OwnerName      = 'OwnerName'
+            PreferredNodeID = 'PreferredNodeID'
+            PreferredNodeName   = 'PreferredNodeName'
             Function       = 'Function'
             VolumeType     = 'VolumeType'
             HAType         = 'HAType'       <# not to display #>
