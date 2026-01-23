@@ -49,7 +49,7 @@ function IBM_RESTVolumeInfo {
             <# Node Info#>
             $TD_VDiskinfo = "" | Select-Object RowID,ID,Name,IOGroupID,IOGroupName,Status,MdiskGrpID,MdiskGrpName,Capacity,Type,FCID,FCName,`
                                             RCID,RCName,VdiskUID,FCMapCount,CopyCount,FastWriteState,SECopyCount,RCChange,CompressedCopyCount,ParentMdiskGrpID,ParentMdiskGrpName,`
-                                            OwnerID,OwnerName,Formatting,Encrypt,VolumeID,VolumeName,Function,VolumeGroupID,VolumeGroupName,Protocol,isSnapshot,`
+                                            OwnerID,OwnerName,Formatting,Encrypt,VolumeID,VolumeName,Function,VolumeGroupID,VolumeGroupName,Protocol,PreferredNodeID,PreferredNodeName,isSnapshot,`
                                             SnapshotCount,VolumeType,ReplicationMode,isSafeguardedSnapshot,SafeguardedSnapshotCount,WWNN,SerialNumber
 
             $TD_VDiskinfo.ID                         = $TD_DeviceInformation.id[$i]
@@ -86,6 +86,8 @@ function IBM_RESTVolumeInfo {
             $TD_VDiskinfo.VolumeGroupID              = $TD_DeviceInformation.volume_group_id[$i]
             $TD_VDiskinfo.VolumeGroupName            = $TD_DeviceInformation.volume_group_name[$i]
             $TD_VDiskinfo.Protocol                   = $TD_DeviceInformation.protocol[$i]
+            $TD_VDiskinfo.PreferredNodeID            = $TD_DeviceInformation.preferred_node_id[$i]
+            $TD_VDiskinfo.PreferredNodeName          = $TD_DeviceInformation.preferred_node_name[$i]
             $TD_VDiskinfo.isSnapshot                 = $TD_DeviceInformation.is_snapshot[$i]
             #   SnapshotCount,VolumeType,ReplicationMode,isSafeguardedSnapshot,SafeguardedSnapshotCount
             $TD_VDiskinfo.SnapshotCount              = $TD_DeviceInformation.snapshot_count[$i]
