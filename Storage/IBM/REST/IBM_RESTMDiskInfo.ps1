@@ -98,7 +98,7 @@ function IBM_RESTMDiskInfo {
 
             $TD_MDiskInfo.WWNN          = $IBMSTOWWNN
             $TD_MDiskInfo.SerialNumber  = $IBMSTOSN
-            $TD_MDiskInfo.RowID          = "$IBMSTOSN|$($TD_MDiskInfo.ID)"
+            $TD_MDiskInfo.RowID         = "$IBMSTOSN|$($TD_MDiskInfo.ID)"
 
             $TD_MDiskInfo
 
