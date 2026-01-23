@@ -685,7 +685,7 @@
                       <DataTrigger Binding="{Binding Status}" Value="offline">
                         <Setter Property="Background" Value="Red" />
                       </DataTrigger>
-                    </Style.Triggers>
+                    </Style.Triggers>d
                   </Style>
                 </DataGrid.RowStyle>
                     <DataGrid.Columns>
@@ -695,8 +695,8 @@
                         <DataGridTextColumn Width="auto" Header="Pool" Binding ="{Binding MdiskGrpName}" IsReadOnly="True"/>
                         <DataGridTextColumn Width="auto" Header="Capacity" Binding ="{Binding Capacity}" IsReadOnly="True"/>  
                         <DataGridTextColumn Width="auto" Header="Volume UID" Binding ="{Binding VdiskUID}" IsReadOnly="True"/> 
-                        <DataGridTextColumn Width="auto" Header="Preferred NodeID" Binding ="{Binding OwnerID}" IsReadOnly="True"/>
-                        <DataGridTextColumn Width="auto" Header="Preferred NodeName" Binding ="{Binding OwnerName}" IsReadOnly="True"/> 
+                        <DataGridTextColumn Width="auto" Header="Preferred NodeID" Binding ="{Binding PreferredNodeID}" IsReadOnly="True"/>
+                        <DataGridTextColumn Width="auto" Header="Preferred NodeName" Binding ="{Binding PreferredNodeName}" IsReadOnly="True"/> 
                         <DataGridTextColumn Width="auto" Header="Volume Func" Binding ="{Binding Function}" IsReadOnly="True"/>
                         <DataGridTextColumn Width="auto" Header="Volume Type" Binding ="{Binding VolumeType}" IsReadOnly="True"/>
                     </DataGrid.Columns> 
