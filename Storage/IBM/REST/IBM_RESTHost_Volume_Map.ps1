@@ -29,6 +29,7 @@ function IBM_RESTHost_Volume_Map {
         Clear-Variable -Name TD_Device_PW -Force
         if($TD_Device_ConnectionTyp -eq "REST"){
             $TD_DeviceInformation = SST_SpectrumSystemAPI -Endpoint lshostvdiskmap -Body $null -BaseUrl $BaseUrl -RESTInfo $RESTInfo
+            $TD_VdiskInfo = SST_SpectrumSystemAPI -Endpoint lsvdisk -Body $null -BaseUrl $BaseUrl -RESTInfo $RESTInfo
             $STONodeInfo = SST_SpectrumSystemAPI -Endpoint lsnode -Body $null -BaseUrl $BaseUrl -RESTInfo $RESTInfo
         }else {
             <#switch to the ssh version and leave this func #>
@@ -45,6 +46,7 @@ function IBM_RESTHost_Volume_Map {
 
     process{
         [int]$imax = $TD_DeviceInformation.Count
+        [int]$nbrmax = $TD_VdiskInfo.Count
         [array]$TD_Mappingresault = for ($i = 0; $i -lt $imax; $i++) {
 
             $TD_SplitInfos = "" | Select-Object RowID,HostID,HostName,HostClusterID,HostCluster,MappingType,SCSIID,VolumeID,VolumeName,UID,Capacity,WWNN,SerialNumber
@@ -57,14 +59,17 @@ function IBM_RESTHost_Volume_Map {
             $TD_SplitInfos.MappingType      = $TD_DeviceInformation.mapping_type[$i]
             $TD_SplitInfos.HostClusterID    = $TD_DeviceInformation.host_cluster_id[$i]
             $TD_SplitInfos.HostCluster      = $TD_DeviceInformation.host_cluster_name[$i]
-            $TD_VdiskInfo = SST_SpectrumSystemAPI -Endpoint lsvdisk/$($TD_SplitInfos.VolumeID) -Body $null -BaseUrl $BaseUrl -RESTInfo $RESTInfo
-            if ($TD_VdiskInfo.vdisk_UID -contains $TD_SplitInfos.UID) {
-                $TD_SplitInfos.Capacity = $TD_VdiskInfo.capacity
+            
+            for ($nbr = 0; $nbr -lt $nbrmax; $nbr++) {
+                if($($TD_SplitInfos.UID) -ne $($TD_VdiskInfo.vdisk_UID[$nbr])){continue}
+                if($($TD_SplitInfos.VolumeID) -eq $($TD_VdiskInfo.id[$nbr])){
+                    $TD_SplitInfos.Capacity = $TD_VdiskInfo.capacity[$nbr]
+                }
             }
 
-            $TD_SplitInfos.WWNN = $IBMSTOWWNN
+            $TD_SplitInfos.WWNN         = $IBMSTOWWNN
             $TD_SplitInfos.SerialNumber = $IBMSTOSN
-            $TD_SplitInfos.RowID          = "$IBMSTOSN|$($TD_SplitInfos.HostID)"
+            $TD_SplitInfos.RowID        = "$IBMSTOSN|$($TD_SplitInfos.HostID)"
 
             $TD_SplitInfos
 
