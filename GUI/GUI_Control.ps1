@@ -29,7 +29,8 @@ $StyleFiles = @(
     "$PSRootPath\Resources\Styles\OtherControlStyle.xaml",
     "$PSRootPath\Resources\Styles\TextBoxStyle.xaml",
     "$PSRootPath\Resources\Styles\ButtonStyle.xaml",
-    "$PSRootPath\Resources\Styles\ViewVisibilityStyles.xaml"
+    "$PSRootPath\Resources\Styles\ViewSTOVisibilityStyles.xaml"
+    "$PSRootPath\Resources\Styles\ViewSANVisibilityStyles.xaml"
 )
 $global:LoadedStyles = @()
 foreach ($file in $styleFiles) {
@@ -766,6 +767,45 @@ $TD_BTN_IBM_FCPortStats.add_click({
     $UCVMMain.SelectedView = "FCPortStats"
 })
 #$TD_BTN_IBM_PolicyBased_Rep.add_click({})
+#endregion
+#region Brocade SAN
+$TD_BTN_FOS_BasicSwitchInfo.add_click({
+    <#Get all Device Cred and count them #>
+    $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_.DeviceTyp -eq "SAN"}
+    <# get the DataConteext of the current View/ means UC and if its nul trow an error #>
+    $UCDataContext = $TD_UserControl_IBMSTO.DataContext
+    if (-not $UCDataContext) { Write-Host "DataContext ist NULL!" -ForegroundColor Red; return }
+    <# if there is a DataContext find th Main Part und put it into UCVMMain#>
+    $UCVMMain = $UCDataContext.Main
+    <# if there a something in, its better to clean it up befor we use it again #>
+    $UCVMMain.DeviceToggles.Clear()
+    foreach($TD_Creds in $TD_Credentials){
+        $baseResult  = FOS_SSHBasicSwitchInfos -TD_Line_ID $TD_Credentials.ID -TD_Device_ConnectionTyp $TD_Credentials.ConnectionTyp -TD_Device_UserName $TD_Credentials.UserName -TD_Device_DeviceName $TD_Credentials.DeviceName`
+        -TD_Device_DeviceIP $TD_Credentials.IPAddress -TD_Device_PW $([Net.NetworkCredential]::new('', $_.Password).Password) -TD_Exportpath $TD_tb_ExportPath.Text
+        
+        $dev = $baseResult.DeviceIdent
+        $mapStorageInfo = @{
+            ID             = 'ID'
+            Name           = 'Name'
+            WWNN           = 'WWNN'
+            Status         = 'Status'
+            IO_group_id    = 'IO_group_id'
+            IO_group_Name  = 'IO_group_Name'
+            Prod_MTM       = 'Prod_MTM'
+            SerialNumber   = 'SerialNumber'
+            CodeLevel      = 'CodeLevel'
+            RecommendedPTF = 'RecommendedPTF'
+            ConfigNode     = 'ConfigNode'
+            SideID         = 'SideID'
+            SideName       = 'SideName'
+        } 
+
+        Add-MappedRows -Collection $dev.BaseRows -Source $baseResult.FuncResult.StorageInfo -IdProperty 'RowID' -Map $mapStorageInfo
+
+        $UCVMMain.DeviceToggles.Add($dev)
+    }
+    $UCVMMain.SelectedView = "Base"
+})
 #endregion
 #endregion
 $TD_CB_DataBaseChoice.add_SelectionChanged({
