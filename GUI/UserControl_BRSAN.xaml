@@ -46,7 +46,7 @@
                 </ComboBox>
                 <!--FOS_BasicSwichInfo-->
                 <ToggleButton
-                x:Name="btn_FOS_BasicSwitchInfo"
+                x:Name="BTN_FOS_BasicSwitchInfo"
                 Style="{DynamicResource MainBtnStyle}"
                 Content="Switch Info" 
                 ToolTip="Get basic SAN-Switch information"/>                
