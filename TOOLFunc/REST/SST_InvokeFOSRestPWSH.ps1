@@ -2,6 +2,15 @@ function SST_InvokeFOSRestPWSH {
   <#
   .SYNOPSIS
     Executes a FOS REST call (Login -> Request -> Logout) in PowerShell 7.
+  
+  .DESCRIPTION
+    The Fabric OS REST interface is enabled by default. 
+    To disable the Fabric OS REST interface, enter mgmtapp --disable REST.
+    To re-enable the Fabric OS REST interface, enter mgmtapp --enable REST.
+    Useful link to the documentation: 
+
+  .LINK
+    https://techdocs.broadcom.com/us/en/fibre-channel-networking/fabric-os/fabric-os-cli-to-rest-api/10-0-x/CLI-to-REST-API-Mappings.html
 
   .PARAMETER SwitchIp
     IP or host name of the switch (without https://)
@@ -38,11 +47,11 @@ function SST_InvokeFOSRestPWSH {
     [Parameter(Mandatory)]
     [string]$SwitchIp,
 
-    [Parameter(Mandatory)]
     [string]$User,
 
-    [Parameter(Mandatory)]
     [string]$Pass,
+
+    [pscredential]$Credential,
 
     [Parameter(Mandatory)]
     [string]$Resource,
@@ -59,8 +68,14 @@ function SST_InvokeFOSRestPWSH {
   $resource = $Resource.TrimStart('/')
 
   # Basic Auth headers such as curl (explicit)
-  $u = $User #$Credential.UserName
-  $p = $Pass #$Credential.GetNetworkCredential().Password
+  if($Credential){
+    $u = $Credential.UserName
+    $p = $Credential.GetNetworkCredential().Password
+  }else{
+    $u = $User #$Credential.UserName
+    $p = $Pass #$Credential.GetNetworkCredential().Password
+  }
+
   $basic = [Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes("$u`:$p"))
 
   # --- Login ---
