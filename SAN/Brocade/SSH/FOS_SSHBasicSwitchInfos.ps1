@@ -41,8 +41,6 @@ function FOS_SSHBasicSwitchInfos {
         }else {
             $FOS_MainInformation = plink $TD_Device_UserName@$TD_Device_DeviceIP -pw $TD_Device_PW -batch 'firmwareshow && ipaddrshow && chassisshow && switchshow'
         }
-        <# next line is for tests #>
-        #[System.Object]$FOS_MainInformation = Get-Content -Path "C:\Users\mailt\Documents\182.txt"
 
         <# Hashtable for BasicSwitch Info #>
         $FOS_SwGeneralInfos =[ordered]@{}
@@ -107,11 +105,13 @@ function FOS_SSHBasicSwitchInfos {
         }else{
             $FOS_SwGeneralInfos.Add('Fabric ID','unknown')
         }
-
+        <# need to creat a RowID #>
+        $SANSwitchRowID = "$($FOS_LoSw_CFG[0])|$($FOS_LoSw_CFG[2])"
         $FOS_SwGeneralInfos.Add('Brocade Product Name',$FOS_SwHw)
         $FOS_SwGeneralInfos.Add('MTM',$FOS_HWMTM)
-        $FOS_SwGeneralInfos.Add('Serial Num',$FOS_LoSw_CFG[0])
-
+        $FOS_SwGeneralInfos.Add('SerialNumber',$FOS_LoSw_CFG[0])
+        $FOS_SwGeneralInfos.Add('RowID',$SANSwitchRowID)
+                 
         $FOS_SwitchOSVersion= FOS_SwitchFW -SwitchData $FOS_MainInformation
 
         foreach ($lineUp in $FOS_MainInformation) {
