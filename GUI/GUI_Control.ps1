@@ -770,42 +770,54 @@ $TD_BTN_IBM_FCPortStats.add_click({
 #endregion
 #region Brocade SAN
 $TD_BTN_FOS_BasicSwitchInfo.add_click({
-    <#Get all Device Cred and count them #>
-    $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_.DeviceTyp -eq "SAN"}
-    <# get the DataConteext of the current View/ means UC and if its nul trow an error #>
+
+    $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource | Where-Object { $_.DeviceTyp -eq "SAN" }
+
     $UCDataContext = $TD_UserControl_IBMSTO.DataContext
     if (-not $UCDataContext) { Write-Host "DataContext ist NULL!" -ForegroundColor Red; return }
-    <# if there is a DataContext find th Main Part und put it into UCVMMain#>
+
     $UCVMMain = $UCDataContext.Main
-    <# if there a something in, its better to clean it up befor we use it again #>
     $UCVMMain.DeviceToggles.Clear()
-    foreach($TD_Creds in $TD_Credentials){
-        $baseResult  = FOS_SSHBasicSwitchInfos -TD_Line_ID $TD_Credentials.ID -TD_Device_ConnectionTyp $TD_Credentials.ConnectionTyp -TD_Device_UserName $TD_Credentials.UserName -TD_Device_DeviceName $TD_Credentials.DeviceName`
-        -TD_Device_DeviceIP $TD_Credentials.IPAddress -TD_Device_PW $([Net.NetworkCredential]::new('', $_.Password).Password) -TD_Exportpath $TD_tb_ExportPath.Text
-        
-        $dev = $baseResult.DeviceIdent
-        $mapStorageInfo = @{
-            ID             = 'ID'
-            Name           = 'Name'
-            WWNN           = 'WWNN'
-            Status         = 'Status'
-            IO_group_id    = 'IO_group_id'
-            IO_group_Name  = 'IO_group_Name'
-            Prod_MTM       = 'Prod_MTM'
-            SerialNumber   = 'SerialNumber'
-            CodeLevel      = 'CodeLevel'
-            RecommendedPTF = 'RecommendedPTF'
-            ConfigNode     = 'ConfigNode'
-            SideID         = 'SideID'
-            SideName       = 'SideName'
-        } 
 
-        Add-MappedRows -Collection $dev.BaseRows -Source $baseResult.FuncResult.StorageInfo -IdProperty 'RowID' -Map $mapStorageInfo
-
-        $UCVMMain.DeviceToggles.Add($dev)
+    $mapSANSwitchInfo = @{
+        SwichtName          = 'Swicht Name'
+        ActiveZonenCFG      = 'Active ZonenCFG'
+        DomainID            = 'DomainID'
+        SwitchWWN           = 'Switch WWN'
+        SwitchType          = 'SwitchType'
+        FabricID            = 'Fabric ID'
+        BrocadeProductName  = 'Brocade Product Name'
+        MTM                 = 'MTM'
+        SerialNumber        = 'SerialNumber'
+        FabricOS            = 'Fabric OS'
+        IPAddress           = 'Ethernet IP Address'
+        SubnetMask          = 'Ethernet Subnet mask'
+        Gateway             = 'Gateway IP Address'
+        DHCP                = 'DHCP'
+        SwitchState         = 'Switch State'
+        SwitchRole          = 'Switch Role'
     }
-    $UCVMMain.SelectedView = "Base"
+
+    foreach ($TD_Creds in $TD_Credentials) {
+
+        $FunctionResult = New-DeviceBlock -Device $TD_Creds -ExportPath $TD_tb_ExportPath.Text -SSHFunc FOS_SSHBasicSwitchInfos
+
+        $deviceIdent = $FunctionResult['DeviceIdent']
+        $funcResult  = $FunctionResult['FuncResult']   # OrderedDictionary
+
+        # if Visibility runs via IsChecked
+        if ($deviceIdent.PSObject.Properties.Match('IsChecked').Count -gt 0) {
+            $deviceIdent.IsChecked = $true
+        }
+
+        Add-MappedKeyValueRows -Collection $deviceIdent.SANSwitchBaseRows -Source $funcResult -Map $mapSANSwitchInfo | Out-Null
+
+        $UCVMMain.DeviceToggles.Add($deviceIdent)
+    }
+
+    $UCVMMain.SelectedView = "SANSwitchBase"
 })
+
 #endregion
 #endregion
 $TD_CB_DataBaseChoice.add_SelectionChanged({
