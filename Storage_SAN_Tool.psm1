@@ -24,8 +24,8 @@ By default, these files are blocked to protect the computer from untrusted files
     $IBMStorage_RESTFunctions = @(Get-ChildItem -Path $PSScriptRoot\Storage\IBM\REST\*.ps1 -ErrorAction SilentlyContinue)
     Unblock-File -Path $PSScriptRoot\Storage\IBM\SSH\*.ps1 -Confirm:$false
     $IBMStorage_SSHFunctions = @(Get-ChildItem -Path $PSScriptRoot\Storage\IBM\SSH\*.ps1 -ErrorAction SilentlyContinue)
-    Unblock-File -Path $PSScriptRoot\SAN\Brocade\*.ps1 -Confirm:$false
-    $FOSBrocade_Functions = @(Get-ChildItem -Path $PSScriptRoot\SAN\Brocade\*.ps1 -ErrorAction SilentlyContinue)
+    Unblock-File -Path $PSScriptRoot\SAN\Brocade\SSH\*.ps1 -Confirm:$false
+    $FOSBrocade_Functions = @(Get-ChildItem -Path $PSScriptRoot\SAN\Brocade\SSH\*.ps1 -ErrorAction SilentlyContinue)
     Unblock-File -Path $PSScriptRoot\HealthCheck\*.ps1 -Confirm:$false
     $HealthCheck_Functions = @(Get-ChildItem -Path $PSScriptRoot\HealthCheck\*.ps1 -ErrorAction SilentlyContinue)
     Unblock-File -Path $PSScriptRoot\GUI\*.ps1 -Confirm:$false
