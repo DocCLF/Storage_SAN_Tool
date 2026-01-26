@@ -83,6 +83,7 @@ public class DeviceToggle : INotifyPropertyChanged
     public ObservableCollection<object> DriveRows { get; } = new ObservableCollection<object>();
     public ObservableCollection<object> FCPortRows { get; } = new ObservableCollection<object>();
     public ObservableCollection<object> FCPortStatsRows { get; } = new ObservableCollection<object>();
+    public ObservableCollection<object> SANSwitchBaseRows { get; } = new ObservableCollection<object>();
 
     public ObservableCollection<object> DumpInfoRows { get; } = new ObservableCollection<object>();
     public ObservableCollection<object> BackUpInfoRows { get; } = new ObservableCollection<object>();
