@@ -121,6 +121,7 @@ public class DeviceToggle : INotifyPropertyChanged
     private ObservableCollection<object> _driveRows;
     private ObservableCollection<object> _fCPortRows;
     private ObservableCollection<object> _fCPortStatsRows;
+    private ObservableCollection<object> _sANSwitchBaseRows;
 
     // === NEU: DumpInfo ===
     private ObservableCollection<object> _dumpInfoRows;
@@ -143,6 +144,7 @@ public class DeviceToggle : INotifyPropertyChanged
         _driveRows = new ObservableCollection<object>();
         _fCPortRows = new ObservableCollection<object>();
         _fCPortStatsRows = new ObservableCollection<object>();
+        _sANSwitchBaseRows = new ObservableCollection<object>();
 
         // NEU
         _dumpInfoRows = new ObservableCollection<object>();
@@ -167,6 +169,7 @@ public class DeviceToggle : INotifyPropertyChanged
     public ObservableCollection<object> DriveRows { get { return _driveRows; } }
     public ObservableCollection<object> FCPortRows { get { return _fCPortRows; } }
     public ObservableCollection<object> FCPortStatsRows { get { return _fCPortStatsRows; } }
+    public ObservableCollection<object> SANSwitchBaseRows { get { return _sANSwitchBaseRows; } }
 
 
     public ObservableCollection<object> DumpInfoRows { get { return _dumpInfoRows; } }
