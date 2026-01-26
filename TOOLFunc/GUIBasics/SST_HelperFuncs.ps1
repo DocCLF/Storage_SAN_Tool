@@ -132,6 +132,45 @@ function Add-MappedRows {
         $Collection.Add([pscustomobject]$h) | Out-Null
     }
 }
+<#  same as Add-MappedRows but
+    This turns the OrderedDictionary directly into key/value rows – without the “intermediate step” with the 1-object row.
+#> 
+function Add-MappedKeyValueRows {
+    param(
+        [Parameter(Mandatory)]
+        $Collection,
+
+        [Parameter(Mandatory)]
+        [System.Collections.IDictionary] $Source,
+
+        [Parameter(Mandatory)]
+        [hashtable] $Map
+    )
+
+    # Empty collection (if possible)
+    try { $Collection.Clear() | Out-Null } catch {}
+
+    foreach ($propName in $Map.Keys) {
+        $label = $Map[$propName]
+
+        $value = $null
+        if ($Source.Contains($propName)) {
+            $value = $Source[$propName]
+        }
+
+        $row = [pscustomobject]@{
+            Key   = $label
+            Value = $value
+        }
+
+        # add/append robust
+        try { $null = $Collection.Add($row) }
+        catch { $Collection = @($Collection) + $row }  # fallback if no .Add()
+    }
+
+    return $Collection
+}
+
 
 # SpectrumTimestamp
 function Convert-SpectrumTimestamp {
