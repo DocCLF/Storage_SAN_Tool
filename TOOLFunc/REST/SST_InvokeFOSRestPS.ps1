@@ -77,7 +77,7 @@ function SST_InvokeFOSRestPS {
   # Build URL (+ optional vf_id)
   $uri = "$base/rest/running/$resource"
   if ($PSBoundParameters.ContainsKey('VfId')) {
-    $join = ($uri -match '\?') ? '&' : '?'
+    $join = if ($uri -match '\?') { '&' } else { '?' }
     $uri = "$uri$join" + "vf_id=$VfId"
   }
 
