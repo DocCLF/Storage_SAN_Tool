@@ -88,10 +88,10 @@ function FOS_SSHBasicSwitchInfos {
         Write-Debug -Message "Process Func GET_BasicSwitchInfos |$(Get-Date)` "
 
         <# add the values to the hashtable #>
-        $FOS_SwGeneralInfos.Add('Swicht Name',$FOS_LoSw_CFG[1])
-        $FOS_SwGeneralInfos.Add('Active ZonenCFG',$FOS_LoSw_CFG[4])
+        $FOS_SwGeneralInfos.Add('SwichtName',$FOS_LoSw_CFG[1])
+        $FOS_SwGeneralInfos.Add('ActiveZonenCFG',$FOS_LoSw_CFG[4])
         $FOS_SwGeneralInfos.Add('DomainID',$FOS_LoSw_CFG[2])
-        $FOS_SwGeneralInfos.Add('Switch WWN',$FOS_LoSw_CFG[3])
+        $FOS_SwGeneralInfos.Add('SwitchWWNN',$FOS_LoSw_CFG[3])
 
         <# Workaround if VF is not enabled #>
         $FOS_LoSw_Temp = (($FOS_MainInformation | Select-String -Pattern 'SwitchType:\s+(\w+)$' -AllMatches).Matches.groups[1].Value)
@@ -101,13 +101,13 @@ function FOS_SSHBasicSwitchInfos {
             $FOS_SwGeneralInfos.Add('SwitchType',(($FOS_MainInformation | Select-String -Pattern 'SwitchType:\s+(\w+)$' -AllMatches).Matches.groups[1].Value))
         }
         if(($FOS_MainInformation | Select-String -Pattern '\[FID:\s(\d+)' |ForEach-Object {$_.Matches.Groups[1].Value}).count -eq 1) {
-            $FOS_SwGeneralInfos.Add('Fabric ID',($FOS_MainInformation | Select-String -Pattern '\[FID:\s(\d+)' |ForEach-Object {$_.Matches.Groups[1].Value}))
+            $FOS_SwGeneralInfos.Add('FabricID',($FOS_MainInformation | Select-String -Pattern '\[FID:\s(\d+)' |ForEach-Object {$_.Matches.Groups[1].Value}))
         }else{
-            $FOS_SwGeneralInfos.Add('Fabric ID','unknown')
+            $FOS_SwGeneralInfos.Add('FabricID','unknown')
         }
         <# need to creat a RowID #>
         $SANSwitchRowID = "$($FOS_LoSw_CFG[0])|$($FOS_LoSw_CFG[2])"
-        $FOS_SwGeneralInfos.Add('Brocade Product Name',$FOS_SwHw)
+        $FOS_SwGeneralInfos.Add('BrocadeProductName',$FOS_SwHw)
         $FOS_SwGeneralInfos.Add('MTM',$FOS_HWMTM)
         $FOS_SwGeneralInfos.Add('SerialNumber',$FOS_LoSw_CFG[0])
         $FOS_SwGeneralInfos.Add('RowID',$SANSwitchRowID)
@@ -116,26 +116,26 @@ function FOS_SSHBasicSwitchInfos {
 
         foreach ($lineUp in $FOS_MainInformation) {
             if($lineUp -match '^Index'){break}
-            $FOS_SwGeneralInfos.Add('Fabric OS',(($lineUp| Select-String -Pattern 'FOS\s+([v?][\d+]\.[\d+]\.[\d].*)$').Matches.Groups[1].Value))
-            $FOS_SwGeneralInfos.Add('Fabric OSLV',$FOS_SwitchOSVersion)
-            $FOS_SwGeneralInfos.Add('Ethernet IP Address',(($lineUp| Select-String -Pattern 'Ethernet IP Address:\s+([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3})').Matches.Groups[1].Value))
-            $FOS_SwGeneralInfos.Add('Ethernet Subnet mask',(($lineUp| Select-String -Pattern 'Ethernet Subnet mask:\s+([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3})').Matches.Groups[1].Value))
-            $FOS_SwGeneralInfos.Add('Gateway IP Address',(($lineUp| Select-String -Pattern 'Gateway IP Address:\s+([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3})').Matches.Groups[1].Value))
+            $FOS_SwGeneralInfos.Add('FabricOS',(($lineUp| Select-String -Pattern 'FOS\s+([v?][\d+]\.[\d+]\.[\d].*)$').Matches.Groups[1].Value))
+            $FOS_SwGeneralInfos.Add('FabricOSLV',$FOS_SwitchOSVersion)
+            $FOS_SwGeneralInfos.Add('EthernetIPAddress',(($lineUp| Select-String -Pattern 'Ethernet IP Address:\s+([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3})').Matches.Groups[1].Value))
+            $FOS_SwGeneralInfos.Add('EthernetSubnetMask',(($lineUp| Select-String -Pattern 'Ethernet Subnet mask:\s+([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3})').Matches.Groups[1].Value))
+            $FOS_SwGeneralInfos.Add('GatewayIPAddress',(($lineUp| Select-String -Pattern 'Gateway IP Address:\s+([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3})').Matches.Groups[1].Value))
             $FOS_SwGeneralInfos.Add('DHCP',((($lineUp| Select-String -Pattern '^DHCP:\s(\w+)$' -AllMatches).Matches.Groups[1].Value)))
-            $FOS_SwGeneralInfos.Add('Switch State',(($lineUp| Select-String -Pattern 'switchState:\s+(.*)$').Matches.Groups[1].Value))
-            $FOS_SwGeneralInfos.Add('Switch Role',(($lineUp| Select-String -Pattern 'switchRole:\s+(.*)$').Matches.Groups[1].Value))
+            $FOS_SwGeneralInfos.Add('SwitchState',(($lineUp| Select-String -Pattern 'switchState:\s+(.*)$').Matches.Groups[1].Value))
+            $FOS_SwGeneralInfos.Add('SwitchRole',(($lineUp| Select-String -Pattern 'switchRole:\s+(.*)$').Matches.Groups[1].Value))
 
             <# Progressbar  #>
             $ProgCounter++
             #$Completed = ($ProgCounter/$TD_HostInfos.Count) * 100
-            Write-ProgressBar -ProgressBar $ProgressBar -Activity "Collect data for Device $($TD_Line_ID) $($FOS_SwGeneralInfos.'Swicht Name')" -PercentComplete (($ProgCounter/$FOS_MainInformation.Count) * 100)
+            Write-ProgressBar -ProgressBar $ProgressBar -Activity "Collect data for Device $($TD_Line_ID) $($FOS_SwGeneralInfos.'SwichtName')" -PercentComplete (($ProgCounter/$FOS_MainInformation.Count) * 100)
         }
         
     }
     
     end {
         
-        if([string]::IsNullOrEmpty($TD_Device_DeviceName)){$TD_Device_DeviceName = $($FOS_SwGeneralInfos.'Swicht Name')}
+        if([string]::IsNullOrEmpty($TD_Device_DeviceName)){$TD_Device_DeviceName = $($FOS_SwGeneralInfos.'SwichtName')}
         Close-ProgressBar -ProgressBar $ProgressBar
         <# export y or n #>
         if($TD_Export -eq "yes"){
