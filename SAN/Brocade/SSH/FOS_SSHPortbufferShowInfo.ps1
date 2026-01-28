@@ -50,12 +50,10 @@ function FOS_SSHPortbufferShowInfo {
             Write-Debug -Message "plink |$(Get-Date)"
             $FOS_MainInformation = plink $TD_Device_UserName@$TD_Device_DeviceIP -pw $TD_Device_PW -batch "portbuffershow"
         }
-        <# next line one for testing #>
-        #$FOS_MainInformation=Get-Content -Path "C:\Users\mailt\Documents\pbs_s.txt"
-        #Out-File -FilePath $Env:TEMP\$($TD_Line_ID)_PortBufferShow_Temp.txt -InputObject $FOS_MainInformation
-
-        <# Create an array #>
         
+        $SANSwitchIdent = FOS_SSHSwitchIdent -TD_Device_UserName $TD_Device_UserName -TD_Device_DeviceIP $TD_Device_DeviceIP -TD_Device_PW $TD_Device_PW
+        
+        <# Create an array #>
         $FOS_InfoCount = $FOS_MainInformation.count
         0..$FOS_InfoCount |ForEach-Object {
             # Pull only the effective ZoneCFG back into ZoneList
@@ -65,6 +63,7 @@ function FOS_SSHPortbufferShowInfo {
             
             }
         }
+        $SwitchShowRowID = "$($SANSwitchIdent.SwitchWWNN)|$($TD_Line_ID)"
     }
 
     process{
@@ -73,7 +72,8 @@ function FOS_SSHPortbufferShowInfo {
             if($FOS_thisLine -match '^Defined'){break}
 
             #create a var and pipe some objects in and fill them with some data
-            $FOS_PortBuff = "" | Select-Object Port,Type,Mode,Max_Resv,Tx,Rx,Usage,Buffers,Distance,Buffer
+            $FOS_PortBuff = "" | Select-Object Port,Type,Mode,Max_Resv,Tx,Rx,Usage,Buffers,Distance,Buffer,SwitchWWNN,SerialNumber,RowID
+            $FOS_PortBuff.RowID = $SwitchShowRowID
             # Index number of the port.
             $FOS_PortBuff.Port = ($FOS_thisLine |Select-String -Pattern '^\s+(\d+)' -AllMatches).Matches.Groups.Value[1]
             # E (E_Port), F (F_Port), G (G_Port), L (L_Port), or U (U_Port).
@@ -95,7 +95,8 @@ function FOS_SSHPortbufferShowInfo {
             $FOS_PortBuff.Distance = ($FOS_thisLine |Select-String -Pattern '\d\s+(\d+|-)\s+(\d+km|\<\d+km|-)' -AllMatches).Matches.Groups.Value[2]
             # The remaining (unallocated) buffers available for allocation in this group.
             $FOS_PortBuff.Buffer = ($FOS_thisLine |Select-String -Pattern '\s+(\d+)$' -AllMatches).Matches.Groups.Value[1]
-            
+            $FOS_PortBuff.SwitchWWNN = $SANSwitchIdent.SwitchWWNN
+            $FOS_PortBuff.SerialNumber = $SANSwitchIdent.SerialNumber
             <# add the values to the array #>
             $FOS_PortBuff
 
