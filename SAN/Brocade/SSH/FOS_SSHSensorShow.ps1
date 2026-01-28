@@ -8,7 +8,6 @@ function FOS_SSHSensorShow {
         [string]$TD_Device_DeviceName,
         [string]$TD_Device_DeviceIP,
         [string]$TD_Device_PW,
-        [string]$TD_Device_SSHKeyPath,
         [Parameter(ValueFromPipeline)]
         [ValidateSet("yes","no")]
         [string]$TD_Export = "yes",
@@ -20,6 +19,7 @@ function FOS_SSHSensorShow {
         Write-Debug -Message "Start Func FOS_SensorShow |$(Get-Date)` "
         <# suppresses error messages #>
         $ErrorActionPreference="SilentlyContinue"
+        $FOS_SensorShow =[ordered]@{}
         #[int]$ProgCounter=0
         $ProgressBar = New-ProgressBar
         <# Connect to Device and get all needed Data #>
@@ -28,12 +28,20 @@ function FOS_SSHSensorShow {
         }else {
             $FOS_SensorInformations = plink $TD_Device_UserName@$TD_Device_DeviceIP -pw $TD_Device_PW -batch 'sensorshow'
         }
+
+        $SANSwitchIdent = FOS_SSHSwitchIdent -TD_Device_UserName $TD_Device_UserName -TD_Device_DeviceIP $TD_Device_DeviceIP -TD_Device_PW $TD_Device_PW
+        
     }
     
     process {
         <# int for the progressbar #>
         Write-ProgressBar -ProgressBar $ProgressBar -Activity "Collect data for Device $($TD_Line_ID) $($TD_Device_DeviceName)" -PercentComplete ((10/50) * 100)
         Start-Sleep -Seconds 0.5;
+        $FOS_SensorShow.Add('RowID',"$($TD_Device_UserName.count)|$TD_Line_ID")
+        $FOS_SensorShow.Add('DeviceName',$TD_Device_DeviceName)
+        $FOS_SensorShow.Add('SensorShowInfo',$FOS_SensorInformations)
+        $FOS_SensorShow.Add('SwitchWWNN',$($SANSwitchIdent.SwitchWWNN))
+        $FOS_SensorShow.Add('SerialNumber',$($SANSwitchIdent.SerialNumber))
     }
     
     end {
@@ -48,9 +56,9 @@ function FOS_SSHSensorShow {
             }
         }else {
             <# output on the promt #>
-            return $FOS_SensorInformations
+            return $FOS_SensorShow
         }
         Close-ProgressBar -ProgressBar $ProgressBar
-        return $FOS_SensorInformations
+        return $FOS_SensorShow
     }
 }
