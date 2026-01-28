@@ -48,9 +48,8 @@ function FOS_SSHPortErrShowInfos {
             Write-Debug -Message "plink |$(Get-Date)"
             $FOS_MainInformation = plink $TD_Device_UserName@$TD_Device_DeviceIP -pw $TD_Device_PW -batch "porterrshow"
         }
-        <# next line one for testing #>
-        #$FOS_MainInformation = Get-Content -Path "C:\Users\mailt\Documents\poerteershow2.txt"
-        #Out-File -FilePath $Env:TEMP\$($TD_Line_ID)_PortErrShow_Temp.txt -InputObject $FOS_MainInformation
+
+        $SANSwitchIdent = FOS_SSHSwitchIdent -TD_Device_UserName $TD_Device_UserName -TD_Device_DeviceIP $TD_Device_DeviceIP -TD_Device_PW $TD_Device_PW
 
         $FOS_InfoCount = $FOS_MainInformation.count
         0..$FOS_InfoCount |ForEach-Object {
@@ -60,16 +59,17 @@ function FOS_SSHPortErrShowInfos {
                 $FOS_perrsh_temp = $FOS_advInfoTemp |Select-Object -Skip 2   
             }
         }
+        $SwitchShowRowID = "$($SANSwitchIdent.SwitchWWNN)|$($TD_Line_ID)"
     }
     process{
         $FOS_PortErrShowfiltered = foreach ($FOS_port in $FOS_perrsh_temp){
             
             # create a var and pipe some objects in
-            $FOS_PortErr = "" | Select-Object Port,frames_tx,frames_rx,enc_in,crc_err,crc_g_eof,too_short,too_long,bad_eof,enc_out,disc_c3,link_fail,loss_sync,loss_sig,f_rejected,f_busied,c3timeout_tx,c3timeout_rx,psc_err,uncor_err
+            $FOS_PortErr = "" | Select-Object Port,frames_tx,frames_rx,enc_in,crc_err,crc_g_eof,too_short,too_long,bad_eof,enc_out,disc_c3,link_fail,loss_sync,loss_sig,f_rejected,f_busied,c3timeout_tx,c3timeout_rx,psc_err,uncor_err,SwitchWWNN,SerialNumber,RowID
             
             # select the ports
             [Int16]$FOS_PortErr.Port = (($FOS_port |Select-String -Pattern '(\d+:)' -AllMatches).Matches.Value).Trim(':')
-            
+            $FOS_PortErr.RowID = $SwitchShowRowID
             # check if the port is "active", if it is fill the objects
             #foreach($FOS_usedPortstemp in $FOS_GetUsedPorts){
                 # take only used Ports in the array
@@ -113,6 +113,8 @@ function FOS_SSHPortErrShowInfos {
                     # The number of uncorrectable forward error corrections (FEC).
                     $FOS_PortErr.uncor_err = (($FOS_port |Select-String -Pattern '(\d+\.\d\w|\d+)' -AllMatches).Matches.Value[19])
                     # Put Line by Line into the array
+                    $FOS_PortErr.SwitchWWNN = $SANSwitchIdent.SwitchWWNN
+                    $FOS_PortErr.SerialNumber = $SANSwitchIdent.SerialNumber
                     $FOS_PortErr
                 #}
             #}
