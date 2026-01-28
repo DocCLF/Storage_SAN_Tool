@@ -26,36 +26,27 @@ function FOS_SSHPortLicenseShowInfo {
         [string]$TD_Export = "yes",
         [string]$TD_Exportpath,
         [string]$TD_RefreshView,
-        [string]$TD_FOSVersion = $TD_cb_FOS_Version.Text
+        [string]$TD_FOSVersion = "FOS 9.1"
     )
     
     begin{
         $ErrorActionPreference="SilentlyContinue"
         Write-Debug -Message "FOS_PortLicenseShow Begin block |$(Get-Date)"
-
+        $FOS_LicenseInfos =[ordered]@{}
         <# int for the progressbar #>
         [int]$ProgCounter=0
         $ProgressBar = New-ProgressBar
 
-        if($TD_Device_ConnectionTyp -eq "ssh"){
-           Write-Debug -Message "ssh |$(Get-Date)"
-           if($TD_FOSVersion -like "FOS 9*"){
-                <# Improved Command for more details #>
-              $FOS_PortLicenseInfo = ssh -i $($TD_Device_SSHKeyPath) $TD_Device_UserName@$TD_Device_DeviceIP "license --show && license --show -port"
-           }else {
-              $FOS_PortLicenseInfo = ssh -i $($TD_Device_SSHKeyPath) $TD_Device_UserName@$TD_Device_DeviceIP "licenseShow"
-           }
-        }else {
-            Write-Debug -Message "plink |$(Get-Date)"
+
            if($TD_FOSVersion -like "FOS 9*"){
               $FOS_PortLicenseInfo = plink $TD_Device_UserName@$TD_Device_DeviceIP -pw $TD_Device_PW -batch "license --show && license --show -port"
            }else {
               $FOS_PortLicenseInfo = plink $TD_Device_UserName@$TD_Device_DeviceIP -pw $TD_Device_PW -batch "licenseShow"
            }
-        }
-        <# next line one for testing #>
-        #$FOS_PortLicenseInfo = Get-Content -Path "C:\Users\mailt\Documents\0.txt"
-        #Out-File -FilePath $Env:TEMP\$($TD_Line_ID)_PortLicenseShow_Temp.txt -InputObject $FOS_MainInformation
+        
+
+        <# need to impl. #>
+        $SANSwitchIdent = FOS_SSHSwitchIdent -TD_Device_UserName $TD_Device_UserName -TD_Device_DeviceIP $TD_Device_DeviceIP -TD_Device_PW $TD_Device_PW
 
     }
 
@@ -70,6 +61,11 @@ function FOS_SSHPortLicenseShowInfo {
             $ProgCounter++
             Write-ProgressBar -ProgressBar $ProgressBar -Activity "Collect data for Device $($TD_Line_ID) $($TD_Device_DeviceName)" -PercentComplete (($ProgCounter/$FOS_PortLicenseInfo.Count) * 100)
         }  
+        $FOS_LicenseInfos.Add('RowID',"$($TD_Device_UserName.count)|$TD_Line_ID")
+        $FOS_LicenseInfos.Add('DeviceName',$TD_Device_DeviceName)
+        $FOS_LicenseInfos.Add('LicenseInfo',$TD_Resaults)
+        $FOS_LicenseInfos.Add('SwitchWWNN',$($SANSwitchIdent.SwitchWWNN))
+        $FOS_LicenseInfos.Add('SerialNumber',$($SANSwitchIdent.SerialNumber))
     }
     end {
         
@@ -87,10 +83,10 @@ function FOS_SSHPortLicenseShowInfo {
             }
         }else {
             <# output on the promt #>
-            return $TD_Resaults
+            return $FOS_LicenseInfos
         }
 
-        return $TD_Resaults 
+        return $FOS_LicenseInfos 
 
         <# Cleanup all TD* Vars #>
         Clear-Variable FOS* -Scope Global
