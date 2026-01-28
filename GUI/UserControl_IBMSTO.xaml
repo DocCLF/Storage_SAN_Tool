@@ -963,7 +963,7 @@
                       Style="{DynamicResource ShowWhenDumpInfo}">
           <ItemsControl.ItemsPanel>
             <ItemsPanelTemplate>
-              <StackPanel/>
+              <WrapPanel/>
             </ItemsPanelTemplate>
           </ItemsControl.ItemsPanel>
 
@@ -991,7 +991,7 @@
                       Style="{DynamicResource ShowWhenBackUpInfo}">
           <ItemsControl.ItemsPanel>
             <ItemsPanelTemplate>
-              <StackPanel/>
+              <WrapPanel />
             </ItemsPanelTemplate>
           </ItemsControl.ItemsPanel>
 
