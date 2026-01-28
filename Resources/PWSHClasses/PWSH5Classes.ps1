@@ -122,6 +122,11 @@ public class DeviceToggle : INotifyPropertyChanged
     private ObservableCollection<object> _fCPortRows;
     private ObservableCollection<object> _fCPortStatsRows;
     private ObservableCollection<object> _sANSwitchBaseRows;
+    private ObservableCollection<object> _sANSwitchShowRows;
+    private ObservableCollection<object> _sANPortbufferShowRows;
+    private ObservableCollection<object> _sANPortErrorShowRows;
+    private ObservableCollection<object> _sANSFPDetailsRows;
+    private ObservableCollection<object> _sANZoneDetailsRows;
 
     // === NEU: DumpInfo ===
     private ObservableCollection<object> _dumpInfoRows;
@@ -130,6 +135,12 @@ public class DeviceToggle : INotifyPropertyChanged
     private ObservableCollection<object> _backUpInfoRows;
     private string _backUpInfoTitle;
     private string _backUpInfoText;
+    private ObservableCollection<object> _licenseInfoRows;
+    private string _licenseInfoTitle;
+    private string _licenseInfoText;
+    private ObservableCollection<object> _sensorShowRows;
+    private string _sensorShowTitle;
+    private string _sensorShowText;
 
     public DeviceToggle()
     {
@@ -145,6 +156,11 @@ public class DeviceToggle : INotifyPropertyChanged
         _fCPortRows = new ObservableCollection<object>();
         _fCPortStatsRows = new ObservableCollection<object>();
         _sANSwitchBaseRows = new ObservableCollection<object>();
+        _sANSwitchShowRows = new ObservableCollection<object>();
+        _sANPortbufferShowRows = new ObservableCollection<object>();
+        _sANPortErrorShowRows = new ObservableCollection<object>();
+        _sANSFPDetailsRows = new ObservableCollection<object>();
+        _sANZoneDetailsRows = new ObservableCollection<object>();
 
         // NEU
         _dumpInfoRows = new ObservableCollection<object>();
@@ -153,6 +169,12 @@ public class DeviceToggle : INotifyPropertyChanged
         _backUpInfoRows = new ObservableCollection<object>();
         _backUpInfoTitle = "";
         _backUpInfoText = "";
+        _licenseInfoRows = new ObservableCollection<object>();
+        _licenseInfoTitle = "";
+        _licenseInfoText = "";
+        _sensorShowRows = new ObservableCollection<object>();
+        _sensorShowTitle = "";
+        _sensorShowText = "";
     }
 
     public string Id { get; set; }
@@ -170,12 +192,31 @@ public class DeviceToggle : INotifyPropertyChanged
     public ObservableCollection<object> FCPortRows { get { return _fCPortRows; } }
     public ObservableCollection<object> FCPortStatsRows { get { return _fCPortStatsRows; } }
     public ObservableCollection<object> SANSwitchBaseRows { get { return _sANSwitchBaseRows; } }
+    public ObservableCollection<object> SANSwitchShowRows { get { return _sANSwitchShowRows; } }
+    public ObservableCollection<object> SANPortbufferShowRows { get { return _sANPortbufferShowRows; } }
+    public ObservableCollection<object> SANPortErrorShowRows { get { return _sANPortErrorShowRows; } }
+    public ObservableCollection<object> SANSFPDetailsRows { get { return _sANSFPDetailsRows; } }
+    public ObservableCollection<object> SANZoneDetailsRows { get { return _sANZoneDetailsRows; } }
 
 
     public ObservableCollection<object> DumpInfoRows { get { return _dumpInfoRows; } }
     public ObservableCollection<object> BackUpInfoRows { get { return _backUpInfoRows; } }
+    public ObservableCollection<object> LicenseInfoRows { get { return _licenseInfoRows; } }
+    public ObservableCollection<object> SensorShowRows { get { return _sensorShowRows; } }
 
     // === NEU: dynamische Headline ===
+    public string SensorShowTitle
+    {
+        get { return _sensorShowTitle; }
+        set
+        {
+            if (_sensorShowTitle != value)
+            {
+                _sensorShowTitle = value;
+                OnPropertyChanged("SensorShowTitle");
+            }
+        }
+    }
     public string DumpInfoTitle
     {
         get { return _dumpInfoTitle; }
@@ -200,8 +241,33 @@ public class DeviceToggle : INotifyPropertyChanged
             }
         }
     }
+    public string LicenseInfoTitle
+    {
+        get { return _licenseInfoTitle; }
+        set
+        {
+            if (_licenseInfoTitle != value)
+            {
+                _licenseInfoTitle = value;
+                OnPropertyChanged("LicenseInfoTitle");
+            }
+        }
+    }
 
     // === NEU: Text für TextBlock ===
+    public string SensorShowText
+    {
+        get { return _sensorShowText; }
+        set
+        {
+            if (_sensorShowText != value)
+            {
+                _sensorShowText = value;
+                OnPropertyChanged("SensorShowText");
+            }
+        }
+    }
+
     public string DumpInfoText
     {
         get { return _dumpInfoText; }
@@ -211,6 +277,19 @@ public class DeviceToggle : INotifyPropertyChanged
             {
                 _dumpInfoText = value;
                 OnPropertyChanged("DumpInfoText");
+            }
+        }
+    }
+
+    public string LicenseInfoText
+    {
+        get { return _licenseInfoText; }
+        set
+        {
+            if (_licenseInfoText != value)
+            {
+                _licenseInfoText = value;
+                OnPropertyChanged("LicenseInfoText");
             }
         }
     }
