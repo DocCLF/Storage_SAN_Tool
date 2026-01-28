@@ -84,11 +84,45 @@ public class DeviceToggle : INotifyPropertyChanged
     public ObservableCollection<object> FCPortRows { get; } = new ObservableCollection<object>();
     public ObservableCollection<object> FCPortStatsRows { get; } = new ObservableCollection<object>();
     public ObservableCollection<object> SANSwitchBaseRows { get; } = new ObservableCollection<object>();
+    public ObservableCollection<object> SANSwitchShowRows { get; } = new ObservableCollection<object>();
+    public ObservableCollection<object> SANPortbufferShowRows { get; } = new ObservableCollection<object>();
+    public ObservableCollection<object> SANPortErrorShowRows { get; } = new ObservableCollection<object>();
+    public ObservableCollection<object> SANSFPDetailsRows { get; } = new ObservableCollection<object>();
+    public ObservableCollection<object> SANZoneDetailsRows { get; } = new ObservableCollection<object>();
 
     public ObservableCollection<object> DumpInfoRows { get; } = new ObservableCollection<object>();
     public ObservableCollection<object> BackUpInfoRows { get; } = new ObservableCollection<object>();
+    public ObservableCollection<object> LicenseInfoRows { get; } = new ObservableCollection<object>();
+    public ObservableCollection<object> SensorShowRows { get; } = new ObservableCollection<object>();
 
     // === NEU: Headline + Text für Lösung 1 ===
+    private string _sensorShowTitle;
+    public string SensorShowTitle
+    {
+        get { return _sensorShowTitle; }
+        set
+        {
+            if (_sensorShowTitle != value)
+            {
+                _sensorShowTitle = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SensorShowTitle)));
+            }
+        }
+    }
+
+    private string _sensorShowText;
+    public string SensorShowText
+    {
+        get { return _sensorShowText; }
+        set
+        {
+            if (_sensorShowText != value)
+            {
+                _sensorShowText = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SensorShowText)));
+            }
+        }
+    }
     private string _dumpInfoTitle;
     public string DumpInfoTitle
     {
@@ -140,6 +174,34 @@ public class DeviceToggle : INotifyPropertyChanged
             {
                 _backUpInfoText = value;
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(BackUpInfoText)));
+            }
+        }
+    }
+
+   private string _licenseInfoTitle;
+    public string LicenseInfoTitle
+    {
+        get { return _licenseInfoTitle; }
+        set
+        {
+            if (_licenseInfoTitle != value)
+            {
+                _licenseInfoTitle = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(LicenseInfoTitle)));
+            }
+        }
+    }
+
+    private string _licenseInfoText;
+    public string LicenseInfoText
+    {
+        get { return _licenseInfoText; }
+        set
+        {
+            if (_licenseInfoText != value)
+            {
+                _licenseInfoText = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(LicenseInfoText)));
             }
         }
     }
