@@ -47,9 +47,8 @@ function FOS_SSHSwitchShowInfo {
         }else {
             $FOS_MainInformation = plink $TD_Device_UserName@$TD_Device_DeviceIP -pw $TD_Device_PW -batch "switchshow"
         }
-        <# next line one for testing #>
-        #$FOS_MainInformation = Get-Content -Path "C:\Users\mailt\Documents\swsh.txt"
-        #Out-File -FilePath $Env:TEMP\$($TD_Line_ID)_SwitchShow_Temp.txt -InputObject $FOS_MainInformation
+
+        $SANSwitchIdent = FOS_SSHSwitchIdent -TD_Device_UserName $TD_Device_UserName -TD_Device_DeviceIP $TD_Device_DeviceIP -TD_Device_PW $TD_Device_PW
         
         $FOS_InfoCount = $FOS_MainInformation.count
         Write-Debug -Message "Number of Lines: $FOS_InfoCount "
@@ -61,6 +60,7 @@ function FOS_SSHSwitchShowInfo {
                 $FOS_SwShowArry_temp = $FOS_SWShowTemp |Select-Object -Skip 2   
             }
         }
+        $SwitchShowRowID = "$($SANSwitchIdent.SwitchWWNN)|$($TD_Line_ID)"
     }
     
     process {
@@ -78,7 +78,10 @@ function FOS_SSHSwitchShowInfo {
             # Build the Portsection of switchshow
             if($FOS_linebyLine -match '^\s+\d+'){   # (\d+\.\d\w|\d+)
                 $PortStateInfo = $null
-                $FOS_SWsh = "" | Select-Object Index,Port,Address,Media,Speed,State,Proto,PortConnect,SwitchWWN,PortStateInfo
+                $FOS_SWsh = "" | Select-Object Index,Port,Address,Media,Speed,State,Proto,PortConnect,SwitchWWN,PortStateInfo,SwitchWWNN,SerialNumber,RowID
+                $FOS_SWsh.SwitchWWNN = $SANSwitchIdent.SwitchWWNN
+                $FOS_SWsh.SerialNumber = $SANSwitchIdent.SerialNumber
+                $FOS_SWsh.RowID = $SwitchShowRowID
                 $FOS_SWsh.SwitchWWN = $FOS_switchWwn
                 <# Port index is a number between 0 and the maximum number of supported ports on the platform. The port index identifies the port number relative to the switch. #>
                 $FOS_SWsh.Index = ($FOS_linebyLine |Select-String -Pattern '^\s+(\d+)' -AllMatches).Matches.Groups.Value[1]
@@ -107,52 +110,26 @@ function FOS_SSHSwitchShowInfo {
                 }
                 
                 if($FOS_SWsh.PortConnect -like "*NPIV*"){
-                    if($FOS_SWsh.Address -ne "virtuell"){
-                        $PortStateInfo = SST_FOSDBFunc -SwitchWWN $FOS_switchWwn -SwitchPort $FOS_SWshPort -SwitchPortState $FOS_SWshState
-                        if(!([string]::IsNullOrWhiteSpace($PortStateInfo))){
-                            $FOS_SWsh.PortStateInfo = $PortStateInfo
-                        }
-                    }
+
                     $FOS_SwBasicPortDetails += $FOS_SWsh
                     <# need a better way to connect #>
-                    if($TD_Device_ConnectionTyp -eq "ssh"){
-                        $FOS_MainInformation = ssh -i $($TD_Device_SSHKeyPath) $TD_Device_UserName@$TD_Device_DeviceIP "portshow $($FOS_SWsh.Port)"
-                        foreach($FOS_PortConnect_Info in $FOS_PortConnect_Infos){
-                            $FOS_NPIV_Info = ($FOS_PortConnect_Info |Select-String -Pattern '^\s+(([0-9a-f]{2}:){7}[0-9a-f]{2})' -AllMatches).Matches.Groups.Value[1]
-                            if($FOS_NPIV_Info -ne $FOS_NPIV_Info_temp){
-                                $FOS_SWsh = "" | Select-Object Index,Port,Address,Media,Speed,State,Proto,PortConnect
-                                $FOS_SWsh.Index = $FOS_SWshIndex
-                                $FOS_SWsh.Port = $FOS_SWshPort
-                                $FOS_SWsh.Address = "virtuell"
-                                $FOS_SWsh.State = $FOS_SWshState
-                                $FOS_SWsh.PortConnect = $FOS_NPIV_Info
-                                $FOS_NPIV_Info_temp = $FOS_NPIV_Info
-                                $FOS_SwBasicPortDetails += $FOS_SWsh
-                            }
-                        }
-                    }else {
-                        $FOS_PortConnect_Infos = plink $TD_Device_UserName@$TD_Device_DeviceIP -pw $TD_Device_PW -batch "portshow $($FOS_SWsh.Port)"
-                        foreach($FOS_PortConnect_Info in $FOS_PortConnect_Infos){
-                            $FOS_NPIV_Info = ($FOS_PortConnect_Info |Select-String -Pattern '^\s+(([0-9a-f]{2}:){7}[0-9a-f]{2})' -AllMatches).Matches.Groups.Value[1]
-                            if($FOS_NPIV_Info -ne $FOS_NPIV_Info_temp){
-                                $FOS_SWsh = "" | Select-Object Index,Port,Address,Media,Speed,State,Proto,PortConnect
-                                $FOS_SWsh.Index = $FOS_SWshIndex
-                                $FOS_SWsh.Port = $FOS_SWshPort
-                                $FOS_SWsh.Address = "virtuell"
-                                $FOS_SWsh.State = $FOS_SWshState
-                                $FOS_SWsh.PortConnect = $FOS_NPIV_Info
-                                $FOS_NPIV_Info_temp = $FOS_NPIV_Info
-                                $FOS_SwBasicPortDetails += $FOS_SWsh
-                            }
+                    $FOS_PortConnect_Infos = plink $TD_Device_UserName@$TD_Device_DeviceIP -pw $TD_Device_PW -batch "portshow $($FOS_SWsh.Port)"
+                    foreach($FOS_PortConnect_Info in $FOS_PortConnect_Infos){
+                        $FOS_NPIV_Info = ($FOS_PortConnect_Info |Select-String -Pattern '^\s+(([0-9a-f]{2}:){7}[0-9a-f]{2})' -AllMatches).Matches.Groups.Value[1]
+                        if($FOS_NPIV_Info -ne $FOS_NPIV_Info_temp){
+                            $FOS_SWsh = "" | Select-Object Index,Port,Address,Media,Speed,State,Proto,PortConnect,RowID
+                            $FOS_SWsh.RowID = $SwitchShowRowID
+                            $FOS_SWsh.Index = $FOS_SWshIndex
+                            $FOS_SWsh.Port = $FOS_SWshPort
+                            $FOS_SWsh.Address = "virtuell"
+                            $FOS_SWsh.State = $FOS_SWshState
+                            $FOS_SWsh.PortConnect = $FOS_NPIV_Info
+                            $FOS_NPIV_Info_temp = $FOS_NPIV_Info
+                            $FOS_SwBasicPortDetails += $FOS_SWsh
                         }
                     }
+                    
                 }else{
-                    if($FOS_SWsh.Address -ne "virtuell"){
-                        $PortStateInfo = SST_FOSDBFunc -SwitchWWN $FOS_switchWwn -SwitchPort $FOS_SWshPort -SwitchPortState $FOS_SWshState
-                        if(!([string]::IsNullOrWhiteSpace($PortStateInfo))){
-                            $FOS_SWsh.PortStateInfo = $PortStateInfo
-                        }
-                    }
                    $FOS_SwBasicPortDetails += $FOS_SWsh
                 }
 
