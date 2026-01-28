@@ -42,6 +42,10 @@ function FOS_SSHZoneDetails  {
             $FOS_MainInformation = plink $TD_Device_UserName@$TD_Device_DeviceIP -pw $TD_Device_PW -batch 'zoneshow'
         }
 
+        $SANSwitchIdent = FOS_SSHSwitchIdent -TD_Device_UserName $TD_Device_UserName -TD_Device_DeviceIP $TD_Device_DeviceIP -TD_Device_PW $TD_Device_PW
+
+        $SwitchShowRowID = "$($SANSwitchIdent.SwitchWWNN)|$($TD_Line_ID)"
+
         $FOS_ZoneCount = $FOS_MainInformation.count
         0..$FOS_ZoneCount |ForEach-Object {
             # Pull only the effective ZoneCFG back into ZoneList
@@ -66,7 +70,7 @@ function FOS_SSHZoneDetails  {
         $FOS_ConfigName = $FOS_ConfigName.Trim()
         # Remove the first 2 Rows because we don't needed any more
         $FOS_EffectiveZoneList = $FOS_EffectiveZoneList |Select-Object -Skip 2
-        
+
         SST_ToolMessageCollector -TD_ToolMSGCollector "`nZoneName: $FOS_ConfigName,`nDefinedZoneCount: $($FOS_DefinedZoneList.Count) " -TD_Shown yes
         
     }
@@ -79,7 +83,8 @@ function FOS_SSHZoneDetails  {
         if(($FOS_EffectiveZoneList.count) -ge 4){
             #Create PowerShell Objects out of the Aliases
             [array]$FOS_ZoneCollection = foreach ($FOS_Zone in $FOS_EffectiveZoneList) {
-                $FOS_TempCollection = "" | Select-Object Zone,WWPN,Alias
+                $FOS_TempCollection = "" | Select-Object Zone,WWPN,Alias,SwitchWWNN,SerialNumber,RowID
+                
                 # Get the ZoneName
                 if(Select-String -InputObject $FOS_Zone -Pattern '^ zone:\s+(.*)'){
                     $FOS_ZoneName = Select-String -InputObject $FOS_Zone -Pattern '^ zone:\s+(.*)' |ForEach-Object {$_.Matches.Groups[1].Value}
@@ -107,6 +112,9 @@ function FOS_SSHZoneDetails  {
                     }
                 }
                 if(-Not (([string]::IsNullOrEmpty($FOS_TempCollection.Zone)) -and ([string]::IsNullOrEmpty($FOS_TempCollection.WWPN)) -and ([string]::IsNullOrEmpty($FOS_TempCollection.Alias)))){
+                    $FOS_TempCollection.RowID = $SwitchShowRowID
+                    $FOS_TempCollection.SwitchWWNN = $SANSwitchIdent.SwitchWWNN
+                    $FOS_TempCollection.SerialNumber = $SANSwitchIdent.SerialNumber
                     $FOS_TempCollection
                 }
             <# Progressbar  #>
