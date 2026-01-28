@@ -153,6 +153,11 @@ $TD_BTN_IBMSpectrVirt.add_click({
     $TD_LB_ExpPathMainWindow.Content ="Export Path: $($TD_tb_ExportPath.Text)"
     SST_ShowUserControl -MainWindowArea $TD_UserContrArea -ShowUserControl $TD_UserControl_IBMSTO -AllUserControls $TD_AllUserControls
     if($TD_LogoImageSmall.Visibility -eq "hidden"){$TD_LogoImageSmall.Visibility = "visible"}
+    $UCDataContext = $TD_UserControl_IBMSTO.DataContext
+    <# if there is a DataContext find th Main Part und put it into UCVMMain#>
+    $UCVMMain = $UCDataContext.Main
+    <# if there a something in, its better to clean it up befor we use it again #>
+    $UCVMMain.DeviceToggles.Clear()
 })
 $TD_BTN_PowerBoard.add_click({
     $TD_LB_ExpPathMainWindow.Content ="Export Path: $($TD_tb_ExportPath.Text)"
@@ -168,6 +173,11 @@ $TD_BTN_BrocSAN.add_click({
     $TD_LB_ExpPathMainWindow.Content ="Export Path: $($TD_tb_ExportPath.Text)"
     SST_ShowUserControl -MainWindowArea $TD_UserContrArea -ShowUserControl $TD_UserControl_BRSAN -AllUserControls $TD_AllUserControls
     if($TD_LogoImageSmall.Visibility -eq "hidden"){$TD_LogoImageSmall.Visibility = "visible"}
+    $UCDataContext = $TD_UserControl_BRSAN.DataContext
+    <# if there is a DataContext find th Main Part und put it into UCVMMain#>
+    $UCVMMain = $UCDataContext.Main
+    <# if there a something in, its better to clean it up befor we use it again #>
+    $UCVMMain.DeviceToggles.Clear()
 })
 $TD_BTN_STOSANHealth.add_click({
     $TD_LB_ExpPathMainWindow.Content ="Export Path: $($TD_tb_ExportPath.Text)"
@@ -382,8 +392,8 @@ $TD_BTN_IBM_BaseStorageInfo.add_click({
         Add-MappedRows -Collection $dev.IPQuorumRows -Source $ipqResult -IdProperty 'RowID' -Map $mapIPQuorum
 
         $UCVMMain.DeviceToggles.Add($dev)
-        $UCVMMain.SelectedView = "Base"
     }
+    $UCVMMain.SelectedView = "Base"
 })
 $TD_BTN_IBM_Eventlog.add_click({
     <#Get all Device Cred and count them #>
@@ -414,8 +424,8 @@ $TD_BTN_IBM_Eventlog.add_click({
         Add-MappedRows -Collection $FunctionResult.DeviceIdent.EventRows -Source $FunctionResult.FuncResult -IdProperty 'RowID' -Map $mapStorageEvents
 
         $UCVMMain.DeviceToggles.Add($FunctionResult.DeviceIdent)
-        $UCVMMain.SelectedView = "Events"
     }
+    $UCVMMain.SelectedView = "Events"
 })
 $TD_BTN_IBM_CatAuditLog.add_click({
     <#Get all Device Cred and count them #>
@@ -448,8 +458,8 @@ $TD_BTN_IBM_CatAuditLog.add_click({
         Add-MappedRows -Collection $FunctionResult.DeviceIdent.AuditLogRows -Source $FunctionResult.FuncResult -IdProperty 'RowID' -Map $mapCatAuditLog
 
         $UCVMMain.DeviceToggles.Add($FunctionResult.DeviceIdent)
-        $UCVMMain.SelectedView = "CatAuditLog"
     }
+    $UCVMMain.SelectedView = "CatAuditLog"
 })
 $TD_BTN_IBM_HostVolumeMap.add_click({
     <#Get all Device Cred and count them #>
@@ -480,8 +490,8 @@ $TD_BTN_IBM_HostVolumeMap.add_click({
         Add-MappedRows -Collection $FunctionResult.DeviceIdent.HostVolumeMapRows -Source $FunctionResult.FuncResult -IdProperty 'RowID' -Map $mapHostVolumeMap
 
         $UCVMMain.DeviceToggles.Add($FunctionResult.DeviceIdent)
-        $UCVMMain.SelectedView = "HostVolumeMap"
     }
+    $UCVMMain.SelectedView = "HostVolumeMap"
 })
 $TD_BTN_IBM_HostInfo.add_click({
     <#Get all Device Cred and count them #>
@@ -533,8 +543,8 @@ $TD_BTN_IBM_HostInfo.add_click({
         Add-MappedRows -Collection $FunctionResult.DeviceIdent.HostRows -Source $FunctionResult.FuncResult -IdProperty 'RowID' -Map $mapHost
 
         $UCVMMain.DeviceToggles.Add($FunctionResult.DeviceIdent)
-        $UCVMMain.SelectedView = "HostMap"
     }
+    $UCVMMain.SelectedView = "HostMap"
 })
 $TD_BTN_IBM_PoolVolumeInfo.add_click({
     <#Get all Device Cred and count them #>
@@ -773,7 +783,7 @@ $TD_BTN_FOS_BasicSwitchInfo.add_click({
 
     $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource | Where-Object { $_.DeviceTyp -eq "SAN" }
 
-    $UCDataContext = $TD_UserControl_IBMSTO.DataContext
+    $UCDataContext = $TD_UserControl_BRSAN.DataContext
     if (-not $UCDataContext) { Write-Host "DataContext ist NULL!" -ForegroundColor Red; return }
 
     $UCVMMain = $UCDataContext.Main
@@ -817,7 +827,229 @@ $TD_BTN_FOS_BasicSwitchInfo.add_click({
 
     $UCVMMain.SelectedView = "SANSwitchBase"
 })
+$TD_BTN_FOS_SwitchShow.add_click({
+    <#Get all Device Cred and count them #>
+    $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_.DeviceTyp -eq "SAN"}
+    <# get the DataConteext of the current View/ means UC and if its nul trow an error #>
+    $UCDataContext = $TD_UserControl_BRSAN.DataContext
+    if (-not $UCDataContext) { Write-Host "DataContext ist NULL!" -ForegroundColor Red; return }
+    <# if there is a DataContext find th Main Part und put it into UCVMMain#>
+    $UCVMMain = $UCDataContext.Main
+    <# if there a something in, its better to clean it up befor we use it again #>
+    $UCVMMain.DeviceToggles.Clear()
+    foreach($TD_Creds in $TD_Credentials){
+        $FunctionResult = New-DeviceBlock -Device $TD_Creds -ExportPath $TD_tb_ExportPath.Text -SSHFunc FOS_SSHSwitchShowInfo
+        # Links = Propertyname im PSCustomObject (das bindet dein XAML)
+        # Rechts = Propertyname im Source-Objekt
+        $mapSwitchShowInfo = @{ 
+            Index           = 'Index'
+            Port            = 'Port'
+            Address         = 'Address'
+            Media           = 'Media'
+            Speed           = 'Speed'
+            State           = 'State'
+            Proto           = 'Proto'
+            PortConnect     = 'PortConnect'
+            PortStateInfo   = 'PortStateInfo'
+        }
+        Add-MappedRows -Collection $FunctionResult.DeviceIdent.SANSwitchShowRows -Source $FunctionResult.FuncResult -IdProperty 'RowID' -Map $mapSwitchShowInfo
 
+        $UCVMMain.DeviceToggles.Add($FunctionResult.DeviceIdent)
+    }
+    $UCVMMain.SelectedView = "SANSwitchShow"
+})
+$TD_BTN_FOS_PortBufferShow.add_click({
+    <#Get all Device Cred and count them #>
+    $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_.DeviceTyp -eq "SAN"}
+    <# get the DataConteext of the current View/ means UC and if its nul trow an error #>
+    $UCDataContext = $TD_UserControl_BRSAN.DataContext
+    if (-not $UCDataContext) { Write-Host "DataContext ist NULL!" -ForegroundColor Red; return }
+    <# if there is a DataContext find th Main Part und put it into UCVMMain#>
+    $UCVMMain = $UCDataContext.Main
+    <# if there a something in, its better to clean it up befor we use it again #>
+    $UCVMMain.DeviceToggles.Clear()
+    foreach($TD_Creds in $TD_Credentials){
+        $FunctionResult = New-DeviceBlock -Device $TD_Creds -ExportPath $TD_tb_ExportPath.Text -SSHFunc FOS_SSHPortbufferShowInfo
+        # Links = Propertyname im PSCustomObject (das bindet dein XAML)
+        # Rechts = Propertyname im Source-Objekt
+        $mapPortbufferShow = @{ 
+            Port        = 'Port'
+            Type        = 'Type'
+            Mode        = 'Mode'
+            Max_Resv    = 'Max_Resv'
+            Tx          = 'Tx'
+            Rx          = 'Rx'
+            Usage       = 'Usage'
+            Buffers     = 'Buffers'
+            Distance    = 'Distance'
+            Buffer      = 'Buffer'
+        }
+        Add-MappedRows -Collection $FunctionResult.DeviceIdent.SANPortbufferShowRows -Source $FunctionResult.FuncResult -IdProperty 'RowID' -Map $mapPortbufferShow
+
+        $UCVMMain.DeviceToggles.Add($FunctionResult.DeviceIdent)
+    }
+    $UCVMMain.SelectedView = "SANPortbufferShow"
+})
+$TD_BTN_FOS_PortErrorShow.add_click({
+    <#Get all Device Cred and count them #>
+    $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_.DeviceTyp -eq "SAN"}
+    <# get the DataConteext of the current View/ means UC and if its nul trow an error #>
+    $UCDataContext = $TD_UserControl_BRSAN.DataContext
+    if (-not $UCDataContext) { Write-Host "DataContext ist NULL!" -ForegroundColor Red; return }
+    <# if there is a DataContext find th Main Part und put it into UCVMMain#>
+    $UCVMMain = $UCDataContext.Main
+    <# if there a something in, its better to clean it up befor we use it again #>
+    $UCVMMain.DeviceToggles.Clear()
+    foreach($TD_Creds in $TD_Credentials){
+        $FunctionResult = New-DeviceBlock -Device $TD_Creds -ExportPath $TD_tb_ExportPath.Text -SSHFunc FOS_SSHPortErrShowInfos
+        # Links = Propertyname im PSCustomObject (das bindet dein XAML)
+        # Rechts = Propertyname im Source-Objekt
+        $mapPortErrorShow = @{ 
+            Port            = 'Port'
+            frames_tx       = 'frames_tx'
+            frames_rx       = 'frames_rx'
+            enc_in          = 'enc_in'
+            crc_err         = 'crc_err'
+            crc_g_eof       = 'crc_g_eof'
+            too_short       = 'too_short'
+            too_long        = 'too_long'
+            bad_eof         = 'bad_eof'
+            enc_out         = 'enc_out'
+            disc_c3         = 'disc_c3'
+            link_fail       = 'link_fail'
+            loss_sync       = 'loss_sync'
+            loss_sig        = 'loss_sig'
+            f_rejected      = 'f_rejected'
+            f_busied        = 'f_busied'
+            c3timeout_tx    = 'c3timeout_tx'
+            c3timeout_rx    = 'c3timeout_rx'
+            psc_err         = 'psc_err'
+            uncor_err       = 'uncor_err'
+        }
+        Add-MappedRows -Collection $FunctionResult.DeviceIdent.SANPortErrorShowRows -Source $FunctionResult.FuncResult -IdProperty 'RowID' -Map $mapPortErrorShow
+
+        $UCVMMain.DeviceToggles.Add($FunctionResult.DeviceIdent)
+    }
+    $UCVMMain.SelectedView = "SANPortErrorShow"
+})
+$TD_BTN_FOS_SFPHealthShow.add_click({
+    <#Get all Device Cred and count them #>
+    $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_.DeviceTyp -eq "SAN"}
+    <# get the DataConteext of the current View/ means UC and if its nul trow an error #>
+    $UCDataContext = $TD_UserControl_BRSAN.DataContext
+    if (-not $UCDataContext) { Write-Host "DataContext ist NULL!" -ForegroundColor Red; return }
+    <# if there is a DataContext find th Main Part und put it into UCVMMain#>
+    $UCVMMain = $UCDataContext.Main
+    <# if there a something in, its better to clean it up befor we use it again #>
+    $UCVMMain.DeviceToggles.Clear()
+    foreach($TD_Creds in $TD_Credentials){
+        $FunctionResult = New-DeviceBlock -Device $TD_Creds -ExportPath $TD_tb_ExportPath.Text -SSHFunc FOS_SSHSFPDetails
+        # Links = Propertyname im PSCustomObject (das bindet dein XAML)
+        # Rechts = Propertyname im Source-Objekt
+        $mapSFPDetails = @{ 
+            Port            = 'Port'
+            SFPUsed         = 'SFPUsed'
+            SFPTyp          = 'SFPTyp'
+            Vendor          = 'Vendor'
+            SerialNo        = 'SerialNo'
+            SpeedRange      = 'SpeedRange'
+            HealthStatus    = 'HealthStatus'
+        }
+        Add-MappedRows -Collection $FunctionResult.DeviceIdent.SANSFPDetailsRows -Source $FunctionResult.FuncResult -IdProperty 'RowID' -Map $mapSFPDetails
+
+        $UCVMMain.DeviceToggles.Add($FunctionResult.DeviceIdent)
+    }
+    $UCVMMain.SelectedView = "SANSFPDetails"
+})
+$TD_BTN_FOS_ZoneDetailsShow.add_click({
+    <#Get all Device Cred and count them #>
+    $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_.DeviceTyp -eq "SAN"}
+    <# get the DataConteext of the current View/ means UC and if its nul trow an error #>
+    $UCDataContext = $TD_UserControl_BRSAN.DataContext
+    if (-not $UCDataContext) { Write-Host "DataContext ist NULL!" -ForegroundColor Red; return }
+    <# if there is a DataContext find th Main Part und put it into UCVMMain#>
+    $UCVMMain = $UCDataContext.Main
+    <# if there a something in, its better to clean it up befor we use it again #>
+    $UCVMMain.DeviceToggles.Clear()
+    foreach($TD_Creds in $TD_Credentials){
+        $FunctionResult = New-DeviceBlock -Device $TD_Creds -ExportPath $TD_tb_ExportPath.Text -SSHFunc FOS_SSHZoneDetails
+        # Links = Propertyname im PSCustomObject (das bindet dein XAML)
+        # Rechts = Propertyname im Source-Objekt
+        $mapZoneDetails = @{ 
+            Zone    = 'Zone'
+            WWPN    = 'WWPN'
+            Alias   = 'Alias'
+        }
+        Add-MappedRows -Collection $FunctionResult.DeviceIdent.SANZoneDetailsRows -Source $FunctionResult.FuncResult -IdProperty 'RowID' -Map $mapZoneDetails
+
+        $UCVMMain.DeviceToggles.Add($FunctionResult.DeviceIdent)
+    }
+    $UCVMMain.SelectedView = "SANZoneDetails"
+})
+$TD_BTN_FOS_PortLicenseShow.add_click({
+    <#Get all Device Cred and count them #>
+    $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_.DeviceTyp -eq "SAN"}
+    <# get the DataConteext of the current View/ means UC and if its nul trow an error #>
+    $UCDataContext = $TD_UserControl_BRSAN.DataContext
+    if (-not $UCDataContext) { Write-Host "DataContext ist NULL!" -ForegroundColor Red; return }
+    <# if there is a DataContext find th Main Part und put it into UCVMMain#>
+    $UCVMMain = $UCDataContext.Main
+    <# if there a something in, its better to clean it up befor we use it again #>
+    $UCVMMain.DeviceToggles.Clear()
+    foreach($TD_Creds in $TD_Credentials){
+        $FunctionResult = New-DeviceBlock -Device $TD_Creds -ExportPath $TD_tb_ExportPath.Text -SSHFunc FOS_SSHPortLicenseShowInfo
+        # Links = Propertyname im PSCustomObject (das bindet dein XAML)
+        # Rechts = Propertyname im Source-Objekt
+        $dev = $FunctionResult.DeviceIdent
+
+        $maptLicenseShowInfo = @{
+            DeviceName  = 'DeviceName'
+            LicenseInfo     = 'LicenseInfo'
+        }
+        Add-MappedRows -Collection $dev.LicenseInfoRows -Source $FunctionResult.FuncResult -IdProperty 'RowID' -Map $maptLicenseShowInfo
+        # dynamische Überschrift
+        $dev.LicenseInfoTitle = "LicenseInfo for - $($dev.Label)"
+
+        # Textblock-Inhalt aus Rows zusammensetzen (DumpMsg je Zeile)
+        $dev.LicenseInfoText = (@($dev.LicenseInfoRows) | ForEach-Object { $_.LicenseInfo } | Where-Object { $_ }) -join "`n"
+
+        $UCVMMain.DeviceToggles.Add($dev)
+    }
+    <#one for each view is fine do need to be inside the foreach #>
+    $UCVMMain.SelectedView = "LicenseInfo"
+})
+$TD_BTN_FOS_SensorShow.add_click({
+    <#Get all Device Cred and count them #>
+    $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_.DeviceTyp -eq "SAN"}
+    <# get the DataConteext of the current View/ means UC and if its nul trow an error #>
+    $UCDataContext = $TD_UserControl_BRSAN.DataContext
+    if (-not $UCDataContext) { Write-Host "DataContext ist NULL!" -ForegroundColor Red; return }
+    <# if there is a DataContext find th Main Part und put it into UCVMMain#>
+    $UCVMMain = $UCDataContext.Main
+    <# if there a something in, its better to clean it up befor we use it again #>
+    $UCVMMain.DeviceToggles.Clear()
+    foreach($TD_Creds in $TD_Credentials){
+        $FunctionResult = New-DeviceBlock -Device $TD_Creds -ExportPath $TD_tb_ExportPath.Text -SSHFunc FOS_SSHSensorShow
+        # Links = Propertyname im PSCustomObject (das bindet dein XAML)
+        # Rechts = Propertyname im Source-Objekt
+        $dev = $FunctionResult.DeviceIdent
+
+        $mapSensorShow = @{
+            DeviceName  = 'DeviceName'
+            SensorShowInfo  = 'SensorShowInfo'
+        }
+        Add-MappedRows -Collection $dev.SensorShowRows -Source $FunctionResult.FuncResult -IdProperty 'RowID' -Map $mapSensorShow
+        # dynamische Überschrift
+        $dev.SensorShowTitle = "Sensorinfo for - $($dev.Label)"
+
+        # Textblock-Inhalt aus Rows zusammensetzen (DumpMsg je Zeile)
+        $dev.SensorShowText = (@($dev.SensorShowRows) | ForEach-Object { $_.SensorShowInfo } | Where-Object { $_ }) -join "`n"
+
+        $UCVMMain.DeviceToggles.Add($dev)
+    }
+    <#one for each view is fine do need to be inside the foreach #>
+    $UCVMMain.SelectedView = "SensorInfo"
+})
 #endregion
 #endregion
 $TD_CB_DataBaseChoice.add_SelectionChanged({
