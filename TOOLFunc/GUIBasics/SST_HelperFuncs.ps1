@@ -69,8 +69,12 @@ function New-DeviceBlock {
     $DeviceIdent = [DeviceToggle]::new()
     $DeviceIdent.Id = "DeviceBlock$($Device.ID)"
     # Label robust: ClusterName kann je nach Result-Shape anders sein
-    $cluster = $FunResult.ClusterName
-    $DeviceIdent.Label = if ([string]::IsNullOrWhiteSpace([string]$cluster)) { "$($Device.IPAddress)" } else { "$cluster" }
+    if(($($FunResult.count) -eq 2)-and ($SSHFunc -like "FOS*")){
+        $LabelName = $FunResult[1]
+    }else{
+        $LabelName = $FunResult.ClusterName
+    }
+    $DeviceIdent.Label = if ([string]::IsNullOrWhiteSpace([string]$LabelName)) { "$($Device.IPAddress)" } else { "$LabelName" }
     $DeviceIdent.IsChecked = $false
     return @{ DeviceIdent = $DeviceIdent; FuncResult = $FunResult }
 }
