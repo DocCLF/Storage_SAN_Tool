@@ -138,9 +138,9 @@
                             <RowDefinition Height="auto" />
                             <RowDefinition Height="auto" />
                         </Grid.RowDefinitions>
-                        <Label Grid.Row="0" Content="Name or Number" Style="{DynamicResource MainLabelStyle}" HorizontalAlignment="Left"/>
+                        <Label Grid.Row="0" Content="Customer Number" Style="{DynamicResource MainLabelStyle}" HorizontalAlignment="Left" />
                         <StackPanel Orientation="Horizontal" Grid.Row="1" Margin="5">
-                            <TextBox x:Name="TB_CustomerInfoName" Text="{Binding ElementName=CB_DataBaseChoice, Path=SelectedValue, Mode=OneWay}" MaxLength="20" Width="180" Style="{DynamicResource ExportCredTBStyle}" HorizontalAlignment="Left" />
+                            <TextBox x:Name="TB_CustomerInfoName" Text="{Binding ElementName=CB_DataBaseChoice, Path=SelectedValue, Mode=OneWay}" HorizontalContentAlignment="Center" MaxLength="12" Width="100" Style="{DynamicResource ExportCredTBStyle}" HorizontalAlignment="Left" />
                             <ComboBox x:Name="CB_DataBaseChoice" SelectedIndex="0" Margin="10,0,0,0" Width="200" Style="{DynamicResource CustomerBoardCBStyle}" />
                             <ToggleButton x:name="BTN_DBRefresh" Margin="10,0,0,0" Height="32" Width="32" HorizontalAlignment="center" Background="Transparent" BorderThickness="0" Style="{DynamicResource CustomerBoardBTNStyle}">
                                 <Image Source = "{Binding RefreshIcon96 , Mode=OneWay}" Stretch="Uniform" VerticalAlignment="Bottom" HorizontalAlignment="Left" MaxHeight="30" />
@@ -160,7 +160,7 @@
                             <CheckBox x:Name="CB_OnlineCheckbyImport" Margin="22,2,2,2" Style="{DynamicResource MainCheckBoxStyle}" />
                             <Label Content="Device Online check by import" Style="{DynamicResource MainLabelStyle}" />
                         </StackPanel>
-                        <Label Grid.Row="1" x:Name="LB_CerdExportPath" Content="Save Path" Style="{DynamicResource MainLabelStyle}" HorizontalAlignment="Left" />
+                        <Label Grid.Row="1" x:Name="LB_CerdExportPath" Content="Empty" Style="{DynamicResource MainLabelStyle}" HorizontalAlignment="Left" />
                     </Grid>
                 </GroupBox>
                 <GroupBox Header="Export Settings" Margin="0,10">
@@ -223,7 +223,7 @@
                 </GroupBox>
                 <GroupBox Header="Tool Settings" Margin="0,10">
                     <StackPanel Orientation="Horizontal">
-                        <ToggleButton x:Name="BTN_SaveToolSettings" Content="Save Tool Settings" ToolTip="Red means that no Coustomer Name/Number has been assigned and no data will be saved!" HorizontalAlignment="Left" Style="{DynamicResource ExportCredBTNStyle}"/>
+                        <ToggleButton x:Name="BTN_SaveToolSettings" Content="Save Tool Settings" ToolTip="Red means that no Coustomer Number has been assigned and no data will be saved!" HorizontalAlignment="Left" Style="{DynamicResource ExportCredBTNStyle}"/>
                         <ToggleButton x:Name="BTN_LoadToolSettings" Content="Load Tool Settings" HorizontalAlignment="Left" Style="{DynamicResource MainBtnStyle}"/>
                         <CheckBox x:Name="CB_LoadSettingsatStartUp" Margin="22,2,2,2" Style="{DynamicResource MainCheckBoxStyle}" />
                         <Label Content="Load Settings at StartUp" Style="{DynamicResource MainLabelStyle}" />
