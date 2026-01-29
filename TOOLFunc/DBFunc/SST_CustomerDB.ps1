@@ -16,7 +16,7 @@ function SST_CustomerDB {
     } elseif (-not [string]::IsNullOrWhiteSpace($TD_TB_CustomerInfoName.Text)) {
         $Customer = $TD_TB_CustomerInfoName.Text
     } else {
-        $Customer = $SST_NewDBObject.CustomerName
+        $Customer = $SST_NewDBObject.CustomerNumber
     }
     Write-Host "Customer $Customer"
     $DBPath = Join-Path $PSRootPath "Resources\DBFolder\$Customer.db"
@@ -32,17 +32,17 @@ function SST_CustomerDB {
 
         # Table sicherstellen
         $SQLiteCommandCreate = $SQLiteDBConnection.CreateCommand()
-        $SQLiteCommandCreate.CommandText = "CREATE TABLE IF NOT EXISTS CustomerToolSetUpDB ( CustomerName TEXT PRIMARY KEY, ExportPath TEXT, ExportPathCredential TEXT NOT NULL, TimeStamp TEXT);"
+        $SQLiteCommandCreate.CommandText = "CREATE TABLE IF NOT EXISTS CustomerToolSetUpDB ( CustomerNumber TEXT PRIMARY KEY, ExportPath TEXT, ExportPathCredential TEXT, TimeStamp TEXT);"
         $SQLiteCommandCreate.ExecuteNonQuery() | Out-Null
 
         switch ($SST_InfoType) {
 
             "SaveCustomerSetUp" {
                 $SQLiteCommand = $SQLiteDBConnection.CreateCommand()
-                $SQLiteCommand.CommandText = " INSERT INTO CustomerToolSetUpDB (CustomerName, ExportPath, ExportPathCredential, TimeStamp) VALUES (@CustomerName, @ExportPath, @ExportPathCredential, @TimeStamp) ON CONFLICT(CustomerName) DO UPDATE SET ExportPath = excluded.ExportPath, ExportPathCredential = excluded.ExportPathCredential, TimeStamp = excluded.TimeStamp;"
-                $SQLiteCommand.Parameters.AddWithValue("@CustomerName", $Customer) | Out-Null
-                $SQLiteCommand.Parameters.AddWithValue("@ExportPath", (if ($null -ne $SST_NewDBObject.ExportPath) { $SST_NewDBObject.ExportPath } else { '' })) |Out-Null
-                $SQLiteCommand.Parameters.AddWithValue("@ExportPathCredential", (if ($null -ne $SST_NewDBObject.ExportPathCredential) { $SST_NewDBObject.ExportPathCredential } else { '' })) |Out-Null
+                $SQLiteCommand.CommandText = " INSERT INTO CustomerToolSetUpDB (CustomerNumber, ExportPath, ExportPathCredential, TimeStamp) VALUES (@CustomerNumber, @ExportPath, @ExportPathCredential, @TimeStamp) ON CONFLICT(CustomerNumber) DO UPDATE SET ExportPath = excluded.ExportPath, ExportPathCredential = excluded.ExportPathCredential, TimeStamp = excluded.TimeStamp;"
+                $SQLiteCommand.Parameters.AddWithValue("@CustomerNumber", $Customer) | Out-Null
+                $SQLiteCommand.Parameters.AddWithValue("@ExportPath", $SST_NewDBObject.ExportPath) |Out-Null
+                $SQLiteCommand.Parameters.AddWithValue("@ExportPathCredential", $SST_NewDBObject.ExportPathCredential) |Out-Null
                 $SQLiteCommand.Parameters.AddWithValue("@TimeStamp", $TimeStamp) | Out-Null
                 $SQLiteCommand.ExecuteNonQuery() | Out-Null
                 return
@@ -50,13 +50,13 @@ function SST_CustomerDB {
 
             "LoadCustomerSetUp" {
                 $SQLiteCommand = $SQLiteDBConnection.CreateCommand()
-                $SQLiteCommand.CommandText = "SELECT CustomerName, ExportPath, ExportPathCredential, TimeStamp FROM CustomerToolSetUpDB WHERE CustomerName = @CustomerName;"
-                $SQLiteCommand.Parameters.AddWithValue("@CustomerName", $Customer) | Out-Null
+                $SQLiteCommand.CommandText = "SELECT CustomerNumber, ExportPath, ExportPathCredential, TimeStamp FROM CustomerToolSetUpDB WHERE CustomerNumber = @CustomerNumber;"
+                $SQLiteCommand.Parameters.AddWithValue("@CustomerNumber", $Customer) | Out-Null
 
                 $SQLiteReader = $SQLiteCommand.ExecuteReader()
                 if ($SQLiteReader.Read()) {
                     return [pscustomobject]@{
-                        CustomerName         = $SQLiteReader["CustomerName"]
+                        CustomerNumber         = $SQLiteReader["CustomerNumber"]
                         ExportPath           = $SQLiteReader["ExportPath"]
                         ExportPathCredential = $SQLiteReader["ExportPathCredential"]
                         TimeStamp            = $SQLiteReader["TimeStamp"]
