@@ -43,6 +43,7 @@ $inputXAML=Get-Content -Raw -Path "$PSScriptRoot\MainWindow.xaml"
 [xml]$MainXAML=$inputXAML -replace 'mc:Ignorable="d"','' -replace "x:N","N" -replace "^<Win.*","<Window"
 [System.Xml.XmlNodeReader] $Mainreader = $MainXAML
 $MainWindow =[Windows.Markup.XamlReader]::Load($Mainreader)
+
 foreach ($style in $global:LoadedStyles) {
     $MainWindow.Resources.MergedDictionaries.Add($style)
 }
@@ -113,6 +114,28 @@ foreach($file in $UserCxamlFile){
 }
 #endregion
 #region Tool Prep
+<# Default Export Path #>
+try {
+    $TD_ExporttoOD = [Environment]::GetFolderPath("mydocuments")
+    $ExportFolderPath="$TD_ExporttoOD\StorageSANTool"
+    If(!(Test-Path -Path $ExportFolderPath)){
+        try {
+            $TD_ExportFolderCreated = New-Item $ExportFolderPath -ItemType Directory -ErrorAction Stop
+            $TD_TB_ExportPath.Text = $TD_ExportFolderCreated.Name
+        }
+        catch {
+            #SST_ToolMessageCollector -TD_ToolMSGCollector "BasicToolPreparation ExportFolderPath $($_.Exception.Message)" -TD_ToolMSGType Error -TD_Shown no
+        }
+    }else{
+        $TD_TB_ExportPath.Text = $ExportFolderPath
+        #PowerShell Create directory if not exists
+    }
+}
+catch {
+    <#Do this if a terminating exception happens#>
+    #SST_ToolMessageCollector -TD_ToolMSGCollector "BasicToolPreparation ExportFolderPath $($_.Exception.Message)" -TD_ToolMSGType Error -TD_Shown no
+    Write-Error -Message $_.Exception.Message
+}
 <# Check if the ToolDB is available if not deploy #>
 if(!(Test-Path -Path "$PSRootPath\Resources\DBFolder\ToolDB\ToolDB.db")){
     try {
@@ -133,7 +156,7 @@ $TD_DataBaseChoice = Get-ChildItem "$PSRootPath\Resources\DBFolder\*" -Filter "*
     }
 }
 if ($($TD_DataBaseChoice.Name).Count -lt 1) {
-    $TD_CB_DataBaseChoice.ItemsSource = @("Keine Datenbank gefunden")
+    $TD_CB_DataBaseChoice.ItemsSource = @("Customer Nbr")
     $TD_CB_DataBaseChoice.IsEnabled = $false
 } else {
     $TD_CB_DataBaseChoice.ItemsSource = @($TD_DataBaseChoice.Name)
@@ -144,6 +167,7 @@ if ($($TD_DataBaseChoice.Name).Count -lt 1) {
 #endregion
 #region Button
 #region ToolBTN
+#region MenuBTN
 $TD_BTN_Dashboard.add_click({
     $TD_LB_ExpPathMainWindow.Content ="Export Path: $($TD_tb_ExportPath.Text)"
     SST_ShowUserControl -MainWindowArea $TD_UserContrArea -ShowUserControl $TD_UserControl_Dash -AllUserControls $TD_AllUserControls
@@ -194,7 +218,39 @@ $TD_BTN_ToolSettings.add_click({
     $TD_LB_ExpPathMainWindow.Content ="Export Path: $($TD_tb_ExportPath.Text)"
     SST_ShowUserControl -MainWindowArea $TD_UserContrArea -ShowUserControl $TD_UserControl_SetUp -AllUserControls $TD_AllUserControls
     if($TD_LogoImageSmall.Visibility -eq "hidden"){$TD_LogoImageSmall.Visibility = "visible"}
+    <# Used to limit the customer number to a certain range and display it in red or green. #>
+    $TB_CustomerInfoName = $TD_UserControl_SetUp.FindName("TB_CustomerInfoName")
+    if ($TB_CustomerInfoName -and -not $TB_CustomerInfoName.Tag) {
+
+        $TB_CustomerInfoName.Tag = "HandlersWired"
+
+        $TB_CustomerInfoName.Add_TextChanged({
+            param($sender, $e)
+
+            $text = [string]$sender.Text
+
+            if ($text -match '^\d{6}$') {
+                $sender.Background = [Windows.Media.Brushes]::LightGreen
+                $sender.Tag = "Valid"
+            } else {
+                $sender.Background = [Windows.Media.Brushes]::LightCoral
+                $sender.Tag = "Invalid"
+            }
+
+            if ($text -eq 'Customer Nbr') {
+                $sender.Background = [Windows.Media.Brushes]::LightCoral
+                $sender.Tag = "Invalid"
+            }
+        })
+
+        $TB_CustomerInfoName.Add_PreviewTextInput({
+            param($sender, $e)
+            $e.Handled = -not ($e.Text -match '^\d$')
+        })
+    }
 })
+#endregion
+#region ToolSettingsBTN
 $TD_BTN_SaveToolSettings.add_click({
     if(($TD_BTN_ActivateDB.Background -notlike "*FFFC4242")-and($TD_TB_CustomerInfoName.Background -notlike "*FFFA8C8C")){
         try {
@@ -206,13 +262,15 @@ $TD_BTN_SaveToolSettings.add_click({
         
     }else {
         [System.Windows.MessageBox]::Show(
-            "Please enter the customer name or number!", "Invalid input", 'OK', 'Warning'
+            "Please enter the Customer Number!", "Invalid input", 'OK', 'Warning'
         )
     }
 })
 $TD_BTN_LoadToolSettings.add_click({
     SST_SaveLoadToolSettings -SST_LoadSettings $true
 })
+#endregion
+#region CredentialBTN
 $TD_BTN_SaveCredtoDG.add_click({
     if($TD_CB_CredUpdate.IsChecked){
         #SST_ToolMessageCollector -TD_ToolMSGCollector "Cred Update" -TD_ToolMSGType Message -TD_Shown no
@@ -259,6 +317,7 @@ $TD_BTN_ImportCred.add_click({
         }
     }
 })
+#endregion
 $TD_BTN_ActivateDB.add_click({
     if(($TD_BTN_ActivateDB.Background -notlike "*FFFC4242")-and($TD_TB_CustomerInfoName.Background -notlike "*FFFA8C8C")){
         $DBName = $TD_TB_CustomerInfoName.Text
@@ -283,7 +342,7 @@ $TD_BTN_ActivateDB.add_click({
         }
     }else {
         [System.Windows.MessageBox]::Show(
-            "Please enter the customer name or number!", "Invalid input", 'OK', 'Warning'
+            "Please enter the Customer Number!", "Invalid input", 'OK', 'Warning'
         )
     }
 })
@@ -294,7 +353,7 @@ $TD_BTN_DeleteDB.add_click({
         Remove-Item -Path "$PSRootPath\Resources\DBFolder\$DBName.db" -Confirm:$false -Force -ErrorAction SilentlyContinue
         $TD_DataBaseChoice = @(Get-ChildItem "$PSRootPath\Resources\DBFolder\*" -Filter "*.db" | Select-Object -ExpandProperty Basename)
         if([string]::IsNullOrWhiteSpace($TD_DataBaseChoice)){
-            $TD_TB_CustomerInfoName.Text = "Keine Datenbank gefunden"
+            $TD_TB_CustomerInfoName.Text = "Customer Nbr"
         }else {
             $TD_CB_DataBaseChoice.ItemsSource = $null
             $TD_DataBaseChoice = @(Get-ChildItem "$PSRootPath\Resources\DBFolder\*" -Filter "*.db" | Select-Object -ExpandProperty Basename)
@@ -315,7 +374,7 @@ $TD_BTN_DBRefresh.add_click({
     $TD_CB_DataBaseChoice.ItemsSource = $null
     $TD_DataBaseChoice = @(Get-ChildItem "$PSRootPath\Resources\DBFolder\*" -Filter "*.db" | Select-Object -ExpandProperty Basename)
     if ($TD_DataBaseChoice.Count -eq 0) {
-        $TD_CB_DataBaseChoice.ItemsSource = @("Keine Datenbank gefunden")
+        $TD_CB_DataBaseChoice.ItemsSource = @("Customer Nbr")
         $TD_CB_DataBaseChoice.SelectedIndex = 0
         $TD_CB_DataBaseChoice.IsEnabled = $false
         $TD_BTN_DeleteDB.Visibility = "Collapsed"
@@ -324,21 +383,6 @@ $TD_BTN_DBRefresh.add_click({
         $TD_CB_DataBaseChoice.IsEnabled = $true
         $TD_CB_DataBaseChoice.SelectedIndex = 0
     }
-})
-$TD_BTN_CloseGUI.add_click({
-    <#CleanUp before close #>
-    try {
-        Remove-Item -Path $PSRootPath\ToolLog\ToolTEMP\* -Filter '*_Temp.csv' -Force -ErrorAction SilentlyContinue
-        if(Test-Path -Path "$PSRootPath\Resources\DBFolder\*" -Filter "*.db"){
-            #SST_RESTDBControl -SST_InfoType "DeleteStorageToken" | Out-Null
-            SST_RESTDBControl -SST_InfoType "DeleteStorageToken"
-        }
-    }
-    catch {
-        <#Do this if a terminating exception happens#>
-        #SST_ToolMessageCollector -TD_ToolMSGCollector $("Remove Files fail: $($_.Exception.Message)") -TD_ToolMSGType Error -TD_Shown no
-    }
-    $MainWindow.Close()
 })
 #endregion
 #region IBM Storage
@@ -1083,7 +1127,21 @@ $TD_DG_KnownDeviceList.add_SelectionChanged({
     }
 })
 
-
+$TD_BTN_CloseGUI.add_click({
+    <#CleanUp before close #>
+    try {
+        Remove-Item -Path $PSRootPath\ToolLog\ToolTEMP\* -Filter '*_Temp.csv' -Force -ErrorAction SilentlyContinue
+        if(Test-Path -Path "$PSRootPath\Resources\DBFolder\*" -Filter "*.db"){
+            #SST_RESTDBControl -SST_InfoType "DeleteStorageToken" | Out-Null
+            SST_RESTDBControl -SST_InfoType "DeleteStorageToken"
+        }
+    }
+    catch {
+        <#Do this if a terminating exception happens#>
+        #SST_ToolMessageCollector -TD_ToolMSGCollector $("Remove Files fail: $($_.Exception.Message)") -TD_ToolMSGType Error -TD_Shown no
+    }
+    $MainWindow.Close()
+})
 #region show MainWindow
 $MainWindow.showDialog()
 $MainWindow.activate()
