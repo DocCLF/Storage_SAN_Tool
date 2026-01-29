@@ -8,11 +8,12 @@ function SST_SaveLoadToolSettings {
     )
     
     begin {
-        $TD_BTN_SaveToolSettings.Background="#FFDDDDDD"
-        $TD_BTN_LoadToolSettings.Background="#FFDDDDDD"
+        $TD_BTN_SaveToolSettings.Background="#F5F7FA"
+        $TD_BTN_LoadToolSettings.Background="#F5F7FA"
         $PSRootPath = Split-Path -Path $PSScriptRoot -Parent
         try {
             $SST_SavedToolSettingsDB = SST_ToolDB -SST_InfoType "LoadToolSettings"
+            <# die clixml muss da abgelegt werden wo die Cred abgelegt werden $TD_LB_CerdExportPath.Content #>
             $SST_SavedToolSettingsXML = Get-Item -Path "$PSRootPath\Resources\SavedToolSettings.clixml" -ErrorAction SilentlyContinue
         }
         catch {
@@ -46,17 +47,16 @@ function SST_SaveLoadToolSettings {
             catch {
                 Write-Host $_.Exception.Message -ForegroundColor Yellow
             }
-            
-
-            $SST_ExportCustomerSettingsDB = "" | Select-Object CustomerName, ExportPath, ExportPathCredential
-            $SST_ExportCustomerSettingsDB.CustomerName = $TD_TB_CustomerInfoName.Text
+            if ($TD_LB_CerdExportPath.Content -ne "Empty") { $TD_LB_CerdExportPath.Content } else { $TD_LB_CerdExportPath.Content = $($TD_TB_ExportPath.Text); Write-Host $($TD_TB_ExportPath.Text)}
+            $SST_ExportCustomerSettingsDB = "" | Select-Object CustomerNumber, ExportPath, ExportPathCredential
+            $SST_ExportCustomerSettingsDB.CustomerNumber = $TD_TB_CustomerInfoName.Text
             $SST_ExportCustomerSettingsDB.ExportPath = $TD_TB_ExportPath.Text
             $SST_ExportCustomerSettingsDB.ExportPathCredential = $TD_LB_CerdExportPath.Content
             try {
                 SST_CustomerDB -SST_InfoType "SaveCustomerSetUp" -SST_NewDBObject $SST_ExportCustomerSettingsDB
             }
             catch {
-                Write-Host $_.Exception.Message -ForegroundColor Cyan
+                Write-Host $_.Exception.Message -ForegroundColor green
             }
 
             <#Save in clixml#>
@@ -97,7 +97,7 @@ function SST_SaveLoadToolSettings {
                     $TD_CB_LoadSettingsatStartUp.IsChecked = $SST_SavedToolSettingsDB.LoadSettingsOnStartUp
                     if($SST_SavedToolSettingsDB.IsCustomer){
                         $TD_CB_CustomerYN.IsChecked = $SST_SavedToolSettingsDB.IsCustomer
-                        $TD_TB_CustomerInfoName.Text = $SST_SavedCustomerSettingsDB.CustomerName
+                        $TD_TB_CustomerInfoName.Text = $SST_SavedCustomerSettingsDB.CustomerNumber
                         $TD_TB_ExportPath.Text = $SST_SavedCustomerSettingsDB.ExportPath
                         $TD_LB_CerdExportPath.Content = $SST_SavedCustomerSettingsDB.ExportPathCredential
                     }
@@ -127,7 +127,7 @@ function SST_SaveLoadToolSettings {
                 }else {
                     if($SST_SavedToolSettingsDB.IsCustomer){
                         $TD_CB_CustomerYN.IsChecked = $SST_SavedToolSettingsDB.IsCustomer
-                        $TD_TB_CustomerInfoName.Text = $SST_SavedCustomerSettingsDB.CustomerName
+                        $TD_TB_CustomerInfoName.Text = $SST_SavedCustomerSettingsDB.CustomerNumber
                         $TD_TB_ExportPath.Text = $SST_SavedCustomerSettingsDB.ExportPath
                         $TD_LB_CerdExportPath.Content = $SST_SavedCustomerSettingsDB.ExportPathCredential
                     }
