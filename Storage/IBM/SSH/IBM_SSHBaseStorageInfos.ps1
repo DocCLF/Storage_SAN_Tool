@@ -37,7 +37,7 @@ function IBM_SSHBaseStorageInfos {
     process {
         $TD_SystemInfo = IBM_SystemInfo -TD_Line_ID $TD_Line_ID -TD_Device_ConnectionTyp $TD_Device_ConnectionTyp -TD_Device_UserName $TD_Device_UserName -TD_Device_DeviceIP $TD_Device_DeviceIP -TD_Device_PW $TD_Device_PW
         $TD_StorageInfo = foreach($TD_FSBaseInfo in $TD_BaseInformations){
-            $TD_FSBaseTemp = "" | Select-Object RowID,ID,Name,ClusterName,WWNN,Status,IO_group_id,IO_group_Name,SerialNumber,CodeLevel,ConfigNode,SideID,SideName,Prod_MTM,RecommendedPTF,MDiskTotalCapacity,MDiskFreeCapacity,MDiskUsedCapacity,PhysicalTotalCapacity,PhysicalFreeCapacity,HostUnmap,BackendUnmap,Topology,Layer,QuorumMode
+            $TD_FSBaseTemp = "" | Select-Object RowID,ID,Name,ClusterName,WWNN,Status,IO_group_id,IO_group_Name,SerialNumber,CodeLevel,ConfigNode,SideID,SideName,ProdMTM,RecommendedPTF,MDiskTotalCapacity,MDiskFreeCapacity,MDiskUsedCapacity,PhysicalTotalCapacity,PhysicalFreeCapacity,HostUnmap,BackendUnmap,Topology,Layer,QuorumMode
             $TD_FSBaseTemp.ID = ($TD_FSBaseInfo|Select-String -Pattern '^(\d+):' -AllMatches).Matches.Groups[1].Value
             $TD_FSBaseTemp.Name = ($TD_FSBaseInfo|Select-String -Pattern '^\d+:([a-zA-Z0-9-_]+):' -AllMatches).Matches.Groups[1].Value
             $TD_FSBaseTemp.ClusterName = ($TD_BaseInformations|Select-String -Pattern '^name\,([\w\-]+)' -AllMatches).Matches.Groups[1].Value
@@ -55,11 +55,11 @@ function IBM_SSHBaseStorageInfos {
             $TD_FSBaseTemp.ConfigNode = ($TD_FSBaseInfo|Select-String -Pattern '\d+:([\w\-]+):(yes|no):' -AllMatches).Matches.Groups[2].Value
             $TD_FSBaseTemp.SideID = ($TD_FSBaseInfo|Select-String -Pattern ':(\d+|):([a-zA-Z0-9-_]+)$' -AllMatches).Matches.Groups[1].Value
             $TD_FSBaseTemp.SideName = ($TD_FSBaseInfo|Select-String -Pattern ':(\d+|):([a-zA-Z0-9-_]+)$' -AllMatches).Matches.Groups[2].Value
-            $TD_FSBaseTemp.Prod_MTM = ($TD_BaseInformations|Select-String -Pattern '^product_mtm:([a-zA-Z0-9-]+)' -AllMatches).Matches.Groups[1].Value
+            $TD_FSBaseTemp.ProdMTM = ($TD_BaseInformations|Select-String -Pattern '^product_mtm:([a-zA-Z0-9-]+)' -AllMatches).Matches.Groups[1].Value
             $TD_FSBaseTemp.CodeLevel = ($TD_BaseInformations|Select-String -Pattern '^code_level:(\d+.\d+.\d+.\d+)' -AllMatches).Matches.Groups[1].Value
-            if ((![string]::IsNullOrEmpty($TD_FSBaseTemp.Prod_MTM))-and(![string]::IsNullOrEmpty($TD_FSBaseTemp.CodeLevel))){
+            if ((![string]::IsNullOrEmpty($TD_FSBaseTemp.ProdMTM))-and(![string]::IsNullOrEmpty($TD_FSBaseTemp.CodeLevel))){
                 if(($TD_FSBaseTemp.CodeLevel)-ne($TD_FSBaseTempCode_Level)){
-                    $TD_SpectrVirtuFWInfos = IBM_StorageSWCheck -IBM_CurrentSpectrVirtuFW $TD_FSBaseTemp.CodeLevel -IBM_ProdMTM $TD_FSBaseTemp.Prod_MTM
+                    $TD_SpectrVirtuFWInfos = IBM_StorageSWCheck -IBM_CurrentSpectrVirtuFW $TD_FSBaseTemp.CodeLevel -IBM_ProdMTM $TD_FSBaseTemp.ProdMTM
                     $TD_FSBaseTempCode_Level = $TD_FSBaseTemp.CodeLevel
                     Write-Debug -Message $TD_FSBaseTemp.CodeLevel $TD_SpectrVirtuFWInfos
                     [string]$TD_FSBaseTemp.RecommendedPTF = $TD_SpectrVirtuFWInfos.RecommendedPTF
@@ -97,7 +97,7 @@ function IBM_SSHBaseStorageInfos {
                 SST_ToolMessageCollector -TD_ToolMSGCollector "$PSScriptRoot\ToolLog\$($TD_Line_ID)_$($TD_Device_DeviceName)_StorageBaseInfo_$(Get-Date -Format "yyyy-MM-dd").csv" -TD_ToolMSGType Debug
             }
         }
-
+        SST_CustomerDeviceDBInsertTable -SST_InfoType "StorageBase" -SST_CollectedInformations $TD_StorageInfo
         [PSCustomObject]@{
             StorageInfo     = $TD_StorageInfo
             ConnectionTyp   = $TD_Device_ConnectionTyp
