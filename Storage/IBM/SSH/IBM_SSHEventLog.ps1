@@ -95,8 +95,8 @@ function IBM_SSHEventLog {
     }
     
     end {
-
         Close-ProgressBar -ProgressBar $ProgressBar
+        SST_CustomerDeviceDBInsertTable -SST_InfoType "StorageEventLog" -SST_CollectedInformations $TD_EventCollection
 
         <# export y or n #>
         if($TD_Export -eq "yes"){
