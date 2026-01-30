@@ -163,7 +163,8 @@ function IBM_SSHDriveInfo {
 
     end{
         Close-ProgressBar -ProgressBar $ProgressBar
-
+        SST_CustomerDeviceDBInsertTable -SST_InfoType "StorageDrive" -SST_CollectedInformations $TD_DriveOverview
+        
         <# export y or n #>
         if($TD_export -eq "yes"){
             if([string]$TD_Exportpath -ne "$PSRootPath\ToolLog\"){
