@@ -339,6 +339,7 @@ $TD_BTN_ActivateDB.add_click({
             $TD_CB_DataBaseChoice.IsEnabled = $true
             $TD_CB_DataBaseChoice.ItemsSource = $TD_DataBaseChoice
             $TD_CB_DataBaseChoice.SelectedIndex = 0
+            SST_CustomerDeviceDBCreateTable
         }
     }else {
         [System.Windows.MessageBox]::Show(
@@ -407,7 +408,7 @@ $TD_BTN_IBM_BaseStorageInfo.add_click({
             Status         = 'Status'
             IO_group_id    = 'IO_group_id'
             IO_group_Name  = 'IO_group_Name'
-            Prod_MTM       = 'Prod_MTM'
+            ProdMTM        = 'ProdMTM'
             SerialNumber   = 'SerialNumber'
             CodeLevel      = 'CodeLevel'
             RecommendedPTF = 'RecommendedPTF'
