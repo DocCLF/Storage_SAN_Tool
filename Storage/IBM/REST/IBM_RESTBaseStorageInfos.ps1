@@ -42,7 +42,7 @@ function IBM_RESTBaseStorageInfos {
     process {
         [int]$imax = $STONodeInfo.Count
         $TD_StorageInfo = for ($i = 0; $i -lt $imax; $i++) {
-            $TD_FSBaseTemp = "" | Select-Object RowID,ID,Name,ClusterName,WWNN,Status,IO_group_id,IO_group_Name,SerialNumber,CodeLevel,ConfigNode,SideID,SideName,Prod_MTM,RecommendedPTF,MDiskTotalCapacity,MDiskFreeCapacity,MDiskUsedCapacity,PhysicalTotalCapacity,PhysicalFreeCapacity,HostUnmap,BackendUnmap,Topology,Layer,QuorumMode
+            $TD_FSBaseTemp = "" | Select-Object RowID,ID,Name,ClusterName,WWNN,Status,IO_group_id,IO_group_Name,SerialNumber,CodeLevel,ConfigNode,SideID,SideName,ProdMTM,RecommendedPTF,MDiskTotalCapacity,MDiskFreeCapacity,MDiskUsedCapacity,PhysicalTotalCapacity,PhysicalFreeCapacity,HostUnmap,BackendUnmap,Topology,Layer,QuorumMode
             $TD_FSBaseTemp.ID               = $STONodeInfo.id[$i]
             $TD_FSBaseTemp.Name             = $STONodeInfo.name[$i]
             $TD_FSBaseTemp.ClusterName      = $STOSystemInfo.name
@@ -54,12 +54,12 @@ function IBM_RESTBaseStorageInfos {
             $TD_FSBaseTemp.ConfigNode      = $STONodeInfo.config_node[$i]
             $TD_FSBaseTemp.SideID           = $STONodeInfo.site_id[$i]
             $TD_FSBaseTemp.SideName         = $STONodeInfo.site_name[$i]
-            $TD_FSBaseTemp.Prod_MTM         = $STOSystemInfo.product_name
+            $TD_FSBaseTemp.ProdMTM         = $STOSystemInfo.product_name
             $TD_FSBaseTemp.CodeLevel       = $STOSystemInfo.code_level
             <#try to get a RecommendedPTF level#>
-            if ((![string]::IsNullOrEmpty($TD_FSBaseTemp.Prod_MTM))-and(![string]::IsNullOrEmpty($TD_FSBaseTemp.Code_Level))){
+            if ((![string]::IsNullOrEmpty($TD_FSBaseTemp.ProdMTM))-and(![string]::IsNullOrEmpty($TD_FSBaseTemp.Code_Level))){
                 if(($TD_FSBaseTemp.Code_Level)-ne($TD_FSBaseTempCode_Level)){
-                    $TD_SpectrVirtuFWInfos = IBM_StorageSWCheck -IBM_CurrentSpectrVirtuFW $TD_FSBaseTemp.Code_Level -IBM_ProdMTM $TD_FSBaseTemp.Prod_MTM
+                    $TD_SpectrVirtuFWInfos = IBM_StorageSWCheck -IBM_CurrentSpectrVirtuFW $TD_FSBaseTemp.Code_Level -IBM_ProdMTM $TD_FSBaseTemp.ProdMTM
                     $TD_FSBaseTempCode_Level = $TD_FSBaseTemp.Code_Level
                     [string]$TD_FSBaseTemp.RecommendedPTF = $TD_SpectrVirtuFWInfos.RecommendedPTF
                 }else {
@@ -96,6 +96,7 @@ function IBM_RESTBaseStorageInfos {
                 SST_ToolMessageCollector -TD_ToolMSGCollector "$PSScriptRoot\ToolLog\$($TD_Line_ID)_$($TD_Device_DeviceName)_StorageBaseInfo_$(Get-Date -Format "yyyy-MM-dd").csv" -TD_ToolMSGType Debug
             }
         }
+        SST_CustomerDeviceDBInsertTable -SST_InfoType "StorageBase" -SST_CollectedInformations $TD_StorageInfo
         [PSCustomObject]@{
             StorageInfo     = $TD_StorageInfo
             ConnectionTyp   = $TD_Device_ConnectionTyp
