@@ -52,7 +52,7 @@ function IBM_RESTFCPortStats {
             for ($ndr = 0; $ndr -lt $iNodemax; $ndr++) {
                 if($($TD_DeviceInformation.type[$ndr]) -ne "FC"){continue}
                 $TD_PortStatsSplitInfos = "" | Select-Object RowID,NodeID,SerialNumber,NodeName,WWNN,CardType,CardID,PortID,WWPN,LinkFailure,LoseSync,LoseSig,PSErrCount,InvTransErr,CRCErr,ZeroBtB,SFPTemp,TXPwr,TXPwrlow,RXPwr,RXPwrlow
-                Write-Host  $IBMSTOName $NodeID -ForegroundColor Yellow                   
+                #Write-Host  $IBMSTOName $NodeID -ForegroundColor Yellow                   
                 $TD_PortStatsSplitInfos.CardType    = $TD_DeviceInformation.type[$ndr]
                 $TD_PortStatsSplitInfos.CardID      = $TD_DeviceInformation.type_id[$ndr]
                 $TD_PortStatsSplitInfos.PortID      = $TD_DeviceInformation.'port id'[$ndr]
@@ -85,8 +85,8 @@ function IBM_RESTFCPortStats {
     }
 
     end {
-
         Close-ProgressBar -ProgressBar $ProgressBar
+        SST_CustomerDeviceDBInsertTable -SST_InfoType "FCPortStats" -SST_CollectedInformations $TD_PortStats_Overview
         <# export y or n #>
         if($TD_export -eq "yes"){
 
