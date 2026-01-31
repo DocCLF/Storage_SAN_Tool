@@ -837,16 +837,16 @@ $TD_BTN_FOS_BasicSwitchInfo.add_click({
     $mapSANSwitchInfo = @{
         SwichtName          = 'Swicht Name'
         ActiveZonenCFG      = 'Active ZonenCFG'
-        DomainID            = 'Domain ID'
+        DomainID            = 'DomainID'
         SwitchWWNN          = 'Switch WWN'
-        SwitchType          = 'Switch Type'
+        SwitchType          = 'SwitchType'
         FabricID            = 'Fabric ID'
         BrocadeProductName  = 'Brocade Name'
         MTM                 = 'MTM'
-        SerialNumber        = 'Serial Number'
+        SerialNumber        = 'SerialNumber'
         FabricOS            = 'Fabric OS'
-        EthernetIPAddress   = 'IPAddress'
-        EthernetSubnetMask  = 'Subnet Mask'
+        EthernetIPAddress   = 'IP Address'
+        EthernetSubnetMask  = 'Subnet mask'
         GatewayIPAddress    = 'Gateway IP'
         DHCP                = 'DHCP'
         SwitchState         = 'Switch State'
@@ -858,18 +858,27 @@ $TD_BTN_FOS_BasicSwitchInfo.add_click({
         $FunctionResult = New-DeviceBlock -Device $TD_Creds -ExportPath $TD_tb_ExportPath.Text -SSHFunc FOS_SSHBasicSwitchInfos
 
         $deviceIdent = $FunctionResult['DeviceIdent']
-        $funcResult  = $FunctionResult['FuncResult']   # OrderedDictionary
+        $funcResult  = $FunctionResult['FuncResult']
 
-        # if Visibility runs via IsChecked
+        # If it is an array: take the IDictionary element (and NOT the first one)
+        if ($funcResult -is [object[]]) {
+            $funcResult = @($funcResult) | Where-Object { $_ -is [System.Collections.IDictionary] } | Select-Object -First 1
+        }
+
+        # Safety: if there is still no dictionary -> cancel
+        if (-not ($funcResult -is [System.Collections.IDictionary])) {
+            Write-Host "FuncResult enthält kein IDictionary. Type: $($funcResult.GetType().FullName)" -ForegroundColor Red
+            continue
+        }
+
         if ($deviceIdent.PSObject.Properties.Match('IsChecked').Count -gt 0) {
             $deviceIdent.IsChecked = $true
         }
 
-        Add-MappedKeyValueRows -Collection $deviceIdent.SANSwitchBaseRows -Source $funcResult -Map $mapSANSwitchInfo | Out-Null
+        Add-MappedKeyValueRows -Collection $deviceIdent.SANSwitchBaseRows -Source $funcResult -Map $mapSANSwitchInfo
 
         $UCVMMain.DeviceToggles.Add($deviceIdent)
     }
-
     $UCVMMain.SelectedView = "SANSwitchBase"
 })
 $TD_BTN_FOS_SwitchShow.add_click({
