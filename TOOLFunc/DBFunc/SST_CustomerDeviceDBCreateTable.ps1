@@ -61,7 +61,7 @@ function SST_CustomerDeviceDBCreateTable {
             <# StorageEventLog #>
             try{
                 $SST_SQLiteTabelQuery ="CREATE TABLE IF NOT EXISTS IBMSTOEventsTable (ID INTEGER PRIMARY KEY AUTOINCREMENT, CustomerNbr TEXT NOT NULL, SeqID INTEGER NOT NULL, LastTime TEXT, ObjectType TEXT, ObjectID INTEGER, ObjectName TEXT, CopyID INTEGER,`
-                                        Status TEXT, Fixed TEXT, ErrorCode TEXT, Description TEXT, SerialNumber TEXT, WWNN TEXT NOT NULL, TimeStamp TEXT );" 
+                                        Status TEXT, Fixed TEXT, ErrorCode TEXT, Description TEXT, SerialNumber TEXT, WWNN TEXT, TimeStamp TEXT );" 
                 $SQLiteCommandCreate.CommandText = $SST_SQLiteTabelQuery
                 $SQLiteCommandCreate.ExecuteNonQuery()
             }catch{
@@ -70,22 +70,32 @@ function SST_CustomerDeviceDBCreateTable {
             }
             <# FCPortStats #>
             try{
-                $SST_SQLiteTabelQuery ="CREATE TABLE IF NOT EXISTS IBMSTOFCPortStatsTable (ID INTEGER PRIMARY KEY AUTOINCREMENT, CardType TEXT, CardID TEXT, PortID TEXT, WWPN TEXT, LinkFailure TEXT, LoseSync TEXT, LoseSig TEXT, PSErrCount TEXT, InvTransErr TEXT, CRCErr TEXT, ZeroBtB TEXT, SFPTemp TEXT, TXPwr TEXT, RXPwr TEXT, WWNN TEXT, SerialNumber TEXT, TimeStamp TEXT );" 
+                $SST_SQLiteTabelQuery ="CREATE TABLE IF NOT EXISTS IBMSTOFCPortStatsTable (ID INTEGER PRIMARY KEY AUTOINCREMENT, CardType TEXT, CardID TEXT, PortID TEXT, WWPN TEXT, LinkFailure TEXT, LoseSync TEXT, LoseSig TEXT,`
+                                        PSErrCount TEXT, InvTransErr TEXT, CRCErr TEXT, ZeroBtB TEXT, SFPTemp TEXT, TXPwr TEXT, RXPwr TEXT, SerialNumber TEXT, WWNN TEXT, TimeStamp TEXT );" 
                 $SQLiteCommandCreate.CommandText = $SST_SQLiteTabelQuery
                 $SQLiteCommandCreate.ExecuteNonQuery()
-            }catch{}
+            }catch{
+                Write-Host "SQL Fehler: $($_.Exception.Message)"
+                Write-Host $_.Exception.ToString()
+            }
             <# SANBase #>
             try{ 
-                $SST_SQLiteTabelQuery ="CREATE TABLE IF NOT EXISTS IBMSANHWTable (ID INTEGER PRIMARY KEY AUTOINCREMENT, Name TEXT NOT NULL, Status TEXT NOT NULL, BrocadeProdName TEXT, MTM TEXT, SerialNumber TEXT, CodeLevel TEXT, CodeLevelLV TEXT, TimeStamp TEXT );" 
+                $SST_SQLiteTabelQuery ="CREATE TABLE IF NOT EXISTS IBMSANHWTable (ID INTEGER PRIMARY KEY AUTOINCREMENT, Name TEXT NOT NULL, Status TEXT NOT NULL, BrocadeProdName TEXT, MTM TEXT, CodeLevel TEXT, SerialNumber TEXT, SwitchWWNN TEXT, TimeStamp TEXT );" 
                 $SQLiteCommandCreate.CommandText = $SST_SQLiteTabelQuery
                 $SQLiteCommandCreate.ExecuteNonQuery()
-            }catch{}
+            }catch{
+                Write-Host "SQL Fehler: $($_.Exception.Message)"
+                Write-Host $_.Exception.ToString()
+            }
             <# SANPortInfo #>
-            try{ 
-                $SST_SQLiteTabelQuery ="CREATE TABLE IF NOT EXISTS IBMSANPortInfoTable (ID INTEGER PRIMARY KEY AUTOINCREMENT, Port TEXT, State TEXT, Speed TEXT, PortConnect TEXT, SwitchWWN TEXT, TimeStamp TEXT );" 
+            try{
+                $SST_SQLiteTabelQuery ="CREATE TABLE IF NOT EXISTS IBMSANPortInfoTable (ID INTEGER PRIMARY KEY AUTOINCREMENT, Port TEXT, State TEXT, Speed TEXT, PortConnect TEXT, SerialNumber TEXT, SwitchWWNN TEXT, TimeStamp TEXT );"
                 $SQLiteCommandCreate.CommandText = $SST_SQLiteTabelQuery
                 $SQLiteCommandCreate.ExecuteNonQuery()
-            }catch{}
+            }catch{
+                Write-Host "SQL Fehler: $($_.Exception.Message)"
+                Write-Host $_.Exception.ToString()
+            }
             <# PowerHMC #>
             try{ 
                 $SST_SQLiteTabelQuery ="CREATE TABLE IF NOT EXISTS PowerHMC (ID INTEGER PRIMARY KEY AUTOINCREMENT, HMCName TEXT, HMCHWModell TEXT, HMCHWSN TEXT, HMCHWBios TEXT, HMCSWVersion TEXT, HMCSWBuildLevel TEXT, HMCSWBaseVersion TEXT, HMCSWFixes TEXT, TimeStamp TEXT );" 
