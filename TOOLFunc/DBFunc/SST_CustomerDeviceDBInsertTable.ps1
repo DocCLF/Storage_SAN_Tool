@@ -39,6 +39,8 @@ function SST_CustomerDeviceDBInsertTable {
                     $SQLiteCommand = $SQLiteDBConnection.CreateCommand()
 
                     foreach ($SST_CollectedInformation in $SST_CollectedInformations){ 
+                        $SQLiteCommand.Parameters.Clear()
+
                         $SQLiteCommand.CommandText ="INSERT INTO IBMSTODriveTable (CustomerNbr, DriveID, SlotID, ProductID, DriveStatus, CurrentDriveFW, DriveCap, PhyDriveCap, PhyUsedDriveCap, EffeUsedDriveCap, SerialNumber, WWNN, TimeStamp)`
                                                     VALUES (@CustomerNbr, @DriveID, @SlotID, @ProductID, @DriveStatus, @CurrentDriveFW, @DriveCap, @PhyDriveCap, @PhyUsedDriveCap, @EffeUsedDriveCap, @SerialNumber, @WWNN, @TimeStamp);"
                         $SQLiteCommand.Parameters.AddWithValue("@CustomerNbr", $Customer) | Out-Null
@@ -83,6 +85,7 @@ function SST_CustomerDeviceDBInsertTable {
                     $SQLiteCommand = $SQLiteDBConnection.CreateCommand()
 
                     foreach ($SST_CollectedInformation in $SST_CollectedInformations[0]){ 
+                        $SQLiteCommand.Parameters.Clear()
 
                         $SQLiteCommand.CommandText ="INSERT INTO IBMSTOHWTable (CustomerNbr, Name, ClusterName, WWNN, Status, IOgroupid, IOgroupName, SerialNumber, CodeLevel, ConfigNode, SideID, SideName, ProdMTM, RecommendedPTF, MDiskTotalCapacity, MDiskFreeCapacity, MDiskUsedCapacity,`
                                                     PhysicalTotalCapacity, PhysicalFreeCapacity, HostUnmap, BackendUnmap, Topology, Layer, QuorumMode, TimeStamp)`
@@ -139,6 +142,8 @@ function SST_CustomerDeviceDBInsertTable {
                     $SQLiteCommand = $SQLiteDBConnection.CreateCommand()
 
                     foreach ($SST_CollectedInformation in $SST_CollectedInformations){
+                        $SQLiteCommand.Parameters.Clear()
+
                         $SQLiteCommand.CommandText ="INSERT INTO IBMSTOHostTable (CustomerNbr, HID, HostName, Status, HostClusterName, SideName, STOName, WWNN, SerialNumber, TimeStamp) VALUES (@CustomerNbr, @HID, @HostName, @Status, @HostClusterName, @SideName, @STOName, @WWNN, @SerialNumber, @TimeStamp);"
                         $SQLiteCommand.Parameters.AddWithValue("@CustomerNbr", $Customer) | Out-Null
                         $SQLiteCommand.Parameters.AddWithValue("@HID", $SST_CollectedInformation.ID) | Out-Null
@@ -176,6 +181,8 @@ function SST_CustomerDeviceDBInsertTable {
                     $SQLiteCommand = $SQLiteDBConnection.CreateCommand()
 
                     foreach ($SST_CollectedInformation in $SST_CollectedInformations){
+                        $SQLiteCommand.Parameters.Clear()
+
                         $SQLiteCommand.CommandText ="INSERT INTO IBMSTOEventsTable (CustomerNbr, SeqID, LastTime, ObjectType, ObjectID, ObjectName, CopyID, Status, Fixed, ErrorCode, Description, WWNN, SerialNumber, TimeStamp)`
                                                     VALUES (@CustomerNbr, @SeqID, @LastTime, @ObjectType, @ObjectID, @ObjectName, @CopyID, @Status, @Fixed, @ErrorCode, @Description, @WWNN, @SerialNumber, @TimeStamp);"
                         $SQLiteCommand.Parameters.AddWithValue("@CustomerNbr", $Customer) | Out-Null
@@ -211,71 +218,133 @@ function SST_CustomerDeviceDBInsertTable {
 
             }
             "FCPortStats" {
-                foreach ($SST_CollectedInformation in $SST_CollectedInformations){
-                    $SST_SQliteInsertCMD.CommandText ="INSERT INTO IBMSTOFCPortStatsTable (CardType, CardID, PortID, WWPN, LinkFailure, LoseSync, LoseSig, PSErrCount, InvTransErr, CRCErr, ZeroBtB, SFPTemp, TXPwr, RXPwr, WWNN, SerialNumber, TimeStamp) VALUES (@CardType, @CardID, @PortID, @WWPN, @LinkFailure, @LoseSync, @LoseSig, @PSErrCount, @InvTransErr, @CRCErr, @ZeroBtB, @SFPTemp, @TXPwr, @RXPwr, @WWNN, @SerialNumber, @TimeStamp);"
-                    $SST_SQliteInsertCMD.Parameters.AddWithValue("@CardType", $SST_CollectedInformation.CardType) | Out-Null
-                    $SST_SQliteInsertCMD.Parameters.AddWithValue("@CardID", $SST_CollectedInformation.CardID) | Out-Null
-                    $SST_SQliteInsertCMD.Parameters.AddWithValue("@PortID", $SST_CollectedInformation.PortID) | Out-Null
-                    $SST_SQliteInsertCMD.Parameters.AddWithValue("@WWPN", $SST_CollectedInformation.WWPN) | Out-Null
-                    $SST_SQliteInsertCMD.Parameters.AddWithValue("@LinkFailure", $SST_CollectedInformation.LinkFailure) | Out-Null
-                    $SST_SQliteInsertCMD.Parameters.AddWithValue("@LoseSync", $SST_CollectedInformation.LoseSync) | Out-Null
-                    $SST_SQliteInsertCMD.Parameters.AddWithValue("@LoseSig", $SST_CollectedInformation.LoseSig) | Out-Null
-                    $SST_SQliteInsertCMD.Parameters.AddWithValue("@PSErrCount", $SST_CollectedInformation.PSErrCount) | Out-Null
-                    $SST_SQliteInsertCMD.Parameters.AddWithValue("@InvTransErr", $SST_CollectedInformation.InvTransErr) | Out-Null
-                    $SST_SQliteInsertCMD.Parameters.AddWithValue("@CRCErr", $SST_CollectedInformation.CRCErr) | Out-Null
-                    $SST_SQliteInsertCMD.Parameters.AddWithValue("@ZeroBtB", $SST_CollectedInformation.ZeroBtB) | Out-Null
-                    $SST_SQliteInsertCMD.Parameters.AddWithValue("@SFPTemp", $SST_CollectedInformation.SFPTemp) | Out-Null
-                    $SST_SQliteInsertCMD.Parameters.AddWithValue("@TXPwr", $SST_CollectedInformation.TXPwr) | Out-Null
-                    $SST_SQliteInsertCMD.Parameters.AddWithValue("@RXPwr", $SST_CollectedInformation.RXPwr) | Out-Null
-                    $SST_SQliteInsertCMD.Parameters.AddWithValue("@WWNN", $SST_CollectedInformation.NodeWWNN) | Out-Null
-                    $SST_SQliteInsertCMD.Parameters.AddWithValue("@SerialNumber", $SST_CollectedInformation.NodeSN) | Out-Null
-                    $SST_SQliteInsertCMD.Parameters.AddWithValue("@TimeStamp", $TimeStamp) | Out-Null
+                try {
+                    $SQLiteDBConnection.Open()
+                    $SQLiteCommand = $SQLiteDBConnection.CreateCommand()
 
-                    # DB save
-                    $SST_SQliteInsertCMD.ExecuteNonQuery()
+                    foreach ($SST_CollectedInformation in $SST_CollectedInformations){
+                        $SQLiteCommand.Parameters.Clear()
 
-                    # Delete | Keep only the 1000 most recent entries after TimeStamp
-                    $SST_SQliteInsertCMD.CommandText = "DELETE FROM IBMSTOFCPortStatsTable WHERE ID NOT IN ( SELECT ID FROM IBMSTOFCPortStatsTable ORDER BY TimeStamp DESC LIMIT 1000 );"
-                    $SST_SQliteInsertCMD.ExecuteNonQuery()
+                        $SQLiteCommand.CommandText ="INSERT INTO IBMSTOFCPortStatsTable (CardType, CardID, PortID, WWPN, LinkFailure, LoseSync, LoseSig, PSErrCount, InvTransErr, CRCErr, ZeroBtB, SFPTemp, TXPwr, RXPwr, WWNN, SerialNumber, TimeStamp)`
+                                                            VALUES (@CardType, @CardID, @PortID, @WWPN, @LinkFailure, @LoseSync, @LoseSig, @PSErrCount, @InvTransErr, @CRCErr, @ZeroBtB, @SFPTemp, @TXPwr, @RXPwr, @WWNN, @SerialNumber, @TimeStamp);"
+                        $SQLiteCommand.Parameters.AddWithValue("@CardType", $SST_CollectedInformation.CardType) | Out-Null
+                        $SQLiteCommand.Parameters.AddWithValue("@CardID", $SST_CollectedInformation.CardID) | Out-Null
+                        $SQLiteCommand.Parameters.AddWithValue("@PortID", $SST_CollectedInformation.PortID) | Out-Null
+                        $SQLiteCommand.Parameters.AddWithValue("@WWPN", $SST_CollectedInformation.WWPN) | Out-Null
+                        $SQLiteCommand.Parameters.AddWithValue("@LinkFailure", $SST_CollectedInformation.LinkFailure) | Out-Null
+                        $SQLiteCommand.Parameters.AddWithValue("@LoseSync", $SST_CollectedInformation.LoseSync) | Out-Null
+                        $SQLiteCommand.Parameters.AddWithValue("@LoseSig", $SST_CollectedInformation.LoseSig) | Out-Null
+                        $SQLiteCommand.Parameters.AddWithValue("@PSErrCount", $SST_CollectedInformation.PSErrCount) | Out-Null
+                        $SQLiteCommand.Parameters.AddWithValue("@InvTransErr", $SST_CollectedInformation.InvTransErr) | Out-Null
+                        $SQLiteCommand.Parameters.AddWithValue("@CRCErr", $SST_CollectedInformation.CRCErr) | Out-Null
+                        $SQLiteCommand.Parameters.AddWithValue("@ZeroBtB", $SST_CollectedInformation.ZeroBtB) | Out-Null
+                        $SQLiteCommand.Parameters.AddWithValue("@SFPTemp", $SST_CollectedInformation.SFPTemp) | Out-Null
+                        $SQLiteCommand.Parameters.AddWithValue("@TXPwr", $SST_CollectedInformation.TXPwr) | Out-Null
+                        $SQLiteCommand.Parameters.AddWithValue("@RXPwr", $SST_CollectedInformation.RXPwr) | Out-Null
+                        $SQLiteCommand.Parameters.AddWithValue("@WWNN", $SST_CollectedInformation.WWNN) | Out-Null
+                        $SQLiteCommand.Parameters.AddWithValue("@SerialNumber", $SST_CollectedInformation.SerialNumber) | Out-Null
+                        $SQLiteCommand.Parameters.AddWithValue("@TimeStamp", $TimeStamp) | Out-Null
+
+                        # DB save
+                        $SQLiteCommand.ExecuteNonQuery()
+
+                        # Delete | Keep only the 1000 most recent entries after TimeStamp
+                        $SQLiteCommand.CommandText = "DELETE FROM IBMSTOFCPortStatsTable WHERE ID NOT IN ( SELECT ID FROM IBMSTOFCPortStatsTable ORDER BY TimeStamp DESC LIMIT 1000 );"
+                        $SQLiteCommand.ExecuteNonQuery()
+                    }
                 }
+                catch {
+                    <#Do this if a terminating exception happens#>
+                    Write-Host "SQL Fehler: $($_.Exception.Message)"
+                    Write-Host $_.Exception.ToString()
+                }
+                finally {
+                    <#Do this after the try block regardless of whether an exception occurred or not#>
+                    if ($SQLiteCommand) { $SQLiteCommand.Dispose() }
+                    if ($SQLiteDBConnection) { $SQLiteDBConnection.Close(); $SQLiteDBConnection.Dispose() }
+                    # If you want to delete files afterwards, extra good:
+                    [System.Data.SQLite.SQLiteConnection]::ClearAllPools()
+                }
+
             }
             "SANBase" {
-                foreach ($SST_CollectedInformation in $SST_CollectedInformations){
-                    $SST_SQliteInsertCMD.CommandText ="INSERT INTO IBMSANHWTable (Name, Status, CodeLevel, CodeLevelLV, BrocadeProdName, MTM, SerialNumber, TimeStamp) VALUES (@Name, @Status, @CodeLevel, @CodeLevelLV, @BrocadeProdName, @MTM, @SerialNumber, @TimeStamp);"
-                    $SST_SQliteInsertCMD.Parameters.AddWithValue("@Name", $SST_CollectedInformation.'Swicht Name') | Out-Null
-                    $SST_SQliteInsertCMD.Parameters.AddWithValue("@Status", $SST_CollectedInformation.'Switch State') | Out-Null
-                    $SST_SQliteInsertCMD.Parameters.AddWithValue("@CodeLevel", $SST_CollectedInformation.'Fabric OS') | Out-Null
-                    $SST_SQliteInsertCMD.Parameters.AddWithValue("@CodeLevelLV", $SST_CollectedInformation.'Fabric OSLV') | Out-Null
-                    $SST_SQliteInsertCMD.Parameters.AddWithValue("@BrocadeProdName", $SST_CollectedInformation.'Brocade Product Name') | Out-Null
-                    $SST_SQliteInsertCMD.Parameters.AddWithValue("@MTM", $SST_CollectedInformation.'MTM') | Out-Null
-                    $SST_SQliteInsertCMD.Parameters.AddWithValue("@SerialNumber", $SST_CollectedInformation.'Serial Num') | Out-Null
-                    $SST_SQliteInsertCMD.Parameters.AddWithValue("@TimeStamp", $TimeStamp) | Out-Null
-                
-                    # DB save 
-                    $SST_SQliteInsertCMD.ExecuteNonQuery()
+                try {
+                    $SQLiteDBConnection.Open()
+                    $SQLiteCommand = $SQLiteDBConnection.CreateCommand()
 
-                    # Delete | Keep only the 16 most recent entries after TimeStamp
-                    $SST_SQliteInsertCMD.CommandText = "DELETE FROM IBMSANHWTable WHERE ID NOT IN ( SELECT ID FROM IBMSANHWTable ORDER BY TimeStamp DESC LIMIT 16 );"
-                    $SST_SQliteInsertCMD.ExecuteNonQuery()
+                    foreach ($SST_CollectedInformation in $SST_CollectedInformations){
+                        $SQLiteCommand.Parameters.Clear()
+
+                        $SQLiteCommand.CommandText ="INSERT INTO IBMSANHWTable (Name, Status, CodeLevel, BrocadeProdName, MTM, SerialNumber, SwitchWWNN, TimeStamp) VALUES (@Name, @Status, @CodeLevel, @BrocadeProdName, @MTM, @SerialNumber, @SwitchWWNN, @TimeStamp);"
+                        $SQLiteCommand.Parameters.AddWithValue("@Name", $SST_CollectedInformation.'SwichtName') | Out-Null
+                        $SQLiteCommand.Parameters.AddWithValue("@Status", $SST_CollectedInformation.'SwitchState') | Out-Null
+                        $SQLiteCommand.Parameters.AddWithValue("@CodeLevel", $SST_CollectedInformation.'FabricOS') | Out-Null
+                        $SQLiteCommand.Parameters.AddWithValue("@BrocadeProdName", $SST_CollectedInformation.'BBrocadeProductName') | Out-Null
+                        $SQLiteCommand.Parameters.AddWithValue("@MTM", $SST_CollectedInformation.'MTM') | Out-Null
+                        $SQLiteCommand.Parameters.AddWithValue("@SerialNumber", $SST_CollectedInformation.'SerialNumber') | Out-Null
+                        $SQLiteCommand.Parameters.AddWithValue("@SwitchWWNN", $SST_CollectedInformation.'SwitchWWNN') | Out-Null
+                        $SQLiteCommand.Parameters.AddWithValue("@TimeStamp", $TimeStamp) | Out-Null
+                    
+                        # DB save 
+                        $SQLiteCommand.ExecuteNonQuery()
+
+                        # Delete | Keep only the 16 most recent entries after TimeStamp
+                        $SQLiteCommand.CommandText = "DELETE FROM IBMSANHWTable WHERE ID NOT IN ( SELECT ID FROM IBMSANHWTable ORDER BY TimeStamp DESC LIMIT 16 );"
+                        $SQLiteCommand.ExecuteNonQuery()
+                    }
                 }
+                catch {
+                    <#Do this if a terminating exception happens#>
+                    Write-Host "SQL Fehler: $($_.Exception.Message)"
+                    Write-Host $_.Exception.ToString()
+                }
+                finally {
+                    <#Do this after the try block regardless of whether an exception occurred or not#>
+                    if ($SQLiteCommand) { $SQLiteCommand.Dispose() }
+                    if ($SQLiteDBConnection) { $SQLiteDBConnection.Close(); $SQLiteDBConnection.Dispose() }
+                    # If you want to delete files afterwards, extra good:
+                    [System.Data.SQLite.SQLiteConnection]::ClearAllPools()
+                }
+
             }
             "SANPortInfo" {
-                foreach ($SST_CollectedInformation in $SST_CollectedInformations){
-                    $SST_SQliteInsertCMD.CommandText ="INSERT INTO IBMSANPortInfoTable (Port, State, Speed, PortConnect, SwitchWWN, TimeStamp) VALUES (@Port, @State, @Speed, @PortConnect, @SwitchWWN, @TimeStamp);"
-                    $SST_SQliteInsertCMD.Parameters.AddWithValue("@Port", $SST_CollectedInformation.Port) | Out-Null
-                    $SST_SQliteInsertCMD.Parameters.AddWithValue("@State", $SST_CollectedInformation.State) | Out-Null
-                    $SST_SQliteInsertCMD.Parameters.AddWithValue("@Speed", $SST_CollectedInformation.Speed) | Out-Null
-                    $SST_SQliteInsertCMD.Parameters.AddWithValue("@PortConnect", $SST_CollectedInformation.PortConnect) | Out-Null
-                    $SST_SQliteInsertCMD.Parameters.AddWithValue("@SwitchWWN", $SST_CollectedInformation.SwitchWWN) | Out-Null
-                    $SST_SQliteInsertCMD.Parameters.AddWithValue("@TimeStamp", $TimeStamp) | Out-Null
-                
-                    # DB save 
-                    $SST_SQliteInsertCMD.ExecuteNonQuery()
+                try {
+                    $SQLiteDBConnection.Open()
+                    $SQLiteCommand = $SQLiteDBConnection.CreateCommand()
 
-                    # Then automatically clean up for this exact switch
-                    $SST_SQliteInsertCMD.CommandText ="DELETE FROM IBMSANPortInfoTable WHERE ID NOT IN (SELECT ID FROM (SELECT ID FROM IBMSANPortInfoTable AS t WHERE (SELECT COUNT(*) FROM IBMSANPortInfoTable AS x WHERE x.SwitchWWN = t.SwitchWWN AND x.Port = t.Port AND datetime(x.TimeStamp) >= datetime(t.TimeStamp) ) <= 1 ));" 
-                    $SST_SQliteInsertCMD.ExecuteNonQuery()
+                    foreach ($SST_CollectedInformation in $SST_CollectedInformations){
+                        $SQLiteCommand.Parameters.Clear()
+
+                        $SST_SQliteInsertCMD.CommandText ="INSERT INTO IBMSANPortInfoTable (Port, State, Speed, PortConnect, SerialNumber, SwitchWWNN, TimeStamp) VALUES (@Port, @State, @Speed, @PortConnect, @SerialNumber, @SwitchWWNN, @TimeStamp);"
+                        $SST_SQliteInsertCMD.Parameters.AddWithValue("@Port", $SST_CollectedInformation.Port) | Out-Null
+                        $SST_SQliteInsertCMD.Parameters.AddWithValue("@State", $SST_CollectedInformation.State) | Out-Null
+                        $SST_SQliteInsertCMD.Parameters.AddWithValue("@Speed", $SST_CollectedInformation.Speed) | Out-Null
+                        $SST_SQliteInsertCMD.Parameters.AddWithValue("@PortConnect", $SST_CollectedInformation.PortConnect) | Out-Null
+                        $SST_SQliteInsertCMD.Parameters.AddWithValue("@SerialNumber", $SST_CollectedInformation.SerialNumber) | Out-Null
+                        $SST_SQliteInsertCMD.Parameters.AddWithValue("@SwitchWWNN", $SST_CollectedInformation.SwitchWWNN) | Out-Null
+                        $SST_SQliteInsertCMD.Parameters.AddWithValue("@TimeStamp", $TimeStamp) | Out-Null
+                    
+                        # DB save 
+                        $SST_SQliteInsertCMD.ExecuteNonQuery()
+
+                        # Then automatically clean up for this exact switch
+                        $SST_SQliteInsertCMD.CommandText ="DELETE FROM IBMSANPortInfoTable WHERE ID NOT IN (SELECT ID FROM (SELECT ID FROM IBMSANPortInfoTable AS t WHERE (SELECT COUNT(*) FROM IBMSANPortInfoTable AS x WHERE x.SwitchWWNN = t.SwitchWWNN AND x.Port = t.Port AND datetime(x.TimeStamp) >= datetime(t.TimeStamp) ) <= 1 ));" 
+                        $SST_SQliteInsertCMD.ExecuteNonQuery()
+                    }
                 }
+                catch {
+                    <#Do this if a terminating exception happens#>
+                    Write-Host "SQL Fehler: $($_.Exception.Message)"
+                    Write-Host $_.Exception.ToString()
+                }
+                finally {
+                    <#Do this after the try block regardless of whether an exception occurred or not#>
+                    if ($SQLiteCommand) { $SQLiteCommand.Dispose() }
+                    if ($SQLiteDBConnection) { $SQLiteDBConnection.Close(); $SQLiteDBConnection.Dispose() }
+                    # If you want to delete files afterwards, extra good:
+                    [System.Data.SQLite.SQLiteConnection]::ClearAllPools()
+                }
+
             }
             "PowerHMC" {
                 foreach ($SST_CollectedInformation in $SST_CollectedInformations){
