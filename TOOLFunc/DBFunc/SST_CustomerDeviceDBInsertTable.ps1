@@ -225,8 +225,9 @@ function SST_CustomerDeviceDBInsertTable {
                     foreach ($SST_CollectedInformation in $SST_CollectedInformations){
                         $SQLiteCommand.Parameters.Clear()
 
-                        $SQLiteCommand.CommandText ="INSERT INTO IBMSTOFCPortStatsTable (CardType, CardID, PortID, WWPN, LinkFailure, LoseSync, LoseSig, PSErrCount, InvTransErr, CRCErr, ZeroBtB, SFPTemp, TXPwr, RXPwr, WWNN, SerialNumber, TimeStamp)`
-                                                            VALUES (@CardType, @CardID, @PortID, @WWPN, @LinkFailure, @LoseSync, @LoseSig, @PSErrCount, @InvTransErr, @CRCErr, @ZeroBtB, @SFPTemp, @TXPwr, @RXPwr, @WWNN, @SerialNumber, @TimeStamp);"
+                        $SQLiteCommand.CommandText ="INSERT INTO IBMSTOFCPortStatsTable (CustomerNbr, CardType, CardID, PortID, WWPN, LinkFailure, LoseSync, LoseSig, PSErrCount, InvTransErr, CRCErr, ZeroBtB, SFPTemp, TXPwr, RXPwr, WWNN, SerialNumber, TimeStamp)`
+                                                            VALUES (@CustomerNbr, @CardType, @CardID, @PortID, @WWPN, @LinkFailure, @LoseSync, @LoseSig, @PSErrCount, @InvTransErr, @CRCErr, @ZeroBtB, @SFPTemp, @TXPwr, @RXPwr, @WWNN, @SerialNumber, @TimeStamp);"
+                        $SQLiteCommand.Parameters.AddWithValue("@CustomerNbr", $Customer) | Out-Null
                         $SQLiteCommand.Parameters.AddWithValue("@CardType", $SST_CollectedInformation.CardType) | Out-Null
                         $SQLiteCommand.Parameters.AddWithValue("@CardID", $SST_CollectedInformation.CardID) | Out-Null
                         $SQLiteCommand.Parameters.AddWithValue("@PortID", $SST_CollectedInformation.PortID) | Out-Null
@@ -275,7 +276,8 @@ function SST_CustomerDeviceDBInsertTable {
                     foreach ($SST_CollectedInformation in $SST_CollectedInformations){
                         $SQLiteCommand.Parameters.Clear()
 
-                        $SQLiteCommand.CommandText ="INSERT INTO IBMSANHWTable (Name, Status, CodeLevel, BrocadeProdName, MTM, SerialNumber, SwitchWWNN, TimeStamp) VALUES (@Name, @Status, @CodeLevel, @BrocadeProdName, @MTM, @SerialNumber, @SwitchWWNN, @TimeStamp);"
+                        $SQLiteCommand.CommandText ="INSERT INTO IBMSANHWTable (CustomerNbr, Name, Status, CodeLevel, BrocadeProdName, MTM, SerialNumber, SwitchWWNN, TimeStamp) VALUES (@CustomerNbr, @Name, @Status, @CodeLevel, @BrocadeProdName, @MTM, @SerialNumber, @SwitchWWNN, @TimeStamp);"
+                        $SQLiteCommand.Parameters.AddWithValue("@CustomerNbr", $Customer) | Out-Null
                         $SQLiteCommand.Parameters.AddWithValue("@Name", $SST_CollectedInformation.'SwichtName') | Out-Null
                         $SQLiteCommand.Parameters.AddWithValue("@Status", $SST_CollectedInformation.'SwitchState') | Out-Null
                         $SQLiteCommand.Parameters.AddWithValue("@CodeLevel", $SST_CollectedInformation.'FabricOS') | Out-Null
@@ -315,21 +317,22 @@ function SST_CustomerDeviceDBInsertTable {
                     foreach ($SST_CollectedInformation in $SST_CollectedInformations){
                         $SQLiteCommand.Parameters.Clear()
 
-                        $SST_SQliteInsertCMD.CommandText ="INSERT INTO IBMSANPortInfoTable (Port, State, Speed, PortConnect, SerialNumber, SwitchWWNN, TimeStamp) VALUES (@Port, @State, @Speed, @PortConnect, @SerialNumber, @SwitchWWNN, @TimeStamp);"
-                        $SST_SQliteInsertCMD.Parameters.AddWithValue("@Port", $SST_CollectedInformation.Port) | Out-Null
-                        $SST_SQliteInsertCMD.Parameters.AddWithValue("@State", $SST_CollectedInformation.State) | Out-Null
-                        $SST_SQliteInsertCMD.Parameters.AddWithValue("@Speed", $SST_CollectedInformation.Speed) | Out-Null
-                        $SST_SQliteInsertCMD.Parameters.AddWithValue("@PortConnect", $SST_CollectedInformation.PortConnect) | Out-Null
-                        $SST_SQliteInsertCMD.Parameters.AddWithValue("@SerialNumber", $SST_CollectedInformation.SerialNumber) | Out-Null
-                        $SST_SQliteInsertCMD.Parameters.AddWithValue("@SwitchWWNN", $SST_CollectedInformation.SwitchWWNN) | Out-Null
-                        $SST_SQliteInsertCMD.Parameters.AddWithValue("@TimeStamp", $TimeStamp) | Out-Null
+                        $SQLiteCommand.CommandText ="INSERT INTO IBMSANPortInfoTable (CustomerNbr, Port, State, Speed, PortConnect, SerialNumber, SwitchWWNN, TimeStamp) VALUES (@CustomerNbr, @Port, @State, @Speed, @PortConnect, @SerialNumber, @SwitchWWNN, @TimeStamp);"
+                        $SQLiteCommand.Parameters.AddWithValue("@CustomerNbr", $Customer) | Out-Null
+                        $SQLiteCommand.Parameters.AddWithValue("@Port", $SST_CollectedInformation.Port) | Out-Null
+                        $SQLiteCommand.Parameters.AddWithValue("@State", $SST_CollectedInformation.State) | Out-Null
+                        $SQLiteCommand.Parameters.AddWithValue("@Speed", $SST_CollectedInformation.Speed) | Out-Null
+                        $SQLiteCommand.Parameters.AddWithValue("@PortConnect", $SST_CollectedInformation.PortConnect) | Out-Null
+                        $SQLiteCommand.Parameters.AddWithValue("@SerialNumber", $SST_CollectedInformation.SerialNumber) | Out-Null
+                        $SQLiteCommand.Parameters.AddWithValue("@SwitchWWNN", $SST_CollectedInformation.SwitchWWNN) | Out-Null
+                        $SQLiteCommand.Parameters.AddWithValue("@TimeStamp", $TimeStamp) | Out-Null
                     
                         # DB save 
-                        $SST_SQliteInsertCMD.ExecuteNonQuery()
+                        $SQLiteCommand.ExecuteNonQuery()
 
                         # Then automatically clean up for this exact switch
-                        $SST_SQliteInsertCMD.CommandText ="DELETE FROM IBMSANPortInfoTable WHERE ID NOT IN (SELECT ID FROM (SELECT ID FROM IBMSANPortInfoTable AS t WHERE (SELECT COUNT(*) FROM IBMSANPortInfoTable AS x WHERE x.SwitchWWNN = t.SwitchWWNN AND x.Port = t.Port AND datetime(x.TimeStamp) >= datetime(t.TimeStamp) ) <= 1 ));" 
-                        $SST_SQliteInsertCMD.ExecuteNonQuery()
+                        $SQLiteCommand.CommandText ="DELETE FROM IBMSANPortInfoTable WHERE ID NOT IN (SELECT ID FROM (SELECT ID FROM IBMSANPortInfoTable AS t WHERE (SELECT COUNT(*) FROM IBMSANPortInfoTable AS x WHERE x.SwitchWWNN = t.SwitchWWNN AND x.Port = t.Port AND datetime(x.TimeStamp) >= datetime(t.TimeStamp) ) <= 1 ));" 
+                        $SQLiteCommand.ExecuteNonQuery()
                     }
                 }
                 catch {
@@ -348,67 +351,70 @@ function SST_CustomerDeviceDBInsertTable {
             }
             "PowerHMC" {
                 foreach ($SST_CollectedInformation in $SST_CollectedInformations){
-                    $SST_SQliteInsertCMD.CommandText ="INSERT INTO PowerHMC (HMCName, HMCHWModell, HMCHWSN, HMCHWBios, HMCSWVersion, HMCSWBuildLevel, HMCSWBaseVersion, HMCSWFixes, TimeStamp) VALUES (@HMCName, @HMCHWModell, @HMCHWSN, @HMCHWBios, @HMCSWVersion, @HMCSWBuildLevel, @HMCSWBaseVersion, @HMCSWFixes, @TimeStamp);"
-                    $SST_SQliteInsertCMD.Parameters.AddWithValue("@HMCName", $SST_CollectedInformation.HMCName) | Out-Null
-                    $SST_SQliteInsertCMD.Parameters.AddWithValue("@HMCHWModell", $SST_CollectedInformation.HMCHWModell) | Out-Null
-                    $SST_SQliteInsertCMD.Parameters.AddWithValue("@HMCHWSN", $SST_CollectedInformation.HMCHWSN) | Out-Null
-                    $SST_SQliteInsertCMD.Parameters.AddWithValue("@HMCHWBios", $SST_CollectedInformation.HMCHWBios) | Out-Null
-                    $SST_SQliteInsertCMD.Parameters.AddWithValue("@HMCSWVersion", $SST_CollectedInformation.HMCSWVersion) | Out-Null
-                    $SST_SQliteInsertCMD.Parameters.AddWithValue("@HMCSWBuildLevel", $SST_CollectedInformation.HMCSWBuildLevel) | Out-Null
-                    $SST_SQliteInsertCMD.Parameters.AddWithValue("@HMCSWBaseVersion", $SST_CollectedInformation.HMCSWBaseVersion) | Out-Null
-                    $SST_SQliteInsertCMD.Parameters.AddWithValue("@HMCSWFixes", $SST_CollectedInformation.HMCSWFixes) | Out-Null
-                    $SST_SQliteInsertCMD.Parameters.AddWithValue("@TimeStamp", $TimeStamp) | Out-Null
+                    $SQLiteCommand.CommandText ="INSERT INTO PowerHMC (CustomerNbr, HMCName, HMCHWModell, HMCHWSN, HMCHWBios, HMCSWVersion, HMCSWBuildLevel, HMCSWBaseVersion, HMCSWFixes, TimeStamp) VALUES (@CustomerNbr, @HMCName, @HMCHWModell, @HMCHWSN, @HMCHWBios, @HMCSWVersion, @HMCSWBuildLevel, @HMCSWBaseVersion, @HMCSWFixes, @TimeStamp);"
+                    $SQLiteCommand.Parameters.AddWithValue("@CustomerNbr", $Customer) | Out-Null
+                    $SQLiteCommand.Parameters.AddWithValue("@HMCName", $SST_CollectedInformation.HMCName) | Out-Null
+                    $SQLiteCommand.Parameters.AddWithValue("@HMCHWModell", $SST_CollectedInformation.HMCHWModell) | Out-Null
+                    $SQLiteCommand.Parameters.AddWithValue("@HMCHWSN", $SST_CollectedInformation.HMCHWSN) | Out-Null
+                    $SQLiteCommand.Parameters.AddWithValue("@HMCHWBios", $SST_CollectedInformation.HMCHWBios) | Out-Null
+                    $SQLiteCommand.Parameters.AddWithValue("@HMCSWVersion", $SST_CollectedInformation.HMCSWVersion) | Out-Null
+                    $SQLiteCommand.Parameters.AddWithValue("@HMCSWBuildLevel", $SST_CollectedInformation.HMCSWBuildLevel) | Out-Null
+                    $SQLiteCommand.Parameters.AddWithValue("@HMCSWBaseVersion", $SST_CollectedInformation.HMCSWBaseVersion) | Out-Null
+                    $SQLiteCommand.Parameters.AddWithValue("@HMCSWFixes", $SST_CollectedInformation.HMCSWFixes) | Out-Null
+                    $SQLiteCommand.Parameters.AddWithValue("@TimeStamp", $TimeStamp) | Out-Null
                 
                     # DB save 
-                    $SST_SQliteInsertCMD.ExecuteNonQuery()
+                    $SQLiteCommand.ExecuteNonQuery()
 
                     # Delete | Keep only the 64 most recent entries after TimeStamp
-                    $SST_SQliteInsertCMD.CommandText = "DELETE FROM PowerHMC WHERE ID NOT IN ( SELECT ID FROM PowerHMC ORDER BY TimeStamp DESC LIMIT 64 );"
-                    $SST_SQliteInsertCMD.ExecuteNonQuery()
+                    $SQLiteCommand.CommandText = "DELETE FROM PowerHMC WHERE ID NOT IN ( SELECT ID FROM PowerHMC ORDER BY TimeStamp DESC LIMIT 64 );"
+                    $SQLiteCommand.ExecuteNonQuery()
                 }
             }
             "PowerSysSummary" {
                 foreach ($SST_CollectedInformation in $SST_CollectedInformations){
-                    $SST_SQliteInsertCMD.CommandText ="INSERT INTO PowerSysSummary (PowerSysManagedSystem, PowerSysSystemStatus, PowerSysSystemMTM, PowerSysSystemSN, PowerSysMGRIPAddr, PowerSysPrimSPIPAddr, PowerSysECNumber, PowerSysIPLLevel, PowerSysIPLActivatedLevel, PowerSysCoDEvent, TimeStamp) VALUES (@PowerSysManagedSystem, @PowerSysSystemStatus, @PowerSysSystemMTM, @PowerSysSystemSN, @PowerSysMGRIPAddr, @PowerSysPrimSPIPAddr, @PowerSysECNumber, @PowerSysIPLLevel, @PowerSysIPLActivatedLevel, @PowerSysCoDEvent, @TimeStamp);"
-                    $SST_SQliteInsertCMD.Parameters.AddWithValue("@PowerSysManagedSystem", $SST_CollectedInformation.ManagedSystem) | Out-Null
-                    $SST_SQliteInsertCMD.Parameters.AddWithValue("@PowerSysSystemStatus", $SST_CollectedInformation.SystemStatus) | Out-Null
-                    $SST_SQliteInsertCMD.Parameters.AddWithValue("@PowerSysSystemMTM", $SST_CollectedInformation.SystemMTM) | Out-Null
-                    $SST_SQliteInsertCMD.Parameters.AddWithValue("@PowerSysSystemSN", $SST_CollectedInformation.SystemSN) | Out-Null
-                    $SST_SQliteInsertCMD.Parameters.AddWithValue("@PowerSysMGRIPAddr", $SST_CollectedInformation.MGRIPAddr) | Out-Null
-                    $SST_SQliteInsertCMD.Parameters.AddWithValue("@PowerSysPrimSPIPAddr", $SST_CollectedInformation.PrimSPIPAddr) | Out-Null
-                    $SST_SQliteInsertCMD.Parameters.AddWithValue("@PowerSysECNumber", $SST_CollectedInformation.ECNumber) | Out-Null
-                    $SST_SQliteInsertCMD.Parameters.AddWithValue("@PowerSysIPLLevel", $SST_CollectedInformation.IPLLevel) | Out-Null
-                    $SST_SQliteInsertCMD.Parameters.AddWithValue("@PowerSysIPLActivatedLevel", $SST_CollectedInformation.IPLActivatedLevel) | Out-Null
-                    $SST_SQliteInsertCMD.Parameters.AddWithValue("@PowerSysCoDEvent", $SST_CollectedInformation.CoDEvent) | Out-Null
-                    $SST_SQliteInsertCMD.Parameters.AddWithValue("@TimeStamp", $TimeStamp) | Out-Null
+                    $SQLiteCommand.CommandText ="INSERT INTO PowerSysSummary (CustomerNbr, PowerSysManagedSystem, PowerSysSystemStatus, PowerSysSystemMTM, PowerSysSystemSN, PowerSysMGRIPAddr, PowerSysPrimSPIPAddr, PowerSysECNumber, PowerSysIPLLevel, PowerSysIPLActivatedLevel, PowerSysCoDEvent, TimeStamp) VALUES (@CustomerNbr, @PowerSysManagedSystem, @PowerSysSystemStatus, @PowerSysSystemMTM, @PowerSysSystemSN, @PowerSysMGRIPAddr, @PowerSysPrimSPIPAddr, @PowerSysECNumber, @PowerSysIPLLevel, @PowerSysIPLActivatedLevel, @PowerSysCoDEvent, @TimeStamp);"
+                    $SQLiteCommand.Parameters.AddWithValue("@CustomerNbr", $Customer) | Out-Null
+                    $SQLiteCommand.Parameters.AddWithValue("@PowerSysManagedSystem", $SST_CollectedInformation.ManagedSystem) | Out-Null
+                    $SQLiteCommand.Parameters.AddWithValue("@PowerSysSystemStatus", $SST_CollectedInformation.SystemStatus) | Out-Null
+                    $SQLiteCommand.Parameters.AddWithValue("@PowerSysSystemMTM", $SST_CollectedInformation.SystemMTM) | Out-Null
+                    $SQLiteCommand.Parameters.AddWithValue("@PowerSysSystemSN", $SST_CollectedInformation.SystemSN) | Out-Null
+                    $SQLiteCommand.Parameters.AddWithValue("@PowerSysMGRIPAddr", $SST_CollectedInformation.MGRIPAddr) | Out-Null
+                    $SQLiteCommand.Parameters.AddWithValue("@PowerSysPrimSPIPAddr", $SST_CollectedInformation.PrimSPIPAddr) | Out-Null
+                    $SQLiteCommand.Parameters.AddWithValue("@PowerSysECNumber", $SST_CollectedInformation.ECNumber) | Out-Null
+                    $SQLiteCommand.Parameters.AddWithValue("@PowerSysIPLLevel", $SST_CollectedInformation.IPLLevel) | Out-Null
+                    $SQLiteCommand.Parameters.AddWithValue("@PowerSysIPLActivatedLevel", $SST_CollectedInformation.IPLActivatedLevel) | Out-Null
+                    $SQLiteCommand.Parameters.AddWithValue("@PowerSysCoDEvent", $SST_CollectedInformation.CoDEvent) | Out-Null
+                    $SQLiteCommand.Parameters.AddWithValue("@TimeStamp", $TimeStamp) | Out-Null
                     
                     # DB save 
-                    $SST_SQliteInsertCMD.ExecuteNonQuery()
+                    $SQLiteCommand.ExecuteNonQuery()
 
                     # Delete | Keep only the 128 most recent entries after TimeStamp
-                    $SST_SQliteInsertCMD.CommandText = "DELETE FROM PowerSysSummary WHERE ID NOT IN ( SELECT ID FROM PowerSysSummary ORDER BY TimeStamp DESC LIMIT 128 );"
-                    $SST_SQliteInsertCMD.ExecuteNonQuery()
+                    $SQLiteCommand.CommandText = "DELETE FROM PowerSysSummary WHERE ID NOT IN ( SELECT ID FROM PowerSysSummary ORDER BY TimeStamp DESC LIMIT 128 );"
+                    $SQLiteCommand.ExecuteNonQuery()
                 }
             }
             "LPARSummary" {
                 foreach ($SST_CollectedInformation in $SST_CollectedInformations){
-                    $SST_SQliteInsertCMD.CommandText ="INSERT INTO LPARSummary (LPARName, LPARID, LPARStatus, LPAREnvironment, LPAROSVersion, LPARRMCIP, LPARManagedSystemName, LPARManagedSystemSN, TimeStamp) VALUES (@LPARName, @LPARID, @LPARStatus, @LPAREnvironment, @LPAROSVersion, @LPARRMCIP, @LPARManagedSystemName, @LPARManagedSystemSN, @TimeStamp);"
-                    $SST_SQliteInsertCMD.Parameters.AddWithValue("@LPARName", $SST_CollectedInformation.LPARName) | Out-Null
-                    $SST_SQliteInsertCMD.Parameters.AddWithValue("@LPARID", $SST_CollectedInformation.LPARID) | Out-Null
-                    $SST_SQliteInsertCMD.Parameters.AddWithValue("@LPARStatus", $SST_CollectedInformation.LPARStatus) | Out-Null
-                    $SST_SQliteInsertCMD.Parameters.AddWithValue("@LPAREnvironment", $SST_CollectedInformation.LPAREnvironment) | Out-Null
-                    $SST_SQliteInsertCMD.Parameters.AddWithValue("@LPAROSVersion", $SST_CollectedInformation.LPAROSVersion) | Out-Null
-                    $SST_SQliteInsertCMD.Parameters.AddWithValue("@LPARRMCIP", $SST_CollectedInformation.RMCIP) | Out-Null
-                    $SST_SQliteInsertCMD.Parameters.AddWithValue("@LPARManagedSystemName", $SST_CollectedInformation.ManagedSystemName) | Out-Null
-                    $SST_SQliteInsertCMD.Parameters.AddWithValue("@LPARManagedSystemSN", $SST_CollectedInformation.ManagedSystemSN) | Out-Null
-                    $SST_SQliteInsertCMD.Parameters.AddWithValue("@TimeStamp", $TimeStamp) | Out-Null
+                    $SQLiteCommand.CommandText ="INSERT INTO LPARSummary (CustomerNbr, LPARName, LPARID, LPARStatus, LPAREnvironment, LPAROSVersion, LPARRMCIP, LPARManagedSystemName, LPARManagedSystemSN, TimeStamp) VALUES (@CustomerNbr, @LPARName, @LPARID, @LPARStatus, @LPAREnvironment, @LPAROSVersion, @LPARRMCIP, @LPARManagedSystemName, @LPARManagedSystemSN, @TimeStamp);"
+                    $SQLiteCommand.Parameters.AddWithValue("@CustomerNbr", $Customer) | Out-Null
+                    $SQLiteCommand.Parameters.AddWithValue("@LPARName", $SST_CollectedInformation.LPARName) | Out-Null
+                    $SQLiteCommand.Parameters.AddWithValue("@LPARID", $SST_CollectedInformation.LPARID) | Out-Null
+                    $SQLiteCommand.Parameters.AddWithValue("@LPARStatus", $SST_CollectedInformation.LPARStatus) | Out-Null
+                    $SQLiteCommand.Parameters.AddWithValue("@LPAREnvironment", $SST_CollectedInformation.LPAREnvironment) | Out-Null
+                    $SQLiteCommand.Parameters.AddWithValue("@LPAROSVersion", $SST_CollectedInformation.LPAROSVersion) | Out-Null
+                    $SQLiteCommand.Parameters.AddWithValue("@LPARRMCIP", $SST_CollectedInformation.RMCIP) | Out-Null
+                    $SQLiteCommand.Parameters.AddWithValue("@LPARManagedSystemName", $SST_CollectedInformation.ManagedSystemName) | Out-Null
+                    $SQLiteCommand.Parameters.AddWithValue("@LPARManagedSystemSN", $SST_CollectedInformation.ManagedSystemSN) | Out-Null
+                    $SQLiteCommand.Parameters.AddWithValue("@TimeStamp", $TimeStamp) | Out-Null
                 
                     # DB save 
-                    $SST_SQliteInsertCMD.ExecuteNonQuery()
+                    $SQLiteCommand.ExecuteNonQuery()
 
                     # Delete | Keep only the 1024 most recent entries after TimeStamp
-                    $SST_SQliteInsertCMD.CommandText = "DELETE FROM LPARSummary WHERE ID NOT IN ( SELECT ID FROM LPARSummary ORDER BY TimeStamp DESC LIMIT 1024 );"
-                    $SST_SQliteInsertCMD.ExecuteNonQuery()
+                    $SQLiteCommand.CommandText = "DELETE FROM LPARSummary WHERE ID NOT IN ( SELECT ID FROM LPARSummary ORDER BY TimeStamp DESC LIMIT 1024 );"
+                    $SQLiteCommand.ExecuteNonQuery()
                 }
             }
             Default {SST_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong during saving the $SST_InfoType data in the local db.") -TD_ToolMSGType Error -TD_Shown yes}
