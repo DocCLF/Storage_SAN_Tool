@@ -137,6 +137,9 @@ function FOS_SSHBasicSwitchInfos {
         
         if([string]::IsNullOrEmpty($TD_Device_DeviceName)){$TD_Device_DeviceName = $($FOS_SwGeneralInfos.'SwichtName')}
         Close-ProgressBar -ProgressBar $ProgressBar
+
+        SST_CustomerDeviceDBInsertTable -SST_InfoType "SANBase" -SST_CollectedInformations $FOS_SwGeneralInfos
+
         <# export y or n #>
         if($TD_Export -eq "yes"){
             <# exported to .\Host_Volume_Map_Result.csv #>
