@@ -82,7 +82,7 @@ function FOS_SSHSwitchShowInfo {
                 $FOS_SWsh.SwitchWWNN = $SANSwitchIdent.SwitchWWNN
                 $FOS_SWsh.SerialNumber = $SANSwitchIdent.SerialNumber
                 $FOS_SWsh.RowID = $SwitchShowRowID
-                $FOS_SWsh.SwitchWWN = $FOS_switchWwn
+                #$FOS_SWsh.SwitchWWN = $FOS_switchWwn
                 <# Port index is a number between 0 and the maximum number of supported ports on the platform. The port index identifies the port number relative to the switch. #>
                 $FOS_SWsh.Index = ($FOS_linebyLine |Select-String -Pattern '^\s+(\d+)' -AllMatches).Matches.Groups.Value[1]
                 $FOS_SWshIndex = $FOS_SWsh.Index
@@ -147,6 +147,8 @@ function FOS_SSHSwitchShowInfo {
     end {
 
         Close-ProgressBar -ProgressBar $ProgressBar
+        SST_CustomerDeviceDBInsertTable -SST_InfoType "SANPortInfo" -SST_CollectedInformations $FOS_SwBasicPortDetails
+
         <# returns the hashtable for further processing, not mandatory but the safe way #>
         Write-Debug -Message "End Func GET_SwitchShowInfo |$(Get-Date)`n "
         <# export y or n #>
