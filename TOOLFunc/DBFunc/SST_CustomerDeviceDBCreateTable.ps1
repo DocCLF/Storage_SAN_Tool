@@ -70,7 +70,7 @@ function SST_CustomerDeviceDBCreateTable {
             }
             <# FCPortStats #>
             try{
-                $SST_SQLiteTabelQuery ="CREATE TABLE IF NOT EXISTS IBMSTOFCPortStatsTable (ID INTEGER PRIMARY KEY AUTOINCREMENT, CardType TEXT, CardID TEXT, PortID TEXT, WWPN TEXT, LinkFailure TEXT, LoseSync TEXT, LoseSig TEXT,`
+                $SST_SQLiteTabelQuery ="CREATE TABLE IF NOT EXISTS IBMSTOFCPortStatsTable (ID INTEGER PRIMARY KEY AUTOINCREMENT, CustomerNbr TEXT NOT NULL, CardType TEXT, CardID TEXT, PortID TEXT, WWPN TEXT, LinkFailure TEXT, LoseSync TEXT, LoseSig TEXT,`
                                         PSErrCount TEXT, InvTransErr TEXT, CRCErr TEXT, ZeroBtB TEXT, SFPTemp TEXT, TXPwr TEXT, RXPwr TEXT, SerialNumber TEXT, WWNN TEXT, TimeStamp TEXT );" 
                 $SQLiteCommandCreate.CommandText = $SST_SQLiteTabelQuery
                 $SQLiteCommandCreate.ExecuteNonQuery()
@@ -80,7 +80,7 @@ function SST_CustomerDeviceDBCreateTable {
             }
             <# SANBase #>
             try{ 
-                $SST_SQLiteTabelQuery ="CREATE TABLE IF NOT EXISTS IBMSANHWTable (ID INTEGER PRIMARY KEY AUTOINCREMENT, Name TEXT NOT NULL, Status TEXT NOT NULL, BrocadeProdName TEXT, MTM TEXT, CodeLevel TEXT, SerialNumber TEXT, SwitchWWNN TEXT, TimeStamp TEXT );" 
+                $SST_SQLiteTabelQuery ="CREATE TABLE IF NOT EXISTS IBMSANHWTable (ID INTEGER PRIMARY KEY AUTOINCREMENT, CustomerNbr TEXT NOT NULL, Name TEXT NOT NULL, Status TEXT NOT NULL, BrocadeProdName TEXT, MTM TEXT, CodeLevel TEXT, SerialNumber TEXT, SwitchWWNN TEXT, TimeStamp TEXT );" 
                 $SQLiteCommandCreate.CommandText = $SST_SQLiteTabelQuery
                 $SQLiteCommandCreate.ExecuteNonQuery()
             }catch{
@@ -89,7 +89,7 @@ function SST_CustomerDeviceDBCreateTable {
             }
             <# SANPortInfo #>
             try{
-                $SST_SQLiteTabelQuery ="CREATE TABLE IF NOT EXISTS IBMSANPortInfoTable (ID INTEGER PRIMARY KEY AUTOINCREMENT, Port TEXT, State TEXT, Speed TEXT, PortConnect TEXT, SerialNumber TEXT, SwitchWWNN TEXT, TimeStamp TEXT );"
+                $SST_SQLiteTabelQuery ="CREATE TABLE IF NOT EXISTS IBMSANPortInfoTable (ID INTEGER PRIMARY KEY AUTOINCREMENT, CustomerNbr TEXT NOT NULL, Port TEXT, State TEXT, Speed TEXT, PortConnect TEXT, SerialNumber TEXT, SwitchWWNN TEXT, TimeStamp TEXT );"
                 $SQLiteCommandCreate.CommandText = $SST_SQLiteTabelQuery
                 $SQLiteCommandCreate.ExecuteNonQuery()
             }catch{
@@ -98,19 +98,19 @@ function SST_CustomerDeviceDBCreateTable {
             }
             <# PowerHMC #>
             try{ 
-                $SST_SQLiteTabelQuery ="CREATE TABLE IF NOT EXISTS PowerHMC (ID INTEGER PRIMARY KEY AUTOINCREMENT, HMCName TEXT, HMCHWModell TEXT, HMCHWSN TEXT, HMCHWBios TEXT, HMCSWVersion TEXT, HMCSWBuildLevel TEXT, HMCSWBaseVersion TEXT, HMCSWFixes TEXT, TimeStamp TEXT );" 
+                $SST_SQLiteTabelQuery ="CREATE TABLE IF NOT EXISTS PowerHMC (ID INTEGER PRIMARY KEY AUTOINCREMENT, CustomerNbr TEXT NOT NULL, HMCName TEXT, HMCHWModell TEXT, HMCHWSN TEXT, HMCHWBios TEXT, HMCSWVersion TEXT, HMCSWBuildLevel TEXT, HMCSWBaseVersion TEXT, HMCSWFixes TEXT, TimeStamp TEXT );" 
                 $SQLiteCommandCreate.CommandText = $SST_SQLiteTabelQuery
                 $SQLiteCommandCreate.ExecuteNonQuery()
             }catch{}
             <# PowerSysSummary #>
             try{ 
-                $SST_SQLiteTabelQuery ="CREATE TABLE IF NOT EXISTS PowerSysSummary (ID INTEGER PRIMARY KEY AUTOINCREMENT, PowerSysManagedSystem TEXT NOT NULL, PowerSysSystemStatus TEXT NOT NULL, PowerSysSystemMTM TEXT, PowerSysSystemSN TEXT, PowerSysMGRIPAddr TEXT, PowerSysPrimSPIPAddr TEXT, PowerSysECNumber TEXT NOT NULL, PowerSysIPLLevel TEXT, PowerSysIPLActivatedLevel TEXT, PowerSysCoDEvent TEXT, TimeStamp TEXT );" 
+                $SST_SQLiteTabelQuery ="CREATE TABLE IF NOT EXISTS PowerSysSummary (ID INTEGER PRIMARY KEY AUTOINCREMENT, CustomerNbr TEXT NOT NULL, PowerSysManagedSystem TEXT NOT NULL, PowerSysSystemStatus TEXT NOT NULL, PowerSysSystemMTM TEXT, PowerSysSystemSN TEXT, PowerSysMGRIPAddr TEXT, PowerSysPrimSPIPAddr TEXT, PowerSysECNumber TEXT NOT NULL, PowerSysIPLLevel TEXT, PowerSysIPLActivatedLevel TEXT, PowerSysCoDEvent TEXT, TimeStamp TEXT );" 
                 $SQLiteCommandCreate.CommandText = $SST_SQLiteTabelQuery
                 $SQLiteCommandCreate.ExecuteNonQuery()
             }catch{}
             <# LPARSummary #>
             try{ 
-                $SST_SQLiteTabelQuery ="CREATE TABLE IF NOT EXISTS LPARSummary (ID INTEGER PRIMARY KEY AUTOINCREMENT, LPARName TEXT NOT NULL, LPARID TEXT NOT NULL, LPARStatus TEXT, LPAREnvironment TEXT, LPAROSVersion TEXT, LPARRMCIP TEXT, LPARManagedSystemName TEXT, LPARManagedSystemSN TEXT, TimeStamp TEXT );" 
+                $SST_SQLiteTabelQuery ="CREATE TABLE IF NOT EXISTS LPARSummary (ID INTEGER PRIMARY KEY AUTOINCREMENT, CustomerNbr TEXT NOT NULL, LPARName TEXT NOT NULL, LPARID TEXT NOT NULL, LPARStatus TEXT, LPAREnvironment TEXT, LPAROSVersion TEXT, LPARRMCIP TEXT, LPARManagedSystemName TEXT, LPARManagedSystemSN TEXT, TimeStamp TEXT );" 
                 $SQLiteCommandCreate.CommandText = $SST_SQLiteTabelQuery
                 $SQLiteCommandCreate.ExecuteNonQuery()
             }catch{}
