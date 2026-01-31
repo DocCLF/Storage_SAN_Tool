@@ -145,36 +145,41 @@ function Add-MappedKeyValueRows {
         $Collection,
 
         [Parameter(Mandatory)]
-        [System.Collections.IDictionary] $Source,
+        $Source,
 
         [Parameter(Mandatory)]
         [hashtable] $Map
     )
 
-    # Empty collection (if possible)
-    try { $Collection.Clear() | Out-Null } catch {}
-
-    foreach ($propName in $Map.Keys) {
-        $label = $Map[$propName]
-
-        $value = $null
-        if ($Source.Contains($propName)) {
-            $value = $Source[$propName]
-        }
-
-        $row = [pscustomobject]@{
-            Key   = $label
-            Value = $value
-        }
-
-        # add/append robust
-        try { $null = $Collection.Add($row) }
-        catch { $Collection = @($Collection) + $row }  # fallback if no .Add()
+    # If Source is an array: search for the IDictionary element
+    if ($Source -is [object[]]) {
+        $Source = @($Source) | Where-Object { $_ -is [System.Collections.IDictionary] } | Select-Object -First 1
     }
 
-    return $Collection
-}
+    # If it is still not an IDictionary, try PSCustomObject -> Hashtable
+    if (-not ($Source -is [System.Collections.IDictionary])) {
+        $ht = @{}
+        $Source.PSObject.Properties | ForEach-Object { $ht[$_.Name] = $_.Value }
+        $Source = $ht
+    }
 
+    # empty (if possible)
+    try { $Collection.Clear() | Out-Null } catch {}
+
+    foreach ($sourceKey in $Map.Keys) {
+        $label = $Map[$sourceKey]
+        $value = $null
+
+        if ($Source.Contains($sourceKey)) {
+            $value = $Source[$sourceKey]
+        }
+
+        $row = [pscustomobject]@{ Key = $label; Value = $value }
+
+        try { $null = $Collection.Add($row) }
+        catch { $Collection = @($Collection) + $row }
+    }
+}
 
 # SpectrumTimestamp
 function Convert-SpectrumTimestamp {
