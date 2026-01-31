@@ -85,6 +85,7 @@ function IBM_RESTBaseStorageInfos {
     
     end {
         Close-ProgressBar -ProgressBar $ProgressBar
+        SST_CustomerDeviceDBInsertTable -SST_InfoType "StorageBase" -SST_CollectedInformations $TD_StorageInfo
         if([string]::IsNullOrEmpty($TD_Device_DeviceName)){$TD_Device_DeviceName = $TD_StorageInfo.Name[0]}
         <# export y or n #>
         if($TD_export -eq "yes"){
@@ -96,7 +97,7 @@ function IBM_RESTBaseStorageInfos {
                 SST_ToolMessageCollector -TD_ToolMSGCollector "$PSScriptRoot\ToolLog\$($TD_Line_ID)_$($TD_Device_DeviceName)_StorageBaseInfo_$(Get-Date -Format "yyyy-MM-dd").csv" -TD_ToolMSGType Debug
             }
         }
-        SST_CustomerDeviceDBInsertTable -SST_InfoType "StorageBase" -SST_CollectedInformations $TD_StorageInfo
+
         [PSCustomObject]@{
             StorageInfo     = $TD_StorageInfo
             ConnectionTyp   = $TD_Device_ConnectionTyp
