@@ -281,7 +281,7 @@ function SST_CustomerDeviceDBInsertTable {
                         $SQLiteCommand.Parameters.AddWithValue("@Name", $SST_CollectedInformation.'SwichtName') | Out-Null
                         $SQLiteCommand.Parameters.AddWithValue("@Status", $SST_CollectedInformation.'SwitchState') | Out-Null
                         $SQLiteCommand.Parameters.AddWithValue("@CodeLevel", $SST_CollectedInformation.'FabricOS') | Out-Null
-                        $SQLiteCommand.Parameters.AddWithValue("@BrocadeProdName", $SST_CollectedInformation.'BBrocadeProductName') | Out-Null
+                        $SQLiteCommand.Parameters.AddWithValue("@BrocadeProdName", $SST_CollectedInformation.'BrocadeProductName') | Out-Null
                         $SQLiteCommand.Parameters.AddWithValue("@MTM", $SST_CollectedInformation.'MTM') | Out-Null
                         $SQLiteCommand.Parameters.AddWithValue("@SerialNumber", $SST_CollectedInformation.'SerialNumber') | Out-Null
                         $SQLiteCommand.Parameters.AddWithValue("@SwitchWWNN", $SST_CollectedInformation.'SwitchWWNN') | Out-Null
