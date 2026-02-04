@@ -76,6 +76,7 @@ function New-DeviceBlock {
     }
     $DeviceIdent.Label = if ([string]::IsNullOrWhiteSpace([string]$LabelName)) { "$($Device.IPAddress)" } else { "$LabelName" }
     $DeviceIdent.IsChecked = $false
+    Write-Host $FunResult
     return @{ DeviceIdent = $DeviceIdent; FuncResult = $FunResult }
 }
 
