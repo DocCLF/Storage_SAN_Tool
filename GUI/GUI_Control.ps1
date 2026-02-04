@@ -1106,6 +1106,87 @@ $TD_BTN_FOS_SensorShow.add_click({
 })
 #endregion
 #endregion
+$TD_BTN_HMC_ManagedSystemInfo.add_click({
+    $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource | Where-Object { $_.DeviceTyp -eq "PowerHMC" }
+
+    $UCDataContext = $TD_UserControl_HMC.DataContext
+    if (-not $UCDataContext) { [System.Windows.MessageBox]::Show("DataContext ist NULL!") | Out-Null; return }
+    $UCVMMain = $UCDataContext.Main
+
+    $UCVMMain.DeviceToggles.Clear()
+
+    foreach($TD_Creds in $TD_Credentials){
+
+        $FunctionResult = New-DeviceBlock -Device $TD_Creds -ExportPath $TD_tb_ExportPath.Text -RESTFunc HMC_RESTHMCManagedSystems
+
+        # Falls Rows-Collection noch nicht existiert
+        if (-not $FunctionResult.DeviceIdent.ManagedSystemRows) {
+            $FunctionResult.DeviceIdent | Add-Member -NotePropertyName ManagedSystemRows `
+                -NotePropertyValue (New-Object System.Collections.ObjectModel.ObservableCollection[object]) -Force
+        }
+
+        $mapMS = @{
+            SystemName       = 'SystemName'
+            State            = 'State'
+            SerialNumber     = 'SerialNumber'
+            MachineTypeModel = 'MachineTypeModel'
+            UUID             = 'UUID'
+            Url              = 'Url'
+        }
+        Add-MappedRows -Collection $FunctionResult.DeviceIdent.ManagedSystemRows `
+            -Source $FunctionResult.FuncResult `
+            -IdProperty 'RowID' `
+            -Map $mapMS
+        $UCVMMain.DeviceToggles.Add($FunctionResult.DeviceIdent)
+    }
+
+    $UCVMMain.SelectedView = "ManagedSystem"
+})
+$TD_BTN_HMCInfo.add_click({
+    $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource | Where-Object { $_.DeviceTyp -eq "PowerHMC" }
+
+    $UCDataContext = $TD_UserControl_HMC.DataContext
+    if (-not $UCDataContext) { [System.Windows.MessageBox]::Show("DataContext ist NULL!") | Out-Null; return }
+    $UCVMMain = $UCDataContext.Main
+
+    $UCVMMain.DeviceToggles.Clear()
+
+    foreach($TD_Creds in $TD_Credentials){
+
+        $FunctionResult = New-DeviceBlock -Device $TD_Creds -ExportPath $TD_tb_ExportPath.Text -RESTFunc HMC_RESTHMCConsole
+
+        if (-not $FunctionResult.DeviceIdent.HmcRows) {
+            $FunctionResult.DeviceIdent | Add-Member -NotePropertyName HmcRows `
+                -NotePropertyValue (New-Object System.Collections.ObjectModel.ObservableCollection[object]) -Force
+        }
+
+        $mapHMC = @{
+            HmcName            = 'HmcName'
+            MachineType        = 'MachineType'
+            Model              = 'Model'
+            SerialNumber       = 'SerialNumber'
+            BIOS               = 'BIOS'
+            DisplayVersion     = 'DisplayVersion'
+            IFix               = 'IFix'
+            PrimaryIP          = 'PrimaryIP'
+            IPsAll             = 'IPsAll'
+            ManagedSystemCount = 'ManagedSystemCount'
+            ManagedSystemUuids = 'ManagedSystemUuids'
+            UUID               = 'UUID'
+            Url                = 'Url'
+        }
+
+        Add-MappedRows -Collection $FunctionResult.DeviceIdent.HmcRows `
+            -Source $FunctionResult.FuncResult `
+            -IdProperty 'RowID' `
+            -Map $mapHMC
+
+        $UCVMMain.DeviceToggles.Add($FunctionResult.DeviceIdent)
+    }
+
+    $UCVMMain.SelectedView = "HMC"
+})
+
 $TD_CB_DataBaseChoice.add_SelectionChanged({
     if(!([string]::IsNullOrEmpty($TD_CB_DataBaseChoice.SelectedItem))){
         $CustomerDB = $TD_CB_DataBaseChoice.SelectedItem.tostring()
