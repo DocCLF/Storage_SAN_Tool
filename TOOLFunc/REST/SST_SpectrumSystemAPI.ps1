@@ -54,9 +54,9 @@ function SST_SpectrumSystemAPI {
         }
     }
     
-end {
-  # optional debug:
-  #$response | Select-Object -First 5 | Format-List * | Out-String | Write-Host
-  return $response
-}
+    end {
+        # optional debug:
+        #$response | Select-Object -First 5 | Format-List * | Out-String | Write-Host
+        return $response
+    }
 }
