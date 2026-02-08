@@ -1106,46 +1106,10 @@ $TD_BTN_FOS_SensorShow.add_click({
 })
 #endregion
 #endregion
-$TD_BTN_HMC_ManagedSystemInfo.add_click({
+$TD_BTN_PWR_HMCInfo.add_click({
     $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource | Where-Object { $_.DeviceTyp -eq "PowerHMC" }
 
-    $UCDataContext = $TD_UserControl_HMC.DataContext
-    if (-not $UCDataContext) { [System.Windows.MessageBox]::Show("DataContext ist NULL!") | Out-Null; return }
-    $UCVMMain = $UCDataContext.Main
-
-    $UCVMMain.DeviceToggles.Clear()
-
-    foreach($TD_Creds in $TD_Credentials){
-
-        $FunctionResult = New-DeviceBlock -Device $TD_Creds -ExportPath $TD_tb_ExportPath.Text -RESTFunc HMC_RESTHMCManagedSystems
-
-        # Falls Rows-Collection noch nicht existiert
-        if (-not $FunctionResult.DeviceIdent.ManagedSystemRows) {
-            $FunctionResult.DeviceIdent | Add-Member -NotePropertyName ManagedSystemRows `
-                -NotePropertyValue (New-Object System.Collections.ObjectModel.ObservableCollection[object]) -Force
-        }
-
-        $mapMS = @{
-            SystemName       = 'SystemName'
-            State            = 'State'
-            SerialNumber     = 'SerialNumber'
-            MachineTypeModel = 'MachineTypeModel'
-            UUID             = 'UUID'
-            Url              = 'Url'
-        }
-        Add-MappedRows -Collection $FunctionResult.DeviceIdent.ManagedSystemRows `
-            -Source $FunctionResult.FuncResult `
-            -IdProperty 'RowID' `
-            -Map $mapMS
-        $UCVMMain.DeviceToggles.Add($FunctionResult.DeviceIdent)
-    }
-
-    $UCVMMain.SelectedView = "ManagedSystem"
-})
-$TD_BTN_HMCInfo.add_click({
-    $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource | Where-Object { $_.DeviceTyp -eq "PowerHMC" }
-
-    $UCDataContext = $TD_UserControl_HMC.DataContext
+    $UCDataContext = $TD_UserControl_PWR.DataContext
     if (-not $UCDataContext) { [System.Windows.MessageBox]::Show("DataContext ist NULL!") | Out-Null; return }
     $UCVMMain = $UCDataContext.Main
 
@@ -1186,7 +1150,97 @@ $TD_BTN_HMCInfo.add_click({
 
     $UCVMMain.SelectedView = "HMC"
 })
+$TD_BTN_PWR_ManagedSystemInfo.add_click({
+    $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource | Where-Object { $_.DeviceTyp -eq "PowerHMC" }
 
+    $UCDataContext = $TD_UserControl_PWR.DataContext
+    if (-not $UCDataContext) { [System.Windows.MessageBox]::Show("DataContext ist NULL!") | Out-Null; return }
+    $UCVMMain = $UCDataContext.Main
+
+    $UCVMMain.DeviceToggles.Clear()
+
+    foreach($TD_Creds in $TD_Credentials){
+
+        $FunctionResult = New-DeviceBlock -Device $TD_Creds -ExportPath $TD_tb_ExportPath.Text -RESTFunc HMC_RESTHMCManagedSystems
+
+        # Falls Rows-Collection noch nicht existiert
+        if (-not $FunctionResult.DeviceIdent.ManagedSystemRows) {
+            $FunctionResult.DeviceIdent | Add-Member -NotePropertyName ManagedSystemRows `
+                -NotePropertyValue (New-Object System.Collections.ObjectModel.ObservableCollection[object]) -Force
+        }
+
+        $mapMS = @{
+            SystemName       = 'SystemName'
+            State            = 'State'
+            SerialNumber     = 'SerialNumber'
+            MachineTypeModel = 'MachineTypeModel'
+            UUID             = 'UUID'
+            Url              = 'Url'
+        }
+        Add-MappedRows -Collection $FunctionResult.DeviceIdent.ManagedSystemRows `
+            -Source $FunctionResult.FuncResult `
+            -IdProperty 'RowID' `
+            -Map $mapMS
+        $UCVMMain.DeviceToggles.Add($FunctionResult.DeviceIdent)
+    }
+
+    $UCVMMain.SelectedView = "ManagedSystem"
+})
+$TD_BTN_PWR_LparSummary.add_click({
+
+    # 1) Geräte holen (wie beim HMC-Button)
+    $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource | Where-Object { $_.DeviceTyp -eq "PowerHMC" }
+
+    # 2) DataContext/VM holen
+    $UCDataContext = $TD_UserControl_PWR.DataContext
+    if (-not $UCDataContext) { [System.Windows.MessageBox]::Show("DataContext ist NULL!") | Out-Null; return }
+    $UCVMMain = $UCDataContext.Main
+
+    $UCVMMain.DeviceToggles.Clear()
+
+    foreach($TD_Creds in $TD_Credentials){
+
+        # 3) REST Call über dein Standard-Pattern
+        $FunctionResult = New-DeviceBlock -Device $TD_Creds -ExportPath $TD_tb_ExportPath.Text -RESTFunc HMC_RESTHMCLogicalPartitions
+
+        # 4) Collection für GUI sicherstellen (ObservableCollection)
+        if (-not $FunctionResult.DeviceIdent.LparRows) {
+            $FunctionResult.DeviceIdent | Add-Member -NotePropertyName LparRows `
+                -NotePropertyValue (New-Object System.Collections.ObjectModel.ObservableCollection[object]) -Force
+        }
+        else {
+            try { $FunctionResult.DeviceIdent.LparRows.Clear() | Out-Null } catch {}
+        }
+
+        # 5) Mapping der Spalten (Label -> PropertyName aus FuncResult)
+        $mapLPAR = @{
+            ManagedSystemName   = 'ManagedSystemName'
+            ManagedSystemMTMS   = 'ManagedSystemMTMS'
+            ManagedSystemSerial = 'ManagedSystemSerial'
+            ManagedSystemUuid   = 'ManagedSystemUuid'
+
+            LparName            = 'LparName'
+            PartitionId         = 'PartitionId'
+            State               = 'State'
+            Environment         = 'Environment'
+            OsVersion           = 'OsVersion'
+
+            LparUuid            = 'LparUuid'
+            RowID               = 'RowID'
+        }
+
+        Add-MappedRows -Collection $FunctionResult.DeviceIdent.LparRows `
+            -Source $FunctionResult.FuncResult `
+            -IdProperty 'RowID' `
+            -Map $mapLPAR
+
+        # 6) Toggle zur Liste hinzufügen
+        $UCVMMain.DeviceToggles.Add($FunctionResult.DeviceIdent)
+    }
+
+    # 7) View umschalten (Name muss zu deinem UI passen!)
+    $UCVMMain.SelectedView = "LPARs"
+})
 $TD_CB_DataBaseChoice.add_SelectionChanged({
     if(!([string]::IsNullOrEmpty($TD_CB_DataBaseChoice.SelectedItem))){
         $CustomerDB = $TD_CB_DataBaseChoice.SelectedItem.tostring()
