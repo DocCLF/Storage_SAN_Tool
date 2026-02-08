@@ -350,72 +350,140 @@ function SST_CustomerDeviceDBInsertTable {
 
             }
             "PowerHMC" {
-                foreach ($SST_CollectedInformation in $SST_CollectedInformations){
-                    $SQLiteCommand.CommandText ="INSERT INTO PowerHMC (CustomerNbr, HMCName, HMCHWModell, HMCHWSN, HMCHWBios, HMCSWVersion, HMCSWBuildLevel, HMCSWBaseVersion, HMCSWFixes, TimeStamp) VALUES (@CustomerNbr, @HMCName, @HMCHWModell, @HMCHWSN, @HMCHWBios, @HMCSWVersion, @HMCSWBuildLevel, @HMCSWBaseVersion, @HMCSWFixes, @TimeStamp);"
-                    $SQLiteCommand.Parameters.AddWithValue("@CustomerNbr", $Customer) | Out-Null
-                    $SQLiteCommand.Parameters.AddWithValue("@HMCName", $SST_CollectedInformation.HMCName) | Out-Null
-                    $SQLiteCommand.Parameters.AddWithValue("@HMCHWModell", $SST_CollectedInformation.HMCHWModell) | Out-Null
-                    $SQLiteCommand.Parameters.AddWithValue("@HMCHWSN", $SST_CollectedInformation.HMCHWSN) | Out-Null
-                    $SQLiteCommand.Parameters.AddWithValue("@HMCHWBios", $SST_CollectedInformation.HMCHWBios) | Out-Null
-                    $SQLiteCommand.Parameters.AddWithValue("@HMCSWVersion", $SST_CollectedInformation.HMCSWVersion) | Out-Null
-                    $SQLiteCommand.Parameters.AddWithValue("@HMCSWBuildLevel", $SST_CollectedInformation.HMCSWBuildLevel) | Out-Null
-                    $SQLiteCommand.Parameters.AddWithValue("@HMCSWBaseVersion", $SST_CollectedInformation.HMCSWBaseVersion) | Out-Null
-                    $SQLiteCommand.Parameters.AddWithValue("@HMCSWFixes", $SST_CollectedInformation.HMCSWFixes) | Out-Null
-                    $SQLiteCommand.Parameters.AddWithValue("@TimeStamp", $TimeStamp) | Out-Null
-                
-                    # DB save 
-                    $SQLiteCommand.ExecuteNonQuery()
+                try {
+                    $SQLiteDBConnection.Open()
+                    $SQLiteCommand = $SQLiteDBConnection.CreateCommand()
 
-                    # Delete | Keep only the 64 most recent entries after TimeStamp
-                    $SQLiteCommand.CommandText = "DELETE FROM PowerHMC WHERE ID NOT IN ( SELECT ID FROM PowerHMC ORDER BY TimeStamp DESC LIMIT 64 );"
-                    $SQLiteCommand.ExecuteNonQuery()
+                    foreach ($SST_CollectedInformation in $SST_CollectedInformations){
+                        $SQLiteCommand.Parameters.Clear()
+
+                        $SQLiteCommand.CommandText ="INSERT INTO PowerHMC (CustomerNbr, HMCName, HMCMTM, SerialNumber, HMCUUID, BIOS, DisplayVersion, BaseVersion, BuildLevel, IFix, ManagedSystemCount, ManagedSystemUUIDs, TimeStamp)`
+                                                    VALUES (@CustomerNbr, @HMCName, @HMCMTM, @SerialNumber, @HMCUUID, @BIOS, @DisplayVersion, @BaseVersion, @BuildLevel, @IFix, @ManagedSystemCount , @ManagedSystemUUIDs , @TimeStamp);"
+                        $SQLiteCommand.Parameters.AddWithValue("@CustomerNbr", $Customer) | Out-Null
+                        $SQLiteCommand.Parameters.AddWithValue("@HMCName", $SST_CollectedInformation.HMCName) | Out-Null
+                        $SQLiteCommand.Parameters.AddWithValue("@HMCMTM", $SST_CollectedInformation.HMCMTM) | Out-Null
+                        $SQLiteCommand.Parameters.AddWithValue("@SerialNumber", $SST_CollectedInformation.SerialNumber) | Out-Null
+                        $SQLiteCommand.Parameters.AddWithValue("@HMCUUID", $SST_CollectedInformation.UUID) | Out-Null
+                        $SQLiteCommand.Parameters.AddWithValue("@BIOS", $SST_CollectedInformation.BIOS) | Out-Null
+                        $SQLiteCommand.Parameters.AddWithValue("@DisplayVersion", $SST_CollectedInformation.DisplayVersion) | Out-Null
+                        $SQLiteCommand.Parameters.AddWithValue("@BaseVersion", $SST_CollectedInformation.BaseVersion) | Out-Null
+                        $SQLiteCommand.Parameters.AddWithValue("@BuildLevel", $SST_CollectedInformation.BuildLevel) | Out-Null
+                        $SQLiteCommand.Parameters.AddWithValue("@IFix", $SST_CollectedInformation.IFix) | Out-Null
+                        $SQLiteCommand.Parameters.AddWithValue("@ManagedSystemCount", $SST_CollectedInformation.ManagedSystemCount) | Out-Null
+                        $SQLiteCommand.Parameters.AddWithValue("@ManagedSystemUUIDs", $SST_CollectedInformation.ManagedSystemUUIDs) | Out-Null
+                        $SQLiteCommand.Parameters.AddWithValue("@TimeStamp", $TimeStamp) | Out-Null
+                    
+                        # DB save 
+                        $SQLiteCommand.ExecuteNonQuery()
+
+                        # Delete | Keep only the 64 most recent entries after TimeStamp
+                        $SQLiteCommand.CommandText = "DELETE FROM PowerHMC WHERE ID NOT IN ( SELECT ID FROM PowerHMC ORDER BY TimeStamp DESC LIMIT 64 );"
+                        $SQLiteCommand.ExecuteNonQuery()
+                    }
                 }
+                catch {
+                    <#Do this if a terminating exception happens#>
+                    Write-Host "SQL Fehler: $($_.Exception.Message)"
+                    Write-Host $_.Exception.ToString()
+                }
+                finally {
+                    <#Do this after the try block regardless of whether an exception occurred or not#>
+                    if ($SQLiteCommand) { $SQLiteCommand.Dispose() }
+                    if ($SQLiteDBConnection) { $SQLiteDBConnection.Close(); $SQLiteDBConnection.Dispose() }
+                    # If you want to delete files afterwards, extra good:
+                    [System.Data.SQLite.SQLiteConnection]::ClearAllPools()
+                }
+
             }
             "PowerSysSummary" {
-                foreach ($SST_CollectedInformation in $SST_CollectedInformations){
-                    $SQLiteCommand.CommandText ="INSERT INTO PowerSysSummary (CustomerNbr, PowerSysManagedSystem, PowerSysSystemStatus, PowerSysSystemMTM, PowerSysSystemSN, PowerSysMGRIPAddr, PowerSysPrimSPIPAddr, PowerSysECNumber, PowerSysIPLLevel, PowerSysIPLActivatedLevel, PowerSysCoDEvent, TimeStamp) VALUES (@CustomerNbr, @PowerSysManagedSystem, @PowerSysSystemStatus, @PowerSysSystemMTM, @PowerSysSystemSN, @PowerSysMGRIPAddr, @PowerSysPrimSPIPAddr, @PowerSysECNumber, @PowerSysIPLLevel, @PowerSysIPLActivatedLevel, @PowerSysCoDEvent, @TimeStamp);"
-                    $SQLiteCommand.Parameters.AddWithValue("@CustomerNbr", $Customer) | Out-Null
-                    $SQLiteCommand.Parameters.AddWithValue("@PowerSysManagedSystem", $SST_CollectedInformation.ManagedSystem) | Out-Null
-                    $SQLiteCommand.Parameters.AddWithValue("@PowerSysSystemStatus", $SST_CollectedInformation.SystemStatus) | Out-Null
-                    $SQLiteCommand.Parameters.AddWithValue("@PowerSysSystemMTM", $SST_CollectedInformation.SystemMTM) | Out-Null
-                    $SQLiteCommand.Parameters.AddWithValue("@PowerSysSystemSN", $SST_CollectedInformation.SystemSN) | Out-Null
-                    $SQLiteCommand.Parameters.AddWithValue("@PowerSysMGRIPAddr", $SST_CollectedInformation.MGRIPAddr) | Out-Null
-                    $SQLiteCommand.Parameters.AddWithValue("@PowerSysPrimSPIPAddr", $SST_CollectedInformation.PrimSPIPAddr) | Out-Null
-                    $SQLiteCommand.Parameters.AddWithValue("@PowerSysECNumber", $SST_CollectedInformation.ECNumber) | Out-Null
-                    $SQLiteCommand.Parameters.AddWithValue("@PowerSysIPLLevel", $SST_CollectedInformation.IPLLevel) | Out-Null
-                    $SQLiteCommand.Parameters.AddWithValue("@PowerSysIPLActivatedLevel", $SST_CollectedInformation.IPLActivatedLevel) | Out-Null
-                    $SQLiteCommand.Parameters.AddWithValue("@PowerSysCoDEvent", $SST_CollectedInformation.CoDEvent) | Out-Null
-                    $SQLiteCommand.Parameters.AddWithValue("@TimeStamp", $TimeStamp) | Out-Null
-                    
-                    # DB save 
-                    $SQLiteCommand.ExecuteNonQuery()
+                try {
+                    $SQLiteDBConnection.Open()
+                    $SQLiteCommand = $SQLiteDBConnection.CreateCommand()
 
-                    # Delete | Keep only the 128 most recent entries after TimeStamp
-                    $SQLiteCommand.CommandText = "DELETE FROM PowerSysSummary WHERE ID NOT IN ( SELECT ID FROM PowerSysSummary ORDER BY TimeStamp DESC LIMIT 128 );"
-                    $SQLiteCommand.ExecuteNonQuery()
+                    foreach ($SST_CollectedInformation in $SST_CollectedInformations){
+                        $SQLiteCommand.Parameters.Clear()
+
+                        $SQLiteCommand.CommandText ="INSERT INTO PowerSysSummary (CustomerNbr, SystemName, MachineTypeModel, SerialNumber, State, UUID, TimeStamp)`
+                                                    VALUES (@CustomerNbr, @SystemName, @MachineTypeModel, @SerialNumber, @State, @UUID, @TimeStamp);"
+                        $SQLiteCommand.Parameters.AddWithValue("@CustomerNbr", $Customer) | Out-Null
+                        $SQLiteCommand.Parameters.AddWithValue("@SystemName", $SST_CollectedInformation.SystemName) | Out-Null
+                        $SQLiteCommand.Parameters.AddWithValue("@MachineTypeModel", $SST_CollectedInformation.MachineTypeModel) | Out-Null
+                        $SQLiteCommand.Parameters.AddWithValue("@SerialNumber", $SST_CollectedInformation.SerialNumber) | Out-Null
+                        $SQLiteCommand.Parameters.AddWithValue("@State", $SST_CollectedInformation.State) | Out-Null
+                        $SQLiteCommand.Parameters.AddWithValue("@UUID", $SST_CollectedInformation.UUID) | Out-Null
+                        $SQLiteCommand.Parameters.AddWithValue("@TimeStamp", $TimeStamp) | Out-Null
+
+                        # DB save 
+                        $SQLiteCommand.ExecuteNonQuery()
+
+                        # Delete | Keep only the 128 most recent entries after TimeStamp
+                        $SQLiteCommand.CommandText = "DELETE FROM PowerSysSummary WHERE ID NOT IN ( SELECT ID FROM PowerSysSummary ORDER BY TimeStamp DESC LIMIT 128 );"
+                        $SQLiteCommand.ExecuteNonQuery()
+                    }
                 }
+                catch {
+                    <#Do this if a terminating exception happens#>
+                    Write-Host "SQL Fehler: $($_.Exception.Message)"
+                    Write-Host $_.Exception.ToString()
+                }
+                finally {
+                    <#Do this after the try block regardless of whether an exception occurred or not#>
+                    if ($SQLiteCommand) { $SQLiteCommand.Dispose() }
+                    if ($SQLiteDBConnection) { $SQLiteDBConnection.Close(); $SQLiteDBConnection.Dispose() }
+                    # If you want to delete files afterwards, extra good:
+                    [System.Data.SQLite.SQLiteConnection]::ClearAllPools()
+                }
+
             }
             "LPARSummary" {
-                foreach ($SST_CollectedInformation in $SST_CollectedInformations){
-                    $SQLiteCommand.CommandText ="INSERT INTO LPARSummary (CustomerNbr, LPARName, LPARID, LPARStatus, LPAREnvironment, LPAROSVersion, LPARRMCIP, LPARManagedSystemName, LPARManagedSystemSN, TimeStamp) VALUES (@CustomerNbr, @LPARName, @LPARID, @LPARStatus, @LPAREnvironment, @LPAROSVersion, @LPARRMCIP, @LPARManagedSystemName, @LPARManagedSystemSN, @TimeStamp);"
-                    $SQLiteCommand.Parameters.AddWithValue("@CustomerNbr", $Customer) | Out-Null
-                    $SQLiteCommand.Parameters.AddWithValue("@LPARName", $SST_CollectedInformation.LPARName) | Out-Null
-                    $SQLiteCommand.Parameters.AddWithValue("@LPARID", $SST_CollectedInformation.LPARID) | Out-Null
-                    $SQLiteCommand.Parameters.AddWithValue("@LPARStatus", $SST_CollectedInformation.LPARStatus) | Out-Null
-                    $SQLiteCommand.Parameters.AddWithValue("@LPAREnvironment", $SST_CollectedInformation.LPAREnvironment) | Out-Null
-                    $SQLiteCommand.Parameters.AddWithValue("@LPAROSVersion", $SST_CollectedInformation.LPAROSVersion) | Out-Null
-                    $SQLiteCommand.Parameters.AddWithValue("@LPARRMCIP", $SST_CollectedInformation.RMCIP) | Out-Null
-                    $SQLiteCommand.Parameters.AddWithValue("@LPARManagedSystemName", $SST_CollectedInformation.ManagedSystemName) | Out-Null
-                    $SQLiteCommand.Parameters.AddWithValue("@LPARManagedSystemSN", $SST_CollectedInformation.ManagedSystemSN) | Out-Null
-                    $SQLiteCommand.Parameters.AddWithValue("@TimeStamp", $TimeStamp) | Out-Null
-                
-                    # DB save 
-                    $SQLiteCommand.ExecuteNonQuery()
+                try {
+                    $SQLiteDBConnection.Open()
+                    $SQLiteCommand = $SQLiteDBConnection.CreateCommand()
 
-                    # Delete | Keep only the 1024 most recent entries after TimeStamp
-                    $SQLiteCommand.CommandText = "DELETE FROM LPARSummary WHERE ID NOT IN ( SELECT ID FROM LPARSummary ORDER BY TimeStamp DESC LIMIT 1024 );"
-                    $SQLiteCommand.ExecuteNonQuery()
+                    foreach ($SST_CollectedInformation in $SST_CollectedInformations){
+                        $SQLiteCommand.Parameters.Clear()
+
+                        $SQLiteCommand.CommandText ="INSERT INTO LPARSummary (CustomerNbr, ManagedSystemName, ManagedSystemUUID, ManagedSystemMTMS, ManagedSystemSerial, LparName, LparUUID, PartitionId, State,Environment,OsVersion, RmcIp, RmcState, DefaultProfile, CurrentProcessingUnits, CurrentMemoryMB, TimeStamp)`
+                                                    VALUES (@CustomerNbr, @ManagedSystemName, @ManagedSystemUUID, @ManagedSystemMTMS, @ManagedSystemSerial, @LparName, @LparUUID, @PartitionId, @State, @Environment, @OsVersion, @RmcIp, @RmcState, @DefaultProfile, @CurrentProcessingUnits, @CurrentMemoryMB, @TimeStamp);"
+                        $SQLiteCommand.Parameters.AddWithValue("@CustomerNbr", $Customer) | Out-Null
+                        $SQLiteCommand.Parameters.AddWithValue("@ManagedSystemName", $SST_CollectedInformation.ManagedSystemName) | Out-Null
+                        $SQLiteCommand.Parameters.AddWithValue("@ManagedSystemUUID", $SST_CollectedInformation.ManagedSystemUUID) | Out-Null
+                        $SQLiteCommand.Parameters.AddWithValue("@ManagedSystemMTMS", $SST_CollectedInformation.ManagedSystemMTMS) | Out-Null
+                        $SQLiteCommand.Parameters.AddWithValue("@ManagedSystemSerial", $SST_CollectedInformation.ManagedSystemSerial) | Out-Null
+                        $SQLiteCommand.Parameters.AddWithValue("@LparName", $SST_CollectedInformation.LparName) | Out-Null
+                        $SQLiteCommand.Parameters.AddWithValue("@LparUUID", $SST_CollectedInformation.LparUUID) | Out-Null
+                        $SQLiteCommand.Parameters.AddWithValue("@PartitionId", $SST_CollectedInformation.PartitionId) | Out-Null
+                        $SQLiteCommand.Parameters.AddWithValue("@State", $SST_CollectedInformation.State) | Out-Null
+                        $SQLiteCommand.Parameters.AddWithValue("@Environment", $SST_CollectedInformation.Environment) | Out-Null
+                        $SQLiteCommand.Parameters.AddWithValue("@OsVersion", $SST_CollectedInformation.OsVersion) | Out-Null
+                        $SQLiteCommand.Parameters.AddWithValue("@RmcIp", $SST_CollectedInformation.RmcIp) | Out-Null
+                        $SQLiteCommand.Parameters.AddWithValue("@RmcState", $SST_CollectedInformation.RmcState) | Out-Null
+                        $SQLiteCommand.Parameters.AddWithValue("@DefaultProfile", $SST_CollectedInformation.DefaultProfile) | Out-Null
+                        $SQLiteCommand.Parameters.AddWithValue("@CurrentProcessingUnits", $SST_CollectedInformation.CurrentProcessingUnits) | Out-Null
+                        $SQLiteCommand.Parameters.AddWithValue("@CurrentMemoryMB", $SST_CollectedInformation.CurrentMemoryMB) | Out-Null
+                        $SQLiteCommand.Parameters.AddWithValue("@TimeStamp", $TimeStamp) | Out-Null
+                    
+                        # DB save 
+                        $SQLiteCommand.ExecuteNonQuery()
+
+                        # Delete | Keep only the 1024 most recent entries after TimeStamp
+                        $SQLiteCommand.CommandText = "DELETE FROM LPARSummary WHERE ID NOT IN ( SELECT ID FROM LPARSummary ORDER BY TimeStamp DESC LIMIT 1024 );"
+                        $SQLiteCommand.ExecuteNonQuery()
+                    }
                 }
+                catch {
+                    <#Do this if a terminating exception happens#>
+                    Write-Host "SQL Fehler: $($_.Exception.Message)"
+                    Write-Host $_.Exception.ToString()
+                }
+                finally {
+                    <#Do this after the try block regardless of whether an exception occurred or not#>
+                    if ($SQLiteCommand) { $SQLiteCommand.Dispose() }
+                    if ($SQLiteDBConnection) { $SQLiteDBConnection.Close(); $SQLiteDBConnection.Dispose() }
+                    # If you want to delete files afterwards, extra good:
+                    [System.Data.SQLite.SQLiteConnection]::ClearAllPools()
+                }
+
             }
             Default {SST_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong during saving the $SST_InfoType data in the local db.") -TD_ToolMSGType Error -TD_Shown yes}
         }
