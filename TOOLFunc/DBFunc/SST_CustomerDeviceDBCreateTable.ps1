@@ -98,22 +98,33 @@ function SST_CustomerDeviceDBCreateTable {
             }
             <# PowerHMC #>
             try{ 
-                $SST_SQLiteTabelQuery ="CREATE TABLE IF NOT EXISTS PowerHMC (ID INTEGER PRIMARY KEY AUTOINCREMENT, CustomerNbr TEXT NOT NULL, HMCName TEXT, HMCHWModell TEXT, HMCHWSN TEXT, HMCHWBios TEXT, HMCSWVersion TEXT, HMCSWBuildLevel TEXT, HMCSWBaseVersion TEXT, HMCSWFixes TEXT, TimeStamp TEXT );" 
+                $SST_SQLiteTabelQuery ="CREATE TABLE IF NOT EXISTS PowerHMC (ID INTEGER PRIMARY KEY AUTOINCREMENT, CustomerNbr TEXT NOT NULL, HMCName TEXT, HMCMTM TEXT, SerialNumber TEXT, HMCUUID TEXT, BIOS TEXT, DisplayVersion TEXT,`
+                                        BuildLevel TEXT, BaseVersion TEXT, IFix TEXT, ManagedSystemCount TEXT, ManagedSystemUUIDs TEXT, TimeStamp TEXT );" 
                 $SQLiteCommandCreate.CommandText = $SST_SQLiteTabelQuery
                 $SQLiteCommandCreate.ExecuteNonQuery()
-            }catch{}
+            }catch{
+                Write-Host "SQL Fehler: $($_.Exception.Message)"
+                Write-Host $_.Exception.ToString()
+            }
             <# PowerSysSummary #>
             try{ 
-                $SST_SQLiteTabelQuery ="CREATE TABLE IF NOT EXISTS PowerSysSummary (ID INTEGER PRIMARY KEY AUTOINCREMENT, CustomerNbr TEXT NOT NULL, PowerSysManagedSystem TEXT NOT NULL, PowerSysSystemStatus TEXT NOT NULL, PowerSysSystemMTM TEXT, PowerSysSystemSN TEXT, PowerSysMGRIPAddr TEXT, PowerSysPrimSPIPAddr TEXT, PowerSysECNumber TEXT NOT NULL, PowerSysIPLLevel TEXT, PowerSysIPLActivatedLevel TEXT, PowerSysCoDEvent TEXT, TimeStamp TEXT );" 
+                $SST_SQLiteTabelQuery ="CREATE TABLE IF NOT EXISTS PowerSysSummary (ID INTEGER PRIMARY KEY AUTOINCREMENT, CustomerNbr TEXT NOT NULL, SystemName TEXT, MachineTypeModel TEXT, SerialNumber TEXT, State TEXT, UUID TEXT, TimeStamp TEXT );" 
                 $SQLiteCommandCreate.CommandText = $SST_SQLiteTabelQuery
                 $SQLiteCommandCreate.ExecuteNonQuery()
-            }catch{}
+            }catch{
+                Write-Host "SQL Fehler: $($_.Exception.Message)"
+                Write-Host $_.Exception.ToString()
+            }
             <# LPARSummary #>
             try{ 
-                $SST_SQLiteTabelQuery ="CREATE TABLE IF NOT EXISTS LPARSummary (ID INTEGER PRIMARY KEY AUTOINCREMENT, CustomerNbr TEXT NOT NULL, LPARName TEXT NOT NULL, LPARID TEXT NOT NULL, LPARStatus TEXT, LPAREnvironment TEXT, LPAROSVersion TEXT, LPARRMCIP TEXT, LPARManagedSystemName TEXT, LPARManagedSystemSN TEXT, TimeStamp TEXT );" 
+                $SST_SQLiteTabelQuery ="CREATE TABLE IF NOT EXISTS LPARSummary (ID INTEGER PRIMARY KEY AUTOINCREMENT, CustomerNbr TEXT NOT NULL, ManagedSystemName TEXT, ManagedSystemUUID TEXT, ManagedSystemMTMS TEXT, ManagedSystemSerial TEXT, LparName TEXT,`
+                                        LparUUID TEXT , PartitionId TEXT, State TEXT, Environment TEXT, OsVersion TEXT, RmcIp TEXT, RmcState TEXT, DefaultProfile TEXT, CurrentProcessingUnits TEXT, CurrentMemoryMB TEXT, TimeStamp TEXT );" 
                 $SQLiteCommandCreate.CommandText = $SST_SQLiteTabelQuery
                 $SQLiteCommandCreate.ExecuteNonQuery()
-            }catch{}
+            }catch{
+                Write-Host "SQL Fehler: $($_.Exception.Message)"
+                Write-Host $_.Exception.ToString()
+            }
             
             #SST_ToolMessageCollector -TD_ToolMSGCollector $("LocalDB is ready and loaded, SST_InfoType $SST_InfoType") -TD_ToolMSGType Message -TD_Shown no
 
