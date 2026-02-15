@@ -19,10 +19,11 @@ function SST_ShowDeviceSelection {
                 $CB_SelectAll = $SST_UCOBJ.FindName("CB_SelectAllSTOCB")
                 #$TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_.DeviceTyp -eq "Storage"}
             }
-            #"PWR" { 
-            #    $BTN_PlaceinUC = $SST_UCOBJ.FindName("STP_PWRDeviceVisibility")
-            #    #$TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_.DeviceTyp -eq "Storage"}
-            #}
+            "PWR" { 
+                $STP_PlaceinUC = $SST_UCOBJ.FindName("STP_PWRDeviceVisibility")
+                $CB_SelectAll = $SST_UCOBJ.FindName("CB_SelectAllPWRCB")
+                #$TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_.DeviceTyp -eq "Storage"}
+            }
             "IBMTape" { 
                 $STP_PlaceinUC = $SST_UCOBJ.FindName("STP_TapeDeviceVisibility")
                 $CB_SelectAll = $SST_UCOBJ.FindName("CB_SelectAllTapeCB")
