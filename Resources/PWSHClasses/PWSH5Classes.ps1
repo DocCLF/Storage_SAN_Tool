@@ -24,6 +24,8 @@ public class RootViewModel : INotifyPropertyChanged
     public string IBMFS73Icon { get; set; }
     public string SAN64B7Icon { get; set; }
     public string IBMPower11Icon { get; set; }
+    public string HMCIcon { get; set; }
+    public string ClockIcon96 { get; set; }
 
     private bool _customerYN;
     public bool CustomerYN
@@ -127,6 +129,7 @@ public class DeviceToggle : INotifyPropertyChanged
     private ObservableCollection<object> _sANPortErrorShowRows;
     private ObservableCollection<object> _sANSFPDetailsRows;
     private ObservableCollection<object> _sANZoneDetailsRows;
+    private ObservableCollection<object> _hmcRows;
 
     // === NEU: DumpInfo ===
     private ObservableCollection<object> _dumpInfoRows;
@@ -161,6 +164,7 @@ public class DeviceToggle : INotifyPropertyChanged
         _sANPortErrorShowRows = new ObservableCollection<object>();
         _sANSFPDetailsRows = new ObservableCollection<object>();
         _sANZoneDetailsRows = new ObservableCollection<object>();
+        _hmcRows = new ObservableCollection<object>();
 
         // NEU
         _dumpInfoRows = new ObservableCollection<object>();
@@ -197,6 +201,7 @@ public class DeviceToggle : INotifyPropertyChanged
     public ObservableCollection<object> SANPortErrorShowRows { get { return _sANPortErrorShowRows; } }
     public ObservableCollection<object> SANSFPDetailsRows { get { return _sANSFPDetailsRows; } }
     public ObservableCollection<object> SANZoneDetailsRows { get { return _sANZoneDetailsRows; } }
+    public ObservableCollection<object> HmcRows { get { return _hmcRows; } }
 
 
     public ObservableCollection<object> DumpInfoRows { get { return _dumpInfoRows; } }
