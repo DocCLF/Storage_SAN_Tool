@@ -1,0 +1,108 @@
+function HMC_GetLogicalPartitionSummary {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory)]$HmcSession,
+
+        # Transfer as in your loop: Uuid/Name/MTMS/Serial come from the ManagedSystem
+        [Parameter(Mandatory)][string]$ManagedSystemUuid,
+        [string]$ManagedSystemName = $ManagedSystemUuid,
+        [string]$ManagedSystemMTMS,
+        [string]$ManagedSystemSerial,
+
+        [switch]$IgnoreCertificate
+    )
+    # If ManagedSystemSerial is not specified (e.g., direct call), the summary function should derive this itself.
+    if((-not $ManagedSystemSerial) -and $ManagedSystemMTMS -and $ManagedSystemMTMS.Length -ge 7){
+        $ManagedSystemSerial = $ManagedSystemMTMS.Substring($ManagedSystemMTMS.Length - 7)
+    }
+
+    $feedPath = "ManagedSystem/$ManagedSystemUuid/LogicalPartition?group=Advanced"
+    $feed = Invoke-HmcUomGet -HmcSession $HmcSession -Path $feedPath -Type "LogicalPartition" -IgnoreCertificate:$IgnoreCertificate
+
+    $lparUrls = Get-AtomSelfLinks -AtomXml $feed
+
+    foreach($u in $lparUrls){
+        # Get details
+        $entry = HMC_GetUomXml -HmcSession $HmcSession -Url $u -Type "LogicalPartition" -IgnoreCertificate:$IgnoreCertificate
+
+        # Atom->UOM (if atom entry), otherwise directly UOM
+        $uom = $null
+        try { $uom = Convert-AtomEntryToUomXml -AtomEntryXml $entry }
+        catch { [xml]$uom = $entry }
+
+        $lparUuid = ($u.TrimEnd("/") -split "/")[-1]
+
+        # robust: OSVersion often has different names (OperatingSystemVersion vs. OSVersion, etc.)
+        $os = Get-FirstXmlValue -Xml $uom -Names @(
+            "OperatingSystemVersion",
+            "OSVersion",
+            "OperatingSystem",
+            "OperatingSystemType"
+        )
+
+        # The environment is usually “AIX/Linux” or “OS400.”
+        $env = Get-FirstXmlValue -Xml $uom -Names @(
+            "PartitionEnvironment",
+            "Environment",
+            "PartitionType"
+        )
+
+        # State is usually “running” / “not activated” / “not available”
+        $state = Get-FirstXmlValue -Xml $uom -Names @(
+            "PartitionState",
+            "State"
+        )
+
+        # RMC
+        $rmcState = Get-FirstXmlValue -Xml $uom -Names @("RMCState","RmcState")
+        $rmcIp    = Get-FirstXmlValue -Xml $uom -Names @("RMCIPAddress","RmcIpAddress","IPAddress")
+
+        # Profiles: in your console run, you had CurrentProfileHref.
+        # In UOM, this varies depending on the version. We do two things:
+        # (A) Link rel SELF of the CurrentProfile (if available)
+        # (B) Search for LogicalPartitionProfile href (CURRENT)
+        $currentProfileHref = $null
+
+        try {
+            $node = $uom.SelectSingleNode("//*[local-name()='CurrentLogicalPartitionProfile']/@href")
+            if($node){ $currentProfileHref = $node.Value }
+        } catch {}
+
+        if(-not $currentProfileHref){
+            try {
+                $node = $uom.SelectSingleNode("//*[local-name()='LogicalPartitionProfile'][translate(@rel,'abcdefghijklmnopqrstuvwxyz','ABCDEFGHIJKLMNOPQRSTUVWXYZ')='CURRENT']/@href") 
+                if($node){ $currentProfileHref = $node.Value }
+            } catch {}
+        }
+
+        # DefaultProfile Name
+        $defaultProfile = Get-FirstXmlValue -Xml $uom -Names @("DefaultProfile","DefaultProfileName")
+
+        # CPU/Mem (currently)
+        $curCpu = Get-FirstXmlValue -Xml $uom -Names @("CurrentProcessingUnits","CurrentProcUnits","CurrentProcessingUnit")
+        $curMem = Get-FirstXmlValue -Xml $uom -Names @("CurrentMemoryMB","CurrentMemory","CurrentMemorySize")
+
+        [pscustomobject]@{
+            ManagedSystemName   = $ManagedSystemName
+            ManagedSystemUUID   = $ManagedSystemUUID
+            ManagedSystemMTMS   = $ManagedSystemMTMS
+            ManagedSystemSerial = $ManagedSystemSerial
+
+            LparName            = Get-FirstXmlValue -Xml $uom -Names @("PartitionName","LogicalPartitionName","Name")
+            LparUUID            = $lparUuid
+            PartitionId         = Get-FirstXmlValue -Xml $uom -Names @("PartitionID","PartitionId")
+
+            State               = $state
+            Environment         = $env
+            OsVersion           = $os
+
+            RmcIp               = $rmcIp
+            RmcState            = $rmcState
+
+            DefaultProfile      = $defaultProfile
+            CurrentProfileHref  = $currentProfileHref
+            CurrentProcessingUnits = $curCpu
+            CurrentMemoryMB        = $curMem
+        }
+    }
+}
