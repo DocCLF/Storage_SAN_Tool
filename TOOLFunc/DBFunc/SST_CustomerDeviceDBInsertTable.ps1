@@ -492,8 +492,8 @@ function SST_CustomerDeviceDBInsertTable {
     
     end {
         #Verbindung schließen
-        $SST_CollectedInformations =$null
-        $SST_SQLiteCon.Close()
-        $SST_SQLiteCon.Dispose()
+        #$SST_CollectedInformations =$null
+        #$SST_SQLiteCon.Close()
+        #$SST_SQLiteCon.Dispose()
     }
 }
