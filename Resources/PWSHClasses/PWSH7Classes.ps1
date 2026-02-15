@@ -10,6 +10,8 @@ public class RootViewModel : INotifyPropertyChanged
     public string IBMFS73Icon { get; set; }
     public string SAN64B7Icon { get; set; }
     public string IBMPower11Icon { get; set; }
+    public string HMCIcon { get; set; }
+    public string ClockIcon96 { get; set; }
 
     private bool _customerYN;
     public bool CustomerYN
@@ -72,6 +74,7 @@ public class DeviceToggle : INotifyPropertyChanged
     public string Label { get; set; }
 
     // Pro Ansicht eine Collection (für dein XAML)
+    // === DG STO ===
     public ObservableCollection<object> BaseRows { get; } = new ObservableCollection<object>();
     public ObservableCollection<object> EventRows { get; } = new ObservableCollection<object>();
     public ObservableCollection<object> AuditLogRows { get; } = new ObservableCollection<object>();
@@ -83,13 +86,16 @@ public class DeviceToggle : INotifyPropertyChanged
     public ObservableCollection<object> DriveRows { get; } = new ObservableCollection<object>();
     public ObservableCollection<object> FCPortRows { get; } = new ObservableCollection<object>();
     public ObservableCollection<object> FCPortStatsRows { get; } = new ObservableCollection<object>();
+    // === DG SAN ===
     public ObservableCollection<object> SANSwitchBaseRows { get; } = new ObservableCollection<object>();
     public ObservableCollection<object> SANSwitchShowRows { get; } = new ObservableCollection<object>();
     public ObservableCollection<object> SANPortbufferShowRows { get; } = new ObservableCollection<object>();
     public ObservableCollection<object> SANPortErrorShowRows { get; } = new ObservableCollection<object>();
     public ObservableCollection<object> SANSFPDetailsRows { get; } = new ObservableCollection<object>();
     public ObservableCollection<object> SANZoneDetailsRows { get; } = new ObservableCollection<object>();
-
+    // === BTN PWR ===
+    public ObservableCollection<object> HmcRows { get; } = new ObservableCollection<object>();
+    // === Textfield STO & SAN ===
     public ObservableCollection<object> DumpInfoRows { get; } = new ObservableCollection<object>();
     public ObservableCollection<object> BackUpInfoRows { get; } = new ObservableCollection<object>();
     public ObservableCollection<object> LicenseInfoRows { get; } = new ObservableCollection<object>();
