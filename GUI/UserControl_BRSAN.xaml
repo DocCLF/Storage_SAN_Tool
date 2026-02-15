@@ -115,7 +115,7 @@
                 </ItemsControl>
 
                 <!-- Select All -->
-                <CheckBox x:Name="CB_SelectAllSTOCB"
+                <CheckBox x:Name="CB_SelectAllSANCB"
                           Content="Select All"
                           IsChecked="{Binding Main.SelectAll, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                           Margin="30,2,2,2"
