@@ -23,140 +23,188 @@
     <!-- ScrollViewer can be enabeld to auto if needed -->
     <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" >
     <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="auto" />
+            <ColumnDefinition Width="auto" />
+        </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto" />
-            <RowDefinition Height="auto" />
-            <RowDefinition Height="auto" />
-            <RowDefinition Height="auto" />
-            <RowDefinition Height="auto" />
-            <RowDefinition Height="auto" />
-            <RowDefinition Height="auto" />
-            <RowDefinition Height="auto" />
+            <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        <GroupBox Grid.Row="0" Header="Options" MinWidth="400" Margin="10,10,10,0" HorizontalAlignment="Left" VerticalAlignment="Top">
+        <GroupBox Grid.Column="0" Grid.RowSpan="4" Header="Actions"  HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,10,0,0">
+            <StackPanel>
+                <!--PWR_HMCInfo-->
                 <ToggleButton
-                x:Name="BTN_HMC_ManagedSystemInfo"
+                x:Name="BTN_PWR_HMCInfo"
                 Style="{DynamicResource MainBtnStyle}"
-                Content="ManagedSystem Info" 
-                ToolTip="Get basic ManagedSystem information"/>
+                Content="HMC Info" 
+                ToolTip="Get Hardware Management Console (HMC) information"/>
+                <!--PWR_ManagedSystemInfo-->
+                <ToggleButton
+                x:Name="BTN_PWR_ManagedSystemInfo"
+                Style="{DynamicResource MainBtnStyle}"
+                Content="Managed System Info" 
+                ToolTip="Get basic Managed System information"/>
+                <!--PWR_LparSummary-->
+                <ToggleButton
+                x:Name="BTN_PWR_LparSummary"
+                Style="{DynamicResource MainBtnStyle}"
+                Content="Logical Partition" 
+                ToolTip="Get Logical Partition information"/>
+            </StackPanel>
         </GroupBox>
-        <GroupBox Grid.Row="1" Header="HMC Info" MinWidth="320" HorizontalAlignment="Left" Margin="10,10,0,0"  VerticalAlignment="Top" Visibility="{Binding ElementName=CB_PowerBoardHMC, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
-            <ScrollViewer Margin="5" VerticalScrollBarVisibility="Auto">
-                <ItemsControl x:Name="IC_IBMPowerHMCObjView">
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate>
-                            <Button Style="{DynamicResource DashBoardBTNStyle}" Margin="0,5,5,5" Width="300" IsEnabled="True" ToolTipService.InitialShowDelay="10">
-                                <Grid Margin="5">
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition MaxHeight="150"/>
-                                        <RowDefinition Height="20"/>
-                                    </Grid.RowDefinitions>
-                                    <Grid Grid.Row="0">
-                                        <Grid.RowDefinitions>
-                                            <RowDefinition />
-                                            <RowDefinition />
-                                            <RowDefinition />
-                                            <RowDefinition />
-                                            <RowDefinition />
-                                            <RowDefinition />
-                                            <RowDefinition />
-                                        </Grid.RowDefinitions>
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition MaxWidth="70" />
-                                            <ColumnDefinition Width="auto" />
-                                            <ColumnDefinition />
-                                        </Grid.ColumnDefinitions>
-                                        <Ellipse Grid.RowSpan="6" Width="65" Height="65" Fill="WhiteSmoke" Stretch="Uniform" >
-                                            <Ellipse.Effect>
-                                                <DropShadowEffect Direction="320" ShadowDepth="2" Color="LightBlue" BlurRadius="5" />
-                                            </Ellipse.Effect>
-                                        </Ellipse>
-                                        <Ellipse Grid.RowSpan="6" Width="60" Height="60" >
-                                           <Ellipse.Fill>
-                                               <ImageBrush ImageSource = "{Binding HMCIcon , Mode=TwoWay}" Stretch="Uniform" />
-                                           </Ellipse.Fill>
-                                        </Ellipse>
-                                                    <TextBlock
-                                                        Grid.Column="1"
-                                                        Style="{DynamicResource DashBoardTB1}"
-                                                        HorizontalAlignment="Left"
-                                                        VerticalAlignment="Center"
-                                                        Text="Name:" 
-                                                        Margin="3,0"/>
-                                                    <TextBlock
-                                                        Grid.Column="2"
-                                                        Style="{DynamicResource DashBoardTB1}"
-                                                        HorizontalAlignment="Left"
-                                                        VerticalAlignment="Center"
-                                                        Text="{Binding HMCName}"
-                                                        Margin="0"/>
-                                                    <TextBlock
-                                                        Grid.Row="2"
-                                                        Grid.Column="1"
-                                                        Style="{DynamicResource DashBoardTB1}"
-                                                        HorizontalAlignment="Left"
-                                                        VerticalAlignment="Center"
-                                                        Text="MTM:" 
-                                                        Margin="3,0"/>
-                                                    <TextBlock
-                                                        Grid.Row="2"
-                                                        Grid.Column="2"
-                                                        Style="{DynamicResource DashBoardTB1}"
-                                                        HorizontalAlignment="Left"
-                                                        VerticalAlignment="Center"
-                                                        Text="{Binding HMCProdMTM}"
-                                                        Margin="0"/>
-                                                    <TextBlock
-                                                        Grid.Row="3"
-                                                        Grid.Column="1"
-                                                        Style="{DynamicResource DashBoardTB1}"
-                                                        HorizontalAlignment="Left"
-                                                        VerticalAlignment="Center"
-                                                        Text="SN:" 
-                                                        Margin="3,0"/>
-                                                    <TextBlock
-                                                        Grid.Row="3"
-                                                        Grid.Column="2"
-                                                        Style="{DynamicResource DashBoardTB1}"
-                                                        HorizontalAlignment="Left"
-                                                        VerticalAlignment="Center"
-                                                        Text="{Binding HMCSerialNumber}"
-                                                        Margin="0"/>
-                                                    <TextBlock
-                                                        Grid.Row="4"
-                                                        Grid.Column="1"
-                                                        Style="{DynamicResource DashBoardTB1}"
-                                                        HorizontalAlignment="Left"
-                                                        VerticalAlignment="Center"
-                                                        Text="SW Version:" 
-                                                        Margin="3,0"/>
-                                                    <TextBlock
-                                                        Grid.Row="4"
-                                                        Grid.Column="2"
-                                                        Style="{DynamicResource DashBoardTB1}"
-                                                        HorizontalAlignment="Left"
-                                                        VerticalAlignment="Center"
-                                                        Text="{Binding HMCSWVersion}"
-                                                        Margin="0"/>
-                                    </Grid>
-                                    <Grid Grid.Row="1">
-                                        <StackPanel Orientation="Horizontal" Margin="5,0" ToolTip="Last Changes">
-                                            <Image Source = "{Binding ClockIcon96 , Mode=TwoWay}" Stretch="Uniform" VerticalAlignment="Bottom" HorizontalAlignment="Left" MaxHeight="30" />
-                                            <TextBlock Text="{Binding TimeStamp}" HorizontalAlignment="Right" Margin="5,2" />
-                                        </StackPanel>
-                                    </Grid>
-                                </Grid>
-                            </Button>
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                    <ItemsControl.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <WrapPanel />
-                        </ItemsPanelTemplate>
-                    </ItemsControl.ItemsPanel>
+        <GroupBox Grid.Column="1" Grid.Row="0" Header="Visibility" Margin="10" >
+            <WrapPanel Orientation="Horizontal" ToolTip="klick for visibility" >
+                <!-- Dynamische Checkboxen -->
+                <ItemsControl ItemsSource="{Binding Main.DeviceToggles}">
+                  <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                      <WrapPanel Orientation="Horizontal"/>
+                    </ItemsPanelTemplate>
+                  </ItemsControl.ItemsPanel>
+
+                  <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                      <CheckBox Content="{Binding Label}"
+                                IsChecked="{Binding IsChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                Style="{DynamicResource MainCheckBoxStyle}"
+                                Margin="2"/>
+                    </DataTemplate>
+                  </ItemsControl.ItemTemplate>
                 </ItemsControl>
+
+                <!-- Select All -->
+                <CheckBox x:Name="CB_SelectAllPWRCB"
+                          Content="Select All"
+                          IsChecked="{Binding Main.SelectAll, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                          Margin="30,2,2,2"
+                          Style="{DynamicResource MainCheckBoxStyle}"
+                          HorizontalAlignment="Right"/>
+            </WrapPanel>
+        </GroupBox>
+        <!-- PWR_HMCInfo -->
+        <GroupBox Grid.Column="1" Grid.Row="1" Header="HMC Info" MinWidth="320" HorizontalAlignment="Left" Margin="10,10,0,0"  VerticalAlignment="Top" >
+            <ScrollViewer Margin="5" VerticalScrollBarVisibility="Auto">
+            <ItemsControl 
+                          ItemsSource="{Binding Main.DeviceToggles}"
+                          Style="{DynamicResource ShowWhenHMC}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <WrapPanel />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+
+                        <!-- Ebene 2: echte HMC-Daten (HmcRows) -->
+                        <ItemsControl ItemsSource="{Binding HmcRows}"
+                                      Visibility="{Binding IsChecked,
+                                                           Converter={StaticResource BooleanToVisibilityConverter},
+                                                           FallbackValue=Collapsed}">
+
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <WrapPanel/>
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+
+                            <!-- ausblenden wenn keine Items -->
+                            <ItemsControl.Style>
+                                <Style TargetType="ItemsControl">
+                                    <Style.Triggers>
+                                        <Trigger Property="HasItems" Value="False">
+                                            <Setter Property="Visibility" Value="Collapsed"/>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </ItemsControl.Style>
+
+                            <!-- Button pro HMC Row -->
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Button Style="{DynamicResource DashBoardBTNStyle}"
+                                            Margin="0,5,5,5"
+                                            MaxWidth="400"
+                                            ToolTipService.InitialShowDelay="10">
+
+                                        <Grid Margin="5">
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition MaxHeight="150"/>
+                                                <RowDefinition Height="20"/>
+                                            </Grid.RowDefinitions>
+
+                                            <Grid Grid.Row="0">
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition />
+                                                    <RowDefinition />
+                                                    <RowDefinition />
+                                                    <RowDefinition />
+                                                    <RowDefinition />
+                                                    <RowDefinition />
+                                                    <RowDefinition />
+                                                </Grid.RowDefinitions>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition MaxWidth="70" />
+                                                    <ColumnDefinition Width="Auto" />
+                                                    <ColumnDefinition />
+                                                </Grid.ColumnDefinitions>
+
+                                                <!-- Falls deine Row ein Icon hat: -->
+                                                 <Ellipse Grid.RowSpan="6" Width="60" Height="60">
+                                                    <Ellipse.Fill>
+                                                        <ImageBrush 
+                                                            ImageSource="{Binding DataContext.HMCIcon, RelativeSource={RelativeSource AncestorType=UserControl}}" 
+                                                            Stretch="Uniform" />
+                                                    </Ellipse.Fill>
+                                                </Ellipse>
+
+                                                <TextBlock Grid.Column="1" Style="{DynamicResource DashBoardTB1}"
+                                                           VerticalAlignment="Center" Text="Name:" Margin="3,0"/>
+                                                <TextBlock Grid.Column="2" Style="{DynamicResource DashBoardTB1}"
+                                                           VerticalAlignment="Center" Text="{Binding HmcName}" />
+
+                                                <TextBlock Grid.Row="2" Grid.Column="1" Style="{DynamicResource DashBoardTB1}"
+                                                           VerticalAlignment="Center" Text="MTM:" Margin="3,0"/>
+                                                <TextBlock Grid.Row="2" Grid.Column="2" Style="{DynamicResource DashBoardTB1}"
+                                                           VerticalAlignment="Center" Text="{Binding MachineType}" />
+
+                                                <TextBlock Grid.Row="4" Grid.Column="1" Style="{DynamicResource DashBoardTB1}"
+                                                           VerticalAlignment="Center" Text="SN:" Margin="3,0"/>
+                                                <TextBlock Grid.Row="4" Grid.Column="2" Style="{DynamicResource DashBoardTB1}"
+                                                           VerticalAlignment="Center" Text="{Binding SerialNumber}" />
+
+                                                <TextBlock Grid.Row="5" Grid.Column="1" Style="{DynamicResource DashBoardTB1}"
+                                                           VerticalAlignment="Center" Text="SW:" Margin="3,0"/>
+                                                <TextBlock Grid.Row="5" Grid.Column="2" Style="{DynamicResource DashBoardTB1}"
+                                                           VerticalAlignment="Center" Text="{Binding DisplayVersion}" />
+
+                                                <TextBlock Grid.Row="3" Grid.Column="1" Style="{DynamicResource DashBoardTB1}"
+                                                           VerticalAlignment="Center" Text="MS Count:" Margin="3,0"/>
+                                                <TextBlock Grid.Row="3" Grid.Column="2" Style="{DynamicResource DashBoardTB1}"
+                                                           VerticalAlignment="Center" Text="{Binding ManagedSystemCount}" />
+                                            </Grid>
+
+                                            <!-- optional: Timestamp etc. wenn vorhanden -->
+                                            <Grid Grid.Row="1">
+                                                <StackPanel Orientation="Horizontal" Margin="5,0" ToolTip="Last Changes">
+                                                    <Image Source="{Binding DataContext.ClockIcon96, RelativeSource={RelativeSource AncestorType=UserControl}}" MaxHeight="30" />
+                                                    <TextBlock Text="20260215 17:12" Margin="5,2" />
+                                                </StackPanel>
+                                            </Grid>
+                                        </Grid>
+                                    </Button>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+
+                        </ItemsControl>
+
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
             </ScrollViewer>
         </GroupBox>
+        <!-- PWR_ManagedSystemInfo -->
         <GroupBox Grid.Row="2" Header="Power Info" MinWidth="820" HorizontalAlignment="Left" Margin="10,10,0,0"  VerticalAlignment="Top" Visibility="{Binding ElementName=CB_PowerBoardSys, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
             <ScrollViewer Margin="5" VerticalScrollBarVisibility="Auto">
                 <ItemsControl x:Name="IC_IBMPowerSysObjView">
@@ -320,6 +368,7 @@
                 </ItemsControl>
             </ScrollViewer>
         </GroupBox>
+        <!-- PWR_LparSummary -->
         <GroupBox Grid.Row="3" Header="LPAR Info" MinWidth="820" MaxHeight="800" HorizontalAlignment="Left" Margin="10,10,0,0"  VerticalAlignment="Top" Visibility="{Binding ElementName=CB_PowerBoardLPAR, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
             <ScrollViewer Margin="5" VerticalScrollBarVisibility="auto">
                 <ItemsControl x:Name="IC_IBMPowerLPARObjView">
