@@ -31,6 +31,7 @@ $StyleFiles = @(
     "$PSRootPath\Resources\Styles\ButtonStyle.xaml",
     "$PSRootPath\Resources\Styles\ViewSTOVisibilityStyles.xaml"
     "$PSRootPath\Resources\Styles\ViewSANVisibilityStyles.xaml"
+    "$PSRootPath\Resources\Styles\ViewPWRVisibilityStyles.xaml"
 )
 $global:LoadedStyles = @()
 foreach ($file in $styleFiles) {
@@ -55,12 +56,15 @@ foreach ($file in $StyleFiles){
     $MainWindow.Resources.MergedDictionaries.Add( $style)
 }
 <# PowerShell WPF XAML simple data binding datacontext #>
-
+<# RootViewModel is in *Classes.ps1 #>
 $ViewModel = [RootViewModel]::new()
 $ViewModel.IBMFS73Icon = "$PSRootPath\Resources\Icons\IBMFS73Icon.png"
 $ViewModel.SAN64B7Icon = "$PSRootPath\Resources\Icons\SAN64B7Icon.png"
 $ViewModel.IBMPower11Icon = "$PSRootPath\Resources\Icons\IBMPower11Icon.png"
 $ViewModel.RefreshIcon96 = "$PSRootPath\Resources\Icons\iconrefresh96.png"
+$ViewModel.HMCIcon = "$PSRootPath\Resources\Icons\HMCicon.png"
+$ViewModel.ClockIcon96 = "$PSRootPath\Resources\Icons\icons8-clock-96.png"
+
 $ViewModel.CustomerYN    = $true
 
 <# PROFI Logo in MainWindow #>
@@ -100,7 +104,7 @@ foreach($file in $UserCxamlFile){
     # --------------------------
     # Set DataContext if needed
     # --------------------------
-    if ($fileName -like "*Dash" -or $fileName -like "*Health" -or $fileName -like "*SetUp") {
+    if ($fileName -like "*Dash" -or $fileName -like "*Health" -or $fileName -like "*SetUp"-or $fileName -like "*PWR") {
         $TD_UserControl.DataContext = $ViewModel
     }
     if ($fileName -like "*STO") {
@@ -1116,17 +1120,17 @@ $TD_BTN_PWR_HMCInfo.add_click({
     $UCVMMain.DeviceToggles.Clear()
 
     foreach($TD_Creds in $TD_Credentials){
-
+        
         $FunctionResult = New-DeviceBlock -Device $TD_Creds -ExportPath $TD_tb_ExportPath.Text -RESTFunc HMC_RESTHMCConsole
 
-        if (-not $FunctionResult.DeviceIdent.HmcRows) {
-            $FunctionResult.DeviceIdent | Add-Member -NotePropertyName HmcRows `
-                -NotePropertyValue (New-Object System.Collections.ObjectModel.ObservableCollection[object]) -Force
-        }
-
+        #if (-not $FunctionResult.DeviceIdent.HmcRows) {
+        #    $FunctionResult.DeviceIdent | Add-Member -NotePropertyName HmcRows `
+        #        -NotePropertyValue (New-Object System.Collections.ObjectModel.ObservableCollection[object]) -Force
+        #}
+        
         $mapHMC = @{
-            HmcName            = 'HmcName'
-            MachineType        = 'MachineType'
+            HmcName            = 'HMCName'
+            MachineType        = 'HMCMTM'
             Model              = 'Model'
             SerialNumber       = 'SerialNumber'
             BIOS               = 'BIOS'
@@ -1140,10 +1144,7 @@ $TD_BTN_PWR_HMCInfo.add_click({
             Url                = 'Url'
         }
 
-        Add-MappedRows -Collection $FunctionResult.DeviceIdent.HmcRows `
-            -Source $FunctionResult.FuncResult `
-            -IdProperty 'RowID' `
-            -Map $mapHMC
+        Add-MappedRows -Collection $FunctionResult.DeviceIdent.HmcRows -Source $FunctionResult.FuncResult -IdProperty 'RowID' -Map $mapHMC
 
         $UCVMMain.DeviceToggles.Add($FunctionResult.DeviceIdent)
     }
