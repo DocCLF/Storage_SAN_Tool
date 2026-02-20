@@ -18,7 +18,7 @@ Copyright (C) Microsoft Corporation. Alle Rechte vorbehalten.
 | 7️⃣      | (Optional) Distribution via GPO      | Company-wide trust
 
 1) Create your code signing certificate
-    New-SelfSignedCertificate -DnsName "MyCompanyCodeSign" -Type CodeSigningCert -CertStoreLocation Cert:\CurrentUser\My
+    New-SelfSignedCertificate -DnsName "MyCodeSigningCert" -Type CodeSigningCert -CertStoreLocation Cert:\CurrentUser\My
 
     What happens here:
     A new certificate is created in the user certificate store (Cert:\CurrentUser\My).
