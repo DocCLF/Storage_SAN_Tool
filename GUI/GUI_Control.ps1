@@ -63,7 +63,9 @@ $ViewModel.SAN64B7Icon = "$PSRootPath\Resources\Icons\SAN64B7Icon.png"
 $ViewModel.IBMPower11Icon = "$PSRootPath\Resources\Icons\IBMPower11Icon.png"
 $ViewModel.RefreshIcon96 = "$PSRootPath\Resources\Icons\iconrefresh96.png"
 $ViewModel.HMCIcon = "$PSRootPath\Resources\Icons\HMCicon.png"
+$ViewModel.PowerIcon = "$PSRootPath\Resources\Icons\powericon01.png"
 $ViewModel.ClockIcon96 = "$PSRootPath\Resources\Icons\icons8-clock-96.png"
+
 
 $ViewModel.CustomerYN    = $true
 
@@ -1175,13 +1177,12 @@ $TD_BTN_PWR_ManagedSystemInfo.add_click({
             State            = 'State'
             SerialNumber     = 'SerialNumber'
             MachineTypeModel = 'MachineTypeModel'
+            ECNumber         = 'ECNumber'
+            ActivatedLevel   = 'ActivatedLevel'
             UUID             = 'UUID'
             Url              = 'Url'
         }
-        Add-MappedRows -Collection $FunctionResult.DeviceIdent.ManagedSystemRows `
-            -Source $FunctionResult.FuncResult `
-            -IdProperty 'RowID' `
-            -Map $mapMS
+        Add-MappedRows -Collection $FunctionResult.DeviceIdent.ManagedSystemRows -Source $FunctionResult.FuncResult -IdProperty 'RowID' -Map $mapMS
         $UCVMMain.DeviceToggles.Add($FunctionResult.DeviceIdent)
     }
 
