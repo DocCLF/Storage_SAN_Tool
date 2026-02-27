@@ -1229,12 +1229,10 @@ $TD_BTN_PWR_LparSummary.add_click({
 
             LparUuid            = 'LparUuid'
             RowID               = 'RowID'
+            RmcIp               = 'RmcIp'
         }
 
-        Add-MappedRows -Collection $FunctionResult.DeviceIdent.LparRows `
-            -Source $FunctionResult.FuncResult `
-            -IdProperty 'RowID' `
-            -Map $mapLPAR
+        Add-MappedRows -Collection $FunctionResult.DeviceIdent.LparRows -Source $FunctionResult.FuncResult -IdProperty 'RowID' -Map $mapLPAR
 
         # 6) Toggle zur Liste hinzufügen
         $UCVMMain.DeviceToggles.Add($FunctionResult.DeviceIdent)
