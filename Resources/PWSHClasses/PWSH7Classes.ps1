@@ -11,6 +11,7 @@ public class RootViewModel : INotifyPropertyChanged
     public string SAN64B7Icon { get; set; }
     public string IBMPower11Icon { get; set; }
     public string HMCIcon { get; set; }
+    public string PowerIcon { get; set; }
     public string ClockIcon96 { get; set; }
 
     private bool _customerYN;
@@ -95,6 +96,7 @@ public class DeviceToggle : INotifyPropertyChanged
     public ObservableCollection<object> SANZoneDetailsRows { get; } = new ObservableCollection<object>();
     // === BTN PWR ===
     public ObservableCollection<object> HmcRows { get; } = new ObservableCollection<object>();
+    public ObservableCollection<object> ManagedSystemRows { get; } = new ObservableCollection<object>();
     // === Textfield STO & SAN ===
     public ObservableCollection<object> DumpInfoRows { get; } = new ObservableCollection<object>();
     public ObservableCollection<object> BackUpInfoRows { get; } = new ObservableCollection<object>();
