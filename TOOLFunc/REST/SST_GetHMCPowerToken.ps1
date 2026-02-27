@@ -70,7 +70,30 @@ function SST_GetHMCPowerToken {
     if ($PSVersionTable.PSVersion.Major -ge 6) {
         # PowerShell 7+ (HttpClient): Use SkipCertificateCheck
         if ($IgnoreCertificate) { $InvokeWebReqParamsBlock['SkipCertificateCheck'] = $true }
-        $result = Invoke-WebRequest @InvokeWebReqParamsBlock
+        try {
+            $result = Invoke-WebRequest @InvokeWebReqParamsBlock -SkipHttpErrorCheck
+            if ($result.StatusCode -ne 200) { throw "HMC Logon HTTP $($result.StatusCode): $($result.Content)" }
+        }
+        catch {
+            $body = $null
+            # When we use SkipHttpErrorCheck, body is usually in $result.Content.
+            if ($result -and $result.Content) { 
+                $body = [string]$result.Content 
+            } else { 
+                $body = $_.Exception.Message 
+            }
+            $decoded = [System.Net.WebUtility]::HtmlDecode($body)
+
+            # Detect max sessions
+            if ($decoded -match 'Reached maximum allowed number of sessions|maximum number of sessions') {
+                $user = ([regex]::Match($decoded,'user\s+([^\.\s<]+)',"IgnoreCase")).Groups[1].Value
+                if (!($user)) { $user = $CredentialUN }  # fallback
+            
+                # One-liner output
+                Write-Host ("HMC login blocked: User '{0}' has reached maximum sessions." -f $user)
+            }
+        }
+
     }
     else {
         # PowerShell 5.1 (HttpWebRequest): Using callback
