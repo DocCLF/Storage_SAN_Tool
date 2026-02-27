@@ -97,6 +97,7 @@ public class DeviceToggle : INotifyPropertyChanged
     // === BTN PWR ===
     public ObservableCollection<object> HmcRows { get; } = new ObservableCollection<object>();
     public ObservableCollection<object> ManagedSystemRows { get; } = new ObservableCollection<object>();
+    public ObservableCollection<object> LparRows { get; } = new ObservableCollection<object>();
     // === Textfield STO & SAN ===
     public ObservableCollection<object> DumpInfoRows { get; } = new ObservableCollection<object>();
     public ObservableCollection<object> BackUpInfoRows { get; } = new ObservableCollection<object>();
