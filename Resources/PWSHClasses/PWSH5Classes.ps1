@@ -132,6 +132,7 @@ public class DeviceToggle : INotifyPropertyChanged
     private ObservableCollection<object> _sANZoneDetailsRows;
     private ObservableCollection<object> _hmcRows;
     private ObservableCollection<object> _managedSystemRows;
+    private ObservableCollection<object> _lparRows;
 
     // === NEU: DumpInfo ===
     private ObservableCollection<object> _dumpInfoRows;
@@ -168,6 +169,7 @@ public class DeviceToggle : INotifyPropertyChanged
         _sANZoneDetailsRows = new ObservableCollection<object>();
         _hmcRows = new ObservableCollection<object>();
         _managedSystemRows = new ObservableCollection<object>();
+        _lparRows = new ObservableCollection<object>();
 
         // NEU
         _dumpInfoRows = new ObservableCollection<object>();
@@ -206,6 +208,7 @@ public class DeviceToggle : INotifyPropertyChanged
     public ObservableCollection<object> SANZoneDetailsRows { get { return _sANZoneDetailsRows; } }
     public ObservableCollection<object> HmcRows { get { return _hmcRows; } }
     public ObservableCollection<object> ManagedSystemRows { get { return _managedSystemRows; } }
+    public ObservableCollection<object> LparRows { get { return _lparRows; } }
 
     public ObservableCollection<object> DumpInfoRows { get { return _dumpInfoRows; } }
     public ObservableCollection<object> BackUpInfoRows { get { return _backUpInfoRows; } }
