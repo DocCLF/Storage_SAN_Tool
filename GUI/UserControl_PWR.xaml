@@ -409,154 +409,191 @@
             </ScrollViewer>
         </GroupBox>
         <!-- PWR_LparSummary -->
-        <GroupBox Grid.Row="3" Header="LPAR Info" MinWidth="820" MaxHeight="800" HorizontalAlignment="Left" Margin="10,10,0,0"  VerticalAlignment="Top" Visibility="{Binding ElementName=CB_PowerBoardLPAR, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
+        <GroupBox Grid.Row="3" Header="LPAR Info" MinWidth="820" MaxHeight="800" HorizontalAlignment="Left" Margin="10,10,0,0"  VerticalAlignment="Top" >
             <ScrollViewer Margin="5" VerticalScrollBarVisibility="auto">
-                <ItemsControl x:Name="IC_IBMPowerLPARObjView">
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate>
-                            <Button Style="{DynamicResource DashBoardBTNStyle}" Margin="0,5,5,5" Width="420" IsEnabled="True" ToolTipService.InitialShowDelay="10">
-                                <Grid Margin="5">
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition MaxHeight="150"/>
-                                        <RowDefinition Height="20"/>
-                                    </Grid.RowDefinitions>
-                                    <Grid Grid.Row="0">
-                                        <Grid.RowDefinitions>
-                                            <RowDefinition />
-                                            <RowDefinition />
-                                            <RowDefinition />
-                                            <RowDefinition />
-                                            <RowDefinition />
-                                            <RowDefinition />
-                                            <RowDefinition />
-                                        </Grid.RowDefinitions>
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition MaxWidth="70" />
-                                            <ColumnDefinition Width="auto" />
-                                            <ColumnDefinition />
-                                        </Grid.ColumnDefinitions>
-                                        <Ellipse Grid.RowSpan="6" Width="65" Height="65" Fill="WhiteSmoke" Stretch="Uniform" >
-                                            <Ellipse.Effect>
-                                                <DropShadowEffect Direction="320" ShadowDepth="2" Color="LightBlue" BlurRadius="5" />
-                                            </Ellipse.Effect>
-                                        </Ellipse>
-                                        <Ellipse Grid.RowSpan="6" Width="60" Height="60" >
-                                           <Ellipse.Fill>
-                                               <ImageBrush ImageSource = "{Binding LPARIcon , Mode=TwoWay}" Stretch="Uniform" />
-                                           </Ellipse.Fill>
-                                        </Ellipse>
-                                                    <TextBlock
-                                                        Grid.Column="1"
-                                                        Style="{DynamicResource DashBoardTB1}"
-                                                        HorizontalAlignment="Left"
-                                                        VerticalAlignment="Center"
-                                                        Text="Name:" 
-                                                        Margin="3,5"/>
-                                                    <TextBlock
-                                                        Grid.Column="2"
-                                                        Style="{DynamicResource DashBoardTB1}"
-                                                        HorizontalAlignment="Left"
-                                                        VerticalAlignment="Center"
-                                                        Text="{Binding LPARName}"
-                                                        Margin="0,5"
-                                                        TextWrapping="Wrap"/>
-                                                    <TextBlock
-                                                        Grid.Row="1"
-                                                        Grid.Column="1"
-                                                        Style="{DynamicResource DashBoardTB1}"
-                                                        HorizontalAlignment="Left"
-                                                        VerticalAlignment="Center"
-                                                        Text="Status:" 
-                                                        Margin="3,0"/>
-                                                    <TextBlock
-                                                        Grid.Row="1"
-                                                        Grid.Column="2"
-                                                        Style="{DynamicResource DashBoardTB1}"
-                                                        HorizontalAlignment="Left"
-                                                        VerticalAlignment="Center"
-                                                        Text="{Binding LPARStatus}"
-                                                        Margin="0">
-                                                        <TextBlock.Style>
-                                                            <Style TargetType="TextBlock">
-                                                                <Style.Triggers>
-                                                                    <Trigger Property ="Text" Value="Running">
-                                                                        <Setter Property= "Foreground" Value="green"/>
-                                                                        <Setter Property= "FontWeight" Value="Bold"/>
-                                                                    </Trigger>
-                                                                    <Trigger Property ="Text" Value="Not Activated">
-                                                                        <Setter Property= "Foreground" Value="orange"/>
-                                                                        <Setter Property= "FontWeight" Value="Bold"/>
-                                                                    </Trigger>
-                                                                </Style.Triggers>
-                                                            </Style>
-                                                        </TextBlock.Style>
-                                                    </TextBlock>
-                                                    <TextBlock
-                                                        Grid.Row="2"
-                                                        Grid.Column="1"
-                                                        Style="{DynamicResource DashBoardTB1}"
-                                                        HorizontalAlignment="Left"
-                                                        VerticalAlignment="Center"
-                                                        Text="Environment:" 
-                                                        Margin="3,0"/>
-                                                    <TextBlock
-                                                        Grid.Row="2"
-                                                        Grid.Column="2"
-                                                        Style="{DynamicResource DashBoardTB1}"
-                                                        HorizontalAlignment="Left"
-                                                        VerticalAlignment="Center"
-                                                        Text="{Binding LPAREnvironment}"
-                                                        Margin="0"/>
-                                                    <TextBlock
-                                                        Grid.Row="3"
-                                                        Grid.Column="1"
-                                                        Style="{DynamicResource DashBoardTB1}"
-                                                        HorizontalAlignment="Left"
-                                                        VerticalAlignment="Center"
-                                                        Text="OS Version:" 
-                                                        Margin="3,5"/>
-                                                    <TextBlock
-                                                        Grid.Row="3"
-                                                        Grid.Column="2"
-                                                        Style="{DynamicResource DashBoardTB1}"
-                                                        HorizontalAlignment="Left"
-                                                        VerticalAlignment="Center"
-                                                        Text="{Binding LPAROSVersion}"
-                                                        Margin="0,5"
-                                                        TextWrapping="Wrap"/>
-                                                    <TextBlock
-                                                        Grid.Row="4"
-                                                        Grid.Column="1"
-                                                        Style="{DynamicResource DashBoardTB1}"
-                                                        HorizontalAlignment="Left"
-                                                        VerticalAlignment="Center"
-                                                        Text="LPAR RMC IP:" 
-                                                        Margin="3,0"/>
-                                                    <TextBlock
-                                                        Grid.Row="4"
-                                                        Grid.Column="2"
-                                                        Style="{DynamicResource DashBoardTB1}"
-                                                        HorizontalAlignment="Left"
-                                                        VerticalAlignment="Center"
-                                                        Text="{Binding LPARRMCIP}"
-                                                        Margin="0"/>
-                                    </Grid>
-                                    <Grid Grid.Row="1">
-                                        <StackPanel Orientation="Horizontal" Margin="5,0" ToolTip="Last Changes">
-                                            <Image Source = "{Binding ClockIcon96 , Mode=TwoWay}" Stretch="Uniform" VerticalAlignment="Bottom" HorizontalAlignment="Left" MaxHeight="30" />
-                                            <TextBlock Text="{Binding TimeStamp}" HorizontalAlignment="Right" Margin="5,2" />
-                                        </StackPanel>
-                                    </Grid>
-                                </Grid>
-                            </Button>
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                    <ItemsControl.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <WrapPanel />
-                        </ItemsPanelTemplate>
-                    </ItemsControl.ItemsPanel>
-                </ItemsControl>
+            <ItemsControl 
+                          ItemsSource="{Binding Main.DeviceToggles}"
+                          Style="{DynamicResource ShowWhenLPAR}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <WrapPanel />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+
+                        <!-- Ebene 2: echte HMC-Daten (HmcRows) -->
+                        <ItemsControl ItemsSource="{Binding LparRows}"
+                                      Visibility="{Binding IsChecked,
+                                                           Converter={StaticResource BooleanToVisibilityConverter},
+                                                           FallbackValue=Collapsed}">
+
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <WrapPanel/>
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+
+                            <!-- ausblenden wenn keine Items -->
+                            <ItemsControl.Style>
+                                <Style TargetType="ItemsControl">
+                                    <Style.Triggers>
+                                        <Trigger Property="HasItems" Value="False">
+                                            <Setter Property="Visibility" Value="Collapsed"/>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </ItemsControl.Style>
+
+                            <!-- Button pro HMC Row -->
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Button Style="{DynamicResource DashBoardBTNStyle}"
+                                            Margin="0,5,5,5"
+                                            MaxWidth="400"
+                                            ToolTipService.InitialShowDelay="10">
+
+                                        <Grid Margin="5">
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition MaxHeight="150"/>
+                                                <RowDefinition Height="20"/>
+                                            </Grid.RowDefinitions>
+
+                                            <Grid Grid.Row="0">
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition />
+                                                    <RowDefinition />
+                                                    <RowDefinition />
+                                                    <RowDefinition />
+                                                    <RowDefinition />
+                                                    <RowDefinition />
+                                                    <RowDefinition />
+                                                </Grid.RowDefinitions>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition MaxWidth="70" />
+                                                    <ColumnDefinition Width="auto" />
+                                                    <ColumnDefinition />
+                                                </Grid.ColumnDefinitions>
+                                                <Ellipse Grid.RowSpan="6" Width="65" Height="65" Fill="WhiteSmoke" Stretch="Uniform" >
+                                                    <Ellipse.Effect>
+                                                        <DropShadowEffect Direction="320" ShadowDepth="2" Color="LightBlue" BlurRadius="5" />
+                                                    </Ellipse.Effect>
+                                                </Ellipse>
+                                                <Ellipse Grid.RowSpan="6" Width="60" Height="60" >
+                                                   <Ellipse.Fill> 
+                                                       <ImageBrush ImageSource = "{Binding DataContext.PowerIcon, RelativeSource={RelativeSource AncestorType=UserControl}}" Stretch="Uniform" />
+                                                   </Ellipse.Fill>
+                                                </Ellipse>
+                                                <TextBlock
+                                                    Grid.Column="1"
+                                                    Style="{DynamicResource DashBoardTB1}"
+                                                    HorizontalAlignment="Left"
+                                                    VerticalAlignment="Center"
+                                                    Text="Name:" 
+                                                    Margin="3,0"/>
+                                                <TextBlock
+                                                    Grid.Column="2"
+                                                    Style="{DynamicResource DashBoardTB1}"
+                                                    HorizontalAlignment="Left"
+                                                    VerticalAlignment="Center"
+                                                    Text="{Binding LparName}"
+                                                    Margin="0"/>
+                                                <TextBlock
+                                                    Grid.Row="1"
+                                                    Grid.Column="1"
+                                                    Style="{DynamicResource DashBoardTB1}"
+                                                    HorizontalAlignment="Left"
+                                                    VerticalAlignment="Center"
+                                                    Text="Status:" 
+                                                    Margin="3,0"/>
+                                                <TextBlock
+                                                    Grid.Row="1"
+                                                    Grid.Column="2"
+                                                    Margin="1"
+                                                    HorizontalAlignment="Left"
+                                                    VerticalAlignment="Center"
+                                                    FontWeight="Bold"
+                                                    FontSize="12"
+                                                    Text="{Binding State}">
+                                                    <TextBlock.Style>
+                                                        <Style TargetType="TextBlock">
+                                                            <Style.Triggers>
+                                                                <Trigger Property ="Text" Value="Power Off">
+                                                                    <Setter Property= "Foreground" Value="Red"/>
+                                                                </Trigger>
+                                                                <Trigger Property ="Text" Value="Operating">
+                                                                    <Setter Property= "Foreground" Value="green"/>
+                                                                </Trigger>
+                                                            </Style.Triggers>
+                                                        </Style>
+                                                    </TextBlock.Style>
+                                                </TextBlock>
+                                                <TextBlock
+                                                    Grid.Row="2"
+                                                    Grid.Column="1"
+                                                    Style="{DynamicResource DashBoardTB1}"
+                                                    HorizontalAlignment="Left"
+                                                    VerticalAlignment="Center"
+                                                    Text="Environment:" 
+                                                    Margin="3,0"/>
+                                                <TextBlock
+                                                    Grid.Row="2"
+                                                    Grid.Column="2"
+                                                    Style="{DynamicResource DashBoardTB1}"
+                                                    HorizontalAlignment="Left"
+                                                    VerticalAlignment="Center"
+                                                    Text="{Binding Environment}"
+                                                    Margin="0"/>
+                                                <TextBlock
+                                                    Grid.Row="3"
+                                                    Grid.Column="1"
+                                                    Style="{DynamicResource DashBoardTB1}"
+                                                    HorizontalAlignment="Left"
+                                                    VerticalAlignment="Center"
+                                                    Text="OS Version:" 
+                                                    Margin="3,0"/>
+                                                <TextBlock
+                                                    Grid.Row="3"
+                                                    Grid.Column="2"
+                                                    Style="{DynamicResource DashBoardTB1}"
+                                                    HorizontalAlignment="Left"
+                                                    VerticalAlignment="Center"
+                                                    Text="{Binding OsVersion}"
+                                                    Margin="0"/>
+                                                <TextBlock
+                                                    Grid.Row="5"
+                                                    Grid.Column="1"
+                                                    Style="{DynamicResource DashBoardTB1}"
+                                                    HorizontalAlignment="Left"
+                                                    VerticalAlignment="Center"
+                                                    Text="LPAR RMC IP:" 
+                                                    Margin="3,0"/>
+                                                <TextBlock 
+                                                    Grid.Row="5"
+                                                    Grid.Column="2"
+                                                    Style="{DynamicResource DashBoardTB1}"
+                                                    HorizontalAlignment="Left"
+                                                    VerticalAlignment="Center"
+                                                    Text="{Binding RmcIp}"
+                                                    Margin="0"/>
+                                            </Grid>
+                                            <Grid Grid.Row="1">
+                                                <StackPanel Orientation="Horizontal" Margin="5,0" ToolTip="Last Changes">
+                                                    <Image Source="{Binding DataContext.ClockIcon96, RelativeSource={RelativeSource AncestorType=UserControl}}" MaxHeight="30" />
+                                                    <TextBlock Text="20260215 17:12" Margin="5,2" />
+                                                </StackPanel>
+                                            </Grid>
+                                        </Grid>
+                                    </Button>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+
+                        </ItemsControl>
+
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
             </ScrollViewer>
         </GroupBox>
     </Grid>
