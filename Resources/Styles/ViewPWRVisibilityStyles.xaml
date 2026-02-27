@@ -19,4 +19,13 @@
             </DataTrigger>
         </Style.Triggers>
     </Style>
+    <!-- Nur sichtbar, wenn Main.SelectedView == LPARs -->
+    <Style x:Key="ShowWhenLPAR" TargetType="ItemsControl">
+        <Setter Property="Visibility" Value="Collapsed"/>
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding Main.SelectedView}" Value="LPARs">
+                <Setter Property="Visibility" Value="Visible"/>
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
 </ResourceDictionary>
