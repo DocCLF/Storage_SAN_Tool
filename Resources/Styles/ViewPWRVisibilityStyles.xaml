@@ -1,7 +1,7 @@
 <ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
-    <!-- Nur sichtbar, wenn Main.SelectedView == Base -->
+    <!-- Nur sichtbar, wenn Main.SelectedView == HMC -->
     <Style x:Key="ShowWhenHMC" TargetType="ItemsControl">
         <Setter Property="Visibility" Value="Collapsed"/>
         <Style.Triggers>
@@ -10,5 +10,13 @@
             </DataTrigger>
         </Style.Triggers>
     </Style>
-
+    <!-- Nur sichtbar, wenn Main.SelectedView == ManagedSystem -->
+    <Style x:Key="ShowWhenManagedSystem" TargetType="ItemsControl">
+        <Setter Property="Visibility" Value="Collapsed"/>
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding Main.SelectedView}" Value="ManagedSystem">
+                <Setter Property="Visibility" Value="Visible"/>
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
 </ResourceDictionary>
