@@ -1167,10 +1167,10 @@ $TD_BTN_PWR_ManagedSystemInfo.add_click({
         $FunctionResult = New-DeviceBlock -Device $TD_Creds -ExportPath $TD_tb_ExportPath.Text -RESTFunc HMC_RESTHMCManagedSystems
 
         # Falls Rows-Collection noch nicht existiert
-        if (-not $FunctionResult.DeviceIdent.ManagedSystemRows) {
-            $FunctionResult.DeviceIdent | Add-Member -NotePropertyName ManagedSystemRows `
-                -NotePropertyValue (New-Object System.Collections.ObjectModel.ObservableCollection[object]) -Force
-        }
+        #if (-not $FunctionResult.DeviceIdent.ManagedSystemRows) {
+        #    $FunctionResult.DeviceIdent | Add-Member -NotePropertyName ManagedSystemRows `
+        #        -NotePropertyValue (New-Object System.Collections.ObjectModel.ObservableCollection[object]) -Force
+        #}
 
         $mapMS = @{
             SystemName       = 'SystemName'
