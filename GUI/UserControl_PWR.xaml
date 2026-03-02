@@ -29,6 +29,9 @@
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <GroupBox Grid.Column="0" Grid.RowSpan="4" Header="Actions"  HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,10,0,0">
@@ -205,7 +208,7 @@
             </ScrollViewer>
         </GroupBox>
         <!-- PWR_ManagedSystemInfo -->
-        <GroupBox Grid.Column="1" Grid.Row="1" Header="Power System Info" MinWidth="820" HorizontalAlignment="Left" Margin="10,10,0,0"  VerticalAlignment="Top">
+        <GroupBox Grid.Column="1" Grid.Row="2" Header="Power System Info" MinWidth="820" HorizontalAlignment="Left" Margin="10,10,0,0"  VerticalAlignment="Top">
             <ScrollViewer Margin="5" VerticalScrollBarVisibility="Auto">
             <ItemsControl 
                           ItemsSource="{Binding Main.DeviceToggles}"
@@ -219,7 +222,7 @@
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
 
-                        <!-- Ebene 2: echte HMC-Daten (HmcRows) -->
+                        <!-- Ebene 2: echte ManagedSystem-Daten (HmcRows) -->
                         <ItemsControl ItemsSource="{Binding ManagedSystemRows}"
                                       Visibility="{Binding IsChecked,
                                                            Converter={StaticResource BooleanToVisibilityConverter},
@@ -242,7 +245,7 @@
                                 </Style>
                             </ItemsControl.Style>
 
-                            <!-- Button pro HMC Row -->
+                            <!-- Button pro ManagedSystem Row -->
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate>
                                     <Button Style="{DynamicResource DashBoardBTNStyle}"
@@ -409,7 +412,7 @@
             </ScrollViewer>
         </GroupBox>
         <!-- PWR_LparSummary -->
-        <GroupBox Grid.Row="3" Header="LPAR Info" MinWidth="820" MaxHeight="800" HorizontalAlignment="Left" Margin="10,10,0,0"  VerticalAlignment="Top" >
+        <GroupBox Grid.Column="1" Grid.Row="3" Header="LPAR Info" MinWidth="820" MaxHeight="800" HorizontalAlignment="Left" Margin="10,10,0,0"  VerticalAlignment="Top" >
             <ScrollViewer Margin="5" VerticalScrollBarVisibility="auto">
             <ItemsControl 
                           ItemsSource="{Binding Main.DeviceToggles}"
@@ -423,7 +426,7 @@
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
 
-                        <!-- Ebene 2: echte HMC-Daten (HmcRows) -->
+                        <!-- Ebene 2: echte LPAR-Daten (HmcRows) -->
                         <ItemsControl ItemsSource="{Binding LparRows}"
                                       Visibility="{Binding IsChecked,
                                                            Converter={StaticResource BooleanToVisibilityConverter},
@@ -446,7 +449,7 @@
                                 </Style>
                             </ItemsControl.Style>
 
-                            <!-- Button pro HMC Row -->
+                            <!-- Button pro LPAR Row -->
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate>
                                     <Button Style="{DynamicResource DashBoardBTNStyle}"
