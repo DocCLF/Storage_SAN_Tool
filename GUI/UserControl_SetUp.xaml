@@ -140,7 +140,7 @@
                         </Grid.RowDefinitions>
                         <Label Grid.Row="0" Content="Customer Number" Style="{DynamicResource MainLabelStyle}" HorizontalAlignment="Left" />
                         <StackPanel Orientation="Horizontal" Grid.Row="1" Margin="5">
-                            <TextBox x:Name="TB_CustomerInfoName" Text="{Binding ElementName=CB_DataBaseChoice, Path=SelectedValue, Mode=OneWay}" HorizontalContentAlignment="Center" MaxLength="12" Width="100" Style="{DynamicResource ExportCredTBStyle}" HorizontalAlignment="Left" />
+                            <TextBox x:Name="TB_CustomerInfoName" Text="{Binding ElementName=CB_DataBaseChoice, Path=SelectedValue, Mode=OneWay}" HorizontalContentAlignment="Center" Width="100" Style="{DynamicResource ExportCredTBStyle}" HorizontalAlignment="Left" />
                             <ComboBox x:Name="CB_DataBaseChoice" SelectedIndex="0" Margin="10,0,0,0" Width="200" Style="{DynamicResource CustomerBoardCBStyle}" />
                             <ToggleButton x:name="BTN_DBRefresh" Margin="10,0,0,0" Height="32" Width="32" HorizontalAlignment="center" Background="Transparent" BorderThickness="0" Style="{DynamicResource CustomerBoardBTNStyle}">
                                 <Image Source = "{Binding RefreshIcon96 , Mode=OneWay}" Stretch="Uniform" VerticalAlignment="Bottom" HorizontalAlignment="Left" MaxHeight="30" />
