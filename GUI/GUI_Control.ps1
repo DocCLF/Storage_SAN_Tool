@@ -161,6 +161,7 @@ $TD_DataBaseChoice = Get-ChildItem "$PSRootPath\Resources\DBFolder\*" -Filter "*
         Path = $_.FullName
     }
 }
+
 if ($($TD_DataBaseChoice.Name).Count -lt 1) {
     $TD_CB_DataBaseChoice.ItemsSource = @("Customer Nbr")
     $TD_CB_DataBaseChoice.IsEnabled = $false
@@ -324,6 +325,7 @@ $TD_BTN_ImportCred.add_click({
     }
 })
 #endregion
+#region LocalDB
 $TD_BTN_ActivateDB.add_click({
     if(($TD_BTN_ActivateDB.Background -notlike "*FFFC4242")-and($TD_TB_CustomerInfoName.Background -notlike "*FFFA8C8C")){
         $DBName = $TD_TB_CustomerInfoName.Text
@@ -391,6 +393,27 @@ $TD_BTN_DBRefresh.add_click({
         $TD_CB_DataBaseChoice.SelectedIndex = 0
     }
 })
+$TD_CB_CustomerYN.Add_Checked({
+    if((Get-ChildItem "$PSRootPath\Resources\DBFolder\*" -Filter "*.db").count -eq 1){
+        $TD_TB_CustomerInfoName.IsEnabled = $false
+    }elseif (((Get-ChildItem "$PSRootPath\Resources\DBFolder\*" -Filter "*.db").count -lt 1)) {
+        $TD_TB_CustomerInfoName.IsEnabled = $true
+    }
+})
+$TD_CB_CustomerYN.Add_Unchecked({
+    $TD_TB_CustomerInfoName.IsEnabled = $true    
+})
+$TD_CB_DataBaseChoice.add_SelectionChanged({
+    if(!([string]::IsNullOrEmpty($TD_CB_DataBaseChoice.SelectedItem))){
+        $CustomerDB = $TD_CB_DataBaseChoice.SelectedItem.tostring()
+        $SST_SavedCustomerSettingsDB = SST_CustomerDB -SST_InfoType "LoadCustomerSetUp" -SST_Customer $CustomerDB
+        $TD_TB_ExportPath.Text = $SST_SavedCustomerSettingsDB.ExportPath
+        $TD_LB_CerdExportPath.Content = $SST_SavedCustomerSettingsDB.ExportPathCredential
+
+        Write-Host $CustomerDB -ForegroundColor Cyan
+    }
+})
+#endregion
 #endregion
 #region IBM Storage
 $TD_BTN_IBM_BaseStorageInfo.add_click({
@@ -1111,7 +1134,7 @@ $TD_BTN_FOS_SensorShow.add_click({
     $UCVMMain.SelectedView = "SensorInfo"
 })
 #endregion
-#endregion
+#region IBM Power
 $TD_BTN_PWR_HMCInfo.add_click({
     $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource | Where-Object { $_.DeviceTyp -eq "PowerHMC" }
 
@@ -1241,16 +1264,10 @@ $TD_BTN_PWR_LparSummary.add_click({
     # 7) View umschalten (Name muss zu deinem UI passen!)
     $UCVMMain.SelectedView = "LPARs"
 })
-$TD_CB_DataBaseChoice.add_SelectionChanged({
-    if(!([string]::IsNullOrEmpty($TD_CB_DataBaseChoice.SelectedItem))){
-        $CustomerDB = $TD_CB_DataBaseChoice.SelectedItem.tostring()
-        $SST_SavedCustomerSettingsDB = SST_CustomerDB -SST_InfoType "LoadCustomerSetUp" -SST_Customer $CustomerDB
-        $TD_TB_ExportPath.Text = $SST_SavedCustomerSettingsDB.ExportPath
-        $TD_LB_CerdExportPath.Content = $SST_SavedCustomerSettingsDB.ExportPathCredential
+#endregion
+#endregion
 
-        Write-Host $CustomerDB -ForegroundColor Cyan
-    }
-})
+
 <# this part is needed if there are any Updates on the cred in DG #>
 $TD_DG_KnownDeviceList.add_SelectionChanged({
     <# to prevent the function from being executed more than once #>
