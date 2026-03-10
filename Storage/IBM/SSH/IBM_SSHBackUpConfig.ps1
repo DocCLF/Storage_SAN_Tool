@@ -36,7 +36,7 @@ function IBM_SSHBackUpConfig {
         $TD_BUInfo = plink $TD_Device_UserName@$TD_Device_DeviceIP -pw $TD_Device_PW -batch "svcconfig backup"
         Start-Sleep -Seconds 0.5
         $TD_BUResault = $TD_BUInfo.TrimStart('.')
-        pscp -unsafe -pw $TD_Device_PW $TD_Device_UserName@$($TD_Device_DeviceIP):/dumps/svc.config.backup.* $TD_Exportpath
+        pscp -unsafe -pw $TD_Device_PW $TD_Device_UserName@$($TD_Device_DeviceIP):/dumps/svc.config.backup* $TD_Exportpath
     }
 
     end {
