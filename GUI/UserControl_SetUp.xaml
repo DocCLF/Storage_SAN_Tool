@@ -210,7 +210,7 @@
                         </StackPanel>
                         <StackPanel Grid.Row="1" Orientation="Horizontal" >
                             <PasswordBox x:Name="TB_ConnectionStringPRISM" MinWidth="150" MaxWidth="350" HorizontalAlignment="Left" HorizontalContentAlignment="Left" Style="{DynamicResource PasswordBoxStyle}"/>
-                            <ToggleButton x:Name="BTN_SaveConnectionStringPRISM" Content="Save" HorizontalAlignment="Left" Style="{DynamicResource MainBtnStyle}"/>
+                            <ToggleButton x:Name="BTN_SaveConnectionStringPRISM" Content="Save" HorizontalAlignment="Left" Style="{DynamicResource ExportCredBTNStyle}"/>
                             <ToggleButton x:Name="BTN_ChangeConnectionStringPRISM" Content="Change Connection String" Visibility="Collapsed" HorizontalAlignment="Left" Style="{DynamicResource MainBtnStyle}"/>
                         </StackPanel>
                         <StackPanel Grid.Row="2" Orientation="Vertical" >
