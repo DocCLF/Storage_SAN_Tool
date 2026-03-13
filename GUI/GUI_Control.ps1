@@ -416,82 +416,95 @@ $TD_CB_DataBaseChoice.add_SelectionChanged({
 #endregion
 #region PRISM
 #SST_ToolMessageCollector -TD_ToolMSGCollector "Load PRISM" -TD_ToolMSGType Message -TD_Shown no
-$TD_BTN_SaveConnectionStringPRISM.add_click({
-    $TD_BTN_SaveConnectionStringPRISM.Background="#FFDDDDDD"
-    #SST_SaveLoadToolSettings -SST_SaveSettings $true
-    $SST_LoadedToolSettings = Import-Clixml -Path "$PSRootPath\Resources\SavedToolSettings.clixml" 
-    $ConnectionStringPRISM = [System.Net.NetworkCredential]::new("", $SST_LoadedToolSettings.ConnectionStringPRISM).Password
-    IF(!([string]::IsNullOrEmpty($ConnectionStringPRISM))){
-        $TD_TB_ConnectionStringPRISM.Visibility="Collapsed"
-        $TD_BTN_SaveConnectionStringPRISM.Content = "Test Connection"
+$TD_TB_CustomerAZPPRISM.Add_PasswordChanged({
+    $len = $TD_TB_CustomerAZPPRISM.Password.Length
+    switch ($len) {
+        1 { $TD_TB_CustomerAZPPRISM.Background = 'White' }
+        {$_ -ge 12} { $TD_TB_CustomerAZPPRISM.Background = 'LightGreen' }
+        default { $TD_TB_CustomerAZPPRISM.Background = 'White' }
     }
-    if(($TD_TB_ConnectionStringPRISM.Visibility -eq "Collapsed")-and ($TD_BTN_SaveConnectionStringPRISM.Content -like "Test Connection")){
-        try {
-            $SQLConnection=New-Object System.Data.SqlClient.SqlConnection
-            $SQLConnection.ConnectionString=$TD_TB_ConnectionStringPRISM.Password
-            $SQLConnection.Open()
+})
+$TD_TB_ConnectionStringPRISM.Add_PasswordChanged({
+    $len = $TD_TB_ConnectionStringPRISM.Password.Length
+
+    switch ($len) {
+        1 { $TD_TB_ConnectionStringPRISM.Background = 'White' }
+        {$_ -ge 150} { $TD_TB_ConnectionStringPRISM.Background = 'LightGreen' }
+        default { $TD_TB_ConnectionStringPRISM.Background = 'White' }
+    }
+})
+$TD_BTN_SaveAZConnectionPRISM.add_click({
+
+    $PasswordOK = $TD_TB_CustomerAZPPRISM.SecurePassword.Length -gt 12
+    $ConnectionStringOK = $TD_TB_ConnectionStringPRISM.SecurePassword.Length -gt 150
+
+    if ($PasswordOK -and $ConnectionStringOK) {
+        $AZPRISM = [PSCustomObject]@{
+            CustomerNBR = $TD_TB_CustomerInfoName.Text
+            CustomerAZP = ($TD_TB_CustomerAZPPRISM.SecurePassword | ConvertFrom-SecureString)
+            ConnectionStringPRISM = ($TD_TB_ConnectionStringPRISM.SecurePassword | ConvertFrom-SecureString)
         }
-        catch {
-            #SST_ToolMessageCollector -TD_ToolMSGCollector "PRISM $($_.Exception.Message)" -TD_ToolMSGType Error -TD_Shown yes
-            $TD_LB_ConnectionStringLabelPRISM.Content = "$($_.Exception.Message)"
-            $TD_BTN_SaveConnectionStringPRISM.Background = "Coral"
-            $TD_BTN_ChangeConnectionStringPRISM.Visibility = "Visible"
-        }
-        if(($SQLConnection.State -eq 'Open') -and ($TD_BTN_ConnetionToPRISM.Content -notlike "Test Connection")){
-            $TD_BTN_SaveConnectionStringPRISM.Content = "Connection String valid"
-            $TD_BTN_SaveConnectionStringPRISM.Background = "lightgreen"
-            $SQLConnection.Close()
-            $TD_BTN_ChangeConnectionStringPRISM.Visibility = "Visible"
-            $TD_LB_ConnectionStringLabelPRISM.Content ="Connection valid"
-        }
+        SST_ToolAdvSaveDB -SST_InfoType "SavePRISMSettings" -SST_NewDBObject $AZPRISM
+        $TD_BTN_SaveAZConnectionPRISM.Visibility = "Collapsed"
+        $TD_LB_ConnectionStringLabelPRISM.Visibility = "Collapsed"
+        $TD_TB_CustomerAZPPRISM.Visibility = "Collapsed"
+        $TD_TB_ConnectionStringPRISM.Visibility = "Collapsed"
+        $TD_LB_CustomerAZPPRISM.Content = "Change the PRISM Password for :"
+        $TD_BTN_ChangeAZConnectionPRISM.Visibility = "Visible"
+    }else {
+        $TD_TB_CustomerAZPPRISM.Background = [Windows.Media.Brushes]::LightCoral
+        $TD_TB_ConnectionStringPRISM.Background = [Windows.Media.Brushes]::LightCoral
     }
 })
 $TD_BTN_ConnetionToPRISM.add_click({
-    $TD_BTN_ConnetionToPRISM.Background="#FFDDDDDD"
+    $TD_BTN_ConnetionToPRISM.Background="#FFF5F7FA" #default color
+
     try {
-        $SST_LoadedToolSettings = Import-Clixml -Path "$PSRootPath\Resources\SavedToolSettings.clixml" -ErrorAction SilentlyContinue
+        $TD_AZDBObj = SST_ToolAdvSaveDB -SST_InfoType "LoadPRISMSettings"
+        $ConString = Convert-SecureStringToPlainText ($TD_AZDBObj.AZConString | ConvertTo-SecureString)
+        $AZCredP  = Convert-SecureStringToPlainText ($TD_AZDBObj.AZCredP | ConvertTo-SecureString)
+
+        $ConnectionStringPRISM = $ConString.Replace('{replaceone}',[string]$TD_AZDBObj.IsCustomerNBR).Replace('{replacetwo}',"$AZCredP")
+        
+        $ConString = $null
+        $AZCredP = $null
     }
     catch {
         <#Do this if a terminating exception happens#>
         #SST_ToolMessageCollector -TD_ToolMSGCollector "PRISM $($_.Exception.Message)" -TD_ToolMSGType Error -TD_Shown yes
     }
-     
-    $ConnectionStringPRISM = [System.Net.NetworkCredential]::new("", $SST_LoadedToolSettings.ConnectionStringPRISM).Password
+
     try {
         $SQLConnection=New-Object System.Data.SqlClient.SqlConnection
         $SQLConnection.ConnectionString=$ConnectionStringPRISM 
+        $ConnectionStringPRISM = $null
         $SQLConnection.Open()
+        if(($SQLConnection.State -eq 'Open')){
+            $TD_BTN_ConnetionToPRISM.Content = "Test successful"
+            $TD_BTN_ConnetionToPRISM.Background = "LightGreen"
+            $SQLConnection.Close()
+        }
     }
     catch {
         #SST_ToolMessageCollector -TD_ToolMSGCollector "PRISM Status $($SQLConnection.Open()) Info: $($_.Exception.Message)" -TD_ToolMSGType Error -TD_Shown yes
-        $TD_LB_TestConnectionPRISM.Foreground = "Coral"
+        #$TD_LB_TestConnectionPRISM.Foreground = "Coral"
         $TD_BTN_ConnetionToPRISM.Background ="Coral"
-    }
-    if(($SQLConnection.State -eq 'Open') -and ($TD_BTN_ConnetionToPRISM.Content -like "Close Connection")){
+    }finally{
         $SQLConnection.Close()
-        $TD_BTN_ConnetionToPRISM.Background ="#FFDDDDDD"
-        $TD_LB_TestConnectionPRISM.Foreground = "coral"
-        $TD_LB_TestConnectionPRISM.Content = "Connect to PROFI PRISM."
-        $TD_BTN_ConnetionToPRISM.Content ="Connetion to PRISM"
-        $SST_LoadedToolSettings.ConnectionStringPRISM = $null
-        $ConnectionStringPRISM = $null
-    }
-    if(($SQLConnection.State -eq 'Open') -and ($TD_BTN_ConnetionToPRISM.Content -like "Connetion to PRISM")){
-        $TD_BTN_ConnetionToPRISM.Background ="LightGreen"
-        $TD_LB_TestConnectionPRISM.Foreground = "DarkGreen"
-        $TD_LB_TestConnectionPRISM.Content = "$($SQLConnection.State)"
-        $TD_BTN_ConnetionToPRISM.Content ="Close Connection"
     }
 })
-$TD_BTN_ChangeConnectionStringPRISM.add_click({
-    $TD_TB_ConnectionStringPRISM.Visibility = "Visible"
+$TD_BTN_ChangeAZConnectionPRISM.add_click({
+    $TD_BTN_SaveAZConnectionPRISM.Visibility = "Visible"
+    $TD_TB_CustomerAZPPRISM.Password = $null
+    $TD_LB_ConnectionStringLabelPRISM.Visibility = "Visible"
     $TD_TB_ConnectionStringPRISM.Password = $null
-    $TD_BTN_SaveConnectionStringPRISM.Content = "Save Connection String"
-    $TD_BTN_SaveConnectionStringPRISM.Background="#FFDDDDDD"
-    $TD_BTN_ChangeConnectionStringPRISM.Visibility = "Collapsed"
+    $TD_TB_CustomerAZPPRISM.Visibility = "Visible"
+    $TD_TB_ConnectionStringPRISM.Visibility = "Visible"
+    $TD_LB_CustomerAZPPRISM.Content = "Insert the PRISM Password for :"
+    $TD_BTN_ChangeAZConnectionPRISM.Visibility = "Collapsed"
 })
 $TD_BTN_SendDataToPRISM.add_click({
-    SST_PRISMDBControl
+    #SST_PRISMDBControl
     #Start-Process pwsh -ArgumentList '-NoExit -ExecutionPolicy Bypass -Command "& { . ''D:\GitRePo\Storage_SAN_Tool\TOOLFunc\SST_PRISMDBControl.ps1''; SST_PRISMDBControl}"'
 })
 #SST_ToolMessageCollector -TD_ToolMSGCollector "Load PRISM done" -TD_ToolMSGType Message -TD_Shown no
