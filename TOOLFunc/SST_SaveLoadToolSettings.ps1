@@ -12,7 +12,7 @@ function SST_SaveLoadToolSettings {
         $TD_BTN_LoadToolSettings.Background="#F5F7FA"
         $PSRootPath = Split-Path -Path $PSScriptRoot -Parent
         try {
-            $SST_SavedToolSettingsDB = SST_ToolDB -SST_InfoType "LoadToolSettings"
+            $SST_SavedToolSettingsDB = SST_ToolSettingsDB -SST_InfoType "LoadToolSettings"
             <# die clixml muss da abgelegt werden wo die Cred abgelegt werden $TD_LB_CerdExportPath.Content #>
             $SST_SavedToolSettingsXML = Get-Item -Path "$PSRootPath\Resources\SavedToolSettings.clixml" -ErrorAction SilentlyContinue
         }
@@ -42,7 +42,7 @@ function SST_SaveLoadToolSettings {
             $SST_ExportToolSettingsDB.PRISMactiv = $TD_CB_PRISMConnectOnOff.IsChecked
             $SST_ExportToolSettingsDB.IsCustomer = $TD_CB_CustomerYN.IsChecked
             try {
-                SST_ToolDB -SST_InfoType "SaveToolSettings" -SST_NewDBObject $SST_ExportToolSettingsDB
+                SST_ToolSettingsDB -SST_InfoType "SaveToolSettings" -SST_NewDBObject $SST_ExportToolSettingsDB
             }
             catch {
                 Write-Host $_.Exception.Message -ForegroundColor Yellow
@@ -62,7 +62,11 @@ function SST_SaveLoadToolSettings {
             <#Save in clixml#>
             $SST_ExportToolSettingsXML = "" | Select-Object DevicestoInExport,ConnectionStringPRISM,CustomerNumber
             $SST_ExportToolSettingsXML.DevicestoInExport = $TD_DG_KnownDeviceList.ItemsSource
-            
+            #########################################################################################
+            #########################################################################################
+            # muss angepasst werden auf die neue konstelation string und pw für customernbr!!!!!!!!
+            #########################################################################################
+            #########################################################################################
             if(!([string]::IsNullOrEmpty($TD_TB_ConnectionStringPRISM.Password))){
                 $SST_ExportToolSettingsXML.ConnectionStringPRISM = ConvertTo-SecureString -String ([string]$($TD_TB_ConnectionStringPRISM.Password)) -AsPlainText -Force
                 $SST_ExportToolSettingsXML.CustomerNumber = $TD_TB_CustomerNumberPRISM.Text
@@ -113,10 +117,11 @@ function SST_SaveLoadToolSettings {
                             $SQLConnection.Open()
                         }
                         if($SQLConnection.State -eq 'Open'){
+                            $TD_TB_CustomerAZPPRISM.Visibility = "Collapsed"
                             $TD_TB_ConnectionStringPRISM.Visibility = "Collapsed"
-                            $TD_BTN_SaveConnectionStringPRISM.Content = "Connection String loaded"
-                            $TD_BTN_SaveConnectionStringPRISM.Background = "LightGreen"
-                            $TD_BTN_ChangeConnectionStringPRISM.Visibility = "Visible"
+                            $TD_BTN_SaveAZConnectionPRISM.Content = "Connection String loaded"
+                            $TD_BTN_SaveAZConnectionPRISM.Background = "LightGreen"
+                            $TD_BTN_ChangeAZConnectionPRISM.Visibility = "Visible"
                             $SQLConnection.Close()
                         }else{
                             <# something should happen if not #>
