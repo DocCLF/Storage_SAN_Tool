@@ -205,17 +205,21 @@
                             <RowDefinition Height="auto" />
                         </Grid.RowDefinitions>
                         <StackPanel Grid.Column="0" Grid.Row="0" Orientation="Horizontal">
-                            <Label x:Name="LB_ConnectionStringLabelPRISM" Content="Insert the PRISM Password for :" Margin="0" Style="{DynamicResource PRISIMLabelStyle}" />
+                            <Label x:Name="LB_CustomerAZPPRISM" Content="Insert the PRISM Password for :" Margin="0" Style="{DynamicResource PRISIMLabelStyle}" />
                             <Label Content="{Binding ElementName=TB_CustomerInfoName, Path=Text}" Foreground="black" Margin="0" Style="{DynamicResource PRISIMLabelStyle}" />
                         </StackPanel>
                         <StackPanel Grid.Row="1" Orientation="Horizontal" >
-                            <PasswordBox x:Name="TB_ConnectionStringPRISM" MinWidth="150" MaxWidth="350" HorizontalAlignment="Left" HorizontalContentAlignment="Left" Style="{DynamicResource PasswordBoxStyle}"/>
-                            <ToggleButton x:Name="BTN_SaveConnectionStringPRISM" Content="Save" HorizontalAlignment="Left" Style="{DynamicResource ExportCredBTNStyle}"/>
-                            <ToggleButton x:Name="BTN_ChangeConnectionStringPRISM" Content="Change Connection String" Visibility="Collapsed" HorizontalAlignment="Left" Style="{DynamicResource MainBtnStyle}"/>
+                            <StackPanel Orientation="Vertical" >
+                                <PasswordBox x:Name="TB_CustomerAZPPRISM" MinWidth="150" MaxWidth="350" MaxLength="24" HorizontalAlignment="Left" HorizontalContentAlignment="Left" Style="{DynamicResource PasswordBoxStyle}"/>
+                                <Label x:Name="LB_ConnectionStringLabelPRISM" Content="Insert the PRISM ConnectionString" Margin="0" Style="{DynamicResource PRISIMLabelStyle}" />
+                                <PasswordBox x:Name="TB_ConnectionStringPRISM" MinWidth="200" MaxWidth="350" HorizontalAlignment="Left" HorizontalContentAlignment="Left" Style="{DynamicResource PasswordBoxStyle}"/>
+                            </StackPanel>
+                            <ToggleButton x:Name="BTN_SaveAZConnectionPRISM" Content="Save" HorizontalAlignment="Left" VerticalAlignment="Bottom" Style="{DynamicResource ExportCredBTNStyle}"/>
+                            <ToggleButton x:Name="BTN_ChangeAZConnectionPRISM" Content="Change Connection" Visibility="Collapsed" HorizontalAlignment="Left" Style="{DynamicResource MainBtnStyle}"/>
                         </StackPanel>
                         <StackPanel Grid.Row="2" Orientation="Vertical" >
                             <Label Grid.Column="0" Grid.Row="2" x:Name="LB_TestConnectionPRISM" Content="Connect to PROFI PRISM." Style="{DynamicResource PRISIMLabelStyle}" />
-                            <ToggleButton Grid.Column="0" Grid.Row="3" x:Name="BTN_ConnetionToPRISM" Content="Connetion to PRISM" HorizontalAlignment="Left" Style="{DynamicResource MainBtnStyle}" />
+                            <ToggleButton Grid.Column="0" Grid.Row="3" x:Name="BTN_ConnetionToPRISM" Content="Test Connect" ToolTip="Test connection to PROFI PRISM" HorizontalAlignment="Left" Style="{DynamicResource MainBtnStyle}" />
                         </StackPanel>
                         <StackPanel Grid.Row="3" Orientation="Vertical" >
                             <Label Grid.Column="0" Grid.Row="2" x:Name="LB_SendDataToPRISM" Content="Send Data to PROFI PRISM." Style="{DynamicResource PRISIMLabelStyle}" />
