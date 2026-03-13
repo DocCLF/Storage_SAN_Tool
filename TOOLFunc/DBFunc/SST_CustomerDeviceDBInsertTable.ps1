@@ -77,7 +77,7 @@ function SST_CustomerDeviceDBInsertTable {
                         # If you want to delete files afterwards, extra good:
                         [System.Data.SQLite.SQLiteConnection]::ClearAllPools()
                 }
-             }
+            }
             "StorageBase" { 
 
                 try {
