@@ -127,7 +127,6 @@ function FOS_SSHBasicSwitchInfos {
 
             <# Progressbar  #>
             $ProgCounter++
-            #$Completed = ($ProgCounter/$TD_HostInfos.Count) * 100
             Write-ProgressBar -ProgressBar $ProgressBar -Activity "Collect data for Device $($TD_Line_ID) $($FOS_SwGeneralInfos.'SwichtName')" -PercentComplete (($ProgCounter/$FOS_MainInformation.Count) * 100)
         }
         
