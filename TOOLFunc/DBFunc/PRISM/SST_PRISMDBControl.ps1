@@ -294,14 +294,17 @@ function SST_PRISMDBControl {
                     foreach ($SST_CollectedInformation in $SST_CollectedInformations){
                         $SQLCommand.Parameters.Clear()
 
-                        $SQLCommand.CommandText ="INSERT INTO PowerSysSummary (CustomerNbr, SystemName, MachineTypeModel, SerialNumber, State, UUID, TimeStamp)`
-                                                    VALUES (@CustomerNbr, @SystemName, @MachineTypeModel, @SerialNumber, @State, @UUID, @TimeStamp);"
+                        $SQLCommand.CommandText ="INSERT INTO PowerSysSummary (CustomerNbr, SystemName, MachineTypeModel, SerialNumber, State, ECNumber, ActivatedLevel, UUID, URL, TimeStamp)`
+                                                    VALUES (@CustomerNbr, @SystemName, @MachineTypeModel, @SerialNumber, @State, @ECNumber, @ActivatedLevel, @UUID, @URL, @TimeStamp);"
                         $SQLCommand.Parameters.AddWithValue("@CustomerNbr", $Customer) | Out-Null
                         $SQLCommand.Parameters.AddWithValue("@SystemName", $SST_CollectedInformation.SystemName) | Out-Null
                         $SQLCommand.Parameters.AddWithValue("@MachineTypeModel", $SST_CollectedInformation.MachineTypeModel) | Out-Null
                         $SQLCommand.Parameters.AddWithValue("@SerialNumber", $SST_CollectedInformation.SerialNumber) | Out-Null
                         $SQLCommand.Parameters.AddWithValue("@State", $SST_CollectedInformation.State) | Out-Null
+                        $SQLCommand.Parameters.AddWithValue("@ECNumber", $SST_CollectedInformation.ECNumber) | Out-Null
+                        $SQLCommand.Parameters.AddWithValue("@ActivatedLevel", $SST_CollectedInformation.ActivatedLevel) | Out-Null
                         $SQLCommand.Parameters.AddWithValue("@UUID", $SST_CollectedInformation.UUID) | Out-Null
+                        $SQLCommand.Parameters.AddWithValue("@URL", $SST_CollectedInformation.Url) | Out-Null
                         $SQLCommand.Parameters.AddWithValue("@TimeStamp", $TimeStamp) | Out-Null
 
                         # DB save 
