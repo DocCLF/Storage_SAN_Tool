@@ -478,12 +478,28 @@ $TD_BTN_ConnetionToPRISM.add_click({
         $SQLConnection=New-Object System.Data.SqlClient.SqlConnection
         $SQLConnection.ConnectionString=$ConnectionStringPRISM 
         $ConnectionStringPRISM = $null
-        $SQLConnection.Open()
-        if(($SQLConnection.State -eq 'Open')){
-            $TD_BTN_ConnetionToPRISM.Content = "Test successful"
-            $TD_BTN_ConnetionToPRISM.Background = "LightGreen"
-            $SQLConnection.Close()
-        }
+        $AZConnection =$false
+        [int]$ProgCounter=10
+        $ProgressBar = New-ProgressBar
+        while (!($AZConnection)) {
+            $ProgCounter++
+            Write-ProgressBar -ProgressBar $ProgressBar -Activity "Try to connect PRISM" -PercentComplete (($ProgCounter/100) * 100)    
+            try {
+                $SQLConnection.Open()
+                Write-Host $SQLConnection.State -ForegroundColor Green
+                $AZConnection =$true
+                $TD_BTN_ConnetionToPRISM.Content = "Test successful"
+                $TD_BTN_ConnetionToPRISM.Background = "LightGreen"
+                $SQLConnection.Close()
+            }
+            catch {
+                <#Do this if a terminating exception happens#>
+                Write-Host "$($SQLConnection.State) - $($_.Exception.Message)" -ForegroundColor Yellow
+            }
+            
+            <# Progressbar  #>
+        }   
+        Close-ProgressBar -ProgressBar $ProgressBar
     }
     catch {
         #SST_ToolMessageCollector -TD_ToolMSGCollector "PRISM Status $($SQLConnection.Open()) Info: $($_.Exception.Message)" -TD_ToolMSGType Error -TD_Shown yes
@@ -492,6 +508,7 @@ $TD_BTN_ConnetionToPRISM.add_click({
     }finally{
         $SQLConnection.Close()
     }
+    Write-Host $SQLConnection.State
 })
 $TD_BTN_ChangeAZConnectionPRISM.add_click({
     $TD_BTN_SaveAZConnectionPRISM.Visibility = "Visible"
@@ -504,7 +521,7 @@ $TD_BTN_ChangeAZConnectionPRISM.add_click({
     $TD_BTN_ChangeAZConnectionPRISM.Visibility = "Collapsed"
 })
 $TD_BTN_SendDataToPRISM.add_click({
-    #SST_PRISMDBControl
+    SST_PRISMDBControl
     #Start-Process pwsh -ArgumentList '-NoExit -ExecutionPolicy Bypass -Command "& { . ''D:\GitRePo\Storage_SAN_Tool\TOOLFunc\SST_PRISMDBControl.ps1''; SST_PRISMDBControl}"'
 })
 #SST_ToolMessageCollector -TD_ToolMSGCollector "Load PRISM done" -TD_ToolMSGType Message -TD_Shown no
