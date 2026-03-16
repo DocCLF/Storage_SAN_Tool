@@ -108,7 +108,7 @@ function SST_CustomerDeviceDBCreateTable {
             }
             <# PowerSysSummary #>
             try{ 
-                $SST_SQLiteTabelQuery ="CREATE TABLE IF NOT EXISTS PowerSysSummary (ID INTEGER PRIMARY KEY AUTOINCREMENT, CustomerNbr TEXT NOT NULL, SystemName TEXT, MachineTypeModel TEXT, SerialNumber TEXT, State TEXT, UUID TEXT, TimeStamp TEXT );" 
+                $SST_SQLiteTabelQuery ="CREATE TABLE IF NOT EXISTS PowerSysSummary (ID INTEGER PRIMARY KEY AUTOINCREMENT, CustomerNbr TEXT NOT NULL, SystemName TEXT, MachineTypeModel TEXT, SerialNumber TEXT, State TEXT, ECNumber TEXT, ActivatedLevel TEXT, UUID TEXT, URL TEXT, TimeStamp TEXT );" 
                 $SQLiteCommandCreate.CommandText = $SST_SQLiteTabelQuery
                 $SQLiteCommandCreate.ExecuteNonQuery()
             }catch{
