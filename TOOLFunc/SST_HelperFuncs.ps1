@@ -213,3 +213,57 @@ function Convert-SecureStringToPlainText {
         }
     }
 }
+#AZDBUSer
+function Invoke-AzureSqlNonQuery {
+
+    param(
+        [string]$ConnectionString,
+        [string]$Query
+    )
+
+    $conn = [System.Data.SqlClient.SqlConnection]::new($ConnectionString)
+    $cmd  = $conn.CreateCommand()
+    $cmd.CommandText = $Query
+
+    try {
+
+        $conn.Open()
+        $cmd.ExecuteNonQuery()
+
+    }
+    finally {
+
+        if ($conn.State -ne "Closed") {
+            $conn.Close()
+        }
+
+        $conn.Dispose()
+    }
+}
+#Random Password Generator
+function Get-RandomPassword {
+    param(
+        [ValidateRange(4,256)]
+        [int]$PasswordLength = 16
+    )
+
+    $lower   = 'abcdefghijklmnopqrstuvwxyz'.ToCharArray()
+    $upper   = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.ToCharArray()
+    $numeric = '0123456789'.ToCharArray()
+    $special = '!$%&/()=?+#*-_.,:;'.ToCharArray()
+
+    $all = $lower + $upper + $numeric + $special
+
+    $passwordChars = @(
+        $lower   | Get-Random -Count 1
+        $upper   | Get-Random -Count 1
+        $numeric | Get-Random -Count 1
+        $special | Get-Random -Count 1
+    )
+
+    $passwordChars += 1..($PasswordLength - 4) | ForEach-Object {
+        $all | Get-Random -Count 1
+    }
+
+    -join ($passwordChars | Get-Random -Count $passwordChars.Count)
+}
