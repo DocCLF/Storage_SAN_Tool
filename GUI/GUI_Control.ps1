@@ -326,6 +326,7 @@ $TD_BTN_ImportCred.add_click({
 })
 #endregion
 #region LocalDB
+if($TD_BTN_DeleteDB.Visibility -eq "Visible"){$TD_BTN_ActivateDB.Visibility = "Collapsed"}
 $TD_BTN_ActivateDB.add_click({
     if(($TD_BTN_ActivateDB.Background -notlike "*FFFC4242")-and($TD_TB_CustomerInfoName.Background -notlike "*FFFA8C8C")){
         $DBName = $TD_TB_CustomerInfoName.Text
@@ -363,6 +364,7 @@ $TD_BTN_DeleteDB.add_click({
         $TD_DataBaseChoice = @(Get-ChildItem "$PSRootPath\Resources\DBFolder\*" -Filter "*.db" | Select-Object -ExpandProperty Basename)
         if([string]::IsNullOrWhiteSpace($TD_DataBaseChoice)){
             $TD_TB_CustomerInfoName.Text = "Customer Nbr"
+            $TD_BTN_ActivateDB.Visibility = "Visible"
         }else {
             $TD_CB_DataBaseChoice.ItemsSource = $null
             $TD_DataBaseChoice = @(Get-ChildItem "$PSRootPath\Resources\DBFolder\*" -Filter "*.db" | Select-Object -ExpandProperty Basename)
@@ -416,44 +418,74 @@ $TD_CB_DataBaseChoice.add_SelectionChanged({
 #endregion
 #region PRISM
 #SST_ToolMessageCollector -TD_ToolMSGCollector "Load PRISM" -TD_ToolMSGType Message -TD_Shown no
-$TD_TB_CustomerAZPPRISM.Add_PasswordChanged({
-    $len = $TD_TB_CustomerAZPPRISM.Password.Length
-    switch ($len) {
-        1 { $TD_TB_CustomerAZPPRISM.Background = 'White' }
-        {$_ -ge 12} { $TD_TB_CustomerAZPPRISM.Background = 'LightGreen' }
-        default { $TD_TB_CustomerAZPPRISM.Background = 'White' }
-    }
-})
-$TD_TB_ConnectionStringPRISM.Add_PasswordChanged({
-    $len = $TD_TB_ConnectionStringPRISM.Password.Length
-
-    switch ($len) {
-        1 { $TD_TB_ConnectionStringPRISM.Background = 'White' }
-        {$_ -ge 150} { $TD_TB_ConnectionStringPRISM.Background = 'LightGreen' }
-        default { $TD_TB_ConnectionStringPRISM.Background = 'White' }
-    }
-})
+#$TD_TB_CustomerAZPPRISMConString.Foreground = "lightgray"
+#$TD_TB_CustomerAZPPRISMConString.Text = "Az-ConnectionString"
+#$TD_TB_CustomerAZPPRISMConString.Add_GotFocus({
+#    if($TD_TB_CustomerAZPPRISMConString.Text -eq "Az-ConnectionString"){
+#        $TD_TB_CustomerAZPPRISMConString.Text=""
+#        $TD_TB_CustomerAZPPRISMConString.Foreground = "Black"
+#    }
+#})
+#$TD_TB_CustomerAZPPRISMConString.Add_LostFocus({
+#    if ([string]::IsNullOrWhiteSpace($TD_TB_CustomerAZPPRISMConString.Text)) {
+#        $TD_TB_CustomerAZPPRISMConString.Text = "Az-ConnectionString"
+#        $TD_TB_CustomerAZPPRISMConString.Foreground = "lightgray"
+#    }
+#})
 $TD_BTN_SaveAZConnectionPRISM.add_click({
-
-    $PasswordOK = $TD_TB_CustomerAZPPRISM.SecurePassword.Length -gt 12
-    $ConnectionStringOK = $TD_TB_ConnectionStringPRISM.SecurePassword.Length -gt 150
-
-    if ($PasswordOK -and $ConnectionStringOK) {
+    $AZConnection =$false
+    [int]$ProgCounter=10
+    if(($TD_TB_CustomerInfoName.Text.Length -ge 6)-and($TD_TB_CustomerAZPPRISMConString.Text.Length -ge 10)-and($TD_TB_CustomerAZPPRISMDB.Text -ge 6)){
+        $ProgressBar = New-ProgressBar
         $AZPRISM = [PSCustomObject]@{
             CustomerNBR = $TD_TB_CustomerInfoName.Text
-            CustomerAZP = ($TD_TB_CustomerAZPPRISM.SecurePassword | ConvertFrom-SecureString)
-            ConnectionStringPRISM = ($TD_TB_ConnectionStringPRISM.SecurePassword | ConvertFrom-SecureString)
+            CustomerP = (ConvertTo-SecureString $(Get-RandomPassword -PasswordLength 16) -AsPlainText -Force | ConvertFrom-SecureString)
+            AZConString = (ConvertTo-SecureString $($TD_TB_CustomerAZPPRISMConString.Text) -AsPlainText -Force | ConvertFrom-SecureString)
+            AZDBNAM = (ConvertTo-SecureString $($TD_TB_CustomerAZPPRISMDB.Text) -AsPlainText -Force | ConvertFrom-SecureString)
         }
-        SST_ToolAdvSaveDB -SST_InfoType "SavePRISMSettings" -SST_NewDBObject $AZPRISM
-        $TD_BTN_SaveAZConnectionPRISM.Visibility = "Collapsed"
-        $TD_LB_ConnectionStringLabelPRISM.Visibility = "Collapsed"
-        $TD_TB_CustomerAZPPRISM.Visibility = "Collapsed"
-        $TD_TB_ConnectionStringPRISM.Visibility = "Collapsed"
-        $TD_LB_CustomerAZPPRISM.Content = "Change the PRISM Password for :"
-        $TD_BTN_ChangeAZConnectionPRISM.Visibility = "Visible"
-    }else {
-        $TD_TB_CustomerAZPPRISM.Background = [Windows.Media.Brushes]::LightCoral
-        $TD_TB_ConnectionStringPRISM.Background = [Windows.Media.Brushes]::LightCoral
+        #ConnectionStringPRISM = "Server=tcp:pwshdemo.database.windows.net,1433;Initial Catalog={replaceone};Persist Security Info=False;User ID={replacetwo};Password={replacethree};MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=15;"
+        $ConString = $TD_TB_CustomerAZPPRISMConString.Text
+        $AZCredDB  = $TD_TB_CustomerAZPPRISMDB.Text
+        $CustomerP  = Convert-SecureStringToPlainText ($AZPRISM.CustomerP | ConvertTo-SecureString)
+        $ConnectionStringPRISM = $ConString.Replace('{replaceone}',[string]$AZCredDB).Replace('{replacetwo}',"$($TD_TB_CustomerAZPPRISMUM.Text)").Replace('{replacethree}',"$($TD_TB_CustomerAZPPRISMUMP.Password)")
+        $SQLConnection=New-Object System.Data.SqlClient.SqlConnection
+        $SQLConnection.ConnectionString=$ConnectionStringPRISM
+        while (!($AZConnection)) {
+            $ProgCounter++
+            if($ProgCounter -gt 50){break}
+            Write-ProgressBar -ProgressBar $ProgressBar -Activity "Try to connect PRISM" -PercentComplete (($ProgCounter/100) * 100)    
+            try {
+                $SQLConnection.Open()
+                $SQLCommand = $SQLConnection.CreateCommand()
+                $SQLCommand.CommandText ="EXEC dbo.usp_CreateManagedUser @UserName = N'$($TD_TB_CustomerInfoName.Text)', @Password = N'$CustomerP';"
+                $SQLCommand.ExecuteNonQuery()
+                $ConString = $null
+                $AZCredDB = $null
+                $CustomerP = $null
+                $TD_BTN_SaveAZConnectionPRISM.Visibility = "Collapsed"
+                $TD_TB_CustomerAZPPRISMConString.Text = $null
+                $TD_TB_CustomerAZPPRISMDB.Text = $null
+                $TD_TB_CustomerAZPPRISMUM.Text = $null
+                $TD_TB_CustomerAZPPRISMUMP.Password = $null
+                $TD_TB_CustomerAZPPRISMConString.Visibility = "Collapsed"
+                $TD_TB_CustomerAZPPRISMDB.Visibility = "Collapsed"
+                $TD_TB_CustomerAZPPRISMUM.Visibility = "Collapsed"
+                $TD_TB_CustomerAZPPRISMUMP.Visibility = "Collapsed"
+                $TD_LB_CustomerAZPPRISM.Content="Reset the PRISM connection"
+                $TD_BTN_ChangeAZConnectionPRISM.Visibility = "Visible"
+                $AZConnection =$true
+                if ($SQLCommand) { $SQLCommand.Dispose() }
+                if ($SQLConnection) { $SQLConnection.Close(); $SQLConnection.Dispose() }
+            }
+            catch {
+                <#Do this if a terminating exception happens#>
+                Write-Host "$($SQLConnection.State) - $($_.Exception.Message)" -ForegroundColor Yellow
+            }
+        } 
+        if($AZConnection){
+            SST_ToolAdvSaveDB -SST_InfoType "SavePRISMSettings" -SST_NewDBObject $AZPRISM
+        }
+        Close-ProgressBar -ProgressBar $ProgressBar
     }
 })
 $TD_BTN_ConnetionToPRISM.add_click({
@@ -461,13 +493,14 @@ $TD_BTN_ConnetionToPRISM.add_click({
 
     try {
         $TD_AZDBObj = SST_ToolAdvSaveDB -SST_InfoType "LoadPRISMSettings"
-        $ConString = Convert-SecureStringToPlainText ($TD_AZDBObj.AZConString | ConvertTo-SecureString)
-        $AZCredP  = Convert-SecureStringToPlainText ($TD_AZDBObj.AZCredP | ConvertTo-SecureString)
+        $AZConString = Convert-SecureStringToPlainText ($TD_AZDBObj.AZConString | ConvertTo-SecureString)
+        $CustomerP  = Convert-SecureStringToPlainText ($TD_AZDBObj.CustomerP | ConvertTo-SecureString)
+        $AZDBNAM  = Convert-SecureStringToPlainText ($TD_AZDBObj.AZDBNAM | ConvertTo-SecureString)
 
-        $ConnectionStringPRISM = $ConString.Replace('{replaceone}',[string]$TD_AZDBObj.IsCustomerNBR).Replace('{replacetwo}',"$AZCredP")
-        
-        $ConString = $null
-        $AZCredP = $null
+        $ConnectionStringPRISM = $AZConString.Replace('{replaceone}',[string]$AZDBNAM).Replace('{replacetwo}',"$($TD_TB_CustomerInfoName.Text)").Replace('{replacethree}',"$($CustomerP)")
+        $AZConString = $null
+        $AZDBNAM = $null
+        $CustomerP = $null
     }
     catch {
         <#Do this if a terminating exception happens#>
@@ -486,7 +519,6 @@ $TD_BTN_ConnetionToPRISM.add_click({
             Write-ProgressBar -ProgressBar $ProgressBar -Activity "Try to connect PRISM" -PercentComplete (($ProgCounter/100) * 100)    
             try {
                 $SQLConnection.Open()
-                Write-Host $SQLConnection.State -ForegroundColor Green
                 $AZConnection =$true
                 $TD_BTN_ConnetionToPRISM.Content = "Test successful"
                 $TD_BTN_ConnetionToPRISM.Background = "LightGreen"
@@ -512,12 +544,15 @@ $TD_BTN_ConnetionToPRISM.add_click({
 })
 $TD_BTN_ChangeAZConnectionPRISM.add_click({
     $TD_BTN_SaveAZConnectionPRISM.Visibility = "Visible"
-    $TD_TB_CustomerAZPPRISM.Password = $null
-    $TD_LB_ConnectionStringLabelPRISM.Visibility = "Visible"
-    $TD_TB_ConnectionStringPRISM.Password = $null
-    $TD_TB_CustomerAZPPRISM.Visibility = "Visible"
-    $TD_TB_ConnectionStringPRISM.Visibility = "Visible"
-    $TD_LB_CustomerAZPPRISM.Content = "Insert the PRISM Password for :"
+    $TD_TB_CustomerAZPPRISMConString.Text = $null
+    $TD_TB_CustomerAZPPRISMDB.Text = $null
+    $TD_TB_CustomerAZPPRISMUM.Text = $null
+    $TD_TB_CustomerAZPPRISMUMP.Password = $null
+    $TD_TB_CustomerAZPPRISMConString.Visibility = "Visible"
+    $TD_TB_CustomerAZPPRISMDB.Visibility = "Visible"
+    $TD_TB_CustomerAZPPRISMUM.Visibility = "Visible"
+    $TD_TB_CustomerAZPPRISMUMP.Visibility = "Visible"
+    $TD_LB_CustomerAZPPRISM.Content="Enter the PRISM connection details"
     $TD_BTN_ChangeAZConnectionPRISM.Visibility = "Collapsed"
 })
 $TD_BTN_SendDataToPRISM.add_click({
