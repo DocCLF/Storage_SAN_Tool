@@ -205,14 +205,16 @@
                             <RowDefinition Height="auto" />
                         </Grid.RowDefinitions>
                         <StackPanel Grid.Column="0" Grid.Row="0" Orientation="Horizontal">
-                            <Label x:Name="LB_CustomerAZPPRISM" Content="Insert the PRISM Password for :" Margin="0" Style="{DynamicResource PRISIMLabelStyle}" />
-                            <Label Content="{Binding ElementName=TB_CustomerInfoName, Path=Text}" Foreground="black" Margin="0" Style="{DynamicResource PRISIMLabelStyle}" />
+                            <Label x:Name="LB_CustomerAZPPRISM" Content="Enter the PRISM connection details" Margin="0" Style="{DynamicResource PRISIMLabelStyle}" />
                         </StackPanel>
-                        <StackPanel Grid.Row="1" Orientation="Horizontal" >
-                            <StackPanel Orientation="Vertical" >
-                                <PasswordBox x:Name="TB_CustomerAZPPRISM" MinWidth="150" MaxWidth="350" MaxLength="24" HorizontalAlignment="Left" HorizontalContentAlignment="Left" Style="{DynamicResource PasswordBoxStyle}"/>
-                                <Label x:Name="LB_ConnectionStringLabelPRISM" Content="Insert the PRISM ConnectionString" Margin="0" Style="{DynamicResource PRISIMLabelStyle}" />
-                                <PasswordBox x:Name="TB_ConnectionStringPRISM" MinWidth="200" MaxWidth="350" HorizontalAlignment="Left" HorizontalContentAlignment="Left" Style="{DynamicResource PasswordBoxStyle}"/>
+                        <StackPanel Grid.Row="1" Orientation="Vertical" >
+                            <StackPanel Orientation="Horizontal" >
+                                <TextBox x:Name="TB_CustomerAZPPRISMConString" Tag="Az-ConnectionString" MaxLength="300" Width="200" HorizontalAlignment="Left" Margin="5,3" HorizontalContentAlignment="Left" Style="{DynamicResource TBAZWaterMarkStyle}"/>
+                                <TextBox x:Name="TB_CustomerAZPPRISMDB" Tag="Az-SQL-DB-Name" Width="200" MaxLength="24" HorizontalAlignment="Left" Margin="5,3" HorizontalContentAlignment="Left" Style="{DynamicResource TBAZWaterMarkStyle}"/>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" >
+                                <TextBox x:Name="TB_CustomerAZPPRISMUM" Tag="UserManager-Name" Width="200" MaxWidth="200" MaxLength="24" HorizontalAlignment="Left" Margin="5,3" HorizontalContentAlignment="Left" Style="{DynamicResource TBAZWaterMarkStyle}"/>
+                                <PasswordBox x:Name="TB_CustomerAZPPRISMUMP" Width="200" MaxWidth="200" MaxLength="24" HorizontalAlignment="Left" Margin="5,3" HorizontalContentAlignment="Left" Style="{DynamicResource PasswordBoxStyle}"/>
                             </StackPanel>
                             <ToggleButton x:Name="BTN_SaveAZConnectionPRISM" Content="Save" HorizontalAlignment="Left" VerticalAlignment="Bottom" Style="{DynamicResource ExportCredBTNStyle}"/>
                             <ToggleButton x:Name="BTN_ChangeAZConnectionPRISM" Content="Change Connection" Visibility="Collapsed" HorizontalAlignment="Left" Style="{DynamicResource MainBtnStyle}"/>
