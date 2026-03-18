@@ -214,7 +214,7 @@
                             </StackPanel>
                             <StackPanel Orientation="Horizontal" >
                                 <TextBox x:Name="TB_CustomerAZPPRISMUM" Tag="UserManager-Name" Width="200" MaxWidth="200" MaxLength="24" HorizontalAlignment="Left" Margin="5,3" HorizontalContentAlignment="Left" Style="{DynamicResource TBAZWaterMarkStyle}"/>
-                                <PasswordBox x:Name="TB_CustomerAZPPRISMUMP" Width="200" MaxWidth="200" MaxLength="24" HorizontalAlignment="Left" Margin="5,3" HorizontalContentAlignment="Left" Style="{DynamicResource PasswordBoxStyle}"/>
+                                <PasswordBox x:Name="TB_CustomerAZPPRISMUMP" Tag="Enter password" Width="200" MaxWidth="200" MaxLength="24" HorizontalAlignment="Left" Margin="5,3" HorizontalContentAlignment="Left" Style="{DynamicResource WatermarkPasswordBox}"/>
                             </StackPanel>
                             <ToggleButton x:Name="BTN_SaveAZConnectionPRISM" Content="Save" HorizontalAlignment="Left" VerticalAlignment="Bottom" Style="{DynamicResource ExportCredBTNStyle}"/>
                             <ToggleButton x:Name="BTN_ChangeAZConnectionPRISM" Content="Change Connection" Visibility="Collapsed" HorizontalAlignment="Left" Style="{DynamicResource MainBtnStyle}"/>
@@ -225,7 +225,18 @@
                         </StackPanel>
                         <StackPanel Grid.Row="3" Orientation="Vertical" >
                             <Label Grid.Column="0" Grid.Row="2" x:Name="LB_SendDataToPRISM" Content="Send Data to PROFI PRISM." Style="{DynamicResource PRISIMLabelStyle}" />
-                            <ToggleButton Grid.Column="0" Grid.Row="3" x:Name="BTN_SendDataToPRISM" Content="Send Data" HorizontalAlignment="Left" Style="{DynamicResource MainBtnStyle}" />
+                            <StackPanel Orientation="Horizontal" >
+                                <ComboBox x:Name="CB_SQltoAzDB" SelectedIndex="0" Margin="10,0,0,0" Width="200" Style="{DynamicResource MainComboBoxStyle}" >
+                                    <ComboBoxItem>IBM Storage Base</ComboBoxItem>
+                                    <ComboBoxItem>IBM Storage Drive</ComboBoxItem>
+                                    <ComboBoxItem>IBM Storage Events</ComboBoxItem>
+                                    <ComboBoxItem>IBM Power HMC</ComboBoxItem>
+                                    <ComboBoxItem>IBM Power SysSummary</ComboBoxItem>
+                                    <ComboBoxItem>IBM Power LPARSummary</ComboBoxItem>
+                                    <ComboBoxItem>Brocade SAN Base</ComboBoxItem>
+                                </ComboBox>
+                                <ToggleButton Grid.Column="0" Grid.Row="3" x:Name="BTN_SendDataToPRISM" Content="Send Data" HorizontalAlignment="Left" Style="{DynamicResource MainBtnStyle}" />
+                            </StackPanel>    
                         </StackPanel>    
                     </Grid>
                 </GroupBox>
