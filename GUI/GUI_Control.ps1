@@ -411,27 +411,11 @@ $TD_CB_DataBaseChoice.add_SelectionChanged({
         $SST_SavedCustomerSettingsDB = SST_CustomerDB -SST_InfoType "LoadCustomerSetUp" -SST_Customer $CustomerDB
         $TD_TB_ExportPath.Text = $SST_SavedCustomerSettingsDB.ExportPath
         $TD_LB_CerdExportPath.Content = $SST_SavedCustomerSettingsDB.ExportPathCredential
-
-        Write-Host $CustomerDB -ForegroundColor Cyan
     }
 })
 #endregion
 #region PRISM
 #SST_ToolMessageCollector -TD_ToolMSGCollector "Load PRISM" -TD_ToolMSGType Message -TD_Shown no
-#$TD_TB_CustomerAZPPRISMConString.Foreground = "lightgray"
-#$TD_TB_CustomerAZPPRISMConString.Text = "Az-ConnectionString"
-#$TD_TB_CustomerAZPPRISMConString.Add_GotFocus({
-#    if($TD_TB_CustomerAZPPRISMConString.Text -eq "Az-ConnectionString"){
-#        $TD_TB_CustomerAZPPRISMConString.Text=""
-#        $TD_TB_CustomerAZPPRISMConString.Foreground = "Black"
-#    }
-#})
-#$TD_TB_CustomerAZPPRISMConString.Add_LostFocus({
-#    if ([string]::IsNullOrWhiteSpace($TD_TB_CustomerAZPPRISMConString.Text)) {
-#        $TD_TB_CustomerAZPPRISMConString.Text = "Az-ConnectionString"
-#        $TD_TB_CustomerAZPPRISMConString.Foreground = "lightgray"
-#    }
-#})
 $TD_BTN_SaveAZConnectionPRISM.add_click({
     $AZConnection =$false
     [int]$ProgCounter=10
@@ -556,7 +540,20 @@ $TD_BTN_ChangeAZConnectionPRISM.add_click({
     $TD_BTN_ChangeAZConnectionPRISM.Visibility = "Collapsed"
 })
 $TD_BTN_SendDataToPRISM.add_click({
-    SST_PRISMDBControl
+    $CustomerNumber = $TD_TB_CustomerInfoName.Text
+    $UserSelection = ($TD_CB_SQltoAzDB.SelectedItem.Content).Replace('IBM','').Replace(' ','')
+    Write-Host $CustomerNumber $UserSelection
+    try {
+        $LocalCustomerData = SST_ReadLocalSendtoPRISM -SST_InfoType $UserSelection -SST_Customer $CustomerNumber
+        Write-Host "here $LocalCustomerData" -ForegroundColor Yellow
+        
+        SST_PRISMDBControl -SST_InfoType $UserSelection -SST_CollectedInformations $LocalCustomerData -CustomerNumber $CustomerNumber
+    }
+    catch {
+        <#Do this if a terminating exception happens#>
+        Write-Host $_.Exception.Message
+    }
+
     #Start-Process pwsh -ArgumentList '-NoExit -ExecutionPolicy Bypass -Command "& { . ''D:\GitRePo\Storage_SAN_Tool\TOOLFunc\SST_PRISMDBControl.ps1''; SST_PRISMDBControl}"'
 })
 #SST_ToolMessageCollector -TD_ToolMSGCollector "Load PRISM done" -TD_ToolMSGType Message -TD_Shown no
