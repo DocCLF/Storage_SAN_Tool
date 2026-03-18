@@ -267,3 +267,28 @@ function Get-RandomPassword {
 
     -join ($passwordChars | Get-Random -Count $passwordChars.Count)
 }
+#Utility-Function for Az und LocalDB
+function Get-SqlParameterValue {
+    param(
+        [AllowNull()]
+        [AllowEmptyString()]
+        $Value,
+
+        [object]$Default = $null,
+
+        [switch]$TreatEmptyStringAsNull
+    )
+
+    if ($TreatEmptyStringAsNull -and [string]::IsNullOrWhiteSpace($Value)) {
+        $Value = $null
+    }
+
+    if ($null -eq $Value) {
+        if ($PSBoundParameters.ContainsKey('Default')) {
+            return $Default
+        }
+        return [DBNull]::Value
+    }
+
+    return $Value
+}
