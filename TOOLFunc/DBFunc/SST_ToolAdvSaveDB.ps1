@@ -40,7 +40,7 @@ function SST_ToolAdvSaveDB {
                 $SQLiteCommand.Parameters.AddWithValue("@AZDBNAM",      [string]$SST_NewDBObject.AZDBNAM)               | Out-Null
                 $SQLiteCommand.Parameters.AddWithValue("@TimeStamp",     $TimeStamp)                                    | Out-Null
 
-                $SQLiteCommand.ExecuteNonQuery() | Out-Null
+                $SQLiteCommand.ExecuteNonQuery() | Out-Null 
                 return
             }
 
@@ -52,7 +52,7 @@ function SST_ToolAdvSaveDB {
                 $SQLiteReader = $SQLiteCommand.ExecuteReader()
                 if ($SQLiteReader.Read()) {
                     return [pscustomobject]@{
-                        IsCustomerNBR   = [int]$SQLiteReader["CustomerNBR"]
+                        CustomerNBR   = [int]$SQLiteReader["CustomerNBR"]
                         AZConString     = [string]$SQLiteReader["AZConString"]
                         CustomerP       = [string]$SQLiteReader["CustomerP"]
                         AZDBNAM         = [string]$SQLiteReader["AZDBNAM"]
