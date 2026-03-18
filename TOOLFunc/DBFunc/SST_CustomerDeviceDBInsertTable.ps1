@@ -6,6 +6,7 @@ function SST_CustomerDeviceDBInsertTable {
         [string]$SST_InfoType,
         $SST_NewDBObject =$null,
         $SST_CollectedInformations,
+        $SST_Customer,
         [string]$TimeStamp
     )
     
@@ -19,13 +20,12 @@ function SST_CustomerDeviceDBInsertTable {
         } else {
             $Customer = $SST_NewDBObject.CustomerNumber
         }
-        Write-Host "Customer $Customer"
+        #Write-Host "Customer $Customer"
         $DBPath = Join-Path $PSRootPath "Resources\DBFolder\$Customer.db"
         $SQLiteConnectionString = "Data Source=$DBPath;Version=3;Pooling=False;"
 
         $SQLiteDBConnection = New-Object System.Data.SQLite.SQLiteConnection $SQLiteConnectionString
         $SQLiteCommand = $null
-
     }
     
     process {
@@ -491,9 +491,6 @@ function SST_CustomerDeviceDBInsertTable {
     }
     
     end {
-        #Verbindung schließen
-        #$SST_CollectedInformations =$null
-        #$SST_SQLiteCon.Close()
-        #$SST_SQLiteCon.Dispose()
+
     }
 }
