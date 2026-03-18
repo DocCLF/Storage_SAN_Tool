@@ -106,6 +106,45 @@
         </Setter>
     </Style>
 
+    <Style x:Key="WatermarkPasswordBox" TargetType="{x:Type PasswordBox}" BasedOn="{StaticResource PasswordBoxStyle}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type PasswordBox}">
+                    <Grid>
+                        <Border x:Name="Bd"
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="5"/>
+
+                        <ScrollViewer x:Name="PART_ContentHost"
+                                      Margin="{TemplateBinding Padding}"/>
+
+                        <!-- Placeholder -->
+                        <TextBlock x:Name="Watermark"
+                                   Text="{TemplateBinding Tag}"
+                                   Foreground="Gray"
+                                   Margin="{TemplateBinding Padding}"
+                                   IsHitTestVisible="False"
+                                   VerticalAlignment="Center"
+                                   HorizontalAlignment="Center"
+                                   TextAlignment="Center"
+                                   Visibility="Visible"/>
+                    </Grid>
+
+                    <ControlTemplate.Triggers>
+
+                        <!-- Wenn Fokus da ist → Placeholder ausblenden -->
+                        <Trigger Property="IsKeyboardFocused" Value="True">
+                            <Setter TargetName="Watermark" Property="Visibility" Value="Collapsed"/>
+                        </Trigger>
+
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
     <Style TargetType="TextBox" x:Key="STODriveTB" >
         <Setter Property="Margin" Value="1,0"/>
         <Setter Property="FontWeight" Value="Bold"/>
