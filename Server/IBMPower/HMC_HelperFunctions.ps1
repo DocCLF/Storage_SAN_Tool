@@ -6,8 +6,6 @@ function HMC_GetUomXml {
         [switch]$IgnoreCertificate
     )
 
-    [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-
     # PS 7+ (stable)
     if ($PSVersionTable.PSVersion.Major -ge 6) {
         $headers = @{
@@ -27,9 +25,14 @@ function HMC_GetUomXml {
         return (Invoke-WebRequest @iwrParams).Content
     }
 
-    # PS 5.1 (GUI-secure path)
+    # PS 5.1
     $OldCallback = $null
+    $OldSecurityProtocol = [Net.ServicePointManager]::SecurityProtocol
+
     try {
+        [Net.ServicePointManager]::SecurityProtocol =
+            [Net.ServicePointManager]::SecurityProtocol -bor [Net.SecurityProtocolType]::Tls12
+
         if ($IgnoreCertificate) {
             $OldCallback = [System.Net.ServicePointManager]::ServerCertificateValidationCallback
             [System.Net.ServicePointManager]::ServerCertificateValidationCallback = { $true }
@@ -53,6 +56,8 @@ function HMC_GetUomXml {
         finally { $resp.Close() }
     }
     finally {
+        [Net.ServicePointManager]::SecurityProtocol = $OldSecurityProtocol
+
         if ($IgnoreCertificate) {
             [System.Net.ServicePointManager]::ServerCertificateValidationCallback = $OldCallback
         }
@@ -67,7 +72,7 @@ function Invoke-HmcUomGet {
         [switch]$IgnoreCertificate
     )
 
-    $ip   = if ($HmcSession.HMCIP) { $HmcSession.HMCIP } else { $HmcSession.Ip }
+    $ip   = if ($HmcSession.HMCIP)   { $HmcSession.HMCIP }   else { $HmcSession.Ip }
     $port = if ($HmcSession.HMCPort) { $HmcSession.HMCPort } else { $HmcSession.Port }
 
     $base = "https://$ip`:$port/rest/api/uom"
