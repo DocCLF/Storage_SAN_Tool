@@ -227,13 +227,13 @@
                             <Label Grid.Column="0" Grid.Row="2" x:Name="LB_SendDataToPRISM" Content="Send Data to PROFI PRISM." Style="{DynamicResource PRISIMLabelStyle}" />
                             <StackPanel Orientation="Horizontal" >
                                 <ComboBox x:Name="CB_SQltoAzDB" SelectedIndex="0" Margin="10,0,0,0" Width="200" Style="{DynamicResource MainComboBoxStyle}" >
-                                    <ComboBoxItem>IBM Storage Base</ComboBoxItem>
-                                    <ComboBoxItem>IBM Storage Drive</ComboBoxItem>
-                                    <ComboBoxItem>IBM Storage Events</ComboBoxItem>
-                                    <ComboBoxItem>IBM Power HMC</ComboBoxItem>
-                                    <ComboBoxItem>IBM Power SysSummary</ComboBoxItem>
-                                    <ComboBoxItem>IBM Power LPARSummary</ComboBoxItem>
-                                    <ComboBoxItem>Brocade SAN Base</ComboBoxItem>
+                                    <ComboBoxItem Tag="StorageBase">IBM Storage Base</ComboBoxItem>
+                                    <ComboBoxItem Tag="StorageDrive">IBM Storage Drive</ComboBoxItem>
+                                    <ComboBoxItem Tag="StorageEventLog">IBM Storage Events</ComboBoxItem>
+                                    <ComboBoxItem Tag="PowerHMC">IBM Power HMC</ComboBoxItem>
+                                    <ComboBoxItem Tag="PowerSysSummary">IBM Power SysSummary</ComboBoxItem>
+                                    <ComboBoxItem Tag="LPARSummary">IBM Power LPARSummary</ComboBoxItem>
+                                    <ComboBoxItem Tag="SANBase">Brocade SAN Base</ComboBoxItem>
                                 </ComboBox>
                                 <ToggleButton Grid.Column="0" Grid.Row="3" x:Name="BTN_SendDataToPRISM" Content="Send Data" HorizontalAlignment="Left" Style="{DynamicResource MainBtnStyle}" />
                             </StackPanel>    
