@@ -31,7 +31,10 @@ function HMC_GetLogicalPartitionSummary {
         catch { [xml]$uom = $entry }
 
         $lparUuid = ($u.TrimEnd("/") -split "/")[-1]
-
+        # There's a chance that an invalid UUID might be generated, so here's the check again
+        if ($lparUuid -match '\?') {
+            $lparUuid = $lparUuid -replace '\?.*$', ''
+        }
         # robust: OSVersion often has different names (OperatingSystemVersion vs. OSVersion, etc.)
         $os = Get-FirstXmlValue -Xml $uom -Names @(
             "OperatingSystemVersion",
