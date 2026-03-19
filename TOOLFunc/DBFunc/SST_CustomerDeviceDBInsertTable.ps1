@@ -403,14 +403,17 @@ function SST_CustomerDeviceDBInsertTable {
                     foreach ($SST_CollectedInformation in $SST_CollectedInformations){
                         $SQLiteCommand.Parameters.Clear()
 
-                        $SQLiteCommand.CommandText ="INSERT INTO PowerSysSummary (CustomerNbr, SystemName, MachineTypeModel, SerialNumber, State, UUID, TimeStamp)`
-                                                    VALUES (@CustomerNbr, @SystemName, @MachineTypeModel, @SerialNumber, @State, @UUID, @TimeStamp);"
+                        $SQLiteCommand.CommandText ="INSERT INTO PowerSysSummary (CustomerNbr, SystemName, MachineTypeModel, SerialNumber, ECNumber, ActivatedLevel, State, UUID, URL, TimeStamp)`
+                                                    VALUES (@CustomerNbr, @SystemName, @MachineTypeModel, @SerialNumber, @ECNumber, @ActivatedLevel, @State, @UUID, @URL, @TimeStamp);"
                         $SQLiteCommand.Parameters.AddWithValue("@CustomerNbr", $Customer) | Out-Null
                         $SQLiteCommand.Parameters.AddWithValue("@SystemName", $SST_CollectedInformation.SystemName) | Out-Null
                         $SQLiteCommand.Parameters.AddWithValue("@MachineTypeModel", $SST_CollectedInformation.MachineTypeModel) | Out-Null
                         $SQLiteCommand.Parameters.AddWithValue("@SerialNumber", $SST_CollectedInformation.SerialNumber) | Out-Null
                         $SQLiteCommand.Parameters.AddWithValue("@State", $SST_CollectedInformation.State) | Out-Null
+                        $SQLiteCommand.Parameters.AddWithValue("@ECNumber", $SST_CollectedInformation.ECNumber) | Out-Null
+                        $SQLiteCommand.Parameters.AddWithValue("@ActivatedLevel", $SST_CollectedInformation.ActivatedLevel) | Out-Null
                         $SQLiteCommand.Parameters.AddWithValue("@UUID", $SST_CollectedInformation.UUID) | Out-Null
+                        $SQLiteCommand.Parameters.AddWithValue("@URL", $SST_CollectedInformation.Url) | Out-Null
                         $SQLiteCommand.Parameters.AddWithValue("@TimeStamp", $TimeStamp) | Out-Null
 
                         # DB save 
