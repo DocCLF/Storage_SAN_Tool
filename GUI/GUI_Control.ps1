@@ -541,11 +541,9 @@ $TD_BTN_ChangeAZConnectionPRISM.add_click({
 })
 $TD_BTN_SendDataToPRISM.add_click({
     $CustomerNumber = $TD_TB_CustomerInfoName.Text
-    $UserSelection = ($TD_CB_SQltoAzDB.SelectedItem.Content).Replace('IBM','').Replace(' ','')
-    Write-Host $CustomerNumber $UserSelection
+    $UserSelection = $TD_CB_SQltoAzDB.SelectedItem.Tag
     try {
         $LocalCustomerData = SST_ReadLocalSendtoPRISM -SST_InfoType $UserSelection -SST_Customer $CustomerNumber
-        Write-Host "here $LocalCustomerData" -ForegroundColor Yellow
         
         SST_PRISMDBControl -SST_InfoType $UserSelection -SST_CollectedInformations $LocalCustomerData -CustomerNumber $CustomerNumber
     }
