@@ -208,7 +208,7 @@
             </ScrollViewer>
         </GroupBox>
         <!-- PWR_ManagedSystemInfo -->
-        <GroupBox Grid.Column="1" Grid.Row="2" Header="Power System Info" MinWidth="820" HorizontalAlignment="Left" Margin="10,10,0,0"  VerticalAlignment="Top">
+        <GroupBox Grid.Column="1" Grid.Row="2" Header="Power System Info" MinWidth="820" MaxWidth="1600" HorizontalAlignment="Left" Margin="10,10,0,0"  VerticalAlignment="Top">
             <ScrollViewer Margin="5" VerticalScrollBarVisibility="Auto">
             <ItemsControl 
                           ItemsSource="{Binding Main.DeviceToggles}"
@@ -318,10 +318,10 @@
                                                     <TextBlock.Style>
                                                         <Style TargetType="TextBlock">
                                                             <Style.Triggers>
-                                                                <Trigger Property ="Text" Value="Power Off">
+                                                                <Trigger Property ="Text" Value="power off">
                                                                     <Setter Property= "Foreground" Value="Red"/>
                                                                 </Trigger>
-                                                                <Trigger Property ="Text" Value="Operating">
+                                                                <Trigger Property ="Text" Value="operating">
                                                                     <Setter Property= "Foreground" Value="green"/>
                                                                 </Trigger>
                                                             </Style.Triggers>
@@ -412,7 +412,7 @@
             </ScrollViewer>
         </GroupBox>
         <!-- PWR_LparSummary -->
-        <GroupBox Grid.Column="1" Grid.Row="3" Header="LPAR Info" MinWidth="820" MaxHeight="800" HorizontalAlignment="Left" Margin="10,10,0,0"  VerticalAlignment="Top" >
+        <GroupBox Grid.Column="1" Grid.Row="3" Header="LPAR Info" MinWidth="820" MaxWidth="1600" MaxHeight="800" HorizontalAlignment="Left" Margin="10,10,0,0"  VerticalAlignment="Top" >
             <ScrollViewer Margin="5" VerticalScrollBarVisibility="auto">
             <ItemsControl 
                           ItemsSource="{Binding Main.DeviceToggles}"
