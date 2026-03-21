@@ -339,15 +339,18 @@ $TD_BTN_ActivateDB.add_click({
             Write-Host $_.exception.message
             SST_ToolMessageCollector -TD_ToolMSGCollector "LocalDB $($_.exception.message)" -TD_ToolMSGType Error -TD_Shown yes
         }
+        Write-Host $SST_SQLiteCon.State $SST_SQLiteCon.DataSource
+        Write-Host (($SST_SQLiteCon.State -eq "Open")-and($SST_SQLiteCon.DataSource -eq "$DBName"))
         if(($SST_SQLiteCon.State -eq "Open")-and($SST_SQLiteCon.DataSource -eq "$DBName")){
             $TD_BTN_DeleteDB.Visibility = "Visible"
             $TD_BTN_DeleteDB.Background = "coral"
             $SST_SQLiteCon.Close()
-            $TD_CB_DataBaseChoice.ItemsSource = $null
-            $TD_DataBaseChoice = @(Get-ChildItem "$PSRootPath\Resources\DBFolder\*" -Filter "*.db" | Select-Object -ExpandProperty Basename)
-            $TD_CB_DataBaseChoice.IsEnabled = $true
-            $TD_CB_DataBaseChoice.ItemsSource = $TD_DataBaseChoice
-            $TD_CB_DataBaseChoice.SelectedIndex = 0
+            #$TD_CB_DataBaseChoice.ItemsSource = $null
+            #$TD_DataBaseChoice = @(Get-ChildItem "$PSRootPath\Resources\DBFolder\*" -Filter "*.db" | Select-Object -ExpandProperty Basename)
+            #Write-Host $TD_DataBaseChoice -ForegroundColor Green
+            #$TD_CB_DataBaseChoice.IsEnabled = $true
+            #$TD_CB_DataBaseChoice.ItemsSource = $TD_DataBaseChoice
+            #$TD_CB_DataBaseChoice.SelectedIndex = 0
             SST_CustomerDeviceDBCreateTable
         }
     }else {
@@ -400,10 +403,15 @@ $TD_CB_CustomerYN.Add_Checked({
         $TD_TB_CustomerInfoName.IsEnabled = $false
     }elseif (((Get-ChildItem "$PSRootPath\Resources\DBFolder\*" -Filter "*.db").count -lt 1)) {
         $TD_TB_CustomerInfoName.IsEnabled = $true
+    }elseif (((Get-ChildItem "$PSRootPath\Resources\DBFolder\*" -Filter "*.db").count -gt 1)) {
+        $TD_BTN_ActivateDB.Visibility = "Collapsed"
     }
 })
 $TD_CB_CustomerYN.Add_Unchecked({
-    $TD_TB_CustomerInfoName.IsEnabled = $true    
+    $TD_TB_CustomerInfoName.IsEnabled = $true
+    if($TD_BTN_ActivateDB.Visibility  -eq "Collapsed"){
+        $TD_BTN_ActivateDB.Visibility = "Visible"
+    }
 })
 $TD_CB_DataBaseChoice.add_SelectionChanged({
     if(!([string]::IsNullOrEmpty($TD_CB_DataBaseChoice.SelectedItem))){
