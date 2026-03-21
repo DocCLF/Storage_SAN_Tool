@@ -522,10 +522,10 @@
                                                     <TextBlock.Style>
                                                         <Style TargetType="TextBlock">
                                                             <Style.Triggers>
-                                                                <Trigger Property ="Text" Value="Power Off">
-                                                                    <Setter Property= "Foreground" Value="Red"/>
+                                                                <Trigger Property ="Text" Value="not activated">
+                                                                    <Setter Property= "Foreground" Value="yellow"/>
                                                                 </Trigger>
-                                                                <Trigger Property ="Text" Value="Operating">
+                                                                <Trigger Property ="Text" Value="running">
                                                                     <Setter Property= "Foreground" Value="green"/>
                                                                 </Trigger>
                                                             </Style.Triggers>
