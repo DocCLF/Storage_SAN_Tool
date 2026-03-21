@@ -1371,13 +1371,13 @@ $TD_BTN_PWR_LparSummary.add_click({
         $FunctionResult = New-DeviceBlock -Device $TD_Creds -ExportPath $TD_tb_ExportPath.Text -RESTFunc HMC_RESTHMCLogicalPartitions
 
         # 4) Collection für GUI sicherstellen (ObservableCollection)
-        if (-not $FunctionResult.DeviceIdent.LparRows) {
-            $FunctionResult.DeviceIdent | Add-Member -NotePropertyName LparRows `
-                -NotePropertyValue (New-Object System.Collections.ObjectModel.ObservableCollection[object]) -Force
-        }
-        else {
-            try { $FunctionResult.DeviceIdent.LparRows.Clear() | Out-Null } catch {}
-        }
+        #if (-not $FunctionResult.DeviceIdent.LparRows) {
+        #    $FunctionResult.DeviceIdent | Add-Member -NotePropertyName LparRows `
+        #        -NotePropertyValue (New-Object System.Collections.ObjectModel.ObservableCollection[object]) -Force
+        #}
+        #else {
+        #    try { $FunctionResult.DeviceIdent.LparRows.Clear() | Out-Null } catch {}
+        #}
 
         # 5) Mapping der Spalten (Label -> PropertyName aus FuncResult)
         $mapLPAR = @{
