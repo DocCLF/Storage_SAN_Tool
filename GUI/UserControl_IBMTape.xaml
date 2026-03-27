@@ -9,7 +9,7 @@
             <LinearGradientBrush>
             <GradientStopCollection>
                 <GradientStop Offset="0.1" Color="White" />
-                <GradientStop Offset="0.5" Color="coral" />
+                <GradientStop Offset="0.5" Color="LightGray" />
                 <GradientStop Offset="0.8" Color="White" />
             </GradientStopCollection>
         </LinearGradientBrush>
@@ -19,14 +19,154 @@
             <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
         </ResourceDictionary>
     </UserControl.Resources>
-    <Grid>
-        <GroupBox Header="Visibility" Margin="10" >
-            <StackPanel Orientation="Horizontal" ToolTip="klick for visibility">
-                <StackPanel x:Name="STP_TapeDeviceVisibility" >
-                
-                </StackPanel>
-                <CheckBox x:Name="CB_SelectAllTapeCB" Content="Select All" Margin="22,2,2,2" Style="{DynamicResource MainCheckBoxStyle}" HorizontalAlignment="Right" />
+    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" >
+    <Grid >
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="auto" />
+            <ColumnDefinition Width="auto" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <StackPanel Grid.Column="0" Grid.RowSpan="4" >
+        <GroupBox Header="For all Versions"  HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,10,0,0">
+            <StackPanel>
+                <!--IBM_BaseTapeInfo-->
+                <ToggleButton
+                x:Name="BTN_IBM_BaseTapeInfo"
+                Style="{DynamicResource MainBtnStyle}"
+                Content="Tape Info" 
+                ToolTip="Get basic Tape Library information"/>
+                <!--IBM_EventLog-->
+                <ToggleButton
+                x:Name="s"
+                Style="{DynamicResource MainBtnStyle}"
+                Content="Eventlog" 
+                ToolTip="Get the last 100 Events"/>
+                <!--IBM_CatAuditLog-->
+                <ToggleButton
+                x:Name="d"
+                Style="{DynamicResource MainBtnStyle}"
+                Content="Audit Log"
+                ToolTip="Get the last 100 in-memory commands of the audit log" /> 
+                <!--IBM_HostVolumeMap-->
+                <ToggleButton
+                x:Name="f"
+                Style="{DynamicResource MainBtnStyle}"
+                Content="Host Volume Info" 
+                ToolTip="Get Infos to Host, HostCluster and their Volumes" />
+                <!--IBM_HostInfo-->
+                <ToggleButton
+                x:Name="g"
+                Style="{DynamicResource MainBtnStyle}"
+                Content="Hosts Info" 
+                ToolTip="Get Infos to Host, HostCluster only" />
+                <!--IBM_PoolVolumeInfo-->
+                <ToggleButton
+                x:Name="h"
+                Style="{DynamicResource MainBtnStyle}"
+                Content="Pool+Volume Info" 
+                ToolTip="Get Infos to Pool and Volume only" />
+                <!--IBM_DriveInfo-->
+                <ToggleButton
+                x:Name="j"
+                Style="{DynamicResource MainBtnStyle}"
+                Content="Drive Info"
+                ToolTip="Get the most important information about your Drives" />
+                <!--IBM_FCPortInfo-->
+                <ToggleButton
+                x:Name="ja"
+                Style="{DynamicResource MainBtnStyle}"
+                Content="FC Port Info"
+                ToolTip="Generate a list of host count and login count for each worldwide port names (WWPNs) required to set up Fibre Channel (FC) zoning and to display the current failover status of host IO ports." />
+                <!--IBM_IPPortInfo-->
+                <!--IBM_CleanUpDumps-->
+                <ToggleButton
+                x:Name="k"
+                Style="{DynamicResource MainBtnStyle}"
+                Content="CleanUp Dumps" 
+                ToolTip="Use the cleardumps command to clear (or delete) the various dump directories on a specified node or node canister."/>
+                <!--IBM_BackUpConfig-->
+                <ToggleButton
+                x:Name="l"
+                Style="{DynamicResource MainBtnStyle}"
+                Content="BackUp CFG" 
+                ToolTip="Create a config backup and download it with the help of pscp."/>
             </StackPanel>
         </GroupBox>
+        <GroupBox Header="From v8.4.x and later"  HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,10,0,0">
+            <StackPanel>
+                <!--IBM_FCPortStats-->
+                <ToggleButton
+                x:Name="o"
+                Style="{DynamicResource MainBtnStyle}"
+                Content="FC Port Stats" 
+                ToolTip="Get an overview of the stats of your FC ports. Requirement v8.4.x and higher!" />
+            </StackPanel>
+        </GroupBox>  
+        <GroupBox Header="From v8.6.x and later"  HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,10,0,0">
+            <StackPanel>
+                <!--IBM_PolicyBased-->
+                <ToggleButton
+                x:Name="i"
+                Style="{DynamicResource MainBtnStyle}"
+                Content="Policy Based (Beta)" 
+                ToolTip="Get some information about the replication policy and VolGrp replication, only if there in use!" />
+            </StackPanel>
+        </GroupBox>   
+        </StackPanel> 
+        <GroupBox Grid.Column="1" Grid.Row="0" Header="Visibility" Margin="10" >
+            <WrapPanel Orientation="Horizontal" ToolTip="klick for visibility" >
+                <!-- Dynamische Checkboxen -->
+                <ItemsControl ItemsSource="{Binding Main.DeviceToggles}">
+                  <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                      <WrapPanel Orientation="Horizontal"/>
+                    </ItemsPanelTemplate>
+                  </ItemsControl.ItemsPanel>
+
+                  <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                      <CheckBox Content="{Binding Label}"
+                                IsChecked="{Binding IsChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                Style="{DynamicResource MainCheckBoxStyle}"
+                                Margin="2"/>
+                    </DataTemplate>
+                  </ItemsControl.ItemTemplate>
+                </ItemsControl>
+
+                <!-- Select All -->
+                <CheckBox x:Name="CB_SelectAllSTOCB"
+                          Content="Select All"
+                          IsChecked="{Binding Main.SelectAll, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                          Margin="30,2,2,2"
+                          Style="{DynamicResource MainCheckBoxStyle}"
+                          HorizontalAlignment="Right"/>
+            </WrapPanel>
+        </GroupBox>
+        <!-- IBM_BaseStorageInfo -->
+
+        <!-- IBM_EventLog -->
+
+        <!-- IBM_CatAuditLog -->
+
+        <!-- IBM_HostVolumeMap -->
+
+        <!-- IBM_Host -->
+
+       <!-- IBM_PoolVolumeInfo -->
+
+        <!-- IBM_DriveInfo -->
+
+        <!-- IBM_FCPortInfo -->
+
+        <!-- IBM_FCPortStats -->
+
+        <!-- IBM_CleanUpDumps -->
+
+        <!-- IBM_BackUpInfo -->
+
     </Grid>
+    </ScrollViewer>
 </UserControl>
