@@ -2,11 +2,11 @@ function SST_PRISMDBControl {
     [CmdletBinding()]
     param (
         [Parameter(ValueFromPipeline)]
-        [ValidateSet("StorageDrive","StorageBase","StorageHostInfo","StorageEventLog","SANBase","FCPortStats")]
+        [ValidateSet("StorageDrive","StorageBase","StorageEventLog","SANBase","PowerHMC","PowerSysSummary","LPARSummary")]
         [string]$SST_InfoType,
         $CustomerNumber =$null,
         [bool]$AZConnection = $false,
-        [array]$SST_CollectedInformations,
+        $SST_CollectedInformations,
         [string]$TimeStamp
     )
     
@@ -18,40 +18,61 @@ function SST_PRISMDBControl {
         try {
             $TD_AZDBObj = SST_ToolAdvSaveDB -SST_InfoType "LoadPRISMSettings"
             $ConString = Convert-SecureStringToPlainText ($TD_AZDBObj.AZConString | ConvertTo-SecureString)
-            $AZCredP  = Convert-SecureStringToPlainText ($TD_AZDBObj.AZCredP | ConvertTo-SecureString)
-            $ConnectionStringPRISM = $ConString.Replace('{replaceone}',[string]$TD_AZDBObj.IsCustomerNBR).Replace('{replacetwo}',"$AZCredP")
+            $AZCredN  = $TD_AZDBObj.CustomerNBR
+            $AZCredP  = Convert-SecureStringToPlainText ($TD_AZDBObj.CustomerP | ConvertTo-SecureString)
+            $AZDBNAM = Convert-SecureStringToPlainText ($TD_AZDBObj.AZDBNAM | ConvertTo-SecureString)
+
+            if($AZCredN -like $CustomerNumber){
+                $ConnectionStringPRISM = $ConString.Replace('{replaceone}',[string]$AZDBNAM).Replace('{replacetwo}',"$AZCredN").Replace('{replacethree}',"$AZCredP")
+            }
             $ConString = $null
             $AZCredP = $null
+            $AZDBNAM = $null
         }
         catch {
             <#Do this if a terminating exception happens#>
             #SST_ToolMessageCollector -TD_ToolMSGCollector "PRISM $($_.Exception.Message)" -TD_ToolMSGType Error -TD_Shown yes
         }
-
+       
         try {
-            $SQLConnection=New-Object System.Data.SqlClient.SqlConnection
-            $SQLConnection.ConnectionString=$ConnectionStringPRISM 
+            if (-not $SQLConnection) {
+                $SQLConnection=New-Object System.Data.SqlClient.SqlConnection($ConnectionStringPRISM)
+            }
             $ConnectionStringPRISM = $null
+            Write-Host $SQLConnection.State -ForegroundColor Yellow
             while (!($AZConnection)) {
+                $ProgCounter++
+                <# Progressbar  #>
+                Write-ProgressBar -ProgressBar $ProgressBar -Activity "Please wait for connection" -PercentComplete ((10/50) * 100)
+                Write-Host $SQLConnection.State -ForegroundColor Blue
                 if($SQLConnection.State -eq "open"){
                     $AZConnection =$true
-                    SST_ToolMessageCollector -TD_ToolMSGCollector $("SST_PRISMDBControl Func State $($SQLConnection.State)") -TD_ToolMSGType Message -TD_Shown yes
+                    #SST_ToolMessageCollector -TD_ToolMSGCollector $("SST_PRISMDBControl Func State $($SQLConnection.State)") -TD_ToolMSGType Message -TD_Shown yes
                 }else {
-                    $SQLConnection.Open()
-                    SST_ToolMessageCollector -TD_ToolMSGCollector $("SST_PRISMDBControl Func State $($SQLConnection.State)") -TD_ToolMSGType Message -TD_Shown no
+                    try {
+                        if ($SQLConnection.State -ne [System.Data.ConnectionState]::Open) {
+                            $SQLConnection.Open()
+                        }
+                    }
+                    catch {
+                        <#Do this if a terminating exception happens#>
+                        Write-Host "$($SQLConnection.State) - $($_.Exception.Message)" -ForegroundColor Yellow
+                    }
+                    #SST_ToolMessageCollector -TD_ToolMSGCollector $("SST_PRISMDBControl Func State $($SQLConnection.State)") -TD_ToolMSGType Message -TD_Shown no
                 }
-                <# Progressbar  #>
-                $ProgCounter++
-                Write-ProgressBar -ProgressBar $ProgressBar -Activity "Please wait while the connection is being established" -PercentComplete ((10/50) * 100)
+                <# While killer ;) #>
+                if($ProgCounter -gt 20){break}
             }
+            Write-Host $SQLConnection.State -ForegroundColor Red
             Close-ProgressBar -ProgressBar $ProgressBar
         }
         catch {
             #SST_ToolMessageCollector -TD_ToolMSGCollector "PRISM Status $($SQLConnection.Open()) Info: $($_.Exception.Message)" -TD_ToolMSGType Error -TD_Shown yes
             #SST_ToolMessageCollector -TD_ToolMSGCollector $("SST_PRISMDBControl Func there is a problem with the CustomerNumber") -TD_ToolMSGType Error -TD_Shown yes
         }
+        
     }
-    
+
     process {
 
         switch ($SST_InfoType) {
@@ -60,25 +81,31 @@ function SST_PRISMDBControl {
                 try {
                     $SQLCommand = $SQLConnection.CreateCommand()
 
-                    foreach ($SST_CollectedInformation in $SST_CollectedInformations[0]){ 
+                    foreach ($SST_CollectedInformation in $SST_CollectedInformations){ 
                         $SQLCommand.Parameters.Clear()
 
-                        $SQLCommand.CommandText ="INSERT INTO IBMSTOHWTable (CustomerNbr, Name, ClusterName, WWNN, Status, IOgroupid, IOgroupName, SerialNumber, CodeLevel, ConfigNode, SideID, SideName, ProdMTM, RecommendedPTF, MDiskTotalCapacity, MDiskFreeCapacity, MDiskUsedCapacity,`
+                        $SQLCommand.CommandText ="UPDATE IBMSTOHWTable SET Name = @Name,ClusterName = @ClusterName,Status = @Status,IOgroupid = @IOgroupid,IOgroupName = @IOgroupName,CodeLevel = @CodeLevel,ConfigNode = @ConfigNode,SideID = @SideID,SideName = @SideName,ProdMTM = @ProdMTM,`
+                                                    RecommendedPTF = @RecommendedPTF, MDiskTotalCapacity = @MDiskTotalCapacity, MDiskFreeCapacity = @MDiskFreeCapacity, MDiskUsedCapacity = @MDiskUsedCapacity, PhysicalTotalCapacity = @PhysicalTotalCapacity, PhysicalFreeCapacity = @PhysicalFreeCapacity,`
+                                                    HostUnmap = @HostUnmap, BackendUnmap = @BackendUnmap, Topology = @Topology, Layer = @Layer, QuorumMode = @QuorumMode, TimeStamp = @TimeStamp`
+                                                WHERE CustomerNbr = @CustomerNbr AND WWNN = @WWNN AND SerialNumber = @SerialNumber;
+                                                IF @@ROWCOUNT = 0`
+                                                BEGIN`
+                                                INSERT INTO IBMSTOHWTable (CustomerNbr, Name, ClusterName, WWNN, Status, IOgroupid, IOgroupName, SerialNumber, CodeLevel, ConfigNode, SideID, SideName, ProdMTM, RecommendedPTF, MDiskTotalCapacity, MDiskFreeCapacity, MDiskUsedCapacity,`
                                                     PhysicalTotalCapacity, PhysicalFreeCapacity, HostUnmap, BackendUnmap, Topology, Layer, QuorumMode, TimeStamp)`
                                                     VALUES (@CustomerNbr, @Name, @ClusterName, @WWNN, @Status, @IOgroupid, @IOgroupName, @SerialNumber, @CodeLevel, @ConfigNode, @SideID, @SideName, @ProdMTM, @RecommendedPTF, @MDiskTotalCapacity, @MDiskFreeCapacity, @MDiskUsedCapacity,`
-                                                    @PhysicalTotalCapacity, @PhysicalFreeCapacity, @HostUnmap, @BackendUnmap, @Topology, @Layer, @QuorumMode, @TimeStamp);"
-                        $SQLCommand.Parameters.AddWithValue("@CustomerNbr", $Customer) | Out-Null
+                                                    @PhysicalTotalCapacity, @PhysicalFreeCapacity, @HostUnmap, @BackendUnmap, @Topology, @Layer, @QuorumMode, @TimeStamp);END"
+                        $SQLCommand.Parameters.AddWithValue("@CustomerNbr", $AZCredN) | Out-Null
                         $SQLCommand.Parameters.AddWithValue("@Name", $SST_CollectedInformation.Name) | Out-Null
                         $SQLCommand.Parameters.AddWithValue("@ClusterName", $SST_CollectedInformation.ClusterName) | Out-Null
                         $SQLCommand.Parameters.AddWithValue("@Status", $SST_CollectedInformation.Status) | Out-Null
-                        $SQLCommand.Parameters.AddWithValue("@IOgroupid", $SST_CollectedInformation.IO_group_id) | Out-Null
-                        $SQLCommand.Parameters.AddWithValue("@IOgroupName", $SST_CollectedInformation.IO_group_Name) | Out-Null
+                        $SQLCommand.Parameters.AddWithValue("@IOgroupid", $SST_CollectedInformation.IOgroupid) | Out-Null
+                        $SQLCommand.Parameters.AddWithValue("@IOgroupName", $SST_CollectedInformation.IOgroupName) | Out-Null
                         $SQLCommand.Parameters.AddWithValue("@CodeLevel", $SST_CollectedInformation.CodeLevel) | Out-Null
                         $SQLCommand.Parameters.AddWithValue("@ConfigNode", $SST_CollectedInformation.ConfigNode) | Out-Null
                         $SQLCommand.Parameters.AddWithValue("@SideID", $SST_CollectedInformation.SideID) | Out-Null
                         $SQLCommand.Parameters.AddWithValue("@SideName", $SST_CollectedInformation.SideName) | Out-Null
                         $SQLCommand.Parameters.AddWithValue("@ProdMTM", $SST_CollectedInformation.ProdMTM) | Out-Null
-                        $SQLCommand.Parameters.AddWithValue("@RecommendedPTF", $SST_CollectedInformation.RecommendedPTF) | Out-Null
+                        $SQLCommand.Parameters.AddWithValue("@RecommendedPTF", (Get-SqlParameterValue -Value $SST_CollectedInformation.RecommendedPTF -Default "Not available" -TreatEmptyStringAsNull)) | Out-Null
                         $SQLCommand.Parameters.AddWithValue("@MDiskTotalCapacity", $SST_CollectedInformation.'MDiskTotalCapacity') | Out-Null
                         $SQLCommand.Parameters.AddWithValue("@MDiskFreeCapacity", $SST_CollectedInformation.'MDiskFreeCapacity') | Out-Null
                         $SQLCommand.Parameters.AddWithValue("@MDiskUsedCapacity", $SST_CollectedInformation.'MDiskUsedCapacity') | Out-Null
@@ -91,21 +118,22 @@ function SST_PRISMDBControl {
                         $SQLCommand.Parameters.AddWithValue("@QuorumMode", $SST_CollectedInformation.QuorumMode) | Out-Null
                         $SQLCommand.Parameters.AddWithValue("@SerialNumber", $SST_CollectedInformation.SerialNumber) | Out-Null
                         $SQLCommand.Parameters.AddWithValue("@WWNN", $SST_CollectedInformation.WWNN) | Out-Null
+                        $SQLCommand.Parameters.AddWithValue("@LocalCreationTimeStamp", $SST_CollectedInformation.TimeStamp) | Out-Null  #maybe for later
                         $SQLCommand.Parameters.AddWithValue("@TimeStamp", $TimeStamp) | Out-Null
                     
                         # DB save
                         $SQLCommand.ExecuteNonQuery()
-
                         # Delete | Keep only the 128 most recent entries after TimeStamp
                         #$SQLiteCommand.CommandText = "DELETE FROM IBMSTOHWTable WHERE ID NOT IN ( SELECT ID FROM IBMSTOHWTable ORDER BY TimeStamp DESC LIMIT 128 );"
                         #$SQLiteCommand.ExecuteNonQuery()
                     }
+                }catch{
+                    Write-Host $_.Exception.Message -ForegroundColor DarkMagenta
                 }
                 finally {
+                        
                         <#Do this after the try block regardless of whether an exception occurred or not#>
                         if ($SQLCommand) { $SQLCommand.Dispose() }
-                        if ($SQLConnection) { $SQLConnection.Close(); $SQLConnection.Dispose() }
-
                         # If you want to delete files afterwards, extra good:
                         [System.Data.SqlClient.SqlConnection]::ClearAllPools()
                 }
@@ -116,21 +144,27 @@ function SST_PRISMDBControl {
                 try {
                     $SQLCommand = $SQLConnection.CreateCommand()
 
-                    foreach ($SST_CollectedInformation in $SST_CollectedInformations){ 
+                    foreach ($SST_CollectedInformation in $SST_CollectedInformations | Where-Object { -not [string]::IsNullOrWhiteSpace($_.ProductID) }){ 
+
                         $SQLCommand.Parameters.Clear()
 
-                        $SQLCommand.CommandText ="INSERT INTO IBMSTODriveTable (CustomerNbr, DriveID, SlotID, ProductID, DriveStatus, CurrentDriveFW, DriveCap, PhyDriveCap, PhyUsedDriveCap, EffeUsedDriveCap, SerialNumber, WWNN, TimeStamp)`
-                                                    VALUES (@CustomerNbr, @DriveID, @SlotID, @ProductID, @DriveStatus, @CurrentDriveFW, @DriveCap, @PhyDriveCap, @PhyUsedDriveCap, @EffeUsedDriveCap, @SerialNumber, @WWNN, @TimeStamp);"
-                        $SQLCommand.Parameters.AddWithValue("@CustomerNbr", $Customer) | Out-Null
-                        $SQLCommand.Parameters.AddWithValue("@DriveID", $SST_CollectedInformation.ID) | Out-Null
+                        $SQLCommand.CommandText ="UPDATE IBMSTODriveTable SET DriveID = @DriveID, SlotID = @SlotID, ProductID = @ProductID, DriveStatus = @DriveStatus, CurrentDriveFW = @CurrentDriveFW, DriveCap = @DriveCap, PhyDriveCap = @PhyDriveCap,`
+                                                    PhyUsedDriveCap = @PhyUsedDriveCap, EffeUsedDriveCap = @EffeUsedDriveCap, TimeStamp = @TimeStamp`
+                                                WHERE CustomerNbr = @CustomerNbr AND DriveID = @DriveID AND SerialNumber = @SerialNumber AND WWNN = @WWNN;`
+                                                IF @@ROWCOUNT = 0`
+                                                BEGIN`
+                                                INSERT INTO IBMSTODriveTable (CustomerNbr, DriveID, SlotID, ProductID, DriveStatus, CurrentDriveFW, DriveCap, PhyDriveCap, PhyUsedDriveCap, EffeUsedDriveCap, SerialNumber, WWNN, TimeStamp)`
+                                                VALUES (@CustomerNbr, @DriveID, @SlotID, @ProductID, @DriveStatus, @CurrentDriveFW, @DriveCap, @PhyDriveCap, @PhyUsedDriveCap, @EffeUsedDriveCap, @SerialNumber, @WWNN, @TimeStamp); END"
+                        $SQLCommand.Parameters.AddWithValue("@CustomerNbr", $AZCredN) | Out-Null
+                        $SQLCommand.Parameters.AddWithValue("@DriveID", $SST_CollectedInformation.DriveID) | Out-Null
                         $SQLCommand.Parameters.AddWithValue("@SlotID", $SST_CollectedInformation.SlotID) | Out-Null
                         $SQLCommand.Parameters.AddWithValue("@ProductID", $SST_CollectedInformation.ProductID) | Out-Null
-                        $SQLCommand.Parameters.AddWithValue("@DriveStatus", $SST_CollectedInformation.Status) | Out-Null
-                        $SQLCommand.Parameters.AddWithValue("@CurrentDriveFW", $SST_CollectedInformation.FirmwareLevel) | Out-Null
-                        $SQLCommand.Parameters.AddWithValue("@DriveCap", $SST_CollectedInformation.Capacity) | Out-Null
-                        $SQLCommand.Parameters.AddWithValue("@PhyDriveCap", $SST_CollectedInformation.PhysicalCapacity) | Out-Null
-                        $SQLCommand.Parameters.AddWithValue("@PhyUsedDriveCap", $SST_CollectedInformation.PhysicalUsedCapacity) | Out-Null
-                        $SQLCommand.Parameters.AddWithValue("@EffeUsedDriveCap", $SST_CollectedInformation.EffectiveUsedCapacity) | Out-Null
+                        $SQLCommand.Parameters.AddWithValue("@DriveStatus", $SST_CollectedInformation.DriveStatus) | Out-Null
+                        $SQLCommand.Parameters.AddWithValue("@CurrentDriveFW", $SST_CollectedInformation.CurrentDriveFW) | Out-Null
+                        $SQLCommand.Parameters.AddWithValue("@DriveCap", $SST_CollectedInformation.DriveCap) | Out-Null
+                        $SQLCommand.Parameters.AddWithValue("@PhyDriveCap", $SST_CollectedInformation.PhyDriveCap) | Out-Null
+                        $SQLCommand.Parameters.AddWithValue("@PhyUsedDriveCap", $SST_CollectedInformation.PhyUsedDriveCap) | Out-Null
+                        $SQLCommand.Parameters.AddWithValue("@EffeUsedDriveCap", $SST_CollectedInformation.EffeUsedDriveCap) | Out-Null
                         $SQLCommand.Parameters.AddWithValue("@SerialNumber", $SST_CollectedInformation.SerialNumber) | Out-Null
                         $SQLCommand.Parameters.AddWithValue("@WWNN", $SST_CollectedInformation.WWNN) | Out-Null
                         $SQLCommand.Parameters.AddWithValue("@TimeStamp", $TimeStamp) | Out-Null
@@ -150,7 +184,6 @@ function SST_PRISMDBControl {
                 finally {
                         <#Do this after the try block regardless of whether an exception occurred or not#>
                         if ($SQLCommand) { $SQLCommand.Dispose() }
-                        if ($SQLConnection) { $SQLConnection.Close(); $SQLConnection.Dispose() }
 
                         # If you want to delete files afterwards, extra good:
                         [System.Data.SqlClient.SqlConnection]::ClearAllPools()
@@ -159,15 +192,19 @@ function SST_PRISMDBControl {
             "StorageEventLog" {
 
                 try {
-                    $SQLConnection.Open()
                     $SQLCommand = $SQLConnection.CreateCommand()
 
                     foreach ($SST_CollectedInformation in $SST_CollectedInformations){
                         $SQLCommand.Parameters.Clear()
 
-                        $SQLCommand.CommandText ="INSERT INTO IBMSTOEventsTable (CustomerNbr, SeqID, LastTime, ObjectType, ObjectID, ObjectName, CopyID, Status, Fixed, ErrorCode, Description, WWNN, SerialNumber, TimeStamp)`
-                                                    VALUES (@CustomerNbr, @SeqID, @LastTime, @ObjectType, @ObjectID, @ObjectName, @CopyID, @Status, @Fixed, @ErrorCode, @Description, @WWNN, @SerialNumber, @TimeStamp);"
-                        $SQLCommand.Parameters.AddWithValue("@CustomerNbr", $Customer) | Out-Null
+                        $SQLCommand.CommandText =$SQLCommand.CommandText = "UPDATE IBMSTOEventsTable SET LastTime = @LastTime, ObjectType = @ObjectType, ObjectID = @ObjectID, ObjectName = @ObjectName, CopyID = @CopyID, Status = @Status, Fixed = @Fixed,`
+                                                                                ErrorCode = @ErrorCode, Description = @Description, TimeStamp = @TimeStamp`
+                                                                            WHERE CustomerNbr = @CustomerNbr AND SeqID = @SeqID AND WWNN = @WWNN AND SerialNumber = @SerialNumber;`
+                                                                            IF @@ROWCOUNT = 0`
+                                                                            BEGIN`
+                                                                            INSERT INTO IBMSTOEventsTable (CustomerNbr, SeqID, LastTime, ObjectType, ObjectID, ObjectName, CopyID, Status, Fixed, ErrorCode, Description, WWNN, SerialNumber, TimeStamp)`
+                                                                            VALUES (@CustomerNbr, @SeqID, @LastTime, @ObjectType, @ObjectID, @ObjectName, @CopyID, @Status, @Fixed, @ErrorCode, @Description, @WWNN, @SerialNumber, @TimeStamp); END"
+                        $SQLCommand.Parameters.AddWithValue("@CustomerNbr", $AZCredN) | Out-Null
                         $SQLCommand.Parameters.AddWithValue("@SeqID", $SST_CollectedInformation.SeqID) | Out-Null
                         $SQLCommand.Parameters.AddWithValue("@LastTime", $SST_CollectedInformation.LastTime) | Out-Null
                         $SQLCommand.Parameters.AddWithValue("@ObjectType", $SST_CollectedInformation.ObjectType) | Out-Null
@@ -186,14 +223,15 @@ function SST_PRISMDBControl {
                         $SQLCommand.ExecuteNonQuery()
 
                         # Delete | Keep only the 500 most recent entries after TimeStamp
-                        $SQLCommand.CommandText = "DELETE FROM IBMSTOEventsTable WHERE ID NOT IN ( SELECT ID FROM IBMSTOEventsTable ORDER BY TimeStamp DESC LIMIT 500 );"
-                        $SQLCommand.ExecuteNonQuery()
+                        #$SQLCommand.CommandText = "DELETE FROM IBMSTOEventsTable WHERE ID NOT IN ( SELECT ID FROM IBMSTOEventsTable ORDER BY TimeStamp DESC LIMIT 500 );"
+                        #$SQLCommand.ExecuteNonQuery()
                     }
-                }
-                finally {
+                }catch{
+                    Write-Host $_.Exception.Message -ForegroundColor DarkMagenta
+                }finally {
                     <#Do this after the try block regardless of whether an exception occurred or not#>
                     if ($SQLCommand) { $SQLCommand.Dispose() }
-                    if ($SQLConnection) { $SQLConnection.Close(); $SQLConnection.Dispose() }
+
                     # If you want to delete files afterwards, extra good:
                     [System.Data.SqlClient.SqlConnection]::ClearAllPools()
                 }
@@ -201,18 +239,22 @@ function SST_PRISMDBControl {
             }
             "SANBase" {
                 try {
-                    $SQLConnection.Open()
                     $SQLCommand = $SQLConnection.CreateCommand()
 
                     foreach ($SST_CollectedInformation in $SST_CollectedInformations){
                         $SQLCommand.Parameters.Clear()
 
-                        $SQLCommand.CommandText ="INSERT INTO IBMSANHWTable (CustomerNbr, Name, Status, CodeLevel, BrocadeProdName, MTM, SerialNumber, SwitchWWNN, TimeStamp) VALUES (@CustomerNbr, @Name, @Status, @CodeLevel, @BrocadeProdName, @MTM, @SerialNumber, @SwitchWWNN, @TimeStamp);"
-                        $SQLCommand.Parameters.AddWithValue("@CustomerNbr", $Customer) | Out-Null
-                        $SQLCommand.Parameters.AddWithValue("@Name", $SST_CollectedInformation.'SwichtName') | Out-Null
-                        $SQLCommand.Parameters.AddWithValue("@Status", $SST_CollectedInformation.'SwitchState') | Out-Null
-                        $SQLCommand.Parameters.AddWithValue("@CodeLevel", $SST_CollectedInformation.'FabricOS') | Out-Null
-                        $SQLCommand.Parameters.AddWithValue("@BrocadeProdName", $SST_CollectedInformation.'BrocadeProductName') | Out-Null
+                        $SQLCommand.CommandText =$SQLCommand.CommandText = "UPDATE IBMSANHWTable SET Name = @Name, Status = @Status, CodeLevel = @CodeLevel, BrocadeProdName = @BrocadeProdName, MTM = @MTM, SwitchWWNN = @SwitchWWNN, TimeStamp = @TimeStamp`
+                                                                                WHERE CustomerNbr = @CustomerNbr AND SerialNumber = @SerialNumber AND SwitchWWNN = @SwitchWWNN;`
+                                                                            IF @@ROWCOUNT = 0`
+                                                                            BEGIN`
+                                                                            INSERT INTO IBMSANHWTable (CustomerNbr, Name, Status, CodeLevel, BrocadeProdName, MTM, SerialNumber, SwitchWWNN, TimeStamp)`
+                                                                            VALUES (@CustomerNbr, @Name, @Status, @CodeLevel, @BrocadeProdName, @MTM, @SerialNumber, @SwitchWWNN, @TimeStamp); END"
+                        $SQLCommand.Parameters.AddWithValue("@CustomerNbr", $AZCredN) | Out-Null
+                        $SQLCommand.Parameters.AddWithValue("@Name", $SST_CollectedInformation.'Name') | Out-Null
+                        $SQLCommand.Parameters.AddWithValue("@Status", $SST_CollectedInformation.'Status') | Out-Null
+                        $SQLCommand.Parameters.AddWithValue("@CodeLevel", $SST_CollectedInformation.'CodeLevel') | Out-Null
+                        $SQLCommand.Parameters.AddWithValue("@BrocadeProdName", $SST_CollectedInformation.'BrocadeProdName') | Out-Null
                         $SQLCommand.Parameters.AddWithValue("@MTM", $SST_CollectedInformation.'MTM') | Out-Null
                         $SQLCommand.Parameters.AddWithValue("@SerialNumber", $SST_CollectedInformation.'SerialNumber') | Out-Null
                         $SQLCommand.Parameters.AddWithValue("@SwitchWWNN", $SST_CollectedInformation.'SwitchWWNN') | Out-Null
@@ -233,8 +275,8 @@ function SST_PRISMDBControl {
                 }
                 finally {
                     <#Do this after the try block regardless of whether an exception occurred or not#>
-                    if ($SQLiteCommand) { $SQLiteCommand.Dispose() }
-                    if ($SQLConnection) { $SQLConnection.Close(); $SQLConnection.Dispose() }
+                    if ($SQLCommand) { $SQLCommand.Dispose() }
+
                     # If you want to delete files afterwards, extra good:
                     [System.Data.SqlClient.SqlConnection]::ClearAllPools()
                 }
@@ -242,19 +284,23 @@ function SST_PRISMDBControl {
             }
             "PowerHMC" {
                 try {
-                    $SQLConnection.Open()
                     $SQLCommand = $SQLConnection.CreateCommand()
 
                     foreach ($SST_CollectedInformation in $SST_CollectedInformations){
                         $SQLCommand.Parameters.Clear()
 
-                        $SQLCommand.CommandText ="INSERT INTO PowerHMC (CustomerNbr, HMCName, HMCMTM, SerialNumber, HMCUUID, BIOS, DisplayVersion, BaseVersion, BuildLevel, IFix, ManagedSystemCount, ManagedSystemUUIDs, TimeStamp)`
-                                                    VALUES (@CustomerNbr, @HMCName, @HMCMTM, @SerialNumber, @HMCUUID, @BIOS, @DisplayVersion, @BaseVersion, @BuildLevel, @IFix, @ManagedSystemCount , @ManagedSystemUUIDs , @TimeStamp);"
-                        $SQLCommand.Parameters.AddWithValue("@CustomerNbr", $Customer) | Out-Null
+                        $SQLCommand.CommandText =$SQLCommand.CommandText = "UPDATE PowerHMC SET HMCName = @HMCName, HMCMTM = @HMCMTM, BIOS = @BIOS, DisplayVersion = @DisplayVersion, BaseVersion = @BaseVersion, BuildLevel = @BuildLevel,IFix = @IFix,`
+                                                                                ManagedSystemCount = @ManagedSystemCount, ManagedSystemUUIDs = @ManagedSystemUUIDs,TimeStamp = @TimeStamp`
+                                                                            WHERE CustomerNbr = @CustomerNbr AND SerialNumber = @SerialNumber AND HMCUUID = @HMCUUID;`
+                                                                            IF @@ROWCOUNT = 0`
+                                                                            BEGIN`
+                                                                            INSERT INTO PowerHMC (CustomerNbr, HMCName, HMCMTM, SerialNumber, HMCUUID, BIOS, DisplayVersion, BaseVersion, BuildLevel, IFix,ManagedSystemCount, ManagedSystemUUIDs, TimeStamp)`
+                                                                            VALUES (@CustomerNbr, @HMCName, @HMCMTM, @SerialNumber, @HMCUUID, @BIOS, @DisplayVersion, @BaseVersion, @BuildLevel, @IFix, @ManagedSystemCount, @ManagedSystemUUIDs, @TimeStamp); END"
+                        $SQLCommand.Parameters.AddWithValue("@CustomerNbr", $AZCredN) | Out-Null
                         $SQLCommand.Parameters.AddWithValue("@HMCName", $SST_CollectedInformation.HMCName) | Out-Null
                         $SQLCommand.Parameters.AddWithValue("@HMCMTM", $SST_CollectedInformation.HMCMTM) | Out-Null
                         $SQLCommand.Parameters.AddWithValue("@SerialNumber", $SST_CollectedInformation.SerialNumber) | Out-Null
-                        $SQLCommand.Parameters.AddWithValue("@HMCUUID", $SST_CollectedInformation.UUID) | Out-Null
+                        $SQLCommand.Parameters.AddWithValue("@HMCUUID", $SST_CollectedInformation.HMCUUID) | Out-Null
                         $SQLCommand.Parameters.AddWithValue("@BIOS", $SST_CollectedInformation.BIOS) | Out-Null
                         $SQLCommand.Parameters.AddWithValue("@DisplayVersion", $SST_CollectedInformation.DisplayVersion) | Out-Null
                         $SQLCommand.Parameters.AddWithValue("@BaseVersion", $SST_CollectedInformation.BaseVersion) | Out-Null
@@ -268,8 +314,8 @@ function SST_PRISMDBControl {
                         $SQLCommand.ExecuteNonQuery()
 
                         # Delete | Keep only the 64 most recent entries after TimeStamp
-                        $SQLCommand.CommandText = "DELETE FROM PowerHMC WHERE ID NOT IN ( SELECT ID FROM PowerHMC ORDER BY TimeStamp DESC LIMIT 64 );"
-                        $SQLCommand.ExecuteNonQuery()
+                        #$SQLCommand.CommandText = "DELETE FROM PowerHMC WHERE ID NOT IN ( SELECT ID FROM PowerHMC ORDER BY TimeStamp DESC LIMIT 64 );"
+                        #$SQLCommand.ExecuteNonQuery()
                     }
                 }
                 catch {
@@ -280,39 +326,42 @@ function SST_PRISMDBControl {
                 finally {
                     <#Do this after the try block regardless of whether an exception occurred or not#>
                     if ($SQLCommand) { $SQLCommand.Dispose() }
-                    if ($SQLConnection) { $SQLConnection.Close(); $SQLConnection.Dispose() }
+
                     # If you want to delete files afterwards, extra good:
-                    [System.Data.SQLite.SQLiteConnection]::ClearAllPools()
+                    [System.Data.SqlClient.SqlConnection]::ClearAllPools()
                 }
 
             }
             "PowerSysSummary" {
                 try {
-                    $SQLConnection.Open()
                     $SQLCommand = $SQLConnection.CreateCommand()
 
                     foreach ($SST_CollectedInformation in $SST_CollectedInformations){
                         $SQLCommand.Parameters.Clear()
-
-                        $SQLCommand.CommandText ="INSERT INTO PowerSysSummary (CustomerNbr, SystemName, MachineTypeModel, SerialNumber, State, ECNumber, ActivatedLevel, UUID, URL, TimeStamp)`
-                                                    VALUES (@CustomerNbr, @SystemName, @MachineTypeModel, @SerialNumber, @State, @ECNumber, @ActivatedLevel, @UUID, @URL, @TimeStamp);"
-                        $SQLCommand.Parameters.AddWithValue("@CustomerNbr", $Customer) | Out-Null
+                        
+                        $SQLCommand.CommandText =$SQLCommand.CommandText = "UPDATE PowerSysSummary SET SystemName = @SystemName, MachineTypeModel = @MachineTypeModel, State = @State, ECNumber = @ECNumber,ActivatedLevel = @ActivatedLevel, URL = @URL, TimeStamp = @TimeStamp`
+                                                                            WHERE CustomerNbr = @CustomerNbr AND SerialNumber = @SerialNumber AND UUID = @UUID;`
+                                                                            IF @@ROWCOUNT = 0`
+                                                                            BEGIN`
+                                                                            INSERT INTO PowerSysSummary ( CustomerNbr, SystemName, MachineTypeModel, SerialNumber, State, ECNumber, ActivatedLevel, UUID, URL, TimeStamp)`
+                                                                            VALUES (@CustomerNbr, @SystemName, @MachineTypeModel, @SerialNumber, @State, @ECNumber, @ActivatedLevel, @UUID, @URL, @TimeStamp); END"
+                        $SQLCommand.Parameters.AddWithValue("@CustomerNbr", $AZCredN) | Out-Null
                         $SQLCommand.Parameters.AddWithValue("@SystemName", $SST_CollectedInformation.SystemName) | Out-Null
                         $SQLCommand.Parameters.AddWithValue("@MachineTypeModel", $SST_CollectedInformation.MachineTypeModel) | Out-Null
                         $SQLCommand.Parameters.AddWithValue("@SerialNumber", $SST_CollectedInformation.SerialNumber) | Out-Null
                         $SQLCommand.Parameters.AddWithValue("@State", $SST_CollectedInformation.State) | Out-Null
-                        $SQLCommand.Parameters.AddWithValue("@ECNumber", $SST_CollectedInformation.ECNumber) | Out-Null
-                        $SQLCommand.Parameters.AddWithValue("@ActivatedLevel", $SST_CollectedInformation.ActivatedLevel) | Out-Null
+                        $SQLCommand.Parameters.AddWithValue("@ECNumber", (Get-SqlParameterValue -Value $SST_CollectedInformation.ECNumber -Default "Not available" -TreatEmptyStringAsNull)) | Out-Null
+                        $SQLCommand.Parameters.AddWithValue("@ActivatedLevel", (Get-SqlParameterValue -Value $SST_CollectedInformation.ActivatedLevel -Default "Not available" -TreatEmptyStringAsNull)) | Out-Null
                         $SQLCommand.Parameters.AddWithValue("@UUID", $SST_CollectedInformation.UUID) | Out-Null
-                        $SQLCommand.Parameters.AddWithValue("@URL", $SST_CollectedInformation.Url) | Out-Null
+                        $SQLCommand.Parameters.AddWithValue("@URL", (Get-SqlParameterValue -Value $SST_CollectedInformation.URL -Default "Not available" -TreatEmptyStringAsNull)) | Out-Null
                         $SQLCommand.Parameters.AddWithValue("@TimeStamp", $TimeStamp) | Out-Null
 
                         # DB save 
                         $SQLCommand.ExecuteNonQuery()
 
                         # Delete | Keep only the 128 most recent entries after TimeStamp
-                        $SQLCommand.CommandText = "DELETE FROM PowerSysSummary WHERE ID NOT IN ( SELECT ID FROM PowerSysSummary ORDER BY TimeStamp DESC LIMIT 128 );"
-                        $SQLCommand.ExecuteNonQuery()
+                        #$SQLCommand.CommandText = "DELETE FROM PowerSysSummary WHERE ID NOT IN ( SELECT ID FROM PowerSysSummary ORDER BY TimeStamp DESC LIMIT 128 );"
+                        #$SQLCommand.ExecuteNonQuery()
                     }
                 }
                 catch {
@@ -323,23 +372,30 @@ function SST_PRISMDBControl {
                 finally {
                     <#Do this after the try block regardless of whether an exception occurred or not#>
                     if ($SQLCommand) { $SQLCommand.Dispose() }
-                    if ($SQLConnection) { $SQLConnection.Close(); $SQLConnection.Dispose() }
+
                     # If you want to delete files afterwards, extra good:
-                    [System.Data.SQLite.SQLiteConnection]::ClearAllPools()
+                    [System.Data.SqlClient.SqlConnection]::ClearAllPools()
                 }
 
             }
             "LPARSummary" {
                 try {
-                    $SQLConnection.Open()
                     $SQLCommand = $SQLConnection.CreateCommand()
 
                     foreach ($SST_CollectedInformation in $SST_CollectedInformations){
                         $SQLCommand.Parameters.Clear()
-
-                        $SQLCommand.CommandText ="INSERT INTO LPARSummary (CustomerNbr, ManagedSystemName, ManagedSystemUUID, ManagedSystemMTMS, ManagedSystemSerial, LparName, LparUUID, PartitionId, State,Environment,OsVersion, RmcIp, RmcState, DefaultProfile, CurrentProcessingUnits, CurrentMemoryMB, TimeStamp)`
-                                                    VALUES (@CustomerNbr, @ManagedSystemName, @ManagedSystemUUID, @ManagedSystemMTMS, @ManagedSystemSerial, @LparName, @LparUUID, @PartitionId, @State, @Environment, @OsVersion, @RmcIp, @RmcState, @DefaultProfile, @CurrentProcessingUnits, @CurrentMemoryMB, @TimeStamp);"
-                        $SQLCommand.Parameters.AddWithValue("@CustomerNbr", $Customer) | Out-Null
+                        Write-Host $SST_CollectedInformation
+                        $SQLCommand.CommandText =$SQLCommand.CommandText = "UPDATE LPARSummary SET ManagedSystemName = @ManagedSystemName, ManagedSystemUUID = @ManagedSystemUUID, ManagedSystemMTMS = @ManagedSystemMTMS, ManagedSystemSerial = @ManagedSystemSerial, LparName = @LparName,`
+                                                                                PartitionId = @PartitionId, State = @State, Environment = @Environment, OsVersion = @OsVersion, RmcIp = @RmcIp, RmcState = @RmcState, DefaultProfile = @DefaultProfile,`
+                                                                                CurrentProcessingUnits = @CurrentProcessingUnits,CurrentMemoryMB = @CurrentMemoryMB, TimeStamp = @TimeStamp`
+                                                                            WHERE CustomerNbr = @CustomerNbr AND ManagedSystemSerial = @ManagedSystemSerial AND LparUUID = @LparUUID;`
+                                                                            IF @@ROWCOUNT = 0`
+                                                                            BEGIN`
+                                                                            INSERT INTO LPARSummary (CustomerNbr, ManagedSystemName, ManagedSystemUUID, ManagedSystemMTMS, ManagedSystemSerial, LparName, LparUUID, PartitionId, State, Environment,OsVersion,`
+                                                                            RmcIp, RmcState, DefaultProfile, CurrentProcessingUnits, CurrentMemoryMB, TimeStamp)`
+                                                                            VALUES (@CustomerNbr, @ManagedSystemName, @ManagedSystemUUID, @ManagedSystemMTMS, @ManagedSystemSerial, @LparName, @LparUUID, @PartitionId, @State, @Environment, @OsVersion, @RmcIp,`
+                                                                            @RmcState, @DefaultProfile, @CurrentProcessingUnits, @CurrentMemoryMB, @TimeStamp); END"
+                        $SQLCommand.Parameters.AddWithValue("@CustomerNbr", $AZCredN) | Out-Null
                         $SQLCommand.Parameters.AddWithValue("@ManagedSystemName", $SST_CollectedInformation.ManagedSystemName) | Out-Null
                         $SQLCommand.Parameters.AddWithValue("@ManagedSystemUUID", $SST_CollectedInformation.ManagedSystemUUID) | Out-Null
                         $SQLCommand.Parameters.AddWithValue("@ManagedSystemMTMS", $SST_CollectedInformation.ManagedSystemMTMS) | Out-Null
@@ -350,9 +406,9 @@ function SST_PRISMDBControl {
                         $SQLCommand.Parameters.AddWithValue("@State", $SST_CollectedInformation.State) | Out-Null
                         $SQLCommand.Parameters.AddWithValue("@Environment", $SST_CollectedInformation.Environment) | Out-Null
                         $SQLCommand.Parameters.AddWithValue("@OsVersion", $SST_CollectedInformation.OsVersion) | Out-Null
-                        $SQLCommand.Parameters.AddWithValue("@RmcIp", $SST_CollectedInformation.RmcIp) | Out-Null
-                        $SQLCommand.Parameters.AddWithValue("@RmcState", $SST_CollectedInformation.RmcState) | Out-Null
-                        $SQLCommand.Parameters.AddWithValue("@DefaultProfile", $SST_CollectedInformation.DefaultProfile) | Out-Null
+                        $SQLCommand.Parameters.AddWithValue("@RmcIp", (Get-SqlParameterValue -Value $SST_CollectedInformation.RmcIp -Default "Not available" -TreatEmptyStringAsNull)) | Out-Null
+                        $SQLCommand.Parameters.AddWithValue("@RmcState", (Get-SqlParameterValue -Value $SST_CollectedInformation.RmcState -Default "Not available" -TreatEmptyStringAsNull)) | Out-Null
+                        $SQLCommand.Parameters.AddWithValue("@DefaultProfile", (Get-SqlParameterValue -Value $SST_CollectedInformation.DefaultProfile -Default "Not available" -TreatEmptyStringAsNull)) | Out-Null
                         $SQLCommand.Parameters.AddWithValue("@CurrentProcessingUnits", $SST_CollectedInformation.CurrentProcessingUnits) | Out-Null
                         $SQLCommand.Parameters.AddWithValue("@CurrentMemoryMB", $SST_CollectedInformation.CurrentMemoryMB) | Out-Null
                         $SQLCommand.Parameters.AddWithValue("@TimeStamp", $TimeStamp) | Out-Null
@@ -361,8 +417,8 @@ function SST_PRISMDBControl {
                         $SQLCommand.ExecuteNonQuery()
 
                         # Delete | Keep only the 1024 most recent entries after TimeStamp
-                        $SQLCommand.CommandText = "DELETE FROM LPARSummary WHERE ID NOT IN ( SELECT ID FROM LPARSummary ORDER BY TimeStamp DESC LIMIT 1024 );"
-                        $SQLCommand.ExecuteNonQuery()
+                        #$SQLCommand.CommandText = "DELETE FROM LPARSummary WHERE ID NOT IN ( SELECT ID FROM LPARSummary ORDER BY TimeStamp DESC LIMIT 1024 );"
+                        #$SQLCommand.ExecuteNonQuery()
                     }
                 }
                 catch {
@@ -373,18 +429,32 @@ function SST_PRISMDBControl {
                 finally {
                     <#Do this after the try block regardless of whether an exception occurred or not#>
                     if ($SQLCommand) { $SQLCommand.Dispose() }
-                    if ($SQLConnection) { $SQLConnection.Close(); $SQLConnection.Dispose() }
+
                     # If you want to delete files afterwards, extra good:
-                    [System.Data.SQLite.SQLiteConnection]::ClearAllPools()
+                    [System.Data.SqlClient.SqlConnection]::ClearAllPools()
                 }
 
             }
-            Default {SST_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong during saving the $SST_InfoType data in the local db.") -TD_ToolMSGType Error -TD_Shown yes}
+            Default {#SST_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong during saving the $SST_InfoType data in the local db.") -TD_ToolMSGType Error -TD_Shown yes
+                Write-Host $_.Exception.Message -ForegroundColor DarkMagenta
+                if ($SQLConnection) { 
+                    if ($SQLConnection.State -ne [System.Data.ConnectionState]::Closed) {
+                        $SQLConnection.Close()
+                    } 
+                    $SQLConnection.Dispose() 
+                }
+            }
         }
 
     }
     
     end {
-        $SQLConnection.Close()
+        if ($SQLCommand) { $SQLCommand.Dispose() }
+        if ($SQLConnection) { 
+            if ($SQLConnection.State -ne [System.Data.ConnectionState]::Closed) {
+                $SQLConnection.Close()
+            } 
+            $SQLConnection.Dispose() 
+        }
     }
 }
