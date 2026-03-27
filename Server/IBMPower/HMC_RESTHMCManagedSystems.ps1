@@ -19,13 +19,7 @@ function HMC_RESTHMCManagedSystems {
     $pass = $TD_Device_PW
 
     # --- High Level Wrapper: Login -> Query -> Logout ---
-    $ms = HMC_InvokeHmcQuery `
-        -HMCIP $ip `
-        -HMCPort $port `
-        -CredentialUN $user `
-        -CredentialPW $pass `
-        -Query ManagedSystems `
-        -IgnoreCertificate
+    $ms = HMC_InvokeHmcQuery -HMCIP $ip -HMCPort $port -CredentialUN $user -CredentialPW $pass -Query ManagedSystems -IgnoreCertificate
 
     <# Write to the local database first before displaying it in the GUI! #>
     SST_CustomerDeviceDBInsertTable -SST_InfoType "PowerSysSummary" -SST_CollectedInformations $ms
