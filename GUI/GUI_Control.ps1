@@ -1415,6 +1415,16 @@ $TD_BTN_PWR_LparSummary.add_click({
     $UCVMMain.SelectedView = "LPARs"
 })
 #endregion
+#region IBM Tape
+$TD_BTN_IBM_BaseTapeInfo.add_click({
+    <#Get all Device Cred and count them #>
+    $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_.DeviceTyp -eq "Storage"}
+    foreach($TD_Creds in $TD_Credentials){
+        $libinfo = Invoke_IBMTapeLibraryApi -Device $TD_Creds -Endpoint 'library/baseinfo'
+        
+    }
+})
+#endregion
 #endregion
 
 
