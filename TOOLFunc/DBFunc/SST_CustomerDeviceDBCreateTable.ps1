@@ -125,8 +125,16 @@ function SST_CustomerDeviceDBCreateTable {
                 Write-Host "SQL Fehler: $($_.Exception.Message)"
                 Write-Host $_.Exception.ToString()
             }
-            
-            #SST_ToolMessageCollector -TD_ToolMSGCollector $("LocalDB is ready and loaded, SST_InfoType $SST_InfoType") -TD_ToolMSGType Message -TD_Shown no
+            <# TapeBase #>
+            try{ 
+                $SST_SQLiteTabelQuery ="CREATE TABLE IF NOT EXISTS IBMTapeHWTable (ID INTEGER PRIMARY KEY AUTOINCREMENT, CustomerNbr TEXT NOT NULL, SerialNumber TEXT, MachineTypeModel Text, BaseFW TEXT,`
+                                        ExpansionFW TEXT, RoboticHW TEXT, RoboticFW TEXT, RoboticSerialNumber TEXT, NoOfModules TEXT, LibraryType TEXT, WWNodeName TEXT, ProductID TEXT, TimeStamp TEXT );" 
+                $SQLiteCommandCreate.CommandText = $SST_SQLiteTabelQuery
+                $SQLiteCommandCreate.ExecuteNonQuery()
+            }catch{
+                Write-Host "SQL Fehler: $($_.Exception.Message)"
+                Write-Host $_.Exception.ToString()
+            }
 
         }finally {
             
