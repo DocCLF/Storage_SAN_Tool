@@ -37,6 +37,15 @@ function SST_GetCredfGUI {
                     break
                 }
             }
+            {$_ -like "*Tape"} { 
+                $TD_BasicDeviceInfo = SST_DeviceConnecCheck -TD_Selected_Items "no"
+                if([string]::IsNullOrEmpty($TD_BasicDeviceInfo)){
+                    $TD_ErrorCode = 1
+                    #$TD_BTN_AddSSHKey.Background="#FFDDDDDD"
+                    #$TD_BTN_AddSSHKey.Content="Add SSH-Key"
+                    break
+                }
+            }
             Default {SST_ToolMessageCollector -TD_ToolMSGCollector "Something went wrong at SST_GetCredfGUI Func or no Device Type was found, please check the promt." -TD_ToolMSGType Warning}
         }
         #$TD_AddaNewDevice="no"
