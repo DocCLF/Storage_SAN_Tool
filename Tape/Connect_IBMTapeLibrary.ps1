@@ -6,8 +6,7 @@ function Connect_IBMTapeLibrary {
         TD_Device_DeviceIP   : <ip>
         TD_Device_Port       : 3031
         BaseUri              : https://<ip>:3031
-        Token                : Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiIxOTIuMTY4LjEwNy4zMyIsImlhdCI6MTc3NDQ2NDQ2NCwiZXhwIjoxNzc0NDcxNjY0LCJkYXRhIjoiUmNJYWIrV1pIVmdQVmx2MmpJbFVOUWJTR0d0d0tOTUVSK1lVQytGWVBRZU5wcGRnM01Ub
-                               3JrTUZGNytwNVFXeCIsImp0aSI6ImJiYTdmZWQ1MzEyYTczZDBkNDkwMDYxZTUxZTNhYzAzNjljNDJkZDAxY2RmMCJ9.VujaVo_UQ9a73cy7ZWLnyfGwnc9fD7_f8hk0zRNoUuA
+        Token                : Bearer WLnyfGwnc9fD7_f8hk0zRNoUuA
         SkipCertificateCheck : True
         LoginTime            : 25.03.2026 19:43:59
         LoginEndpoint        : /rest/login
