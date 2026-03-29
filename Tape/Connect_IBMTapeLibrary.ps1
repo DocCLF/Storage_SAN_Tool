@@ -24,7 +24,7 @@ function Connect_IBMTapeLibrary {
         [switch]$SkipCertificateCheck
     )
 
-    $baseUri  = "https://$TD_Device_DeviceIP"+":$TD_Device_Port"
+    $BaseUrl  = "https://$TD_Device_DeviceIP"+":$TD_Device_Port"
  
     $loginCandidates =
         if ($PreferredLoginApi -eq 'v1') {
@@ -101,7 +101,7 @@ function Connect_IBMTapeLibrary {
         PSTypeName           = 'IbmTapeLibrary.Connection'
         TD_Device_DeviceIP   = $TD_Device_DeviceIP
         TD_Device_Port       = $TD_Device_Port
-        BaseUri              = $baseUri
+        BaseUrl              = $BaseUrl
         Token                = $token
         SkipCertificateCheck = [bool]$SkipCertificateCheck
         LoginTime            = Get-Date
