@@ -1416,9 +1416,9 @@ $TD_BTN_PWR_LparSummary.add_click({
 })
 #endregion
 #region IBM Tape
-$TD_BTN_IBM_BaseTapeInfo.add_click({
+$TD_BTN_IBM_TapeInfo.add_click({
     <#Get all Device Cred and count them #>
-    $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_.DeviceTyp -eq "Storage"}
+    $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_.DeviceTyp -eq "Tape"}
     foreach($TD_Creds in $TD_Credentials){
         $libinfo = Invoke_IBMTapeLibraryApi -Device $TD_Creds -Endpoint 'library/baseinfo'
         
@@ -1454,8 +1454,8 @@ $TD_BTN_CloseGUI.add_click({
     try {
         Remove-Item -Path $PSRootPath\ToolLog\ToolTEMP\* -Filter '*_Temp.csv' -Force -ErrorAction SilentlyContinue
         if(Test-Path -Path "$PSRootPath\Resources\DBFolder\*" -Filter "*.db"){
-            #SST_RESTDBControl -SST_InfoType "DeleteStorageToken" | Out-Null
-            SST_RESTDBControl -SST_InfoType "DeleteStorageToken"
+            #SST_RESTDBControl -SST_InfoType "DeleteToken" | Out-Null
+            SST_RESTDBControl -SST_InfoType "DeleteToken"
         }
     }
     catch {
