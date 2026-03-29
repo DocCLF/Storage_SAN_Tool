@@ -35,11 +35,20 @@ function Invoke_IBMTapeLibraryApi {
         [switch]$SkipCertificateCheck
     )
 
-    #$pw = [Net.NetworkCredential]::new('', $Device.Password).Password
-    #$Connection = Connect_IBMTapeLibary -TD_Device_DeviceIP $Device.IPAddress -TD_Device_UserName $Device.UserName -TD_Device_PW $pw -SkipCertificateCheck
+    $BaseUrl  = "https://$($Device.IPAddress)"+":3031"
+    $TapeTokenObj = SST_RESTDBControl -SST_InfoType "UseTapeToken" -SST_BaseUrl $BaseUrl
+    if($null -eq $TapeTokenObj){
+        $pw = [Net.NetworkCredential]::new('', $Device.Password).Password
+        $Connection = Connect_IBMTapeLibary -TD_Device_DeviceIP $Device.IPAddress -TD_Device_UserName $Device.UserName -TD_Device_PW $pw -SkipCertificateCheck
+    }else {
+        $Connection = $TapeTokenObj
+        $APIVersionEndpoint = $TapeTokenObj.WorkingEndpoint
+    }
 
-    if ([string]::IsNullOrWhiteSpace($APIVersionwEndpoint)) {
-        $APIVersionwEndpoint = @("/v1/$Endpoint", "/rest/$Endpoint")
+    if ([string]::IsNullOrWhiteSpace($APIVersionEndpoint)) {
+        $APIVersionEndpoint = @("/v1/$Endpoint", "/rest/$Endpoint")
+    }else {
+        $APIVersionEndpoint = "$APIVersionEndpoint$Endpoint"
     }
 
     $headers = @{
@@ -47,12 +56,12 @@ function Invoke_IBMTapeLibraryApi {
         Authorization = $Connection.Token
     }
 
-    foreach($APIEndPoint in $APIVersionwEndpoint) {
+    foreach($APIEndPoint in $APIVersionEndpoint) {
 
         $uri = if ($APIEndPoint -match '^https?://') {
             $APIEndPoint
         } else {
-            "$($Connection.BaseUri)$APIEndPoint"
+            "$($BaseUrl)$APIEndPoint"
         }
 
         $irmParams = @{
@@ -77,7 +86,18 @@ function Invoke_IBMTapeLibraryApi {
             }
 
             try {
-                return Invoke-RestMethod @irmParams
+                $result = Invoke-RestMethod @irmParams
+
+                $SaveTapeObj= [pscustomobject]@{
+                    BaseUrl              = $BaseUrl
+                    Token                = $Connection.Token
+                    SkipCertificateCheck = $Connection.SkipCertificateCheck
+                    WorkingEndpoint      = $APIEndPoint.TrimEnd($Endpoint)
+                    LoginTime            = $Connection.LoginTime
+                }
+
+                SST_RESTDBControl -SST_InfoType "SaveTapeToken" -SST_NewDBObject $SaveTapeObj
+                return $result
             }
             catch {
                 Write-Verbose $_.Exception.Message
@@ -87,6 +107,9 @@ function Invoke_IBMTapeLibraryApi {
                     try { $statusCode = [int]$_.Exception.Response.StatusCode } catch {}
                 }
 
+                if ($statusCode -eq 401) {
+                    throw
+                }
                 if ($statusCode -ge 400 -and $statusCode -lt 500) {
                     continue
                 }
@@ -110,7 +133,19 @@ function Invoke_IBMTapeLibraryApi {
                     [System.Net.ServicePointManager]::ServerCertificateValidationCallback = { $true }
                 }
 
-                return Invoke-RestMethod @irmParams
+                $result = Invoke-RestMethod @irmParams
+
+                $SaveTapeObj= [pscustomobject]@{
+                    BaseUrl              = $BaseUrl
+                    Token                = $Connection.Token
+                    SkipCertificateCheck = $Connection.SkipCertificateCheck
+                    WorkingEndpoint      = $uri
+                    LoginTime            = $Connection.LoginTime
+                }
+
+                SST_RESTDBControl -SST_InfoType "SaveTapeToken" -SST_NewDBObject $SaveTapeObj
+
+                return $result
             }
             catch {
                 Write-Verbose $_.Exception.Message
@@ -118,6 +153,10 @@ function Invoke_IBMTapeLibraryApi {
                 $statusCode = $null
                 if ($_.Exception.Response) {
                     try { $statusCode = [int]$_.Exception.Response.StatusCode } catch {}
+                }
+
+                if ($statusCode -eq 401) {
+                    throw
                 }
                 if ($statusCode -ge 400 -and $statusCode -lt 500) {
                     continue
