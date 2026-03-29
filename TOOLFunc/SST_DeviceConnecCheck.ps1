@@ -44,7 +44,7 @@ function SST_DeviceConnecCheck {
     process {
 
         switch ($TD_Selected_DeviceType) {
-            "Storage" { 
+            {$_ -like "*Storage"} { 
                 $TD_BasicInfo = IBM_RESTBaseStorageInfos -TD_Device_DeviceIP $TD_Selected_DeviceIPAddr -TD_Device_UserName $TD_Selected_DeviceUserName -TD_Device_PW $([Net.NetworkCredential]::new('', $TD_Selected_DevicePassword).Password) -TD_Device_SSHKeyPath $TD_Selected_DeviceSSHFile -TD_Storage $TD_UserInputCred
                 if((($($TD_BaseStorageInfo.StorageInfo).Count -lt 1))){
                     [array]$TD_BasicInfo = IBM_SSHBaseStorageInfos -TD_Line_ID $_.ID -TD_Device_ConnectionTyp $_.ConnectionTyp -TD_Device_UserName $_.UserName -TD_Device_DeviceIP $_.IPAddress -TD_Device_DeviceName $_.DeviceName -TD_Device_PW $([Net.NetworkCredential]::new('', $_.Password).Password) -TD_Exportpath $TD_tb_ExportPath.Text
@@ -95,7 +95,7 @@ function SST_DeviceConnecCheck {
                     break
                 }
             }
-            "SAN" { 
+            {$_ -like "*SAN"} { 
 
                 $TD_BasicDeviceInfos = FOS_BasicSwitchInfos -TD_Device_ConnectionTyp $TD_Selected_DeviceConnectionType -TD_Device_DeviceIP $TD_Selected_DeviceIPAddr -TD_Device_UserName $TD_Selected_DeviceUserName -TD_Device_PW $([Net.NetworkCredential]::new('', $TD_Selected_DevicePassword).Password) -TD_Device_SSHKeyPath $TD_Selected_DeviceSSHFile 
                 
@@ -123,10 +123,17 @@ function SST_DeviceConnecCheck {
                     break
                 }
             }
-            "PowerHMC" {
+            {$_ -like "*PowerHMC"} {
                 $TD_BInfo = "" | Select-Object DeviceName,ProductDes
                 $TD_BInfo.DeviceName = "HMC"
                 $TD_BInfo.ProductDes = "PowerHMC"
+                $TD_BasicDeviceInfo += $TD_BInfo
+                SST_ToolMessageCollector -TD_ToolMSGCollector "It's a HMC, is okay" -TD_ToolMSGType Message
+            }
+            {$_ -like "*Tape"} {
+                $TD_BInfo = "" | Select-Object DeviceName,ProductDes
+                $TD_BInfo.DeviceName = "Tape"
+                $TD_BInfo.ProductDes = "TSxx00"
                 $TD_BasicDeviceInfo += $TD_BInfo
                 SST_ToolMessageCollector -TD_ToolMSGCollector "It's a HMC, is okay" -TD_ToolMSGType Message
             }
