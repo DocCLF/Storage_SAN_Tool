@@ -37,9 +37,10 @@ function Invoke_IBMTapeLibraryApi {
 
     $BaseUrl  = "https://$($Device.IPAddress)"+":3031"
     $TapeTokenObj = SST_RESTDBControl -SST_InfoType "UseTapeToken" -SST_BaseUrl $BaseUrl
+    
     if($null -eq $TapeTokenObj){
         $pw = [Net.NetworkCredential]::new('', $Device.Password).Password
-        $Connection = Connect_IBMTapeLibary -TD_Device_DeviceIP $Device.IPAddress -TD_Device_UserName $Device.UserName -TD_Device_PW $pw -SkipCertificateCheck
+        $Connection = Connect_IBMTapeLibrary -TD_Device_DeviceIP $Device.IPAddress -TD_Device_UserName $Device.UserName -TD_Device_PW $pw -SkipCertificateCheck
     }else {
         $Connection = $TapeTokenObj
         $APIVersionEndpoint = $TapeTokenObj.WorkingEndpoint
@@ -63,7 +64,7 @@ function Invoke_IBMTapeLibraryApi {
         } else {
             "$($BaseUrl)$APIEndPoint"
         }
-
+        if($null -eq $($Device.IPAddress)){continue}
         $irmParams = @{
             Uri         = $uri
             Method      = $Method
