@@ -1416,12 +1416,56 @@ $TD_BTN_PWR_LparSummary.add_click({
 })
 #endregion
 #region IBM Tape
-$TD_BTN_IBM_TapeInfo.add_click({
+$TD_BTN_IBM_TapeLibrary.add_click({
     <#Get all Device Cred and count them #>
     $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_.DeviceTyp -eq "Tape"}
     foreach($TD_Creds in $TD_Credentials){
-        $libinfo = Invoke_IBMTapeLibraryApi -Device $TD_Creds -Endpoint 'library/baseinfo'
-        
+        $LibInfo = $null; $LibApiVersion = $null
+        $LibInfo = Invoke_IBMTapeLibraryApi -Device $TD_Creds -Endpoint 'library/baseinfo'
+        $LibInfo = Invoke_IBMTapeLibraryApi -Device $TD_Creds -Endpoint 'library'
+        $LibApiVersion = Invoke_IBMTapeLibraryApi -Device $TD_Creds -Endpoint 'apiversion'
+    }
+})
+$TD_BTN_IBM_TapeInventory.add_click({
+    <#Get all Device Cred and count them #>
+    $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_.DeviceTyp -eq "Tape"}
+    foreach($TD_Creds in $TD_Credentials){
+        $LibInfo = $null; $LibInfoAdv=$null
+        $LibInfo = Invoke_IBMTapeLibraryApi -Device $TD_Creds -Endpoint 'library/inventory'
+        $LibInfoAdv = Invoke_IBMTapeLibraryApi -Device $TD_Creds -Endpoint 'library/mediainfo'
+    }
+})
+$TD_BTN_IBM_TapeDrives.add_click({
+    <#Get all Device Cred and count them #>
+    $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_.DeviceTyp -eq "Tape"}
+    foreach($TD_Creds in $TD_Credentials){
+        $LibInfo = $null; $LibInfoAdv=$null
+        $LibInfo = Invoke_IBMTapeLibraryApi -Device $TD_Creds -Endpoint 'drive'
+        $LibInfoAdv = Invoke_IBMTapeLibraryApi -Device $TD_Creds -Endpoint 'drive/information'
+    }
+})
+$TD_BTN_IBM_TapeLogicalLib.add_click({
+    <#Get all Device Cred and count them #>
+    $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_.DeviceTyp -eq "Tape"}
+    foreach($TD_Creds in $TD_Credentials){
+        $LibInfo = $null
+        $LibInfo = Invoke_IBMTapeLibraryApi -Device $TD_Creds -Endpoint 'logicalLibrary/information'
+    }
+})
+$TD_BTN_IBM_TapeReports.add_click({
+    <#Get all Device Cred and count them #>
+    $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_.DeviceTyp -eq "Tape"}
+    foreach($TD_Creds in $TD_Credentials){
+        $LibInfo = $null
+        $LibInfo = Invoke_IBMTapeLibraryApi -Device $TD_Creds -Endpoint 'reports/mountHistory'
+    }
+})
+$TD_BTN_IBM_TapeEvents.add_click({
+    <#Get all Device Cred and count them #>
+    $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_.DeviceTyp -eq "Tape"}
+    foreach($TD_Creds in $TD_Credentials){
+        $LibInfo = $null
+        $LibInfo = Invoke_IBMTapeLibraryApi -Device $TD_Creds -Endpoint 'events'
     }
 })
 #endregion
