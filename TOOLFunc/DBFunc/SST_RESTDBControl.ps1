@@ -21,13 +21,13 @@ function SST_RESTDBControl {
     try {
         $SQLiteDBConnection.Open()
 
-        # Table sicherstellen (für alle Modi ok)
+        # Ensure the table is secure (works for all modes)
         $SQLiteCommandCreate = $SQLiteDBConnection.CreateCommand()
-        if($SST_InfoType -eq "SaveStorageToken"){
-            $SQLiteCommandCreate.CommandText = " CREATE TABLE IF NOT EXISTS STOApiTokens ( BaseUrl TEXT PRIMARY KEY, Token TEXT NOT NULL, ExpiresAt TEXT NOT NULL, TimeStamp TEXT);"
-        }elseif ($SST_InfoType -eq "SaveTapeToken") {
-            $SQLiteCommandCreate.CommandText = " CREATE TABLE IF NOT EXISTS TapeApiTokens ( BaseUrl TEXT PRIMARY KEY, Token TEXT NOT NULL, SkipCertificateCheck TEXT NOT NULL, WorkingEndpoint  TEXT, LoginTime TEXT, TimeStamp TEXT);"
-        }
+
+        $SQLiteCommandCreate.CommandText = " CREATE TABLE IF NOT EXISTS STOApiTokens ( BaseUrl TEXT PRIMARY KEY, Token TEXT NOT NULL, ExpiresAt TEXT NOT NULL, TimeStamp TEXT);"
+        $SQLiteCommandCreate.ExecuteNonQuery() | Out-Null
+
+        $SQLiteCommandCreate.CommandText = " CREATE TABLE IF NOT EXISTS TapeApiTokens ( BaseUrl TEXT PRIMARY KEY, Token TEXT NOT NULL, SkipCertificateCheck TEXT NOT NULL, WorkingEndpoint  TEXT, LoginTime TEXT, TimeStamp TEXT);"
         $SQLiteCommandCreate.ExecuteNonQuery() | Out-Null
 
         switch ($SST_InfoType) {
