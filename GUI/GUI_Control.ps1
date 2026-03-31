@@ -344,6 +344,7 @@ $TD_BTN_ActivateDB.add_click({
         if(($SST_SQLiteCon.State -eq "Open")-and($SST_SQLiteCon.DataSource -eq "$DBName")){
             $TD_BTN_DeleteDB.Visibility = "Visible"
             $TD_BTN_DeleteDB.Background = "coral"
+            if($TD_CB_CustomerYN.IsChecked){$TD_BTN_ActivateDB.Visibility = "Collapsed"}
             $SST_SQLiteCon.Close()
             #$TD_CB_DataBaseChoice.ItemsSource = $null
             #$TD_DataBaseChoice = @(Get-ChildItem "$PSRootPath\Resources\DBFolder\*" -Filter "*.db" | Select-Object -ExpandProperty Basename)
@@ -352,6 +353,7 @@ $TD_BTN_ActivateDB.add_click({
             #$TD_CB_DataBaseChoice.ItemsSource = $TD_DataBaseChoice
             #$TD_CB_DataBaseChoice.SelectedIndex = 0
             SST_CustomerDeviceDBCreateTable
+            SST_CustomerLibraryDBCreateTable
         }
     }else {
         [System.Windows.MessageBox]::Show(
@@ -367,6 +369,7 @@ $TD_BTN_DeleteDB.add_click({
         $TD_DataBaseChoice = @(Get-ChildItem "$PSRootPath\Resources\DBFolder\*" -Filter "*.db" | Select-Object -ExpandProperty Basename)
         if([string]::IsNullOrWhiteSpace($TD_DataBaseChoice)){
             $TD_TB_CustomerInfoName.Text = "Customer Nbr"
+            $TD_TB_CustomerInfoName.IsEnabled = $true
             $TD_BTN_ActivateDB.Visibility = "Visible"
         }else {
             $TD_CB_DataBaseChoice.ItemsSource = $null
@@ -403,13 +406,14 @@ $TD_CB_CustomerYN.Add_Checked({
         $TD_TB_CustomerInfoName.IsEnabled = $false
     }elseif (((Get-ChildItem "$PSRootPath\Resources\DBFolder\*" -Filter "*.db").count -lt 1)) {
         $TD_TB_CustomerInfoName.IsEnabled = $true
-    }elseif (((Get-ChildItem "$PSRootPath\Resources\DBFolder\*" -Filter "*.db").count -gt 1)) {
+    }
+    if (((Get-ChildItem "$PSRootPath\Resources\DBFolder\*" -Filter "*.db").count -ge 1)) {
         $TD_BTN_ActivateDB.Visibility = "Collapsed"
     }
 })
 $TD_CB_CustomerYN.Add_Unchecked({
     $TD_TB_CustomerInfoName.IsEnabled = $true
-    if($TD_BTN_ActivateDB.Visibility  -eq "Collapsed"){
+    if($TD_BTN_ActivateDB.Visibility -eq "Collapsed"){
         $TD_BTN_ActivateDB.Visibility = "Visible"
     }
 })
