@@ -415,6 +415,7 @@ $TD_CB_CustomerYN.Add_Unchecked({
     $TD_TB_CustomerInfoName.IsEnabled = $true
     if($TD_BTN_ActivateDB.Visibility -eq "Collapsed"){
         $TD_BTN_ActivateDB.Visibility = "Visible"
+        # To Update the Local DB place the func here ;)
     }
 })
 $TD_CB_DataBaseChoice.add_SelectionChanged({
