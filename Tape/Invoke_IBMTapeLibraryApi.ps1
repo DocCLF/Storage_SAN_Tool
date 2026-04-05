@@ -4,23 +4,13 @@ function Invoke_IBMTapeLibraryApi {
         $libinfo = Invoke_IBMTapeLibraryApi -Connection $connect -Method GET -Endpoint 'library/baseinfo'
     .OUTPUTS
         $libinfo.BaseInfo | Format-List *
-        SerialNumber        : 3555L3A7801ZM6
-            $mtm="3555L3A7801ZM6"
-            $sn = $mtm.Substring($mtm.Length -7) /  SN = 7801ZM6
-            $($mtm.TrimEnd($sn)).Insert(4,"-") /    MTM = 3555-L3A
+        SerialNumber        : 3#*#ZM6
         MacAdress_1         : 00:0e:11:18:59:0c
         MacAdress_2         : 00:0e:11:18:59:0d
-        Vendor              : IBM
-        ProductID           : 3573-TL
-        BaseFWRevision      : 1.6.0.0-A00
-        BaseFWBuildDate     : 2022-12-08
-        ExpansionFWRevision : 0.37
-        WWNodeName          : 5000E1118590C000
-        RoboticHWRevision   : 6
-        RoboticFWRevision   : 0.19
-        RoboticSerialNumber : 564MC3EC028304
+        Vendor              : IBMi
+        ......
         NoOfModules         : 1
-        LibraryType         : 40
+        LibraryType         : 60
     #>
     [CmdletBinding()]
     param(
@@ -43,7 +33,6 @@ function Invoke_IBMTapeLibraryApi {
         $Connection = Connect_IBMTapeLibrary -TD_Device_DeviceIP $Device.IPAddress -TD_Device_UserName $Device.UserName -TD_Device_PW $pw -SkipCertificateCheck
     }else {
         $Connection = $TapeTokenObj
-        $APIVersionEndpoint = $TapeTokenObj.WorkingEndpoint
     }
 
     if ([string]::IsNullOrWhiteSpace($APIVersionEndpoint)) {
@@ -56,9 +45,8 @@ function Invoke_IBMTapeLibraryApi {
         Accept        = 'application/json'
         Authorization = $Connection.Token
     }
-
+    
     foreach($APIEndPoint in $APIVersionEndpoint) {
-
         $uri = if ($APIEndPoint -match '^https?://') {
             $APIEndPoint
         } else {
@@ -69,9 +57,8 @@ function Invoke_IBMTapeLibraryApi {
             Uri         = $uri
             Method      = $Method
             Headers     = $headers
-            ErrorAction = 'Stop'
+            
         }
-
         if ($PSBoundParameters.ContainsKey('Body')) {
             $irmParams.ContentType = 'application/json'
             $irmParams.Body = if ($Body -is [string]) {
@@ -86,37 +73,36 @@ function Invoke_IBMTapeLibraryApi {
                 $irmParams.SkipCertificateCheck = $true
             }
 
+            
             try {
-                $result = Invoke-RestMethod @irmParams
-
-                $SaveTapeObj= [pscustomobject]@{
-                    BaseUrl              = $BaseUrl
-                    Token                = $Connection.Token
-                    SkipCertificateCheck = $Connection.SkipCertificateCheck
-                    WorkingEndpoint      = $APIEndPoint.TrimEnd($Endpoint)
-                    LoginTime            = $Connection.LoginTime
+                try {
+                    $result = Invoke-RestMethod @irmParams
+                    
                 }
-
-                SST_RESTDBControl -SST_InfoType "SaveTapeToken" -SST_NewDBObject $SaveTapeObj
-                return $result
-            }
-            catch {
-                Write-Verbose $_.Exception.Message
-
-                $statusCode = $null
-                if ($_.Exception.Response) {
-                    try { $statusCode = [int]$_.Exception.Response.StatusCode } catch {}
-                }
-
-                if ($statusCode -eq 401) {
-                    throw
-                }
-                if ($statusCode -ge 400 -and $statusCode -lt 500) {
+                catch {
+                    Write-Host $_.Exception.Message
                     continue
                 }
+                
+                if ($null -eq $TapeTokenObj) {
 
-                throw
+                    $SaveTapeObj= [pscustomobject]@{
+                        BaseUrl              = $BaseUrl
+                        Token                = $Connection.Token
+                        SkipCertificateCheck = $Connection.SkipCertificateCheck
+                        LoginTime            = $Connection.LoginTime
+                    }
+
+                    SST_RESTDBControl -SST_InfoType "SaveTapeToken" -SST_NewDBObject $SaveTapeObj
+                }
+
+                return $result
+             
             }
+            catch {
+                Write-Host $_.Exception.Message
+            }
+            Write-Host "after catch $result" -ForegroundColor Magenta
         }
         else {
             $irmParams.UseBasicParsing = $true
@@ -135,16 +121,15 @@ function Invoke_IBMTapeLibraryApi {
                 }
 
                 $result = Invoke-RestMethod @irmParams
-
-                $SaveTapeObj= [pscustomobject]@{
-                    BaseUrl              = $BaseUrl
-                    Token                = $Connection.Token
-                    SkipCertificateCheck = $Connection.SkipCertificateCheck
-                    WorkingEndpoint      = $uri
-                    LoginTime            = $Connection.LoginTime
+                if ($null -eq $TapeTokenObj) {
+                    $SaveTapeObj= [pscustomobject]@{
+                        BaseUrl              = $BaseUrl
+                        Token                = $Connection.Token
+                        SkipCertificateCheck = $Connection.SkipCertificateCheck
+                        LoginTime            = $Connection.LoginTime
+                    }
+                    SST_RESTDBControl -SST_InfoType "SaveTapeToken" -SST_NewDBObject $SaveTapeObj
                 }
-
-                SST_RESTDBControl -SST_InfoType "SaveTapeToken" -SST_NewDBObject $SaveTapeObj
 
                 return $result
             }
