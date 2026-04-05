@@ -24,7 +24,7 @@ function Connect_IBMTapeLibrary {
     )
 
     $BaseUrl  = "https://$TD_Device_DeviceIP"+":$TD_Device_Port"
- 
+
     $loginCandidates =
         if ($PreferredLoginApi -eq 'v1') {
             @('/v1/login', '/rest/login')
@@ -38,9 +38,10 @@ function Connect_IBMTapeLibrary {
         password = $TD_Device_PW
     } | ConvertTo-Json -Compress
     
+
     foreach ($loginEndpoint in $loginCandidates) {
-        $loginUri = "$baseUri$loginEndpoint"
-        
+        $loginUri = "$BaseUrl$loginEndpoint"
+
         $irmParams = @{
             Uri         = $loginUri
             Method      = 'POST'
@@ -52,7 +53,11 @@ function Connect_IBMTapeLibrary {
         if ($SkipCertificateCheck -and $PSVersionTable.PSVersion.Major -ge 6) {
 
             $irmParams.SkipCertificateCheck = $true
+            try{
             $response = Invoke-RestMethod @irmParams
+            }catch{
+             Write-Host $_.Exception.Message
+            }
 
         }else {
             # PowerShell 5.1 (HttpWebRequest): Using callback
@@ -78,8 +83,8 @@ function Connect_IBMTapeLibrary {
     if (-not $response) {
         Write-Error -Message "The login was successful, but no token was returned."
     }
-
-    # Some APIs return { token = ‘Bearer ...’ }, while others may return string content directly.
+    
+    # Some APIs return { token = â€˜Bearer ...â€™ }, while others may return string content directly.
     $token = $null
 
     if ($response -is [string]) {
