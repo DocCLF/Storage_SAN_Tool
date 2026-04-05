@@ -58,8 +58,8 @@ function SST_CustomerLibraryDBCreateTable {
             }
             <# library/inventory Slots #>
             try{
-                $SST_SQLiteTabelQuery ="CREATE TABLE IF NOT EXISTS LibraryInventorySlots (ID INTEGER PRIMARY KEY AUTOINCREMENT, CustomerNbr TEXT NOT NULL, LogicalNumber TEXT, Module INTEGER, LogicalLibrary INTEGER, Mailslot TEXT, Cartridge TEXT, Barcode TEXT,`
-                                        CartridgeType TEXT, CartridgeSubType TEXT, CartridgeGeneration TEXT, CartridgeEncrypted TEXT, Access TEXT, Blocked TEXT, SerialNumberMTM TEXT NOT NULL, TimeStamp TEXT );" 
+                $SST_SQLiteTabelQuery ="CREATE TABLE IF NOT EXISTS LibraryInventorySlots (ID INTEGER PRIMARY KEY AUTOINCREMENT, CustomerNbr TEXT NOT NULL, PhysicalNumber INTEGER, LogicalNumber TEXT, Module INTEGER, LogicalLibrary INTEGER, Mailslot TEXT, Cartridge TEXT, Barcode TEXT,`
+                                        CartridgeType TEXT, CartridgeSubType TEXT, CartridgeGeneration TEXT, CartridgeEncrypted TEXT, Access TEXT, Blocked TEXT, SerialNumberMTM TEXT NOT NULL, TimeStamp TEXT);" 
                 $SQLiteCommandCreate.CommandText = $SST_SQLiteTabelQuery
                 $SQLiteCommandCreate.ExecuteNonQuery()
             }catch{
@@ -68,8 +68,8 @@ function SST_CustomerLibraryDBCreateTable {
             }
             <# library/inventory Drives #>
             try{
-                $SST_SQLiteTabelQuery ="CREATE TABLE IF NOT EXISTS LibraryInventoryDrives (ID INTEGER PRIMARY KEY AUTOINCREMENT, CustomerNbr TEXT NOT NULL, PhysicalNumber INTEGER, Module INTEGER, LogicalLibrary INTEGER, Barcode TEXT, Vendor TEXT, Product TEXT, FWRevision TEXT,`
-                                        SerialNumber TEXT, SerialNumberMTM TEXT NOT NULL, TimeStamp TEXT );" 
+                $SST_SQLiteTabelQuery ="CREATE TABLE IF NOT EXISTS LibraryInventoryDrives (ID INTEGER PRIMARY KEY AUTOINCREMENT, CustomerNbr TEXT NOT NULL, PhysicalNumber INTEGER, LogicalNumber INTEGER, Module INTEGER, LogicalLibrary INTEGER, Barcode TEXT, Vendor TEXT, Product TEXT, FWRevision TEXT,`
+                                        SerialNumber TEXT, SerialNumberMTM TEXT NOT NULL, TimeStamp TEXT);" 
                 $SQLiteCommandCreate.CommandText = $SST_SQLiteTabelQuery
                 $SQLiteCommandCreate.ExecuteNonQuery()
             }catch{
@@ -77,10 +77,10 @@ function SST_CustomerLibraryDBCreateTable {
                 Write-Host $_.Exception.ToString()
             }
             <# Drive not the same as Drives #>
-            # Check a  combination of endpoints drive and drive/infomation
+            # A combination of endpoints drive and drive/infomation
             try{ 
-                $SST_SQLiteTabelQuery ="CREATE TABLE IF NOT EXISTS LibraryDrive (ID INTEGER PRIMARY KEY AUTOINCREMENT, CustomerNbr TEXT NOT NULL, Location TEXT, SerialNumber TEXT, MFGSerialNumber TEXT, MediaType TEXT, State TEXT, MTM TEXT, Interface TEXT,`
-                                        LogicalLibrary TEXT, USE TEXT, Firmware TEXT, Encryption TEXT, Mounts INTEGER, Barcode TEXT, WWNN TEXT, ElementAddress TEXT, SerialNumberMTM TEXT NOT NULL, TimeStamp TEXT );" 
+                $SST_SQLiteTabelQuery ="CREATE TABLE IF NOT EXISTS LibraryDrive (ID INTEGER PRIMARY KEY AUTOINCREMENT, CustomerNbr TEXT NOT NULL, Location TEXT, SerialNumber TEXT, MFGSerialNumber TEXT, MediaType TEXT, State TEXT, MTM TEXT, Interface TEXT, LogicalLibrary TEXT, LogicalLibraryID INTEGER, USE TEXT, Firmware TEXT,`
+                                        Encryption TEXT, Mounts INTEGER, Barcode TEXT, WWNN TEXT, ElementAddress TEXT, LogicalNumber INTEGER, PhysicalNumber INTEGER, Module TEXT, Generation TEXT, Cartridge TEXT, Vendor TEXT, ErrorState TEXT, Power TEXT, Presence TEXT, ADTMode TEXT, SerialNumberMTM TEXT NOT NULL, TimeStamp TEXT );" 
                 $SQLiteCommandCreate.CommandText = $SST_SQLiteTabelQuery
                 $SQLiteCommandCreate.ExecuteNonQuery()
             }catch{
@@ -89,7 +89,7 @@ function SST_CustomerLibraryDBCreateTable {
             }
             <# library/mediainfo #>
             try{
-                $SST_SQLiteTabelQuery ="CREATE TABLE IF NOT EXISTS LibraryMediainfo (ID INTEGER PRIMARY KEY AUTOINCREMENT, CustomerNbr TEXT NOT NULL, Barcode TEXT, LocationType TEXT, LogicalNumber INTEGER, PhysicalNumber INTEGER, Cleaning TEXT, LogicalLibrary INTEGER, Generation INTEGER,`
+                $SST_SQLiteTabelQuery ="CREATE TABLE IF NOT EXISTS LibraryMediaInfo (ID INTEGER PRIMARY KEY AUTOINCREMENT, CustomerNbr TEXT NOT NULL, Barcode TEXT, LocationType TEXT, LogicalNumber INTEGER, PhysicalNumber INTEGER, Cleaning TEXT, LogicalLibrary INTEGER, Generation INTEGER,`
                                         SubType INTEGER, Protection TEXT, Encryption TEXT, NoLoads INTEGER, MBRead INTEGER, MBReadLoad INTEGER, MBWritten INTEGER, MBWrittenLoad INTEGER, SerialNumberMTM TEXT NOT NULL, TimeStamp TEXT );"
                 $SQLiteCommandCreate.CommandText = $SST_SQLiteTabelQuery
                 $SQLiteCommandCreate.ExecuteNonQuery()
@@ -100,7 +100,7 @@ function SST_CustomerLibraryDBCreateTable {
             <# logicalLibrary/information #>
             try{ 
                 $SST_SQLiteTabelQuery ="CREATE TABLE IF NOT EXISTS LogicalLibraryInfo (ID INTEGER PRIMARY KEY AUTOINCREMENT, CustomerNbr TEXT NOT NULL, LogicalLibraryNumber INTEGER, Name TEXT, SerialNumber TEXT, NumSlots INTEGER, NumIOSlots INTEGER, NumDrives INTEGER, LunPrimaryDrive TEXT, LunPrimaryDrivePhys TEXT,`
-                                        LunPrimaryDriveArr TEXT, LunPrimaryDrivePhysArr TEXT, EncryptionMode TEXT, BarcodeAlign TEXT, BarcodeLength INTEGER, AutoClean TEXT, WWNode TEXT, Micw TEXT, SerialNumberMTM TEXT NOT NULL, TimeStamp TEXT );" 
+                                        LunPrimaryDriveArr TEXT, LunPrimaryDrivePhysArr TEXT, EncryptionMode TEXT, BarcodeAlign TEXT, BarcodeLength INTEGER, AutoClean TEXT, WWNode TEXT, Micw TEXT, SerialNumberMTM TEXT NOT NULL, TimeStamp TEXT);" 
                 $SQLiteCommandCreate.CommandText = $SST_SQLiteTabelQuery
                 $SQLiteCommandCreate.ExecuteNonQuery()
             }catch{
@@ -131,3 +131,4 @@ function SST_CustomerLibraryDBCreateTable {
         
     }
 }
+
