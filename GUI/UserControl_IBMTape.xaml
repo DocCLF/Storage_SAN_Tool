@@ -52,7 +52,13 @@
                 ToolTip="Get the last 100 in-memory commands of the audit log" /> 
                 <!--IBM_TapeDrives-->
                 <ToggleButton
-                x:Name="BTN_IBM_TapeDrives"
+                x:Name="BTN_IBM_TapeDrive"
+                Style="{DynamicResource MainBtnStyle}"
+                Content="Drives" 
+                ToolTip="Get Infos to Host, HostCluster and their Volumes" />
+                <!--IBM_TapeMediaInfo-->
+                <ToggleButton
+                x:Name="BTN_IBM_TapeMediaInfo"
                 Style="{DynamicResource MainBtnStyle}"
                 Content="Drives" 
                 ToolTip="Get Infos to Host, HostCluster and their Volumes" />
