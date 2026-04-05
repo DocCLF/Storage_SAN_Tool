@@ -1423,54 +1423,117 @@ $TD_BTN_PWR_LparSummary.add_click({
 #region IBM Tape
 $TD_BTN_IBM_TapeLibrary.add_click({
     <#Get all Device Cred and count them #>
-    $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_.DeviceTyp -eq "Tape"}
+    $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_.DeviceTyp -like "*Tape"}
     foreach($TD_Creds in $TD_Credentials){
-        $LibInfo = $null; $LibApiVersion = $null
-        $LibInfo = Invoke_IBMTapeLibraryApi -Device $TD_Creds -Endpoint 'library/baseinfo'
+        $LibBaseInfo = $null; $LibApiVersion = $null;$LibInfo=$null
+        try{
+        $LibBaseInfo = Invoke_IBMTapeLibraryApi -Device $TD_Creds -Endpoint 'library/baseinfo'
         $LibInfo = Invoke_IBMTapeLibraryApi -Device $TD_Creds -Endpoint 'library'
         $LibApiVersion = Invoke_IBMTapeLibraryApi -Device $TD_Creds -Endpoint 'apiversion'
+        }catch{
+        Write-Host $_.Exception.Message
+        }
+        try {
+            $MergeLibObj = Merge-PSCustomObject -InputObject @($($LibBaseInfo.BaseInfo), $LibInfo)
+            SST_CustomerDeviceDBInsertTable -SST_InfoType "LibraryBaseInfo" -SST_CollectedInformations $MergeLibObj
+        }
+        catch {
+            <#Do this if a terminating exception happens#>
+            Write-Host $_.Exception.Message
+        }
     }
 })
 $TD_BTN_IBM_TapeInventory.add_click({
     <#Get all Device Cred and count them #>
     $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_.DeviceTyp -eq "Tape"}
     foreach($TD_Creds in $TD_Credentials){
-        $LibInfo = $null; $LibInfoAdv=$null
-        $LibInfo = Invoke_IBMTapeLibraryApi -Device $TD_Creds -Endpoint 'library/inventory'
-        $LibInfoAdv = Invoke_IBMTapeLibraryApi -Device $TD_Creds -Endpoint 'library/mediainfo'
+        $LibInventory = $null
+        $LibInventory = Invoke_IBMTapeLibraryApi -Device $TD_Creds -Endpoint 'library/inventory'
+        try {
+            SST_CustomerDeviceDBInsertTable -SST_InfoType "LibraryInventorySlots" -SST_CollectedInformations $LibInventory.Slots
+            SST_CustomerDeviceDBInsertTable -SST_InfoType "LibraryInventoryDrives" -SST_CollectedInformations $LibInventory.Drives
+        }
+        catch {
+            <#Do this if a terminating exception happens#>
+            Write-Verbose $_.Exception.Message
+        }
     }
 })
-$TD_BTN_IBM_TapeDrives.add_click({
+$TD_BTN_IBM_TapeDrive.add_click({
     <#Get all Device Cred and count them #>
     $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_.DeviceTyp -eq "Tape"}
     foreach($TD_Creds in $TD_Credentials){
         $LibInfo = $null; $LibInfoAdv=$null
         $LibInfo = Invoke_IBMTapeLibraryApi -Device $TD_Creds -Endpoint 'drive'
         $LibInfoAdv = Invoke_IBMTapeLibraryApi -Device $TD_Creds -Endpoint 'drive/information'
+        try {
+            $MergeLibObj = Merge-PSCustomObject -InputObject @($LibInfoAdv, $LibInfo)
+            SST_CustomerDeviceDBInsertTable -SST_InfoType "LibraryDrive" -SST_CollectedInformations $MergeLibObj
+        }
+        catch {
+            <#Do this if a terminating exception happens#>
+            Write-Verbose $_.Exception.Message
+        }
     }
 })
 $TD_BTN_IBM_TapeLogicalLib.add_click({
     <#Get all Device Cred and count them #>
     $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_.DeviceTyp -eq "Tape"}
     foreach($TD_Creds in $TD_Credentials){
+        $LogicalLibraryInfo = $null
+        $LogicalLibraryInfo = Invoke_IBMTapeLibraryApi -Device $TD_Creds -Endpoint 'logicalLibrary/information'    
+        try {
+            SST_CustomerDeviceDBInsertTable -SST_InfoType "LogicalLibraryInfo" -SST_CollectedInformations $LogicalLibraryInfo
+        }
+        catch {
+            <#Do this if a terminating exception happens#>
+            Write-Verbose $_.Exception.Message
+        }
+    }
+})
+$TD_BTN_IBM_TapeMediaInfo.add_click({
+    <#Get all Device Cred and count them #>
+    $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_.DeviceTyp -eq "Tape"}
+    foreach($TD_Creds in $TD_Credentials){
         $LibInfo = $null
-        $LibInfo = Invoke_IBMTapeLibraryApi -Device $TD_Creds -Endpoint 'logicalLibrary/information'
+        $LibInfo = Invoke_IBMTapeLibraryApi -Device $TD_Creds -Endpoint 'library/mediainfo'    
+        try {
+            SST_CustomerDeviceDBInsertTable -SST_InfoType "LibraryMediaInfo" -SST_CollectedInformations $LibInfo
+        }
+        catch {
+            <#Do this if a terminating exception happens#>
+            Write-Verbose $_.Exception.Message
+        }
     }
 })
 $TD_BTN_IBM_TapeReports.add_click({
     <#Get all Device Cred and count them #>
     $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_.DeviceTyp -eq "Tape"}
     foreach($TD_Creds in $TD_Credentials){
-        $LibInfo = $null
-        $LibInfo = Invoke_IBMTapeLibraryApi -Device $TD_Creds -Endpoint 'reports/mountHistory'
+        $LibraryReports = $null
+        $LibraryReports = Invoke_IBMTapeLibraryApi -Device $TD_Creds -Endpoint 'reports/mountHistory'  
+        try {
+            SST_CustomerDeviceDBInsertTable -SST_InfoType "LibraryReports" -SST_CollectedInformations $LibraryReports
+        }
+        catch {
+            <#Do this if a terminating exception happens#>
+            Write-Verbose $_.Exception.Message
+        }
     }
 })
 $TD_BTN_IBM_TapeEvents.add_click({
     <#Get all Device Cred and count them #>
     $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_.DeviceTyp -eq "Tape"}
     foreach($TD_Creds in $TD_Credentials){
-        $LibInfo = $null
-        $LibInfo = Invoke_IBMTapeLibraryApi -Device $TD_Creds -Endpoint 'events'
+        $LibraryEvents = $null
+        $LibraryEvents = Invoke_IBMTapeLibraryApi -Device $TD_Creds -Endpoint 'events'    
+        try {
+            SST_CustomerDeviceDBInsertTable -SST_InfoType "LibraryEvents" -SST_CollectedInformations $LibraryEvents
+        }
+        catch {
+            <#Do this if a terminating exception happens#>
+            Write-Verbose $_.Exception.Message
+        }
     }
 })
 #endregion
