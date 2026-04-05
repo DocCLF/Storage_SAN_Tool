@@ -27,7 +27,7 @@ function SST_RESTDBControl {
         $SQLiteCommandCreate.CommandText = " CREATE TABLE IF NOT EXISTS STOApiTokens ( BaseUrl TEXT PRIMARY KEY, Token TEXT NOT NULL, ExpiresAt TEXT NOT NULL, TimeStamp TEXT);"
         $SQLiteCommandCreate.ExecuteNonQuery() | Out-Null
 
-        $SQLiteCommandCreate.CommandText = " CREATE TABLE IF NOT EXISTS TapeApiTokens ( BaseUrl TEXT PRIMARY KEY, Token TEXT NOT NULL, SkipCertificateCheck TEXT NOT NULL, WorkingEndpoint  TEXT, LoginTime TEXT, TimeStamp TEXT);"
+        $SQLiteCommandCreate.CommandText = " CREATE TABLE IF NOT EXISTS TapeApiTokens ( BaseUrl TEXT PRIMARY KEY, Token TEXT, SkipCertificateCheck TEXT, LoginTime TEXT, TimeStamp TEXT);"
         $SQLiteCommandCreate.ExecuteNonQuery() | Out-Null
 
         switch ($SST_InfoType) {
@@ -45,16 +45,15 @@ function SST_RESTDBControl {
             }
             "SaveTapeToken" {
                 $SQLiteCommand = $SQLiteDBConnection.CreateCommand()
-                $SQLiteCommand.CommandText = " INSERT INTO TapeApiTokens (BaseUrl, Token, SkipCertificateCheck, LoginTime, WorkingEndpoint , TimeStamp) VALUES (@BaseUrl, @Token, @SkipCertificateCheck, @WorkingEndpoint , @LoginTime, @TimeStamp) ON CONFLICT(BaseUrl) DO UPDATE SET Token = excluded.Token, SkipCertificateCheck = excluded.SkipCertificateCheck, APIVersionEndpoint = excluded.APIVersionEndpoint, LoginTime = excluded.LoginTime, TimeStamp = excluded.TimeStamp;"
-                $SQLiteCommand.Parameters.AddWithValue("@BaseUrl",   [string]$SST_NewDBObject.BaseUrl) | Out-Null
-                $SQLiteCommand.Parameters.AddWithValue("@Token",     [string]$SST_NewDBObject.Token)   | Out-Null
-                $SQLiteCommand.Parameters.AddWithValue("@SkipCertificateCheck", [string]$SST_NewDBObject.SkipCertificateCheck) | Out-Null
-                $SQLiteCommand.Parameters.AddWithValue("@WorkingEndpoint ", [string]$SST_NewDBObject.WorkingEndpoint ) | Out-Null
-                $SQLiteCommand.Parameters.AddWithValue("@LoginTime", $LoginTime)                       | Out-Null
+                $SQLiteCommand.CommandText = " INSERT INTO TapeApiTokens (BaseUrl, Token, SkipCertificateCheck, LoginTime, TimeStamp) VALUES (@BaseUrl, @Token, @SkipCertificateCheck, @LoginTime, @TimeStamp) ON CONFLICT(BaseUrl) DO UPDATE SET Token = excluded.Token, SkipCertificateCheck = excluded.SkipCertificateCheck, LoginTime = excluded.LoginTime, TimeStamp = excluded.TimeStamp;"
+                $SQLiteCommand.Parameters.AddWithValue("@BaseUrl",   $SST_NewDBObject.BaseUrl) | Out-Null
+                $SQLiteCommand.Parameters.AddWithValue("@Token",     $SST_NewDBObject.Token)   | Out-Null
+                $SQLiteCommand.Parameters.AddWithValue("@SkipCertificateCheck", $SST_NewDBObject.SkipCertificateCheck) | Out-Null
+                $SQLiteCommand.Parameters.AddWithValue("@LoginTime", $SST_NewDBObject.LoginTime)                       | Out-Null
                 $SQLiteCommand.Parameters.AddWithValue("@TimeStamp", $TimeStamp)                       | Out-Null
 
                 $SQLiteCommand.ExecuteNonQuery() | Out-Null
-                return "DataSaved"
+                #return "DataSaved"
             }
 
             "UseStorageToken" {
@@ -83,18 +82,17 @@ function SST_RESTDBControl {
 
             "UseTapeToken" {
                 $SQLiteCommand = $SQLiteDBConnection.CreateCommand()
-                $SQLiteCommand.CommandText = "SELECT Token, SkipCertificateCheck, WorkingEndpoint , LoginTime FROM TapeApiTokens WHERE BaseUrl = @BaseUrl LIMIT 1;"
+                $SQLiteCommand.CommandText = "SELECT Token, SkipCertificateCheck, LoginTime FROM TapeApiTokens WHERE BaseUrl = @BaseUrl LIMIT 1;"
                 $SQLiteCommand.Parameters.AddWithValue("@BaseUrl", $SST_BaseUrl) | Out-Null
 
                 $SQLiteReader = $SQLiteCommand.ExecuteReader()
                 if ($SQLiteReader.Read()) {
 
                     $TapeTokenObj = [pscustomobject]@{
-                        $Token = [string]$SQLiteReader["Token"]
-                        $SkipCertificateCheck   = [string]$SQLiteReader["SkipCertificateCheck"]
-                        $WorkingEndpoint        = [string]$SQLiteReader["WorkingEndpoint "]
+                        Token = [string]$SQLiteReader["Token"]
+                        SkipCertificateCheck   = [string]$SQLiteReader["SkipCertificateCheck"]
                     }
-                    $LoginTime   = [string]$SQLiteReader["LoginTime"]
+                    $LoginTime   = [datetime]$SQLiteReader["LoginTime"]
 
                     if (($LoginTime.AddHours(+1)) -lt (Get-Date)) {
                         return $TapeTokenObj
