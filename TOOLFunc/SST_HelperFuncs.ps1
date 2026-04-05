@@ -292,3 +292,21 @@ function Get-SqlParameterValue {
 
     return $Value
 }
+# merge 2 PSCustomObject to one PSCustomObject
+function Merge-PSCustomObject {
+    param(
+        [Parameter(Mandatory)]
+        [object[]]$InputObject
+    )
+
+    $result = [ordered]@{}
+
+    foreach ($obj in $InputObject) {
+        if ($null -eq $obj) { continue }
+        foreach ($prop in $obj.PSObject.Properties) {
+            $result[$prop.Name] = $prop.Value
+        }
+    }
+
+   [PSCustomObject]$result
+}
