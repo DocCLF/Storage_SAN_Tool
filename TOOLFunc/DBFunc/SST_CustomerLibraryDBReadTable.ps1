@@ -37,11 +37,11 @@ function SST_CustomerLibraryDBReadTable {
 
                     # Set parameters (important for preventing SQL injection!)
                     $SQLiteCommand.Parameters.Clear()
-                    $SQLiteCommandSelect.Parameters.AddWithValue("@CustomerNbr", $CustomerNbr) | Out-Null
-                    $SQLiteCommandSelect.Parameters.AddWithValue("@WWNN", $WWNN) | Out-Null
+                    $SQLiteCommand.Parameters.AddWithValue("@CustomerNbr", $Customer) | Out-Null
+                    $SQLiteCommand.Parameters.AddWithValue("@WWNN", $SST_NeededInformations) | Out-Null
 
                     #Run query
-                    $result = $SQLiteCommandSelect.ExecuteScalar()
+                    $result = $SQLiteCommand.ExecuteScalar()
                     return $result
                 }
                 Default {}
