@@ -1445,13 +1445,14 @@ $TD_BTN_IBM_TapeLibrary.add_click({
 })
 $TD_BTN_IBM_TapeInventory.add_click({
     <#Get all Device Cred and count them #>
-    $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_.DeviceTyp -eq "Tape"}
+    $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_.DeviceTyp -like "*Tape"}
     foreach($TD_Creds in $TD_Credentials){
         $LibInventory = $null
         $LibInventory = Invoke_IBMTapeLibraryApi -Device $TD_Creds -Endpoint 'library/inventory'
         try {
-            SST_CustomerDeviceDBInsertTable -SST_InfoType "LibraryInventorySlots" -SST_CollectedInformations $LibInventory.Slots
-            SST_CustomerDeviceDBInsertTable -SST_InfoType "LibraryInventoryDrives" -SST_CollectedInformations $LibInventory.Drives
+            $LibrarySerialNumberMTM = SST_CustomerLibraryDBReadTable -SST_InfoType "GetLibrarySerialNumberMTM" -SST_Customer $($TD_TB_CustomerInfoName.Text) -SST_NeededInformations $($TD_Creds.TapeWWNN)
+            SST_CustomerDeviceDBInsertTable -SST_InfoType "LibraryInventorySlots" -SST_CollectedInformations $($LibInventory.Slots) -SST_NeededInformations $LibrarySerialNumberMTM
+            SST_CustomerDeviceDBInsertTable -SST_InfoType "LibraryInventoryDrives" -SST_CollectedInformations $($LibInventory.Drives) -SST_NeededInformations $LibrarySerialNumberMTM
         }
         catch {
             <#Do this if a terminating exception happens#>
@@ -1461,14 +1462,15 @@ $TD_BTN_IBM_TapeInventory.add_click({
 })
 $TD_BTN_IBM_TapeDrive.add_click({
     <#Get all Device Cred and count them #>
-    $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_.DeviceTyp -eq "Tape"}
+    $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_.DeviceTyp -like "*Tape"}
     foreach($TD_Creds in $TD_Credentials){
         $LibInfo = $null; $LibInfoAdv=$null
         $LibInfo = Invoke_IBMTapeLibraryApi -Device $TD_Creds -Endpoint 'drive'
         $LibInfoAdv = Invoke_IBMTapeLibraryApi -Device $TD_Creds -Endpoint 'drive/information'
         try {
             $MergeLibObj = Merge-PSCustomObject -InputObject @($LibInfoAdv, $LibInfo)
-            SST_CustomerDeviceDBInsertTable -SST_InfoType "LibraryDrive" -SST_CollectedInformations $MergeLibObj
+            $LibrarySerialNumberMTM = SST_CustomerLibraryDBReadTable -SST_InfoType "GetLibrarySerialNumberMTM" -SST_Customer $($TD_TB_CustomerInfoName.Text) -SST_NeededInformations $($TD_Creds.TapeWWNN)
+            SST_CustomerDeviceDBInsertTable -SST_InfoType "LibraryDrive" -SST_CollectedInformations $MergeLibObj -SST_NeededInformations $LibrarySerialNumberMTM
         }
         catch {
             <#Do this if a terminating exception happens#>
@@ -1478,12 +1480,13 @@ $TD_BTN_IBM_TapeDrive.add_click({
 })
 $TD_BTN_IBM_TapeLogicalLib.add_click({
     <#Get all Device Cred and count them #>
-    $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_.DeviceTyp -eq "Tape"}
+    $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_.DeviceTyp -like "*Tape"}
     foreach($TD_Creds in $TD_Credentials){
         $LogicalLibraryInfo = $null
         $LogicalLibraryInfo = Invoke_IBMTapeLibraryApi -Device $TD_Creds -Endpoint 'logicalLibrary/information'    
         try {
-            SST_CustomerDeviceDBInsertTable -SST_InfoType "LogicalLibraryInfo" -SST_CollectedInformations $LogicalLibraryInfo
+            $LibrarySerialNumberMTM = SST_CustomerLibraryDBReadTable -SST_InfoType "GetLibrarySerialNumberMTM" -SST_Customer $($TD_TB_CustomerInfoName.Text) -SST_NeededInformations $($TD_Creds.TapeWWNN)
+            SST_CustomerDeviceDBInsertTable -SST_InfoType "LogicalLibraryInfo" -SST_CollectedInformations $LogicalLibraryInfo -SST_NeededInformations $LibrarySerialNumberMTM
         }
         catch {
             <#Do this if a terminating exception happens#>
@@ -1493,12 +1496,13 @@ $TD_BTN_IBM_TapeLogicalLib.add_click({
 })
 $TD_BTN_IBM_TapeMediaInfo.add_click({
     <#Get all Device Cred and count them #>
-    $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_.DeviceTyp -eq "Tape"}
+    $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_.DeviceTyp -like "*Tape"}
     foreach($TD_Creds in $TD_Credentials){
         $LibInfo = $null
         $LibInfo = Invoke_IBMTapeLibraryApi -Device $TD_Creds -Endpoint 'library/mediainfo'    
         try {
-            SST_CustomerDeviceDBInsertTable -SST_InfoType "LibraryMediaInfo" -SST_CollectedInformations $LibInfo
+            $LibrarySerialNumberMTM = SST_CustomerLibraryDBReadTable -SST_InfoType "GetLibrarySerialNumberMTM" -SST_Customer $($TD_TB_CustomerInfoName.Text) -SST_NeededInformations $($TD_Creds.TapeWWNN)
+            SST_CustomerDeviceDBInsertTable -SST_InfoType "LibraryMediaInfo" -SST_CollectedInformations $LibInfo -SST_NeededInformations $LibrarySerialNumberMTM
         }
         catch {
             <#Do this if a terminating exception happens#>
@@ -1508,12 +1512,13 @@ $TD_BTN_IBM_TapeMediaInfo.add_click({
 })
 $TD_BTN_IBM_TapeReports.add_click({
     <#Get all Device Cred and count them #>
-    $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_.DeviceTyp -eq "Tape"}
+    $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_.DeviceTyp -like "*Tape"}
     foreach($TD_Creds in $TD_Credentials){
         $LibraryReports = $null
         $LibraryReports = Invoke_IBMTapeLibraryApi -Device $TD_Creds -Endpoint 'reports/mountHistory'  
         try {
-            SST_CustomerDeviceDBInsertTable -SST_InfoType "LibraryReports" -SST_CollectedInformations $LibraryReports
+            $LibrarySerialNumberMTM = SST_CustomerLibraryDBReadTable -SST_InfoType "GetLibrarySerialNumberMTM" -SST_Customer $($TD_TB_CustomerInfoName.Text) -SST_NeededInformations $($TD_Creds.TapeWWNN)
+            SST_CustomerDeviceDBInsertTable -SST_InfoType "LibraryReports" -SST_CollectedInformations $LibraryReports -SST_NeededInformations $LibrarySerialNumberMTM
         }
         catch {
             <#Do this if a terminating exception happens#>
@@ -1523,12 +1528,13 @@ $TD_BTN_IBM_TapeReports.add_click({
 })
 $TD_BTN_IBM_TapeEvents.add_click({
     <#Get all Device Cred and count them #>
-    $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_.DeviceTyp -eq "Tape"}
+    $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_.DeviceTyp -like "*Tape"}
     foreach($TD_Creds in $TD_Credentials){
         $LibraryEvents = $null
         $LibraryEvents = Invoke_IBMTapeLibraryApi -Device $TD_Creds -Endpoint 'events'    
         try {
-            SST_CustomerDeviceDBInsertTable -SST_InfoType "LibraryEvents" -SST_CollectedInformations $LibraryEvents
+            $LibrarySerialNumberMTM = SST_CustomerLibraryDBReadTable -SST_InfoType "GetLibrarySerialNumberMTM" -SST_Customer $($TD_TB_CustomerInfoName.Text) -SST_NeededInformations $($TD_Creds.TapeWWNN)
+            SST_CustomerDeviceDBInsertTable -SST_InfoType "LibraryEvents" -SST_CollectedInformations $LibraryEvents -SST_NeededInformations $LibrarySerialNumberMTM
         }
         catch {
             <#Do this if a terminating exception happens#>
