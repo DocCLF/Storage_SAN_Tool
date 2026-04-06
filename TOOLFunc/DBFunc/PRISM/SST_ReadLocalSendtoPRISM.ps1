@@ -2,7 +2,7 @@ function SST_ReadLocalSendtoPRISM {
     [CmdletBinding()]
     param (
         [Parameter(ValueFromPipeline)]
-        [ValidateSet("StorageDrive","StorageBase","StorageEventLog","SANBase","PowerHMC","PowerSysSummary","LPARSummary")]
+        [ValidateSet("StorageDrive","StorageBase","StorageEventLog","SANBase","PowerHMC","PowerSysSummary","LPARSummary","LibraryBaseInfo")]
         [string]$SST_InfoType,
         $SST_Customer,
         [int]$Top = 1,
@@ -52,6 +52,9 @@ function SST_ReadLocalSendtoPRISM {
 
                 "LPARSummary" {
                     $SQLiteCommand.CommandText = "SELECT * FROM LPARSummary WHERE CustomerNbr = @CustomerNbr ORDER BY TimeStamp DESC"
+                }
+                "LibraryBaseInfo" { 
+                    $SQLiteCommand.CommandText = "SELECT * FROM LibraryBaseInfo WHERE CustomerNbr = @CustomerNbr ORDER BY TimeStamp DESC;"
                 }
             }
 
