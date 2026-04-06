@@ -87,15 +87,24 @@ function SST_RESTDBControl {
 
                 $SQLiteReader = $SQLiteCommand.ExecuteReader()
                 if ($SQLiteReader.Read()) {
-
-                    $TapeTokenObj = [pscustomobject]@{
-                        Token = [string]$SQLiteReader["Token"]
-                        SkipCertificateCheck   = [string]$SQLiteReader["SkipCertificateCheck"]
-                    }
-                    $LoginTime   = [datetime]$SQLiteReader["LoginTime"]
-
-                    if (($LoginTime.AddHours(+1)) -lt (Get-Date)) {
+                
+                    $LoginTime = [datetime]$SQLiteReader["LoginTime"]
+                
+                    if ($LoginTime.AddHours(1) -gt (Get-Date)) {
+                        # Token ist gültig
+                        $TapeTokenObj = [PSCustomObject]@{
+                            Token                = [string]$SQLiteReader["Token"]
+                            SkipCertificateCheck = [string]$SQLiteReader["SkipCertificateCheck"]
+                        }
                         return $TapeTokenObj
+                    }
+                    else {
+                        $SQLiteReader.Close()
+                    
+                        $DeleteCmd = $SQLiteDBConnection.CreateCommand()
+                        $DeleteCmd.CommandText = "DELETE FROM TapeApiTokens WHERE BaseUrl = @BaseUrl;"
+                        $DeleteCmd.Parameters.AddWithValue("@BaseUrl", [string]$SST_BaseUrl) | Out-Null
+                        $DeleteCmd.ExecuteNonQuery() | Out-Null
                     }
                 }
                 return $null
