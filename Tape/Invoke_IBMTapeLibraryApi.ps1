@@ -31,6 +31,7 @@ function Invoke_IBMTapeLibraryApi {
     if($null -eq $TapeTokenObj){
         $pw = [Net.NetworkCredential]::new('', $Device.Password).Password
         $Connection = Connect_IBMTapeLibrary -TD_Device_DeviceIP $Device.IPAddress -TD_Device_UserName $Device.UserName -TD_Device_PW $pw -SkipCertificateCheck
+        $pw = $null
     }else {
         $Connection = $TapeTokenObj
     }
@@ -73,7 +74,6 @@ function Invoke_IBMTapeLibraryApi {
                 $irmParams.SkipCertificateCheck = $true
             }
 
-            
             try {
                 try {
                     $result = Invoke-RestMethod @irmParams
@@ -120,14 +120,23 @@ function Invoke_IBMTapeLibraryApi {
                     [System.Net.ServicePointManager]::ServerCertificateValidationCallback = { $true }
                 }
 
-                $result = Invoke-RestMethod @irmParams
+                try {
+                    $result = Invoke-RestMethod @irmParams
+                    
+                }
+                catch {
+                    Write-Host $_.Exception.Message
+                    continue
+                }
                 if ($null -eq $TapeTokenObj) {
+
                     $SaveTapeObj= [pscustomobject]@{
                         BaseUrl              = $BaseUrl
                         Token                = $Connection.Token
                         SkipCertificateCheck = $Connection.SkipCertificateCheck
                         LoginTime            = $Connection.LoginTime
                     }
+
                     SST_RESTDBControl -SST_InfoType "SaveTapeToken" -SST_NewDBObject $SaveTapeObj
                 }
 
@@ -135,18 +144,6 @@ function Invoke_IBMTapeLibraryApi {
             }
             catch {
                 Write-Verbose $_.Exception.Message
-
-                $statusCode = $null
-                if ($_.Exception.Response) {
-                    try { $statusCode = [int]$_.Exception.Response.StatusCode } catch {}
-                }
-
-                if ($statusCode -eq 401) {
-                    throw
-                }
-                if ($statusCode -ge 400 -and $statusCode -lt 500) {
-                    continue
-                }
             }
             finally {
                 [System.Net.ServicePointManager]::SecurityProtocol = $oldProtocol
