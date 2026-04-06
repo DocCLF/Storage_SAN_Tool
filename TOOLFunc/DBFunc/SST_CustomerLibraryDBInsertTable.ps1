@@ -4,7 +4,7 @@ function SST_CustomerDeviceDBInsertTable {
         [Parameter(ValueFromPipeline)]
         [ValidateSet("LibraryBaseInfo","LibraryEvents","LibraryReports","LogicalLibraryInfo","LibraryInventorySlots","LibraryInventoryDrives","LibraryDrive","LibraryMediaInfo")]
         [string]$SST_InfoType,
-        $SST_NewDBObject =$null,
+        $SST_NeededInformations,
         $SST_CollectedInformations,
         $SST_Customer,
         [string]$TimeStamp
@@ -70,7 +70,7 @@ function SST_CustomerDeviceDBInsertTable {
                         $SQLiteCommand.Parameters.AddWithValue("@NoOfModules", $SST_CollectedInformation.NoOfModules) | Out-Null
                         $SQLiteCommand.Parameters.AddWithValue("@LibraryType", $SST_CollectedInformation.LibraryType) | Out-Null
                         $SQLiteCommand.Parameters.AddWithValue("@SecureCommunications", $SST_CollectedInformation.secureCommunications) | Out-Null
-                        $SQLiteCommand.Parameters.AddWithValue("@SerialNumberMTM", $SST_CollectedInformation.SerialNumber) | Out-Null # benÃ¶tigt einen anderen/eindeutigeren $SST_CollectedInformation.SerialNumber
+                        $SQLiteCommand.Parameters.AddWithValue("@SerialNumberMTM", $SST_CollectedInformation.SerialNumber) | Out-Null
                         $SQLiteCommand.Parameters.AddWithValue("@TimeStamp", $TimeStamp) | Out-Null
                         # DB save 
                         $SQLiteCommand.ExecuteNonQuery() | Out-Null
@@ -113,7 +113,7 @@ function SST_CustomerDeviceDBInsertTable {
                         $SQLiteCommand.Parameters.AddWithValue("@Description", $SST_CollectedInformation.description) | Out-Null
                         $SQLiteCommand.Parameters.AddWithValue("@ErrorCode", $SST_CollectedInformation.errorCode) | Out-Null
                         $SQLiteCommand.Parameters.AddWithValue("@EventTime", $SST_CollectedInformation.time) | Out-Null
-                        $SQLiteCommand.Parameters.AddWithValue("@SerialNumberMTM", $SST_CollectedInformation.SerialNumber) | Out-Null # benÃ¶tigt einen anderen/eindeutigeren $SST_CollectedInformation.SerialNumber
+                        $SQLiteCommand.Parameters.AddWithValue("@SerialNumberMTM", $SST_NeededInformations) | Out-Null 
                         $SQLiteCommand.Parameters.AddWithValue("@TimeStamp", $TimeStamp) | Out-Null
                     
                         # DB save
@@ -161,7 +161,7 @@ function SST_CustomerDeviceDBInsertTable {
                         $SQLiteCommand.Parameters.AddWithValue("@ErrorsUncorrectedWrites", $SST_CollectedInformation.SiteName) | Out-Null
                         $SQLiteCommand.Parameters.AddWithValue("@ErrorsCorrectedReads", $SST_CollectedInformation.STOName) | Out-Null
                         $SQLiteCommand.Parameters.AddWithValue("@ErrorsUncorrectedReads", $SST_CollectedInformation.WWNN) | Out-Null
-                        $SQLiteCommand.Parameters.AddWithValue("@SerialNumberMTM", $SST_CollectedInformation.SerialNumber) | Out-Null # benÃ¶tigt einen anderen/eindeutigeren $SST_CollectedInformation.SerialNumber
+                        $SQLiteCommand.Parameters.AddWithValue("@SerialNumberMTM", $SST_NeededInformations) | Out-Null 
                         $SQLiteCommand.Parameters.AddWithValue("@TimeStamp", $TimeStamp) | Out-Null
                     
                         # DB save 
@@ -171,7 +171,10 @@ function SST_CustomerDeviceDBInsertTable {
                         $SQLiteCommand.CommandText = "DELETE FROM LibraryReports WHERE ID NOT IN ( SELECT ID FROM LibraryReports ORDER BY TimeStamp DESC LIMIT 128 );"
                         $SQLiteCommand.ExecuteNonQuery()
                     }
-                }
+                } catch {
+                    Write-Host "SQL Fehler: $($_.Exception.Message)"
+                    Write-Host $_.Exception.ToString()
+                } 
                 finally {
                         <#Do this after the try block regardless of whether an exception occurred or not#>
                         if ($SQLiteCommand) { $SQLiteCommand.Dispose() }
@@ -212,7 +215,7 @@ function SST_CustomerDeviceDBInsertTable {
                         $SQLiteCommand.Parameters.AddWithValue("@AutoClean", $SST_CollectedInformation.AutoClean) | Out-Null
                         $SQLiteCommand.Parameters.AddWithValue("@WWNode", $SST_CollectedInformation.WWNode) | Out-Null
                         $SQLiteCommand.Parameters.AddWithValue("@Micw", $SST_CollectedInformation.Micw) | Out-Null
-                        $SQLiteCommand.Parameters.AddWithValue("@SerialNumberMTM", $SST_CollectedInformation.SerialNumber) | Out-Null # benÃ¶tigt einen anderen/eindeutigeren $SST_CollectedInformation.SerialNumber
+                        $SQLiteCommand.Parameters.AddWithValue("@SerialNumberMTM", $SST_NeededInformations) | Out-Null 
                         $SQLiteCommand.Parameters.AddWithValue("@TimeStamp", $TimeStamp) | Out-Null 
                     
                         # DB save
@@ -222,7 +225,10 @@ function SST_CustomerDeviceDBInsertTable {
                         $SQLiteCommand.CommandText = "DELETE FROM LogicalLibraryInfo WHERE ID NOT IN ( SELECT ID FROM LogicalLibraryInfo ORDER BY TimeStamp DESC LIMIT 256 );"
                         $SQLiteCommand.ExecuteNonQuery()
                     }
-                }
+                } catch {
+                    Write-Host "SQL Fehler: $($_.Exception.Message)"
+                    Write-Host $_.Exception.ToString()
+                } 
                 finally {
                     <#Do this after the try block regardless of whether an exception occurred or not#>
                     if ($SQLiteCommand) { $SQLiteCommand.Dispose() }
@@ -256,7 +262,7 @@ function SST_CustomerDeviceDBInsertTable {
                         $SQLiteCommand.Parameters.AddWithValue("@CartridgeEncrypted", $SST_CollectedInformation.CartridgeEncrypted) | Out-Null
                         $SQLiteCommand.Parameters.AddWithValue("@Access", $SST_CollectedInformation.Access) | Out-Null
                         $SQLiteCommand.Parameters.AddWithValue("@Blocked", $SST_CollectedInformation.Blocked) | Out-Null
-                        $SQLiteCommand.Parameters.AddWithValue("@SerialNumberMTM", $SST_CollectedInformation.SFPTemp) | Out-Null # benÃ¶tigt einen anderen/eindeutigeren $SST_CollectedInformation.SerialNumber
+                        $SQLiteCommand.Parameters.AddWithValue("@SerialNumberMTM", $SST_NeededInformations) | Out-Null
                         $SQLiteCommand.Parameters.AddWithValue("@TimeStamp", $TimeStamp) | Out-Null
 
                         # DB save
@@ -301,7 +307,7 @@ function SST_CustomerDeviceDBInsertTable {
                         $SQLiteCommand.Parameters.AddWithValue("@Product", $SST_CollectedInformation.Product) | Out-Null
                         $SQLiteCommand.Parameters.AddWithValue("@FWRevision", $SST_CollectedInformation.FWRevision) | Out-Null
                         $SQLiteCommand.Parameters.AddWithValue("@SerialNumber", $SST_CollectedInformation.SerialNumber) | Out-Null
-                        $SQLiteCommand.Parameters.AddWithValue("@SerialNumberMTM", $SST_CollectedInformation.SerialNumberMTM) | Out-Null # benÃ¶tigt einen anderen/eindeutigeren $SST_CollectedInformation.SerialNumber
+                        $SQLiteCommand.Parameters.AddWithValue("@SerialNumberMTM", $SST_NeededInformations) | Out-Null 
                         $SQLiteCommand.Parameters.AddWithValue("@TimeStamp", $TimeStamp) | Out-Null
                     
                         # DB save 
@@ -365,7 +371,7 @@ function SST_CustomerDeviceDBInsertTable {
                         $SQLiteCommand.Parameters.AddWithValue("@Power", $SST_CollectedInformation.Power) | Out-Null
                         $SQLiteCommand.Parameters.AddWithValue("@Presence", $SST_CollectedInformation.Presence) | Out-Null
                         $SQLiteCommand.Parameters.AddWithValue("@ADTMode", $SST_CollectedInformation.ADTMode) | Out-Null
-                        $SQLiteCommand.Parameters.AddWithValue("@SerialNumberMTM", $SST_CollectedInformation.SerialNumberMTM) | Out-Null
+                        $SQLiteCommand.Parameters.AddWithValue("@SerialNumberMTM", $SST_NeededInformations) | Out-Null
                         $SQLiteCommand.Parameters.AddWithValue("@TimeStamp", $TimeStamp) | Out-Null
                     
                         # DB save 
@@ -418,7 +424,7 @@ function SST_CustomerDeviceDBInsertTable {
                         $SQLiteCommand.Parameters.AddWithValue("@MBReadLoad", $SST_CollectedInformation.MBReadLoad) | Out-Null
                         $SQLiteCommand.Parameters.AddWithValue("@MBWritten", $SST_CollectedInformation.MBWritten) | Out-Null
                         $SQLiteCommand.Parameters.AddWithValue("@MBWrittenLoad", $SST_CollectedInformation.MBWrittenLoad) | Out-Null
-                        $SQLiteCommand.Parameters.AddWithValue("@SerialNumberMTM", $SST_CollectedInformation.SerialNumberMTM) | Out-Null
+                        $SQLiteCommand.Parameters.AddWithValue("@SerialNumberMTM", $SST_NeededInformations) | Out-Null
                         $SQLiteCommand.Parameters.AddWithValue("@TimeStamp", $TimeStamp) | Out-Null
                     
                         # DB save 
