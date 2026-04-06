@@ -100,7 +100,7 @@ function SST_CustomerDeviceDBInsertTable {
                     $SQLiteDBConnection.Open()
                     $SQLiteCommand = $SQLiteDBConnection.CreateCommand()
 
-                    foreach ($SST_CollectedInformation in $SST_CollectedInformations[0]){ 
+                    foreach ($SST_CollectedInformation in $SST_CollectedInformations){ 
                         $SQLiteCommand.Parameters.Clear()
 
                         $SQLiteCommand.CommandText ="INSERT INTO LibraryEvents (CustomerNbr, LibID, Severity, Type, Location, Description, ErrorCode, EventTime, SerialNumberMTM, TimeStamp)`
