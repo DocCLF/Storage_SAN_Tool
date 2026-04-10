@@ -115,7 +115,7 @@
                                     <DataGridTextColumn Header="Device Name" Width="Auto"  Binding="{Binding DeviceName}" />
                                     <DataGridTextColumn Header="Login User" Width="Auto"  Binding="{Binding UserName}" />
                                     <DataGridTextColumn Header="Login PW" Binding="{Binding Password}" Visibility="{Binding ElementName=Password, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}"/>
-                                    <DataGridTextColumn Header="TapeWWNN" Binding="{Binding TPWWNN}" Visibility="{Binding ElementName=TPWWNN, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}"/>
+                                    <DataGridTextColumn Header="Tape WWNN" Binding="{Binding TapeWWNN}" Visibility="{Binding ElementName=TapeWWNN, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}"/>
                                     <DataGridTextColumn Header="MTM-Code" Width="Auto"  Binding="{Binding MTMCode}" />
                                     <DataGridTextColumn Header="Product" Width="Auto"  Binding="{Binding ProductDescr}" />
                                     <DataGridTextColumn Header="Firmware" Width="Auto"  Binding="{Binding CurrentFirmware}" />
