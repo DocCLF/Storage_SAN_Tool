@@ -28,7 +28,7 @@ function SST_GetCredfGUI {
                     break
                 }
             }
-            "PowerHMC" { 
+            {$_ -like "*PowerHMC*"} { 
                 $TD_BasicDeviceInfo = SST_DeviceConnecCheck -TD_Selected_Items "no"
                 if([string]::IsNullOrEmpty($TD_BasicDeviceInfo)){
                     $TD_ErrorCode = 1
@@ -78,6 +78,7 @@ function SST_GetCredfGUI {
                 $TD_ExistingCred.UserName         =   $TD_TB_DeviceUserName.Text;
                 <# The PwLine needs a better Option #>
                 $TD_ExistingCred.Password         =   ConvertTo-SecureString -string ([string]$TD_TB_DevicePassword.Password) -AsPlainText -Force;
+                $TD_ExistingCred.TapeWWNN         =   $TD_BasicDeviceInfo.TapeWWNN
                 if($TD_CB_SVCorVF.IsChecked -and ($TD_CB_DeviceType.Text -like "*Storage")){$TD_ExistingCred.SVCorVF = "SVC"}else{if($TD_CB_DeviceType.Text -like "*Storage"){$TD_ExistingCred.SVCorVF = "FSystem"}};
                 if($TD_CB_SVCorVF.IsChecked -and ($TD_CB_DeviceType.Text -like "*SAN")){$TD_ExistingCred.SVCorVF = "VF"}else{if($TD_CB_DeviceType.Text -like "*SAN"){$TD_ExistingCred.SVCorVF = ""}};
                 $TD_ExistingCred.MTMCode          =   $TD_BasicDeviceInfo.Prod_MTM;
@@ -130,10 +131,17 @@ function SST_GetCredfGUI {
             }
         }
         if($TD_AddaNewDevice -eq "yes"){
-            if($TD_CB_DeviceType.Text -eq "PowerHMC"){   
+            if($TD_CB_DeviceType.Text -like "*PowerHMC*"){   
                 [int]$TD_CredentialsCount= (($TD_Credentials |Where-Object {$_.DeviceTyp -eq "PowerHMC"}).count + 1)
                 if($TD_Credentials |Where-Object {($_.DeviceTyp -eq "PowerHMC") -and ($_.ID -eq $TD_CredentialsCount)}){$TD_CredentialsCount = $TD_CredentialsCount +1}
-                SST_ToolMessageCollector -TD_ToolMSGCollector "SAN ID is $TD_CredentialsCount" -TD_ToolMSGType Debug -TD_Shown yes
+                SST_ToolMessageCollector -TD_ToolMSGCollector "PowerHMC ID is $TD_CredentialsCount" -TD_ToolMSGType Debug -TD_Shown yes
+            }
+        }
+        if($TD_AddaNewDevice -eq "yes"){
+            if($TD_CB_DeviceType.Text -like "*Tape"){   
+                [int]$TD_CredentialsCount= (($TD_Credentials |Where-Object {$_.DeviceTyp -like "*Tape"}).count + 1)
+                if($TD_Credentials |Where-Object {($_.DeviceTyp -like "*Tape") -and ($_.ID -eq $TD_CredentialsCount)}){$TD_CredentialsCount = $TD_CredentialsCount +1}
+                SST_ToolMessageCollector -TD_ToolMSGCollector "Tape ID is $TD_CredentialsCount" -TD_ToolMSGType Debug -TD_Shown yes
             }
         }
         <# needs more tests to be able to use it safely thats why plink is plink and not plink and ssh #>
@@ -148,7 +156,7 @@ function SST_GetCredfGUI {
         $TD_UserInputCred.UserName         =   $TD_TB_DeviceUserName.Text;
         <# The PwLine needs a better Option #>
         $TD_UserInputCred.Password         =   ConvertTo-SecureString -String ([string]$TD_TB_DevicePassword.Password) -AsPlainText -Force;
-        $TD_UserInputCred.SSHKeyPath       =   $TD_TB_PathtoSSHKeyNotVisibil.Text;
+        $TD_UserInputCred.TapeWWNN         =   $TD_BasicDeviceInfo.TapeWWNN;
         if($TD_CB_SVCorVF.IsChecked -and ($TD_CB_DeviceType.Text -like "*Storage")){$TD_UserInputCred.SVCorVF = "SVC"}else{if($TD_CB_DeviceType.Text -like "*Storage"){$TD_UserInputCred.SVCorVF = "FSystem"}};
         if($TD_CB_SVCorVF.IsChecked -and ($TD_CB_DeviceType.Text -like "*SAN")){$TD_UserInputCred.SVCorVF = "VF"}else{if($TD_CB_DeviceType.Text -like "*SAN"){$TD_UserInputCred.SVCorVF = ""}};
         $TD_UserInputCred.MTMCode          =   $TD_BasicDeviceInfo.Prod_MTM;
