@@ -50,7 +50,7 @@ function SST_CustomerDeviceDBInsertTable {
                         $SN = $CombiSNMTM.Substring($CombiSNMTM.Length -7)
 
                         $SQLiteCommand.Parameters.AddWithValue("@CustomerNbr", $Customer) | Out-Null
-                        $SQLiteCommand.Parameters.AddWithValue("@Name", $SST_CollectedInformation.ID) | Out-Null
+                        $SQLiteCommand.Parameters.AddWithValue("@Name", $SST_CollectedInformation.name) | Out-Null
                         $SQLiteCommand.Parameters.AddWithValue("@Status", $SST_CollectedInformation.status) | Out-Null
                         $SQLiteCommand.Parameters.AddWithValue("@Vendor", $SST_CollectedInformation.Vendor) | Out-Null
                         $SQLiteCommand.Parameters.AddWithValue("@ProductID", $SST_CollectedInformation.ProductID) | Out-Null
