@@ -318,7 +318,18 @@ $TD_BTN_ImportCred.add_click({
         if($TD_CB_OnlineCheckbyImport.IsChecked){
             Write-Host ($TD_CB_OnlineCheckbyImport.IsChecked) $CockpitView
             $TD_ImportedCredentials | ForEach-Object {
-                SST_DeviceConnecCheck -TD_Selected_Items "yes" -TD_Selected_DeviceType $_.DeviceTyp -TD_Selected_DeviceConnectionType $_.ConnectionTyp -TD_Selected_DeviceIPAddr $_.IPAddress -TD_Selected_DeviceUserName $_.UserName -TD_Selected_DevicePassword $_.Password -TD_Selected_SVCorVF $_.SVCorVF
+                if($_.DeviceTyp -like "*Tape"){
+                    $TD_Creds =@{
+                        IPAddress = $_.IPAddress
+                        UserName = $_.UserName
+                        Password = $_.Password
+                        Endpoint = 'library/baseinfo'
+                    }
+                    SST_DeviceConnecCheck -TD_TapeCred $TD_Creds 
+                }else {
+                    <# Action when all if and elseif conditions are false #>
+                    SST_DeviceConnecCheck -TD_Selected_Items "yes" -TD_Selected_DeviceType $_.DeviceTyp -TD_Selected_DeviceConnectionType $_.ConnectionTyp -TD_Selected_DeviceIPAddr $_.IPAddress -TD_Selected_DeviceUserName $_.UserName -TD_Selected_DevicePassword $_.Password -TD_Selected_SVCorVF $_.SVCorVF
+                }
                 Start-Sleep -Seconds 0.5
             }
         }
