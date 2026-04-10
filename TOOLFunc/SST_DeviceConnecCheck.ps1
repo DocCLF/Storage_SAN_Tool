@@ -9,6 +9,7 @@ function SST_DeviceConnecCheck {
         $TD_Selected_DevicePassword,
         $TD_Selected_DeviceSSHFile,
         $TD_Selected_SVCorVF,
+        $TD_TapeCred = $null,
         $CockpitView
     )
     
@@ -131,11 +132,32 @@ function SST_DeviceConnecCheck {
                 SST_ToolMessageCollector -TD_ToolMSGCollector "It's a HMC, is okay" -TD_ToolMSGType Message
             }
             {$_ -like "*Tape"} {
-                $TD_BInfo = "" | Select-Object DeviceName,ProductDes
-                $TD_BInfo.DeviceName = "Tape"
-                $TD_BInfo.ProductDes = "TSxx00"
-                $TD_BasicDeviceInfo += $TD_BInfo
-                SST_ToolMessageCollector -TD_ToolMSGCollector "It's a HMC, is okay" -TD_ToolMSGType Message
+                if($null -eq $TD_TapeCred){
+                    $TD_Creds =@{
+                        IPAddress = $TD_Selected_DeviceIPAddr
+                        UserName = $TD_Selected_DeviceUserName
+                        Password = $TD_Selected_DevicePassword
+                    }
+                }else {
+                    $TD_Creds = $TD_TapeCred
+                }
+                $TD_BasicDeviceInfos = Invoke_IBMTapeLibraryApi -Device $TD_Creds -Endpoint 'library/baseinfo'
+
+                if($TD_BasicDeviceInfos.count -gt 0){
+                    $CombiSNMTM = $null
+                    $CombiSNMTM = $TD_BasicDeviceInfos.SerialNumber
+                    #$SN = $CombiSNMTM.Substring($CombiSNMTM.Length -7) # not needed at moment
+                    $TD_BInfo = "" | Select-Object DeviceName,ProductDes,Prod_MTM,Code_Level
+                    $TD_BInfo.DeviceName = $TD_BasicDeviceInfos.name
+                    $TD_BInfo.ProductDes = "Tape Library"
+                    $TD_BInfo.Prod_MTM = $CombiSNMTM
+                    $TD_BInfo.Code_Level = $TD_BasicDeviceInfos.BaseFWRevision
+                    $TD_BasicDeviceInfo += $TD_BInfo
+                    SST_ToolMessageCollector -TD_ToolMSGCollector "Added Tape Device to the List" -TD_ToolMSGType Message
+                }else {
+                    SST_ToolMessageCollector -TD_ToolMSGCollector "Something went wrong, no data could be received from Tape device." -TD_ToolMSGType Error
+                    break
+                }
             }
             Default {SST_ToolMessageCollector -TD_ToolMSGCollector "Something went wrong at SST_DeviceConnecCheck Func or no Device Type was found, please check the promt." -TD_ToolMSGType Warning}
         }
@@ -151,10 +173,10 @@ function SST_DeviceConnecCheck {
                     $TD_UserInputCred.ConnectionTyp    =   $TD_BasicDeviceInfo.ConnectionTyp;
                     $TD_UserInputCred.IPAddress        =   $TD_ExistingCred.IPAddress;
                     $TD_UserInputCred.DeviceName       =   $TD_BasicDeviceInfo.DeviceName;
+                    $TD_UserInputCred.TapeWWNN         =   $TD_BasicDeviceInfo.TapeWWNN
                     $TD_UserInputCred.UserName         =   $TD_ExistingCred.UserName;
                     <# The PwLine needs a better Option #>
                     $TD_UserInputCred.Password         =   $TD_Selected_DevicePassword;
-                    $TD_UserInputCred.SSHKeyPath       =   $TD_ExistingCred.SSHKeyPath;
                     $TD_UserInputCred.SVCorVF          =   $TD_ExistingCred.SVCorVF;
                     $TD_UserInputCred.MTMCode          =   $TD_BasicDeviceInfo.Prod_MTM;
                     $TD_UserInputCred.ProductDescr     =   $TD_BasicDeviceInfo.ProductDes;
