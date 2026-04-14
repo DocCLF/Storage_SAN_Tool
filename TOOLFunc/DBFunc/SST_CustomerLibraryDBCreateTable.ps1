@@ -47,15 +47,16 @@ function SST_CustomerLibraryDBCreateTable {
                 Write-Host $_.Exception.ToString()
             }
             <# library/status #>
-            try{ 
-                $SST_SQLiteTabelQuery ="CREATE TABLE IF NOT EXISTS LibraryStatus (ID INTEGER PRIMARY KEY AUTOINCREMENT, CustomerNbr TEXT NOT NULL, BaseInformation TEXT, BaseRobStatus TEXT, BaseMoveCount INTEGER, BasePowerUpCount INTEGER,`
-                                        BasePowerOnTime TEXT, BaseLibHealth TEXT, ModulesPhysicalNumber TEXT, ModulesLogicalNumber TEXT, ModulesHealth TEXT, SerialNumberMTM TEXT NOT NULL, TimeStamp TEXT );" 
-                $SQLiteCommandCreate.CommandText = $SST_SQLiteTabelQuery
-                $SQLiteCommandCreate.ExecuteNonQuery()
-            }catch{
-                Write-Host "SQL Fehler: $($_.Exception.Message)"
-                Write-Host $_.Exception.ToString()
-            }
+            # for later use!?!
+            #try{ 
+            #    $SST_SQLiteTabelQuery ="CREATE TABLE IF NOT EXISTS LibraryStatus (ID INTEGER PRIMARY KEY AUTOINCREMENT, CustomerNbr TEXT NOT NULL, BaseInformation TEXT, BaseRobStatus TEXT, BaseMoveCount INTEGER, BasePowerUpCount INTEGER,`
+            #                            BasePowerOnTime TEXT, BaseLibHealth TEXT, ModulesPhysicalNumber TEXT, ModulesLogicalNumber TEXT, ModulesHealth TEXT, SerialNumberMTM TEXT NOT NULL, TimeStamp TEXT );" 
+            #    $SQLiteCommandCreate.CommandText = $SST_SQLiteTabelQuery
+            #    $SQLiteCommandCreate.ExecuteNonQuery()
+            #}catch{
+            #    Write-Host "SQL Fehler: $($_.Exception.Message)"
+            #    Write-Host $_.Exception.ToString()
+            #}
             <# library/inventory Slots #>
             try{
                 $SST_SQLiteTabelQuery ="CREATE TABLE IF NOT EXISTS LibraryInventorySlots (ID INTEGER PRIMARY KEY AUTOINCREMENT, CustomerNbr TEXT NOT NULL, PhysicalNumber INTEGER, LogicalNumber TEXT, Module INTEGER, LogicalLibrary INTEGER, Mailslot TEXT, Cartridge TEXT, Barcode TEXT,`
@@ -109,7 +110,7 @@ function SST_CustomerLibraryDBCreateTable {
             }
             <# reports/mountHistory #>
             try{ 
-                $SST_SQLiteTabelQuery ="CREATE TABLE IF NOT EXISTS LibraryReports (ID INTEGER PRIMARY KEY AUTOINCREMENT, CustomerNbr TEXT NOT NULL, Barcode TEXT, Location TEXT, MountTime TEXT, UnmountTime TEXT, HostIOReads INTEGER, HostIOWrites INTEGER, CompressionRate TEXT, ErrorsCorrectedWrites INTEGER,`
+                $SST_SQLiteTabelQuery ="CREATE TABLE IF NOT EXISTS LibraryReports (ID INTEGER PRIMARY KEY AUTOINCREMENT, CustomerNbr TEXT NOT NULL, Barcode TEXT, LogicalLibrary TEXT, Location TEXT, MountTime TEXT, UnmountTime TEXT, HostIOReads INTEGER, HostIOWrites INTEGER, CompressionRate TEXT, ErrorsCorrectedWrites INTEGER,`
                                         ErrorsUncorrectedWrites INTEGER, ErrorsCorrectedReads INTEGER, ErrorsUncorrectedReads INTEGER, SerialNumberMTM TEXT NOT NULL, TimeStamp TEXT );" 
                 $SQLiteCommandCreate.CommandText = $SST_SQLiteTabelQuery
                 $SQLiteCommandCreate.ExecuteNonQuery()
