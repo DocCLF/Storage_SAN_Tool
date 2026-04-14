@@ -30,7 +30,7 @@ function Invoke_IBMTapeLibraryApi {
     
     if($null -eq $TapeTokenObj){
         $pw = [Net.NetworkCredential]::new('', $Device.Password).Password
-        $Connection = Connect_IBMTapeLibrary -TD_Device_DeviceIP $Device.IPAddress -TD_Device_UserName $Device.UserName -TD_Device_PW $pw -SkipCertificateCheck
+        $Connection = SST_GetTapeLibraryToken -TD_Device_DeviceIP $Device.IPAddress -TD_Device_UserName $Device.UserName -TD_Device_PW $pw -SkipCertificateCheck
         $pw = $null
     }else {
         $Connection = $TapeTokenObj
