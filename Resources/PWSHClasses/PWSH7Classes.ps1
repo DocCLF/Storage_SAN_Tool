@@ -13,6 +13,9 @@ public class RootViewModel : INotifyPropertyChanged
     public string HMCIcon { get; set; }
     public string PowerIcon { get; set; }
     public string ClockIcon96 { get; set; }
+    public string SAN720 { get; set; }
+    public string STOIcon { get; set; }
+    public string BrocadeIcon { get; set; }
 
     private bool _customerYN;
     public bool CustomerYN
