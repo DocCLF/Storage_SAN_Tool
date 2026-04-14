@@ -147,23 +147,24 @@ function SST_CustomerDeviceDBInsertTable {
                     foreach ($SST_CollectedInformation in $SST_CollectedInformations){
                         $SQLiteCommand.Parameters.Clear()
 
-                        $SQLiteCommand.CommandText ="INSERT INTO LibraryReports (CustomerNbr, Barcode, Location, MountTime, UnmountTime, HostIOReads, HostIOWrites, CompressionRate, ErrorsCorrectedWrites, ErrorsUncorrectedWrites, ErrorsCorrectedReads, ErrorsUncorrectedReads, SerialNumberMTM, TimeStamp)`
-                                                    VALUES (@CustomerNbr, @Barcode, @Location, @MountTime, @UnmountTime, @HostIOReads, @HostIOWrites, @CompressionRate, @ErrorsCorrectedWrites, @ErrorsUncorrectedWrites, @ErrorsCorrectedReads, @ErrorsUncorrectedReads, @SerialNumberMTM, @TimeStamp);"
+                        $SQLiteCommand.CommandText ="INSERT INTO LibraryReports (CustomerNbr, Barcode, LogicalLibrary, Location, MountTime, UnmountTime, HostIOReads, HostIOWrites, CompressionRate, ErrorsCorrectedWrites, ErrorsUncorrectedWrites, ErrorsCorrectedReads, ErrorsUncorrectedReads, SerialNumberMTM, TimeStamp)`
+                                                    VALUES (@CustomerNbr, @Barcode, @LogicalLibrary, @Location, @MountTime, @UnmountTime, @HostIOReads, @HostIOWrites, @CompressionRate, @ErrorsCorrectedWrites, @ErrorsUncorrectedWrites, @ErrorsCorrectedReads, @ErrorsUncorrectedReads, @SerialNumberMTM, @TimeStamp);"
                         $SQLiteCommand.Parameters.AddWithValue("@CustomerNbr", $Customer) | Out-Null
-                        $SQLiteCommand.Parameters.AddWithValue("@Barcode", $SST_CollectedInformation.HostName) | Out-Null
-                        $SQLiteCommand.Parameters.AddWithValue("@Location", $SST_CollectedInformation.Status) | Out-Null
-                        $SQLiteCommand.Parameters.AddWithValue("@MountTime", $SST_CollectedInformation.HostClusterName) | Out-Null
-                        $SQLiteCommand.Parameters.AddWithValue("@UnmountTime", $SST_CollectedInformation.SiteName) | Out-Null
-                        $SQLiteCommand.Parameters.AddWithValue("@HostIOReads", $SST_CollectedInformation.ID) | Out-Null
-                        $SQLiteCommand.Parameters.AddWithValue("@HostIOWrites", $SST_CollectedInformation.HostName) | Out-Null
-                        $SQLiteCommand.Parameters.AddWithValue("@CompressionRate", $SST_CollectedInformation.Status) | Out-Null
-                        $SQLiteCommand.Parameters.AddWithValue("@ErrorsCorrectedWrites", $SST_CollectedInformation.HostClusterName) | Out-Null
-                        $SQLiteCommand.Parameters.AddWithValue("@ErrorsUncorrectedWrites", $SST_CollectedInformation.SiteName) | Out-Null
-                        $SQLiteCommand.Parameters.AddWithValue("@ErrorsCorrectedReads", $SST_CollectedInformation.STOName) | Out-Null
-                        $SQLiteCommand.Parameters.AddWithValue("@ErrorsUncorrectedReads", $SST_CollectedInformation.WWNN) | Out-Null
+                        $SQLiteCommand.Parameters.AddWithValue("@Barcode", $SST_CollectedInformation.barcode) | Out-Null
+                        $SQLiteCommand.Parameters.AddWithValue("@LogicalLibrary", $SST_CollectedInformation.LogicalLibrary) | Out-Null
+                        $SQLiteCommand.Parameters.AddWithValue("@Location", $SST_CollectedInformation.location) | Out-Null
+                        $SQLiteCommand.Parameters.AddWithValue("@MountTime", $SST_CollectedInformation.mountTime) | Out-Null
+                        $SQLiteCommand.Parameters.AddWithValue("@UnmountTime", $SST_CollectedInformation.unmountTime) | Out-Null
+                        $SQLiteCommand.Parameters.AddWithValue("@HostIOReads", $SST_CollectedInformation.hostIOReads) | Out-Null
+                        $SQLiteCommand.Parameters.AddWithValue("@HostIOWrites", $SST_CollectedInformation.hostIOWrites) | Out-Null
+                        $SQLiteCommand.Parameters.AddWithValue("@CompressionRate", $SST_CollectedInformation.compressionRate) | Out-Null
+                        $SQLiteCommand.Parameters.AddWithValue("@ErrorsCorrectedWrites", $SST_CollectedInformation.errorsCorrectedWrites) | Out-Null
+                        $SQLiteCommand.Parameters.AddWithValue("@ErrorsUncorrectedWrites", $SST_CollectedInformation.errorsUncorrectedWrites) | Out-Null
+                        $SQLiteCommand.Parameters.AddWithValue("@ErrorsCorrectedReads", $SST_CollectedInformation.errorsCorrectedReads) | Out-Null
+                        $SQLiteCommand.Parameters.AddWithValue("@ErrorsUncorrectedReads", $SST_CollectedInformation.errorsUncorrectedReads) | Out-Null
                         $SQLiteCommand.Parameters.AddWithValue("@SerialNumberMTM", $SST_NeededInformations) | Out-Null 
                         $SQLiteCommand.Parameters.AddWithValue("@TimeStamp", $TimeStamp) | Out-Null
-                    
+
                         # DB save 
                         $SQLiteCommand.ExecuteNonQuery()
 
@@ -345,35 +346,35 @@ function SST_CustomerDeviceDBInsertTable {
                                                     VALUES (@CustomerNbr, @Location, @SerialNumber, @MFGSerialNumber, @MediaType, @State, @MTM, @Interface, @LogicalLibrary, @LogicalLibraryID, @USE, @Firmware, @Encryption, @Mounts, @Barcode, @WWNN,`
                                                         @ElementAddress, @LogicalNumber, @PhysicalNumber, @Module, @Generation, @Cartridge, @Vendor, @ErrorState, @Power, @Presence, @ADTMode, @SerialNumberMTM, @TimeStamp);"
                         $SQLiteCommand.Parameters.AddWithValue("@CustomerNbr", $Customer) | Out-Null
-                        $SQLiteCommand.Parameters.AddWithValue("@Location", $SST_CollectedInformation.location) | Out-Null
-                        $SQLiteCommand.Parameters.AddWithValue("@SerialNumber", $SST_CollectedInformation.SerialNumber) | Out-Null
-                        $SQLiteCommand.Parameters.AddWithValue("@MFGSerialNumber", $SST_CollectedInformation.MFGSerialNumber) | Out-Null
-                        $SQLiteCommand.Parameters.AddWithValue("@MediaType", $SST_CollectedInformation.mediaType) | Out-Null
-                        $SQLiteCommand.Parameters.AddWithValue("@State", $SST_CollectedInformation.state) | Out-Null
-                        $SQLiteCommand.Parameters.AddWithValue("@MTM", $SST_CollectedInformation.mtm) | Out-Null
-                        $SQLiteCommand.Parameters.AddWithValue("@Interface", $SST_CollectedInformation.Interface) | Out-Null
-                        $SQLiteCommand.Parameters.AddWithValue("@LogicalLibrary", $SST_CollectedInformation.logicalLibrary) | Out-Null      #string
-                        $SQLiteCommand.Parameters.AddWithValue("@LogicalLibraryID", $SST_CollectedInformation.LogicalLibrary) | Out-Null    #id
-                        $SQLiteCommand.Parameters.AddWithValue("@USE", $SST_CollectedInformation.use) | Out-Null
-                        $SQLiteCommand.Parameters.AddWithValue("@Firmware", $SST_CollectedInformation.firmware) | Out-Null
-                        $SQLiteCommand.Parameters.AddWithValue("@Encryption", $SST_CollectedInformation.encryption) | Out-Null
-                        $SQLiteCommand.Parameters.AddWithValue("@Mounts", $SST_CollectedInformation.mounts) | Out-Null
-                        $SQLiteCommand.Parameters.AddWithValue("@Barcode", $SST_CollectedInformation.barcode) | Out-Null
-                        $SQLiteCommand.Parameters.AddWithValue("@WWNN", $SST_CollectedInformation.wwnn) | Out-Null
-                        $SQLiteCommand.Parameters.AddWithValue("@ElementAddress", $SST_CollectedInformation.elementAddress) | Out-Null
-                        $SQLiteCommand.Parameters.AddWithValue("@LogicalNumber", $SST_CollectedInformation.LogicalNumber) | Out-Null
-                        $SQLiteCommand.Parameters.AddWithValue("@PhysicalNumber", $SST_CollectedInformation.PhysicalNumber) | Out-Null
-                        $SQLiteCommand.Parameters.AddWithValue("@Module", $SST_CollectedInformation.Module) | Out-Null
-                        $SQLiteCommand.Parameters.AddWithValue("@Generation", $SST_CollectedInformation.Generation) | Out-Null
-                        $SQLiteCommand.Parameters.AddWithValue("@Cartridge", $SST_CollectedInformation.Cartridge) | Out-Null
-                        $SQLiteCommand.Parameters.AddWithValue("@Vendor", $SST_CollectedInformation.Vendor) | Out-Null
-                        $SQLiteCommand.Parameters.AddWithValue("@ErrorState", $SST_CollectedInformation.ErrorState) | Out-Null
-                        $SQLiteCommand.Parameters.AddWithValue("@Power", $SST_CollectedInformation.Power) | Out-Null
-                        $SQLiteCommand.Parameters.AddWithValue("@Presence", $SST_CollectedInformation.Presence) | Out-Null
-                        $SQLiteCommand.Parameters.AddWithValue("@ADTMode", $SST_CollectedInformation.ADTMode) | Out-Null
+                        $SQLiteCommand.Parameters.AddWithValue("@Location", $SST_CollectedInformation.DriveLocation) | Out-Null
+                        $SQLiteCommand.Parameters.AddWithValue("@SerialNumber", $SST_CollectedInformation.InfoSerialNumber) | Out-Null
+                        $SQLiteCommand.Parameters.AddWithValue("@MFGSerialNumber", $SST_CollectedInformation.InfoMFGSerialNumber) | Out-Null
+                        $SQLiteCommand.Parameters.AddWithValue("@MediaType", $SST_CollectedInformation.DriveMediaType) | Out-Null
+                        $SQLiteCommand.Parameters.AddWithValue("@State", $SST_CollectedInformation.DriveState) | Out-Null
+                        $SQLiteCommand.Parameters.AddWithValue("@MTM", $SST_CollectedInformation.DriveMTM) | Out-Null
+                        $SQLiteCommand.Parameters.AddWithValue("@Interface", $SST_CollectedInformation.InfoInterface) | Out-Null
+                        $SQLiteCommand.Parameters.AddWithValue("@LogicalLibrary", $SST_CollectedInformation.DriveLogicalLibrary) | Out-Null      #string
+                        $SQLiteCommand.Parameters.AddWithValue("@LogicalLibraryID", $SST_CollectedInformation.InfoLogicalLibraryID) | Out-Null    #id
+                        $SQLiteCommand.Parameters.AddWithValue("@USE", $SST_CollectedInformation.DriveUse) | Out-Null
+                        $SQLiteCommand.Parameters.AddWithValue("@Firmware", $SST_CollectedInformation.DriveFirmware) | Out-Null
+                        $SQLiteCommand.Parameters.AddWithValue("@Encryption", $SST_CollectedInformation.DriveEncryption) | Out-Null
+                        $SQLiteCommand.Parameters.AddWithValue("@Mounts", $SST_CollectedInformation.DriveMounts) | Out-Null
+                        $SQLiteCommand.Parameters.AddWithValue("@Barcode", $SST_CollectedInformation.DriveBarcode) | Out-Null
+                        $SQLiteCommand.Parameters.AddWithValue("@WWNN", $SST_CollectedInformation.DriveWWNN) | Out-Null
+                        $SQLiteCommand.Parameters.AddWithValue("@ElementAddress", $SST_CollectedInformation.DriveElementAddress) | Out-Null
+                        $SQLiteCommand.Parameters.AddWithValue("@LogicalNumber", $SST_CollectedInformation.InfoLogicalNumber) | Out-Null
+                        $SQLiteCommand.Parameters.AddWithValue("@PhysicalNumber", $SST_CollectedInformation.InfoPhysicalNumber) | Out-Null
+                        $SQLiteCommand.Parameters.AddWithValue("@Module", $SST_CollectedInformation.InfoModule) | Out-Null
+                        $SQLiteCommand.Parameters.AddWithValue("@Generation", $SST_CollectedInformation.InfoGeneration) | Out-Null
+                        $SQLiteCommand.Parameters.AddWithValue("@Cartridge", $SST_CollectedInformation.InfoCartridge) | Out-Null
+                        $SQLiteCommand.Parameters.AddWithValue("@Vendor", $SST_CollectedInformation.InfoVendor) | Out-Null
+                        $SQLiteCommand.Parameters.AddWithValue("@ErrorState", $SST_CollectedInformation.InfoErrorState) | Out-Null
+                        $SQLiteCommand.Parameters.AddWithValue("@Power", $SST_CollectedInformation.InfoPower) | Out-Null
+                        $SQLiteCommand.Parameters.AddWithValue("@Presence", $SST_CollectedInformation.InfoPresence) | Out-Null
+                        $SQLiteCommand.Parameters.AddWithValue("@ADTMode", $SST_CollectedInformation.InfoADTMode) | Out-Null
                         $SQLiteCommand.Parameters.AddWithValue("@SerialNumberMTM", $SST_NeededInformations) | Out-Null
                         $SQLiteCommand.Parameters.AddWithValue("@TimeStamp", $TimeStamp) | Out-Null
-                    
+
                         # DB save 
                         $SQLiteCommand.ExecuteNonQuery()
 
