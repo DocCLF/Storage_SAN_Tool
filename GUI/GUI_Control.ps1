@@ -59,12 +59,15 @@ foreach ($file in $StyleFiles){
 <# RootViewModel is in *Classes.ps1 #>
 $ViewModel = [RootViewModel]::new()
 $ViewModel.IBMFS73Icon = "$PSRootPath\Resources\Icons\IBMFS73Icon.png"
+$ViewModel.STOIcon = "$PSRootPath\Resources\Icons\ibmstoicon.png"
+$ViewModel.BrocadeIcon = "$PSRootPath\Resources\Icons\broadcom-96.png"
 $ViewModel.SAN64B7Icon = "$PSRootPath\Resources\Icons\SAN64B7Icon.png"
 $ViewModel.IBMPower11Icon = "$PSRootPath\Resources\Icons\IBMPower11Icon.png"
 $ViewModel.RefreshIcon96 = "$PSRootPath\Resources\Icons\iconrefresh96.png"
 $ViewModel.HMCIcon = "$PSRootPath\Resources\Icons\HMCicon.png"
 $ViewModel.PowerIcon = "$PSRootPath\Resources\Icons\powericon01.png"
 $ViewModel.ClockIcon96 = "$PSRootPath\Resources\Icons\icons8-clock-96.png"
+$ViewModel.SAN720 = "$PSRootPath\SAN\Brocade\IMG\switchG720.png"
 
 
 $ViewModel.CustomerYN    = $true
@@ -1475,11 +1478,46 @@ $TD_BTN_IBM_TapeDrive.add_click({
     <#Get all Device Cred and count them #>
     $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_.DeviceTyp -like "*Tape"}
     foreach($TD_Creds in $TD_Credentials){
-        $LibInfo = $null; $LibInfoAdv=$null
-        $LibInfo = Invoke_IBMTapeLibraryApi -Device $TD_Creds -Endpoint 'drive'
-        $LibInfoAdv = Invoke_IBMTapeLibraryApi -Device $TD_Creds -Endpoint 'drive/information'
+        $LibDrives = $null; $LibDriveInfo=$null
+        $LibDrives = Invoke_IBMTapeLibraryApi -Device $TD_Creds -Endpoint 'drive'
+        $LibDriveInfo = Invoke_IBMTapeLibraryApi -Device $TD_Creds -Endpoint 'drive/information'
         try {
-            $MergeLibObj = Merge-PSCustomObject -InputObject @($LibInfoAdv, $LibInfo)
+            #need a better solution
+            $MergeLibObj = foreach ($LibDrive in $LibDrives) {
+                $match = $LibDriveInfo | Where-Object { $_.SerialNumber -eq $LibDrive.sn } | Select-Object -First 1
+            
+                [PSCustomObject]@{
+                    DriveLocation          = $LibDrive.location
+                    DriveMediaType         = $LibDrive.mediaType
+                    DriveState             = $LibDrive.state
+                    DriveMTM               = $LibDrive.mtm
+                    DriveLogicalLibrary    = $LibDrive.logicalLibrary
+                    DriveUse               = $LibDrive.use
+                    DriveFirmware          = $LibDrive.firmware
+                    DriveEncryption        = $LibDrive.encryption
+                    DriveMounts            = $LibDrive.mounts
+                    DriveBarcode           = $LibDrive.barcode
+                    DriveWWNN              = $LibDrive.wwnn
+                    DriveElementAddress    = $LibDrive.elementAddress
+                
+                    InfoLogicalNumber      = $match.LogicalNumber
+                    InfoPhysicalNumber     = $match.PhysicalNumber
+                    InfoModule             = $match.Module
+                    InfoLogicalLibraryID   = $match.LogicalLibrary
+                    InfoGeneration         = $match.Generation
+                    InfoCartridge          = $match.Cartridge
+                    InfoBarcode            = $match.Barcode
+                    InfoVendor             = $match.Vendor
+                    InfoSerialNumber       = $match.SerialNumber
+                    InfoWWNodeName         = $match.WWNodeName
+                    InfoInterface          = $match.Interface
+                    InfoMFGSerialNumber    = $match.MFGSerialNumber
+                    InfoErrorState         = $match.ErrorState
+                    InfoPower              = $match.Power
+                    InfoPresence           = $match.Presence
+                    InfoADTMode            = $match.ADTMode
+                }
+            }
             $LibrarySerialNumberMTM = SST_CustomerLibraryDBReadTable -SST_InfoType "GetLibrarySerialNumberMTM" -SST_Customer $($TD_TB_CustomerInfoName.Text) -SST_NeededInformations $($TD_Creds.TapeWWNN)
             SST_CustomerDeviceDBInsertTable -SST_InfoType "LibraryDrive" -SST_CollectedInformations $MergeLibObj -SST_NeededInformations $LibrarySerialNumberMTM
         }
@@ -1569,6 +1607,8 @@ $TD_DG_KnownDeviceList.add_SelectionChanged({
                 $TD_TB_DeviceUserName.Text = $_.selecteditem.UserName
                 if(($_.selecteditem.DeviceTyp -like "*Storage")-and($_.selecteditem.SVCorVF -eq "SVC")){$TD_CB_SVCorVF.IsChecked=$true}else{$TD_CB_SVCorVF.IsChecked=$false}
                 if(($_.selecteditem.DeviceTyp -like "*SAN")-and($_.selecteditem.SVCorVF -eq "VF")){$TD_CB_SVCorVF.IsChecked=$true}else{$TD_CB_SVCorVF.IsChecked=$false}
+                if($_.selecteditem.DeviceTyp -like "*PowerHMC"){$TD_CB_SVCorVF.Visibility="Collapsed"}
+                if($_.selecteditem.DeviceTyp -like "*Tape"){$TD_CB_SVCorVF.Visibility="Collapsed"}
                 $_.selecteditem | Export-Clixml -Path $PSRootPath\ToolLog\ToolTEMP\UpdateCred.xml
             }
 
@@ -1577,6 +1617,19 @@ $TD_DG_KnownDeviceList.add_SelectionChanged({
         }
     }
 })
+
+$FoundDBforDashBoard = $(Get-ChildItem "$PSRootPath\Resources\DBFolder\*" -Filter "*.db").BaseName
+if(!([string]::IsNullOrWhiteSpace($FoundDBforDashBoard))){
+    try {
+        $SelFirstDB = $FoundDBforDashBoard | Select-Object -First 1
+    }
+    catch {
+        <#Do this if a terminating exception happens#>
+        Write-Host $_.Exception.Message
+        #SST_ToolMessageCollector -TD_ToolMSGCollector $("Found some problems with local customer db") -TD_ToolMSGType Warning -TD_Shown yes
+    }
+    SST_DashBoardMain -MainPath $PSRootPath -SST_UCOBJ $TD_UserControl_Dash -FoundLocalDB $SelFirstDB
+}
 
 $TD_BTN_CloseGUI.add_click({
     <#CleanUp before close #>
