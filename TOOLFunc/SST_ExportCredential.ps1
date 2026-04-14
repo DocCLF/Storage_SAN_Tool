@@ -12,6 +12,7 @@ function SST_ExportCredential {
         $TD_ToExportCredInfo.IPAddress = $TD_CollectedCredData.IPAddress;
         $TD_ToExportCredInfo.DeviceName = $TD_CollectedCredData.DeviceName;
         $TD_ToExportCredInfo.UserName = $TD_CollectedCredData.UserName;
+        $TD_ToExportCredInfo.TapeWWNN = $TD_CollectedCredData.TapeWWNN;
         $TD_ToExportCredInfo.Password =    $TD_CollectedCredData.Password
         $TD_ToExportCredInfo.SVCorVF = $TD_CollectedCredData.SVCorVF;
         $TD_ToExportCredInfo
