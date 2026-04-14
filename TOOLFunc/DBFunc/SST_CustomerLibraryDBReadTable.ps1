@@ -19,7 +19,7 @@ function SST_CustomerLibraryDBReadTable {
         } else {
             $Customer = $SST_NewDBObject.CustomerNumber
         }
-        Write-Host "Customer $Customer"
+        #Write-Host "Customer $Customer"
         $DBPath = Join-Path $PSRootPath "Resources\DBFolder\$Customer.db"
         $SQLiteConnectionString = "Data Source=$DBPath;Version=3;Pooling=False;"
 
