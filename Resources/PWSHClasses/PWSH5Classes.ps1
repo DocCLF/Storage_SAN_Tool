@@ -20,13 +20,16 @@ public class RootViewModel : INotifyPropertyChanged
         get { return _main; }
     }
 
-    public string RefreshIcon96  { get; set; }
+    public string RefreshIcon96 { get; set; }
     public string IBMFS73Icon { get; set; }
     public string SAN64B7Icon { get; set; }
     public string IBMPower11Icon { get; set; }
     public string HMCIcon { get; set; }
     public string PowerIcon { get; set; }
     public string ClockIcon96 { get; set; }
+    public string SAN720 { get; set; }
+    public string STOIcon { get; set; }
+    public string BrocadeIcon { get; set; }
 
     private bool _customerYN;
     public bool CustomerYN
