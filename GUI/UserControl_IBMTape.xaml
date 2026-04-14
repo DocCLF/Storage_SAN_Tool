@@ -37,43 +37,43 @@
                 x:Name="BTN_IBM_TapeLibrary"
                 Style="{DynamicResource MainBtnStyle}"
                 Content="Library Info" 
-                ToolTip="Get basic Tape Library information"/>
+                ToolTip="The general information about the tape library and its settings"/>
                 <!--IBM_TapeEvents-->
                 <ToggleButton
                 x:Name="BTN_IBM_TapeEvents"
                 Style="{DynamicResource MainBtnStyle}"
                 Content="Events" 
-                ToolTip="Get the last 100 Events"/>
+                ToolTip="Events requests"/>
                 <!--IBM_TapeInventory-->
                 <ToggleButton
                 x:Name="BTN_IBM_TapeInventory"
                 Style="{DynamicResource MainBtnStyle}"
                 Content="Inventory"
-                ToolTip="Get the last 100 in-memory commands of the audit log" /> 
+                ToolTip="Execute an inventory scan on the library. This does not return until the inventory is finished." /> 
                 <!--IBM_TapeDrives-->
                 <ToggleButton
                 x:Name="BTN_IBM_TapeDrive"
                 Style="{DynamicResource MainBtnStyle}"
-                Content="Drives" 
-                ToolTip="Get Infos to Host, HostCluster and their Volumes" />
+                Content="Drive" 
+                ToolTip="Returns the information about drives like Product Id, Model, Serialno and other useful information" />
                 <!--IBM_TapeMediaInfo-->
                 <ToggleButton
                 x:Name="BTN_IBM_TapeMediaInfo"
                 Style="{DynamicResource MainBtnStyle}"
-                Content="Drives" 
-                ToolTip="Get Infos to Host, HostCluster and their Volumes" />
+                Content="Media Info" 
+                ToolTip="Returns the list of media which are located in the library including detailed information about them" />
                 <!--IBM_TapeLogicalLib-->
                 <ToggleButton
                 x:Name="BTN_IBM_TapeLogicalLib"
                 Style="{DynamicResource MainBtnStyle}"
                 Content="Logical Library" 
-                ToolTip="Get Infos to Host, HostCluster only" />
+                ToolTip="Returns the list of logical libraries including logical library details" />
                 <!--IBM_TapeReports-->
                 <ToggleButton
                 x:Name="BTN_IBM_TapeReports"
                 Style="{DynamicResource MainBtnStyle}"
                 Content="Reports" 
-                ToolTip="Get Infos to Pool and Volume only" />
+                ToolTip="Retrieve a single resource for every drive mount done in the library for the past describing the activity done during a mount. These metrics are updated once a cartridge is unmounted from a drive. This history goes back one year." />
             </StackPanel>
         </GroupBox> 
         </StackPanel> 
