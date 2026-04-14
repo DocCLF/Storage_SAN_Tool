@@ -14,8 +14,7 @@ function SST_GetCredfGUI {
                 $TD_BasicDeviceInfo = SST_DeviceConnecCheck -TD_Selected_Items "no"
                 if([string]::IsNullOrEmpty($TD_BasicDeviceInfo)){
                     $TD_ErrorCode = 1
-                    #$TD_BTN_AddSSHKey.Background="#FFDDDDDD"
-                    #$TD_BTN_AddSSHKey.Content="Add SSH-Key"
+
                     break
                 }
             }
@@ -23,8 +22,7 @@ function SST_GetCredfGUI {
                 $TD_BasicDeviceInfo = SST_DeviceConnecCheck -TD_Selected_Items "no"
                 if([string]::IsNullOrEmpty($TD_BasicDeviceInfo)){
                     $TD_ErrorCode = 1
-                    #$TD_BTN_AddSSHKey.Background="#FFDDDDDD"
-                    #$TD_BTN_AddSSHKey.Content="Add SSH-Key"
+
                     break
                 }
             }
@@ -32,8 +30,7 @@ function SST_GetCredfGUI {
                 $TD_BasicDeviceInfo = SST_DeviceConnecCheck -TD_Selected_Items "no"
                 if([string]::IsNullOrEmpty($TD_BasicDeviceInfo)){
                     $TD_ErrorCode = 1
-                    #$TD_BTN_AddSSHKey.Background="#FFDDDDDD"
-                    #$TD_BTN_AddSSHKey.Content="Add SSH-Key"
+
                     break
                 }
             }
@@ -41,8 +38,7 @@ function SST_GetCredfGUI {
                 $TD_BasicDeviceInfo = SST_DeviceConnecCheck -TD_Selected_Items "no"
                 if([string]::IsNullOrEmpty($TD_BasicDeviceInfo)){
                     $TD_ErrorCode = 1
-                    #$TD_BTN_AddSSHKey.Background="#FFDDDDDD"
-                    #$TD_BTN_AddSSHKey.Content="Add SSH-Key"
+
                     break
                 }
             }
@@ -69,7 +65,7 @@ function SST_GetCredfGUI {
             if(($TD_ExistingCred.ID -eq $TD_InportCred.ID)-and($TD_ExistingCred.DeviceTyp -eq $TD_InportCred.DeviceTyp)){
                 $TD_CredentialsCount = $TD_InportCred.ID;
                 <# Create the Main_CredObj #>
-                $TD_ExistingCred = "" | Select-Object ID,DeviceTyp,ConnectionTyp,IPAddress,DeviceName,UserName,Password,SVCorVF,MTMCode,ProductDescr,CurrentFirmware,Exportpath
+                $TD_ExistingCred = "" | Select-Object ID,DeviceTyp,ConnectionTyp,IPAddress,DeviceName,UserName,Password,TapeWWNN,SVCorVF,MTMCode,ProductDescr,CurrentFirmware,Exportpath
                 $TD_ExistingCred.ID               =   $TD_InportCred.ID;
                 $TD_ExistingCred.DeviceTyp        =   $TD_CB_DeviceType.Text;
                 $TD_ExistingCred.ConnectionTyp    =   $TD_BasicDeviceInfo.ConnectionTyp;
@@ -147,7 +143,7 @@ function SST_GetCredfGUI {
         <# needs more tests to be able to use it safely thats why plink is plink and not plink and ssh #>
         if($TD_CB_DeviceConnectionType.Text -like "Classic*"){$TD_CB_DeviceConnectionTypeText="plink"}else{$TD_CB_DeviceConnectionTypeText="plink"}
         <# Create the Main_CredObj #>
-        $TD_UserInputCred = "" | Select-Object ID,DeviceTyp,ConnectionTyp,IPAddress,DeviceName,UserName,Password,SSHKeyPath,SVCorVF,MTMCode,ProductDescr,CurrentFirmware,Exportpath
+        $TD_UserInputCred = "" | Select-Object ID,DeviceTyp,ConnectionTyp,IPAddress,DeviceName,UserName,Password,TapeWWNN,SVCorVF,MTMCode,ProductDescr,CurrentFirmware,Exportpath
         $TD_UserInputCred.ID               =   $TD_CredentialsCount;
         $TD_UserInputCred.DeviceTyp        =   $TD_CB_DeviceType.Text;
         $TD_UserInputCred.ConnectionTyp    =   $TD_BasicDeviceInfo.ConnectionTyp;
