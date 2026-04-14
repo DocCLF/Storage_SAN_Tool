@@ -23,14 +23,12 @@ function SST_DeviceConnecCheck {
                 $TD_Selected_DeviceIPAddr
                 $TD_Selected_DeviceUserName
                 $TD_Selected_DevicePassword
-                $TD_Selected_DeviceSSHFile
                 $TD_UserInputCred = $TD_Selected_SVCorVF
              }
             "no" { 
                 $TD_Selected_DeviceIPAddr = $TD_TB_DeviceIPAddr.Text
                 $TD_Selected_DeviceUserName = $TD_TB_DeviceUserName.Text
                 $TD_Selected_DevicePassword = [string]$TD_TB_DevicePassword.Password
-                $TD_Selected_DeviceSSHFile = $TD_TB_PathtoSSHKeyNotVisibil.Text="$($TD_ImportaddsshkeyObj.FileName)"
                 $TD_Selected_DeviceType = $TD_CB_DeviceType.Text
                 if($TD_CB_SVCorVF.IsChecked -and ($TD_Selected_DeviceType -like "*Storage")){$TD_UserInputCred = "SVC"};
                 if($TD_CB_SVCorVF.IsChecked -and ($TD_Selected_DeviceType -like "*SAN")){$TD_UserInputCred = "VF"};
@@ -46,7 +44,7 @@ function SST_DeviceConnecCheck {
 
         switch ($TD_Selected_DeviceType) {
             {$_ -like "*Storage"} { 
-                $TD_BasicInfo = IBM_RESTBaseStorageInfos -TD_Device_DeviceIP $TD_Selected_DeviceIPAddr -TD_Device_UserName $TD_Selected_DeviceUserName -TD_Device_PW $([Net.NetworkCredential]::new('', $TD_Selected_DevicePassword).Password) -TD_Device_SSHKeyPath $TD_Selected_DeviceSSHFile -TD_Storage $TD_UserInputCred
+                $TD_BasicInfo = IBM_RESTBaseStorageInfos -TD_Device_DeviceIP $TD_Selected_DeviceIPAddr -TD_Device_UserName $TD_Selected_DeviceUserName -TD_Device_PW $([Net.NetworkCredential]::new('', $TD_Selected_DevicePassword).Password) -TD_Storage $TD_UserInputCred
                 if((($($TD_BaseStorageInfo.StorageInfo).Count -lt 1))){
                     [array]$TD_BasicInfo = IBM_SSHBaseStorageInfos -TD_Line_ID $_.ID -TD_Device_ConnectionTyp $_.ConnectionTyp -TD_Device_UserName $_.UserName -TD_Device_DeviceIP $_.IPAddress -TD_Device_DeviceName $_.DeviceName -TD_Device_PW $([Net.NetworkCredential]::new('', $_.Password).Password) -TD_Exportpath $TD_tb_ExportPath.Text
                 }
@@ -98,7 +96,7 @@ function SST_DeviceConnecCheck {
             }
             {$_ -like "*SAN"} { 
 
-                $TD_BasicDeviceInfos = FOS_BasicSwitchInfos -TD_Device_ConnectionTyp $TD_Selected_DeviceConnectionType -TD_Device_DeviceIP $TD_Selected_DeviceIPAddr -TD_Device_UserName $TD_Selected_DeviceUserName -TD_Device_PW $([Net.NetworkCredential]::new('', $TD_Selected_DevicePassword).Password) -TD_Device_SSHKeyPath $TD_Selected_DeviceSSHFile 
+                $TD_BasicDeviceInfos = FOS_BasicSwitchInfos -TD_Device_ConnectionTyp $TD_Selected_DeviceConnectionType -TD_Device_DeviceIP $TD_Selected_DeviceIPAddr -TD_Device_UserName $TD_Selected_DeviceUserName -TD_Device_PW $([Net.NetworkCredential]::new('', $TD_Selected_DevicePassword).Password) 
                 
                 switch ($($TD_BasicDeviceInfos.'Brocade Product Name')) {
                     {$_ -like "Brocade G720"}  { $FOS_HWMTM = "8960-P/R64" }
@@ -141,17 +139,19 @@ function SST_DeviceConnecCheck {
                 }else {
                     $TD_Creds = $TD_TapeCred
                 }
-                $TD_BasicDeviceInfos = Invoke_IBMTapeLibraryApi -Device $TD_Creds -Endpoint 'library/baseinfo'
-
+                $TD_BasicTapeInfos = Invoke_IBMTapeLibraryApi -Device $TD_Creds -Endpoint 'library/baseinfo'
+                $TD_BasicDeviceInfos = $TD_BasicTapeInfos.BaseInfo
                 if($TD_BasicDeviceInfos.count -gt 0){
                     $CombiSNMTM = $null
                     $CombiSNMTM = $TD_BasicDeviceInfos.SerialNumber
+                    $SN = $CombiSNMTM.Substring($CombiSNMTM.Length -7)
                     #$SN = $CombiSNMTM.Substring($CombiSNMTM.Length -7) # not needed at moment
-                    $TD_BInfo = "" | Select-Object DeviceName,ProductDes,Prod_MTM,Code_Level
-                    $TD_BInfo.DeviceName = $TD_BasicDeviceInfos.name
+                    $TD_BInfo = "" | Select-Object DeviceName,ProductDes,Prod_MTM,Code_Level,TapeWWNN
+                    $TD_BInfo.DeviceName = if([string]::IsNullOrWhiteSpace($($TD_BasicDeviceInfos.name))){$SN}else{$($TD_BasicDeviceInfos.name)}
                     $TD_BInfo.ProductDes = "Tape Library"
-                    $TD_BInfo.Prod_MTM = $CombiSNMTM
+                    $TD_BInfo.Prod_MTM = $($CombiSNMTM.TrimEnd($SN)).Insert(4,"-")
                     $TD_BInfo.Code_Level = $TD_BasicDeviceInfos.BaseFWRevision
+                    $TD_BInfo.TapeWWNN = $TD_BasicDeviceInfos.WWNodeName
                     $TD_BasicDeviceInfo += $TD_BInfo
                     SST_ToolMessageCollector -TD_ToolMSGCollector "Added Tape Device to the List" -TD_ToolMSGType Message
                 }else {
@@ -167,7 +167,7 @@ function SST_DeviceConnecCheck {
             <# ForEach is needed if you import ced, because you musst add the pw this was not exported  #>
             [array]$TD_Credentials = foreach ($TD_ExistingCred in $TD_Credentials) {
                 if($TD_ExistingCred.IPAddress -eq $TD_Selected_DeviceIPAddr){
-                    $TD_UserInputCred = "" | Select-Object ID,DeviceTyp,ConnectionTyp,IPAddress,DeviceName,UserName,Password,SSHKeyPath,SVCorVF,MTMCode,ProductDescr,CurrentFirmware,Exportpath
+                    $TD_UserInputCred = "" | Select-Object ID,DeviceTyp,ConnectionTyp,IPAddress,DeviceName,UserName,Password,TapeWWNN,SVCorVF,MTMCode,ProductDescr,CurrentFirmware,Exportpath
                     $TD_UserInputCred.ID               =   $TD_ExistingCred.ID;
                     $TD_UserInputCred.DeviceTyp        =   $TD_ExistingCred.DeviceTyp;
                     $TD_UserInputCred.ConnectionTyp    =   $TD_BasicDeviceInfo.ConnectionTyp;
