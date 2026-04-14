@@ -304,7 +304,8 @@ function Merge-PSCustomObject {
     foreach ($obj in $InputObject) {
         if ($null -eq $obj) { continue }
         foreach ($prop in $obj.PSObject.Properties) {
-            $result[$prop.Name] = $prop.Value
+            $cleanName = $prop.Name.Trim()
+            $result[$cleanName] = $prop.Value
         }
     }
 
