@@ -162,7 +162,7 @@
                                         </Ellipse>
                                         <Ellipse Grid.RowSpan="6" Width="60" Height="60" Margin="5,0,10,0">
                                            <Ellipse.Fill>
-                                               <ImageBrush ImageSource = "{Binding STOIcon , Mode=TwoWay}" Stretch="Uniform" />
+                                               <ImageBrush ImageSource = "{Binding DataContext.STOIcon, RelativeSource={RelativeSource AncestorType=UserControl}}" Stretch="Uniform" />
                                            </Ellipse.Fill>
                                         </Ellipse>
                                         <TextBlock
@@ -243,22 +243,6 @@
                                             VerticalAlignment="Center"
                                             Text="{Binding CodeLevel}"
                                             Margin="0"/>
-                                        <TextBlock
-                                            Grid.Row="5"
-                                            Grid.Column="1"
-                                            Style="{DynamicResource DashBoardTB1}"
-                                            HorizontalAlignment="Left"
-                                            VerticalAlignment="Center"
-                                            Text="FW Rec:" 
-                                            Margin="3,0"/>
-                                        <TextBlock
-                                            Grid.Row="5"
-                                            Grid.Column="2"
-                                            Style="{DynamicResource DashBoardTB1}"
-                                            HorizontalAlignment="Left"
-                                            VerticalAlignment="Center"
-                                            Text="{Binding RecommendedPTF}"
-                                            Margin="0"/>
                                         <StackPanel Grid.Row="6" Grid.ColumnSpan="3" Margin="5,0">
                                             <Grid Margin="0,0,0,2">
                                                 <TextBlock Text="0" />
@@ -275,7 +259,7 @@
                                     </Grid>
                                     <Grid Grid.Row="1">
                                         <StackPanel Orientation="Horizontal" Margin="5,0" ToolTip="Last Changes">
-                                            <Image Source = "{Binding ClockIcon96 , Mode=TwoWay}" Stretch="Uniform" VerticalAlignment="Bottom" HorizontalAlignment="Left" MaxHeight="30" />
+                                            <Image Source = "{Binding DataContext.ClockIcon96, RelativeSource={RelativeSource AncestorType=UserControl}}" Stretch="Uniform" VerticalAlignment="Bottom" HorizontalAlignment="Left" MaxHeight="30" />
                                             <TextBlock Text="{Binding TimeStamp}" HorizontalAlignment="Right" Margin="5,2" />
                                         </StackPanel>
                                     </Grid>
@@ -332,7 +316,7 @@
                                         </Ellipse>
                                         <Ellipse Grid.RowSpan="6" Width="60" Height="60" Margin="5,0,10,0">
                                            <Ellipse.Fill>
-                                               <ImageBrush ImageSource = "{Binding PowerIcon , Mode=TwoWay}" Stretch="Uniform" />
+                                               <ImageBrush ImageSource = "{Binding DataContext.PowerIcon, RelativeSource={RelativeSource AncestorType=UserControl}}" Stretch="Uniform" />
                                            </Ellipse.Fill>
                                         </Ellipse>
                                         <TextBlock
@@ -446,7 +430,7 @@
                                     </Grid>
                                     <Grid Grid.Row="1">
                                         <StackPanel Orientation="Horizontal" Margin="5,0" ToolTip="Last Changes">
-                                            <Image Source = "{Binding ClockIcon96 , Mode=TwoWay}" Stretch="Uniform" VerticalAlignment="Bottom" HorizontalAlignment="Left" MaxHeight="30" />
+                                            <Image Source = "{Binding DataContext.ClockIcon96, RelativeSource={RelativeSource AncestorType=UserControl}}" Stretch="Uniform" VerticalAlignment="Bottom" HorizontalAlignment="Left" MaxHeight="30" />
                                             <TextBlock Text="{Binding TimeStamp}" HorizontalAlignment="Right" Margin="5,2" />
                                         </StackPanel>
                                     </Grid>
@@ -495,7 +479,7 @@
                                         </Ellipse>
                                         <Ellipse Grid.RowSpan="6" Width="60" Height="60" Margin="5,0,10,0">
                                            <Ellipse.Fill>
-                                               <ImageBrush ImageSource = "{Binding BrocadeIcon , Mode=TwoWay}" Stretch="Uniform" />
+                                               <ImageBrush ImageSource = "{Binding DataContext.BrocadeIcon, RelativeSource={RelativeSource AncestorType=UserControl}}" Stretch="Uniform" />
                                            </Ellipse.Fill>
                                         </Ellipse>
                                         <TextBlock
@@ -592,26 +576,10 @@
                                             VerticalAlignment="Center"
                                             Text="{Binding CodeLevel}"
                                             Margin="0"/>
-                                        <TextBlock
-                                            Grid.Row="6"
-                                            Grid.Column="1"
-                                            Style="{DynamicResource DashBoardTB1}"
-                                            HorizontalAlignment="Left"
-                                            VerticalAlignment="Center"
-                                            Text="FW Rec:" 
-                                            Margin="3,0"/>
-                                        <TextBlock
-                                            Grid.Row="6"
-                                            Grid.Column="2"
-                                            Style="{DynamicResource DashBoardTB1}"
-                                            HorizontalAlignment="Left"
-                                            VerticalAlignment="Center"
-                                            Text="{Binding CodeLevelLV}"
-                                            Margin="0"/>
                                     </Grid>
                                     <Grid Grid.Row="1">
                                         <StackPanel Orientation="Horizontal" Margin="5,0" ToolTip="Last Changes">
-                                            <Image Source = "{Binding ClockIcon96 , Mode=TwoWay}" Stretch="Uniform" VerticalAlignment="Bottom" HorizontalAlignment="Left" MaxHeight="30" />
+                                            <Image Source = "{Binding DataContext.ClockIcon96, RelativeSource={RelativeSource AncestorType=UserControl}}" Stretch="Uniform" VerticalAlignment="Bottom" HorizontalAlignment="Left" MaxHeight="30" />
                                             <TextBlock Text="{Binding TimeStamp}" HorizontalAlignment="Right" Margin="5,2" />
                                         </StackPanel>
                                     </Grid>
