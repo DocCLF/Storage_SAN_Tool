@@ -311,3 +311,75 @@ function Merge-PSCustomObject {
 
    [PSCustomObject]$result
 }
+# DBEventcounter for Devices
+function Add-EventInfoToDevices {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory)]
+        [System.Collections.IEnumerable]$Devices,
+
+        [Parameter(Mandatory)]
+        [System.Collections.IEnumerable]$Events
+    )
+
+    $eventInfoBySerial = @{}
+    $orphanEvents = [System.Collections.Generic.List[object]]::new()
+
+    foreach ($event in $Events) {
+        if ([string]::IsNullOrWhiteSpace($event.SerialNumber)) {
+            continue
+        }
+
+        if (-not $eventInfoBySerial.ContainsKey($event.SerialNumber)) {
+            $eventInfoBySerial[$event.SerialNumber] = [PSCustomObject]@{
+                Count        = 0
+                Descriptions = [System.Collections.Generic.List[string]]::new()
+                Events       = [System.Collections.Generic.List[object]]::new()
+            }
+        }
+
+        $eventInfoBySerial[$event.SerialNumber].Count++
+        $eventInfoBySerial[$event.SerialNumber].Events.Add($event)
+
+        if (-not [string]::IsNullOrWhiteSpace($event.Description)) {
+            $eventInfoBySerial[$event.SerialNumber].Descriptions.Add($event.Description)
+        }
+    }
+
+    $deviceSerials = @{}
+    foreach ($device in $Devices) {
+        if (-not [string]::IsNullOrWhiteSpace($device.SerialNumber)) {
+            $deviceSerials[$device.SerialNumber] = $true
+        }
+    }
+
+    foreach ($device in $Devices) {
+        $serial = $device.SerialNumber
+
+        if (-not [string]::IsNullOrWhiteSpace($serial) -and $eventInfoBySerial.ContainsKey($serial)) {
+            $info = $eventInfoBySerial[$serial]
+
+            Add-Member -InputObject $device -MemberType NoteProperty -Name Events -Value $info.Count -Force
+            Add-Member -InputObject $device -MemberType NoteProperty -Name EventDescriptions -Value ($info.Descriptions | Select-Object -Unique) -Force
+            Add-Member -InputObject $device -MemberType NoteProperty -Name EventDescriptionsText -Value (($info.Descriptions | Select-Object -Unique) -join "`n") -Force
+            Add-Member -InputObject $device -MemberType NoteProperty -Name EventObjects -Value $info.Events -Force
+        }
+        else {
+            Add-Member -InputObject $device -MemberType NoteProperty -Name Events -Value 0 -Force
+            Add-Member -InputObject $device -MemberType NoteProperty -Name EventDescriptions -Value @() -Force
+            Add-Member -InputObject $device -MemberType NoteProperty -Name EventDescriptionsText -Value "" -Force
+            Add-Member -InputObject $device -MemberType NoteProperty -Name EventObjects -Value @() -Force
+        }
+    }
+
+    foreach ($event in $Events) {
+        if ([string]::IsNullOrWhiteSpace($event.SerialNumber) -or -not $deviceSerials.ContainsKey($event.SerialNumber)) {
+            $orphanEvents.Add($event)
+        }
+    }
+
+    [PSCustomObject]@{
+        Devices      = $Devices
+        OrphanEvents = $orphanEvents
+    }
+}
