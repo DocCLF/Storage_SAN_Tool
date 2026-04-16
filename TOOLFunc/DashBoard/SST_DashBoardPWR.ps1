@@ -27,7 +27,7 @@ function SST_DashBoardPWR {
                 PWRSYSProdMTM = $SST_SQLiteDBReader["MachineTypeModel"]
                 PWRSYSSerialNumber = $SST_SQLiteDBReader["SerialNumber"]
                 PWRSYSECNumber = $SST_SQLiteDBReader["ECNumber"]
-                ProdMTM  = $SST_SQLiteDBReader["PWRSYSIPLActivatedLevel"]
+                PWRSYSIPLActiLev  = $SST_SQLiteDBReader["ActivatedLevel"]
                 TimeStamp    = $SST_SQLiteDBReader["TimeStamp"]
             }
             $DashBoardPWRDeviceView.Add($DashBoardSTOsObj)
@@ -45,6 +45,7 @@ function SST_DashBoardPWR {
         if ($SST_SQLiteDBReader) { $SST_SQLiteDBReader.Close() }
         if ($SQLiteCommand) { $SQLiteCommand.Dispose() }
         if ($SQLConnection.State -eq 'Open') { $SQLConnection.Close() }
+        $DashBoardPWRDeviceView = $null
         #$SQLConnection.Dispose()
     }
     
