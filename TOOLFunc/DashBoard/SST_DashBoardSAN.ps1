@@ -45,6 +45,7 @@ function SST_DashBoardSAN {
         if ($SST_SQLiteDBReader) { $SST_SQLiteDBReader.Close() }
         if ($SQLiteCommand) { $SQLiteCommand.Dispose() }
         if ($SQLConnection.State -eq 'Open') { $SQLConnection.Close() }
+        $DashBoardSANDeviceView = $null
         #$SQLConnection.Dispose()
     }
 }
