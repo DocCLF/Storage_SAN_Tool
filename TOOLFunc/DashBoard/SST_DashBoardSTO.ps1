@@ -5,7 +5,9 @@ function SST_DashBoardSTO {
         [string]$Query,
 
         [Parameter(Mandatory)]
-        $SQLConnection
+        $SQLConnection,
+
+        $Events
     )
     $DashBoardSTODeviceView = [System.Collections.Generic.List[object]]::new()
     $DeviceCounter = 0
@@ -36,6 +38,22 @@ function SST_DashBoardSTO {
             $DashBoardSTODeviceView.Add($DashBoardSTOsObj)
         }
 
+        $eventMergeResult = Add-EventInfoToDevices -Devices $DashBoardSTODeviceView -Events $Events
+        $DashBoardSTODeviceView = $eventMergeResult.Devices
+        $OrphanEvents = $eventMergeResult.OrphanEvents
+        <# Woraround for ClusterSystem like IBM SVC #>
+        foreach ($STODevice in $DashBoardSTODeviceView) {
+            $STOClusterName = $STODevice.ClusterName
+            foreach($OrphanEvent in $OrphanEvents){
+                if($STOClusterName -eq $OrphanEvent.ObjectName){
+                    $ECounter = $STODevice.Events
+                    $STODevice.Events = $ECounter + 1
+                    $STODevice.EventDescriptionsText = $OrphanEvent.Description
+                }
+            }
+        }
+        
+        Write-Host $OrphanEvents
         $TD_IC_DashBoardSTODevice.ItemsSource = $DashBoardSTODeviceView
         $TD_TB_STODEVCount.Text = $DeviceCounter
 
@@ -48,6 +66,7 @@ function SST_DashBoardSTO {
         if ($SST_SQLiteDBReader) { $SST_SQLiteDBReader.Close() }
         if ($SQLiteCommand) { $SQLiteCommand.Dispose() }
         if ($SQLConnection.State -eq 'Open') { $SQLConnection.Close() }
+        #$DashBoardSTODeviceView = $null
         #$SQLConnection.Dispose()
     }
 }
