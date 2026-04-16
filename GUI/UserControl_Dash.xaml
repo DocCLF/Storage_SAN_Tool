@@ -91,27 +91,6 @@
                     <Label MinWidth="150" Margin="0" >
                         <Grid>
                             <StackPanel Grid.Row="0" Grid.Column="1" Orientation="Vertical" Margin="5">
-                                <TextBlock Text="DriveFW / Latest DriveFW" FontWeight="Bold" HorizontalAlignment="left" />
-                                <TextBlock x:Name="TB_NKNResOne" Text=""  HorizontalAlignment="left" Visibility = "Collapsed" Margin="2"/>
-                                <TextBlock x:Name="TB_NKNResTwo" Text="" HorizontalAlignment="left" Visibility = "Collapsed" Margin="2"/>
-                                <TextBlock x:Name="TB_NKNResThree" Text="" HorizontalAlignment="left" Visibility = "Collapsed" Margin="2"/>
-                            </StackPanel>
-                        </Grid>
-                    </Label>
-                    <Label MinWidth="150" Margin="0" >
-                        <Grid>
-                            <StackPanel Grid.Row="0" Grid.Column="1" Orientation="Vertical" Margin="5">
-                                <TextBlock Text="FOS Version / Latest FOS Vers" FontWeight="Bold" HorizontalAlignment="left" />
-                                <TextBlock x:Name="TB_SANFOSOne" Text=""  HorizontalAlignment="left" Visibility = "Collapsed" Margin="2"/>
-                                <TextBlock x:Name="TB_SANFOSTwo" Text="" HorizontalAlignment="left" Visibility = "Collapsed" Margin="2"/>
-                                <TextBlock x:Name="TB_SANFOSThree" Text="" HorizontalAlignment="left" Visibility = "Collapsed" Margin="2"/>
-                                <TextBlock x:Name="TB_SANFOSFour" Text="" HorizontalAlignment="left" Visibility = "Collapsed" Margin="2"/>
-                            </StackPanel>
-                        </Grid>
-                    </Label>
-                    <Label MinWidth="150" Margin="0" >
-                        <Grid>
-                            <StackPanel Grid.Row="0" Grid.Column="1" Orientation="Vertical" Margin="5">
                                 <TextBlock Text="Host Status changes since the last check" FontWeight="Bold" HorizontalAlignment="left" />
                                 <TextBlock x:Name="TB_STOHostStatusChangedOne" Text="Please Click the refresh Button to Update the DashBoard."  HorizontalAlignment="left" Margin="2"/>
                                 <TextBlock x:Name="TB_STOHostStatusChangedTwo" Text="" HorizontalAlignment="left" Visibility = "Collapsed" Margin="2"/>
@@ -125,9 +104,9 @@
             </Grid>
         </GroupBox>
         <StackPanel Grid.Row="1" Margin="10,10,0,5" Orientation="Horizontal">
-            <CheckBox x:Name="CB_DashBoardSTO" Content="View Storages" IsChecked="True" Margin="2" />
-            <CheckBox x:Name="CB_DashBoardSAN" Content="View SAN-Switches" IsChecked="True" Margin="10,2,0,2" />
-            <CheckBox x:Name="CB_DashBoardPWR" Content="View PowerServer" IsChecked="True" Margin="10,2,0,2" />
+            <CheckBox x:Name="CB_DashBoardSTO" Content="View Storages" IsChecked="True" Margin="2" FontSize="10" Style="{DynamicResource MainCheckBoxStyle}"/>
+            <CheckBox x:Name="CB_DashBoardSAN" Content="View SAN-Switches" IsChecked="True" Margin="10,2,0,2" FontSize="10" Style="{DynamicResource MainCheckBoxStyle}"/>
+            <CheckBox x:Name="CB_DashBoardPWR" Content="View PowerServer" IsChecked="True" Margin="10,2,0,2"  FontSize="10" Style="{DynamicResource MainCheckBoxStyle}"/>
         </StackPanel>
         <GroupBox Grid.Row="2" Header="Storage Info" MinWidth="400" MaxHeight="340" HorizontalAlignment="Left" Margin="10,10,0,0"  VerticalAlignment="Top" Visibility="{Binding ElementName=CB_DashBoardSTO, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
             <ScrollViewer Margin="5" VerticalScrollBarVisibility="Auto">
@@ -243,6 +222,35 @@
                                             VerticalAlignment="Center"
                                             Text="{Binding CodeLevel}"
                                             Margin="0"/>
+                                        <TextBlock
+                                            Grid.Row="5"
+                                            Grid.Column="1"
+                                            Style="{DynamicResource DashBoardTB1}"
+                                            HorizontalAlignment="Left"
+                                            VerticalAlignment="Center"
+                                            Text="Events:" 
+                                            Margin="3,0"/>
+                                        <TextBlock
+                                            Grid.Row="5"
+                                            Grid.Column="2"
+                                            Style="{DynamicResource DashBoardTB1}"
+                                            HorizontalAlignment="Left"
+                                            VerticalAlignment="Center"
+                                            Text="{Binding Events}"
+                                            Margin="0">
+                                                <TextBlock.Style>
+                                                    <Style TargetType="TextBlock">
+                                                    <Setter Property= "FontSize" Value="14"/>
+                                                    <Setter Property= "FontWeight" Value="Bold"/>
+                                                    <Setter Property= "Foreground" Value="Orange"/>
+                                                        <Style.Triggers>
+                                                            <Trigger Property ="Text" Value="0">
+                                                                <Setter Property= "Foreground" Value="Green"/>
+                                                            </Trigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </TextBlock.Style>
+                                                </TextBlock>
                                         <StackPanel Grid.Row="6" Grid.ColumnSpan="3" Margin="5,0">
                                             <Grid Margin="0,0,0,2">
                                                 <TextBlock Text="0" />
@@ -266,10 +274,26 @@
                                 </Grid>
                                 <Button.ToolTip>
                                     <ToolTip>
-                                    <StackPanel>
-                                        <TextBlock Text="{Binding MDiskTCfPGB, StringFormat=MDiskTotalCap: {0:D}TB}"/>
-                                        <TextBlock Text="{Binding MDiskUC, StringFormat=MDiskUsedCap: {0:D}TB}"/>
-                                    </StackPanel>
+                                        <StackPanel>
+                                            <TextBlock Text="{Binding MDiskTCfPGB, StringFormat=MDiskTotalCap: {0:D}TB}"/>
+                                            <TextBlock Text="{Binding MDiskUC, StringFormat=MDiskUsedCap: {0:D}TB}"/>
+
+                                            <StackPanel>
+                                                <StackPanel.Style>
+                                                    <Style TargetType="StackPanel">
+                                                        <Setter Property="Visibility" Value="Visible"/>
+                                                        <Style.Triggers>
+                                                            <DataTrigger Binding="{Binding EventDescriptionsText, TargetNullValue=''}" Value="">
+                                                                <Setter Property="Visibility" Value="Collapsed"/>
+                                                            </DataTrigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </StackPanel.Style>
+                                                <Separator Margin="0,4,0,4"/>
+                                                <TextBlock Text="Events:" Foreground="Orange"/>
+                                                <TextBlock Text="{Binding EventDescriptionsText}" TextWrapping="Wrap" MaxWidth="350"/>
+                                            </StackPanel>
+                                        </StackPanel>
                                     </ToolTip>
                                 </Button.ToolTip>
                             </Button>
@@ -425,7 +449,7 @@
                                             Style="{DynamicResource DashBoardTB1}"
                                             HorizontalAlignment="Left"
                                             VerticalAlignment="Center"
-                                            Text="{Binding PWRSYSIPLActivatedLevel}"
+                                            Text="{Binding PWRSYSIPLActiLev}"
                                             Margin="0"/>
                                     </Grid>
                                     <Grid Grid.Row="1">
@@ -604,8 +628,8 @@
             </ScrollViewer>
         </GroupBox>
         <StackPanel Grid.Row="5" Margin="10,10,0,5" Orientation="Horizontal">
-            <CheckBox x:Name="CB_DashBoardOnlineHosts" Content="View Online Hosts" Margin="2" />
-            <CheckBox x:Name="CB_DashBoardOfflineHosts" Content="View Offline Hosts" Margin="10,2,0,2" />
+            <CheckBox x:Name="CB_DashBoardOnlineHosts" Content="View Online Hosts" Margin="2" FontSize="10" Style="{DynamicResource MainCheckBoxStyle}"/>
+            <CheckBox x:Name="CB_DashBoardOfflineHosts" Content="View Offline Hosts" Margin="10,2,0,2" FontSize="10" Style="{DynamicResource MainCheckBoxStyle}"/>
         </StackPanel>
         <GroupBox Grid.Row="6" Header="Online Hosts, Storage View" MinWidth="400" MaxHeight="280" HorizontalAlignment="Left" Margin="10,5,0,0"  VerticalAlignment="Top" Visibility="{Binding ElementName=CB_DashBoardOnlineHosts, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
                 <ScrollViewer Margin="5" VerticalScrollBarVisibility="Auto">
