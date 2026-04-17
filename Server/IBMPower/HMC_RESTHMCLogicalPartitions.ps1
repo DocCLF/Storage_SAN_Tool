@@ -26,7 +26,7 @@ function HMC_RESTHMCLogicalPartitions {
         -IgnoreCertificate
 
     <# Write to the local database first before displaying it in the GUI! #>
-    SST_CustomerDeviceDBInsertTable -SST_InfoType "LPARSummary" -SST_CollectedInformations $lpars
+    SST_CustomerPWRDBInsertTable -SST_InfoType "LPARSummary" -SST_CollectedInformations $lpars
 
     $i = 0
     $lpars | ForEach-Object {
