@@ -102,7 +102,7 @@ function IBM_RESTDriveInfo {
 
     end{
         Close-ProgressBar -ProgressBar $ProgressBar
-        SST_CustomerDeviceDBInsertTable -SST_InfoType "StorageDrive" -SST_CollectedInformations $TD_DriveOverview
+        SST_CustomerSTODBInsertTable -SST_InfoType "StorageDrive" -SST_CollectedInformations $TD_DriveOverview
         
         <# export y or n #>
         if($TD_export -eq "yes"){
