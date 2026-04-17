@@ -97,7 +97,7 @@ function IBM_SSHBaseStorageInfos {
                 SST_ToolMessageCollector -TD_ToolMSGCollector "$PSScriptRoot\ToolLog\$($TD_Line_ID)_$($TD_Device_DeviceName)_StorageBaseInfo_$(Get-Date -Format "yyyy-MM-dd").csv" -TD_ToolMSGType Debug
             }
         }
-        SST_CustomerDeviceDBInsertTable -SST_InfoType "StorageBase" -SST_CollectedInformations $TD_StorageInfo
+        SST_CustomerSTODBInsertTable -SST_InfoType "StorageBase" -SST_CollectedInformations $TD_StorageInfo
         [PSCustomObject]@{
             StorageInfo     = $TD_StorageInfo
             ConnectionTyp   = $TD_Device_ConnectionTyp
