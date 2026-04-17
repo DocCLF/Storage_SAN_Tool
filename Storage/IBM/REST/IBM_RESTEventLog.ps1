@@ -75,7 +75,7 @@ function IBM_RESTEventLog {
     
     end {
         Close-ProgressBar -ProgressBar $ProgressBar
-        SST_CustomerDeviceDBInsertTable -SST_InfoType "StorageEventLog" -SST_CollectedInformations $TD_EventCollection
+        SST_CustomerSTODBInsertTable -SST_InfoType "StorageEventLog" -SST_CollectedInformations $TD_EventCollection
         
         <# returns the hashtable for further processing, not mandatory but the safe way #>
         Write-Debug -Message "IBM_EventLog End block |$(Get-Date) `n"
