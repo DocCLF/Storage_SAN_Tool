@@ -5,7 +5,7 @@ function SST_ExportCredential {
     <# collect the access data for subsequent processing #>
 
     $TD_CredCollection=foreach($TD_CollectedCredData in $TD_CollectedCredDatas){
-        $TD_ToExportCredInfo = ""| Select-Object ID,DeviceTyp,ConnectionTyp,IPAddress,DeviceName,UserName,Password,SVCorVF
+        $TD_ToExportCredInfo = ""| Select-Object ID,DeviceTyp,ConnectionTyp,IPAddress,DeviceName,UserName,Password,SVCorVF,TapeWWNN
         $TD_ToExportCredInfo.ID = $TD_CollectedCredData.ID
         $TD_ToExportCredInfo.DeviceTyp = $TD_CollectedCredData.DeviceTyp;
         $TD_ToExportCredInfo.ConnectionTyp = $TD_CollectedCredData.ConnectionTyp;
