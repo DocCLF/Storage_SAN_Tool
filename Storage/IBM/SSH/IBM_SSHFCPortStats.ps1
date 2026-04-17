@@ -138,7 +138,7 @@ function IBM_SSHFCPortStats {
     end {
         Close-ProgressBar -ProgressBar $ProgressBar
         
-        SST_CustomerDeviceDBInsertTable -SST_InfoType "FCPortStats" -SST_CollectedInformations $TD_PortStats_Overview
+        SST_CustomerSTODBInsertTable -SST_InfoType "FCPortStats" -SST_CollectedInformations $TD_PortStats_Overview
         <# export y or n #>
         if($TD_export -eq "yes"){
 
