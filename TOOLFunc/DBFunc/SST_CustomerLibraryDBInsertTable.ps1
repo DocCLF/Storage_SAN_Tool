@@ -1,4 +1,4 @@
-function SST_CustomerDeviceDBInsertTable {
+function SST_CustomerLibraryDBInsertTable {
     [CmdletBinding()]
     param (
         [Parameter(ValueFromPipeline)]
