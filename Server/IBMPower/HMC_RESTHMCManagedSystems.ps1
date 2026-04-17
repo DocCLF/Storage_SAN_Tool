@@ -22,7 +22,7 @@ function HMC_RESTHMCManagedSystems {
     $ms = HMC_InvokeHmcQuery -HMCIP $ip -HMCPort $port -CredentialUN $user -CredentialPW $pass -Query ManagedSystems -IgnoreCertificate
 
     <# Write to the local database first before displaying it in the GUI! #>
-    SST_CustomerDeviceDBInsertTable -SST_InfoType "PowerSysSummary" -SST_CollectedInformations $ms
+    SST_CustomerPWRDBInsertTable -SST_InfoType "PowerSysSummary" -SST_CollectedInformations $ms
 
     # RowID for Add-MappedRows (stable for the grid)
     $i = 0
