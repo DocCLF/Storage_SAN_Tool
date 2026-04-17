@@ -157,8 +157,14 @@
 
           <ItemsControl.ItemTemplate>
             <DataTemplate>
-            <StackPanel>
-              <DataGrid AutoGenerateColumns="False"
+                <StackPanel>
+                    <!-- Headline Label pro Device -->
+                    <Label Content="Storage Info"
+                        Style="{DynamicResource MainLabelStyle}"
+                        FontSize="12"
+                        Margin="5,8,5,0"
+                        Visibility="{Binding IsChecked, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                    <DataGrid AutoGenerateColumns="False"
                         ColumnWidth="*"
                         HorizontalAlignment="Stretch"
                         Margin="5"
@@ -168,108 +174,109 @@
                         CanUserAddRows="False"
                         Visibility="{Binding IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
 
-                <!-- Optional: Header pro Device -->
-                <DataGrid.GroupStyle>
-                  <GroupStyle/>
-                </DataGrid.GroupStyle>
+                        <!-- Optional: Header pro Device -->
+                        <DataGrid.GroupStyle>
+                          <GroupStyle/>
+                        </DataGrid.GroupStyle>
 
-                <DataGrid.RowStyle>
-                  <Style TargetType="DataGridRow">
-                    <Style.Triggers>
-                      <DataTrigger Binding="{Binding Status}" Value="online">
-                        <Setter Property="Background" Value="LightGreen" />
-                      </DataTrigger>
-                      <DataTrigger Binding="{Binding Status}" Value="service">
-                        <Setter Property="Background" Value="Yellow" />
-                      </DataTrigger>
-                      <DataTrigger Binding="{Binding Status}" Value="offline">
-                        <Setter Property="Background" Value="Red" />
-                      </DataTrigger>
-                    </Style.Triggers>
-                  </Style>
-                </DataGrid.RowStyle>
+                        <DataGrid.RowStyle>
+                          <Style TargetType="DataGridRow">
+                            <Style.Triggers>
+                              <DataTrigger Binding="{Binding Status}" Value="online">
+                                <Setter Property="Background" Value="LightGreen" />
+                              </DataTrigger>
+                              <DataTrigger Binding="{Binding Status}" Value="service">
+                                <Setter Property="Background" Value="Yellow" />
+                              </DataTrigger>
+                              <DataTrigger Binding="{Binding Status}" Value="offline">
+                                <Setter Property="Background" Value="Red" />
+                              </DataTrigger>
+                            </Style.Triggers>
+                          </Style>
+                        </DataGrid.RowStyle>
 
-                <DataGrid.Columns>
-                  <DataGridTextColumn Width="auto" Header="NodeID" Binding="{Binding ID}" IsReadOnly="True"/>
-                  <DataGridTextColumn Width="auto" Header="NodeName" Binding="{Binding Name}" IsReadOnly="True"/>
-                  <DataGridTextColumn Width="auto" Header="NodeWWNN" Binding="{Binding WWNN}" IsReadOnly="True"/>
-                  <DataGridTextColumn Width="auto" Header="Status" Binding="{Binding Status}" IsReadOnly="True"/>
-                  <DataGridTextColumn Width="auto" Header="Serial Number" Binding="{Binding SerialNumber}" IsReadOnly="True"/>
-                  <DataGridTextColumn Width="auto" Header="IO_group_id" Binding="{Binding IO_group_id}" IsReadOnly="True"/>
-                  <DataGridTextColumn Width="auto" Header="IO_group_Name" Binding="{Binding IO_group_Name}" IsReadOnly="True"/>
-                  <DataGridTextColumn Width="auto" Header="Code Level" Binding ="{Binding CodeLevel}" IsReadOnly="True">
-                      <DataGridTextColumn.CellStyle>
-                          <Style TargetType="DataGridCell">
-                              <Setter Property="ToolTip" Value="Indicates the current level of machine code that is running on the node or node canister" />
-                          </Style>
-                      </DataGridTextColumn.CellStyle>
-                  </DataGridTextColumn>
-                  <DataGridTextColumn Width="auto" Header="Recommended Level" Binding ="{Binding RecommendedPTF}" IsReadOnly="True">
-                      <DataGridTextColumn.CellStyle>
-                          <Style TargetType="DataGridCell">
-                              <Setter Property="ToolTip" Value="Indicates the Recommended level for the machine or node" />
-                          </Style>
-                      </DataGridTextColumn.CellStyle>
-                  </DataGridTextColumn>
-                  <DataGridTextColumn Width="auto" Header="Config Node" Binding ="{Binding ConfigNode}" IsReadOnly="True">
-                      <DataGridTextColumn.CellStyle>
-                          <Style TargetType="DataGridCell">
-                              <Setter Property="ToolTip" Value="Indicates if the node is a configuration node." />
-                          </Style>
-                      </DataGridTextColumn.CellStyle>
-                  </DataGridTextColumn>
-                  <DataGridTextColumn Width="auto" Header="SideID" Binding ="{Binding SideID}" IsReadOnly="True"/>
-                  <DataGridTextColumn Width="auto" Header="Side Name" Binding ="{Binding SideName}" IsReadOnly="True"/>
-                </DataGrid.Columns>
-              </DataGrid>
-              <!-- Label zwischen den Grids -->
-              <Label Content="Quorum Info"
-                     Style="{DynamicResource MainLabelStyle}"
-                     Margin="5,8,5,0"
-                     Visibility="{Binding IsChecked, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Width="auto" Header="NodeID" Binding="{Binding ID}" IsReadOnly="True"/>
+                            <DataGridTextColumn Width="auto" Header="NodeName" Binding="{Binding Name}" IsReadOnly="True"/>
+                            <DataGridTextColumn Width="auto" Header="NodeWWNN" Binding="{Binding WWNN}" IsReadOnly="True"/>
+                            <DataGridTextColumn Width="auto" Header="Status" Binding="{Binding Status}" IsReadOnly="True"/>
+                            <DataGridTextColumn Width="auto" Header="Serial Number" Binding="{Binding SerialNumber}" IsReadOnly="True"/>
+                            <DataGridTextColumn Width="auto" Header="IO_group_id" Binding="{Binding IO_group_id}" IsReadOnly="True"/>
+                            <DataGridTextColumn Width="auto" Header="IO_group_Name" Binding="{Binding IO_group_Name}" IsReadOnly="True"/>
+                            <DataGridTextColumn Width="auto" Header="Code Level" Binding ="{Binding CodeLevel}" IsReadOnly="True">
+                                <DataGridTextColumn.CellStyle>
+                                    <Style TargetType="DataGridCell">
+                                        <Setter Property="ToolTip" Value="Indicates the current level of machine code that is running on the node or node canister" />
+                                    </Style>
+                                </DataGridTextColumn.CellStyle>
+                            </DataGridTextColumn>
+                            <DataGridTextColumn Width="auto" Header="Recommended Level" Binding ="{Binding RecommendedPTF}" IsReadOnly="True">
+                                <DataGridTextColumn.CellStyle>
+                                    <Style TargetType="DataGridCell">
+                                        <Setter Property="ToolTip" Value="Indicates the Recommended level for the machine or node" />
+                                    </Style>
+                                </DataGridTextColumn.CellStyle>
+                            </DataGridTextColumn>
+                            <DataGridTextColumn Width="auto" Header="Config Node" Binding ="{Binding ConfigNode}" IsReadOnly="True">
+                                <DataGridTextColumn.CellStyle>
+                                    <Style TargetType="DataGridCell">
+                                        <Setter Property="ToolTip" Value="Indicates if the node is a configuration node." />
+                                    </Style>
+                                </DataGridTextColumn.CellStyle>
+                            </DataGridTextColumn>
+                            <DataGridTextColumn Width="auto" Header="SideID" Binding ="{Binding SideID}" IsReadOnly="True"/>
+                            <DataGridTextColumn Width="auto" Header="Side Name" Binding ="{Binding SideName}" IsReadOnly="True"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                    <!-- Label zwischen den Grids -->
+                    <Label Content="Quorum Info"
+                        Style="{DynamicResource MainLabelStyle}"
+                        FontSize="12"
+                        Margin="5,8,5,0"
+                        Visibility="{Binding IsChecked, Converter={StaticResource BooleanToVisibilityConverter}}"/>
           
-              <!-- IP Quorum Grid -->
-              <DataGrid AutoGenerateColumns="False"
-                        ColumnWidth="*"
-                        HorizontalAlignment="Stretch"
-                        Margin="5"
-                        MaxWidth="1024"
-                        MaxHeight="460"
-                        ItemsSource="{Binding IPQuorumRows}"
-                        CanUserAddRows="False"
-                        Visibility="{Binding IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
+                    <!-- IP Quorum Grid -->
+                    <DataGrid AutoGenerateColumns="False"
+                              ColumnWidth="*"
+                              HorizontalAlignment="Stretch"
+                              Margin="5"
+                              MaxWidth="1024"
+                              MaxHeight="460"
+                              ItemsSource="{Binding IPQuorumRows}"
+                              CanUserAddRows="False"
+                              Visibility="{Binding IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
 
-                <!-- Optional: Header pro Device -->
-                <DataGrid.GroupStyle>
-                  <GroupStyle/>
-                </DataGrid.GroupStyle>
+                      <!-- Optional: Header pro Device -->
+                        <DataGrid.GroupStyle>
+                          <GroupStyle/>
+                        </DataGrid.GroupStyle>
 
-                             <DataGrid.CellStyle>
-                                <Style TargetType="DataGridCell">
-                                    <Style.Triggers>
-                                        <DataTrigger Binding="{Binding Status}" Value="Online">
-                                            <Setter Property="Background" Value="LightGreen" />
-                                        </DataTrigger>
-                                        <DataTrigger Binding="{Binding Status}" Value="Offline">
-                                            <Setter Property="Background" Value="yellow" />
-                                        </DataTrigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </DataGrid.CellStyle>
+                        <DataGrid.CellStyle>
+                           <Style TargetType="DataGridCell">
+                               <Style.Triggers>
+                                   <DataTrigger Binding="{Binding Status}" Value="Online">
+                                       <Setter Property="Background" Value="LightGreen" />
+                                   </DataTrigger>
+                                   <DataTrigger Binding="{Binding Status}" Value="Offline">
+                                       <Setter Property="Background" Value="yellow" />
+                                   </DataTrigger>
+                               </Style.Triggers>
+                           </Style>
+                        </DataGrid.CellStyle>
 
-                <DataGrid.Columns>
-                    <DataGridTextColumn Width="auto" Header="QuorumIndex"  Binding ="{Binding QuorumIndex}" IsReadOnly="True"/>
-                    <DataGridTextColumn Width="auto" Header="Status" Binding ="{Binding Status}" IsReadOnly="True"/>
-                    <DataGridTextColumn Width="auto" Header="ID"  Binding ="{Binding ID}" IsReadOnly="True"/>  
-                    <DataGridTextColumn Width="auto" Header="Name" Binding ="{Binding Name}" IsReadOnly="True"/>  
-                    <DataGridTextColumn Width="auto" Header="Active" Binding ="{Binding Active}" IsReadOnly="True"/> 
-                    <DataGridTextColumn Width="auto" Header="Object Type" Binding ="{Binding ObjectType}" IsReadOnly="True"/>
-                    <DataGridTextColumn Width="auto" Header="Override" Binding ="{Binding Override}" IsReadOnly="True"/> 
-                    <DataGridTextColumn Width="auto" Header="Site Name" Binding ="{Binding SideName}" IsReadOnly="True"/>
-                </DataGrid.Columns>
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Width="auto" Header="QuorumIndex"  Binding ="{Binding QuorumIndex}" IsReadOnly="True"/>
+                            <DataGridTextColumn Width="auto" Header="Status" Binding ="{Binding Status}" IsReadOnly="True"/>
+                            <DataGridTextColumn Width="auto" Header="ID"  Binding ="{Binding ID}" IsReadOnly="True"/>  
+                            <DataGridTextColumn Width="auto" Header="Name" Binding ="{Binding Name}" IsReadOnly="True"/>  
+                            <DataGridTextColumn Width="auto" Header="Active" Binding ="{Binding Active}" IsReadOnly="True"/> 
+                            <DataGridTextColumn Width="auto" Header="Object Type" Binding ="{Binding ObjectType}" IsReadOnly="True"/>
+                            <DataGridTextColumn Width="auto" Header="Override" Binding ="{Binding Override}" IsReadOnly="True"/> 
+                            <DataGridTextColumn Width="auto" Header="Site Name" Binding ="{Binding SideName}" IsReadOnly="True"/>
+                        </DataGrid.Columns>
 
-              </DataGrid>
-              </StackPanel>
+                    </DataGrid>
+                </StackPanel>
             </DataTemplate>
           </ItemsControl.ItemTemplate>
         </ItemsControl>
