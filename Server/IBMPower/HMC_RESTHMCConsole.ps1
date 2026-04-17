@@ -25,7 +25,7 @@ function HMC_RESTHMCConsole {
         -IgnoreCertificate
 
     <# Write to the local database first before displaying it in the GUI! #>
-    SST_CustomerDeviceDBInsertTable -SST_InfoType "PowerHMC" -SST_CollectedInformations $hmc
+    SST_CustomerPWRDBInsertTable -SST_InfoType "PowerHMC" -SST_CollectedInformations $hmc
 
     # RowID for Add-MappedRows (stable for the grid)
     $i = 0
