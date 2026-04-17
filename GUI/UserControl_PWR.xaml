@@ -523,7 +523,7 @@
                                                         <Style TargetType="TextBlock">
                                                             <Style.Triggers>
                                                                 <Trigger Property ="Text" Value="not activated">
-                                                                    <Setter Property= "Foreground" Value="yellow"/>
+                                                                    <Setter Property= "Foreground" Value="DarkYellow"/>
                                                                 </Trigger>
                                                                 <Trigger Property ="Text" Value="running">
                                                                     <Setter Property= "Foreground" Value="green"/>
