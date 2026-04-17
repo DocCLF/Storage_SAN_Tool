@@ -318,18 +318,32 @@ function Add-EventInfoToDevices {
         [Parameter(Mandatory)]
         [System.Collections.IEnumerable]$Devices,
 
-        [Parameter(Mandatory)]
+        [Parameter()]
+        [AllowNull()]
         [System.Collections.IEnumerable]$Events
     )
-
+    # If no devices are provided → return empty result structure
+    if ($null -eq $Devices) {
+        return [PSCustomObject]@{
+            Devices      = [System.Collections.Generic.List[object]]::new()
+            OrphanEvents = [System.Collections.Generic.List[object]]::new()
+        }
+    }
+    # If events are null → replace with empty array (prevents foreach errors)
+    if ($null -eq $Events) {
+        $Events = @()
+    }
+    # Hashtable to group events by SerialNumber
     $eventInfoBySerial = @{}
+    # List for events that do not belong to any device
     $orphanEvents = [System.Collections.Generic.List[object]]::new()
-
+    # Group events by SerialNumber and collect metadata
     foreach ($event in $Events) {
+        # Skip events without SerialNumber
         if ([string]::IsNullOrWhiteSpace($event.SerialNumber)) {
             continue
         }
-
+        # Initialize entry if SerialNumber not yet present
         if (-not $eventInfoBySerial.ContainsKey($event.SerialNumber)) {
             $eventInfoBySerial[$event.SerialNumber] = [PSCustomObject]@{
                 Count        = 0
@@ -337,47 +351,48 @@ function Add-EventInfoToDevices {
                 Events       = [System.Collections.Generic.List[object]]::new()
             }
         }
-
+        # Increase count and store event object
         $eventInfoBySerial[$event.SerialNumber].Count++
         $eventInfoBySerial[$event.SerialNumber].Events.Add($event)
-
+        # Store description if not empty
         if (-not [string]::IsNullOrWhiteSpace($event.Description)) {
             $eventInfoBySerial[$event.SerialNumber].Descriptions.Add($event.Description)
         }
     }
-
+    # Hashtable of all device serial numbers for fast lookup
     $deviceSerials = @{}
     foreach ($device in $Devices) {
         if (-not [string]::IsNullOrWhiteSpace($device.SerialNumber)) {
             $deviceSerials[$device.SerialNumber] = $true
         }
     }
-
+    # Attach event information to each device
     foreach ($device in $Devices) {
         $serial = $device.SerialNumber
-
+        # If events exist for this device
         if (-not [string]::IsNullOrWhiteSpace($serial) -and $eventInfoBySerial.ContainsKey($serial)) {
             $info = $eventInfoBySerial[$serial]
-
-            Add-Member -InputObject $device -MemberType NoteProperty -Name Events -Value $info.Count -Force
-            Add-Member -InputObject $device -MemberType NoteProperty -Name EventDescriptions -Value ($info.Descriptions | Select-Object -Unique) -Force
-            Add-Member -InputObject $device -MemberType NoteProperty -Name EventDescriptionsText -Value (($info.Descriptions | Select-Object -Unique) -join "`n") -Force
-            Add-Member -InputObject $device -MemberType NoteProperty -Name EventObjects -Value $info.Events -Force
+            $uniqueDescriptions = $info.Descriptions | Select-Object -Unique
+            Add-Member -InputObject $device -MemberType NoteProperty -Name Events -Value $info.Count -Force     # Number of events
+            Add-Member -InputObject $device -MemberType NoteProperty -Name EventDescriptions -Value $uniqueDescriptions -Force     # Unique descriptions as array
+            Add-Member -InputObject $device -MemberType NoteProperty -Name EventDescriptionsText -Value ($uniqueDescriptions -join "`n") -Force    # Unique descriptions as single string (for UI / tooltip)
+            Add-Member -InputObject $device -MemberType NoteProperty -Name EventObjects -Value $info.Events -Force      # Original event objects
         }
         else {
+            # No events found → assign default values
             Add-Member -InputObject $device -MemberType NoteProperty -Name Events -Value 0 -Force
             Add-Member -InputObject $device -MemberType NoteProperty -Name EventDescriptions -Value @() -Force
             Add-Member -InputObject $device -MemberType NoteProperty -Name EventDescriptionsText -Value "" -Force
             Add-Member -InputObject $device -MemberType NoteProperty -Name EventObjects -Value @() -Force
         }
     }
-
+    # Identify orphan events (events without matching device)
     foreach ($event in $Events) {
         if ([string]::IsNullOrWhiteSpace($event.SerialNumber) -or -not $deviceSerials.ContainsKey($event.SerialNumber)) {
             $orphanEvents.Add($event)
         }
     }
-
+    # Return result object
     [PSCustomObject]@{
         Devices      = $Devices
         OrphanEvents = $orphanEvents
