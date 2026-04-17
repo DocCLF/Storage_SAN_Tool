@@ -106,7 +106,7 @@ function IBM_RESTHostInfo {
     
     end {
         Close-ProgressBar -ProgressBar $ProgressBar
-        SST_CustomerDeviceDBInsertTable -SST_InfoType "StorageHostInfo" -SST_CollectedInformations $CollectedHostInfo
+        SST_CustomerSTODBInsertTable -SST_InfoType "StorageHostInfo" -SST_CollectedInformations $CollectedHostInfo
         <# export y or n #>
         if($TD_Export -eq "yes"){
             if([string]$TD_Exportpath -ne "$PSCommandPath\ToolLog\"){
