@@ -1449,7 +1449,7 @@ $TD_BTN_IBM_TapeLibrary.add_click({
         }
         try {
             $MergeLibObj = Merge-PSCustomObject -InputObject @($($LibBaseInfo.BaseInfo), $LibInfo)
-            SST_CustomerDeviceDBInsertTable -SST_InfoType "LibraryBaseInfo" -SST_CollectedInformations $MergeLibObj
+            SST_CustomerLibraryDBInsertTable -SST_InfoType "LibraryBaseInfo" -SST_CollectedInformations $MergeLibObj
         }
         catch {
             <#Do this if a terminating exception happens#>
@@ -1465,8 +1465,8 @@ $TD_BTN_IBM_TapeInventory.add_click({
         $LibInventory = Invoke_IBMTapeLibraryApi -Device $TD_Creds -Endpoint 'library/inventory'
         try {
             $LibrarySerialNumberMTM = SST_CustomerLibraryDBReadTable -SST_InfoType "GetLibrarySerialNumberMTM" -SST_Customer $($TD_TB_CustomerInfoName.Text) -SST_NeededInformations $($TD_Creds.TapeWWNN)
-            SST_CustomerDeviceDBInsertTable -SST_InfoType "LibraryInventorySlots" -SST_CollectedInformations $($LibInventory.Slots) -SST_NeededInformations $LibrarySerialNumberMTM
-            SST_CustomerDeviceDBInsertTable -SST_InfoType "LibraryInventoryDrives" -SST_CollectedInformations $($LibInventory.Drives) -SST_NeededInformations $LibrarySerialNumberMTM
+            SST_CustomerLibraryDBInsertTable -SST_InfoType "LibraryInventorySlots" -SST_CollectedInformations $($LibInventory.Slots) -SST_NeededInformations $LibrarySerialNumberMTM
+            SST_CustomerLibraryDBInsertTable -SST_InfoType "LibraryInventoryDrives" -SST_CollectedInformations $($LibInventory.Drives) -SST_NeededInformations $LibrarySerialNumberMTM
         }
         catch {
             <#Do this if a terminating exception happens#>
@@ -1519,7 +1519,7 @@ $TD_BTN_IBM_TapeDrive.add_click({
                 }
             }
             $LibrarySerialNumberMTM = SST_CustomerLibraryDBReadTable -SST_InfoType "GetLibrarySerialNumberMTM" -SST_Customer $($TD_TB_CustomerInfoName.Text) -SST_NeededInformations $($TD_Creds.TapeWWNN)
-            SST_CustomerDeviceDBInsertTable -SST_InfoType "LibraryDrive" -SST_CollectedInformations $MergeLibObj -SST_NeededInformations $LibrarySerialNumberMTM
+            SST_CustomerLibraryDBInsertTable -SST_InfoType "LibraryDrive" -SST_CollectedInformations $MergeLibObj -SST_NeededInformations $LibrarySerialNumberMTM
         }
         catch {
             <#Do this if a terminating exception happens#>
@@ -1535,7 +1535,7 @@ $TD_BTN_IBM_TapeLogicalLib.add_click({
         $LogicalLibraryInfo = Invoke_IBMTapeLibraryApi -Device $TD_Creds -Endpoint 'logicalLibrary/information'    
         try {
             $LibrarySerialNumberMTM = SST_CustomerLibraryDBReadTable -SST_InfoType "GetLibrarySerialNumberMTM" -SST_Customer $($TD_TB_CustomerInfoName.Text) -SST_NeededInformations $($TD_Creds.TapeWWNN)
-            SST_CustomerDeviceDBInsertTable -SST_InfoType "LogicalLibraryInfo" -SST_CollectedInformations $LogicalLibraryInfo -SST_NeededInformations $LibrarySerialNumberMTM
+            SST_CustomerLibraryDBInsertTable -SST_InfoType "LogicalLibraryInfo" -SST_CollectedInformations $LogicalLibraryInfo -SST_NeededInformations $LibrarySerialNumberMTM
         }
         catch {
             <#Do this if a terminating exception happens#>
@@ -1551,7 +1551,7 @@ $TD_BTN_IBM_TapeMediaInfo.add_click({
         $LibInfo = Invoke_IBMTapeLibraryApi -Device $TD_Creds -Endpoint 'library/mediainfo'    
         try {
             $LibrarySerialNumberMTM = SST_CustomerLibraryDBReadTable -SST_InfoType "GetLibrarySerialNumberMTM" -SST_Customer $($TD_TB_CustomerInfoName.Text) -SST_NeededInformations $($TD_Creds.TapeWWNN)
-            SST_CustomerDeviceDBInsertTable -SST_InfoType "LibraryMediaInfo" -SST_CollectedInformations $LibInfo -SST_NeededInformations $LibrarySerialNumberMTM
+            SST_CustomerLibraryDBInsertTable -SST_InfoType "LibraryMediaInfo" -SST_CollectedInformations $LibInfo -SST_NeededInformations $LibrarySerialNumberMTM
         }
         catch {
             <#Do this if a terminating exception happens#>
@@ -1567,7 +1567,7 @@ $TD_BTN_IBM_TapeReports.add_click({
         $LibraryReports = Invoke_IBMTapeLibraryApi -Device $TD_Creds -Endpoint 'reports/mountHistory'  
         try {
             $LibrarySerialNumberMTM = SST_CustomerLibraryDBReadTable -SST_InfoType "GetLibrarySerialNumberMTM" -SST_Customer $($TD_TB_CustomerInfoName.Text) -SST_NeededInformations $($TD_Creds.TapeWWNN)
-            SST_CustomerDeviceDBInsertTable -SST_InfoType "LibraryReports" -SST_CollectedInformations $LibraryReports -SST_NeededInformations $LibrarySerialNumberMTM
+            SST_CustomerLibraryDBInsertTable -SST_InfoType "LibraryReports" -SST_CollectedInformations $LibraryReports -SST_NeededInformations $LibrarySerialNumberMTM
         }
         catch {
             <#Do this if a terminating exception happens#>
@@ -1583,7 +1583,7 @@ $TD_BTN_IBM_TapeEvents.add_click({
         $LibraryEvents = Invoke_IBMTapeLibraryApi -Device $TD_Creds -Endpoint 'events'    
         try {
             $LibrarySerialNumberMTM = SST_CustomerLibraryDBReadTable -SST_InfoType "GetLibrarySerialNumberMTM" -SST_Customer $($TD_TB_CustomerInfoName.Text) -SST_NeededInformations $($TD_Creds.TapeWWNN)
-            SST_CustomerDeviceDBInsertTable -SST_InfoType "LibraryEvents" -SST_CollectedInformations $LibraryEvents -SST_NeededInformations $LibrarySerialNumberMTM
+            SST_CustomerLibraryDBInsertTable -SST_InfoType "LibraryEvents" -SST_CollectedInformations $LibraryEvents -SST_NeededInformations $LibrarySerialNumberMTM
         }
         catch {
             <#Do this if a terminating exception happens#>
