@@ -1,3 +1,4 @@
+<#
 function SST_CustomerDeviceDBReadTable {
     [CmdletBinding()]
     param (
@@ -36,3 +37,4 @@ function SST_CustomerDeviceDBReadTable {
         
     }
 }
+#>
