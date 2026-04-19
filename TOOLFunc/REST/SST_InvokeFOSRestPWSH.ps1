@@ -85,7 +85,9 @@ function SST_InvokeFOSRestPWSH {
     -ContentType "application/yang-data+xml" `
     -Body "" `
     -SkipCertificateCheck `
+    -UseBasicParsing `
     -ErrorAction Stop
+    
 
   # Normalize token: String[] -> String
   $token = @($login.Headers.Authorization)[0].Trim()
@@ -120,6 +122,7 @@ function SST_InvokeFOSRestPWSH {
         -ContentType "application/yang-data+xml" `
         -Body "" `
         -SkipCertificateCheck `
+        -UseBasicParsing `
         -ErrorAction SilentlyContinue | Out-Null
     } catch { }
   }
