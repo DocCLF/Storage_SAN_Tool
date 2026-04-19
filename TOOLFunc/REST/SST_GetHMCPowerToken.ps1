@@ -106,7 +106,7 @@ function SST_GetHMCPowerToken {
                 [System.Net.ServicePointManager]::ServerCertificateValidationCallback = { $true }
             }
 
-            $result = Invoke-WebRequest @InvokeWebReqParamsBlock -UseBasicParsing
+            $result = Invoke-WebRequest @InvokeWebReqParamsBlock
         }
         finally {
             if ($IgnoreCertificate) {
