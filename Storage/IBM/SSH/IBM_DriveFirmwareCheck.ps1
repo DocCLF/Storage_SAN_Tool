@@ -56,7 +56,7 @@ function IBM_DriveFirmwareCheck {
         }
 
         try {
-            $IBM_WebStoDRIVESWInofs = Invoke-WebRequest https://www.ibm.com/support/pages/supported-drive-types-and-firmware-levels-ibm-storage-virtualize-family-products
+            $IBM_WebStoDRIVESWInofs = Invoke-WebRequest https://www.ibm.com/support/pages/supported-drive-types-and-firmware-levels-ibm-storage-virtualize-family-products -UseBasicParsing
             $IBM_WebStoDRIVESWInofs.Content | Out-File -FilePath $PSRootPath\ToolLog\ToolTEMP\IBMFSDriveSWTemp.txt
             $IBM_WebStoDRIVESWInofsTemp = Get-Content -Path $PSRootPath\ToolLog\ToolTEMP\IBMFSDriveSWTemp.txt
             $IBM_WebDateInfo = ($IBM_WebStoDRIVESWInofsTemp|Select-String -Pattern '([1-9]+\s[A-Za-z]+\s[0-9]+)' -AllMatches).Matches.Groups[1].Value
