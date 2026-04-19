@@ -47,7 +47,7 @@ function IBM_StorageSWCheck {
         }
 
         try {
-            $IBM_WebSpecVirtSWInofs = Invoke-WebRequest https://www.ibm.com/support/pages/ibm-storage-virtualize-family-products-upgrade-planning
+            $IBM_WebSpecVirtSWInofs = Invoke-WebRequest https://www.ibm.com/support/pages/ibm-storage-virtualize-family-products-upgrade-planning -UseBasicParsing
             $IBM_WebSpecVirtSWInofs.Content | Out-File -FilePath $PSRootPath\ToolLog\ToolTEMP\IBMSVSWTemp.txt
             $IBM_LocSpecVirtSWInofsTemp = Get-Content -Path $PSRootPath\ToolLog\ToolTEMP\IBMSVSWTemp.txt
             $IBM_WebDateInfo = ($IBM_LocSpecVirtSWInofsTemp|Select-String -Pattern '([1-9]+\s[A-Za-z]+\s[0-9]+)' -AllMatches).Matches.Groups[1].Value
