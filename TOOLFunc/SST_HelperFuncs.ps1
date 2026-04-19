@@ -29,6 +29,44 @@ function Get-VisualDescendants {
     }
 }
 
+#Fallback HelperFunc for using in DashBoard and New-DeviceBlock
+function Invoke-DeviceDataFetch {
+    param(
+        [Parameter(Mandatory)] $Device,
+        [string] $ExportPath,
+        [object] $RESTFunc,
+        [object] $SSHFunc
+    )
+
+    $FunResult = $null
+    [bool]$FallbacktoSSH = $false
+    $pw = [Net.NetworkCredential]::new('', $Device.Password).Password
+
+    if($RESTFunc){
+        $FunResult = & $RESTFunc -TD_Line_ID $Device.ID -TD_Device_UserName $Device.UserName -TD_Device_DeviceIP $Device.IPAddress -TD_Device_PW $pw -TD_Exportpath $ExportPath
+
+        $items = @($FunResult)
+
+        if ($items.Count -eq 0) {
+            $FallbacktoSSH = $true
+        }
+        elseif ($items.Count -eq 1 -and ($items[0].PSObject.Properties.Name -contains 'StorageInfo')) {
+            if ($null -eq $items[0].StorageInfo -or [string]::IsNullOrWhiteSpace([string]$items[0].StorageInfo.ID)) {
+                $FallbacktoSSH = $true
+            }
+        }
+    }
+    else {
+        $FallbacktoSSH = $true
+    }
+
+    if ($FallbacktoSSH) {
+        $FunResult = & $SSHFunc -TD_Line_ID $Device.ID -TD_Device_ConnectionTyp $Device.ConnectionTyp -TD_Device_UserName $Device.UserName -TD_Device_DeviceIP $Device.IPAddress -TD_Device_PW $pw -TD_Exportpath $ExportPath
+    }
+
+    return $FunResult
+}
+
 # REST/SSH-Fallback + DeviceBlock-Erstellung zentralisieren
 # Helper-Funktion, die pro Device die Daten holt (REST, sonst SSH) und dir direkt einen DeviceToggle zurückgibt.
 function New-DeviceBlock {
@@ -40,31 +78,8 @@ function New-DeviceBlock {
         [object]$SSHFunc
     )
 
-    $FunResult = $null
-    [bool]$FallbacktoSSH = $false
-    # 1) Daten holen (REST -> wenn leer -> SSH) StorageInfo
-    $pw = [Net.NetworkCredential]::new('', $Device.Password).Password
-    if($RESTFunc){
-        $FunResult = & $RESTFunc -TD_Line_ID $Device.ID -TD_Device_UserName $Device.UserName -TD_Device_DeviceIP $Device.IPAddress -TD_Device_PW $pw -TD_Exportpath $ExportPath
+    $FunResult = Invoke-DeviceDataFetch -Device $Device -ExportPath $ExportPath -RESTFunc $RESTFunc -SSHFunc $SSHFunc
 
-        $items = @($FunResult)  # normalisiert null/single/multi
-
-        if ($items.Count -eq 0) {
-            $FallbacktoSSH = $true
-        }
-        # optional: wenn es wirklich ein "Einzelobjekt mit StorageInfo" ist:
-        elseif ($items.Count -eq 1 -and ($items[0].PSObject.Properties.Name -contains 'StorageInfo')) {
-            if ($null -eq $items[0].StorageInfo -or [string]::IsNullOrWhiteSpace([string]$items[0].StorageInfo.ID)) {
-                $FallbacktoSSH = $true
-            }
-        }
-    }else{
-        $FallbacktoSSH = $true
-    }
-     
-    if ($FallbacktoSSH) {
-        $FunResult = & $SSHFunc -TD_Line_ID $Device.ID -TD_Device_ConnectionTyp $Device.ConnectionTyp -TD_Device_UserName $Device.UserName -TD_Device_DeviceIP $Device.IPAddress -TD_Device_PW $pw -TD_Exportpath $ExportPath
-    }
     # 2) DeviceToggle bauen
     $DeviceIdent = [DeviceToggle]::new()
     $DeviceIdent.Id = "DeviceBlock$($Device.ID)"
@@ -76,7 +91,7 @@ function New-DeviceBlock {
     }
     $DeviceIdent.Label = if ([string]::IsNullOrWhiteSpace([string]$LabelName)) { "$($Device.IPAddress)" } else { "$LabelName" }
     $DeviceIdent.IsChecked = $false
-    Write-Host $FunResult
+
     return @{ DeviceIdent = $DeviceIdent; FuncResult = $FunResult }
 }
 
