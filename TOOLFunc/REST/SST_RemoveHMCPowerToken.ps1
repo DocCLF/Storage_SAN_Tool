@@ -41,7 +41,7 @@ function SST_RemoveHMCPowerToken {
                 [System.Net.ServicePointManager]::ServerCertificateValidationCallback = { $true }
             }
 
-            Invoke-WebRequest @RmHMCSessionParams | Out-Null
+            Invoke-WebRequest @RmHMCSessionParams -UseBasicParsing | Out-Null
         }
         finally {
             [Net.ServicePointManager]::SecurityProtocol = $OldSecurityProtocol
