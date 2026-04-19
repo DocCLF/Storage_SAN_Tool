@@ -175,7 +175,7 @@ if ($($TD_DataBaseChoice.Name).Count -lt 1) {
     $TD_BTN_DeleteDB.Background = "coral"
 }
 #endregion
-#region Button
+
 #region ToolBTN
 #region MenuBTN
 $TD_BTN_Dashboard.add_click({
@@ -583,7 +583,13 @@ $TD_BTN_SendDataToPRISM.add_click({
 })
 #SST_ToolMessageCollector -TD_ToolMSGCollector "Load PRISM done" -TD_ToolMSGType Message -TD_Shown no
 #endregion
+#region DashBoard
+$TD_BTN_RefreshDashBoard.add_click({
+    SST_DashBoardRefreshData
+})
 #endregion
+#endregion
+#region Devices
 #region IBM Storage
 $TD_BTN_IBM_BaseStorageInfo.add_click({
     <#Get all Device Cred and count them #>
@@ -1593,7 +1599,6 @@ $TD_BTN_IBM_TapeEvents.add_click({
 })
 #endregion
 #endregion
-
 
 <# this part is needed if there are any Updates on the cred in DG #>
 $TD_DG_KnownDeviceList.add_SelectionChanged({
