@@ -11,7 +11,13 @@ function SST_GetCredfGUI {
     if($TD_AddaNewDevice -eq "yes"){
         switch ($TD_CB_DeviceType.Text) {
             {$_ -like "*Storage"} { 
-                $TD_BasicDeviceInfo = SST_DeviceConnecCheck -TD_Selected_Items "no"
+                try {
+                    $TD_BasicDeviceInfo = SST_DeviceConnecCheck -TD_Selected_Items "no"
+                }
+                catch {
+                    Write-Host $_.Exception.Message
+                }
+                
                 if([string]::IsNullOrEmpty($TD_BasicDeviceInfo)){
                     $TD_ErrorCode = 1
 
@@ -19,7 +25,13 @@ function SST_GetCredfGUI {
                 }
             }
             {$_ -like "*SAN"} { 
-                $TD_BasicDeviceInfo = SST_DeviceConnecCheck -TD_Selected_Items "no"
+                try {
+                    $TD_BasicDeviceInfo = SST_DeviceConnecCheck -TD_Selected_Items "no"
+                }
+                catch {
+                    Write-Host $_.Exception.Message
+                }
+                
                 if([string]::IsNullOrEmpty($TD_BasicDeviceInfo)){
                     $TD_ErrorCode = 1
 
@@ -27,7 +39,13 @@ function SST_GetCredfGUI {
                 }
             }
             {$_ -like "*PowerHMC*"} { 
-                $TD_BasicDeviceInfo = SST_DeviceConnecCheck -TD_Selected_Items "no"
+                try {
+                    $TD_BasicDeviceInfo = SST_DeviceConnecCheck -TD_Selected_Items "no"
+                }
+                catch {
+                    Write-Host $_.Exception.Message
+                }
+                
                 if([string]::IsNullOrEmpty($TD_BasicDeviceInfo)){
                     $TD_ErrorCode = 1
 
@@ -35,14 +53,22 @@ function SST_GetCredfGUI {
                 }
             }
             {$_ -like "*Tape"} { 
-                $TD_BasicDeviceInfo = SST_DeviceConnecCheck -TD_Selected_Items "no"
+                try {
+                    $TD_BasicDeviceInfo = SST_DeviceConnecCheck -TD_Selected_Items "no"
+                }
+                catch {
+                    Write-Host $_.Exception.Message
+                }
+                
                 if([string]::IsNullOrEmpty($TD_BasicDeviceInfo)){
                     $TD_ErrorCode = 1
 
                     break
                 }
             }
-            Default {SST_ToolMessageCollector -TD_ToolMSGCollector "Something went wrong at SST_GetCredfGUI Func or no Device Type was found, please check the promt." -TD_ToolMSGType Warning}
+            Default {
+                #SST_ToolMessageCollector -TD_ToolMSGCollector "Something went wrong at SST_GetCredfGUI Func or no Device Type was found, please check the promt." -TD_ToolMSGType Warning
+            }
         }
         #$TD_AddaNewDevice="no"
     }else {
@@ -58,7 +84,8 @@ function SST_GetCredfGUI {
         }
         catch {
             <#Do this if a terminating exception happens#>
-            SST_ToolMessageCollector -TD_ToolMSGCollector "Update Cred $($_.exception.message)" -TD_ToolMSGType Warning -TD_Shown yes
+            Write-Host $_.Exception.Message
+            #SST_ToolMessageCollector -TD_ToolMSGCollector "Update Cred $($_.exception.message)" -TD_ToolMSGType Warning -TD_Shown yes
         }
         
         [array]$TD_Credentials = foreach ($TD_ExistingCred in $TD_ExistingCreds) {
@@ -93,7 +120,8 @@ function SST_GetCredfGUI {
         }
         catch {
             <#Do this if a terminating exception happens#>
-            SST_ToolMessageCollector -TD_ToolMSGCollector "Update Cred $($_.exception.message)" -TD_ToolMSGType Warning -TD_Shown yes
+            Write-Host $_.Exception.Message
+            #SST_ToolMessageCollector -TD_ToolMSGCollector "Update Cred $($_.exception.message)" -TD_ToolMSGType Warning -TD_Shown yes
         }
     }
     <# can be set to 1 for tests default value is 0 #>
@@ -105,7 +133,7 @@ function SST_GetCredfGUI {
         [array]$TD_Credentials = foreach ($TD_ExistingCred in $TD_ExistingCreds) {
             
             if($TD_ExistingCred.IPAddress -eq $TD_TB_DeviceIPAddr.Text){
-                SST_ToolMessageCollector -TD_ToolMSGCollector $("This $($TD_TB_DeviceIPAddr.Text) is already in use") -TD_ToolMSGType Warning -TD_Shown yes
+                #SST_ToolMessageCollector -TD_ToolMSGCollector $("This $($TD_TB_DeviceIPAddr.Text) is already in use") -TD_ToolMSGType Warning -TD_Shown yes
                 continue
             }
             
@@ -116,28 +144,28 @@ function SST_GetCredfGUI {
             if($TD_CB_DeviceType.Text -like "*Storage"){
                 [int]$TD_CredentialsCount=(($TD_Credentials |Where-Object {$_.DeviceTyp -like "*Storage"}).count + 1)
                 if($TD_Credentials |Where-Object {($_.DeviceTyp -like "*Storage") -and ($_.ID -eq $TD_CredentialsCount)}){$TD_CredentialsCount = $TD_CredentialsCount +1}
-                SST_ToolMessageCollector -TD_ToolMSGCollector "Storage ID is $TD_CredentialsCount" -TD_ToolMSGType Debug -TD_Shown yes
+                #SST_ToolMessageCollector -TD_ToolMSGCollector "Storage ID is $TD_CredentialsCount" -TD_ToolMSGType Debug -TD_Shown yes
             }
         }
         if($TD_AddaNewDevice -eq "yes"){
             if($TD_CB_DeviceType.Text -like "*SAN"){   
                 [int]$TD_CredentialsCount= (($TD_Credentials |Where-Object {$_.DeviceTyp -like "*SAN"}).count + 1)
                 if($TD_Credentials |Where-Object {($_.DeviceTyp -like "*SAN") -and ($_.ID -eq $TD_CredentialsCount)}){$TD_CredentialsCount = $TD_CredentialsCount +1}
-                SST_ToolMessageCollector -TD_ToolMSGCollector "SAN ID is $TD_CredentialsCount" -TD_ToolMSGType Debug -TD_Shown yes
+                #SST_ToolMessageCollector -TD_ToolMSGCollector "SAN ID is $TD_CredentialsCount" -TD_ToolMSGType Debug -TD_Shown yes
             }
         }
         if($TD_AddaNewDevice -eq "yes"){
             if($TD_CB_DeviceType.Text -like "*PowerHMC*"){   
                 [int]$TD_CredentialsCount= (($TD_Credentials |Where-Object {$_.DeviceTyp -eq "PowerHMC"}).count + 1)
                 if($TD_Credentials |Where-Object {($_.DeviceTyp -eq "PowerHMC") -and ($_.ID -eq $TD_CredentialsCount)}){$TD_CredentialsCount = $TD_CredentialsCount +1}
-                SST_ToolMessageCollector -TD_ToolMSGCollector "PowerHMC ID is $TD_CredentialsCount" -TD_ToolMSGType Debug -TD_Shown yes
+                #SST_ToolMessageCollector -TD_ToolMSGCollector "PowerHMC ID is $TD_CredentialsCount" -TD_ToolMSGType Debug -TD_Shown yes
             }
         }
         if($TD_AddaNewDevice -eq "yes"){
             if($TD_CB_DeviceType.Text -like "*Tape"){   
                 [int]$TD_CredentialsCount= (($TD_Credentials |Where-Object {$_.DeviceTyp -like "*Tape"}).count + 1)
                 if($TD_Credentials |Where-Object {($_.DeviceTyp -like "*Tape") -and ($_.ID -eq $TD_CredentialsCount)}){$TD_CredentialsCount = $TD_CredentialsCount +1}
-                SST_ToolMessageCollector -TD_ToolMSGCollector "Tape ID is $TD_CredentialsCount" -TD_ToolMSGType Debug -TD_Shown yes
+                #SST_ToolMessageCollector -TD_ToolMSGCollector "Tape ID is $TD_CredentialsCount" -TD_ToolMSGType Debug -TD_Shown yes
             }
         }
         <# needs more tests to be able to use it safely thats why plink is plink and not plink and ssh #>
