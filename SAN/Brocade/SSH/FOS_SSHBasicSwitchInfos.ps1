@@ -36,10 +36,11 @@ function FOS_SSHBasicSwitchInfos {
         [int]$ProgCounter=0
         $ProgressBar = New-ProgressBar
         <# Connect to Device and get all needed Data #>
-        if($TD_Device_ConnectionTyp -eq "ssh"){
-            $FOS_MainInformation = ssh -i $($TD_Device_SSHKeyPath) $TD_Device_UserName@$TD_Device_DeviceIP 'firmwareshow && ipaddrshow && chassisshow && switchshow'
-        }else {
+        try {
             $FOS_MainInformation = plink $TD_Device_UserName@$TD_Device_DeviceIP -pw $TD_Device_PW -batch 'firmwareshow && ipaddrshow && chassisshow && switchshow'
+        }
+        catch {
+            Write-Host $_.Exception.Message
         }
 
         <# Hashtable for BasicSwitch Info #>
@@ -94,7 +95,11 @@ function FOS_SSHBasicSwitchInfos {
         $FOS_SwGeneralInfos.Add('SwitchWWNN',$FOS_LoSw_CFG[3])
 
         <# Workaround if VF is not enabled #>
-        $FOS_LoSw_Temp = (($FOS_MainInformation | Select-String -Pattern 'SwitchType:\s+(\w+)$' -AllMatches).Matches.groups[1].Value)
+        $match = $FOS_MainInformation | Select-String -Pattern 'SwitchType:\s+(\w+)$'
+        if ($match -and $match.Matches.Count -gt 0) {
+            $FOS_LoSw_Temp = $match.Matches[0].Groups[1].Value
+        }
+        #$FOS_LoSw_Temp = (($FOS_MainInformation | Select-String -Pattern 'SwitchType:\s+(\w+)$' -AllMatches).Matches.groups[1].Value)
         if(!($FOS_LoSw_Temp)) {
             $FOS_SwGeneralInfos.Add('SwitchType','DS')
         }else {
@@ -112,18 +117,31 @@ function FOS_SSHBasicSwitchInfos {
         $FOS_SwGeneralInfos.Add('SerialNumber',$FOS_LoSw_CFG[0])
         $FOS_SwGeneralInfos.Add('RowID',$SANSwitchRowID)
                  
-        $FOS_SwitchOSVersion= FOS_SwitchFW -SwitchData $FOS_MainInformation
+        $FOS_SwitchOSVersion= FOS_SSHSwitchFW -SwitchData $FOS_MainInformation
 
         foreach ($lineUp in $FOS_MainInformation) {
-            if($lineUp -match '^Index'){break}
-            $FOS_SwGeneralInfos.Add('FabricOS',(($lineUp| Select-String -Pattern 'FOS\s+([v?][\d+]\.[\d+]\.[\d].*)$').Matches.Groups[1].Value))
+         #   if($lineUp -match 'Index'){break}
+            Write-Host $lineUp
+            $match = $FOS_MainInformation | Select-String -Pattern 'FOS\s+([v?][\d+]\.[\d+]\.[\w]+)'
+            if ($match -and $match.Matches.Count -gt 0) {$FOSTemp = $match.Matches[0].Groups[1].Value }
+            $FOS_SwGeneralInfos.Add('FabricOS',$FOSTemp)
             $FOS_SwGeneralInfos.Add('FabricOSLV',$FOS_SwitchOSVersion)
-            $FOS_SwGeneralInfos.Add('EthernetIPAddress',(($lineUp| Select-String -Pattern 'Ethernet IP Address:\s+([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3})').Matches.Groups[1].Value))
-            $FOS_SwGeneralInfos.Add('EthernetSubnetMask',(($lineUp| Select-String -Pattern 'Ethernet Subnet mask:\s+([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3})').Matches.Groups[1].Value))
-            $FOS_SwGeneralInfos.Add('GatewayIPAddress',(($lineUp| Select-String -Pattern 'Gateway IP Address:\s+([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3})').Matches.Groups[1].Value))
-            $FOS_SwGeneralInfos.Add('DHCP',((($lineUp| Select-String -Pattern '^DHCP:\s(\w+)$' -AllMatches).Matches.Groups[1].Value)))
-            $FOS_SwGeneralInfos.Add('SwitchState',(($lineUp| Select-String -Pattern 'switchState:\s+(.*)$').Matches.Groups[1].Value))
-            $FOS_SwGeneralInfos.Add('SwitchRole',(($lineUp| Select-String -Pattern 'switchRole:\s+(.*)$').Matches.Groups[1].Value))
+            $FOS_SwGeneralInfos.Add('EthernetIPAddress',$TD_Device_DeviceIP)
+            $match = $FOS_MainInformation | Select-String -Pattern 'Ethernet Subnet mask:\s+([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3})'
+            if ($match -and $match.Matches.Count -gt 0) {$Subnet = $match.Matches[0].Groups[1].Value }
+            $FOS_SwGeneralInfos.Add('EthernetSubnetMask',$Subnet)
+            $match = $FOS_MainInformation | Select-String -Pattern 'Gateway IP Address:\s+([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3})'
+            if ($match -and $match.Matches.Count -gt 0) {$Gateway = $match.Matches[0].Groups[1].Value }
+            $FOS_SwGeneralInfos.Add('GatewayIPAddress',$Gateway)
+            $match = $FOS_MainInformation | Select-String -Pattern 'DHCP:\s(\w+)'
+            if ($match -and $match.Matches.Count -gt 0) {$DHCP = $match.Matches[0].Groups[1].Value }
+            $FOS_SwGeneralInfos.Add('DHCP',$DHCP)
+            $match = $FOS_MainInformation | Select-String -Pattern 'switchState:\s+(\w+)'
+            if ($match -and $match.Matches.Count -gt 0) {$switchState = $match.Matches[0].Groups[1].Value }
+            $FOS_SwGeneralInfos.Add('SwitchState',$switchState)
+            $match = $FOS_MainInformation | Select-String -Pattern 'switchRole:\s+(\w+)'
+            if ($match -and $match.Matches.Count -gt 0) {$switchRole = $match.Matches[0].Groups[1].Value }
+            $FOS_SwGeneralInfos.Add('SwitchRole',$switchRole)
 
             <# Progressbar  #>
             $ProgCounter++
@@ -144,10 +162,10 @@ function FOS_SSHBasicSwitchInfos {
             <# exported to .\Host_Volume_Map_Result.csv #>
             if([string]$TD_Exportpath -ne "$PSRootPath\ToolLog\"){
                 Out-File -FilePath $TD_Exportpath\$($TD_Line_ID)_$($TD_Device_DeviceName)_BasicSwitchInfo_Result_$(Get-Date -Format "yyyy-MM-dd").csv -InputObject $FOS_SwGeneralInfos
-                SST_ToolMessageCollector -TD_ToolMSGCollector "$TD_Exportpath\$($TD_Line_ID)_$($TD_Device_DeviceName)_BasicSwitchInfo_Result_$(Get-Date -Format "yyyy-MM-dd").csv" -TD_ToolMSGType Debug
+                #SST_ToolMessageCollector -TD_ToolMSGCollector "$TD_Exportpath\$($TD_Line_ID)_$($TD_Device_DeviceName)_BasicSwitchInfo_Result_$(Get-Date -Format "yyyy-MM-dd").csv" -TD_ToolMSGType Debug
             }else {
                 Out-File -FilePath $PSScriptRoot\ToolLog\$($TD_Line_ID)_$($TD_Device_DeviceName)_BasicSwitchInfo_Result_$(Get-Date -Format "yyyy-MM-dd").csv -InputObject $FOS_SwGeneralInfos
-                SST_ToolMessageCollector -TD_ToolMSGCollector "$PSScriptRoot\ToolLog\$($TD_Line_ID)_$($TD_Device_DeviceName)_BasicSwitchInfo_Result_$(Get-Date -Format "yyyy-MM-dd").csv" -TD_ToolMSGType Debug
+                #SST_ToolMessageCollector -TD_ToolMSGCollector "$PSScriptRoot\ToolLog\$($TD_Line_ID)_$($TD_Device_DeviceName)_BasicSwitchInfo_Result_$(Get-Date -Format "yyyy-MM-dd").csv" -TD_ToolMSGType Debug
             }
         }else {
             <# output on the promt #>
