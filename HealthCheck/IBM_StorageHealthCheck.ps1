@@ -32,7 +32,7 @@ function IBM_StorageHealthCheck {
                         #region Storage_Base_Info
                         [array]$TD_BaseStorageInfo = IBM_RESTBaseStorageInfos -TD_Line_ID $_.ID -TD_Device_ConnectionTyp $_.ConnectionTyp -TD_Device_UserName $_.UserName -TD_Device_DeviceIP $_.IPAddress -TD_Device_DeviceName $_.DeviceName -TD_Device_PW $([Net.NetworkCredential]::new('', $_.Password).Password) -TD_Device_SSHKeyPath $_.SSHKeyPath -TD_Export "no"
                         if(($_.ConnectionTyp -eq "plink") -or (($($TD_BaseStorageInfo.StorageInfo).Count -lt 1))){
-                            [array]$TD_BaseStorageInfo = IBM_SSHBaseStorageInfos -TD_Line_ID $_.ID -TD_Device_ConnectionTyp $_.ConnectionTyp -TD_Device_UserName $_.UserName -TD_Device_DeviceIP $_.IPAddress -TD_Device_DeviceName $_.DeviceName -TD_Device_PW $([Net.NetworkCredential]::new('', $_.Password).Password) -TD_Exportpath $TD_tb_ExportPath.Text
+                            [array]$TD_BaseStorageInfo = IBM_SSHBaseStorageInfos -TD_Line_ID $_.ID -TD_Device_ConnectionTyp $_.ConnectionTyp -TD_Device_UserName $_.UserName -TD_Device_DeviceIP $_.IPAddress -TD_Device_DeviceName $_.DeviceName -TD_Device_PW $([Net.NetworkCredential]::new('', $_.Password).Password) -TD_Exportpath $TD_TB_ExportPath.Text
                         }
                         SST_ToolMessageCollector -TD_ToolMSGCollector "Storage HS_Eventlog" -TD_ToolMSGType Debug -TD_Shown no
                         [int]$i=0
