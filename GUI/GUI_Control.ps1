@@ -179,12 +179,12 @@ if ($($TD_DataBaseChoice.Name).Count -lt 1) {
 #region ToolBTN
 #region MenuBTN
 $TD_BTN_Dashboard.add_click({
-    $TD_LB_ExpPathMainWindow.Content ="Export Path: $($TD_tb_ExportPath.Text)"
+    $TD_LB_ExpPathMainWindow.Content ="Export Path: $($TD_TB_ExportPath.Text)"
     SST_ShowUserControl -MainWindowArea $TD_UserContrArea -ShowUserControl $TD_UserControl_Dash -AllUserControls $TD_AllUserControls
     if($TD_LogoImageSmall.Visibility -eq "hidden"){$TD_LogoImageSmall.Visibility = "visible"}
 })
 $TD_BTN_IBMSpectrVirt.add_click({
-    $TD_LB_ExpPathMainWindow.Content ="Export Path: $($TD_tb_ExportPath.Text)"
+    $TD_LB_ExpPathMainWindow.Content ="Export Path: $($TD_TB_ExportPath.Text)"
     SST_ShowUserControl -MainWindowArea $TD_UserContrArea -ShowUserControl $TD_UserControl_IBMSTO -AllUserControls $TD_AllUserControls
     if($TD_LogoImageSmall.Visibility -eq "hidden"){$TD_LogoImageSmall.Visibility = "visible"}
     $UCDataContext = $TD_UserControl_IBMSTO.DataContext
@@ -194,17 +194,17 @@ $TD_BTN_IBMSpectrVirt.add_click({
     $UCVMMain.DeviceToggles.Clear()
 })
 $TD_BTN_PowerBoard.add_click({
-    $TD_LB_ExpPathMainWindow.Content ="Export Path: $($TD_tb_ExportPath.Text)"
+    $TD_LB_ExpPathMainWindow.Content ="Export Path: $($TD_TB_ExportPath.Text)"
     SST_ShowUserControl -MainWindowArea $TD_UserContrArea -ShowUserControl $TD_UserControl_PWR -AllUserControls $TD_AllUserControls
     if($TD_LogoImageSmall.Visibility -eq "hidden"){$TD_LogoImageSmall.Visibility = "visible"}
 })
 $TD_BTN_IBMTape.add_click({
-    $TD_LB_ExpPathMainWindow.Content ="Export Path: $($TD_tb_ExportPath.Text)"
+    $TD_LB_ExpPathMainWindow.Content ="Export Path: $($TD_TB_ExportPath.Text)"
     SST_ShowUserControl -MainWindowArea $TD_UserContrArea -ShowUserControl $TD_UserControl_IBMTape -AllUserControls $TD_AllUserControls
     if($TD_LogoImageSmall.Visibility -eq "hidden"){$TD_LogoImageSmall.Visibility = "visible"}
 })
 $TD_BTN_BrocSAN.add_click({
-    $TD_LB_ExpPathMainWindow.Content ="Export Path: $($TD_tb_ExportPath.Text)"
+    $TD_LB_ExpPathMainWindow.Content ="Export Path: $($TD_TB_ExportPath.Text)"
     SST_ShowUserControl -MainWindowArea $TD_UserContrArea -ShowUserControl $TD_UserControl_BRSAN -AllUserControls $TD_AllUserControls
     if($TD_LogoImageSmall.Visibility -eq "hidden"){$TD_LogoImageSmall.Visibility = "visible"}
     $UCDataContext = $TD_UserControl_BRSAN.DataContext
@@ -214,18 +214,18 @@ $TD_BTN_BrocSAN.add_click({
     $UCVMMain.DeviceToggles.Clear()
 })
 $TD_BTN_STOSANHealth.add_click({
-    $TD_LB_ExpPathMainWindow.Content ="Export Path: $($TD_tb_ExportPath.Text)"
+    $TD_LB_ExpPathMainWindow.Content ="Export Path: $($TD_TB_ExportPath.Text)"
     SST_ShowUserControl -MainWindowArea $TD_UserContrArea -ShowUserControl $TD_UserControl_Health -AllUserControls $TD_AllUserControls
     SST_MainHealthCheckFunc -SST_UCOBJ $TD_UserControl_Health
     if($TD_LogoImageSmall.Visibility -eq "hidden"){$TD_LogoImageSmall.Visibility = "visible"}
 })
 $TD_BTN_CustomerBoard.add_click({
-    $TD_LB_ExpPathMainWindow.Content ="Export Path: $($TD_tb_ExportPath.Text)"
+    $TD_LB_ExpPathMainWindow.Content ="Export Path: $($TD_TB_ExportPath.Text)"
     SST_ShowUserControl -MainWindowArea $TD_UserContrArea -ShowUserControl $TD_UserControl_CustomerBoard -AllUserControls $TD_AllUserControls
     if($TD_LogoImageSmall.Visibility -eq "hidden"){$TD_LogoImageSmall.Visibility = "visible"}
 })
 $TD_BTN_ToolSettings.add_click({
-    $TD_LB_ExpPathMainWindow.Content ="Export Path: $($TD_tb_ExportPath.Text)"
+    $TD_LB_ExpPathMainWindow.Content ="Export Path: $($TD_TB_ExportPath.Text)"
     SST_ShowUserControl -MainWindowArea $TD_UserContrArea -ShowUserControl $TD_UserControl_SetUp -AllUserControls $TD_AllUserControls
     if($TD_LogoImageSmall.Visibility -eq "hidden"){$TD_LogoImageSmall.Visibility = "visible"}
     <# Used to limit the customer number to a certain range and display it in red or green. #>
@@ -284,7 +284,13 @@ $TD_BTN_LoadToolSettings.add_click({
 $TD_BTN_SaveCredtoDG.add_click({
     if($TD_CB_CredUpdate.IsChecked){
         #SST_ToolMessageCollector -TD_ToolMSGCollector "Cred Update" -TD_ToolMSGType Message -TD_Shown no
-        $TD_CredfGUIArray = SST_GetCredfGUI -TD_AddaNewDevice "no"
+        try {
+            $TD_CredfGUIArray = SST_GetCredfGUI -TD_AddaNewDevice "no"
+        }
+        catch {
+            Write-Host $_.Exception.Message
+        }
+        
     }else{
         #SST_ToolMessageCollector -TD_ToolMSGCollector "Cred AddaNewDevice" -TD_ToolMSGType Message -TD_Shown no
         $TD_CredfGUIArray = SST_GetCredfGUI -TD_AddaNewDevice "yes"
@@ -585,7 +591,7 @@ $TD_BTN_SendDataToPRISM.add_click({
 #endregion
 #region DashBoard
 $TD_BTN_RefreshDashBoard.add_click({
-    SST_DashBoardRefreshData
+    #SST_DashBoardRefreshData
 })
 #endregion
 #endregion
@@ -602,7 +608,7 @@ $TD_BTN_IBM_BaseStorageInfo.add_click({
     <# if there a something in, its better to clean it up befor we use it again #>
     $UCVMMain.DeviceToggles.Clear()
     foreach($TD_Creds in $TD_Credentials){
-        $baseResult  = New-DeviceBlock -Device $TD_Creds -ExportPath $TD_tb_ExportPath.Text -RESTFunc IBM_RESTBaseStorageInfos -SSHFunc IBM_SSHBaseStorageInfos
+        $baseResult  = New-DeviceBlock -Device $TD_Creds -ExportPath $TD_TB_ExportPath.Text -RESTFunc IBM_RESTBaseStorageInfos -SSHFunc IBM_SSHBaseStorageInfos
         
         $dev = $baseResult.DeviceIdent
         $mapStorageInfo = @{
@@ -624,7 +630,7 @@ $TD_BTN_IBM_BaseStorageInfo.add_click({
         Add-MappedRows -Collection $dev.BaseRows -Source $baseResult.FuncResult.StorageInfo -IdProperty 'RowID' -Map $mapStorageInfo
 
         #$FunctionResult = $null
-        $ipqResult  = RestThenSshForCombiView -Device $TD_Creds -ExportPath $TD_tb_ExportPath.Text -RESTFunc IBM_RESTIPQuorum -SSHFunc IBM_SSHIPQuorum
+        $ipqResult  = RestThenSshForCombiView -Device $TD_Creds -ExportPath $TD_TB_ExportPath.Text -RESTFunc IBM_RESTIPQuorum -SSHFunc IBM_SSHIPQuorum
         $mapIPQuorum = @{
             QuorumIndex    = 'QuorumIndex'
             ID             = 'ID'
@@ -655,7 +661,7 @@ $TD_BTN_IBM_Eventlog.add_click({
     <# if there a something in, its better to clean it up befor we use it again #>
     $UCVMMain.DeviceToggles.Clear()
     foreach($TD_Creds in $TD_Credentials){
-        $FunctionResult = New-DeviceBlock -Device $TD_Creds -ExportPath $TD_tb_ExportPath.Text -RESTFunc IBM_RESTEventLog -SSHFunc IBM_SSHEventLog
+        $FunctionResult = New-DeviceBlock -Device $TD_Creds -ExportPath $TD_TB_ExportPath.Text -RESTFunc IBM_RESTEventLog -SSHFunc IBM_SSHEventLog
         # Links = Propertyname im PSCustomObject (das bindet dein XAML)
         # Rechts = Propertyname im Source-Objekt
         $mapStorageEvents = @{
@@ -687,7 +693,7 @@ $TD_BTN_IBM_CatAuditLog.add_click({
     <# if there a something in, its better to clean it up befor we use it again #>
     $UCVMMain.DeviceToggles.Clear()
     foreach($TD_Creds in $TD_Credentials){
-        $FunctionResult = New-DeviceBlock -Device $TD_Creds -ExportPath $TD_tb_ExportPath.Text -RESTFunc IBM_RESTCatAuditLog -SSHFunc IBM_SSHCatAuditLog
+        $FunctionResult = New-DeviceBlock -Device $TD_Creds -ExportPath $TD_TB_ExportPath.Text -RESTFunc IBM_RESTCatAuditLog -SSHFunc IBM_SSHCatAuditLog
         # Links = Propertyname im PSCustomObject (das bindet dein XAML)
         # Rechts = Propertyname im Source-Objekt
         $mapCatAuditLog = @{
@@ -721,7 +727,7 @@ $TD_BTN_IBM_HostVolumeMap.add_click({
     <# if there a something in, its better to clean it up befor we use it again #>
     $UCVMMain.DeviceToggles.Clear()
     foreach($TD_Creds in $TD_Credentials){
-        $FunctionResult = New-DeviceBlock -Device $TD_Creds -ExportPath $TD_tb_ExportPath.Text -RESTFunc IBM_RESTHost_Volume_Map -SSHFunc IBM_SSHHost_Volume_Map
+        $FunctionResult = New-DeviceBlock -Device $TD_Creds -ExportPath $TD_TB_ExportPath.Text -RESTFunc IBM_RESTHost_Volume_Map -SSHFunc IBM_SSHHost_Volume_Map
         # Links = Propertyname im PSCustomObject (das bindet dein XAML)
         # Rechts = Propertyname im Source-Objekt
         $mapHostVolumeMap = @{
@@ -753,7 +759,7 @@ $TD_BTN_IBM_HostInfo.add_click({
     <# if there a something in, its better to clean it up befor we use it again #>
     $UCVMMain.DeviceToggles.Clear()
     foreach($TD_Creds in $TD_Credentials){
-        $FunctionResult = New-DeviceBlock -Device $TD_Creds -ExportPath $TD_tb_ExportPath.Text -RESTFunc IBM_RESTHostInfo -SSHFunc IBM_SSHHostInfo
+        $FunctionResult = New-DeviceBlock -Device $TD_Creds -ExportPath $TD_TB_ExportPath.Text -RESTFunc IBM_RESTHostInfo -SSHFunc IBM_SSHHostInfo
 
         # Links = Propertyname im PSCustomObject (das bindet dein XAML)
         # Rechts = Propertyname im Source-Objekt
@@ -806,7 +812,7 @@ $TD_BTN_IBM_PoolVolumeInfo.add_click({
     <# if there a something in, its better to clean it up befor we use it again #>
     $UCVMMain.DeviceToggles.Clear()
     foreach($TD_Creds in $TD_Credentials){
-        $MDiskResult  = New-DeviceBlock -Device $TD_Creds -ExportPath $TD_tb_ExportPath.Text -RESTFunc IBM_RESTMDiskInfo -SSHFunc IBM_SSHMDiskInfo
+        $MDiskResult  = New-DeviceBlock -Device $TD_Creds -ExportPath $TD_TB_ExportPath.Text -RESTFunc IBM_RESTMDiskInfo -SSHFunc IBM_SSHMDiskInfo
         
         $dev = $MDiskResult.DeviceIdent
 
@@ -827,7 +833,7 @@ $TD_BTN_IBM_PoolVolumeInfo.add_click({
         Add-MappedRows -Collection $dev.MDiskRows -Source $MDiskResult.FuncResult -IdProperty 'RowID' -Map $mapMDiskInfo
 
         #$FunctionResult = $null
-        $VolumeResult  = RestThenSshForCombiView -Device $TD_Creds -ExportPath $TD_tb_ExportPath.Text -RESTFunc IBM_RESTVolumeInfo -SSHFunc IBM_SSHVolumeInfo
+        $VolumeResult  = RestThenSshForCombiView -Device $TD_Creds -ExportPath $TD_TB_ExportPath.Text -RESTFunc IBM_RESTVolumeInfo -SSHFunc IBM_SSHVolumeInfo
 
         $mapVolumeInfo = @{
             Name           = 'Name'
@@ -861,7 +867,7 @@ $TD_BTN_IBM_DriveInfo.add_click({
     <# if there a something in, its better to clean it up befor we use it again #>
     $UCVMMain.DeviceToggles.Clear()
     foreach($TD_Creds in $TD_Credentials){
-        $FunctionResult = New-DeviceBlock -Device $TD_Creds -ExportPath $TD_tb_ExportPath.Text -RESTFunc IBM_RESTDriveInfo -SSHFunc IBM_SSHDriveInfo
+        $FunctionResult = New-DeviceBlock -Device $TD_Creds -ExportPath $TD_TB_ExportPath.Text -RESTFunc IBM_RESTDriveInfo -SSHFunc IBM_SSHDriveInfo
         # Links = Propertyname im PSCustomObject (das bindet dein XAML)
         # Rechts = Propertyname im Source-Objekt
         $mapDrive = @{
@@ -894,7 +900,7 @@ $TD_BTN_IBM_FCPortInfo.add_click({
     <# if there a something in, its better to clean it up befor we use it again #>
     $UCVMMain.DeviceToggles.Clear()
     foreach($TD_Creds in $TD_Credentials){
-        $FunctionResult = New-DeviceBlock -Device $TD_Creds -ExportPath $TD_tb_ExportPath.Text -RESTFunc IBM_RESTFCPortInfo -SSHFunc IBM_SSHFCPortInfo
+        $FunctionResult = New-DeviceBlock -Device $TD_Creds -ExportPath $TD_TB_ExportPath.Text -RESTFunc IBM_RESTFCPortInfo -SSHFunc IBM_SSHFCPortInfo
         # Links = Propertyname im PSCustomObject (das bindet dein XAML)
         # Rechts = Propertyname im Source-Objekt
         $mapFCPort = @{
@@ -931,7 +937,7 @@ $TD_BTN_IBM_CleanUpDumps.add_click({
     <# if there a something in, its better to clean it up befor we use it again #>
     $UCVMMain.DeviceToggles.Clear()
     foreach($TD_Creds in $TD_Credentials){
-        $FunctionResult = New-DeviceBlock -Device $TD_Creds -ExportPath $TD_tb_ExportPath.Text -SSHFunc IBM_SSHCleanUpDumps
+        $FunctionResult = New-DeviceBlock -Device $TD_Creds -ExportPath $TD_TB_ExportPath.Text -SSHFunc IBM_SSHCleanUpDumps
         # Links = Propertyname im PSCustomObject (das bindet dein XAML)
         # Rechts = Propertyname im Source-Objekt
         $dev = $FunctionResult.DeviceIdent
@@ -963,7 +969,7 @@ $TD_BTN_IBM_BackUpConfig.add_click({
     <# if there a something in, its better to clean it up befor we use it again #>
     $UCVMMain.DeviceToggles.Clear()
     foreach($TD_Creds in $TD_Credentials){
-        $FunctionResult = New-DeviceBlock -Device $TD_Creds -ExportPath $TD_tb_ExportPath.Text -SSHFunc IBM_SSHBackUpConfig
+        $FunctionResult = New-DeviceBlock -Device $TD_Creds -ExportPath $TD_TB_ExportPath.Text -SSHFunc IBM_SSHBackUpConfig
         # Links = Propertyname im PSCustomObject (das bindet dein XAML)
         # Rechts = Propertyname im Source-Objekt
         $dev = $FunctionResult.DeviceIdent
@@ -995,7 +1001,7 @@ $TD_BTN_IBM_FCPortStats.add_click({
     <# if there a something in, its better to clean it up befor we use it again #>
     $UCVMMain.DeviceToggles.Clear()
     foreach($TD_Creds in $TD_Credentials){
-        $FunctionResult = New-DeviceBlock -Device $TD_Creds -ExportPath $TD_tb_ExportPath.Text -RESTFunc IBM_RESTFCPortStats -SSHFunc IBM_SSHFCPortStats
+        $FunctionResult = New-DeviceBlock -Device $TD_Creds -ExportPath $TD_TB_ExportPath.Text -RESTFunc IBM_RESTFCPortStats -SSHFunc IBM_SSHFCPortStats
         # Links = Propertyname im PSCustomObject (das bindet dein XAML)
         # Rechts = Propertyname im Source-Objekt
         
@@ -1059,7 +1065,7 @@ $TD_BTN_FOS_BasicSwitchInfo.add_click({
 
     foreach ($TD_Creds in $TD_Credentials) {
 
-        $FunctionResult = New-DeviceBlock -Device $TD_Creds -ExportPath $TD_tb_ExportPath.Text -SSHFunc FOS_SSHBasicSwitchInfos
+        $FunctionResult = New-DeviceBlock -Device $TD_Creds -ExportPath $TD_TB_ExportPath.Text -SSHFunc FOS_SSHBasicSwitchInfos
 
         $deviceIdent = $FunctionResult['DeviceIdent']
         $funcResult  = $FunctionResult['FuncResult']
@@ -1096,7 +1102,7 @@ $TD_BTN_FOS_SwitchShow.add_click({
     <# if there a something in, its better to clean it up befor we use it again #>
     $UCVMMain.DeviceToggles.Clear()
     foreach($TD_Creds in $TD_Credentials){
-        $FunctionResult = New-DeviceBlock -Device $TD_Creds -ExportPath $TD_tb_ExportPath.Text -SSHFunc FOS_SSHSwitchShowInfo
+        $FunctionResult = New-DeviceBlock -Device $TD_Creds -ExportPath $TD_TB_ExportPath.Text -SSHFunc FOS_SSHSwitchShowInfo
         # Links = Propertyname im PSCustomObject (das bindet dein XAML)
         # Rechts = Propertyname im Source-Objekt
         $mapSwitchShowInfo = @{ 
@@ -1127,7 +1133,7 @@ $TD_BTN_FOS_PortBufferShow.add_click({
     <# if there a something in, its better to clean it up befor we use it again #>
     $UCVMMain.DeviceToggles.Clear()
     foreach($TD_Creds in $TD_Credentials){
-        $FunctionResult = New-DeviceBlock -Device $TD_Creds -ExportPath $TD_tb_ExportPath.Text -SSHFunc FOS_SSHPortbufferShowInfo
+        $FunctionResult = New-DeviceBlock -Device $TD_Creds -ExportPath $TD_TB_ExportPath.Text -SSHFunc FOS_SSHPortbufferShowInfo
         # Links = Propertyname im PSCustomObject (das bindet dein XAML)
         # Rechts = Propertyname im Source-Objekt
         $mapPortbufferShow = @{ 
@@ -1159,7 +1165,7 @@ $TD_BTN_FOS_PortErrorShow.add_click({
     <# if there a something in, its better to clean it up befor we use it again #>
     $UCVMMain.DeviceToggles.Clear()
     foreach($TD_Creds in $TD_Credentials){
-        $FunctionResult = New-DeviceBlock -Device $TD_Creds -ExportPath $TD_tb_ExportPath.Text -SSHFunc FOS_SSHPortErrShowInfos
+        $FunctionResult = New-DeviceBlock -Device $TD_Creds -ExportPath $TD_TB_ExportPath.Text -SSHFunc FOS_SSHPortErrShowInfos
         # Links = Propertyname im PSCustomObject (das bindet dein XAML)
         # Rechts = Propertyname im Source-Objekt
         $mapPortErrorShow = @{ 
@@ -1201,7 +1207,7 @@ $TD_BTN_FOS_SFPHealthShow.add_click({
     <# if there a something in, its better to clean it up befor we use it again #>
     $UCVMMain.DeviceToggles.Clear()
     foreach($TD_Creds in $TD_Credentials){
-        $FunctionResult = New-DeviceBlock -Device $TD_Creds -ExportPath $TD_tb_ExportPath.Text -SSHFunc FOS_SSHSFPDetails
+        $FunctionResult = New-DeviceBlock -Device $TD_Creds -ExportPath $TD_TB_ExportPath.Text -SSHFunc FOS_SSHSFPDetails
         # Links = Propertyname im PSCustomObject (das bindet dein XAML)
         # Rechts = Propertyname im Source-Objekt
         $mapSFPDetails = @{ 
@@ -1230,7 +1236,7 @@ $TD_BTN_FOS_ZoneDetailsShow.add_click({
     <# if there a something in, its better to clean it up befor we use it again #>
     $UCVMMain.DeviceToggles.Clear()
     foreach($TD_Creds in $TD_Credentials){
-        $FunctionResult = New-DeviceBlock -Device $TD_Creds -ExportPath $TD_tb_ExportPath.Text -SSHFunc FOS_SSHZoneDetails
+        $FunctionResult = New-DeviceBlock -Device $TD_Creds -ExportPath $TD_TB_ExportPath.Text -SSHFunc FOS_SSHZoneDetails
         # Links = Propertyname im PSCustomObject (das bindet dein XAML)
         # Rechts = Propertyname im Source-Objekt
         $mapZoneDetails = @{ 
@@ -1255,7 +1261,7 @@ $TD_BTN_FOS_PortLicenseShow.add_click({
     <# if there a something in, its better to clean it up befor we use it again #>
     $UCVMMain.DeviceToggles.Clear()
     foreach($TD_Creds in $TD_Credentials){
-        $FunctionResult = New-DeviceBlock -Device $TD_Creds -ExportPath $TD_tb_ExportPath.Text -SSHFunc FOS_SSHPortLicenseShowInfo
+        $FunctionResult = New-DeviceBlock -Device $TD_Creds -ExportPath $TD_TB_ExportPath.Text -SSHFunc FOS_SSHPortLicenseShowInfo
         # Links = Propertyname im PSCustomObject (das bindet dein XAML)
         # Rechts = Propertyname im Source-Objekt
         $dev = $FunctionResult.DeviceIdent
@@ -1287,7 +1293,7 @@ $TD_BTN_FOS_SensorShow.add_click({
     <# if there a something in, its better to clean it up befor we use it again #>
     $UCVMMain.DeviceToggles.Clear()
     foreach($TD_Creds in $TD_Credentials){
-        $FunctionResult = New-DeviceBlock -Device $TD_Creds -ExportPath $TD_tb_ExportPath.Text -SSHFunc FOS_SSHSensorShow
+        $FunctionResult = New-DeviceBlock -Device $TD_Creds -ExportPath $TD_TB_ExportPath.Text -SSHFunc FOS_SSHSensorShow
         # Links = Propertyname im PSCustomObject (das bindet dein XAML)
         # Rechts = Propertyname im Source-Objekt
         $dev = $FunctionResult.DeviceIdent
@@ -1321,7 +1327,7 @@ $TD_BTN_PWR_HMCInfo.add_click({
 
     foreach($TD_Creds in $TD_Credentials){
         
-        $FunctionResult = New-DeviceBlock -Device $TD_Creds -ExportPath $TD_tb_ExportPath.Text -RESTFunc HMC_RESTHMCConsole
+        $FunctionResult = New-DeviceBlock -Device $TD_Creds -ExportPath $TD_TB_ExportPath.Text -RESTFunc HMC_RESTHMCConsole
 
         #if (-not $FunctionResult.DeviceIdent.HmcRows) {
         #    $FunctionResult.DeviceIdent | Add-Member -NotePropertyName HmcRows `
@@ -1362,7 +1368,7 @@ $TD_BTN_PWR_ManagedSystemInfo.add_click({
 
     foreach($TD_Creds in $TD_Credentials){
 
-        $FunctionResult = New-DeviceBlock -Device $TD_Creds -ExportPath $TD_tb_ExportPath.Text -RESTFunc HMC_RESTHMCManagedSystems
+        $FunctionResult = New-DeviceBlock -Device $TD_Creds -ExportPath $TD_TB_ExportPath.Text -RESTFunc HMC_RESTHMCManagedSystems
 
         # Falls Rows-Collection noch nicht existiert
         #if (-not $FunctionResult.DeviceIdent.ManagedSystemRows) {
@@ -1401,7 +1407,7 @@ $TD_BTN_PWR_LparSummary.add_click({
     foreach($TD_Creds in $TD_Credentials){
 
         # 3) REST Call über dein Standard-Pattern
-        $FunctionResult = New-DeviceBlock -Device $TD_Creds -ExportPath $TD_tb_ExportPath.Text -RESTFunc HMC_RESTHMCLogicalPartitions
+        $FunctionResult = New-DeviceBlock -Device $TD_Creds -ExportPath $TD_TB_ExportPath.Text -RESTFunc HMC_RESTHMCLogicalPartitions
 
         # 4) Collection für GUI sicherstellen (ObservableCollection)
         #if (-not $FunctionResult.DeviceIdent.LparRows) {
