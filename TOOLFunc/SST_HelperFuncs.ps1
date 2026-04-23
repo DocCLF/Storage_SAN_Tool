@@ -43,7 +43,12 @@ function Invoke-DeviceDataFetch {
     $pw = [Net.NetworkCredential]::new('', $Device.Password).Password
 
     if($RESTFunc){
-        $FunResult = & $RESTFunc -TD_Line_ID $Device.ID -TD_Device_UserName $Device.UserName -TD_Device_DeviceIP $Device.IPAddress -TD_Device_PW $pw -TD_Exportpath $ExportPath
+        try {
+            $FunResult = & $RESTFunc -TD_Line_ID $Device.ID -TD_Device_UserName $Device.UserName -TD_Device_DeviceIP $Device.IPAddress -TD_Device_PW $pw -TD_Exportpath $ExportPath
+        }
+        catch {
+            Write-Host $_.Exception.Message
+        }
 
         $items = @($FunResult)
 
@@ -61,7 +66,12 @@ function Invoke-DeviceDataFetch {
     }
 
     if ($FallbacktoSSH) {
-        $FunResult = & $SSHFunc -TD_Line_ID $Device.ID -TD_Device_ConnectionTyp $Device.ConnectionTyp -TD_Device_UserName $Device.UserName -TD_Device_DeviceIP $Device.IPAddress -TD_Device_PW $pw -TD_Exportpath $ExportPath
+        try {
+            $FunResult = & $SSHFunc -TD_Line_ID $Device.ID -TD_Device_ConnectionTyp $Device.ConnectionTyp -TD_Device_UserName $Device.UserName -TD_Device_DeviceIP $Device.IPAddress -TD_Device_PW $pw -TD_Exportpath $ExportPath
+        }
+        catch {
+            Write-Host $_.Exception.Message
+        }
     }
 
     return $FunResult
@@ -77,8 +87,13 @@ function New-DeviceBlock {
         [object]$RESTFunc,
         [object]$SSHFunc
     )
-
-    $FunResult = Invoke-DeviceDataFetch -Device $Device -ExportPath $ExportPath -RESTFunc $RESTFunc -SSHFunc $SSHFunc
+    try {
+        $FunResult = Invoke-DeviceDataFetch -Device $Device -ExportPath $ExportPath -RESTFunc $RESTFunc -SSHFunc $SSHFunc
+    }
+    catch {
+        Write-Host $_.Exception.Message
+    }
+    
 
     # 2) DeviceToggle bauen
     $DeviceIdent = [DeviceToggle]::new()
