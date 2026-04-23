@@ -24,6 +24,11 @@ function SST_DeviceConnecCheck {
                 $TD_Selected_DeviceUserName
                 $TD_Selected_DevicePassword
                 $TD_UserInputCred = $TD_Selected_SVCorVF
+                $TD_Creds = [PSCustomObject]@{
+                    UserName = $TD_Selected_DeviceUserName
+                    IPAddress = $TD_Selected_DeviceIPAddr
+                    Password = $TD_Selected_DevicePassword
+                }
              }
             "no" { 
                 $TD_Selected_DeviceIPAddr = $TD_TB_DeviceIPAddr.Text
@@ -33,9 +38,15 @@ function SST_DeviceConnecCheck {
                 if($TD_CB_SVCorVF.IsChecked -and ($TD_Selected_DeviceType -like "*Storage")){$TD_UserInputCred = "SVC"};
                 if($TD_CB_SVCorVF.IsChecked -and ($TD_Selected_DeviceType -like "*SAN")){$TD_UserInputCred = "VF"};
                 if(!($TD_CB_SVCorVF.IsChecked)){$TD_UserInputCred = "Nothing"};
-                
+                $TD_Creds = [PSCustomObject]@{
+                    UserName = $TD_TB_DeviceUserName.Text
+                    IPAddress = $TD_TB_DeviceIPAddr.Text
+                    Password = [string]$TD_TB_DevicePassword.Password
+                }
              }
-            Default {SST_ToolMessageCollector -TD_ToolMSGCollector "Something went wrong at SST_DeviceConnecCheck Func please check the promt or close the gui and write $error in the promt." -TD_ToolMSGType Warning}
+            Default {
+                #SST_ToolMessageCollector -TD_ToolMSGCollector "Something went wrong at SST_DeviceConnecCheck Func please check the promt or close the gui and write $error in the promt." -TD_ToolMSGType Warning
+                }
         }
 
     }
@@ -44,25 +55,32 @@ function SST_DeviceConnecCheck {
 
         switch ($TD_Selected_DeviceType) {
             {$_ -like "*Storage"} { 
-                $TD_BasicInfo = IBM_RESTBaseStorageInfos -TD_Device_DeviceIP $TD_Selected_DeviceIPAddr -TD_Device_UserName $TD_Selected_DeviceUserName -TD_Device_PW $([Net.NetworkCredential]::new('', $TD_Selected_DevicePassword).Password) -TD_Storage $TD_UserInputCred
-                if((($($TD_BaseStorageInfo.StorageInfo).Count -lt 1))){
-                    [array]$TD_BasicInfo = IBM_SSHBaseStorageInfos -TD_Line_ID $_.ID -TD_Device_ConnectionTyp $_.ConnectionTyp -TD_Device_UserName $_.UserName -TD_Device_DeviceIP $_.IPAddress -TD_Device_DeviceName $_.DeviceName -TD_Device_PW $([Net.NetworkCredential]::new('', $_.Password).Password) -TD_Exportpath $TD_tb_ExportPath.Text
+                #-TD_Line_ID $Device.ID -TD_Device_UserName $Device.UserName -TD_Device_DeviceIP $Device.IPAddress -TD_Device_PW $pw -TD_Exportpath $ExportPath
+
+                try {
+                    $TD_BasicInfoTemp = New-DeviceBlock -Device $TD_Creds -ExportPath $TD_TB_ExportPath.Text -RESTFunc IBM_RESTBaseStorageInfos -SSHFunc IBM_SSHBaseStorageInfos
                 }
+                catch {
+                    Write-Host $_.Exception.Message
+                }finally{
+                    $TD_Creds =$null
+                }
+
                 <# not the best check but try-catch do not work, i have to check why #>
-                $TD_BasicDeviceInfos = $TD_BasicInfo.StorageInfo
-                $TD_BasicDeviceConnection = $TD_BasicInfo.ConnectionTyp
+                $TD_BasicDeviceInfos = $TD_BasicInfoTemp.FuncResult.StorageInfo
+                $TD_BasicDeviceConnection = $TD_BasicInfoTemp.FuncResult.ConnectionTyp
                 if($TD_BasicDeviceInfos.count -gt 0){
                     $TD_BInfo = "" | Select-Object ConnectionTyp,DeviceName,ProductDes,Prod_MTM,Code_Level
                     
                     $TD_BInfo.ConnectionTyp = $TD_BasicDeviceConnection
 
-                    if($TD_BasicDeviceInfos.Name[0] -ne ""){
-                        $TD_BInfo.DeviceName = $TD_BasicDeviceInfos.Name[0]
+                    if($TD_BasicDeviceInfos.ClusterName[0] -ne ""){
+                        $TD_BInfo.DeviceName = $TD_BasicDeviceInfos.ClusterName[0]
                     }else {
-                        $TD_BInfo.DeviceName = $TD_BasicDeviceInfos.Serial_Number[0]
+                        $TD_BInfo.DeviceName = $TD_BasicDeviceInfos.SerialNumber[0]
                     }
 
-                    switch ($TD_BasicDeviceInfos.Prod_MTM[0]) {
+                    switch ($TD_BasicDeviceInfos.ProdMTM[0]) {
                         {$_ -like "2078-324"} { $TD_BInfo.ProductDes = "V5030 Gen2" }
                         {$_ -like "2072-3N*" -or $_ -like "2078-2N*"} { $TD_BInfo.ProductDes = "FlashSystem 5000" }
                         {$_ -like "4680-3*"}  { $TD_BInfo.ProductDes = "FlashSystem 5045" }
@@ -80,13 +98,13 @@ function SST_DeviceConnecCheck {
                         {$_ -like "2145-SV3"}  { $TD_BInfo.ProductDes = "SVC SV3" }
             
                         Default {
-                            $TD_BInfo.ProductDes = $TD_BasicDeviceInfos.Prod_MTM[0]
+                            $TD_BInfo.ProductDes = $TD_BasicDeviceInfos.ProdMTM[0]
                             #SST_ToolMessageCollector -TD_ToolMSGCollector "Unknown Storage MTM, please check this MTM Number via google $($TD_BasicDeviceInfos.Prod_MTM[0])" -TD_ToolMSGType Warning
                         }
                     }
                     
-                    $TD_BInfo.Prod_MTM = $TD_BasicDeviceInfos.Prod_MTM[0]
-                    $TD_BInfo.Code_Level = $TD_BasicDeviceInfos.Code_Level[0]
+                    $TD_BInfo.Prod_MTM = $TD_BasicDeviceInfos.ProdMTM[0]
+                    $TD_BInfo.Code_Level = $TD_BasicDeviceInfos.CodeLevel[0] -replace '\s+\(.*\)',''
                     $TD_BasicDeviceInfo += $TD_BInfo
                     #SST_ToolMessageCollector -TD_ToolMSGCollector "Added Storage Device to the List" -TD_ToolMSGType Message
                 }else {
@@ -96,9 +114,15 @@ function SST_DeviceConnecCheck {
             }
             {$_ -like "*SAN"} { 
 
-                $TD_BasicDeviceInfos = FOS_BasicSwitchInfos -TD_Device_ConnectionTyp $TD_Selected_DeviceConnectionType -TD_Device_DeviceIP $TD_Selected_DeviceIPAddr -TD_Device_UserName $TD_Selected_DeviceUserName -TD_Device_PW $([Net.NetworkCredential]::new('', $TD_Selected_DevicePassword).Password) 
-                
-                switch ($($TD_BasicDeviceInfos.'Brocade Product Name')) {
+                try {
+                    $TD_BasicDeviceInfosTemp = New-DeviceBlock -Device $TD_Creds -ExportPath $TD_TB_ExportPath.Text -SSHFunc FOS_SSHBasicSwitchInfos
+                    $TD_BasicDeviceInfos  = $TD_BasicDeviceInfosTemp['FuncResult']
+                }
+                catch {
+                     Write-Host $_.Exception.Message
+                }
+
+                switch ($($TD_BasicDeviceInfos.'BrocadeProductName')) {
                     {$_ -like "Brocade G720"}  { $FOS_HWMTM = "8960-P/R64" }
                     {$_ -like "Brocade G730"}  { $FOS_HWMTM = "8960-P/R96" }
                     {$_ -like "Brocade G610"}  { $FOS_HWMTM = "8969-F24" }
@@ -110,11 +134,12 @@ function SST_DeviceConnecCheck {
                 }
                 
                 if($TD_BasicDeviceInfos.count -gt 0){
-                    $TD_BInfo = "" | Select-Object DeviceName,ProductDes,Prod_MTM,Code_Level
-                    $TD_BInfo.DeviceName = $TD_BasicDeviceInfos.'Swicht Name'
-                    $TD_BInfo.ProductDes = $TD_BasicDeviceInfos.'Brocade Product Name'
+                    $TD_BInfo = "" | Select-Object ConnectionTyp,DeviceName,ProductDes,Prod_MTM,Code_Level
+                    $TD_BInfo.ConnectionTyp = "plink" #change this if we switch to REST
+                    $TD_BInfo.DeviceName = $TD_BasicDeviceInfos.'SwichtName'
+                    $TD_BInfo.ProductDes = $TD_BasicDeviceInfos.'BrocadeProductName'
                     $TD_BInfo.Prod_MTM = $TD_BasicDeviceInfos.'MTM'
-                    $TD_BInfo.Code_Level = $TD_BasicDeviceInfos.'Fabric OS'
+                    $TD_BInfo.Code_Level = $TD_BasicDeviceInfos.'FabricOS'
                     $TD_BasicDeviceInfo += $TD_BInfo
                     #SST_ToolMessageCollector -TD_ToolMSGCollector "Added SAN Device to the List" -TD_ToolMSGType Message
                 }else {
