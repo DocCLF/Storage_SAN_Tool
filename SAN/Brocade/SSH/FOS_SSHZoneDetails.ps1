@@ -71,7 +71,7 @@ function FOS_SSHZoneDetails  {
         # Remove the first 2 Rows because we don't needed any more
         $FOS_EffectiveZoneList = $FOS_EffectiveZoneList |Select-Object -Skip 2
 
-        SST_ToolMessageCollector -TD_ToolMSGCollector "`nZoneName: $FOS_ConfigName,`nDefinedZoneCount: $($FOS_DefinedZoneList.Count) " -TD_Shown yes
+        #SST_ToolMessageCollector -TD_ToolMSGCollector "`nZoneName: $FOS_ConfigName,`nDefinedZoneCount: $($FOS_DefinedZoneList.Count) " -TD_Shown yes
         
     }
     process{
@@ -125,8 +125,8 @@ function FOS_SSHZoneDetails  {
             $FOS_ZoneCollection = $FOS_ZoneCollection |Select-Object -SkipLast 1
         }else {
              <# Action when all if and elseif conditions are false #>
-            SST_ToolMessageCollector -TD_ToolMSGCollector "Something wrong, notthing was not found." -TD_ToolMSGType Error -TD_Shown yes
-            SST_ToolMessageCollector -TD_ToolMSGCollector "Some Infos: notthing was found, ZoneEntry count: $($FOS_EffectiveZoneList.count)`n, $FOS_EffectiveZoneList" -TD_Shown no
+            #SST_ToolMessageCollector -TD_ToolMSGCollector "Something wrong, notthing was not found." -TD_ToolMSGType Error -TD_Shown yes
+            #SST_ToolMessageCollector -TD_ToolMSGCollector "Some Infos: notthing was found, ZoneEntry count: $($FOS_EffectiveZoneList.count)`n, $FOS_EffectiveZoneList" -TD_Shown no
         }
 
     }
@@ -139,22 +139,22 @@ function FOS_SSHZoneDetails  {
             <# exported to .\Host_Volume_Map_Result.csv #>
             if([string]$TD_Exportpath -ne "$PSRootPath\ToolLog\"){
                 $FOS_ZoneCollection | Export-Csv -Path $TD_Exportpath\$($TD_Line_ID)_$($FOS_ConfigName)_ZoneShow_Result_$(Get-Date -Format "yyyy-MM-dd").csv -NoTypeInformation
-                SST_ToolMessageCollector -TD_ToolMSGCollector "$TD_Exportpath\$($TD_Line_ID)_$($FOS_ConfigName)_ZoneShow_Result_$(Get-Date -Format "yyyy-MM-dd").csv" -TD_ToolMSGType Debug
+                #SST_ToolMessageCollector -TD_ToolMSGCollector "$TD_Exportpath\$($TD_Line_ID)_$($FOS_ConfigName)_ZoneShow_Result_$(Get-Date -Format "yyyy-MM-dd").csv" -TD_ToolMSGType Debug
             }else {
                 $FOS_ZoneCollection | Export-Csv -Path $PSScriptRoot\ToolLog\$($TD_Line_ID)_$($FOS_ConfigName)_ZoneShow_Result_$(Get-Date -Format "yyyy-MM-dd").csv -NoTypeInformation
-                SST_ToolMessageCollector -TD_ToolMSGCollector "$PSScriptRoot\ToolLog\$($TD_Line_ID)_$($FOS_ConfigName)_ZoneShow_Result_$(Get-Date -Format "yyyy-MM-dd").csv" -TD_ToolMSGType Debug
+                #SST_ToolMessageCollector -TD_ToolMSGCollector "$PSScriptRoot\ToolLog\$($TD_Line_ID)_$($FOS_ConfigName)_ZoneShow_Result_$(Get-Date -Format "yyyy-MM-dd").csv" -TD_ToolMSGType Debug
             }
         }else {
             <# output on the promt #>
             return $FOS_ZoneCollection
         }
-        SST_ToolMessageCollector -TD_ToolMSGCollector "$TD_Device_DeviceName `n$FOS_ZoneCollection" -TD_Shown no
-        SST_ToolMessageCollector -TD_ToolMSGCollector "$TD_Device_DeviceName `n$FOS_ConfigName" -TD_Shown no
+        #SST_ToolMessageCollector -TD_ToolMSGCollector "$TD_Device_DeviceName `n$FOS_ZoneCollection" -TD_Shown no
+        #SST_ToolMessageCollector -TD_ToolMSGCollector "$TD_Device_DeviceName `n$FOS_ConfigName" -TD_Shown no
 
         <# FOS_usedPorts commented out can be used later via filter option if necessary #>
-        return $FOS_ZoneCollection, $FOS_ConfigName
-        
-        <# Cleanup all TD* Vars #>
-        Clear-Variable FOS* -Scope Global
+        return [PSCustomObject]@{
+            FOSZoneCfg  = @($FOS_ZoneCollection)
+            FOSZoneCfgName = $FOS_ConfigName
+        }
     }
 }
