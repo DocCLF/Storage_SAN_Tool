@@ -42,6 +42,7 @@ function IBM_RESTDriveInfo {
                 $IBMSTOSN = if($STONodeInfo.enclosure_serial_number[$i] -eq ""){$STONodeInfo.panel_name[$i]}else{$STONodeInfo.enclosure_serial_number[$i]}
             }
         }
+        $TD_Device_DeviceName = $STONodeInfo.name[0]
     }
 
     process{
@@ -50,7 +51,7 @@ function IBM_RESTDriveInfo {
             $TD_DriveIDInformation = SST_SpectrumSystemAPI -Endpoint lsdrive/$($TD_DeviceInformation.id[$i]) -Body $null -BaseUrl $BaseUrl -RESTInfo $RESTInfo
             $TD_DriveSplitInfos = "" | Select-Object RowID,ID,Status,ErrorSequenceNumber,Use,TechType,UID,Capacity,BlockSize,VendorID,ProductID,FRUPartNumber,FRUIdentity,`
                                         RPM,FirmwareLevel,LatestFirmwareLevel,FirmwareLevelStatus,MdiskID,MdiskName,MemberID,EnclosureID,SlotID,NodeID,NodeName,QuorumID,Port1Status,`
-                                        Port2Status,ErrorSequenceNumber,ProtectionEnabled,AutoManage,DriveClassID,ReplacementDate,TransportProtocol,Compressed,PhysicalCapacity,PhysicalUsedCapacity,EffectiveUsedCapacity,WWNN,SerialNumber
+                                        Port2Status,InterfaceSpeed,ProtectionEnabled,AutoManage,DriveClassID,ReplacementDate,TransportProtocol,Compressed,PhysicalCapacity,PhysicalUsedCapacity,EffectiveUsedCapacity,WWNN,SerialNumber
             #   ID,Status,ErrorSequenceNumber,Use,TechType,UID,Capacity,BlockSize,VendorID,ProductID,FRUPartNumber,FRUIdentity
             $TD_DriveSplitInfos.ID                     = $TD_DriveIDInformation.id
             $TD_DriveSplitInfos.Status                 = $TD_DriveIDInformation.status
@@ -78,7 +79,7 @@ function IBM_RESTDriveInfo {
             $TD_DriveSplitInfos.Port1Status            = $TD_DriveIDInformation.port_1_status
             #   Port2Status,ErrorSequenceNumber,ProtectionEnabled,AutoManage,DriveClassID,ReplacementDate,TransportProtocol,Compressed,PhysicalCapacity,PhysicalUsedCapacity,EffectiveUsedCapacity,WWNN,SerialNumber 
             $TD_DriveSplitInfos.Port2Status            = $TD_DriveIDInformation.port_2_status
-            $TD_DriveSplitInfos.ErrorSequenceNumber    = $TD_DriveIDInformation.interface_speed
+            $TD_DriveSplitInfos.InterfaceSpeed    = $TD_DriveIDInformation.interface_speed
             $TD_DriveSplitInfos.ProtectionEnabled      = $TD_DriveIDInformation.protection_enabled
             $TD_DriveSplitInfos.AutoManage             = $TD_DriveIDInformation.auto_manage
             $TD_DriveSplitInfos.DriveClassID           = $TD_DriveIDInformation.drive_class_id
