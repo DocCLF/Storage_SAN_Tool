@@ -692,7 +692,7 @@
                       <DataTrigger Binding="{Binding Status}" Value="offline">
                         <Setter Property="Background" Value="Red" />
                       </DataTrigger>
-                    </Style.Triggers>d
+                    </Style.Triggers>
                   </Style>
                 </DataGrid.RowStyle>
                     <DataGrid.Columns>
