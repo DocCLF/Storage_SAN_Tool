@@ -120,8 +120,7 @@ function FOS_SSHBasicSwitchInfos {
         $FOS_SwitchOSVersion= FOS_SSHSwitchFW -SwitchData $FOS_MainInformation
 
         foreach ($lineUp in $FOS_MainInformation) {
-         #   if($lineUp -match 'Index'){break}
-            Write-Host $lineUp
+            if($lineUp -match 'Index'){break}
             $match = $FOS_MainInformation | Select-String -Pattern 'FOS\s+([v?][\d+]\.[\d+]\.[\w]+)'
             if ($match -and $match.Matches.Count -gt 0) {$FOSTemp = $match.Matches[0].Groups[1].Value }
             $FOS_SwGeneralInfos.Add('FabricOS',$FOSTemp)
