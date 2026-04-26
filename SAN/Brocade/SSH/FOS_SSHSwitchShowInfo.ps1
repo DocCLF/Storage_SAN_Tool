@@ -73,69 +73,72 @@ function FOS_SSHSwitchShowInfo {
         foreach($FOS_linebyLine in $FOS_SwShowArry_temp){
 
             <# Only collect data up to the next section, marked by frames #>
-            if($FOS_linebyLine -match '^\s+frames'){break}
+            if ($FOS_linebyLine -match '^\s+frames') { break }
+
+            if ([string]::IsNullOrWhiteSpace($FOS_linebyLine)) { continue }
+            if ($FOS_linebyLine -notmatch '^\s+\d+') { continue } # (\d+\.\d\w|\d+)
     
             # Build the Portsection of switchshow
-            if($FOS_linebyLine -match '^\s+\d+'){   # (\d+\.\d\w|\d+)
-                $PortStateInfo = $null
-                $FOS_SWsh = "" | Select-Object Index,Port,Address,Media,Speed,State,Proto,PortConnect,SwitchWWN,PortStateInfo,SwitchWWNN,SerialNumber,RowID
-                $FOS_SWsh.SwitchWWNN = $SANSwitchIdent.SwitchWWNN
-                $FOS_SWsh.SerialNumber = $SANSwitchIdent.SerialNumber
-                $FOS_SWsh.RowID = $SwitchShowRowID
-                #$FOS_SWsh.SwitchWWN = $FOS_switchWwn
-                <# Port index is a number between 0 and the maximum number of supported ports on the platform. The port index identifies the port number relative to the switch. #>
-                $FOS_SWsh.Index = ($FOS_linebyLine |Select-String -Pattern '^\s+(\d+)' -AllMatches).Matches.Groups.Value[1]
-                $FOS_SWshIndex = $FOS_SWsh.Index
-                <# Port number; 0-15, 0-31, or 0-63. #>
-                $FOS_SWsh.Port = ($FOS_linebyLine |Select-String -Pattern '^\s+\d+\s+(\d+)' -AllMatches).Matches.Groups.Value[1]
-                $FOS_SWshPort = $FOS_SWsh.Port
-                <# The 24-bit Address Identifier. #>
-                $FOS_SWsh.Address = ($FOS_linebyLine |Select-String -Pattern '([\w]+)\s+(id|--|cu)\s+' -AllMatches).Matches.Groups.Value[1]
-                <# Media types means module types #>
-                $FOS_SWsh.Media = ($FOS_linebyLine |Select-String -Pattern '\s+(id|--|cu)\s+' -AllMatches).Matches.Groups.Value[1]
-                <# The speed of the port. #>
-                $FOS_SWsh.Speed = ($FOS_linebyLine |Select-String -Pattern '\s+(id|--|cu)\s+(N\d+|\d+G|AN|UN)' -AllMatches).Matches.Groups.Value[2]
-                <# Port state information #>
-                $FOS_SWsh.State = ($FOS_linebyLine |Select-String -Pattern '(\w+_\w+|\w+)\s+(FC)' -AllMatches).Matches.Groups.Value[1]
-                $FOS_SWshState = $FOS_SWsh.State
-                <# Protocol support by GbE port. #>
-                $FOS_SWsh.Proto = ($FOS_linebyLine |Select-String -Pattern '(\w+_\w+|\w+)\s+(FC)' -AllMatches).Matches.Groups.Value[2]
-                <# WWPN or other Infos #>
-                $FOS_PortConnect = ($FOS_linebyLine |Select-String -Pattern '(E-Port\s+([0-9a-f]{2}:){7}[0-9a-f]{2}\s+.*\))' -AllMatches).Matches.Groups.Value[1]
-                If($FOS_PortConnect -ne "empty"){
-                    $FOS_SWsh.PortConnect =$FOS_PortConnect
-                    $FOS_PortConnect = "empty"
-                }else{
-                    $FOS_SWsh.PortConnect = ($FOS_linebyLine |Select-String -Pattern '\s+(FC)\s+([A-Za-z-]+\s+([0-9a-f]{2}:){7}[0-9a-f]{2}|\(.*\)|[A-Za-z-]+.*)' -AllMatches).Matches.Groups.Value[2]
+            $PortStateInfo = $null
+            $FOS_SWsh = "" | Select-Object Index,Port,Address,Media,Speed,State,Proto,PortConnect,SwitchWWN,PortStateInfo,SwitchWWNN,SerialNumber,RowID
+            $FOS_SWsh.SwitchWWNN = $SANSwitchIdent.SwitchWWNN
+            $FOS_SWsh.SerialNumber = $SANSwitchIdent.SerialNumber
+            $FOS_SWsh.RowID = $SwitchShowRowID
+            #$FOS_SWsh.SwitchWWN = $FOS_switchWwn
+            <# Port index is a number between 0 and the maximum number of supported ports on the platform. The port index identifies the port number relative to the switch. #>
+            $m = $FOS_linebyLine | Select-String -Pattern '^\s+(\d+)'
+            if ($m) {$FOS_SWsh.Index = $m.Matches[0].Groups[1].Value } else {continue }
+            $FOS_SWshIndex = $FOS_SWsh.Index
+            $m = $FOS_linebyLine | Select-String -Pattern '^\s+\d+\s+(\d+)'
+            if ($m) {$FOS_SWsh.Port = $m.Matches[0].Groups[1].Value}
+            $FOS_SWshPort = $FOS_SWsh.Port
+            $m = $FOS_linebyLine | Select-String -Pattern '([\w]+)\s+(id|--|cu)\s+'
+            if ($m) {$FOS_SWsh.Address = $m.Matches[0].Groups[1].Value}
+            $m = $FOS_linebyLine | Select-String -Pattern '\s+(id|--|cu)\s+'
+            if ($m) {$FOS_SWsh.Media = $m.Matches[0].Groups[1].Value}
+            $m = $FOS_linebyLine | Select-String -Pattern '\s+(id|--|cu)\s+(N\d+|\d+G|AN|UN)'
+            if ($m) {$FOS_SWsh.Speed = $m.Matches[0].Groups[2].Value}
+            $m = $FOS_linebyLine | Select-String -Pattern '(\w+_\w+|\w+)\s+(FC)'
+            if ($m) {
+                $FOS_SWsh.State = $m.Matches[0].Groups[1].Value
+                $FOS_SWsh.Proto = $m.Matches[0].Groups[2].Value
+            }
+            $FOS_SWshState = $FOS_SWsh.State
+            $m = $FOS_linebyLine | Select-String -Pattern '(E-Port\s+([0-9a-f]{2}:){7}[0-9a-f]{2}\s+.*\))'
+            if ($m) {
+                $FOS_SWsh.PortConnect = $m.Matches[0].Groups[1].Value
+            }else {
+                $m = $FOS_linebyLine | Select-String -Pattern '\s+(FC)\s+([A-Za-z-]+\s+([0-9a-f]{2}:){7}[0-9a-f]{2}|\(.*\)|[A-Za-z-]+.*)'
+                if ($m) {
+                    $FOS_SWsh.PortConnect = $m.Matches[0].Groups[2].Value
+                }
+            }
+                
+            if($FOS_SWsh.PortConnect -like "*NPIV*"){
+                $FOS_SwBasicPortDetails += $FOS_SWsh
+                <# need a better way to connect #>
+                $FOS_PortConnect_Infos = plink $TD_Device_UserName@$TD_Device_DeviceIP -pw $TD_Device_PW -batch "portshow $($FOS_SWsh.Port)"
+                foreach($FOS_PortConnect_Info in $FOS_PortConnect_Infos){
+                    $m = $FOS_PortConnect_Info | Select-String -Pattern '^\s+(([0-9a-f]{2}:){7}[0-9a-f]{2})'
+                    if ($m) {$FOS_NPIV_Info = $m.Matches[0].Groups[1].Value}else {continue}
+                    if($FOS_NPIV_Info -ne $FOS_NPIV_Info_temp){
+                        $FOS_SWsh = "" | Select-Object Index,Port,Address,Media,Speed,State,Proto,PortConnect,RowID
+                        $FOS_SWsh.RowID = $SwitchShowRowID
+                        $FOS_SWsh.Index = $FOS_SWshIndex
+                        $FOS_SWsh.Port = $FOS_SWshPort
+                        $FOS_SWsh.Address = "virtuell"
+                        $FOS_SWsh.State = $FOS_SWshState
+                        $FOS_SWsh.PortConnect = $FOS_NPIV_Info
+                        $FOS_NPIV_Info_temp = $FOS_NPIV_Info
+                        $FOS_SwBasicPortDetails += $FOS_SWsh
+                    }
                 }
                 
-                if($FOS_SWsh.PortConnect -like "*NPIV*"){
-
-                    $FOS_SwBasicPortDetails += $FOS_SWsh
-                    <# need a better way to connect #>
-                    $FOS_PortConnect_Infos = plink $TD_Device_UserName@$TD_Device_DeviceIP -pw $TD_Device_PW -batch "portshow $($FOS_SWsh.Port)"
-                    foreach($FOS_PortConnect_Info in $FOS_PortConnect_Infos){
-                        $FOS_NPIV_Info = ($FOS_PortConnect_Info |Select-String -Pattern '^\s+(([0-9a-f]{2}:){7}[0-9a-f]{2})' -AllMatches).Matches.Groups.Value[1]
-                        if($FOS_NPIV_Info -ne $FOS_NPIV_Info_temp){
-                            $FOS_SWsh = "" | Select-Object Index,Port,Address,Media,Speed,State,Proto,PortConnect,RowID
-                            $FOS_SWsh.RowID = $SwitchShowRowID
-                            $FOS_SWsh.Index = $FOS_SWshIndex
-                            $FOS_SWsh.Port = $FOS_SWshPort
-                            $FOS_SWsh.Address = "virtuell"
-                            $FOS_SWsh.State = $FOS_SWshState
-                            $FOS_SWsh.PortConnect = $FOS_NPIV_Info
-                            $FOS_NPIV_Info_temp = $FOS_NPIV_Info
-                            $FOS_SwBasicPortDetails += $FOS_SWsh
-                        }
-                    }
-                    
-                }else{
-                   $FOS_SwBasicPortDetails += $FOS_SWsh
-                }
-
+            }else{
+               $FOS_SwBasicPortDetails += $FOS_SWsh
             }
             # if the Portnumber is not empty and there is a SFP pluged in, push the Port in the FOS_usedPorts array
-            if(($FOS_SWsh.Port -ne "") -and ($FOS_SWsh.Media -eq "id")){$FOS_usedPorts += $FOS_SWsh.Port}
+            if ($FOS_SWsh.Port -and $FOS_SWsh.Media -eq "id") {$FOS_usedPorts += $FOS_SWsh.Port}
 
             <# Progressbar  #>
             $ProgCounter++
@@ -147,7 +150,7 @@ function FOS_SSHSwitchShowInfo {
     end {
 
         Close-ProgressBar -ProgressBar $ProgressBar
-        SST_CustomerSANDBInsertTable -SST_InfoType "SANPortInfo" -SST_CollectedInformations $FOS_SwBasicPortDetails
+        #SST_CustomerSANDBInsertTable -SST_InfoType "SANPortInfo" -SST_CollectedInformations $FOS_SwBasicPortDetails
 
         <# returns the hashtable for further processing, not mandatory but the safe way #>
         Write-Debug -Message "End Func GET_SwitchShowInfo |$(Get-Date)`n "
@@ -156,10 +159,10 @@ function FOS_SSHSwitchShowInfo {
             <# exported to .\Host_Volume_Map_Result.csv #>
             if([string]$TD_Exportpath -ne "$PSRootPath\ToolLog\"){
                 $FOS_SwBasicPortDetails | Export-Csv -Path $TD_Exportpath\$($TD_Line_ID)_$($TD_Device_DeviceName)_SwitchShow_Result_$(Get-Date -Format "yyyy-MM-dd").csv -NoTypeInformation
-                SST_ToolMessageCollector -TD_ToolMSGCollector "$TD_Exportpath\$($TD_Line_ID)_$($TD_Device_DeviceName)_SwitchShow_Result_$(Get-Date -Format "yyyy-MM-dd").csv" -TD_ToolMSGType Debug
+                #SST_ToolMessageCollector -TD_ToolMSGCollector "$TD_Exportpath\$($TD_Line_ID)_$($TD_Device_DeviceName)_SwitchShow_Result_$(Get-Date -Format "yyyy-MM-dd").csv" -TD_ToolMSGType Debug
             }else {
                 $FOS_SwBasicPortDetails | Export-Csv -Path $PSScriptRoot\ToolLog\$($TD_Line_ID)_$($TD_Device_DeviceName)_SwitchShow_Result_$(Get-Date -Format "yyyy-MM-dd").csv -NoTypeInformation
-                SST_ToolMessageCollector -TD_ToolMSGCollector "Export-Csv -Path $PSScriptRoot\ToolLog\$($TD_Line_ID)_$($TD_Device_DeviceName)_SwitchShow_Result_$(Get-Date -Format "yyyy-MM-dd").csv" -TD_ToolMSGType Debug
+                #SST_ToolMessageCollector -TD_ToolMSGCollector "Export-Csv -Path $PSScriptRoot\ToolLog\$($TD_Line_ID)_$($TD_Device_DeviceName)_SwitchShow_Result_$(Get-Date -Format "yyyy-MM-dd").csv" -TD_ToolMSGType Debug
             }
         }else {
             <# output on the promt #>
