@@ -867,6 +867,7 @@ $TD_BTN_IBM_DriveInfo.add_click({
     <# if there a something in, its better to clean it up befor we use it again #>
     $UCVMMain.DeviceToggles.Clear()
     foreach($TD_Creds in $TD_Credentials){
+        if($TD_Creds.SVCorVF -like "*SVC*"){continue}
         $FunctionResult = New-DeviceBlock -Device $TD_Creds -ExportPath $TD_TB_ExportPath.Text -RESTFunc IBM_RESTDriveInfo -SSHFunc IBM_SSHDriveInfo
         # Links = Propertyname im PSCustomObject (das bindet dein XAML)
         # Rechts = Propertyname im Source-Objekt
@@ -1244,7 +1245,7 @@ $TD_BTN_FOS_ZoneDetailsShow.add_click({
             WWPN    = 'WWPN'
             Alias   = 'Alias'
         }
-        Add-MappedRows -Collection $FunctionResult.DeviceIdent.SANZoneDetailsRows -Source $FunctionResult.FuncResult -IdProperty 'RowID' -Map $mapZoneDetails
+        Add-MappedRows -Collection $FunctionResult.DeviceIdent.SANZoneDetailsRows -Source $FunctionResult.FuncResult.FOSZoneCfg -IdProperty 'RowID' -Map $mapZoneDetails
 
         $UCVMMain.DeviceToggles.Add($FunctionResult.DeviceIdent)
     }
