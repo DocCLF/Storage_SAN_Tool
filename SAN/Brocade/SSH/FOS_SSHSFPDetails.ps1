@@ -33,21 +33,27 @@ function FOS_SSHSFPDetails {
     
     process {
         $TD_SFPDetailsResault = foreach ($TD_SFP in $FOS_SFPInformations){
+            if ([string]::IsNullOrWhiteSpace($TD_SFP)) { continue }
+            if ($TD_SFP -notmatch '^Port\s+\d+') { continue }
             $TD_SFPInfo = "" | Select-Object Port,SFPUsed,SFPTyp,Vendor,SerialNo,SpeedRange,HealthStatus,SwitchWWNN,SerialNumber,RowID
             $TD_SFPInfo.RowID = $SwitchShowRowID
             
-            $TD_SFPInfo.SFPUsed = ($TD_SFP|Select-String -Pattern '^Port\s+\d+:\s+(Media\snot\sinstalled)' -AllMatches).Matches.Groups[1].Value
-            if($TD_SFPInfo.SFPUsed -eq "Media not installed"){
-                SST_ToolMessageCollector -TD_ToolMSGCollector "$($TD_SFPInfo.SFPUsed) Media not installed" -TD_ToolMSGType Message -TD_Shown yes
-                continue
-            }
+            $m = $TD_SFP | Select-String -Pattern '^Port\s+\d+:\s+(Media\snot\sinstalled)'
+            if ($m) {$TD_SFPInfo.SFPUsed = $m.Matches[0].Groups[1].Value}
+            if($TD_SFPInfo.SFPUsed -eq "Media not installed"){continue}
+            $m = $TD_SFP | Select-String -Pattern '^Port\s+(\d+)'    
+            if ($m) {$TD_SFPInfo.Port = $m.Matches[0].Groups[1].Value}
+            $m = $TD_SFP | Select-String -Pattern '\s+id\s+(\([a-z]+\))\s+'
+            if ($m) {$TD_SFPInfo.SFPTyp = $m.Matches[0].Groups[1].Value}
+            $m = $TD_SFP | Select-String -Pattern '\s+Vendor:\s+([a-zA-Z]+)\s+'
+            if ($m) {$TD_SFPInfo.Vendor = $m.Matches[0].Groups[1].Value}
+            $m = $TD_SFP | Select-String -Pattern '\s+Serial\s+No:\s+([a-zA-Z0-9]+)\s+'
+            if ($m) {$TD_SFPInfo.SerialNo = $m.Matches[0].Groups[1].Value}
+            $m = $TD_SFP | Select-String -Pattern '\s+Speed:\s+(\d+,\d+,\d+[a-zA-Z_]+)\s+'
+            if ($m) {$TD_SFPInfo.SpeedRange = $m.Matches[0].Groups[1].Value}
+            $m = $TD_SFP | Select-String -Pattern '\s+Health:\s+(Green|Yellow|Unknown|Paused|No\s+License)'
+            if ($m) {$TD_SFPInfo.HealthStatus = $m.Matches[0].Groups[1].Value}
 
-            $TD_SFPInfo.Port = ($TD_SFP|Select-String -Pattern '^Port\s+(\d+)' -AllMatches).Matches.Groups[1].Value
-            $TD_SFPInfo.SFPTyp = ($TD_SFP|Select-String -Pattern '\s+id\s+(\([a-z]+\))\s+' -AllMatches).Matches.Groups[1].Value
-            $TD_SFPInfo.Vendor = ($TD_SFP|Select-String -Pattern '\s+Vendor:\s+([a-zA-Z]+)\s+' -AllMatches).Matches.Groups[1].Value
-            $TD_SFPInfo.SerialNo = ($TD_SFP|Select-String -Pattern '\s+Serial\s+No:\s+([a-zA-Z0-9]+)\s+' -AllMatches).Matches.Groups[1].Value
-            $TD_SFPInfo.SpeedRange = ($TD_SFP|Select-String -Pattern '\s+Speed:\s+(\d+,\d+,\d+[a-zA-Z_]+)\s+' -AllMatches).Matches.Groups[1].Value
-            $TD_SFPInfo.HealthStatus = ($TD_SFP|Select-String -Pattern '\s+Health:\s+(Green|Yellow|Unknown|Paused|No\s+License)' -AllMatches).Matches.Groups[1].Value
             $TD_SFPInfo.SwitchWWNN = $SANSwitchIdent.SwitchWWNN
             $TD_SFPInfo.SerialNumber = $SANSwitchIdent.SerialNumber
             $TD_SFPInfo
@@ -55,7 +61,6 @@ function FOS_SSHSFPDetails {
             <# Progressbar  #>
             $ProgCounter++
             Write-ProgressBar -ProgressBar $ProgressBar -Activity "Collect data for Device $($TD_Line_ID) $($TD_Device_DeviceName)" -PercentComplete (($ProgCounter/$FOS_SFPInformations.Count) * 100)
-            Start-Sleep -Seconds 0.5
         }
     }
     
@@ -67,10 +72,10 @@ function FOS_SSHSFPDetails {
             <# exported to .\Host_Volume_Map_Result.csv #>
             if([string]$TD_Exportpath -ne "$PSRootPath\ToolLog\"){
                 $TD_SFPDetailsResault | Export-Csv -Path $TD_Exportpath\$($TD_Line_ID)_$($TD_Device_DeviceName)_SFPDetails_Result_$(Get-Date -Format "yyyy-MM-dd").csv -NoTypeInformation
-                SST_ToolMessageCollector -TD_ToolMSGCollector "$TD_Exportpath\$($TD_Line_ID)_$($TD_Device_DeviceName)_SFPDetails_Result_$(Get-Date -Format "yyyy-MM-dd").csv" -TD_ToolMSGType Debug
+                #SST_ToolMessageCollector -TD_ToolMSGCollector "$TD_Exportpath\$($TD_Line_ID)_$($TD_Device_DeviceName)_SFPDetails_Result_$(Get-Date -Format "yyyy-MM-dd").csv" -TD_ToolMSGType Debug
             }else {
                 $TD_SFPDetailsResault | Export-Csv -Path $PSScriptRoot\ToolLog\$($TD_Line_ID)_$($TD_Device_DeviceName)_SFPDetails_Result_$(Get-Date -Format "yyyy-MM-dd").csv -NoTypeInformation
-                SST_ToolMessageCollector -TD_ToolMSGCollector "$PSScriptRoot\ToolLog\$($TD_Line_ID)_$($TD_Device_DeviceName)_SFPDetails_Result_$(Get-Date -Format "yyyy-MM-dd").csv" -TD_ToolMSGType Debug
+                #SST_ToolMessageCollector -TD_ToolMSGCollector "$PSScriptRoot\ToolLog\$($TD_Line_ID)_$($TD_Device_DeviceName)_SFPDetails_Result_$(Get-Date -Format "yyyy-MM-dd").csv" -TD_ToolMSGType Debug
             }
         }else {
             <# output on the promt #>
