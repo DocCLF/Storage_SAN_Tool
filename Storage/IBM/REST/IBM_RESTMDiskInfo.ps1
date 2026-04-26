@@ -28,7 +28,7 @@ function IBM_RESTMDiskInfo {
         }
         Clear-Variable -Name TD_Device_PW -Force
         if($TD_Device_ConnectionTyp -eq "REST"){
-            $TD_DeviceInformation = SST_SpectrumSystemAPI -Endpoint lsmdiskgrp -Body $null -BaseUrl $BaseUrl -RESTInfo $RESTInfo
+            $TD_DeviceInformation = @(SST_SpectrumSystemAPI -Endpoint lsmdiskgrp -Body $null -BaseUrl $BaseUrl -RESTInfo $RESTInfo)
             $STONodeInfo = SST_SpectrumSystemAPI -Endpoint lsnode -Body $null -BaseUrl $BaseUrl -RESTInfo $RESTInfo
         }else {
             <#switch to the ssh version and leave this func #>
@@ -46,55 +46,57 @@ function IBM_RESTMDiskInfo {
     process{
         [int]$imax = $TD_DeviceInformation.Count
         $TD_MDiskInfoResault = for ($i = 0; $i -lt $imax; $i++) {
+            $item = $TD_DeviceInformation[$i]
+            if ($null -eq $item) { continue }
             <# Node Info#>
             $TD_MDiskInfo = "" | Select-Object RowID,ID,Name,Status,MDiskCount,VdiskCount,Capacity,ExtentSize,FreeCapacity,VirtualCapacity,UsedCapacity,RealCapacity,`
                                             Overallocation,Warning,EasyTier,EasyTierStatus,CompressionActive,CompressionVirtualCapacity,CompressionCompressedCapacity,CompressionUncompressedCapacity,ParentMdiskGrpID,ParentMdiskGrpName,ChildMdiskGrpCount,`
                                             ChildMdiskGrpCapacity,Type,Encrypt,OwnerType,OwnerID,OwnerName,SiteID,SiteName,DataReduction,UsedCapacityBeforeReduction,UsedCapacityAfterReduction,`
                                             OverheadCapacity,DeduplicationCapacitySaving,ReclaimableCapacity,EasyTierFCMOverAllocationMax,ProvisioningPolicyID,ProvisioningPolicyName,ReplicationPoolLinkUID,WWNN,SerialNumber
             #   ID,Name,Status,DdiskCount,VdiskCount,Capacity,ExtentSize,FreeCapacity,VirtualCapacity,UsedCapacity,RealCapacity     
-            $TD_MDiskInfo.ID                                 = $TD_DeviceInformation.id[$i]
-            $TD_MDiskInfo.Name                               = $TD_DeviceInformation.name[$i]
-            $TD_MDiskInfo.Status                             = $TD_DeviceInformation.status[$i]
-            $TD_MDiskInfo.MDiskCount                         = $TD_DeviceInformation.mdisk_count[$i]
-            $TD_MDiskInfo.VdiskCount                         = $TD_DeviceInformation.vdisk_count[$i]
-            $TD_MDiskInfo.Capacity                           = $TD_DeviceInformation.capacity[$i]
-            $TD_MDiskInfo.ExtentSize                         = $TD_DeviceInformation.extent_size[$i]
-            $TD_MDiskInfo.FreeCapacity                       = $TD_DeviceInformation.free_capacity[$i]
-            $TD_MDiskInfo.VirtualCapacity                    = $TD_DeviceInformation.virtual_capacity[$i]
-            $TD_MDiskInfo.UsedCapacity                       = $TD_DeviceInformation.used_capacity[$i]
-            $TD_MDiskInfo.RealCapacity                       = $TD_DeviceInformation.real_capacity[$i]
+            $TD_MDiskInfo.ID                              = $item.id
+            $TD_MDiskInfo.Name                            = $item.name
+            $TD_MDiskInfo.Status                          = $item.status
+            $TD_MDiskInfo.MDiskCount                      = $item.mdisk_count
+            $TD_MDiskInfo.VdiskCount                      = $item.vdisk_count
+            $TD_MDiskInfo.Capacity                        = $item.capacity
+            $TD_MDiskInfo.ExtentSize                      = $item.extent_size
+            $TD_MDiskInfo.FreeCapacity                    = $item.free_capacity
+            $TD_MDiskInfo.VirtualCapacity                 = $item.virtual_capacity
+            $TD_MDiskInfo.UsedCapacity                    = $item.used_capacity
+            $TD_MDiskInfo.RealCapacity                    = $item.real_capacity
             #   Overallocation, Warning, EasyTier, EasyTierStatus, CompressionActive, CompressionVirtualCapacity, CompressionCompressedCapacity, CompressionUncompressedCapacity, ParentMdiskGrpID, ParentMdiskGrpName, ChildMdiskGrpCount              
-            $TD_MDiskInfo.Overallocation                     = $TD_DeviceInformation.overallocation[$i]
-            $TD_MDiskInfo.Warning                            = $TD_DeviceInformation.warning[$i]
-            $TD_MDiskInfo.EasyTier                           = $TD_DeviceInformation.easy_tier[$i]
-            $TD_MDiskInfo.EasyTierStatus                     = $TD_DeviceInformation.easy_tier_status[$i]
-            $TD_MDiskInfo.CompressionActive                  = $TD_DeviceInformation.compression_active[$i]
-            $TD_MDiskInfo.CompressionVirtualCapacity         = $TD_DeviceInformation.compression_virtual_capacity[$i]
-            $TD_MDiskInfo.CompressionCompressedCapacity      = $TD_DeviceInformation.compression_compressed_capacity[$i]
-            $TD_MDiskInfo.CompressionUncompressedCapacity    = $TD_DeviceInformation.compression_uncompressed_capacity[$i]
-            $TD_MDiskInfo.ParentMdiskGrpID                   = $TD_DeviceInformation.parent_mdisk_grp_id[$i]
-            $TD_MDiskInfo.ParentMdiskGrpName                 = $TD_DeviceInformation.parent_mdisk_grp_name[$i]
-            $TD_MDiskInfo.ChildMdiskGrpCount                 = $TD_DeviceInformation.child_mdisk_grp_count[$i]
+            $TD_MDiskInfo.Overallocation                  = $item.overallocation
+            $TD_MDiskInfo.Warning                         = $item.warning
+            $TD_MDiskInfo.EasyTier                        = $item.easy_tier
+            $TD_MDiskInfo.EasyTierStatus                  = $item.easy_tier_status
+            $TD_MDiskInfo.CompressionActive               = $item.compression_active
+            $TD_MDiskInfo.CompressionVirtualCapacity      = $item.compression_virtual_capacity
+            $TD_MDiskInfo.CompressionCompressedCapacity   = $item.compression_compressed_capacity
+            $TD_MDiskInfo.CompressionUncompressedCapacity = $item.compression_uncompressed_capacity
+            $TD_MDiskInfo.ParentMdiskGrpID                = $item.parent_mdisk_grp_id
+            $TD_MDiskInfo.ParentMdiskGrpName              = $item.parent_mdisk_grp_name
+            $TD_MDiskInfo.ChildMdiskGrpCount              = $item.child_mdisk_grp_count
             #   ChildMdiskGrpCapacity, Type, Encrypt, OwnerType, OwnerID, OwnerName, SiteID, SiteName, DataReduction, UsedCapacityBeforeReduction, UsedCapacityAfterReduction  
-            $TD_MDiskInfo.ChildMdiskGrpCapacity              = $TD_DeviceInformation.child_mdisk_grp_capacity[$i]
-            $TD_MDiskInfo.Type                               = $TD_DeviceInformation.type[$i]
-            $TD_MDiskInfo.Encrypt                            = $TD_DeviceInformation.encrypt[$i]
-            $TD_MDiskInfo.OwnerType                          = $TD_DeviceInformation.owner_type[$i]
-            $TD_MDiskInfo.OwnerID                            = $TD_DeviceInformation.owner_id[$i]
-            $TD_MDiskInfo.OwnerName                          = $TD_DeviceInformation.owner_name[$i]
-            $TD_MDiskInfo.SiteID                             = $TD_DeviceInformation.site_id[$i]
-            $TD_MDiskInfo.SiteName                           = $TD_DeviceInformation.site_name[$i]
-            $TD_MDiskInfo.DataReduction                      = $TD_DeviceInformation.data_reduction[$i]
-            $TD_MDiskInfo.UsedCapacityBeforeReduction        = $TD_DeviceInformation.used_capacity_before_reduction[$i]
-            $TD_MDiskInfo.UsedCapacityAfterReduction         = $TD_DeviceInformation.used_capacity_after_reduction[$i]
+            $TD_MDiskInfo.ChildMdiskGrpCapacity           = $item.child_mdisk_grp_capacity
+            $TD_MDiskInfo.Type                            = $item.type
+            $TD_MDiskInfo.Encrypt                         = $item.encrypt
+            $TD_MDiskInfo.OwnerType                       = $item.owner_type
+            $TD_MDiskInfo.OwnerID                         = $item.owner_id
+            $TD_MDiskInfo.OwnerName                       = $item.owner_name
+            $TD_MDiskInfo.SiteID                          = $item.site_id
+            $TD_MDiskInfo.SiteName                        = $item.site_name
+            $TD_MDiskInfo.DataReduction                   = $item.data_reduction
+            $TD_MDiskInfo.UsedCapacityBeforeReduction     = $item.used_capacity_before_reduction
+            $TD_MDiskInfo.UsedCapacityAfterReduction      = $item.used_capacity_after_reduction
             #   OverheadCapacity, DeduplicationCapacitySaving, ReclaimableCapacity, EasyTierFCMOverAllocationMax, ProvisioningPolicyID,ProvisioningPolicyName,ReplicationPoolLinkUID      
-            $TD_MDiskInfo.OverheadCapacity                   = $TD_DeviceInformation.overhead_capacity[$i]
-            $TD_MDiskInfo.DeduplicationCapacitySaving        = $TD_DeviceInformation.deduplication_capacity_saving[$i]
-            $TD_MDiskInfo.ReclaimableCapacity                = $TD_DeviceInformation.reclaimable_capacity[$i]
-            $TD_MDiskInfo.EasyTierFCMOverAllocationMax       = $TD_DeviceInformation.easy_tier_fcm_over_allocation_max[$i]
-            $TD_MDiskInfo.ProvisioningPolicyID               = $TD_DeviceInformation.provisioning_policy_id[$i]
-            $TD_MDiskInfo.ProvisioningPolicyName             = $TD_DeviceInformation.provisioning_policy_name[$i]
-            $TD_MDiskInfo.ReplicationPoolLinkUID             = $TD_DeviceInformation.replication_pool_link_uid[$i]
+            $TD_MDiskInfo.OverheadCapacity                = $item.overhead_capacity
+            $TD_MDiskInfo.DeduplicationCapacitySaving     = $item.deduplication_capacity_saving
+            $TD_MDiskInfo.ReclaimableCapacity             = $item.reclaimable_capacity
+            $TD_MDiskInfo.EasyTierFCMOverAllocationMax    = $item.easy_tier_fcm_over_allocation_max
+            $TD_MDiskInfo.ProvisioningPolicyID            = $item.provisioning_policy_id
+            $TD_MDiskInfo.ProvisioningPolicyName          = $item.provisioning_policy_name
+            $TD_MDiskInfo.ReplicationPoolLinkUID          = $item.replication_pool_link_uid
 
             $TD_MDiskInfo.WWNN          = $IBMSTOWWNN
             $TD_MDiskInfo.SerialNumber  = $IBMSTOSN
