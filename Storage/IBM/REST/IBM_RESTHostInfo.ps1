@@ -5,7 +5,7 @@ function IBM_RESTHostInfo {
         [string]$TD_Device_ConnectionTyp,
         [string]$TD_Device_UserName,
         [string]$TD_Device_DeviceIP,
-        #[string]$TD_Device_DeviceName,
+        [string]$TD_Device_DeviceName=$null,
         [string]$TD_Device_PW,
         [string]$TD_Export = "yes",
         [string]$TD_Exportpath,
@@ -41,6 +41,7 @@ function IBM_RESTHostInfo {
                 $IBMSTOSN = if($STONodeInfo.enclosure_serial_number[$i] -eq ""){$STONodeInfo.panel_name[$i]}else{$STONodeInfo.enclosure_serial_number[$i]}
             }
         }
+        $TD_Device_DeviceName = $STONodeInfo.name[0]
     }
 
     process{
@@ -95,7 +96,6 @@ function IBM_RESTHostInfo {
             $TD_HostBaseTemp.SerialNumber = $IBMSTOSN
             $TD_HostBaseTemp.RowID = "$IBMSTOSN|$($TD_HostBaseTemp.ID)"
 
-
             $TD_HostBaseTemp
 
             <# Progressbar  #>
@@ -110,11 +110,11 @@ function IBM_RESTHostInfo {
         <# export y or n #>
         if($TD_Export -eq "yes"){
             if([string]$TD_Exportpath -ne "$PSCommandPath\ToolLog\"){
-                $CollectedHostInfo | Export-Csv -Path $TD_Exportpath\$($TD_Line_ID)_($TD_Device_DeviceName)_IBM_HostInfo_$(Get-Date -Format "yyyy-MM-dd").csv -NoTypeInformation
-                SST_ToolMessageCollector -TD_ToolMSGCollector "$TD_Exportpath\$($TD_Line_ID)_($TD_Device_DeviceName)_IBM_HostInfo_$(Get-Date -Format "yyyy-MM-dd").csv" -TD_ToolMSGType Debug
+                $CollectedHostInfo | Export-Csv -Path $TD_Exportpath\$($TD_Line_ID)_$($TD_Device_DeviceName)_IBM_HostInfo_$(Get-Date -Format "yyyy-MM-dd").csv -NoTypeInformation
+                SST_ToolMessageCollector -TD_ToolMSGCollector "$TD_Exportpath\$($TD_Line_ID)_$($TD_Device_DeviceName)_IBM_HostInfo_$(Get-Date -Format "yyyy-MM-dd").csv" -TD_ToolMSGType Debug
             }else {
-                $CollectedHostInfo | Export-Csv -Path $PSCommandPath\ToolLog\$($TD_Line_ID)_($TD_Device_DeviceName)_IBM_HostInfo_$(Get-Date -Format "yyyy-MM-dd").csv -NoTypeInformation
-                SST_ToolMessageCollector -TD_ToolMSGCollector "$PSCommandPath\ToolLog\$($TD_Line_ID)_($TD_Device_DeviceName)_IBM_HostInfo_$(Get-Date -Format "yyyy-MM-dd").csv" -TD_ToolMSGType Debug
+                $CollectedHostInfo | Export-Csv -Path $PSCommandPath\ToolLog\$($TD_Line_ID)_$($TD_Device_DeviceName)_IBM_HostInfo_$(Get-Date -Format "yyyy-MM-dd").csv -NoTypeInformation
+                SST_ToolMessageCollector -TD_ToolMSGCollector "$PSCommandPath\ToolLog\$($TD_Line_ID)_$($TD_Device_DeviceName)_IBM_HostInfo_$(Get-Date -Format "yyyy-MM-dd").csv" -TD_ToolMSGType Debug
             }
         }else {
             <# output on the promt #>
