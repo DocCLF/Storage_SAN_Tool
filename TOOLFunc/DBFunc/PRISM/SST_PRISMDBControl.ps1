@@ -2,7 +2,7 @@ function SST_PRISMDBControl {
     [CmdletBinding()]
     param (
         [Parameter(ValueFromPipeline)]
-        [ValidateSet("StorageDrive","StorageBase","StorageEventLog","SANBase","PowerHMC","PowerSysSummary","LPARSummary")]
+        [ValidateSet("StorageDrive","StorageBase","StorageEventLog","SANBase","PowerHMC","PowerSysSummary","LPARSummary","LibraryBaseInfo")]
         [string]$SST_InfoType,
         $CustomerNumber =$null,
         [bool]$AZConnection = $false,
@@ -17,6 +17,7 @@ function SST_PRISMDBControl {
 
         try {
             $TD_AZDBObj = SST_ToolAdvSaveDB -SST_InfoType "LoadPRISMSettings"
+
             $ConString = Convert-SecureStringToPlainText ($TD_AZDBObj.AZConString | ConvertTo-SecureString)
             $AZCredN  = $TD_AZDBObj.CustomerNBR
             $AZCredP  = Convert-SecureStringToPlainText ($TD_AZDBObj.CustomerP | ConvertTo-SecureString)
@@ -384,7 +385,6 @@ function SST_PRISMDBControl {
 
                     foreach ($SST_CollectedInformation in $SST_CollectedInformations){
                         $SQLCommand.Parameters.Clear()
-                        Write-Host $SST_CollectedInformation
                         $SQLCommand.CommandText =$SQLCommand.CommandText = "UPDATE LPARSummary SET ManagedSystemName = @ManagedSystemName, ManagedSystemUUID = @ManagedSystemUUID, ManagedSystemMTMS = @ManagedSystemMTMS, ManagedSystemSerial = @ManagedSystemSerial, LparName = @LparName,`
                                                                                 PartitionId = @PartitionId, State = @State, Environment = @Environment, OsVersion = @OsVersion, RmcIp = @RmcIp, RmcState = @RmcState, DefaultProfile = @DefaultProfile,`
                                                                                 CurrentProcessingUnits = @CurrentProcessingUnits,CurrentMemoryMB = @CurrentMemoryMB, TimeStamp = @TimeStamp`
@@ -411,6 +411,71 @@ function SST_PRISMDBControl {
                         $SQLCommand.Parameters.AddWithValue("@DefaultProfile", (Get-SqlParameterValue -Value $SST_CollectedInformation.DefaultProfile -Default "Not available" -TreatEmptyStringAsNull)) | Out-Null
                         $SQLCommand.Parameters.AddWithValue("@CurrentProcessingUnits", $SST_CollectedInformation.CurrentProcessingUnits) | Out-Null
                         $SQLCommand.Parameters.AddWithValue("@CurrentMemoryMB", $SST_CollectedInformation.CurrentMemoryMB) | Out-Null
+                        $SQLCommand.Parameters.AddWithValue("@TimeStamp", $TimeStamp) | Out-Null
+                    
+                        # DB save 
+                        $SQLCommand.ExecuteNonQuery()
+
+                        # Delete | Keep only the 1024 most recent entries after TimeStamp
+                        #$SQLCommand.CommandText = "DELETE FROM LPARSummary WHERE ID NOT IN ( SELECT ID FROM LPARSummary ORDER BY TimeStamp DESC LIMIT 1024 );"
+                        #$SQLCommand.ExecuteNonQuery()
+                    }
+                }
+                catch {
+                    <#Do this if a terminating exception happens#>
+                    Write-Host "SQL Fehler: $($_.Exception.Message)"
+                    Write-Host $_.Exception.ToString()
+                }
+                finally {
+                    <#Do this after the try block regardless of whether an exception occurred or not#>
+                    if ($SQLCommand) { $SQLCommand.Dispose() }
+
+                    # If you want to delete files afterwards, extra good:
+                    [System.Data.SqlClient.SqlConnection]::ClearAllPools()
+                }
+
+            }
+            "LibraryBaseInfo" {
+                try {
+                    $SQLCommand = $SQLConnection.CreateCommand()
+                    
+                    foreach ($SST_CollectedInformation in $SST_CollectedInformations){
+
+                        $SQLCommand.Parameters.Clear()
+                        $SQLCommand.CommandText =$SQLCommand.CommandText = "UPDATE LibraryBaseInfo SET Name = @Name, Status = @Status, Vendor = @Vendor, ProductID = @ProductID, BaseFWRevision = @BaseFWRevision, SerialNumber = @SerialNumber, MTM = @MTM,`
+                                                                                TotalCartridges = @TotalCartridges, AssignedCartridges = @AssignedCartridges, TotalCapacity = @TotalCapacity, LicensedCapacity = @LicensedCapacity, BaseFWBuildDate = @BaseFWBuildDate,`
+                                                                                ExpansionFWRevision = @ExpansionFWRevision, WWNN = @WWNN, RoboticHWRevision = @RoboticHWRevision, RoboticFWRevision = @RoboticFWRevision, RoboticSerialNumber = @RoboticSerialNumber,`
+                                                                                NoOfModules = @NoOfModules, LibraryType = @LibraryType, SecureCommunications = @SecureCommunications, SerialNumberMTM = @SerialNumberMTM, TimeStamp = @TimeStamp`
+                                                                            WHERE CustomerNbr = @CustomerNbr AND SerialNumberMTM = @SerialNumberMTM;`
+                                                                            IF @@ROWCOUNT = 0`
+                                                                            BEGIN`
+                                                                            INSERT INTO LibraryBaseInfo (CustomerNbr, Name, Status, Vendor, ProductID, BaseFWRevision, SerialNumber, MTM, TotalCartridges, AssignedCartridges, TotalCapacity, LicensedCapacity,`
+                                                                                BaseFWBuildDate, ExpansionFWRevision, WWNN, RoboticHWRevision, RoboticFWRevision, RoboticSerialNumber, NoOfModules, LibraryType, SecureCommunications, SerialNumberMTM, TimeStamp)`
+                                                                            VALUES (@CustomerNbr, @Name, @Status, @Vendor, @ProductID, @BaseFWRevision, @SerialNumber, @MTM, @TotalCartridges, @AssignedCartridges, @TotalCapacity, @LicensedCapacity,`
+                                                                                @BaseFWBuildDate, @ExpansionFWRevision, @WWNN, @RoboticHWRevision, @RoboticFWRevision, @RoboticSerialNumber, @NoOfModules, @LibraryType, @SecureCommunications, @SerialNumberMTM, @TimeStamp); END"
+
+                        $SQLCommand.Parameters.AddWithValue("@CustomerNbr", $AZCredN) | Out-Null
+                        $SQLCommand.Parameters.AddWithValue("@Name", (Get-DbValue $SST_CollectedInformation.Name)) | Out-Null
+                        $SQLCommand.Parameters.AddWithValue("@Status", $SST_CollectedInformation.status) | Out-Null
+                        $SQLCommand.Parameters.AddWithValue("@Vendor", $SST_CollectedInformation.Vendor) | Out-Null
+                        $SQLCommand.Parameters.AddWithValue("@ProductID", $SST_CollectedInformation.ProductID) | Out-Null
+                        $SQLCommand.Parameters.AddWithValue("@BaseFWRevision", $SST_CollectedInformation.BaseFWRevision) | Out-Null
+                        $SQLCommand.Parameters.AddWithValue("@SerialNumber", $SST_CollectedInformation.SerialNumber) | Out-Null
+                        $SQLCommand.Parameters.AddWithValue("@MTM", $SST_CollectedInformation.MTM) | Out-Null
+                        $SQLCommand.Parameters.AddWithValue("@TotalCartridges", $SST_CollectedInformation.TotalCartridges) | Out-Null
+                        $SQLCommand.Parameters.AddWithValue("@AssignedCartridges", $SST_CollectedInformation.AssignedCartridges) | Out-Null
+                        $SQLCommand.Parameters.AddWithValue("@TotalCapacity", $SST_CollectedInformation.TotalCapacity) | Out-Null
+                        $SQLCommand.Parameters.AddWithValue("@LicensedCapacity", $SST_CollectedInformation.LicensedCapacity) | Out-Null
+                        $SQLCommand.Parameters.AddWithValue("@BaseFWBuildDate", $SST_CollectedInformation.BaseFWBuildDate) | Out-Null
+                        $SQLCommand.Parameters.AddWithValue("@ExpansionFWRevision", $SST_CollectedInformation.ExpansionFWRevision) | Out-Null
+                        $SQLCommand.Parameters.AddWithValue("@WWNN", $SST_CollectedInformation.WWNN) | Out-Null
+                        $SQLCommand.Parameters.AddWithValue("@RoboticHWRevision", $SST_CollectedInformation.RoboticHWRevision) | Out-Null
+                        $SQLCommand.Parameters.AddWithValue("@RoboticFWRevision", $SST_CollectedInformation.RoboticFWRevision) | Out-Null
+                        $SQLCommand.Parameters.AddWithValue("@RoboticSerialNumber", $SST_CollectedInformation.RoboticSerialNumber) | Out-Null
+                        $SQLCommand.Parameters.AddWithValue("@NoOfModules", $SST_CollectedInformation.NoOfModules) | Out-Null
+                        $SQLCommand.Parameters.AddWithValue("@LibraryType", $SST_CollectedInformation.LibraryType) | Out-Null
+                        $SQLCommand.Parameters.AddWithValue("@SecureCommunications", $SST_CollectedInformation.SecureCommunications) | Out-Null
+                        $SQLCommand.Parameters.AddWithValue("@SerialNumberMTM", $SST_CollectedInformation.SerialNumberMTM) | Out-Null
                         $SQLCommand.Parameters.AddWithValue("@TimeStamp", $TimeStamp) | Out-Null
                     
                         # DB save 
