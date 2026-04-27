@@ -24,7 +24,7 @@ function SST_ToolAdvSaveDB {
         # Ensure table
         $SQLiteCommandCreate = $SQLiteDBConnection.CreateCommand()
         if($SST_InfoType -like "*PRISM*"){
-            $SQLiteCommandCreate.CommandText = " CREATE TABLE IF NOT EXISTS AdvSettings ( Id INTEGER PRIMARY KEY AUTOINCREMENT, CustomerNBR INTEGER NOT NULL UNIQUE, AZConString TEXT NOT NULL, CustomerP TEXT NOT NULL, AZDBNAM TEXT NOT NULL,TimeStamp TEXT);"
+            $SQLiteCommandCreate.CommandText = " CREATE TABLE IF NOT EXISTS AdvSettings ( Id INTEGER PRIMARY KEY AUTOINCREMENT, CustomerNbr INTEGER NOT NULL UNIQUE, AZConString TEXT NOT NULL, CustomerP TEXT NOT NULL, AZDBNAM TEXT NOT NULL,TimeStamp TEXT);"
         }
         $SQLiteCommandCreate.ExecuteNonQuery() | Out-Null
 
@@ -33,8 +33,8 @@ function SST_ToolAdvSaveDB {
             "SavePRISMSettings" {
                 # UPSERT per customer number
                 $SQLiteCommand = $SQLiteDBConnection.CreateCommand()
-                $SQLiteCommand.CommandText = "INSERT INTO AdvSettings (CustomerNBR, AZConString, CustomerP, AZDBNAM, TimeStamp) VALUES (@CustomerNBR, @AZConString, @CustomerP, @AZDBNAM, @TimeStamp) ON CONFLICT(CustomerNBR) DO UPDATE SET AZConString = excluded.AZConString, CustomerP = excluded.CustomerP, AZDBNAM = excluded.AZDBNAM, TimeStamp = excluded.TimeStamp;"
-                $SQLiteCommand.Parameters.AddWithValue("@CustomerNBR",  [int]$SST_NewDBObject.CustomerNBR)              | Out-Null
+                $SQLiteCommand.CommandText = "INSERT INTO AdvSettings (CustomerNbr, AZConString, CustomerP, AZDBNAM, TimeStamp) VALUES (@CustomerNbr, @AZConString, @CustomerP, @AZDBNAM, @TimeStamp) ON CONFLICT(CustomerNbr) DO UPDATE SET AZConString = excluded.AZConString, CustomerP = excluded.CustomerP, AZDBNAM = excluded.AZDBNAM, TimeStamp = excluded.TimeStamp;"
+                $SQLiteCommand.Parameters.AddWithValue("@CustomerNbr",  [int]$SST_NewDBObject.CustomerNbr)              | Out-Null
                 $SQLiteCommand.Parameters.AddWithValue("@AZConString",  [string]$SST_NewDBObject.AZConString)           | Out-Null
                 $SQLiteCommand.Parameters.AddWithValue("@CustomerP",    [string]$SST_NewDBObject.CustomerP)           | Out-Null
                 $SQLiteCommand.Parameters.AddWithValue("@AZDBNAM",      [string]$SST_NewDBObject.AZDBNAM)               | Out-Null
@@ -46,13 +46,13 @@ function SST_ToolAdvSaveDB {
 
             "LoadPRISMSettings" {
                 $SQLiteCommand = $SQLiteDBConnection.CreateCommand()
-                $SQLiteCommand.CommandText = "SELECT CustomerNBR, AZConString, CustomerP, AZDBNAM, TimeStamp FROM AdvSettings WHERE CustomerNBR = @CustomerNBR;"
-                $SQLiteCommand.Parameters.AddWithValue("@CustomerNBR", $GUICustomerNBR) | Out-Null
+                $SQLiteCommand.CommandText = "SELECT CustomerNbr, AZConString, CustomerP, AZDBNAM, TimeStamp FROM AdvSettings WHERE CustomerNbr = @CustomerNbr;"
+                $SQLiteCommand.Parameters.AddWithValue("@CustomerNbr", $GUICustomerNBR) | Out-Null
 
                 $SQLiteReader = $SQLiteCommand.ExecuteReader()
                 if ($SQLiteReader.Read()) {
                     return [pscustomobject]@{
-                        CustomerNBR   = [int]$SQLiteReader["CustomerNBR"]
+                        CustomerNbr   = [int]$SQLiteReader["CustomerNbr"]
                         AZConString     = [string]$SQLiteReader["AZConString"]
                         CustomerP       = [string]$SQLiteReader["CustomerP"]
                         AZDBNAM         = [string]$SQLiteReader["AZDBNAM"]
