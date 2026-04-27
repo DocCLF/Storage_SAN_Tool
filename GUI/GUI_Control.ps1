@@ -544,17 +544,19 @@ $TD_BTN_ConnetionToPRISM.add_click({
             catch {
                 <#Do this if a terminating exception happens#>
                 Write-Host "$($SQLConnection.State) - $($_.Exception.Message)" -ForegroundColor Yellow
+            }finally{
+                $SQLConnection.Close()
             }
-            
             <# Progressbar  #>
         }   
-        Close-ProgressBar -ProgressBar $ProgressBar
+        
     }
     catch {
         #SST_ToolMessageCollector -TD_ToolMSGCollector "PRISM Status $($SQLConnection.Open()) Info: $($_.Exception.Message)" -TD_ToolMSGType Error -TD_Shown yes
         #$TD_LB_TestConnectionPRISM.Foreground = "Coral"
         $TD_BTN_ConnetionToPRISM.Background ="Coral"
     }finally{
+        Close-ProgressBar -ProgressBar $ProgressBar
         $SQLConnection.Close()
     }
     Write-Host $SQLConnection.State
@@ -575,6 +577,7 @@ $TD_BTN_ChangeAZConnectionPRISM.add_click({
 $TD_BTN_SendDataToPRISM.add_click({
     $CustomerNumber = $TD_TB_CustomerInfoName.Text
     $UserSelection = $TD_CB_SQltoAzDB.SelectedItem.Tag
+    
     try {
         $LocalCustomerData = SST_ReadLocalSendtoPRISM -SST_InfoType $UserSelection -SST_Customer $CustomerNumber
         
@@ -584,8 +587,6 @@ $TD_BTN_SendDataToPRISM.add_click({
         <#Do this if a terminating exception happens#>
         Write-Host $_.Exception.Message
     }
-
-    #Start-Process pwsh -ArgumentList '-NoExit -ExecutionPolicy Bypass -Command "& { . ''D:\GitRePo\Storage_SAN_Tool\TOOLFunc\SST_PRISMDBControl.ps1''; SST_PRISMDBControl}"'
 })
 #SST_ToolMessageCollector -TD_ToolMSGCollector "Load PRISM done" -TD_ToolMSGType Message -TD_Shown no
 #endregion
