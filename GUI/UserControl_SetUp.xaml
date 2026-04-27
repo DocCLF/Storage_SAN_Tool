@@ -235,6 +235,10 @@
                                     <ComboBoxItem Tag="PowerSysSummary">IBM Power SysSummary</ComboBoxItem>
                                     <ComboBoxItem Tag="LPARSummary">IBM Power LPARSummary</ComboBoxItem>
                                     <ComboBoxItem Tag="SANBase">Brocade SAN Base</ComboBoxItem>
+                                    <ComboBoxItem Tag="LibraryBaseInfo">Library Base Info</ComboBoxItem>
+                                    <ComboBoxItem Tag="LibraryDrive">Library Drive</ComboBoxItem>
+                                    <ComboBoxItem Tag="LibraryEvents">Library Events</ComboBoxItem>
+                                    <ComboBoxItem Tag="LibraryReports">Library Reports</ComboBoxItem>
                                 </ComboBox>
                                 <ToggleButton Grid.Column="0" Grid.Row="3" x:Name="BTN_SendDataToPRISM" Content="Send Data" HorizontalAlignment="Left" Style="{DynamicResource MainBtnStyle}" />
                             </StackPanel>    
