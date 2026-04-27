@@ -66,7 +66,7 @@ function SST_CustomerLibraryDBInsertTable {
                         $SQLiteCommand.Parameters.AddWithValue("@WWNN", $SST_CollectedInformation.WWNodeName) | Out-Null
                         $SQLiteCommand.Parameters.AddWithValue("@RoboticHWRevision", $SST_CollectedInformation.RoboticHWRevision) | Out-Null
                         $SQLiteCommand.Parameters.AddWithValue("@RoboticFWRevision", $SST_CollectedInformation.RoboticFWRevision) | Out-Null
-                        $SQLiteCommand.Parameters.AddWithValue("RoboticSerialNumber", $SST_CollectedInformation.RoboticSerialNumber) | Out-Null
+                        $SQLiteCommand.Parameters.AddWithValue("@RoboticSerialNumber", $SST_CollectedInformation.RoboticSerialNumber) | Out-Null
                         $SQLiteCommand.Parameters.AddWithValue("@NoOfModules", $SST_CollectedInformation.NoOfModules) | Out-Null
                         $SQLiteCommand.Parameters.AddWithValue("@LibraryType", $SST_CollectedInformation.LibraryType) | Out-Null
                         $SQLiteCommand.Parameters.AddWithValue("@SecureCommunications", $SST_CollectedInformation.secureCommunications) | Out-Null
