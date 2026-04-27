@@ -428,3 +428,11 @@ function Add-EventInfoToDevices {
         OrphanEvents = $orphanEvents
     }
 }
+# DB Helper if $null is pos.
+function Get-DbValue {
+    param($Value)
+    if ($null -eq $Value -or [string]::IsNullOrWhiteSpace([string]$Value)) {
+        return [DBNull]::Value
+    }
+    return $Value
+}
