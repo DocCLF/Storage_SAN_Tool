@@ -2,7 +2,7 @@ function SST_PRISMDBControl {
     [CmdletBinding()]
     param (
         [Parameter(ValueFromPipeline)]
-        [ValidateSet("StorageDrive","StorageBase","StorageEventLog","SANBase","PowerHMC","PowerSysSummary","LPARSummary","LibraryBaseInfo")]
+        [ValidateSet("StorageDrive","StorageBase","StorageEventLog","SANBase","PowerHMC","PowerSysSummary","LPARSummary","LibraryBaseInfo","LibraryDrive","LibraryEvents","LibraryReports")]
         [string]$SST_InfoType,
         $CustomerNumber =$null,
         [bool]$AZConnection = $false,
@@ -500,6 +500,179 @@ function SST_PRISMDBControl {
                 }
 
             }
+            "LibraryDrive" {
+                try {
+                    $SQLCommand = $SQLConnection.CreateCommand()
+                    
+                    foreach ($SST_CollectedInformation in $SST_CollectedInformations){
+
+                        $SQLCommand.Parameters.Clear()
+                        $SQLCommand.CommandText =$SQLCommand.CommandText = "UPDATE LibraryDrive SET Location = @Location, SerialNumber = @SerialNumber, MFGSerialNumber = @MFGSerialNumber, MediaType = @MediaType, State = @State, MTM = @MTM, Interface = @Interface,`
+                                                                                LogicalLibrary = @LogicalLibrary, LogicalLibraryID = @LogicalLibraryID, Usage = @Usage, Firmware = @Firmware, Encryption = @Encryption,Mounts = @Mounts, Barcode = @Barcode, WWNN = @WWNN,`
+                                                                                ElementAddress = @ElementAddress, LogicalNumber = @LogicalNumber,PhysicalNumber = @PhysicalNumber, Module = @Module, Generation = @Generation, Cartridge = @Cartridge,`
+                                                                                Vendor = @Vendor, ErrorState = @ErrorState, Power = @Power, Presence = @Presence, ADTMode = @ADTMode, SerialNumberMTM = @SerialNumberMTM, TimeStamp = @TimeStamp`
+                                                                            WHERE CustomerNbr = @CustomerNbr AND SerialNumberMTM = @SerialNumberMTM AND SerialNumber = @SerialNumber;`
+                                                                            IF @@ROWCOUNT = 0`
+                                                                            BEGIN`
+                                                                            INSERT INTO LibraryDrive (CustomerNbr, Location, SerialNumber, MFGSerialNumber, MediaType, State, MTM, Interface, LogicalLibrary, LogicalLibraryID, Usage, Firmware, Encryption, Mounts, Barcode, WWNN,`
+                                                                                ElementAddress, LogicalNumber, PhysicalNumber, Module, Generation, Cartridge, Vendor, ErrorState, Power, Presence, ADTMode, SerialNumberMTM, TimeStamp)`
+                                                                            VALUES (@CustomerNbr, @Location, @SerialNumber, @MFGSerialNumber, @MediaType, @State, @MTM, @Interface, @LogicalLibrary, @LogicalLibraryID, @Usage, @Firmware, @Encryption, @Mounts, @Barcode, @WWNN,`
+                                                                                @ElementAddress, @LogicalNumber, @PhysicalNumber, @Module, @Generation, @Cartridge, @Vendor, @ErrorState, @Power, @Presence, @ADTMode, @SerialNumberMTM, @TimeStamp); END"
+                        <# if there is a $null error use the helper func (Get-DbValue $SST_CollectedInformation.<value>)#>
+                        $SQLCommand.Parameters.AddWithValue("@CustomerNbr", $AZCredN) | Out-Null
+                        $SQLCommand.Parameters.AddWithValue("@Location", (Get-DbValue $SST_CollectedInformation.Location)) | Out-Null
+                        $SQLCommand.Parameters.AddWithValue("@SerialNumber", $SST_CollectedInformation.SerialNumber) | Out-Null
+                        $SQLCommand.Parameters.AddWithValue("@MFGSerialNumber", $SST_CollectedInformation.MFGSerialNumber) | Out-Null
+                        $SQLCommand.Parameters.AddWithValue("@MediaType", $SST_CollectedInformation.MediaType) | Out-Null
+                        $SQLCommand.Parameters.AddWithValue("@State", $SST_CollectedInformation.State) | Out-Null
+                        $SQLCommand.Parameters.AddWithValue("@MTM", $SST_CollectedInformation.MTM) | Out-Null
+                        $SQLCommand.Parameters.AddWithValue("@Interface", $SST_CollectedInformation.Interface) | Out-Null
+                        $SQLCommand.Parameters.AddWithValue("@LogicalLibrary", $SST_CollectedInformation.LogicalLibrary) | Out-Null
+                        $SQLCommand.Parameters.AddWithValue("@LogicalLibraryID", $SST_CollectedInformation.LogicalLibraryID) | Out-Null
+                        $SQLCommand.Parameters.AddWithValue("@Usage", $SST_CollectedInformation.USE) | Out-Null
+                        $SQLCommand.Parameters.AddWithValue("@Firmware", $SST_CollectedInformation.Firmware) | Out-Null
+                        $SQLCommand.Parameters.AddWithValue("@Encryption", $SST_CollectedInformation.Encryption) | Out-Null
+                        $SQLCommand.Parameters.AddWithValue("@Mounts", $SST_CollectedInformation.Mounts) | Out-Null
+                        $SQLCommand.Parameters.AddWithValue("@Barcode", $SST_CollectedInformation.Barcode) | Out-Null
+                        $SQLCommand.Parameters.AddWithValue("@WWNN", $SST_CollectedInformation.WWNN) | Out-Null
+                        $SQLCommand.Parameters.AddWithValue("@ElementAddress", $SST_CollectedInformation.ElementAddress) | Out-Null
+                        $SQLCommand.Parameters.AddWithValue("@LogicalNumber", $SST_CollectedInformation.LogicalNumber) | Out-Null
+                        $SQLCommand.Parameters.AddWithValue("@PhysicalNumber", $SST_CollectedInformation.PhysicalNumber) | Out-Null
+                        $SQLCommand.Parameters.AddWithValue("@Module", $SST_CollectedInformation.Module) | Out-Null
+                        $SQLCommand.Parameters.AddWithValue("@Generation", $SST_CollectedInformation.Generation) | Out-Null
+                        $SQLCommand.Parameters.AddWithValue("@Cartridge", $SST_CollectedInformation.Cartridge) | Out-Null
+                        $SQLCommand.Parameters.AddWithValue("@Vendor", $SST_CollectedInformation.Vendor) | Out-Null
+                        $SQLCommand.Parameters.AddWithValue("@ErrorState", $SST_CollectedInformation.ErrorState) | Out-Null
+                        $SQLCommand.Parameters.AddWithValue("@Power", $SST_CollectedInformation.Power) | Out-Null
+                        $SQLCommand.Parameters.AddWithValue("@Presence", $SST_CollectedInformation.Presence) | Out-Null
+                        $SQLCommand.Parameters.AddWithValue("@ADTMode", $SST_CollectedInformation.ADTMode) | Out-Null
+                        $SQLCommand.Parameters.AddWithValue("@SerialNumberMTM", $SST_CollectedInformation.SerialNumberMTM) | Out-Null
+                        $SQLCommand.Parameters.AddWithValue("@TimeStamp", $TimeStamp) | Out-Null
+                    
+                        # DB save 
+                        $SQLCommand.ExecuteNonQuery()
+
+                        # Delete | Keep only the 1024 most recent entries after TimeStamp
+                        #$SQLCommand.CommandText = "DELETE FROM LPARSummary WHERE ID NOT IN ( SELECT ID FROM LPARSummary ORDER BY TimeStamp DESC LIMIT 1024 );"
+                        #$SQLCommand.ExecuteNonQuery()
+                    }
+                }
+                catch {
+                    <#Do this if a terminating exception happens#>
+                    Write-Host "SQL Fehler: $($_.Exception.Message)"
+                    Write-Host $_.Exception.ToString()
+                }
+                finally {
+                    <#Do this after the try block regardless of whether an exception occurred or not#>
+                    if ($SQLCommand) { $SQLCommand.Dispose() }
+
+                    # If you want to delete files afterwards, extra good:
+                    [System.Data.SqlClient.SqlConnection]::ClearAllPools()
+                }
+
+            }
+            "LibraryEvents" {
+                try {
+                    $SQLCommand = $SQLConnection.CreateCommand()
+                    
+                    foreach ($SST_CollectedInformation in $SST_CollectedInformations){
+
+                        $SQLCommand.Parameters.Clear()
+                        $SQLCommand.CommandText =$SQLCommand.CommandText = "UPDATE LibraryEvents SET LibID = @LibID, Severity = @Severity, Type = @Type, Location = @Location, Description = @Description, ErrorCode = @ErrorCode, EventTime = @EventTime,`
+                                                                                SerialNumberMTM = @SerialNumberMTM, TimeStamp = @TimeStamp`
+                                                                            WHERE CustomerNbr = @CustomerNbr AND SerialNumberMTM = @SerialNumberMTM AND LibID = @LibID;`
+                                                                            IF @@ROWCOUNT = 0`
+                                                                            BEGIN`
+                                                                            INSERT INTO LibraryEvents (CustomerNbr, LibID, Severity, Type, Location, Description, ErrorCode, EventTime, SerialNumberMTM, TimeStamp)`
+                                                                            VALUES (@CustomerNbr, @LibID, @Severity, @Type, @Location, @Description, @ErrorCode, @EventTime, @SerialNumberMTM, @TimeStamp); END"
+                        <# if there is a $null error use the helper func (Get-DbValue $SST_CollectedInformation.<value>)#>
+                        $SQLCommand.Parameters.AddWithValue("@CustomerNbr", $AZCredN) | Out-Null
+                        $SQLCommand.Parameters.AddWithValue("@LibID", (Get-DbValue $SST_CollectedInformation.LibID)) | Out-Null
+                        $SQLCommand.Parameters.AddWithValue("@Severity", $SST_CollectedInformation.Severity) | Out-Null
+                        $SQLCommand.Parameters.AddWithValue("@Type", $SST_CollectedInformation.Type) | Out-Null
+                        $SQLCommand.Parameters.AddWithValue("@Location", (Get-DbValue $SST_CollectedInformation.Location)) | Out-Null
+                        $SQLCommand.Parameters.AddWithValue("@Description", $SST_CollectedInformation.Description) | Out-Null
+                        $SQLCommand.Parameters.AddWithValue("@ErrorCode", $SST_CollectedInformation.ErrorCode) | Out-Null
+                        $SQLCommand.Parameters.AddWithValue("@EventTime", $SST_CollectedInformation.EventTime) | Out-Null
+                        $SQLCommand.Parameters.AddWithValue("@SerialNumberMTM", $SST_CollectedInformation.SerialNumberMTM) | Out-Null
+                        $SQLCommand.Parameters.AddWithValue("@TimeStamp", $TimeStamp) | Out-Null
+                    
+                        # DB save 
+                        $SQLCommand.ExecuteNonQuery()
+
+                        # Delete | Keep only the 1024 most recent entries after TimeStamp
+                        #$SQLCommand.CommandText = "DELETE FROM LPARSummary WHERE ID NOT IN ( SELECT ID FROM LPARSummary ORDER BY TimeStamp DESC LIMIT 1024 );"
+                        #$SQLCommand.ExecuteNonQuery()
+                    }
+                }
+                catch {
+                    <#Do this if a terminating exception happens#>
+                    Write-Host "SQL Fehler: $($_.Exception.Message)"
+                    Write-Host $_.Exception.ToString()
+                }
+                finally {
+                    <#Do this after the try block regardless of whether an exception occurred or not#>
+                    if ($SQLCommand) { $SQLCommand.Dispose() }
+
+                    # If you want to delete files afterwards, extra good:
+                    [System.Data.SqlClient.SqlConnection]::ClearAllPools()
+                }
+
+            }
+            "LibraryReports" {
+                try {
+                    $SQLCommand = $SQLConnection.CreateCommand()
+                    
+                    foreach ($SST_CollectedInformation in $SST_CollectedInformations){
+
+                        $SQLCommand.Parameters.Clear()
+                        $SQLCommand.CommandText =$SQLCommand.CommandText = "UPDATE LibraryReports SET Barcode = @Barcode, LogicalLibrary = @LogicalLibrary, Location = @Location, MountTime = @MountTime, UnmountTime = @UnmountTime, HostIOReads = @HostIOReads, HostIOWrites = @HostIOWrites,`
+                                                                                CompressionRate = @CompressionRate, ErrorsCorrectedWrites = @ErrorsCorrectedWrites, ErrorsUncorrectedWrites = @ErrorsUncorrectedWrites, ErrorsCorrectedReads = @ErrorsCorrectedReads, ErrorsUncorrectedReads = @ErrorsUncorrectedReads,`
+                                                                                SerialNumberMTM = @SerialNumberMTM, TimeStamp = @TimeStamp`
+                                                                            WHERE CustomerNbr = @CustomerNbr AND SerialNumberMTM = @SerialNumberMTM AND Barcode = @Barcode;`
+                                                                            IF @@ROWCOUNT = 0`
+                                                                            BEGIN`
+                                                                            INSERT INTO LibraryReports (CustomerNbr, Barcode, LogicalLibrary, Location, MountTime, UnmountTime, HostIOReads, HostIOWrites, CompressionRate, ErrorsCorrectedWrites, ErrorsUncorrectedWrites, ErrorsCorrectedReads, ErrorsUncorrectedReads, SerialNumberMTM, TimeStamp)`
+                                                                            VALUES (@CustomerNbr, @Barcode, @LogicalLibrary, @Location, @MountTime, @UnmountTime, @HostIOReads, @HostIOWrites, @CompressionRate, @ErrorsCorrectedWrites, @ErrorsUncorrectedWrites, @ErrorsCorrectedReads, @ErrorsUncorrectedReads, @SerialNumberMTM, @TimeStamp); END"
+                        <# if there is a $null error use the helper func (Get-DbValue $SST_CollectedInformation.<value>)#>
+                        $SQLCommand.Parameters.AddWithValue("@CustomerNbr", $AZCredN) | Out-Null
+                        $SQLCommand.Parameters.AddWithValue("@Barcode", $SST_CollectedInformation.Barcode) | Out-Null
+                        $SQLCommand.Parameters.AddWithValue("@LogicalLibrary", $SST_CollectedInformation.LogicalLibrary) | Out-Null
+                        $SQLCommand.Parameters.AddWithValue("@Location", $SST_CollectedInformation.Location) | Out-Null
+                        $SQLCommand.Parameters.AddWithValue("@MountTime", $SST_CollectedInformation.MountTime) | Out-Null
+                        $SQLCommand.Parameters.AddWithValue("@UnmountTime", $SST_CollectedInformation.UnmountTime) | Out-Null
+                        $SQLCommand.Parameters.AddWithValue("@HostIOReads", $SST_CollectedInformation.HostIOReads) | Out-Null
+                        $SQLCommand.Parameters.AddWithValue("@HostIOWrites", $SST_CollectedInformation.HostIOWrites) | Out-Null
+                        $SQLCommand.Parameters.AddWithValue("@CompressionRate", $SST_CollectedInformation.CompressionRate) | Out-Null
+                        $SQLCommand.Parameters.AddWithValue("@ErrorsCorrectedWrites", $SST_CollectedInformation.ErrorsCorrectedWrites) | Out-Null
+                        $SQLCommand.Parameters.AddWithValue("@ErrorsUncorrectedWrites", $SST_CollectedInformation.ErrorsUncorrectedWrites) | Out-Null
+                        $SQLCommand.Parameters.AddWithValue("@ErrorsCorrectedReads", $SST_CollectedInformation.ErrorsCorrectedReads) | Out-Null
+                        $SQLCommand.Parameters.AddWithValue("@ErrorsUncorrectedReads", $SST_CollectedInformation.ErrorsUncorrectedReads) | Out-Null
+                        $SQLCommand.Parameters.AddWithValue("@SerialNumberMTM", $SST_CollectedInformation.SerialNumberMTM) | Out-Null
+                        $SQLCommand.Parameters.AddWithValue("@TimeStamp", $TimeStamp) | Out-Null
+                    
+                        # DB save 
+                        $SQLCommand.ExecuteNonQuery()
+
+                        # Delete | Keep only the 1024 most recent entries after TimeStamp
+                        #$SQLCommand.CommandText = "DELETE FROM LPARSummary WHERE ID NOT IN ( SELECT ID FROM LPARSummary ORDER BY TimeStamp DESC LIMIT 1024 );"
+                        #$SQLCommand.ExecuteNonQuery()
+                    }
+                }
+                catch {
+                    <#Do this if a terminating exception happens#>
+                    Write-Host "SQL Fehler: $($_.Exception.Message)"
+                    Write-Host $_.Exception.ToString()
+                }
+                finally {
+                    <#Do this after the try block regardless of whether an exception occurred or not#>
+                    if ($SQLCommand) { $SQLCommand.Dispose() }
+
+                    # If you want to delete files afterwards, extra good:
+                    [System.Data.SqlClient.SqlConnection]::ClearAllPools()
+                }
+
+            }
             Default {#SST_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong during saving the $SST_InfoType data in the local db.") -TD_ToolMSGType Error -TD_Shown yes
                 Write-Host $_.Exception.Message -ForegroundColor DarkMagenta
                 if ($SQLConnection) { 
@@ -518,6 +691,7 @@ function SST_PRISMDBControl {
         if ($SQLConnection) { 
             if ($SQLConnection.State -ne [System.Data.ConnectionState]::Closed) {
                 $SQLConnection.Close()
+                Write-Host $SQLConnection.State -ForegroundColor Blue
             } 
             $SQLConnection.Dispose() 
         }
