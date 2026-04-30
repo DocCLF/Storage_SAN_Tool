@@ -521,45 +521,55 @@ $TD_BTN_ConnetionToPRISM.add_click({
     }
     catch {
         <#Do this if a terminating exception happens#>
+        Write-Host $_.Exception.Message
         #SST_ToolMessageCollector -TD_ToolMSGCollector "PRISM $($_.Exception.Message)" -TD_ToolMSGType Error -TD_Shown yes
     }
-
-    try {
-        $SQLConnection=New-Object System.Data.SqlClient.SqlConnection
-        $SQLConnection.ConnectionString=$ConnectionStringPRISM 
-        $ConnectionStringPRISM = $null
-        $AZConnection =$false
-        [int]$ProgCounter=10
-        $ProgressBar = New-ProgressBar
-        while (!($AZConnection)) {
-            $ProgCounter++
-            Write-ProgressBar -ProgressBar $ProgressBar -Activity "Try to connect PRISM" -PercentComplete (($ProgCounter/100) * 100)    
-            try {
-                $SQLConnection.Open()
-                $AZConnection =$true
+    <#  #>
+    $SQLConnection=New-Object System.Data.SqlClient.SqlConnection
+    $SQLConnection.ConnectionString=$ConnectionStringPRISM 
+    $ConnectionStringPRISM = $null
+    $MaxRetries = 10
+    $RetryDelaySeconds = 3
+    $AZConnection = $false
+    [int]$ProgCounter=10
+    $ProgressBar = New-ProgressBar
+    for ($Attempt = 1; $Attempt -le $MaxRetries -and -not $AZConnection; $Attempt++) {
+        try {
+            Write-ProgressBar -ProgressBar $ProgressBar -Activity "Try to connect PRISM ($Attempt/$MaxRetries)" -PercentComplete (($Attempt / $MaxRetries) * 100)
+        
+            if ($SQLConnection.State -ne [System.Data.ConnectionState]::Closed) {
+                $SQLConnection.Close()
+            }
+        
+            $SQLConnection.Open()
+        
+            if ($SQLConnection.State -eq [System.Data.ConnectionState]::Open) {
+                $AZConnection = $true
                 $TD_BTN_ConnetionToPRISM.Content = "Test successful"
                 $TD_BTN_ConnetionToPRISM.Background = "LightGreen"
-                $SQLConnection.Close()
+                Write-Host "Azure SQL connection successful on attempt $Attempt." -ForegroundColor Green
             }
-            catch {
-                <#Do this if a terminating exception happens#>
-                Write-Host "$($SQLConnection.State) - $($_.Exception.Message)" -ForegroundColor Yellow
-            }finally{
-                $SQLConnection.Close()
-            }
-            <# Progressbar  #>
-        }   
+        }
+        catch {
+            Write-Host "Attempt $Attempt/$MaxRetries failed: $($_.Exception.Message)" -ForegroundColor Yellow
         
+            if ($Attempt -lt $MaxRetries) {
+                Start-Sleep -Seconds $RetryDelaySeconds
+            }
+        }
     }
-    catch {
-        #SST_ToolMessageCollector -TD_ToolMSGCollector "PRISM Status $($SQLConnection.Open()) Info: $($_.Exception.Message)" -TD_ToolMSGType Error -TD_Shown yes
-        #$TD_LB_TestConnectionPRISM.Foreground = "Coral"
-        $TD_BTN_ConnetionToPRISM.Background ="Coral"
-    }finally{
-        Close-ProgressBar -ProgressBar $ProgressBar
-        $SQLConnection.Close()
+    if (-not $AZConnection) {
+        $TD_BTN_ConnetionToPRISM.Content = "Test failed"
+        $TD_BTN_ConnetionToPRISM.Background = "Coral"
+        Write-Host "Azure SQL connection failed after $MaxRetries attempts." -ForegroundColor Red
+    }   
+    if ($SQLConnection) {
+        if ($SQLConnection.State -ne [System.Data.ConnectionState]::Closed) {
+            $SQLConnection.Close()
+        }
+        $SQLConnection.Dispose()
     }
-    Write-Host $SQLConnection.State
+    Close-ProgressBar -ProgressBar $ProgressBar
 })
 $TD_BTN_ChangeAZConnectionPRISM.add_click({
     $TD_BTN_SaveAZConnectionPRISM.Visibility = "Visible"
