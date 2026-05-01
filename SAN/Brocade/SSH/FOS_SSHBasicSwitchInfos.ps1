@@ -122,25 +122,25 @@ function FOS_SSHBasicSwitchInfos {
         foreach ($lineUp in $FOS_MainInformation) {
             if($lineUp -match 'Index'){break}
             $match = $FOS_MainInformation | Select-String -Pattern 'FOS\s+([v?][\d+]\.[\d+]\.[\w]+)'
-            if ($match -and $match.Matches.Count -gt 0) {$FOSTemp = $match.Matches[0].Groups[1].Value }
-            $FOS_SwGeneralInfos.Add('FabricOS',$FOSTemp)
-            $FOS_SwGeneralInfos.Add('FabricOSLV',$FOS_SwitchOSVersion)
-            $FOS_SwGeneralInfos.Add('EthernetIPAddress',$TD_Device_DeviceIP)
+            if ($match -and $match.Matches.Count -gt 0) {$FOSTemp = $match.Matches[0].Groups[1].Value}
+            $FOS_SwGeneralInfos['FabricOS'] = $FOSTemp
+            $FOS_SwGeneralInfos['FabricOSLV'] = $FOS_SwitchOSVersion
+            $FOS_SwGeneralInfos['EthernetIPAddress'] = $TD_Device_DeviceIP
             $match = $FOS_MainInformation | Select-String -Pattern 'Ethernet Subnet mask:\s+([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3})'
             if ($match -and $match.Matches.Count -gt 0) {$Subnet = $match.Matches[0].Groups[1].Value }
-            $FOS_SwGeneralInfos.Add('EthernetSubnetMask',$Subnet)
+            $FOS_SwGeneralInfos['EthernetSubnetMask'] = $Subnet
             $match = $FOS_MainInformation | Select-String -Pattern 'Gateway IP Address:\s+([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3})'
             if ($match -and $match.Matches.Count -gt 0) {$Gateway = $match.Matches[0].Groups[1].Value }
-            $FOS_SwGeneralInfos.Add('GatewayIPAddress',$Gateway)
+            $FOS_SwGeneralInfos['GatewayIPAddress'] = $Gateway
             $match = $FOS_MainInformation | Select-String -Pattern 'DHCP:\s(\w+)'
             if ($match -and $match.Matches.Count -gt 0) {$DHCP = $match.Matches[0].Groups[1].Value }
-            $FOS_SwGeneralInfos.Add('DHCP',$DHCP)
+            $FOS_SwGeneralInfos['DHCP'] = $DHCP
             $match = $FOS_MainInformation | Select-String -Pattern 'switchState:\s+(\w+)'
             if ($match -and $match.Matches.Count -gt 0) {$switchState = $match.Matches[0].Groups[1].Value }
-            $FOS_SwGeneralInfos.Add('SwitchState',$switchState)
+            $FOS_SwGeneralInfos['SwitchState'] = $switchState
             $match = $FOS_MainInformation | Select-String -Pattern 'switchRole:\s+(\w+)'
             if ($match -and $match.Matches.Count -gt 0) {$switchRole = $match.Matches[0].Groups[1].Value }
-            $FOS_SwGeneralInfos.Add('SwitchRole',$switchRole)
+            $FOS_SwGeneralInfos['SwitchRole'] = $switchRole
 
             <# Progressbar  #>
             $ProgCounter++
