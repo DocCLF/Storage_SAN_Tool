@@ -372,7 +372,7 @@
                                             HorizontalAlignment="Left"
                                             VerticalAlignment="Center"
                                             FontWeight="Bold"
-                                            FontSize="12"
+                                            FontSize="14"
                                             Text="{Binding PWRSYSStatus}">
                                             <TextBlock.Style>
                                                 <Style TargetType="TextBlock">
@@ -380,8 +380,8 @@
                                                         <Trigger Property ="Text" Value="Power Off">
                                                             <Setter Property= "Foreground" Value="Red"/>
                                                         </Trigger>
-                                                        <Trigger Property ="Text" Value="Operating">
-                                                            <Setter Property= "Foreground" Value="green"/>
+                                                        <Trigger Property ="Text" Value="operating">
+                                                            <Setter Property= "Foreground" Value="Green"/>
                                                         </Trigger>
                                                     </Style.Triggers>
                                                 </Style>
