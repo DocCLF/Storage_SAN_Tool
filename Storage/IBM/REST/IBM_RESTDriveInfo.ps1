@@ -49,6 +49,8 @@ function IBM_RESTDriveInfo {
         [int]$imax = $TD_DeviceInformation.Count
         [array]$TD_DriveOverview = for ($i = 0; $i -lt $imax; $i++) {
             $TD_DriveIDInformation = SST_SpectrumSystemAPI -Endpoint lsdrive/$($TD_DeviceInformation.id[$i]) -Body $null -BaseUrl $BaseUrl -RESTInfo $RESTInfo
+            <# Max requests/sec to command endpoints = 10 -.- #>
+            if ($i % 8 -eq 0) { Start-Sleep -Milliseconds 1500 }
             $TD_DriveSplitInfos = "" | Select-Object RowID,ID,Status,ErrorSequenceNumber,Use,TechType,UID,Capacity,BlockSize,VendorID,ProductID,FRUPartNumber,FRUIdentity,`
                                         RPM,FirmwareLevel,LatestFirmwareLevel,FirmwareLevelStatus,MdiskID,MdiskName,MemberID,EnclosureID,SlotID,NodeID,NodeName,QuorumID,Port1Status,`
                                         Port2Status,InterfaceSpeed,ProtectionEnabled,AutoManage,DriveClassID,ReplacementDate,TransportProtocol,Compressed,PhysicalCapacity,PhysicalUsedCapacity,EffectiveUsedCapacity,WWNN,SerialNumber
