@@ -46,6 +46,8 @@ function IBM_RESTVDiskAnalysis {
     process {
         [int]$imax = $TD_DeviceInformation.Count
         [array]$TD_VDiskFuncResault = for ($i = 0; $i -lt $imax; $i++) {
+            <# Max requests/sec to command endpoints = 10 -.- #>
+            if ($i % 8 -eq 0) { Start-Sleep -Milliseconds 1500 }
             <# Node Info#>
             $TD_VDiskinfo = "" | Select-Object ID,Name,State,AnalysisTime,Capacity,ThinSize,ThinSavings,ThinSavingsRatio,CompressedSize,CompressionSavings,CompressionSavingsRatio,TotalSavings,TotalSavingsRatio,MarginOfError,WWNN,SerialNumber
 
