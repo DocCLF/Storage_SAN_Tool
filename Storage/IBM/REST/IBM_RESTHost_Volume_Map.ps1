@@ -45,31 +45,42 @@ function IBM_RESTHost_Volume_Map {
     }
 
     process{
-        [int]$imax = $TD_DeviceInformation.Count
-        [int]$nbrmax = $TD_VdiskInfo.Count
-        [array]$TD_Mappingresault = for ($i = 0; $i -lt $imax; $i++) {
+        $VdiskLookup = @{}
 
-            $TD_SplitInfos = "" | Select-Object RowID,HostID,HostName,HostClusterID,HostCluster,MappingType,SCSIID,VolumeID,VolumeName,UID,Capacity,WWNN,SerialNumber
-            $TD_SplitInfos.HostID           = $TD_DeviceInformation.id[$i]
-            $TD_SplitInfos.HostName         = $TD_DeviceInformation.name[$i]
-            $TD_SplitInfos.SCSIID           = $TD_DeviceInformation.SCSI_id[$i]
-            $TD_SplitInfos.VolumeID         = $TD_DeviceInformation.vdisk_id[$i]
-            $TD_SplitInfos.VolumeName       = $TD_DeviceInformation.vdisk_name[$i]
-            $TD_SplitInfos.UID              = $TD_DeviceInformation.vdisk_UID[$i]
-            $TD_SplitInfos.MappingType      = $TD_DeviceInformation.mapping_type[$i]
-            $TD_SplitInfos.HostClusterID    = $TD_DeviceInformation.host_cluster_id[$i]
-            $TD_SplitInfos.HostCluster      = $TD_DeviceInformation.host_cluster_name[$i]
-            
-            for ($nbr = 0; $nbr -lt $nbrmax; $nbr++) {
-                if($($TD_SplitInfos.UID) -ne $($TD_VdiskInfo.vdisk_UID[$nbr])){continue}
-                if($($TD_SplitInfos.VolumeID) -eq $($TD_VdiskInfo.id[$nbr])){
-                    $TD_SplitInfos.Capacity = $TD_VdiskInfo.capacity[$nbr]
-                }
+        foreach ($vdisk in $TD_VdiskInfo) {
+            $key = "$($vdisk.vdisk_UID)|$($vdisk.id)"
+            $VdiskLookup[$key] = $vdisk
+        }
+
+        [int]$imax = $TD_DeviceInformation.Count
+
+        [array]$TD_MappingResult = for ($i = 0; $i -lt $imax; $i++) {
+
+            $device = $TD_DeviceInformation[$i]
+
+            $TD_SplitInfos = [pscustomobject]@{
+                RowID         = $null
+                HostID        = $device.id
+                HostName      = $device.name
+                HostClusterID = $device.host_cluster_id
+                HostCluster   = $device.host_cluster_name
+                MappingType   = $device.mapping_type
+                SCSIID        = $device.SCSI_id
+                VolumeID      = $device.vdisk_id
+                VolumeName    = $device.vdisk_name
+                UID           = $device.vdisk_UID
+                Capacity      = $null
+                WWNN          = $IBMSTOWWNN
+                SerialNumber  = $IBMSTOSN
             }
 
-            $TD_SplitInfos.WWNN         = $IBMSTOWWNN
-            $TD_SplitInfos.SerialNumber = $IBMSTOSN
-            $TD_SplitInfos.RowID        = "$IBMSTOSN|$($TD_SplitInfos.HostID)"
+            $key = "$($TD_SplitInfos.UID)|$($TD_SplitInfos.VolumeID)"
+
+            if ($VdiskLookup.ContainsKey($key)) {
+                $TD_SplitInfos.Capacity = $VdiskLookup[$key].capacity
+            }
+
+            $TD_SplitInfos.RowID = "$IBMSTOSN|$($TD_SplitInfos.HostID)"
 
             $TD_SplitInfos
 
@@ -80,7 +91,7 @@ function IBM_RESTHost_Volume_Map {
     }
         
     end{
-        #$TD_Mappingresault | Select-Object -First 5 | Format-List * | Out-String | Write-Host
+        #$TD_MappingResult | Select-Object -First 5 | Format-List * | Out-String | Write-Host
 
         <# if update is clicked update the right list #>
         if($TD_RefreshView -eq "Update"){
@@ -94,16 +105,16 @@ function IBM_RESTHost_Volume_Map {
         <# export y or n #>
         if($TD_Export -eq "yes"){
             if([string]$TD_Exportpath -ne "$PSCommandPath\ToolLog\"){
-                $TD_Mappingresault | Export-Csv -Path $TD_Exportpath\$($TD_Line_ID)_$($TD_Device_DeviceName)_Host_Volume_Map_Result_$(Get-Date -Format "yyyy-MM-dd").csv -NoTypeInformation
+                $TD_MappingResult | Export-Csv -Path $TD_Exportpath\$($TD_Line_ID)_$($TD_Device_DeviceName)_Host_Volume_Map_Result_$(Get-Date -Format "yyyy-MM-dd").csv -NoTypeInformation
                 SST_ToolMessageCollector -TD_ToolMSGCollector "$TD_Exportpath\$($TD_Line_ID)_$($TD_Device_DeviceName)_Host_Volume_Map_Result_$(Get-Date -Format "yyyy-MM-dd").csv" -TD_ToolMSGType Debug
             }else {
-                $TD_Mappingresault | Export-Csv -Path $PSCommandPath\ToolLog\$($TD_Line_ID)_$($TD_Device_DeviceName)_Host_Volume_Map_Result_$(Get-Date -Format "yyyy-MM-dd").csv -NoTypeInformation
+                $TD_MappingResult | Export-Csv -Path $PSCommandPath\ToolLog\$($TD_Line_ID)_$($TD_Device_DeviceName)_Host_Volume_Map_Result_$(Get-Date -Format "yyyy-MM-dd").csv -NoTypeInformation
                 SST_ToolMessageCollector -TD_ToolMSGCollector "$PSCommandPath\ToolLog\$($TD_Line_ID)_$($TD_Device_DeviceName)_Host_Volume_Map_Result_$(Get-Date -Format "yyyy-MM-dd").csv" -TD_ToolMSGType Debug
             }
         }else {
             <# output on the promt #>
-            return $TD_Mappingresault
+            return $TD_MappingResult
         }
-        return $TD_Mappingresault 
+        return $TD_MappingResult 
     }
 }
