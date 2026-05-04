@@ -85,7 +85,6 @@ function SST_InvokeFOSRestPWSH {
     -ContentType "application/yang-data+xml" `
     -Body "" `
     -SkipCertificateCheck `
-    -UseBasicParsing `
     -ErrorAction Stop
     
 
