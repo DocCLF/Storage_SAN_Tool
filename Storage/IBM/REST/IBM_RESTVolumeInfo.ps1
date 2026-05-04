@@ -46,6 +46,8 @@ function IBM_RESTVolumeInfo {
     process{
         [int]$imax = $TD_DeviceInformation.Count
         $TD_VDiskFuncResault = for ($i = 0; $i -lt $imax; $i++) {
+            <# Max requests/sec to command endpoints = 10 -.- #>
+            if ($i % 8 -eq 0) { Start-Sleep -Milliseconds 1500 }
             <# Node Info#>
             $TD_VDiskinfo = "" | Select-Object RowID,ID,Name,IOGroupID,IOGroupName,Status,MdiskGrpID,MdiskGrpName,Capacity,Type,FCID,FCName,`
                                             RCID,RCName,VdiskUID,FCMapCount,CopyCount,FastWriteState,SECopyCount,RCChange,CompressedCopyCount,ParentMdiskGrpID,ParentMdiskGrpName,`
