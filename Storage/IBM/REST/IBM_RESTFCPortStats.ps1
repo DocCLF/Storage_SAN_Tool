@@ -39,7 +39,8 @@ function IBM_RESTFCPortStats {
     process{
         [int]$imax = $STONodeInfo.Count
         [array]$TD_PortStats_Overview = for ($i = 0; $i -lt $imax; $i++) {
-
+            <# Max requests/sec to command endpoints = 10 -.- #>
+            if ($i % 8 -eq 0) { Start-Sleep -Milliseconds 1500 }
             $NodeID = $STONodeInfo.id[$i]
             $body = @{node = "$($NodeID)"}
             $IBMSTOName = $STONodeInfo.name[$i]
