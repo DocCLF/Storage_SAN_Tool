@@ -23,19 +23,22 @@ function SST_ToolSettingsDB {
 
         # Table sicherstellen
         $SQLiteCommandCreate = $SQLiteDBConnection.CreateCommand()
-        $SQLiteCommandCreate.CommandText = " CREATE TABLE IF NOT EXISTS ToolSettings ( Id INTEGER PRIMARY KEY CHECK (Id = 1), LoadSettingsOnStartUp INTEGER NOT NULL, OnlineCheckbyImport INTEGER NOT NULL, PRISMactiv INTEGER NOT NULL, IsCustomer INTEGER NOT NULL, TimeStamp TEXT);"
+        $SQLiteCommandCreate.CommandText = " CREATE TABLE IF NOT EXISTS ToolSettings ( Id INTEGER PRIMARY KEY CHECK (Id = 1), LoadSettingsOnStartUp INTEGER NOT NULL, OnlineCheckbyImport INTEGER NOT NULL, PRISMactiv INTEGER NOT NULL, IsCustomer INTEGER NOT NULL, CustomerNumber TEXT, TimeStamp TEXT);"
         $SQLiteCommandCreate.ExecuteNonQuery() | Out-Null
 
         switch ($SST_InfoType) {
 
             "SaveToolSettings" {
+                <# Update Table HelperFunc #>
+                #Add-ColumnIfNotExists -Connection $SQLiteDBConnection -TableName "ToolSettings" -ColumnName "CustomerNumber" -ColumnDefinition "TEXT"
                 # UPSERT auf Id=1
                 $SQLiteCommand = $SQLiteDBConnection.CreateCommand()
-                $SQLiteCommand.CommandText = "INSERT INTO ToolSettings (Id, LoadSettingsOnStartUp, OnlineCheckbyImport, PRISMactiv, IsCustomer, TimeStamp) VALUES (1, @LoadSettingsOnStartUp, @OnlineCheckbyImport, @PRISMactiv, @IsCustomer, @TimeStamp) ON CONFLICT(Id) DO UPDATE SET LoadSettingsOnStartUp = excluded.LoadSettingsOnStartUp, OnlineCheckbyImport = excluded.OnlineCheckbyImport, PRISMactiv = excluded.PRISMactiv, IsCustomer = excluded.IsCustomer, TimeStamp = excluded.TimeStamp;"
+                $SQLiteCommand.CommandText = "INSERT INTO ToolSettings (Id, LoadSettingsOnStartUp, OnlineCheckbyImport, PRISMactiv, IsCustomer, CustomerNumber, TimeStamp) VALUES (1, @LoadSettingsOnStartUp, @OnlineCheckbyImport, @PRISMactiv, @IsCustomer, @CustomerNumber, @TimeStamp) ON CONFLICT(Id) DO UPDATE SET LoadSettingsOnStartUp = excluded.LoadSettingsOnStartUp, OnlineCheckbyImport = excluded.OnlineCheckbyImport, PRISMactiv = excluded.PRISMactiv, IsCustomer = excluded.IsCustomer, TimeStamp = excluded.TimeStamp;"
                 $SQLiteCommand.Parameters.AddWithValue("@LoadSettingsOnStartUp", [int]$SST_NewDBObject.LoadSettingsOnStartUp) | Out-Null
                 $SQLiteCommand.Parameters.AddWithValue("@OnlineCheckbyImport",   [int]$SST_NewDBObject.OnlineCheckbyImport)   | Out-Null
                 $SQLiteCommand.Parameters.AddWithValue("@PRISMactiv",            [int]$SST_NewDBObject.PRISMactiv)            | Out-Null
                 $SQLiteCommand.Parameters.AddWithValue("@IsCustomer",            [int]$SST_NewDBObject.IsCustomer)            | Out-Null
+                $SQLiteCommand.Parameters.AddWithValue("@CustomerNumber",        $SST_NewDBObject.CustomerNumber)             | Out-Null
                 $SQLiteCommand.Parameters.AddWithValue("@TimeStamp",             $TimeStamp)                                  | Out-Null
 
                 $SQLiteCommand.ExecuteNonQuery() | Out-Null
@@ -44,7 +47,7 @@ function SST_ToolSettingsDB {
 
             "LoadToolSettings" {
                 $SQLiteCommand = $SQLiteDBConnection.CreateCommand()
-                $SQLiteCommand.CommandText = "SELECT LoadSettingsOnStartUp, OnlineCheckbyImport, PRISMactiv, IsCustomer, TimeStamp FROM ToolSettings WHERE Id = 1;"
+                $SQLiteCommand.CommandText = "SELECT LoadSettingsOnStartUp, OnlineCheckbyImport, PRISMactiv, IsCustomer, CustomerNumber, TimeStamp FROM ToolSettings WHERE Id = 1;"
 
                 $SQLiteReader = $SQLiteCommand.ExecuteReader()
                 if ($SQLiteReader.Read()) {
@@ -53,6 +56,7 @@ function SST_ToolSettingsDB {
                         OnlineCheckbyImport   = ([int]$SQLiteReader["OnlineCheckbyImport"]   -ne 0)
                         PRISMactiv            = ([int]$SQLiteReader["PRISMactiv"]            -ne 0)
                         IsCustomer            = ([int]$SQLiteReader["IsCustomer"]            -ne 0)
+                        CustomerNumber        = $SQLiteReader["CustomerNumber"]
                         TimeStamp             = $SQLiteReader["TimeStamp"]
                     }
                 }
