@@ -32,7 +32,7 @@ function SST_PRISMDBControl {
         }
         catch {
             <#Do this if a terminating exception happens#>
-            #SST_ToolMessageCollector -TD_ToolMSGCollector "PRISM $($_.Exception.Message)" -TD_ToolMSGType Error -TD_Shown yes
+            SST_ToolMessageCollector -TD_ToolMSGCollector "PRISM $($_.Exception.Message)" -TD_ToolMSGType Error -TD_Shown yes
         }
        
         try {
@@ -48,7 +48,7 @@ function SST_PRISMDBControl {
                 Write-Host $SQLConnection.State -ForegroundColor Blue
                 if($SQLConnection.State -eq "open"){
                     $AZConnection =$true
-                    #SST_ToolMessageCollector -TD_ToolMSGCollector $("SST_PRISMDBControl Func State $($SQLConnection.State)") -TD_ToolMSGType Message -TD_Shown yes
+                    SST_ToolMessageCollector -TD_ToolMSGCollector $("SST_PRISMDBControl Func State $($SQLConnection.State)") -TD_ToolMSGType Message -TD_Shown yes
                 }else {
                     try {
                         if ($SQLConnection.State -ne [System.Data.ConnectionState]::Open) {
@@ -59,7 +59,7 @@ function SST_PRISMDBControl {
                         <#Do this if a terminating exception happens#>
                         Write-Host "$($SQLConnection.State) - $($_.Exception.Message)" -ForegroundColor Yellow
                     }
-                    #SST_ToolMessageCollector -TD_ToolMSGCollector $("SST_PRISMDBControl Func State $($SQLConnection.State)") -TD_ToolMSGType Message -TD_Shown no
+                    SST_ToolMessageCollector -TD_ToolMSGCollector $("SST_PRISMDBControl Func State $($SQLConnection.State)") -TD_ToolMSGType Message -TD_Shown no
                 }
                 <# While killer ;) #>
                 if($ProgCounter -gt 20){break}
@@ -68,8 +68,8 @@ function SST_PRISMDBControl {
             Close-ProgressBar -ProgressBar $ProgressBar
         }
         catch {
-            #SST_ToolMessageCollector -TD_ToolMSGCollector "PRISM Status $($SQLConnection.Open()) Info: $($_.Exception.Message)" -TD_ToolMSGType Error -TD_Shown yes
-            #SST_ToolMessageCollector -TD_ToolMSGCollector $("SST_PRISMDBControl Func there is a problem with the CustomerNumber") -TD_ToolMSGType Error -TD_Shown yes
+            SST_ToolMessageCollector -TD_ToolMSGCollector "PRISM Status $($SQLConnection.Open()) Info: $($_.Exception.Message)" -TD_ToolMSGType Error -TD_Shown yes
+            SST_ToolMessageCollector -TD_ToolMSGCollector $("SST_PRISMDBControl Func there is a problem with the CustomerNumber") -TD_ToolMSGType Error -TD_Shown yes
         }
         
     }
@@ -673,7 +673,7 @@ function SST_PRISMDBControl {
                 }
 
             }
-            Default {#SST_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong during saving the $SST_InfoType data in the local db.") -TD_ToolMSGType Error -TD_Shown yes
+            Default {SST_ToolMessageCollector -TD_ToolMSGCollector $("Something went wrong during saving the $SST_InfoType data in the local db.") -TD_ToolMSGType Error -TD_Shown yes
                 Write-Host $_.Exception.Message -ForegroundColor DarkMagenta
                 if ($SQLConnection) { 
                     if ($SQLConnection.State -ne [System.Data.ConnectionState]::Closed) {
