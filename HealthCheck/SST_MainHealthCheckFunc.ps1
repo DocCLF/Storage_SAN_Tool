@@ -8,13 +8,13 @@ function SST_MainHealthCheckFunc {
     
     begin {
         $ErrorActionPreference="Continue"
-        #SST_ToolMessageCollector -TD_ToolMSGCollector "Start SST_MainHealthCheckFunc " -TD_ToolMSGType Message -TD_Shown no
+        SST_ToolMessageCollector -TD_ToolMSGCollector "Start SST_MainHealthCheckFunc " -TD_ToolMSGType Message -TD_Shown no
     }
     
     process {
         try {
             $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_.DeviceTyp -eq "Storage"}
-            #SST_ToolMessageCollector -TD_ToolMSGCollector $TD_Credentials.DeviceTyp -TD_ToolMSGType Message -TD_Shown no
+            SST_ToolMessageCollector -TD_ToolMSGCollector $TD_Credentials.DeviceTyp -TD_ToolMSGType Message -TD_Shown no
             <# Find Warppanel in UC and add Button Stlye #>
             $SST_STOHealthCheckWP = $SST_UCOBJ.FindName("WP_STOHealthCheck")
             
@@ -36,12 +36,12 @@ function SST_MainHealthCheckFunc {
 
         }
         catch {
-            #SST_ToolMessageCollector -TD_ToolMSGCollector $("Create Storage Button in MainHealthCheckFunc $($_.Exception.Message)") -TD_ToolMSGType Error -TD_Shown yes       
+            SST_ToolMessageCollector -TD_ToolMSGCollector $("Create Storage Button in MainHealthCheckFunc $($_.Exception.Message)") -TD_ToolMSGType Error -TD_Shown yes       
         }
        
         try {
             $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_.DeviceTyp -eq "SAN"}
-            #SST_ToolMessageCollector -TD_ToolMSGCollector $TD_Credentials.DeviceTyp -TD_ToolMSGType Message -TD_Shown no
+            SST_ToolMessageCollector -TD_ToolMSGCollector $TD_Credentials.DeviceTyp -TD_ToolMSGType Message -TD_Shown no
             <# Find Warppanel in UC and add Button Stlye #>
             $SST_STOHealthCheckWP = $SST_UCOBJ.FindName("WP_SANHealthCheck")
 
@@ -64,12 +64,12 @@ function SST_MainHealthCheckFunc {
             }
         }
         catch {
-            #SST_ToolMessageCollector -TD_ToolMSGCollector $("Create SAN Button in MainHealthCheckFunc $($_.Exception.Message)") -TD_ToolMSGType Error -TD_Shown yes       
+            SST_ToolMessageCollector -TD_ToolMSGCollector $("Create SAN Button in MainHealthCheckFunc $($_.Exception.Message)") -TD_ToolMSGType Error -TD_Shown yes       
         }
 
         try {
             $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_.DeviceTyp -eq "PowerHMC"}
-            #SST_ToolMessageCollector -TD_ToolMSGCollector $TD_Credentials.DeviceTyp -TD_ToolMSGType Message -TD_Shown no
+            SST_ToolMessageCollector -TD_ToolMSGCollector $TD_Credentials.DeviceTyp -TD_ToolMSGType Message -TD_Shown no
             <# Find Warppanel in UC and add Button Stlye #>
             $SST_STOHealthCheckWP = $SST_UCOBJ.FindName("WP_SVRHealthCheck")
 
@@ -92,11 +92,11 @@ function SST_MainHealthCheckFunc {
             }
         }
         catch {
-            #SST_ToolMessageCollector -TD_ToolMSGCollector $("Create Server Button in MainHealthCheckFunc $($_.Exception.Message)") -TD_ToolMSGType Error -TD_Shown yes       
+            SST_ToolMessageCollector -TD_ToolMSGCollector $("Create Server Button in MainHealthCheckFunc $($_.Exception.Message)") -TD_ToolMSGType Error -TD_Shown yes       
         }
     }
     
     end {
-        #SST_ToolMessageCollector -TD_ToolMSGCollector "SST_MainHealthCheckFunc End" -TD_ToolMSGType Debug -TD_Shown no
+        SST_ToolMessageCollector -TD_ToolMSGCollector "SST_MainHealthCheckFunc End" -TD_ToolMSGType Debug -TD_Shown no
     }
 }
