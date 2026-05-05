@@ -13,7 +13,6 @@ function SST_DashBoardMain {
         }
 
         $SQLiteConnectionString = "Data Source=$DBPath;Version=3;Pooling=False;"
-        
         $SQLiteDBConnection = New-Object System.Data.SQLite.SQLiteConnection $SQLiteConnectionString   
         #region Storage Events
         try {
@@ -23,7 +22,7 @@ function SST_DashBoardMain {
         }
         catch {
             Write-Host $_.Exception.Message
-            #SST_ToolMessageCollector -TD_ToolMSGCollector "There is something wrong, mybe there is no IBMSTOEventsTable Table" -TD_ToolMSGType Warning -TD_Shown yes
+            SST_ToolMessageCollector -TD_ToolMSGCollector "There is something wrong, mybe there is no IBMSTOEventsTable Table" -TD_ToolMSGType Warning -TD_Shown yes
         }
         #endregion
         #region Storage
@@ -44,7 +43,7 @@ function SST_DashBoardMain {
         }
         catch {
             Write-Host $_.Exception.Message
-            #SST_ToolMessageCollector -TD_ToolMSGCollector "There is something wrong, mybe there is no IBMSANHWTable Table" -TD_ToolMSGType Warning -TD_Shown yes
+            SST_ToolMessageCollector -TD_ToolMSGCollector "There is something wrong, mybe there is no IBMSANHWTable Table" -TD_ToolMSGType Warning -TD_Shown yes
         }
         #endregion
         #region Power Systems
@@ -55,7 +54,7 @@ function SST_DashBoardMain {
         }
         catch {
             Write-Debug $_.Exception.Message
-            #SST_ToolMessageCollector -TD_ToolMSGCollector "There is something wrong, mybe there is no PowerSysSummary Table $($_.Exception.Message)" -TD_ToolMSGType Warning -TD_Shown yes
+            SST_ToolMessageCollector -TD_ToolMSGCollector "There is something wrong, mybe there is no PowerSysSummary Table $($_.Exception.Message)" -TD_ToolMSGType Warning -TD_Shown yes
         }
         #endregion
         #region Storage Host
@@ -63,7 +62,7 @@ function SST_DashBoardMain {
             $SST_SQLiteSTODashBoardQuery = $null
             $SST_SQLiteSTODashBoardQuery = " SELECT ID, HID, HostName, Status, HostClusterName, STOName, SideName, WWNN, TimeStamp FROM IBMSTOHostTable d WHERE TimeStamp = ( SELECT MAX(TimeStamp) FROM IBMSTOHostTable WHERE HID = d.HID ) AND Status = 'offline' ORDER BY HID; "
             SST_DashBoardHosts -Query $SST_SQLiteSTODashBoardQuery -SST_IBMHostDeviceCounter 0 -SQLConnection $SQLiteDBConnection
-            #$SST_SQLiteDBReader.Close()
+            #$SST_SQLiteDBReader.Close() 
         }
         catch {
             Write-Host $_.Exception.Message
@@ -77,7 +76,7 @@ function SST_DashBoardMain {
         }
         catch {
             Write-Host $_.Exception.Message
-            #SST_ToolMessageCollector -TD_ToolMSGCollector "There is something wrong, mybe there is no IBMSTOHostTable Table" -TD_ToolMSGType Warning -TD_Shown yes
+            SST_ToolMessageCollector -TD_ToolMSGCollector "There is something wrong, mybe there is no IBMSTOHostTable Table" -TD_ToolMSGType Warning -TD_Shown yes
         }
         #endregion
 }
