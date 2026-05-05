@@ -2,7 +2,7 @@ function SST_ToolAdvSaveDB {
     [CmdletBinding()]
     param (
         [Parameter(Mandatory)]
-        [ValidateSet("SavePRISMSettings","LoadPRISMSettings")]
+        [ValidateSet("SavePRISMSettings","LoadPRISMSettings","HasData")]
         [string]$SST_InfoType,
 
         $SST_NewDBObject
@@ -25,8 +25,9 @@ function SST_ToolAdvSaveDB {
         $SQLiteCommandCreate = $SQLiteDBConnection.CreateCommand()
         if($SST_InfoType -like "*PRISM*"){
             $SQLiteCommandCreate.CommandText = " CREATE TABLE IF NOT EXISTS AdvSettings ( Id INTEGER PRIMARY KEY AUTOINCREMENT, CustomerNbr INTEGER NOT NULL UNIQUE, AZConString TEXT NOT NULL, CustomerP TEXT NOT NULL, AZDBNAM TEXT NOT NULL,TimeStamp TEXT);"
+            $SQLiteCommandCreate.ExecuteNonQuery() | Out-Null
         }
-        $SQLiteCommandCreate.ExecuteNonQuery() | Out-Null
+        
 
         switch ($SST_InfoType) {
 
@@ -60,6 +61,11 @@ function SST_ToolAdvSaveDB {
                     }
                 }
                 return $null
+            }
+
+            "HasData" {
+                $result = Test-SQLiteHasAnyData -Connection $SQLiteDBConnection -TableName "AdvSettings"
+                return $result
             }
         }
     }
