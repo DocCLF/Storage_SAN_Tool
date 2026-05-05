@@ -5,8 +5,30 @@
 - Additional support for errors in the event log
 - PBHA and DR Support
 
-
 All notable changes to this project will be documented in this file.
+# [v1.4.010_beta] - 2026-05-05
+### Added 
+- Support for IBM Tape
+- REST Function for IBM Storage
+- REST Function for IBM Power
+- REST Function for IBM Tape
+- UseBasicParsing for Powershell 5.1 
+- TextBox for Customer Number (who is needed for Local DB)
+
+### Fixed
+- ToolLog on GUI, Some entries were not displayed or were displayed incorrectly
+- some major and minor bugs
+
+### Changed
+- GUI redesigned
+- PRISM Connection and Setup
+- ToolLog on GUI The most recent post now always appears at the top
+
+### Known Bugs
+- Currently, there is no display of the current recommended firmware versions
+    * This will be fixed in a future update
+
+
 # [v1.3.135] - 2025-10-31
 ### Added 
 - Dashboard for a first fast Overview
