@@ -16,7 +16,6 @@ function SST_ReadLocalSendtoPRISM {
         $SQLiteConnectionString = "Data Source=$DBPath;Version=3;Pooling=False;"
         $SQLiteDBConnection = New-Object System.Data.SQLite.SQLiteConnection $SQLiteConnectionString
         $SQLiteCommand = $null
-        Write-Host $SST_Customer
     }
     
     process {
