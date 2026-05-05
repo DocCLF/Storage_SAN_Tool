@@ -4,7 +4,6 @@ function SST_CustomerDB {
         [Parameter(Mandatory)]
         [ValidateSet("SaveCustomerSetUp","LoadCustomerSetUp")]
         [string]$SST_InfoType,
-
         [string]$SST_Customer,
         $SST_NewDBObject
     )
@@ -18,10 +17,9 @@ function SST_CustomerDB {
     } else {
         $Customer = $SST_NewDBObject.CustomerNumber
     }
-    Write-Host "Customer $Customer"
+
     $DBPath = Join-Path $PSRootPath "Resources\DBFolder\$Customer.db"
     $SQLiteConnectionString = "Data Source=$DBPath;Version=3;Pooling=False;"
-
     $SQLiteDBConnection = New-Object System.Data.SQLite.SQLiteConnection $SQLiteConnectionString
     $SQLiteCommandCreate = $null
     $SQLiteCommand = $null
