@@ -133,7 +133,7 @@ try {
             $TD_TB_ExportPath.Text = $TD_ExportFolderCreated.Name
         }
         catch {
-            #SST_ToolMessageCollector -TD_ToolMSGCollector "BasicToolPreparation ExportFolderPath $($_.Exception.Message)" -TD_ToolMSGType Error -TD_Shown no
+            SST_ToolMessageCollector -TD_ToolMSGCollector "BasicToolPreparation ExportFolderPath $($_.Exception.Message)" -TD_ToolMSGType Error -TD_Shown no
         }
     }else{
         $TD_TB_ExportPath.Text = $ExportFolderPath
@@ -142,7 +142,7 @@ try {
 }
 catch {
     <#Do this if a terminating exception happens#>
-    #SST_ToolMessageCollector -TD_ToolMSGCollector "BasicToolPreparation ExportFolderPath $($_.Exception.Message)" -TD_ToolMSGType Error -TD_Shown no
+    SST_ToolMessageCollector -TD_ToolMSGCollector "BasicToolPreparation ExportFolderPath $($_.Exception.Message)" -TD_ToolMSGType Error -TD_Shown no
     Write-Error -Message $_.Exception.Message
 }
 <# Check if the ToolDB is available if not deploy #>
@@ -154,7 +154,7 @@ if(!(Test-Path -Path "$PSRootPath\Resources\DBFolder\ToolDB\ToolDB.db")){
     }
     catch {
         Write-Host $_.exception.message
-        #SST_ToolMessageCollector -TD_ToolMSGCollector "LocalDB $($_.exception.message)" -TD_ToolMSGType Error -TD_Shown yes
+        SST_ToolMessageCollector -TD_ToolMSGCollector "LocalDB $($_.exception.message)" -TD_ToolMSGType Error -TD_Shown yes
     }
     if($SST_SQLiteCon.State -eq "Open"){ $SST_SQLiteCon.Close() }
 }
@@ -277,13 +277,22 @@ $TD_BTN_SaveToolSettings.add_click({
     }
 })
 $TD_BTN_LoadToolSettings.add_click({
-    SST_SaveLoadToolSettings -SST_LoadSettings $true
+    SST_SaveLoadToolSettings -SST_LoadSettings $true -CockpitView $null -SST_LoadSettingsBTN $true
+})
+<# Button Export Settings #>
+$TD_BTN_ChangeExportPath.add_click({
+    $TD_ChPathdialog = New-Object System.Windows.Forms.FolderBrowserDialog
+    if ($TD_ChPathdialog.ShowDialog() -eq [System.Windows.Forms.DialogResult]::OK) {
+        $TD_DirectoryName = $TD_ChPathdialog.SelectedPath
+        $TD_tb_ExportPath.Text = $TD_DirectoryName
+    }
+    $TD_LB_ExpPathMainWindow.Content ="Export Path: $($TD_tb_ExportPath.Text)"
 })
 #endregion
 #region CredentialBTN
 $TD_BTN_SaveCredtoDG.add_click({
     if($TD_CB_CredUpdate.IsChecked){
-        #SST_ToolMessageCollector -TD_ToolMSGCollector "Cred Update" -TD_ToolMSGType Message -TD_Shown no
+        SST_ToolMessageCollector -TD_ToolMSGCollector "Cred Update" -TD_ToolMSGType Message -TD_Shown no
         try {
             $TD_CredfGUIArray = SST_GetCredfGUI -TD_AddaNewDevice "no"
         }
@@ -292,7 +301,7 @@ $TD_BTN_SaveCredtoDG.add_click({
         }
         
     }else{
-        #SST_ToolMessageCollector -TD_ToolMSGCollector "Cred AddaNewDevice" -TD_ToolMSGType Message -TD_Shown no
+        SST_ToolMessageCollector -TD_ToolMSGCollector "Cred AddaNewDevice" -TD_ToolMSGType Message -TD_Shown no
         $TD_CredfGUIArray = SST_GetCredfGUI -TD_AddaNewDevice "yes"
         Start-Sleep -Seconds 0.5
         if(!([string]::IsNullOrEmpty($TD_CredfGUIArray))){
@@ -310,17 +319,17 @@ $TD_BTN_ExportCred.add_click({
     <# Save to Dir #>
     $TD_SaveCred = SST_SaveFile_to_Directory -TD_UserDataObject $TD_SST_ExportCred
     if([string]::IsNullOrEmpty($TD_SaveCred.FileName)){
-        #SST_ToolMessageCollector -TD_ToolMSGCollector $("Export failed!") -TD_ToolMSGType Warning -TD_Shown yes
+        SST_ToolMessageCollector -TD_ToolMSGCollector $("Export failed!") -TD_ToolMSGType Warning -TD_Shown yes
     }else {
-        #SST_ToolMessageCollector -TD_ToolMSGCollector $("Credentials successfully exported to $($TD_SaveCred.FileName)") -TD_ToolMSGType Message -TD_Shown yes
+        SST_ToolMessageCollector -TD_ToolMSGCollector $("Credentials successfully exported to $($TD_SaveCred.FileName)") -TD_ToolMSGType Message -TD_Shown yes
     }
 })
 $TD_BTN_ImportCred.add_click({
     $TD_ImportedCredentials = SST_ImportCredential
     if($TD_ImportedCredentials.count -lt 1){
-        #SST_ToolMessageCollector -TD_ToolMSGCollector $("Import failed!") -TD_ToolMSGType Warning -TD_Shown yes
+        SST_ToolMessageCollector -TD_ToolMSGCollector $("Import failed!") -TD_ToolMSGType Warning -TD_Shown yes
     }else {
-        #SST_ToolMessageCollector -TD_ToolMSGCollector $("Credentials successfully Import") -TD_ToolMSGType Message -TD_Shown yes
+        SST_ToolMessageCollector -TD_ToolMSGCollector $("Credentials successfully Import") -TD_ToolMSGType Message -TD_Shown yes
         #$SST_BTN_PowerBoard = $TD_UserControl6.FindName("BTN_HMCCollector")
         #$SST_BTN_PowerBoard.Content="HMC Scanner"
         #$SST_BTN_PowerBoard.IsEnabled=$true
@@ -404,7 +413,7 @@ $TD_BTN_DeleteDB.add_click({
         [System.Data.SQLite.SQLiteConnection]::ClearAllPools()
         Write-Host $_.Exception.Message
     }
-        #SST_ToolMessageCollector -TD_ToolMSGCollector "LocalDB: $($TD_DBtoDelete.Name) are deleted" -TD_ToolMSGType Message -TD_Shown yes
+        SST_ToolMessageCollector -TD_ToolMSGCollector "LocalDB: $($TD_DBtoDelete.Name) are deleted" -TD_ToolMSGType Message -TD_Shown yes
         #$TD_DataBaseChoice = @(Get-ChildItem "$PSRootPath\Resources\DBFolder\*" -Filter "*.db" | Select-Object -ExpandProperty Basename)
 })
 $TD_BTN_DBRefresh.add_click({
@@ -448,7 +457,7 @@ $TD_CB_DataBaseChoice.add_SelectionChanged({
 })
 #endregion
 #region PRISM
-#SST_ToolMessageCollector -TD_ToolMSGCollector "Load PRISM" -TD_ToolMSGType Message -TD_Shown no
+SST_ToolMessageCollector -TD_ToolMSGCollector "Load PRISM" -TD_ToolMSGType Message -TD_Shown no
 $TD_BTN_SaveAZConnectionPRISM.add_click({
     $AZConnection =$false
     [int]$ProgCounter=10
@@ -522,7 +531,7 @@ $TD_BTN_ConnetionToPRISM.add_click({
     catch {
         <#Do this if a terminating exception happens#>
         Write-Host $_.Exception.Message
-        #SST_ToolMessageCollector -TD_ToolMSGCollector "PRISM $($_.Exception.Message)" -TD_ToolMSGType Error -TD_Shown yes
+        SST_ToolMessageCollector -TD_ToolMSGCollector "PRISM $($_.Exception.Message)" -TD_ToolMSGType Error -TD_Shown yes
     }
     <#  #>
     $SQLConnection=New-Object System.Data.SqlClient.SqlConnection
@@ -598,7 +607,7 @@ $TD_BTN_SendDataToPRISM.add_click({
         Write-Host $_.Exception.Message
     }
 })
-#SST_ToolMessageCollector -TD_ToolMSGCollector "Load PRISM done" -TD_ToolMSGType Message -TD_Shown no
+SST_ToolMessageCollector -TD_ToolMSGCollector "Load PRISM done" -TD_ToolMSGType Message -TD_Shown no
 #endregion
 #region DashBoard
 $TD_BTN_RefreshDashBoard.add_click({
@@ -1649,7 +1658,7 @@ if(!([string]::IsNullOrWhiteSpace($FoundDBforDashBoard))){
     catch {
         <#Do this if a terminating exception happens#>
         Write-Host $_.Exception.Message
-        #SST_ToolMessageCollector -TD_ToolMSGCollector $("Found some problems with local customer db") -TD_ToolMSGType Warning -TD_Shown yes
+        SST_ToolMessageCollector -TD_ToolMSGCollector $("Found some problems with local customer db") -TD_ToolMSGType Warning -TD_Shown yes
     }
     SST_DashBoardMain -MainPath $PSRootPath -SST_UCOBJ $TD_UserControl_Dash -FoundLocalDB $SelFirstDB
 }
@@ -1665,10 +1674,35 @@ $TD_BTN_CloseGUI.add_click({
     }
     catch {
         <#Do this if a terminating exception happens#>
-        #SST_ToolMessageCollector -TD_ToolMSGCollector $("Remove Files fail: $($_.Exception.Message)") -TD_ToolMSGType Error -TD_Shown no
+        SST_ToolMessageCollector -TD_ToolMSGCollector $("Remove Files fail: $($_.Exception.Message)") -TD_ToolMSGType Error -TD_Shown no
     }
     $MainWindow.Close()
 })
+
+SST_SaveLoadToolSettings -SST_LoadSettings $true -CockpitView $CockpitView -SST_LoadSettingsBTN $false
+
+switch ($CockpitView) {
+    "DEFAULT" { $TD_UserContrArea.Children.Add($TD_UserControl_Dash) }
+    "STORAGE" { $TD_UserContrArea.Children.Add($TD_UserControl_IBMSTO) }
+    "SAN" { $TD_UserContrArea.Children.Add($TD_UserControl_BRSAN) }
+    "POWER" { $TD_UserContrArea.Children.Add($TD_UserControl_PWR) }
+    "HEALTH" { $TD_UserContrArea.Children.Add($TD_UserControl_Health) }
+    "CONFIG" { $TD_UserContrArea.Children.Add($TD_UserControl_SetUp) }
+    "JobMode" {
+        try {
+            Remove-Item -Path $PSRootPath\ToolLog\ToolTEMP\* -Filter '*_Temp.csv' -Force -ErrorAction SilentlyContinue
+            SST_ToolMessageCollector -TD_ToolMSGCollector $("Remove Files from TEMP-Folder, done.") -TD_ToolMSGType Message -TD_Shown no
+        }
+        catch {
+            <#Do this if a terminating exception happens#>
+            SST_ToolMessageCollector -TD_ToolMSGCollector $("Remove Files fail: $($_.Exception.Message)") -TD_ToolMSGType Error -TD_Shown no
+        }
+        Write-Debug -Message "Close the appl via CloseBtn"
+        #$MainWindow.Close()
+        #Exit
+    }
+    Default {SST_ToolMessageCollector -TD_ToolMSGCollector $("Start Tool with Usercontrol $CockpitView ") -TD_ToolMSGType Message -TD_Shown no}
+}
 #region show MainWindow
 $MainWindow.showDialog()
 $MainWindow.activate()
