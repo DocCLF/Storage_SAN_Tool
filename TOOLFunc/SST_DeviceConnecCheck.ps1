@@ -45,7 +45,7 @@ function SST_DeviceConnecCheck {
                 }
              }
             Default {
-                #SST_ToolMessageCollector -TD_ToolMSGCollector "Something went wrong at SST_DeviceConnecCheck Func please check the promt or close the gui and write $error in the promt." -TD_ToolMSGType Warning
+                SST_ToolMessageCollector -TD_ToolMSGCollector "Something went wrong at SST_DeviceConnecCheck Func please check the promt or close the gui and write $error in the promt." -TD_ToolMSGType Warning
                 }
         }
 
@@ -99,16 +99,16 @@ function SST_DeviceConnecCheck {
             
                         Default {
                             $TD_BInfo.ProductDes = $TD_BasicDeviceInfos.ProdMTM[0]
-                            #SST_ToolMessageCollector -TD_ToolMSGCollector "Unknown Storage MTM, please check this MTM Number via google $($TD_BasicDeviceInfos.Prod_MTM[0])" -TD_ToolMSGType Warning
+                            SST_ToolMessageCollector -TD_ToolMSGCollector "Unknown Storage MTM, please check this MTM Number via google $($TD_BasicDeviceInfos.Prod_MTM[0])" -TD_ToolMSGType Warning
                         }
                     }
                     
                     $TD_BInfo.Prod_MTM = $TD_BasicDeviceInfos.ProdMTM[0]
                     $TD_BInfo.Code_Level = $TD_BasicDeviceInfos.CodeLevel[0] -replace '\s+\(.*\)',''
                     $TD_BasicDeviceInfo += $TD_BInfo
-                    #SST_ToolMessageCollector -TD_ToolMSGCollector "Added Storage Device to the List" -TD_ToolMSGType Message
+                    SST_ToolMessageCollector -TD_ToolMSGCollector "Added Storage Device to the List" -TD_ToolMSGType Message
                 }else {
-                    #SST_ToolMessageCollector -TD_ToolMSGCollector "Something went wrong, no data could be received from Storage device." -TD_ToolMSGType Error
+                    SST_ToolMessageCollector -TD_ToolMSGCollector "Something went wrong, no data could be received from Storage device." -TD_ToolMSGType Error
                     break
                 }
             }
@@ -141,9 +141,9 @@ function SST_DeviceConnecCheck {
                     $TD_BInfo.Prod_MTM = $TD_BasicDeviceInfos.'MTM'
                     $TD_BInfo.Code_Level = $TD_BasicDeviceInfos.'FabricOS'
                     $TD_BasicDeviceInfo += $TD_BInfo
-                    #SST_ToolMessageCollector -TD_ToolMSGCollector "Added SAN Device to the List" -TD_ToolMSGType Message
+                    SST_ToolMessageCollector -TD_ToolMSGCollector "Added SAN Device to the List" -TD_ToolMSGType Message
                 }else {
-                    #SST_ToolMessageCollector -TD_ToolMSGCollector "Something went wrong, no data could be received from SAN device." -TD_ToolMSGType Error
+                    SST_ToolMessageCollector -TD_ToolMSGCollector "Something went wrong, no data could be received from SAN device." -TD_ToolMSGType Error
                     break
                 }
             }
@@ -152,7 +152,7 @@ function SST_DeviceConnecCheck {
                 $TD_BInfo.DeviceName = "HMC"
                 $TD_BInfo.ProductDes = "PowerHMC"
                 $TD_BasicDeviceInfo += $TD_BInfo
-                #SST_ToolMessageCollector -TD_ToolMSGCollector "It's a HMC, is okay" -TD_ToolMSGType Message
+                SST_ToolMessageCollector -TD_ToolMSGCollector "It's a HMC, is okay" -TD_ToolMSGType Message
             }
             {$_ -like "*Tape"} {
                 if($null -eq $TD_TapeCred){
@@ -178,13 +178,13 @@ function SST_DeviceConnecCheck {
                     $TD_BInfo.Code_Level = $TD_BasicDeviceInfos.BaseFWRevision
                     $TD_BInfo.TapeWWNN = $TD_BasicDeviceInfos.WWNodeName
                     $TD_BasicDeviceInfo += $TD_BInfo
-                    #SST_ToolMessageCollector -TD_ToolMSGCollector "Added Tape Device to the List" -TD_ToolMSGType Message
+                    SST_ToolMessageCollector -TD_ToolMSGCollector "Added Tape Device to the List" -TD_ToolMSGType Message
                 }else {
-                    #SST_ToolMessageCollector -TD_ToolMSGCollector "Something went wrong, no data could be received from Tape device." -TD_ToolMSGType Error
+                    SST_ToolMessageCollector -TD_ToolMSGCollector "Something went wrong, no data could be received from Tape device." -TD_ToolMSGType Error
                     break
                 }
             }
-            Default {}#SST_ToolMessageCollector -TD_ToolMSGCollector "Something went wrong at SST_DeviceConnecCheck Func or no Device Type was found, please check the promt." -TD_ToolMSGType Warning}
+            Default {SST_ToolMessageCollector -TD_ToolMSGCollector "Something went wrong at SST_DeviceConnecCheck Func or no Device Type was found, please check the promt." -TD_ToolMSGType Warning}
         }
         
         if($TD_Selected_Items -eq "yes"){
