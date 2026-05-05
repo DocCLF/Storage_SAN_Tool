@@ -16,12 +16,12 @@ function SST_CreateCheckBox {
             $SST_DummyCB.Content = $SST_UCOBJ.name  <# der Name sollte entweder aus dem DeviceNamen oder ähnlichen bestehen oder IP-Addr nutzen #>
         }
         catch {
-            #SST_ToolMessageCollector -TD_ToolMSGCollector $_.Exception.Message -TD_ToolMSGType Error -TD_Shown yes       
+            SST_ToolMessageCollector -TD_ToolMSGCollector $_.Exception.Message -TD_ToolMSGType Error -TD_Shown yes       
         }
     }
     
     end {
-        #SST_ToolMessageCollector -TD_ToolMSGCollector "End to create Button for $DeviceTyp Healthcheck" -TD_ToolMSGType Message -TD_Shown no
+        SST_ToolMessageCollector -TD_ToolMSGCollector "End to create Button for $DeviceTyp Healthcheck" -TD_ToolMSGType Message -TD_Shown no
         return $SST_DummyCB
     }
 }
