@@ -73,7 +73,7 @@ function Invoke-DeviceDataFetch {
             Write-Host $_.Exception.Message
         }
     }
-
+ 
     return $FunResult
 }
 
@@ -435,4 +435,68 @@ function Get-DbValue {
         return [DBNull]::Value
     }
     return $Value
+}
+# DB Helper to Add Columns if they not exist
+function Add-ColumnIfNotExists {
+    param(
+        $Connection,
+        [string]$TableName,
+        [string]$ColumnName,
+        [string]$ColumnDefinition
+    )
+
+    $cmd = $Connection.CreateCommand()
+    $cmd.CommandText = "PRAGMA table_info($TableName);"
+
+    $reader = $cmd.ExecuteReader()
+
+    $exists = $false
+    while ($reader.Read()) {
+        if ($reader["name"] -eq $ColumnName) {
+            $exists = $true
+            break
+        }
+    }
+    $reader.Close()
+
+    if (-not $exists) {
+        $alterCmd = $Connection.CreateCommand()
+        $alterCmd.CommandText = "ALTER TABLE $TableName ADD COLUMN $ColumnName $ColumnDefinition;"
+        $alterCmd.ExecuteNonQuery() | Out-Null
+    }
+}
+# DB Helper Check if Table contains Data
+function Test-SQLiteHasAnyData {
+    param(
+        [Parameter(Mandatory)]
+        $Connection,
+
+        [Parameter(Mandatory)]
+        [string]$TableName
+    )
+
+    # 1. Check if the table exists
+    $cmd = $Connection.CreateCommand()
+    $cmd.CommandText = "
+        SELECT 1
+        FROM sqlite_master
+        WHERE type = 'table'
+          AND name = @TableName
+        LIMIT 1;
+    "
+
+    $param = $cmd.CreateParameter()
+    $param.ParameterName = "@TableName"
+    $param.Value = $TableName
+    $cmd.Parameters.Add($param) | Out-Null
+
+    if ($null -eq $cmd.ExecuteScalar()) {
+        return $false
+    }
+
+    # 2. Check if data is available
+    $countCmd = $Connection.CreateCommand()
+    $countCmd.CommandText = "SELECT 1 FROM [$TableName] LIMIT 1;"
+
+    return ($null -ne $countCmd.ExecuteScalar())
 }
