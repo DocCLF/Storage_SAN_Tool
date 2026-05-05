@@ -13,7 +13,7 @@ function SST_CreateButton {
     
     begin {
         
-        #SST_ToolMessageCollector -TD_ToolMSGCollector "Start to create Button for $DeviceTyp Healthcheck" -TD_ToolMSGType Message -TD_Shown no
+        SST_ToolMessageCollector -TD_ToolMSGCollector "Start to create Button for $DeviceTyp Healthcheck" -TD_ToolMSGType Message -TD_Shown no
 
         if($DeviceTyp -eq "Storage"){$ButtonIcon = "$PSRootPath\Resources\Icons\IBMFS73Icon.png"}
         if($DeviceTyp -eq "SAN"){$ButtonIcon = "$PSRootPath\Resources\Icons\SAN64B7Icon.png"}
@@ -24,7 +24,7 @@ function SST_CreateButton {
     process {
         try {
             #$TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_.DeviceTyp -eq "Storage"}
-            #SST_ToolMessageCollector -TD_ToolMSGCollector $TD_Credentials.DeviceTyp -TD_ToolMSGType Message -TD_Shown no
+            SST_ToolMessageCollector -TD_ToolMSGCollector $TD_Credentials.DeviceTyp -TD_ToolMSGType Message -TD_Shown no
             <# Find Warppanel in UC and add Button Stlye #>
             #$SST_STOHealthCheckWP = $SST_UCOBJ.FindName("WP_STOHealthCheck")
             #$SST_UCOBJ.Resources.MergedDictionaries.Add( $SST_UCSTYLEOBJ )
@@ -55,12 +55,12 @@ function SST_CreateButton {
         }
         catch {
             Write-Host $_.Exception.Message
-            #SST_ToolMessageCollector -TD_ToolMSGCollector $_.Exception.Message -TD_ToolMSGType Error -TD_Shown yes       
+            SST_ToolMessageCollector -TD_ToolMSGCollector $_.Exception.Message -TD_ToolMSGType Error -TD_Shown yes       
         }
     }
     
     end {
-        #SST_ToolMessageCollector -TD_ToolMSGCollector "End to create Button for $DeviceTyp Healthcheck" -TD_ToolMSGType Message -TD_Shown no
+        SST_ToolMessageCollector -TD_ToolMSGCollector "End to create Button for $DeviceTyp Healthcheck" -TD_ToolMSGType Message -TD_Shown no
         return $SST_DummyBTN
     }
 }
