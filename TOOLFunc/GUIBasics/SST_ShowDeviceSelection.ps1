@@ -8,7 +8,7 @@ function SST_ShowDeviceSelection {
     
     begin {
         $ErrorActionPreference="Continue"
-        #SST_ToolMessageCollector -TD_ToolMSGCollector "Start SST_MainHealthCheckFunc " -TD_ToolMSGType Message -TD_Shown no
+        SST_ToolMessageCollector -TD_ToolMSGCollector "Start SST_MainHealthCheckFunc " -TD_ToolMSGType Message -TD_Shown no
     }
     
     process {
@@ -76,6 +76,6 @@ function SST_ShowDeviceSelection {
     }
     
     end {
-        #SST_ToolMessageCollector -TD_ToolMSGCollector "SST_MainHealthCheckFunc End" -TD_ToolMSGType Debug -TD_Shown no
+        SST_ToolMessageCollector -TD_ToolMSGCollector "SST_MainHealthCheckFunc End" -TD_ToolMSGType Debug -TD_Shown no
     }
 }
