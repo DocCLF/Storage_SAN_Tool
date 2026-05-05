@@ -26,9 +26,6 @@ function SST_ToolMessageCollector {
     <# Create a DateTime for each entry #>
     $TD_GetMSGDate = Get-Date -Format "dd/MM/yyyy HH:mm:ss"
     $PSRootPath = Split-Path -Path $PSScriptRoot -Parent
-    <# Get to "old MSG" in a Var #>
-    $TD_OldMSG = $TD_DG_ToolEventsWindow.ItemsSource
-    [array]$TD_MSG_GUIpresenter = $TD_OldMSG
 
     $TD_MSGpresenter = [PSCustomObject]@{
         TimeStamp = $TD_GetMSGDate
@@ -36,7 +33,16 @@ function SST_ToolMessageCollector {
         Message   = $TD_ToolMSGCollector
     }
 
-    [array]$TD_MSG_GUIpresenter += $TD_MSGpresenter |Sort-Object
+    $TD_OldMSG = @()
+
+    if ($null -ne $TD_DG_ToolEventsWindow.ItemsSource) {
+        $TD_OldMSG = @($TD_DG_ToolEventsWindow.ItemsSource) |
+            Where-Object { $null -ne $_ }
+    }
+
+    $TD_MSG_GUIpresenter = @($TD_MSGpresenter) + @($TD_OldMSG)
+
+    $TD_DG_ToolEventsWindow.ItemsSource = $TD_MSG_GUIpresenter
     <#present all msg #> 
     switch ($TD_Shown) {
         "no" { Write-Debug -Message "$TD_ToolMSGCollector $TD_ToolMSGType" }
@@ -46,11 +52,6 @@ function SST_ToolMessageCollector {
 
     <# Example: Get-Date -UFormat "%d%m%Y" - Res: 14012025 #>
     Out-File -FilePath $PSRootPath\ToolLog\SST_$(Get-Date -UFormat "%d%m%Y").log -InputObject $TD_MSGpresenter -Append -Width 1000
-    
-    #$TD_tb_ToolWindowForDebug.Text = $TD_MSG_GUIpresenter
-    # the following line as switch case with the different options red,yellow etc.
-    #$TD_tb_ToolWindowForDebug.Foreground="Red"
-    <# refresh the gui #>
-    #$TD_UserControl4.Dispatcher.Invoke([System.Action]{},"Render")
+ 
 
 }
