@@ -110,6 +110,23 @@ function New-DeviceBlock {
     return @{ DeviceIdent = $DeviceIdent; FuncResult = $FunResult }
 }
 
+function ReadDBandBuildDB{
+    param(
+        $Device,
+        $SST_InfoType,
+        $SST_Customer,
+        $SST_AdditionalInformation,
+        [object]$ReadDBFunc
+    )
+    
+    $FunResult = & $ReadDBFunc -SST_InfoType $SST_InfoType -SST_Customer $SST_Customer -SST_NeededInformations $SST_AdditionalInformation
+    $DeviceIdent = [DeviceToggle]::new()
+    $DeviceIdent.Id = "DeviceBlock$($Device.ID)"
+    $DeviceIdent.Label = if ([string]::IsNullOrWhiteSpace([string]$LabelName)) { "$($Device.IPAddress)" } else { "$LabelName" }
+    $DeviceIdent.IsChecked = $false
+
+    return @{ DeviceIdent = $DeviceIdent; FuncResult = $FunResult }
+}
 #c&p need for doubel view, is a bit diff as New-devBlock
 function RestThenSshForCombiView {
     param(
