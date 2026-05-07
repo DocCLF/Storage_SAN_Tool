@@ -106,6 +106,15 @@ public class DeviceToggle : INotifyPropertyChanged
     public ObservableCollection<object> BackUpInfoRows { get; } = new ObservableCollection<object>();
     public ObservableCollection<object> LicenseInfoRows { get; } = new ObservableCollection<object>();
     public ObservableCollection<object> SensorShowRows { get; } = new ObservableCollection<object>();
+    // === DG Tape ===
+    public ObservableCollection<object> LibraryBaseRows { get; } = new ObservableCollection<object>();
+    public ObservableCollection<object> LibraryEventsRows { get; } = new ObservableCollection<object>();
+    public ObservableCollection<object> LibraryReportsRows { get; } = new ObservableCollection<object>();
+    public ObservableCollection<object> LibraryMediaRows { get; } = new ObservableCollection<object>();
+    public ObservableCollection<object> LibraryDriveRows { get; } = new ObservableCollection<object>();
+    public ObservableCollection<object> LibraryInventorySlotsRows { get; } = new ObservableCollection<object>();
+    public ObservableCollection<object> LibraryInventoryDrivesRows { get; } = new ObservableCollection<object>();
+
 
     // === NEU: Headline + Text für Lösung 1 ===
     private string _sensorShowTitle;
