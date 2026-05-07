@@ -2,7 +2,7 @@ function SST_CustomerLibraryDBReadTable {
     [CmdletBinding()]
     param (
         [Parameter(ValueFromPipeline)]
-        [ValidateSet("GetLibrarySerialNumberMTM")]
+        [ValidateSet("GetLibrarySerialNumberMTM","LibraryInventorySlots","LibraryInventoryDrives","LibraryBaseInfo","LibraryDrive","LibraryEvents","LibraryReports","LibraryMediaInfo")]
         [string]$SST_InfoType,
         $SST_NeededInformations,
         $SST_Customer,
@@ -44,8 +44,51 @@ function SST_CustomerLibraryDBReadTable {
                     $result = $SQLiteCommand.ExecuteScalar()
                     return $result
                 }
+                "LibraryBaseInfo" {
+                    $SQLiteCommand.CommandText = "SELECT * FROM LibraryBaseInfo WHERE SerialNumberMTM = @SerialNumberMTM AND TimeStamp = (SELECT MAX(TimeStamp) FROM LibraryBaseInfo WHERE SerialNumberMTM = @SerialNumberMTM);"
+                }
+                "LibraryEvents" {
+                    $SQLiteCommand.CommandText = "SELECT * FROM LibraryEvents WHERE SerialNumberMTM = @SerialNumberMTM AND TimeStamp = (SELECT MAX(TimeStamp) FROM LibraryEvents WHERE SerialNumberMTM = @SerialNumberMTM);"
+                }
+                "LibraryDrive" {
+                    $SQLiteCommand.CommandText = "SELECT * FROM LibraryDrive WHERE SerialNumberMTM = @SerialNumberMTM AND TimeStamp = (SELECT MAX(TimeStamp) FROM LibraryDrive WHERE SerialNumberMTM = @SerialNumberMTM);"
+                }
+                "LibraryReports" {
+                    $SQLiteCommand.CommandText = "SELECT * FROM LibraryReports WHERE SerialNumberMTM = @SerialNumberMTM AND TimeStamp = (SELECT MAX(TimeStamp) FROM LibraryReports WHERE SerialNumberMTM = @SerialNumberMTM);"
+                }
+                "LibraryMediaInfo" {
+                    $SQLiteCommand.CommandText = "SELECT * FROM LibraryMediaInfo WHERE SerialNumberMTM = @SerialNumberMTM AND TimeStamp = (SELECT MAX(TimeStamp) FROM LibraryMediaInfo WHERE SerialNumberMTM = @SerialNumberMTM);"
+                }
+                "LibraryInventorySlots" {
+                    $SQLiteCommand.CommandText = "SELECT * FROM LibraryInventorySlots WHERE SerialNumberMTM = @SerialNumberMTM AND TimeStamp = (SELECT MAX(TimeStamp) FROM LibraryInventorySlots WHERE SerialNumberMTM = @SerialNumberMTM);"
+                }
+                "LibraryInventoryDrives" {
+                    $SQLiteCommand.CommandText = "SELECT * FROM LibraryInventoryDrives WHERE SerialNumberMTM = @SerialNumberMTM AND TimeStamp = (SELECT MAX(TimeStamp) FROM LibraryInventoryDrives WHERE SerialNumberMTM = @SerialNumberMTM);"
+                }
                 Default {}
             }
+
+            # Parameter
+            $SQLiteCommand.Parameters.Clear()
+            $SQLiteCommand.Parameters.AddWithValue("@SerialNumberMTM", $SST_NeededInformations) | Out-Null
+            #$SQLiteCommand.Parameters.AddWithValue("@Top", $Top) | Out-Null # wenn man die Ausgabe beschränken möchte!
+
+            $reader = $SQLiteCommand.ExecuteReader()
+            $result = while ($reader.Read()) {
+                $row = [ordered]@{}
+                for ($i = 0; $i -lt $reader.FieldCount; $i++) {
+                    $columnName = $reader.GetName($i)
+                    if ($reader.IsDBNull($i)) {
+                        $row[$columnName] = $null
+                    }
+                    else {
+                        $row[$columnName] = $reader.GetValue($i)
+                    }
+                }
+                [PSCustomObject]$row
+            }
+            $reader.Close()
+            return $result
 
         }
         catch {
