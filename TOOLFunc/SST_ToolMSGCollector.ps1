@@ -15,6 +15,7 @@ function SST_ToolMessageCollector {
     #>
     [CmdletBinding()]
     param (
+        [Parameter(ValueFromPipeline,HelpMessage="Here you can enter the message you want to be displayed.")]
         $TD_ToolMSGCollector,
         [Parameter(ValueFromPipeline,HelpMessage="Enter Error, Warning or Message to be able to categorize the message correctly in the GUI and in the log files.")]
         [ValidateSet("Error","Warning","Message","Debug")]
