@@ -32,6 +32,7 @@ $StyleFiles = @(
     "$PSRootPath\Resources\Styles\ViewSTOVisibilityStyles.xaml"
     "$PSRootPath\Resources\Styles\ViewSANVisibilityStyles.xaml"
     "$PSRootPath\Resources\Styles\ViewPWRVisibilityStyles.xaml"
+    "$PSRootPath\Resources\Styles\ViewTapeVisibilityStyles.xaml"
 )
 $global:LoadedStyles = @()
 foreach ($file in $styleFiles) {
@@ -439,6 +440,9 @@ $TD_CB_CustomerYN.Add_Checked({
     if (((Get-ChildItem "$PSRootPath\Resources\DBFolder\*" -Filter "*.db").count -ge 1)) {
         $TD_BTN_ActivateDB.Visibility = "Collapsed"
     }
+    if((-not $TD_UserControl_Dash.IsLoaded)-and($TD_UserControl_CustomerBoard.IsLoaded)){
+        $TD_UserContrArea.Children.Add($TD_UserControl_Dash)
+    }
 })
 $TD_CB_CustomerYN.Add_Unchecked({
     $TD_TB_CustomerInfoName.IsEnabled = $true
@@ -611,7 +615,10 @@ SST_ToolMessageCollector -TD_ToolMSGCollector "Load PRISM done" -TD_ToolMSGType 
 #endregion
 #region DashBoard
 $TD_BTN_RefreshDashBoard.add_click({
-    #SST_DashBoardRefreshData
+    $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource
+    SST_DashBoardRefreshData -Device $TD_Credentials -ExportPath $TD_TB_ExportPath.Text
+    $CustomerDBDashBoard = $(Get-ChildItem "$PSRootPath\Resources\DBFolder\*" -Filter "$($TD_TB_CustomerInfoName.Text).db").BaseName
+    SST_DashBoardMain -MainPath $PSRootPath -SST_UCOBJ $TD_UserControl_Dash -FoundLocalDB $CustomerDBDashBoard
 })
 #endregion
 #endregion
@@ -1338,6 +1345,8 @@ $TD_BTN_FOS_SensorShow.add_click({
 #endregion
 #region IBM Power
 $TD_BTN_PWR_HMCInfo.add_click({
+    $TD_GBPWRHMCInfo.Visibility = "Visible"
+    $TD_GBPWRLPARSum,$TD_GBPWRManagSysInfo | ForEach-Object {$_.Visibility = "Collapsed"}
     $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource | Where-Object { $_.DeviceTyp -eq "PowerHMC" }
 
     $UCDataContext = $TD_UserControl_PWR.DataContext
@@ -1379,6 +1388,8 @@ $TD_BTN_PWR_HMCInfo.add_click({
     $UCVMMain.SelectedView = "HMC"
 })
 $TD_BTN_PWR_ManagedSystemInfo.add_click({
+    $TD_GBPWRManagSysInfo.Visibility = "Visible"
+    $TD_GBPWRHMCInfo,$TD_GBPWRLPARSum | ForEach-Object {$_.Visibility = "Collapsed"}
     $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource | Where-Object { $_.DeviceTyp -eq "PowerHMC" }
 
     $UCDataContext = $TD_UserControl_PWR.DataContext
@@ -1414,7 +1425,8 @@ $TD_BTN_PWR_ManagedSystemInfo.add_click({
     $UCVMMain.SelectedView = "ManagedSystem"
 })
 $TD_BTN_PWR_LparSummary.add_click({
-
+    $TD_GBPWRLPARSum.Visibility = "Visible"
+    $TD_GBPWRHMCInfo,$TD_GBPWRManagSysInfo | ForEach-Object {$_.Visibility = "Collapsed"}
     # 1) Geräte holen (wie beim HMC-Button)
     $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource | Where-Object { $_.DeviceTyp -eq "PowerHMC" }
 
@@ -1428,7 +1440,7 @@ $TD_BTN_PWR_LparSummary.add_click({
     foreach($TD_Creds in $TD_Credentials){
 
         # 3) REST Call über dein Standard-Pattern
-        $FunctionResult = New-DeviceBlock -Device $TD_Creds -ExportPath $TD_TB_ExportPath.Text -RESTFunc HMC_RESTHMCLogicalPartitions
+        #$FunctionResult = New-DeviceBlock -Device $TD_Creds -ExportPath $TD_TB_ExportPath.Text -RESTFunc HMC_RESTHMCLogicalPartitions
 
         # 4) Collection für GUI sicherstellen (ObservableCollection)
         #if (-not $FunctionResult.DeviceIdent.LparRows) {
@@ -1466,19 +1478,30 @@ $TD_BTN_PWR_LparSummary.add_click({
     # 7) View umschalten (Name muss zu deinem UI passen!)
     $UCVMMain.SelectedView = "LPARs"
 })
+$TD_BTN_PWR_ShowAll.add_click({
+    $TD_GBPWRHMCInfo,$TD_GBPWRManagSysInfo,$TD_GBPWRLPARSum | ForEach-Object {$_.Visibility = "Visible"}
+})
 #endregion
 #region IBM Tape
 $TD_BTN_IBM_TapeLibrary.add_click({
+    $CustomerNumber = $TD_TB_CustomerInfoName.Text
     <#Get all Device Cred and count them #>
     $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_.DeviceTyp -like "*Tape"}
+    <# get the DataConteext of the current View/ means UC and if its nul trow an error #>
+    $UCDataContext = $TD_UserControl_IBMTape.DataContext
+    if (-not $UCDataContext) { Write-Host "DataContext ist NULL!" -ForegroundColor Red; return }
+    <# if there is a DataContext find th Main Part und put it into UCVMMain#>
+    $UCVMMain = $UCDataContext.Main
+    <# if there a something in, its better to clean it up befor we use it again #>
+    $UCVMMain.DeviceToggles.Clear()
     foreach($TD_Creds in $TD_Credentials){
         $LibBaseInfo = $null; $LibApiVersion = $null;$LibInfo=$null
         try{
-        $LibBaseInfo = Invoke_IBMTapeLibraryApi -Device $TD_Creds -Endpoint 'library/baseinfo'
-        $LibInfo = Invoke_IBMTapeLibraryApi -Device $TD_Creds -Endpoint 'library'
-        $LibApiVersion = Invoke_IBMTapeLibraryApi -Device $TD_Creds -Endpoint 'apiversion'
+            $LibBaseInfo = Invoke_IBMTapeLibraryApi -Device $TD_Creds -Endpoint 'library/baseinfo'
+            $LibInfo = Invoke_IBMTapeLibraryApi -Device $TD_Creds -Endpoint 'library'
+            $LibApiVersion = Invoke_IBMTapeLibraryApi -Device $TD_Creds -Endpoint 'apiversion'
         }catch{
-        Write-Host $_.Exception.Message
+            Write-Host $_.Exception.Message
         }
         try {
             $MergeLibObj = Merge-PSCustomObject -InputObject @($($LibBaseInfo.BaseInfo), $LibInfo)
@@ -1488,28 +1511,125 @@ $TD_BTN_IBM_TapeLibrary.add_click({
             <#Do this if a terminating exception happens#>
             Write-Host $_.Exception.Message
         }
+        $FunctionResult = ReadDBandBuildDB -Device $TD_Creds -ReadDBFunc SST_CustomerLibraryDBReadTable -SST_InfoType "LibraryBaseInfo" -SST_Customer $CustomerNumber -SST_AdditionalInformation $($LibInfo.sn)
+        $mapLibraryBaseInfo = @{ 
+            ProductID           = 'ProductID'
+            MTM                 = 'MTM'
+            SerialNumber        = 'SerialNumber'
+            Status	            = 'Status'
+            BaseFWRevision      = 'BaseFWRevision'
+            LicensedCapacity    = 'LicensedCapacity'
+            TotalCapacity       = 'TotalCapacity'
+            AssignedCartridges  = 'AssignedCartridges'
+            ExpansionFWRevision = 'ExpansionFWRevision'
+            RoboticHWRevision   = 'RoboticHWRevision'
+            RoboticFWRevision   = 'RoboticFWRevision'
+            RoboticSerialNumber = 'RoboticSerialNumber'
+            NoOfModules         = 'NoOfModules'
+            SecureCommunications= 'SecureCommunications'
+        }
+        Add-MappedRows -Collection $FunctionResult.DeviceIdent.LibraryBaseRows -Source $FunctionResult.FuncResult -IdProperty 'SerialNumberMTM' -Map $mapLibraryBaseInfo
+
+        $UCVMMain.DeviceToggles.Add($FunctionResult.DeviceIdent)
     }
+    $UCVMMain.SelectedView = "TapeLibraryShow"
 })
-$TD_BTN_IBM_TapeInventory.add_click({
+$TD_BTN_IBM_TapeInventoryDrives.add_click({
+    $CustomerNumber = $TD_TB_CustomerInfoName.Text
     <#Get all Device Cred and count them #>
     $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_.DeviceTyp -like "*Tape"}
+    <# get the DataConteext of the current View/ means UC and if its nul trow an error #>
+    $UCDataContext = $TD_UserControl_IBMTape.DataContext
+    if (-not $UCDataContext) { Write-Host "DataContext ist NULL!" -ForegroundColor Red; return }
+    <# if there is a DataContext find th Main Part und put it into UCVMMain#>
+    $UCVMMain = $UCDataContext.Main
+    <# if there a something in, its better to clean it up befor we use it again #>
+    $UCVMMain.DeviceToggles.Clear()
     foreach($TD_Creds in $TD_Credentials){
-        $LibInventory = $null
-        $LibInventory = Invoke_IBMTapeLibraryApi -Device $TD_Creds -Endpoint 'library/inventory'
+        $LibInventoryDrives = $null
+        $LibInventoryDrives = Invoke_IBMTapeLibraryApi -Device $TD_Creds -Endpoint 'library/inventory'
         try {
             $LibrarySerialNumberMTM = SST_CustomerLibraryDBReadTable -SST_InfoType "GetLibrarySerialNumberMTM" -SST_Customer $($TD_TB_CustomerInfoName.Text) -SST_NeededInformations $($TD_Creds.TapeWWNN)
-            SST_CustomerLibraryDBInsertTable -SST_InfoType "LibraryInventorySlots" -SST_CollectedInformations $($LibInventory.Slots) -SST_NeededInformations $LibrarySerialNumberMTM
-            SST_CustomerLibraryDBInsertTable -SST_InfoType "LibraryInventoryDrives" -SST_CollectedInformations $($LibInventory.Drives) -SST_NeededInformations $LibrarySerialNumberMTM
+            SST_CustomerLibraryDBInsertTable -SST_InfoType "LibraryInventoryDrives" -SST_CollectedInformations $($LibInventoryDrives.Drives) -SST_NeededInformations $LibrarySerialNumberMTM
         }
         catch {
             <#Do this if a terminating exception happens#>
             Write-Verbose $_.Exception.Message
         }
+        $FunctionResult = ReadDBandBuildDB -Device $TD_Creds -ReadDBFunc SST_CustomerLibraryDBReadTable -SST_InfoType "LibraryInventoryDrives" -SST_Customer $CustomerNumber -SST_AdditionalInformation $LibrarySerialNumberMTM
+        
+        $mapLibraryInventoryDrives = @{ 
+            PhysicalNumber  = 'PhysicalNumber'
+            LogicalNumber   = 'LogicalNumber'
+            Module          = 'Module'
+            LogicalLibrary  = 'LogicalLibrary'
+            Barcode         = 'Barcode'
+            Vendor          = 'Vendor'
+            Product         = 'Product'
+            FWRevision      = 'FWRevision'
+            SerialNumber    = 'SerialNumber'
+        }
+        Add-MappedRows -Collection $FunctionResult.DeviceIdent.LibraryInventoryDrivesRows -Source $FunctionResult.FuncResult -IdProperty 'SerialNumberMTM' -Map $mapLibraryInventoryDrives
+
+        $UCVMMain.DeviceToggles.Add($FunctionResult.DeviceIdent)
     }
+    $UCVMMain.SelectedView = "LibraryInventoryDrivesShow"
 })
-$TD_BTN_IBM_TapeDrive.add_click({
+$TD_BTN_IBM_TapeInventorySlots.add_click({
+    $CustomerNumber = $TD_TB_CustomerInfoName.Text
     <#Get all Device Cred and count them #>
     $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_.DeviceTyp -like "*Tape"}
+    <# get the DataConteext of the current View/ means UC and if its nul trow an error #>
+    $UCDataContext = $TD_UserControl_IBMTape.DataContext
+    if (-not $UCDataContext) { Write-Host "DataContext ist NULL!" -ForegroundColor Red; return }
+    <# if there is a DataContext find th Main Part und put it into UCVMMain#>
+    $UCVMMain = $UCDataContext.Main
+    <# if there a something in, its better to clean it up befor we use it again #>
+    $UCVMMain.DeviceToggles.Clear()
+    foreach($TD_Creds in $TD_Credentials){
+        $LibInventorySlots = $null
+        $LibInventorySlots = Invoke_IBMTapeLibraryApi -Device $TD_Creds -Endpoint 'logicalLibrary/information'    
+        try {
+            $LibrarySerialNumberMTM = SST_CustomerLibraryDBReadTable -SST_InfoType "GetLibrarySerialNumberMTM" -SST_Customer $($TD_TB_CustomerInfoName.Text) -SST_NeededInformations $($TD_Creds.TapeWWNN)
+            SST_CustomerLibraryDBInsertTable -SST_InfoType "LibraryInventorySlots" -SST_CollectedInformations $($LibInventorySlots.Slots) -SST_NeededInformations $LibrarySerialNumberMTM
+        }
+        catch {
+            <#Do this if a terminating exception happens#>
+            Write-Verbose $_.Exception.Message
+        }
+
+        $FunctionResult = ReadDBandBuildDB -Device $TD_Creds -ReadDBFunc SST_CustomerLibraryDBReadTable -SST_InfoType "LibraryInventorySlots" -SST_Customer $CustomerNumber -SST_AdditionalInformation $LibrarySerialNumberMTM
+        
+        $mapLibraryInventorySlots = @{ 
+            PhysicalNumber  = 'PhysicalNumber'
+            LogicalNumber   = 'LogicalNumber'
+            Module          = 'Module'
+            LogicalLibrary  = 'LogicalLibrary'
+            Mailslot        = 'Mailslot'
+            Cartridge       = 'Cartridge'
+            CartridgeType   = 'CartridgeType'
+            CartridgeSubType    = 'CartridgeSubType'
+            CartridgeGeneration = 'CartridgeGeneration'
+            Access          = 'Access'
+            Blocked         = 'Blocked'
+        }
+        Add-MappedRows -Collection $FunctionResult.DeviceIdent.LibraryInventorySlotsRows -Source $FunctionResult.FuncResult -IdProperty 'SerialNumberMTM' -Map $mapLibraryInventorySlots
+
+        $UCVMMain.DeviceToggles.Add($FunctionResult.DeviceIdent)
+    }
+    $UCVMMain.SelectedView = "LibraryInventorySlotsShow"
+})
+$TD_BTN_IBM_TapeDrive.add_click({
+    $CustomerNumber = $TD_TB_CustomerInfoName.Text
+    <#Get all Device Cred and count them #>
+    $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_.DeviceTyp -like "*Tape"}
+    <# get the DataConteext of the current View/ means UC and if its nul trow an error #>
+    $UCDataContext = $TD_UserControl_IBMTape.DataContext
+    if (-not $UCDataContext) { Write-Host "DataContext ist NULL!" -ForegroundColor Red; return }
+    <# if there is a DataContext find th Main Part und put it into UCVMMain#>
+    $UCVMMain = $UCDataContext.Main
+    <# if there a something in, its better to clean it up befor we use it again #>
+    $UCVMMain.DeviceToggles.Clear()
     foreach($TD_Creds in $TD_Credentials){
         $LibDrives = $null; $LibDriveInfo=$null
         $LibDrives = Invoke_IBMTapeLibraryApi -Device $TD_Creds -Endpoint 'drive'
@@ -1558,27 +1678,57 @@ $TD_BTN_IBM_TapeDrive.add_click({
             <#Do this if a terminating exception happens#>
             Write-Verbose $_.Exception.Message
         }
-    }
-})
-$TD_BTN_IBM_TapeLogicalLib.add_click({
-    <#Get all Device Cred and count them #>
-    $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_.DeviceTyp -like "*Tape"}
-    foreach($TD_Creds in $TD_Credentials){
-        $LogicalLibraryInfo = $null
-        $LogicalLibraryInfo = Invoke_IBMTapeLibraryApi -Device $TD_Creds -Endpoint 'logicalLibrary/information'    
-        try {
-            $LibrarySerialNumberMTM = SST_CustomerLibraryDBReadTable -SST_InfoType "GetLibrarySerialNumberMTM" -SST_Customer $($TD_TB_CustomerInfoName.Text) -SST_NeededInformations $($TD_Creds.TapeWWNN)
-            SST_CustomerLibraryDBInsertTable -SST_InfoType "LogicalLibraryInfo" -SST_CollectedInformations $LogicalLibraryInfo -SST_NeededInformations $LibrarySerialNumberMTM
+
+        $FunctionResult = ReadDBandBuildDB -Device $TD_Creds -ReadDBFunc SST_CustomerLibraryDBReadTable -SST_InfoType "LibraryDrive" -SST_Customer $CustomerNumber -SST_AdditionalInformation $LibrarySerialNumberMTM
+
+        $mapLibraryDrive = @{ 
+            Location        = 'Location'
+            SerialNumber    = 'SerialNumber'
+            MFGSerialNumber = 'MFGSerialNumber'
+            MediaType       = 'MediaType'
+            State           = 'State'
+            LogicalLibrary  = 'LogicalLibrary'
+            Firmware        = 'Firmware'
+            Encryption      = 'Encryption'
+            Mounts          = 'Mounts'
+            Barcode         = 'Barcode'
+            WWNN            = 'WWNN'
         }
-        catch {
-            <#Do this if a terminating exception happens#>
-            Write-Verbose $_.Exception.Message
-        }
+        Add-MappedRows -Collection $FunctionResult.DeviceIdent.LibraryDriveRows -Source $FunctionResult.FuncResult -IdProperty 'SerialNumberMTM' -Map $mapLibraryDrive
+
+        $UCVMMain.DeviceToggles.Add($FunctionResult.DeviceIdent)
     }
+    $UCVMMain.SelectedView = "LibraryDriveShow"
 })
+<# not needed at first time but maybe later#>
+#$TD_BTN_IBM_TapeLogicalLib.add_click({
+#    <#Get all Device Cred and count them #>
+#    $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_.DeviceTyp -like "*Tape"}
+#    foreach($TD_Creds in $TD_Credentials){
+#        $LogicalLibraryInfo = $null
+#        $LogicalLibraryInfo = Invoke_IBMTapeLibraryApi -Device $TD_Creds -Endpoint 'logicalLibrary/information'    
+#        try {
+#            $LibrarySerialNumberMTM = SST_CustomerLibraryDBReadTable -SST_InfoType "GetLibrarySerialNumberMTM" -SST_Customer $($TD_TB_CustomerInfoName.Text) -SST_NeededInformations $($TD_Creds.TapeWWNN)
+#            SST_CustomerLibraryDBInsertTable -SST_InfoType "LogicalLibraryInfo" -SST_CollectedInformations $LogicalLibraryInfo -SST_NeededInformations $LibrarySerialNumberMTM
+#        }
+#        catch {
+#            <#Do this if a terminating exception happens#>
+#            Write-Verbose $_.Exception.Message
+#        }
+#    }
+#})
 $TD_BTN_IBM_TapeMediaInfo.add_click({
+    $CustomerNumber = $TD_TB_CustomerInfoName.Text
     <#Get all Device Cred and count them #>
     $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_.DeviceTyp -like "*Tape"}
+    <# get the DataConteext of the current View/ means UC and if its nul trow an error #>
+    $UCDataContext = $TD_UserControl_IBMTape.DataContext
+    if (-not $UCDataContext) { Write-Host "DataContext ist NULL!" -ForegroundColor Red; return }
+    <# if there is a DataContext find th Main Part und put it into UCVMMain#>
+    $UCVMMain = $UCDataContext.Main
+    <# if there a something in, its better to clean it up befor we use it again #>
+    $UCVMMain.DeviceToggles.Clear()
+
     foreach($TD_Creds in $TD_Credentials){
         $LibInfo = $null
         $LibInfo = Invoke_IBMTapeLibraryApi -Device $TD_Creds -Endpoint 'library/mediainfo'    
@@ -1590,11 +1740,41 @@ $TD_BTN_IBM_TapeMediaInfo.add_click({
             <#Do this if a terminating exception happens#>
             Write-Verbose $_.Exception.Message
         }
+
+        $FunctionResult = ReadDBandBuildDB -Device $TD_Creds -ReadDBFunc SST_CustomerLibraryDBReadTable -SST_InfoType "LibraryMediaInfo" -SST_Customer $CustomerNumber -SST_AdditionalInformation $LibrarySerialNumberMTM
+
+        $mapLibraryMediaInfo = @{ 
+            Barcode         = 'Barcode'
+            LocationType    = 'LocationType'
+            LogicalNumber   = 'LogicalNumber'
+            PhysicalNumber  = 'PhysicalNumber'
+            Cleaning        = 'Cleaning'
+            LogicalLibrary  = 'LogicalLibrary'
+            Generation      = 'Generation'
+            SubType         = 'SubType'
+            Protection      = 'Protection'
+            Encryption      = 'Encryption'
+            NoLoads         = 'NoLoads'
+            MBRead          = 'MBRead'
+            MBWritten       = 'MBWritten'
+        }
+        Add-MappedRows -Collection $FunctionResult.DeviceIdent.LibraryMediaRows -Source $FunctionResult.FuncResult -IdProperty 'SerialNumberMTM' -Map $mapLibraryMediaInfo
+
+        $UCVMMain.DeviceToggles.Add($FunctionResult.DeviceIdent)
     }
+    $UCVMMain.SelectedView = "LibraryMediaShow"
 })
 $TD_BTN_IBM_TapeReports.add_click({
+    $CustomerNumber = $TD_TB_CustomerInfoName.Text
     <#Get all Device Cred and count them #>
     $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_.DeviceTyp -like "*Tape"}
+    <# get the DataConteext of the current View/ means UC and if its nul trow an error #>
+    $UCDataContext = $TD_UserControl_IBMTape.DataContext
+    if (-not $UCDataContext) { Write-Host "DataContext ist NULL!" -ForegroundColor Red; return }
+    <# if there is a DataContext find th Main Part und put it into UCVMMain#>
+    $UCVMMain = $UCDataContext.Main
+    <# if there a something in, its better to clean it up befor we use it again #>
+    $UCVMMain.DeviceToggles.Clear()
     foreach($TD_Creds in $TD_Credentials){
         $LibraryReports = $null
         $LibraryReports = Invoke_IBMTapeLibraryApi -Device $TD_Creds -Endpoint 'reports/mountHistory'  
@@ -1606,11 +1786,40 @@ $TD_BTN_IBM_TapeReports.add_click({
             <#Do this if a terminating exception happens#>
             Write-Verbose $_.Exception.Message
         }
+
+        $FunctionResult = ReadDBandBuildDB -Device $TD_Creds -ReadDBFunc SST_CustomerLibraryDBReadTable -SST_InfoType "LibraryReports" -SST_Customer $CustomerNumber -SST_AdditionalInformation $LibrarySerialNumberMTM
+
+        $mapLibraryReports = @{ 
+            Barcode                 = 'Barcode'
+            LogicalLibrary          = 'LogicalLibrary'
+            Location                = 'Location'
+            MountTime	            = 'MountTime'
+            UnmountTime             = 'UnmountTime'
+            HostIOReads             = 'HostIOReads'
+            HostIOWrites            = 'HostIOWrites'
+            CompressionRate         = 'CompressionRate'
+            ErrorsCorrectedWrites   = 'ErrorsCorrectedWrites'
+            ErrorsUncorrectedWrites = 'ErrorsUncorrectedWrites'
+            ErrorsCorrectedReads    = 'ErrorsCorrectedReads'
+            ErrorsUncorrectedReads  = 'ErrorsUncorrectedReads'
+        }
+        Add-MappedRows -Collection $FunctionResult.DeviceIdent.LibraryReportsRows -Source $FunctionResult.FuncResult -IdProperty 'SerialNumberMTM' -Map $mapLibraryReports
+
+        $UCVMMain.DeviceToggles.Add($FunctionResult.DeviceIdent)
     }
+    $UCVMMain.SelectedView = "LibraryReportsShow"
 })
 $TD_BTN_IBM_TapeEvents.add_click({
+    $CustomerNumber = $TD_TB_CustomerInfoName.Text
     <#Get all Device Cred and count them #>
     $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_.DeviceTyp -like "*Tape"}
+    <# get the DataConteext of the current View/ means UC and if its nul trow an error #>
+    $UCDataContext = $TD_UserControl_IBMTape.DataContext
+    if (-not $UCDataContext) { Write-Host "DataContext ist NULL!" -ForegroundColor Red; return }
+    <# if there is a DataContext find th Main Part und put it into UCVMMain#>
+    $UCVMMain = $UCDataContext.Main
+    <# if there a something in, its better to clean it up befor we use it again #>
+    $UCVMMain.DeviceToggles.Clear()
     foreach($TD_Creds in $TD_Credentials){
         $LibraryEvents = $null
         $LibraryEvents = Invoke_IBMTapeLibraryApi -Device $TD_Creds -Endpoint 'events'    
@@ -1622,7 +1831,23 @@ $TD_BTN_IBM_TapeEvents.add_click({
             <#Do this if a terminating exception happens#>
             Write-Verbose $_.Exception.Message
         }
+        
+        $FunctionResult = ReadDBandBuildDB -Device $TD_Creds -ReadDBFunc SST_CustomerLibraryDBReadTable -SST_InfoType "LibraryEvents" -SST_Customer $CustomerNumber -SST_AdditionalInformation $LibrarySerialNumberMTM
+
+        $mapLibraryEvents = @{ 
+            LibID       = 'LibID'
+            Severity    = 'Severity'
+            Type        = 'Type'
+            Location    = 'Location'
+            Description = 'Description'
+            ErrorCode   = 'ErrorCode'
+            EventTime   = 'EventTime'
+        }
+        Add-MappedRows -Collection $FunctionResult.DeviceIdent.LibraryEventsRows -Source $FunctionResult.FuncResult -IdProperty 'SerialNumberMTM' -Map $mapLibraryEvents 
+
+        $UCVMMain.DeviceToggles.Add($FunctionResult.DeviceIdent)
     }
+    $UCVMMain.SelectedView = "TapeLibraryEventsShow"
 })
 #endregion
 #endregion
@@ -1703,6 +1928,7 @@ switch ($CockpitView) {
     }
     Default {SST_ToolMessageCollector -TD_ToolMSGCollector $("Start Tool with Usercontrol $CockpitView ") -TD_ToolMSGType Message -TD_Shown no}
 }
+Get-Variable TD_* |Out-Null
 #region show MainWindow
 $MainWindow.showDialog()
 $MainWindow.activate()
