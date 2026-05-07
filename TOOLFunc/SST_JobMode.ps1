@@ -12,6 +12,7 @@ function SST_JobMode {
         $SecData | ForEach-Object {
             <# Storage Area #>
             if($_.DeviceTyp -like "*Storage*"){
+                $Device = $_
                 <#Basis Storage Infos#>
                 try {
                     Invoke-DeviceDataFetch -Device $Device -ExportPath $ExportPath -RESTFunc IBM_RESTBaseStorageInfos -SSHFunc IBM_SSHBaseStorageInfos  | Out-Null
@@ -42,6 +43,7 @@ function SST_JobMode {
             }
             <# SAN Area #>
             if($_.DeviceTyp -like "*SAN*"){
+                $Device = $_
                 try {
                     Invoke-DeviceDataFetch -Device $Device -ExportPath $ExportPath -RESTFunc IBM_RESTHostInfo -SSHFunc IBM_SSHHostInfo | Out-Null
                 }
