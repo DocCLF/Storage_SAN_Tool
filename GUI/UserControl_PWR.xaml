@@ -30,11 +30,9 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="auto" />
             <RowDefinition Height="auto" />
-            <RowDefinition Height="auto" />
-            <RowDefinition Height="auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        <GroupBox Grid.Column="0" Grid.RowSpan="4" Header="Actions"  HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,10,0,0">
+        <GroupBox Grid.Column="0" Grid.RowSpan="4" Header="Actions" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,10,0,0">
             <StackPanel>
                 <!--PWR_HMCInfo-->
                 <ToggleButton
@@ -54,6 +52,13 @@
                 Style="{DynamicResource MainBtnStyle}"
                 Content="Logical Partition" 
                 ToolTip="Get Logical Partition information"/>
+                <!--PWR_LparSummary-->
+                <ToggleButton
+                x:Name="BTN_PWR_ShowAll"
+                Style="{DynamicResource MainBtnStyle}"
+                Margin="0,20,0,0"
+                Content="Show All Infos" 
+                ToolTip="Show All Infos of the System"/>
             </StackPanel>
         </GroupBox>
         <GroupBox Grid.Column="1" Grid.Row="0" Header="Visibility" Margin="10" >
@@ -85,8 +90,9 @@
                           HorizontalAlignment="Right"/>
             </WrapPanel>
         </GroupBox>
+        <WrapPanel Orientation="Vertical" Grid.Column="1" Grid.Row="1">
         <!-- PWR_HMCInfo -->
-        <GroupBox Grid.Column="1" Grid.Row="1" Header="HMC Info" MinWidth="320" HorizontalAlignment="Left" Margin="10,10,0,0"  VerticalAlignment="Top" >
+        <GroupBox x:Name="GBPWRHMCInfo" Visibility="Collapsed" Grid.Column="1" Grid.Row="1" Header="HMC Info" MinWidth="320" HorizontalAlignment="Left" Margin="10,10,0,0"  VerticalAlignment="Top" >
             <ScrollViewer Margin="5" VerticalScrollBarVisibility="Auto">
             <ItemsControl 
                           ItemsSource="{Binding Main.DeviceToggles}"
@@ -208,7 +214,7 @@
             </ScrollViewer>
         </GroupBox>
         <!-- PWR_ManagedSystemInfo -->
-        <GroupBox Grid.Column="1" Grid.Row="2" Header="Power System Info" MinWidth="820" MaxWidth="1600" HorizontalAlignment="Left" Margin="10,10,0,0"  VerticalAlignment="Top">
+        <GroupBox x:Name="GBPWRManagSysInfo" Visibility="Collapsed" Grid.Column="1" Grid.Row="1" Header="Power System Info" MinWidth="820" MaxWidth="1600" HorizontalAlignment="Left" Margin="10,10,0,0"  VerticalAlignment="Top">
             <ScrollViewer Margin="5" VerticalScrollBarVisibility="Auto">
             <ItemsControl 
                           ItemsSource="{Binding Main.DeviceToggles}"
@@ -412,7 +418,7 @@
             </ScrollViewer>
         </GroupBox>
         <!-- PWR_LparSummary -->
-        <GroupBox Grid.Column="1" Grid.Row="3" Header="LPAR Info" MinWidth="820" MaxWidth="1600" MaxHeight="800" HorizontalAlignment="Left" Margin="10,10,0,0"  VerticalAlignment="Top" >
+        <GroupBox x:Name="GBPWRLPARSum" Visibility="Collapsed" Grid.Column="1" Grid.Row="1" Header="LPAR Info" MinWidth="820" MaxWidth="1600" MaxHeight="800" HorizontalAlignment="Left" Margin="10,10,0,0"  VerticalAlignment="Top" >
             <ScrollViewer Margin="5" VerticalScrollBarVisibility="auto">
             <ItemsControl 
                           ItemsSource="{Binding Main.DeviceToggles}"
@@ -599,6 +605,7 @@
             </ItemsControl>
             </ScrollViewer>
         </GroupBox>
+        </WrapPanel>
     </Grid>
     </ScrollViewer>
 </UserControl>
