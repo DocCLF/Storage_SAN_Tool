@@ -1,4 +1,4 @@
-# Nur einmal pro Session laden
+﻿# Nur einmal pro Session laden
 if (-not ("RootViewModel" -as [type])) {
 
 $cs = @"
@@ -30,6 +30,7 @@ public class RootViewModel : INotifyPropertyChanged
     public string SAN720 { get; set; }
     public string STOIcon { get; set; }
     public string BrocadeIcon { get; set; }
+    public string IBMArchive { get; set; }
 
     private bool _customerYN;
     public bool CustomerYN
@@ -137,6 +138,15 @@ public class DeviceToggle : INotifyPropertyChanged
     private ObservableCollection<object> _managedSystemRows;
     private ObservableCollection<object> _lparRows;
 
+    // === DG Tape ===
+    private ObservableCollection<object> _libraryBaseRows;
+    private ObservableCollection<object> _libraryEventsRows;
+    private ObservableCollection<object> _libraryReportsRows;
+    private ObservableCollection<object> _libraryMediaRows;
+    private ObservableCollection<object> _libraryDriveRows;
+    private ObservableCollection<object> _libraryInventorySlotsRows;
+    private ObservableCollection<object> _libraryInventoryDrivesRows;
+
     // === NEU: DumpInfo ===
     private ObservableCollection<object> _dumpInfoRows;
     private string _dumpInfoTitle;
@@ -173,6 +183,15 @@ public class DeviceToggle : INotifyPropertyChanged
         _hmcRows = new ObservableCollection<object>();
         _managedSystemRows = new ObservableCollection<object>();
         _lparRows = new ObservableCollection<object>();
+
+        // DG Tape
+        _libraryBaseRows = new ObservableCollection<object>();
+        _libraryEventsRows = new ObservableCollection<object>();
+        _libraryReportsRows = new ObservableCollection<object>();
+        _libraryMediaRows = new ObservableCollection<object>();
+        _libraryDriveRows = new ObservableCollection<object>();
+        _libraryInventorySlotsRows = new ObservableCollection<object>();
+        _libraryInventoryDrivesRows = new ObservableCollection<object>();
 
         // NEU
         _dumpInfoRows = new ObservableCollection<object>();
@@ -212,6 +231,14 @@ public class DeviceToggle : INotifyPropertyChanged
     public ObservableCollection<object> HmcRows { get { return _hmcRows; } }
     public ObservableCollection<object> ManagedSystemRows { get { return _managedSystemRows; } }
     public ObservableCollection<object> LparRows { get { return _lparRows; } }
+
+    public ObservableCollection<object> LibraryBaseRows { get { return _libraryBaseRows; } }
+    public ObservableCollection<object> LibraryEventsRows { get { return _libraryEventsRows; } }
+    public ObservableCollection<object> LibraryReportsRows { get { return _libraryReportsRows; } }
+    public ObservableCollection<object> LibraryMediaRows { get { return _libraryMediaRows; } }
+    public ObservableCollection<object> LibraryDriveRows { get { return _libraryDriveRows; } }
+    public ObservableCollection<object> LibraryInventorySlotsRows { get { return _libraryInventorySlotsRows; } }
+    public ObservableCollection<object> LibraryInventoryDrivesRows { get { return _libraryInventoryDrivesRows; } }
 
     public ObservableCollection<object> DumpInfoRows { get { return _dumpInfoRows; } }
     public ObservableCollection<object> BackUpInfoRows { get { return _backUpInfoRows; } }
