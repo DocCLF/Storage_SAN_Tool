@@ -79,4 +79,16 @@ function SST_DashBoardMain {
             SST_ToolMessageCollector -TD_ToolMSGCollector "There is something wrong, mybe there is no IBMSTOHostTable Table" -TD_ToolMSGType Warning -TD_Shown yes
         }
         #endregion
+        #region TapeLibrary
+        try {
+            $SST_SQLiteSTODashBoardQuery = $null
+            $SST_SQLiteSTODashBoardQuery = "SELECT * FROM LibraryBaseInfo t1 WHERE ID = (SELECT MAX(t2.ID) FROM LibraryBaseInfo t2 WHERE t2.SerialNumberMTM = t1.SerialNumberMTM);"
+            SST_DashBoardTape -Query $SST_SQLiteSTODashBoardQuery -SQLConnection $SQLiteDBConnection
+            #$SST_SQLiteDBReader.Close() 
+        }
+        catch {
+            Write-Host $_.Exception.Message
+            SST_ToolMessageCollector -TD_ToolMSGCollector "There is something wrong, mybe there is no IBMSTOHostTable Table" -TD_ToolMSGType Warning -TD_Shown yes
+        }
+        #endregion
 }
