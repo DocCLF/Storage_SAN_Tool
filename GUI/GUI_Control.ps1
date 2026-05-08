@@ -69,7 +69,7 @@ $ViewModel.HMCIcon = "$PSRootPath\Resources\Icons\HMCicon.png"
 $ViewModel.PowerIcon = "$PSRootPath\Resources\Icons\powericon01.png"
 $ViewModel.ClockIcon96 = "$PSRootPath\Resources\Icons\icons8-clock-96.png"
 $ViewModel.SAN720 = "$PSRootPath\SAN\Brocade\IMG\switchG720.png"
-
+$ViewModel.IBMArchive = "$PSRootPath\Resources\Icons\ibmarchive.png"
 
 $ViewModel.CustomerYN    = $true
 
@@ -122,6 +122,16 @@ foreach($file in $UserCxamlFile){
     # --------------------------
     Set-Variable -Name "TD_$fileName" -Value $TD_UserControl 
 }
+#region Global DataGrid Search
+#. "$PSRootPath\ToolFunc\SST_SearchFuncs.ps1"
+
+foreach ($uc in $TD_AllUserControls) {
+    $searchBox = $uc.FindName("TB_GlobalGridSearch")
+    if ($null -ne $searchBox) {
+        Initialize-GlobalDataGridSearch -RootControl $uc -SearchBox $searchBox
+    }
+}
+#endregion
 #endregion
 #region Tool Prep
 <# Default Export Path #>
@@ -183,6 +193,7 @@ $TD_BTN_Dashboard.add_click({
     $TD_LB_ExpPathMainWindow.Content ="Export Path: $($TD_TB_ExportPath.Text)"
     SST_ShowUserControl -MainWindowArea $TD_UserContrArea -ShowUserControl $TD_UserControl_Dash -AllUserControls $TD_AllUserControls
     if($TD_LogoImageSmall.Visibility -eq "hidden"){$TD_LogoImageSmall.Visibility = "visible"}
+    $TD_CB_SelectAllSTOCB.IsChecked = $false
 })
 $TD_BTN_IBMSpectrVirt.add_click({
     $TD_LB_ExpPathMainWindow.Content ="Export Path: $($TD_TB_ExportPath.Text)"
@@ -193,16 +204,19 @@ $TD_BTN_IBMSpectrVirt.add_click({
     $UCVMMain = $UCDataContext.Main
     <# if there a something in, its better to clean it up befor we use it again #>
     $UCVMMain.DeviceToggles.Clear()
+    $TD_CB_SelectAllSTOCB.IsChecked = $false
 })
 $TD_BTN_PowerBoard.add_click({
     $TD_LB_ExpPathMainWindow.Content ="Export Path: $($TD_TB_ExportPath.Text)"
     SST_ShowUserControl -MainWindowArea $TD_UserContrArea -ShowUserControl $TD_UserControl_PWR -AllUserControls $TD_AllUserControls
     if($TD_LogoImageSmall.Visibility -eq "hidden"){$TD_LogoImageSmall.Visibility = "visible"}
+    $TD_CB_SelectAllSTOCB.IsChecked = $false
 })
 $TD_BTN_IBMTape.add_click({
     $TD_LB_ExpPathMainWindow.Content ="Export Path: $($TD_TB_ExportPath.Text)"
     SST_ShowUserControl -MainWindowArea $TD_UserContrArea -ShowUserControl $TD_UserControl_IBMTape -AllUserControls $TD_AllUserControls
     if($TD_LogoImageSmall.Visibility -eq "hidden"){$TD_LogoImageSmall.Visibility = "visible"}
+    $TD_CB_SelectAllSTOCB.IsChecked = $false
 })
 $TD_BTN_BrocSAN.add_click({
     $TD_LB_ExpPathMainWindow.Content ="Export Path: $($TD_TB_ExportPath.Text)"
@@ -213,17 +227,20 @@ $TD_BTN_BrocSAN.add_click({
     $UCVMMain = $UCDataContext.Main
     <# if there a something in, its better to clean it up befor we use it again #>
     $UCVMMain.DeviceToggles.Clear()
+    $TD_CB_SelectAllSTOCB.IsChecked = $false
 })
 $TD_BTN_STOSANHealth.add_click({
     $TD_LB_ExpPathMainWindow.Content ="Export Path: $($TD_TB_ExportPath.Text)"
     SST_ShowUserControl -MainWindowArea $TD_UserContrArea -ShowUserControl $TD_UserControl_Health -AllUserControls $TD_AllUserControls
     SST_MainHealthCheckFunc -SST_UCOBJ $TD_UserControl_Health
     if($TD_LogoImageSmall.Visibility -eq "hidden"){$TD_LogoImageSmall.Visibility = "visible"}
+    $TD_CB_SelectAllSTOCB.IsChecked = $false
 })
 $TD_BTN_CustomerBoard.add_click({
     $TD_LB_ExpPathMainWindow.Content ="Export Path: $($TD_TB_ExportPath.Text)"
     SST_ShowUserControl -MainWindowArea $TD_UserContrArea -ShowUserControl $TD_UserControl_CustomerBoard -AllUserControls $TD_AllUserControls
     if($TD_LogoImageSmall.Visibility -eq "hidden"){$TD_LogoImageSmall.Visibility = "visible"}
+    $TD_CB_SelectAllSTOCB.IsChecked = $false
 })
 $TD_BTN_ToolSettings.add_click({
     $TD_LB_ExpPathMainWindow.Content ="Export Path: $($TD_TB_ExportPath.Text)"
@@ -259,6 +276,7 @@ $TD_BTN_ToolSettings.add_click({
             $e.Handled = -not ($e.Text -match '^\d$')
         })
     }
+    $TD_CB_SelectAllSTOCB.IsChecked = $false
 })
 #endregion
 #region ToolSettingsBTN
