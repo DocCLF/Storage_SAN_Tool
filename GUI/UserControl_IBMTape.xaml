@@ -77,35 +77,47 @@
             </StackPanel>
         </GroupBox> 
         </StackPanel> 
-        <GroupBox Grid.Column="1" Grid.Row="0" Header="Visibility" Margin="10" >
-            <WrapPanel Orientation="Horizontal" ToolTip="klick for visibility" >
-                <!-- Dynamische Checkboxen -->
-                <ItemsControl ItemsSource="{Binding Main.DeviceToggles}">
-                  <ItemsControl.ItemsPanel>
-                    <ItemsPanelTemplate>
-                      <WrapPanel Orientation="Horizontal"/>
-                    </ItemsPanelTemplate>
-                  </ItemsControl.ItemsPanel>
-
-                  <ItemsControl.ItemTemplate>
-                    <DataTemplate>
-                      <CheckBox Content="{Binding Label}"
-                                IsChecked="{Binding IsChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                Style="{DynamicResource MainCheckBoxStyle}"
-                                Margin="2"/>
-                    </DataTemplate>
-                  </ItemsControl.ItemTemplate>
-                </ItemsControl>
-
-                <!-- Select All -->
-                <CheckBox x:Name="CB_SelectAllSTOCB"
-                          Content="Select All"
-                          IsChecked="{Binding Main.SelectAll, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                          Margin="30,2,2,2"
-                          Style="{DynamicResource MainCheckBoxStyle}"
-                          HorizontalAlignment="Right"/>
-            </WrapPanel>
-        </GroupBox>
+        <WrapPanel Grid.Column="1" Grid.Row="0" >
+            <GroupBox Header="Visibility" Margin="10" >
+                <WrapPanel Orientation="Horizontal" ToolTip="klick for visibility" >
+                    <!-- Dynamische Checkboxen -->
+                    <ItemsControl ItemsSource="{Binding Main.DeviceToggles}">
+                      <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                          <WrapPanel Orientation="Horizontal"/>
+                        </ItemsPanelTemplate>
+                      </ItemsControl.ItemsPanel>
+    
+                      <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                          <CheckBox Content="{Binding Label}"
+                                    IsChecked="{Binding IsChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                    Style="{DynamicResource MainCheckBoxStyle}"
+                                    Margin="2"/>
+                        </DataTemplate>
+                      </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+    
+                    <!-- Select All -->
+                    <CheckBox x:Name="CB_SelectAllSTOCB"
+                              Content="Select All"
+                              IsChecked="{Binding Main.SelectAll, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                              Margin="30,2,2,2"
+                              Style="{DynamicResource MainCheckBoxStyle}"
+                              HorizontalAlignment="Right"/>
+                </WrapPanel>
+            </GroupBox>
+            <GroupBox Header="Filter / Suche" Margin="10">
+                <DockPanel>
+                    <Label Content="Suche:" Margin="0,0,6,0" VerticalAlignment="Center" Style="{DynamicResource MainLabelStyle}"/>
+                    <TextBox x:Name="TB_GlobalGridSearch"
+                    Width="300"
+                    Tag="Global Search"
+                    ToolTip="Sucht über alle geladenen DataGrids und alle Row-Properties"
+                    Style="{DynamicResource TBAZWaterMarkStyle}"/>
+                </DockPanel>
+            </GroupBox>
+        </WrapPanel>
         <!-- TapeLibraryBase -->
           <ItemsControl Grid.Column="1" Grid.Row="1"
                         ItemsSource="{Binding Main.DeviceToggles}"
