@@ -16,6 +16,8 @@ public class RootViewModel : INotifyPropertyChanged
     public string SAN720 { get; set; }
     public string STOIcon { get; set; }
     public string BrocadeIcon { get; set; }
+    public string IBMArchive { get; set; }
+    
 
     private bool _customerYN;
     public bool CustomerYN
