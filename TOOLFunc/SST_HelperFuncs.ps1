@@ -109,7 +109,7 @@ function New-DeviceBlock {
 
     return @{ DeviceIdent = $DeviceIdent; FuncResult = $FunResult }
 }
-
+# Helper Func for Reaad DB in GUi.ps1 Tape Area
 function ReadDBandBuildDB{
     param(
         $Device,
