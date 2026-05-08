@@ -107,6 +107,7 @@
             <CheckBox x:Name="CB_DashBoardSTO" Content="View Storages" IsChecked="True" Margin="2" FontSize="10" Style="{DynamicResource MainCheckBoxStyle}"/>
             <CheckBox x:Name="CB_DashBoardSAN" Content="View SAN-Switches" IsChecked="True" Margin="10,2,0,2" FontSize="10" Style="{DynamicResource MainCheckBoxStyle}"/>
             <CheckBox x:Name="CB_DashBoardPWR" Content="View PowerServer" IsChecked="True" Margin="10,2,0,2"  FontSize="10" Style="{DynamicResource MainCheckBoxStyle}"/>
+            <CheckBox x:Name="CB_DashBoardTape" Content="View TapeLibrary" IsChecked="True" Margin="10,2,0,2"  FontSize="10" Style="{DynamicResource MainCheckBoxStyle}"/>
         </StackPanel>
         <GroupBox Grid.Row="2" Header="Storage Info" MinWidth="400" MaxHeight="340" HorizontalAlignment="Left" Margin="10,10,0,0"  VerticalAlignment="Top" Visibility="{Binding ElementName=CB_DashBoardSTO, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
             <ScrollViewer Margin="5" VerticalScrollBarVisibility="Auto">
@@ -608,14 +609,6 @@
                                         </StackPanel>
                                     </Grid>
                                 </Grid>
-                                <Button.ToolTip>
-                                    <ToolTip>
-                                    <StackPanel>
-                                        <TextBlock Text="{Binding Name}"/>
-                                        <TextBlock Text="{Binding CodeLevelLVInfo}"/>
-                                    </StackPanel>
-                                    </ToolTip>
-                                </Button.ToolTip>
                             </Button>
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
@@ -627,11 +620,160 @@
                 </ItemsControl>
             </ScrollViewer>
         </GroupBox>
-        <StackPanel Grid.Row="5" Margin="10,10,0,5" Orientation="Horizontal">
+        <GroupBox Grid.Row="5" Header="Tape Info" MinWidth="400" MaxHeight="340" HorizontalAlignment="Left" Margin="10,10,0,0"  VerticalAlignment="Top" Visibility="{Binding ElementName=CB_DashBoardTape, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
+            <ScrollViewer Margin="5" VerticalScrollBarVisibility="Auto">
+                <ItemsControl x:Name="IC_DashBoardTapeDevice">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Button Style="{DynamicResource DashBoardBTNStyle}" Margin="0,5,5,5" MaxWidth="500" IsEnabled="True" ToolTipService.InitialShowDelay="10">
+                                <Grid Margin="5">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition MaxHeight="150"/>
+                                        <RowDefinition Height="20"/>
+                                    </Grid.RowDefinitions>
+                                    <Grid Grid.Row="0">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition />
+                                            <RowDefinition />
+                                            <RowDefinition />
+                                            <RowDefinition />
+                                            <RowDefinition />
+                                            <RowDefinition />
+                                            <RowDefinition />
+                                        </Grid.RowDefinitions>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition MaxWidth="90" />
+                                            <ColumnDefinition Width="auto"/>
+                                            <ColumnDefinition />
+                                        </Grid.ColumnDefinitions>
+                                        <Ellipse Grid.RowSpan="6" Width="65" Height="65" Fill="WhiteSmoke" Stretch="Uniform" Margin="5,0,10,0">
+                                            <Ellipse.Effect>
+                                                <DropShadowEffect Direction="320" ShadowDepth="2" Color="LightBlue" BlurRadius="5" />
+                                            </Ellipse.Effect>
+                                        </Ellipse>
+                                        <Ellipse Grid.RowSpan="6" Width="60" Height="60" Margin="5,0,10,0">
+                                           <Ellipse.Fill>
+                                               <ImageBrush ImageSource = "{Binding DataContext.IBMArchive, RelativeSource={RelativeSource AncestorType=UserControl}}" Stretch="Uniform" />
+                                           </Ellipse.Fill>
+                                        </Ellipse>
+                                        <TextBlock
+                                            Grid.Column="1"
+                                            Style="{DynamicResource DashBoardTB1}"
+                                            HorizontalAlignment="Left"
+                                            VerticalAlignment="Center"
+                                            Text="MTM:" 
+                                            Margin="3,0"/>
+                                        <TextBlock
+                                            Grid.Column="2"
+                                            Style="{DynamicResource DashBoardTB1}"
+                                            HorizontalAlignment="Left"
+                                            VerticalAlignment="Center"
+                                            Text="{Binding MTM}"
+                                            Margin="0"/>
+                                        <TextBlock
+                                            Grid.Row="1"
+                                            Grid.Column="1"
+                                            Style="{DynamicResource DashBoardTB1}"
+                                            HorizontalAlignment="Left"
+                                            VerticalAlignment="Center"
+                                            Text="SerialNumber:" 
+                                            Margin="3,0"/>
+                                        <TextBlock
+                                            Grid.Row="1"
+                                            Grid.Column="2"
+                                            Style="{DynamicResource DashBoardTB1}"
+                                            Margin="0"
+                                            HorizontalAlignment="Left"
+                                            VerticalAlignment="Center"
+                                            Text="{Binding SerialNumber}"/>
+                                        <TextBlock
+                                            Grid.Row="2"
+                                            Grid.Column="1"
+                                            Style="{DynamicResource DashBoardTB1}"
+                                            HorizontalAlignment="Left"
+                                            VerticalAlignment="Center"
+                                            Text="FW:" 
+                                            Margin="3,0"/>
+                                        <TextBlock
+                                            Grid.Row="2"
+                                            Grid.Column="2"
+                                            Style="{DynamicResource DashBoardTB1}"
+                                            HorizontalAlignment="Left"
+                                            VerticalAlignment="Center"
+                                            Text="{Binding BaseFWRevision}"
+                                            Margin="0"/>
+                                        <TextBlock
+                                            Grid.Row="3"
+                                            Grid.Column="1"
+                                            Style="{DynamicResource DashBoardTB1}"
+                                            HorizontalAlignment="Left"
+                                            VerticalAlignment="Center"
+                                            Text="LicensedCapacity:" 
+                                            Margin="3,0"/>
+                                        <TextBlock
+                                            Grid.Row="3"
+                                            Grid.Column="2"
+                                            Style="{DynamicResource DashBoardTB1}"
+                                            HorizontalAlignment="Left"
+                                            VerticalAlignment="Center"
+                                            Text="{Binding LicensedCapacity}"
+                                            Margin="0"/>
+                                        <TextBlock
+                                            Grid.Row="4"
+                                            Grid.Column="1"
+                                            Style="{DynamicResource DashBoardTB1}"
+                                            HorizontalAlignment="Left"
+                                            VerticalAlignment="Center"
+                                            Text="AssignedCartridges:" 
+                                            Margin="3,0"/>
+                                        <TextBlock
+                                            Grid.Row="4"
+                                            Grid.Column="2"
+                                            Style="{DynamicResource DashBoardTB1}"
+                                            HorizontalAlignment="Left"
+                                            VerticalAlignment="Center"
+                                            Text="{Binding AssignedCartridges}"
+                                            Margin="0"/>
+                                        <TextBlock
+                                            Grid.Row="5"
+                                            Grid.Column="1"
+                                            Style="{DynamicResource DashBoardTB1}"
+                                            HorizontalAlignment="Left"
+                                            VerticalAlignment="Center"
+                                            Text="SecCommunications:" 
+                                            Margin="3,0"/>
+                                        <TextBlock
+                                            Grid.Row="5"
+                                            Grid.Column="2"
+                                            Style="{DynamicResource DashBoardTB1}"
+                                            HorizontalAlignment="Left"
+                                            VerticalAlignment="Center"
+                                            Text="{Binding SecureCommunications}"
+                                            Margin="0"/>
+                                    </Grid>
+                                    <Grid Grid.Row="1">
+                                        <StackPanel Orientation="Horizontal" Margin="5,0" ToolTip="Last Changes">
+                                            <Image Source = "{Binding DataContext.ClockIcon96, RelativeSource={RelativeSource AncestorType=UserControl}}" Stretch="Uniform" VerticalAlignment="Bottom" HorizontalAlignment="Left" MaxHeight="30" />
+                                            <TextBlock Text="{Binding TimeStamp}" HorizontalAlignment="Right" Margin="5,2" />
+                                        </StackPanel>
+                                    </Grid>
+                                </Grid>
+                            </Button>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapPanel />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                </ItemsControl>
+            </ScrollViewer>
+        </GroupBox>
+        <StackPanel Grid.Row="6" Margin="10,10,0,5" Orientation="Horizontal">
             <CheckBox x:Name="CB_DashBoardOnlineHosts" Content="View Online Hosts" Margin="2" FontSize="10" Style="{DynamicResource MainCheckBoxStyle}"/>
             <CheckBox x:Name="CB_DashBoardOfflineHosts" Content="View Offline Hosts" Margin="10,2,0,2" FontSize="10" Style="{DynamicResource MainCheckBoxStyle}"/>
         </StackPanel>
-        <GroupBox Grid.Row="6" Header="Online Hosts, Storage View" MinWidth="400" MaxHeight="280" HorizontalAlignment="Left" Margin="10,5,0,0"  VerticalAlignment="Top" Visibility="{Binding ElementName=CB_DashBoardOnlineHosts, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
+        <GroupBox Grid.Row="7" Header="Online Hosts, Storage View" MinWidth="400" MaxHeight="280" HorizontalAlignment="Left" Margin="10,5,0,0"  VerticalAlignment="Top" Visibility="{Binding ElementName=CB_DashBoardOnlineHosts, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
                 <ScrollViewer Margin="5" VerticalScrollBarVisibility="Auto">
                     <ItemsControl x:Name="IC_DashBoardOnlineHosts">
                         <ItemsControl.ItemTemplate>
@@ -772,7 +914,7 @@
                     </ItemsControl>
                 </ScrollViewer>
         </GroupBox>
-        <GroupBox Grid.Row="7" Header="Offline Hosts, Storage View" MinWidth="400" MaxHeight="280" HorizontalAlignment="Left" Margin="10,5,0,0"  VerticalAlignment="Top" Visibility="{Binding ElementName=CB_DashBoardOfflineHosts, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
+        <GroupBox Grid.Row="8" Header="Offline Hosts, Storage View" MinWidth="400" MaxHeight="280" HorizontalAlignment="Left" Margin="10,5,0,0"  VerticalAlignment="Top" Visibility="{Binding ElementName=CB_DashBoardOfflineHosts, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
                 <ScrollViewer Margin="5" VerticalScrollBarVisibility="Auto">
                     <ItemsControl x:Name="IC_DashBoardOfflineHosts">
                         <ItemsControl.ItemTemplate>
