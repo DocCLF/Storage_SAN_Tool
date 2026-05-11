@@ -150,10 +150,20 @@
                 <DockPanel>
                     <Label Content="Suche:" Margin="0,0,6,0" VerticalAlignment="Center" Style="{DynamicResource MainLabelStyle}"/>
                     <TextBox x:Name="TB_GlobalGridSearch"
-                    Width="300"
-                    Tag="Global Search"
-                    ToolTip="Sucht über alle geladenen DataGrids und alle Row-Properties"
-                    Style="{DynamicResource TBAZWaterMarkStyle}"/>
+                        Width="300"
+                        Tag="Global Search"
+                        ToolTip="Sucht über alle geladenen DataGrids und alle Row-Properties"
+                        Style="{DynamicResource TBAZWaterMarkStyle}"/>
+                    <ToggleButton x:Name="BTN_GlobalGridSearch"
+                        Style="{DynamicResource MainBtnStyle}"
+                        Content="Search"
+                        Width="80"
+                        Margin="6,0,0,0"/>
+                    <ToggleButton x:Name="BTN_GlobalGridSearchClear"
+                        Style="{DynamicResource MainBtnStyle}"
+                        Content="X"
+                        Width="30"
+                        Margin="6,0,0,0"/>
                 </DockPanel>
             </GroupBox>
         </WrapPanel>
@@ -522,16 +532,21 @@
                       <DataGridTextColumn Width="auto" Header="Status"        Binding="{Binding Status}" IsReadOnly="True"/>
                       <DataGridTextColumn Width="auto" Header="HostStateInfo" Binding="{Binding HostStateInfo}" IsReadOnly="True">
                           <DataGridTextColumn.CellStyle>
-                              <Style TargetType="DataGridCell">
-                                  <Style.Triggers>
-                                      <DataTrigger Binding="{Binding HostStateInfo}" Value="no change">
-                                          <Setter Property="Background" Value="LightGreen" />
-                                      </DataTrigger>
-                                  </Style.Triggers>
-                                  <Setter Property="Background" Value="OrangeRed" />
-                                  <Setter Property="ToolTip" Value="Shows the change from the last check to the current one." />
-                                  <Setter Property="ToolTipService.InitialShowDelay" Value="10" />
-                              </Style>
+                                <Style TargetType="DataGridCell">
+                                    <Setter Property="Background" Value="OrangeRed" />
+                                    <Setter Property="ToolTip" Value="Shows the change from the last check to the current one." />
+                                    <Setter Property="ToolTipService.InitialShowDelay" Value="10" />
+                                
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding HostStateInfo}" Value="NO_CHANGE">
+                                            <Setter Property="Background" Value="LightGreen" />
+                                        </DataTrigger>
+                                
+                                        <DataTrigger Binding="{Binding HostStateInfo}" Value="NEW_HOST">
+                                            <Setter Property="Background" Value="Yellow" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
                           </DataGridTextColumn.CellStyle>
                       </DataGridTextColumn>
                       <DataGridTextColumn Width="auto" Header="SiteName" Binding="{Binding SiteName}" IsReadOnly="True"/>
