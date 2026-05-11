@@ -63,7 +63,7 @@ function IBM_SSHHostInfo {
                 $TD_HostBaseTemp;
                 $iCounter++
                 if(!([string]::IsNullOrWhiteSpace($TD_HostBaseTemp.HostName))){
-                    $TD_HostBaseTemp.HostStateInfo = SST_IBMDBFunc -STOWWN $TD_EventSplitInfoWWNN -STOHostID $TD_HostBaseTemp.HostID -STOHostName $TD_HostBaseTemp.HostName -STOHostState $TD_HostBaseTemp.Status
+                    $TD_HostBaseTemp.HostStateInfo = $(STO_HostStateInfo -STOWWN $TD_EventSplitInfoWWNN -STOHostID $TD_HostBaseTemp.HostID -STOSN $TD_FSBaseSerialNumber -STOHostStatus $TD_HostBaseTemp.Status).CheckResult
                 }
                 $TD_HostBaseTemp = "" | Select-Object RowID,ID,HostName,PortCount,Type,IOGrpCount,Status,HostStateInfo,SiteID,SiteName,HostClusterID,HostClusterName,Protocol,StatusPolicy,StatusSite,WWPNOne,NodeLoggedInCountOne,StateOne,WWPNTwo,NodeLoggedInCountTwo,StateTwo,WWPNThree,NodeLoggedInCountThree,StateThree,WWPNFour,NodeLoggedInCountFour,StateFour,STOName,WWNN,SerialNumber
                 continue    
