@@ -91,16 +91,6 @@
                               HorizontalAlignment="Right"/>
                 </WrapPanel>
             </GroupBox>
-            <GroupBox Header="Filter / Suche" Margin="10">
-                <DockPanel>
-                    <Label Content="Suche:" Margin="0,0,6,0" VerticalAlignment="Center" Style="{DynamicResource MainLabelStyle}"/>
-                    <TextBox x:Name="TB_GlobalGridSearch"
-                    Width="300"
-                    Tag="Global Search"
-                    ToolTip="Sucht über alle geladenen DataGrids und alle Row-Properties"
-                    Style="{DynamicResource TBAZWaterMarkStyle}"/>
-                </DockPanel>
-            </GroupBox>
         </WrapPanel>
         <WrapPanel Orientation="Vertical" Grid.Column="1" Grid.Row="1">
         <!-- PWR_HMCInfo -->
