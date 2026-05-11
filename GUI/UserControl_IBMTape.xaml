@@ -111,10 +111,20 @@
                 <DockPanel>
                     <Label Content="Suche:" Margin="0,0,6,0" VerticalAlignment="Center" Style="{DynamicResource MainLabelStyle}"/>
                     <TextBox x:Name="TB_GlobalGridSearch"
-                    Width="300"
-                    Tag="Global Search"
-                    ToolTip="Sucht über alle geladenen DataGrids und alle Row-Properties"
-                    Style="{DynamicResource TBAZWaterMarkStyle}"/>
+                        Width="300"
+                        Tag="Global Search"
+                        ToolTip="Sucht über alle geladenen DataGrids und alle Row-Properties"
+                        Style="{DynamicResource TBAZWaterMarkStyle}"/>
+                    <ToggleButton x:Name="BTN_GlobalGridSearch"
+                        Style="{DynamicResource MainBtnStyle}"
+                        Content="Search"
+                        Width="80"
+                        Margin="6,0,0,0"/>
+                    <ToggleButton x:Name="BTN_GlobalGridSearchClear"
+                        Style="{DynamicResource MainBtnStyle}"
+                        Content="X"
+                        Width="30"
+                        Margin="6,0,0,0"/>
                 </DockPanel>
             </GroupBox>
         </WrapPanel>
