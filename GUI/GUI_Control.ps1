@@ -185,6 +185,7 @@ if ($($TD_DataBaseChoice.Name).Count -lt 1) {
     $TD_BTN_DeleteDB.Visibility = "Visible"
     $TD_BTN_DeleteDB.Background = "coral"
 }
+$Global:HostStatusChanges = [System.Collections.ObjectModel.ObservableCollection[string]]::new()
 #endregion
 
 #region ToolBTN
@@ -194,6 +195,7 @@ $TD_BTN_Dashboard.add_click({
     SST_ShowUserControl -MainWindowArea $TD_UserContrArea -ShowUserControl $TD_UserControl_Dash -AllUserControls $TD_AllUserControls
     if($TD_LogoImageSmall.Visibility -eq "hidden"){$TD_LogoImageSmall.Visibility = "visible"}
     $TD_CB_SelectAllSTOCB.IsChecked = $false
+    $TD_IC_STOHostStatusChanges.ItemsSource = $Global:HostStatusChanges
 })
 $TD_BTN_IBMSpectrVirt.add_click({
     $TD_LB_ExpPathMainWindow.Content ="Export Path: $($TD_TB_ExportPath.Text)"
@@ -480,6 +482,13 @@ $TD_CB_DataBaseChoice.add_SelectionChanged({
 #endregion
 #region PRISM
 SST_ToolMessageCollector -TD_ToolMSGCollector "Load PRISM" -TD_ToolMSGType Message -TD_Shown no
+# If data is available, hide the fields
+if($(SST_PRISMLocalDataCheck -PSRootPath $PSRootPath)){
+    $TD_TB_CustomerAZPPRISMConString.Visibility = "Collapsed"
+    $TD_TB_CustomerAZPPRISMDB.Visibility = "Collapsed"
+    $TD_TB_CustomerAZPPRISMUM.Visibility = "Collapsed"
+    $TD_TB_CustomerAZPPRISMUMP.Visibility = "Collapsed"
+}
 $TD_BTN_SaveAZConnectionPRISM.add_click({
     $AZConnection =$false
     [int]$ProgCounter=10
@@ -498,42 +507,58 @@ $TD_BTN_SaveAZConnectionPRISM.add_click({
         $ConnectionStringPRISM = $ConString.Replace('{replaceone}',[string]$AZCredDB).Replace('{replacetwo}',"$($TD_TB_CustomerAZPPRISMUM.Text)").Replace('{replacethree}',"$($TD_TB_CustomerAZPPRISMUMP.Password)")
         $SQLConnection=New-Object System.Data.SqlClient.SqlConnection
         $SQLConnection.ConnectionString=$ConnectionStringPRISM
-        while (!($AZConnection)) {
-            $ProgCounter++
-            if($ProgCounter -gt 50){break}
-            Write-ProgressBar -ProgressBar $ProgressBar -Activity "Try to connect PRISM" -PercentComplete (($ProgCounter/100) * 100)    
-            try {
-                $SQLConnection.Open()
-                $SQLCommand = $SQLConnection.CreateCommand()
-                $SQLCommand.CommandText ="EXEC dbo.usp_CreateManagedUser @UserName = N'$($TD_TB_CustomerInfoName.Text)', @Password = N'$CustomerP';"
-                $SQLCommand.ExecuteNonQuery()
-                $ConString = $null
-                $AZCredDB = $null
-                $CustomerP = $null
-                $TD_BTN_SaveAZConnectionPRISM.Visibility = "Collapsed"
-                $TD_TB_CustomerAZPPRISMConString.Text = $null
-                $TD_TB_CustomerAZPPRISMDB.Text = $null
-                $TD_TB_CustomerAZPPRISMUM.Text = $null
-                $TD_TB_CustomerAZPPRISMUMP.Password = $null
-                $TD_TB_CustomerAZPPRISMConString.Visibility = "Collapsed"
-                $TD_TB_CustomerAZPPRISMDB.Visibility = "Collapsed"
-                $TD_TB_CustomerAZPPRISMUM.Visibility = "Collapsed"
-                $TD_TB_CustomerAZPPRISMUMP.Visibility = "Collapsed"
-                $TD_LB_CustomerAZPPRISM.Content="Reset the PRISM connection"
-                $TD_BTN_ChangeAZConnectionPRISM.Visibility = "Visible"
-                $AZConnection =$true
-                if ($SQLCommand) { $SQLCommand.Dispose() }
-                if ($SQLConnection) { $SQLConnection.Close(); $SQLConnection.Dispose() }
+        if ($SQLConnection.State -ne "Closed") { $SQLConnection.Close()}
+        try{
+            while (!($AZConnection)) {
+                $ProgCounter++
+                if($ProgCounter -gt 50){break}
+                Write-ProgressBar -ProgressBar $ProgressBar -Activity "Try to connect PRISM" -PercentComplete (($ProgCounter/50) * 100)    
+                try {
+                    $SQLConnection.Open()
+                    $SQLCommand = $SQLConnection.CreateCommand()
+                    $SQLCommand.CommandText ="EXEC dbo.usp_CreateManagedUser @UserName = @UserName, @Password = @Password;"
+                    $SQLCommand.Parameters.AddWithValue("@UserName",$TD_TB_CustomerInfoName.Text)
+                    $SQLCommand.Parameters.AddWithValue("@Password",$CustomerP)
+                    $SQLCommand.ExecuteNonQuery()
+                    $ConString = $null
+                    $AZCredDB = $null
+                    $CustomerP = $null
+                    $TD_BTN_SaveAZConnectionPRISM.Visibility = "Collapsed"
+                    $TD_TB_CustomerAZPPRISMConString.Text = $null
+                    $TD_TB_CustomerAZPPRISMDB.Text = $null
+                    $TD_TB_CustomerAZPPRISMUM.Text = $null
+                    $TD_TB_CustomerAZPPRISMUMP.Password = $null
+                    $TD_TB_CustomerAZPPRISMConString.Visibility = "Collapsed"
+                    $TD_TB_CustomerAZPPRISMDB.Visibility = "Collapsed"
+                    $TD_TB_CustomerAZPPRISMUM.Visibility = "Collapsed"
+                    $TD_TB_CustomerAZPPRISMUMP.Visibility = "Collapsed"
+                    $TD_LB_CustomerAZPPRISM.Content="Reset the PRISM connection"
+                    $TD_BTN_ChangeAZConnectionPRISM.Visibility = "Visible"
+                    $AZConnection =$true
+                }
+                catch {
+                    <#Do this if a terminating exception happens#>
+                    Write-Host "$($SQLConnection.State) - $($_.Exception.Message)" -ForegroundColor Yellow
+                }finally{
+                    if ($SQLCommand) {
+                        $SQLCommand.Dispose()
+                        $SQLCommand = $null
+                    }
+                    if ($SQLConnection.State -eq "Open") {
+                        $SQLConnection.Close()
+                    }
+                }
+            } 
+        }finally{
+            if ($SQLConnection) {
+                if ($SQLConnection.State -eq "Open") {$SQLConnection.Close()}
+                $SQLConnection.Dispose()
             }
-            catch {
-                <#Do this if a terminating exception happens#>
-                Write-Host "$($SQLConnection.State) - $($_.Exception.Message)" -ForegroundColor Yellow
-            }
-        } 
+            Close-ProgressBar -ProgressBar $ProgressBar
+        }
         if($AZConnection){
             SST_ToolAdvSaveDB -SST_InfoType "SavePRISMSettings" -SST_NewDBObject $AZPRISM
         }
-        Close-ProgressBar -ProgressBar $ProgressBar
     }
 })
 $TD_BTN_ConnetionToPRISM.add_click({
@@ -726,6 +751,8 @@ $TD_BTN_IBM_Eventlog.add_click({
         $UCVMMain.DeviceToggles.Add($FunctionResult.DeviceIdent)
     }
     $UCVMMain.SelectedView = "Events"
+    # Refresh global search/filter for all DataGrids inside this UserControl
+    Update-GlobalDataGridSearchFilter -RootControl $TD_UserControl_IBMSTO -SearchBox $TD_UserControl_IBMSTO.FindName("TB_GlobalGridSearch")
 })
 $TD_BTN_IBM_CatAuditLog.add_click({
     <#Get all Device Cred and count them #>
@@ -796,6 +823,7 @@ $TD_BTN_IBM_HostVolumeMap.add_click({
 $TD_BTN_IBM_HostInfo.add_click({
     <#Get all Device Cred and count them #>
     $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_.DeviceTyp -eq "Storage"}
+    $Global:HostStatusChanges.Clear()
     <# get the DataConteext of the current View/ means UC and if its nul trow an error #>
     $UCDataContext = $TD_UserControl_IBMSTO.DataContext
     if (-not $UCDataContext) { Write-Host "DataContext ist NULL!" -ForegroundColor Red; return }
@@ -845,6 +873,12 @@ $TD_BTN_IBM_HostInfo.add_click({
         $UCVMMain.DeviceToggles.Add($FunctionResult.DeviceIdent)
     }
     $UCVMMain.SelectedView = "HostMap"
+if ($Global:HostStatusChanges.Count -eq 0) {
+
+    $Global:HostStatusChanges.Add(
+        "No Host Status changes since the last check."
+    )
+}
 })
 $TD_BTN_IBM_PoolVolumeInfo.add_click({
     <#Get all Device Cred and count them #>
@@ -1947,6 +1981,12 @@ switch ($CockpitView) {
     Default {SST_ToolMessageCollector -TD_ToolMSGCollector $("Start Tool with Usercontrol $CockpitView ") -TD_ToolMSGType Message -TD_Shown no}
 }
 Get-Variable TD_* |Out-Null
+if ($Global:HostStatusChanges.Count -eq 0) {
+
+    $Global:HostStatusChanges.Add(
+        "No Host Status changes since the last check."
+    )
+}
 #region show MainWindow
 $MainWindow.showDialog()
 $MainWindow.activate()
