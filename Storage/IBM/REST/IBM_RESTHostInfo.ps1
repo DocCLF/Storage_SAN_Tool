@@ -60,6 +60,8 @@ function IBM_RESTHostInfo {
             $TD_HostBaseTemp.Type               = $TD_HostIDInformation.type
             $TD_HostBaseTemp.IOGrpCount         = $TD_HostIDInformation.iogrp_count
             $TD_HostBaseTemp.Status             = $TD_HostIDInformation.status
+            $HostCheckResult = STO_HostStateInfo -STOWWN $IBMSTOWWNN -STOSN $IBMSTOSN -STOHostID $($TD_HostIDInformation.id) -STOHostStatus $($TD_HostIDInformation.status)
+            $TD_HostBaseTemp.HostStateInfo      = $HostCheckResult.CheckResult
             $TD_HostBaseTemp.SiteID             = $TD_HostIDInformation.site_id
             $TD_HostBaseTemp.SiteName           = $TD_HostIDInformation.site_name
             $TD_HostBaseTemp.HostClusterID      = $TD_HostIDInformation.host_cluster_id
