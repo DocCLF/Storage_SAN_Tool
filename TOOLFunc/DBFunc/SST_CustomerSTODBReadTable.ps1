@@ -53,18 +53,18 @@ function STO_HostStateInfo {
             
                 "NEW_HOST" {
                     $Message = "NEW HOST | HID: $($Result.HID) | WWNN: $($Result.SerialNumber) | Status: $($Result.CurrentStatus)"
-                    Write-Host "Neuer Host gefunden: HID $($Result.HID), WWNN $($Result.WWNN)" -ForegroundColor Cyan
+                    Write-Host "NEW HOST found: HID $($Result.HID), WWNN $($Result.WWNN)" -ForegroundColor Cyan
                     $Global:HostStatusChanges.Add($Message)
                 }
             
                 "STATUS_CHANGED" {
                     $Message = "STATUS CHANGED | HID: $($Result.HID) | WWNN: $($Result.SerialNumber) | Status: $($Result.CurrentStatus)"
-                    Write-Host "Status geändert: $($Result.StoredStatus) -> $($Result.CurrentStatus)" -ForegroundColor Yellow
+                    Write-Host "STATUS CHANGED: $($Result.StoredStatus) -> $($Result.CurrentStatus)" -ForegroundColor Yellow
                     $Global:HostStatusChanges.Add($Message)
                 }
             
                 "NO_CHANGE" {
-                    Write-Host "Keine Änderung: $($Result.CurrentStatus)" -ForegroundColor Green
+                    Write-Host "NO CHANGE: $($Result.CurrentStatus)" -ForegroundColor Green
                 }
             }
         
