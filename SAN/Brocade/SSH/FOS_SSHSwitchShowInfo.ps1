@@ -115,6 +115,12 @@ function FOS_SSHSwitchShowInfo {
             }
                 
             if($FOS_SWsh.PortConnect -like "*NPIV*"){
+                if($FOS_SWsh.Address -ne "virtuell"){
+                    $PortStateInfo = SAN_PortStateInfo -SANSwitchWWNN $FOS_switchWwn -SANSerialNumber $SANSwitchIdent.SerialNumber -SANPort $FOS_SWshPort -SANState $FOS_SWshState
+                    if(!([string]::IsNullOrWhiteSpace($($PortStateInfo.CheckResult)))){
+                        $FOS_SWsh.PortStateInfo = $($PortStateInfo.CheckResult)
+                    }
+                }
                 $FOS_SwBasicPortDetails += $FOS_SWsh
                 <# need a better way to connect #>
                 $FOS_PortConnect_Infos = plink $TD_Device_UserName@$TD_Device_DeviceIP -pw $TD_Device_PW -batch "portshow $($FOS_SWsh.Port)"
