@@ -186,6 +186,7 @@ if ($($TD_DataBaseChoice.Name).Count -lt 1) {
     $TD_BTN_DeleteDB.Background = "coral"
 }
 $Global:HostStatusChanges = [System.Collections.ObjectModel.ObservableCollection[string]]::new()
+$Global:SANPortStatusChanges = [System.Collections.ObjectModel.ObservableCollection[string]]::new()
 #endregion
 
 #region ToolBTN
@@ -196,6 +197,7 @@ $TD_BTN_Dashboard.add_click({
     if($TD_LogoImageSmall.Visibility -eq "hidden"){$TD_LogoImageSmall.Visibility = "visible"}
     $TD_CB_SelectAllSTOCB.IsChecked = $false
     $TD_IC_STOHostStatusChanges.ItemsSource = $Global:HostStatusChanges
+    $TD_IC_SANPortStatusChanges.ItemsSource = $Global:SANPortStatusChanges
 })
 $TD_BTN_IBMSpectrVirt.add_click({
     $TD_LB_ExpPathMainWindow.Content ="Export Path: $($TD_TB_ExportPath.Text)"
@@ -1980,13 +1982,11 @@ switch ($CockpitView) {
     }
     Default {SST_ToolMessageCollector -TD_ToolMSGCollector $("Start Tool with Usercontrol $CockpitView ") -TD_ToolMSGType Message -TD_Shown no}
 }
-Get-Variable TD_* |Out-Null
-if ($Global:HostStatusChanges.Count -eq 0) {
+#to make sure the dashboard displays something as soon as the app starts
+if ($Global:HostStatusChanges.Count -eq 0) {$Global:HostStatusChanges.Add("No Host Status changes since the last check.")}
+if ($Global:SANPortStatusChanges.Count -eq 0) {$Global:SANPortStatusChanges.Add("No SAN Port Status changes since the last check.")}
 
-    $Global:HostStatusChanges.Add(
-        "No Host Status changes since the last check."
-    )
-}
+Get-Variable TD_* |Out-Null
 #region show MainWindow
 $MainWindow.showDialog()
 $MainWindow.activate()
