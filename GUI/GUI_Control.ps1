@@ -405,7 +405,6 @@ $TD_BTN_ActivateDB.add_click({
             #$TD_CB_DataBaseChoice.ItemsSource = $TD_DataBaseChoice
             #$TD_CB_DataBaseChoice.SelectedIndex = 0
             SST_CustomerDeviceDBCreateTable
-            SST_CustomerLibraryDBCreateTable
         }
     }else {
         [System.Windows.MessageBox]::Show(
@@ -670,8 +669,9 @@ $TD_BTN_RefreshDashBoard.add_click({
 #region Devices
 #region IBM Storage
 $TD_BTN_IBM_BaseStorageInfo.add_click({
+    $TD_GB_SearchFilterSTO.Visibility="visible"
     <#Get all Device Cred and count them #>
-    $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_.DeviceTyp -eq "Storage"}
+    $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_.DeviceTyp -like "*Storage*"}
     <# get the DataConteext of the current View/ means UC and if its nul trow an error #>
     $UCDataContext = $TD_UserControl_IBMSTO.DataContext
     if (-not $UCDataContext) { Write-Host "DataContext ist NULL!" -ForegroundColor Red; return }
@@ -723,8 +723,9 @@ $TD_BTN_IBM_BaseStorageInfo.add_click({
     $UCVMMain.SelectedView = "Base"
 })
 $TD_BTN_IBM_Eventlog.add_click({
+    $TD_GB_SearchFilterSTO.Visibility="visible"
     <#Get all Device Cred and count them #>
-    $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_.DeviceTyp -eq "Storage"}
+    $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_.DeviceTyp -like "*Storage*"}
     <# get the DataConteext of the current View/ means UC and if its nul trow an error #>
     $UCDataContext = $TD_UserControl_IBMSTO.DataContext
     if (-not $UCDataContext) { Write-Host "DataContext ist NULL!" -ForegroundColor Red; return }
@@ -757,8 +758,9 @@ $TD_BTN_IBM_Eventlog.add_click({
     Update-GlobalDataGridSearchFilter -RootControl $TD_UserControl_IBMSTO -SearchBox $TD_UserControl_IBMSTO.FindName("TB_GlobalGridSearch")
 })
 $TD_BTN_IBM_CatAuditLog.add_click({
+    $TD_GB_SearchFilterSTO.Visibility="visible"
     <#Get all Device Cred and count them #>
-    $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_.DeviceTyp -eq "Storage"}
+    $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_.DeviceTyp -like "*Storage*"}
     <# get the DataConteext of the current View/ means UC and if its nul trow an error #>
     $UCDataContext = $TD_UserControl_IBMSTO.DataContext
     if (-not $UCDataContext) { Write-Host "DataContext ist NULL!" -ForegroundColor Red; return }
@@ -791,8 +793,9 @@ $TD_BTN_IBM_CatAuditLog.add_click({
     $UCVMMain.SelectedView = "CatAuditLog"
 })
 $TD_BTN_IBM_HostVolumeMap.add_click({
+    $TD_GB_SearchFilterSTO.Visibility="visible"
     <#Get all Device Cred and count them #>
-    $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_.DeviceTyp -eq "Storage"}
+    $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_.DeviceTyp -like "*Storage*"}
     <# get the DataConteext of the current View/ means UC and if its nul trow an error #>
     $UCDataContext = $TD_UserControl_IBMSTO.DataContext
     if (-not $UCDataContext) { Write-Host "DataContext ist NULL!" -ForegroundColor Red; return }
@@ -823,8 +826,9 @@ $TD_BTN_IBM_HostVolumeMap.add_click({
     $UCVMMain.SelectedView = "HostVolumeMap"
 })
 $TD_BTN_IBM_HostInfo.add_click({
+    $TD_GB_SearchFilterSTO.Visibility="visible"
     <#Get all Device Cred and count them #>
-    $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_.DeviceTyp -eq "Storage"}
+    $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_.DeviceTyp -like "*Storage*"}
     $Global:HostStatusChanges.Clear()
     <# get the DataConteext of the current View/ means UC and if its nul trow an error #>
     $UCDataContext = $TD_UserControl_IBMSTO.DataContext
@@ -883,8 +887,9 @@ if ($Global:HostStatusChanges.Count -eq 0) {
 }
 })
 $TD_BTN_IBM_PoolVolumeInfo.add_click({
+    $TD_GB_SearchFilterSTO.Visibility="visible"
     <#Get all Device Cred and count them #>
-    $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_.DeviceTyp -eq "Storage"}
+    $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_.DeviceTyp -like "*Storage*"}
     <# get the DataConteext of the current View/ means UC and if its nul trow an error #>
     $UCDataContext = $TD_UserControl_IBMSTO.DataContext
     if (-not $UCDataContext) { Write-Host "DataContext ist NULL!" -ForegroundColor Red; return }
@@ -938,8 +943,9 @@ $TD_BTN_IBM_PoolVolumeInfo.add_click({
     $UCVMMain.SelectedView = "PoolVolumeInfo"
 })
 $TD_BTN_IBM_DriveInfo.add_click({
+    $TD_GB_SearchFilterSTO.Visibility="visible"
     <#Get all Device Cred and count them #>
-    $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_.DeviceTyp -eq "Storage"}
+    $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_.DeviceTyp -like "*Storage*"}
     <# get the DataConteext of the current View/ means UC and if its nul trow an error #>
     $UCDataContext = $TD_UserControl_IBMSTO.DataContext
     if (-not $UCDataContext) { Write-Host "DataContext ist NULL!" -ForegroundColor Red; return }
@@ -972,8 +978,9 @@ $TD_BTN_IBM_DriveInfo.add_click({
     }
 })
 $TD_BTN_IBM_FCPortInfo.add_click({
+    $TD_GB_SearchFilterSTO.Visibility="visible"
     <#Get all Device Cred and count them #>
-    $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_.DeviceTyp -eq "Storage"}
+    $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_.DeviceTyp -like "*Storage*"}
     <# get the DataConteext of the current View/ means UC and if its nul trow an error #>
     $UCDataContext = $TD_UserControl_IBMSTO.DataContext
     if (-not $UCDataContext) { Write-Host "DataContext ist NULL!" -ForegroundColor Red; return }
@@ -1009,8 +1016,9 @@ $TD_BTN_IBM_FCPortInfo.add_click({
 })
 #$TD_BTN_IBM_IPPortInfo.add_click({})
 $TD_BTN_IBM_CleanUpDumps.add_click({
-        <#Get all Device Cred and count them #>
-    $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_.DeviceTyp -eq "Storage"}
+    $TD_GB_SearchFilterSTO.Visibility="Collapsed"
+    <#Get all Device Cred and count them #>
+    $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_.DeviceTyp -like "*Storage*"}
     <# get the DataConteext of the current View/ means UC and if its nul trow an error #>
     $UCDataContext = $TD_UserControl_IBMSTO.DataContext
     if (-not $UCDataContext) { Write-Host "DataContext ist NULL!" -ForegroundColor Red; return }
@@ -1041,8 +1049,9 @@ $TD_BTN_IBM_CleanUpDumps.add_click({
     $UCVMMain.SelectedView = "DumpInfo"
 })
 $TD_BTN_IBM_BackUpConfig.add_click({
+    $TD_GB_SearchFilterSTO.Visibility="Collapsed"
     <#Get all Device Cred and count them #>
-    $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_.DeviceTyp -eq "Storage"}
+    $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_.DeviceTyp -like "*Storage*"}
     <# get the DataConteext of the current View/ means UC and if its nul trow an error #>
     $UCDataContext = $TD_UserControl_IBMSTO.DataContext
     if (-not $UCDataContext) { Write-Host "DataContext ist NULL!" -ForegroundColor Red; return }
@@ -1073,8 +1082,9 @@ $TD_BTN_IBM_BackUpConfig.add_click({
     $UCVMMain.SelectedView = "BackUpInfo"
 })
 $TD_BTN_IBM_FCPortStats.add_click({
+    $TD_GB_SearchFilterSTO.Visibility="visible"
     <#Get all Device Cred and count them #>
-    $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_.DeviceTyp -eq "Storage"}
+    $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_.DeviceTyp -like "*Storage*"}
     <# get the DataConteext of the current View/ means UC and if its nul trow an error #>
     $UCDataContext = $TD_UserControl_IBMSTO.DataContext
     if (-not $UCDataContext) { Write-Host "DataContext ist NULL!" -ForegroundColor Red; return }
@@ -1117,8 +1127,8 @@ $TD_BTN_IBM_FCPortStats.add_click({
 #endregion
 #region Brocade SAN
 $TD_BTN_FOS_BasicSwitchInfo.add_click({
-
-    $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource | Where-Object { $_.DeviceTyp -eq "SAN" }
+    $TD_GB_SearchFilter.Visibility = "Collapsed"
+    $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource | Where-Object { $_.DeviceTyp -like "*SAN*" }
 
     $UCDataContext = $TD_UserControl_BRSAN.DataContext
     if (-not $UCDataContext) { Write-Host "DataContext ist NULL!" -ForegroundColor Red; return }
@@ -1174,8 +1184,9 @@ $TD_BTN_FOS_BasicSwitchInfo.add_click({
     $UCVMMain.SelectedView = "SANSwitchBase"
 })
 $TD_BTN_FOS_SwitchShow.add_click({
+    $TD_GB_SearchFilter.Visibility = "visible"
     <#Get all Device Cred and count them #>
-    $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_.DeviceTyp -eq "SAN"}
+    $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_.DeviceTyp -like "*SAN*" }
     <# get the DataConteext of the current View/ means UC and if its nul trow an error #>
     $UCDataContext = $TD_UserControl_BRSAN.DataContext
     if (-not $UCDataContext) { Write-Host "DataContext ist NULL!" -ForegroundColor Red; return }
@@ -1205,8 +1216,9 @@ $TD_BTN_FOS_SwitchShow.add_click({
     $UCVMMain.SelectedView = "SANSwitchShow"
 })
 $TD_BTN_FOS_PortBufferShow.add_click({
+    $TD_GB_SearchFilter.Visibility = "visible"
     <#Get all Device Cred and count them #>
-    $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_.DeviceTyp -eq "SAN"}
+    $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_.DeviceTyp -like "*SAN*" }
     <# get the DataConteext of the current View/ means UC and if its nul trow an error #>
     $UCDataContext = $TD_UserControl_BRSAN.DataContext
     if (-not $UCDataContext) { Write-Host "DataContext ist NULL!" -ForegroundColor Red; return }
@@ -1237,8 +1249,9 @@ $TD_BTN_FOS_PortBufferShow.add_click({
     $UCVMMain.SelectedView = "SANPortbufferShow"
 })
 $TD_BTN_FOS_PortErrorShow.add_click({
+    $TD_GB_SearchFilter.Visibility = "visible"
     <#Get all Device Cred and count them #>
-    $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_.DeviceTyp -eq "SAN"}
+    $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_.DeviceTyp -like "*SAN*" }
     <# get the DataConteext of the current View/ means UC and if its nul trow an error #>
     $UCDataContext = $TD_UserControl_BRSAN.DataContext
     if (-not $UCDataContext) { Write-Host "DataContext ist NULL!" -ForegroundColor Red; return }
@@ -1279,8 +1292,9 @@ $TD_BTN_FOS_PortErrorShow.add_click({
     $UCVMMain.SelectedView = "SANPortErrorShow"
 })
 $TD_BTN_FOS_SFPHealthShow.add_click({
+    $TD_GB_SearchFilter.Visibility = "visible"
     <#Get all Device Cred and count them #>
-    $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_.DeviceTyp -eq "SAN"}
+    $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_.DeviceTyp -like "*SAN*" }
     <# get the DataConteext of the current View/ means UC and if its nul trow an error #>
     $UCDataContext = $TD_UserControl_BRSAN.DataContext
     if (-not $UCDataContext) { Write-Host "DataContext ist NULL!" -ForegroundColor Red; return }
@@ -1308,8 +1322,9 @@ $TD_BTN_FOS_SFPHealthShow.add_click({
     $UCVMMain.SelectedView = "SANSFPDetails"
 })
 $TD_BTN_FOS_ZoneDetailsShow.add_click({
+    $TD_GB_SearchFilter.Visibility = "visible"
     <#Get all Device Cred and count them #>
-    $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_.DeviceTyp -eq "SAN"}
+    $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_.DeviceTyp -like "*SAN*" }
     <# get the DataConteext of the current View/ means UC and if its nul trow an error #>
     $UCDataContext = $TD_UserControl_BRSAN.DataContext
     if (-not $UCDataContext) { Write-Host "DataContext ist NULL!" -ForegroundColor Red; return }
@@ -1333,8 +1348,9 @@ $TD_BTN_FOS_ZoneDetailsShow.add_click({
     $UCVMMain.SelectedView = "SANZoneDetails"
 })
 $TD_BTN_FOS_PortLicenseShow.add_click({
+    $TD_GB_SearchFilter.Visibility = "Collapsed"
     <#Get all Device Cred and count them #>
-    $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_.DeviceTyp -eq "SAN"}
+    $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_.DeviceTyp -like "*SAN*" }
     <# get the DataConteext of the current View/ means UC and if its nul trow an error #>
     $UCDataContext = $TD_UserControl_BRSAN.DataContext
     if (-not $UCDataContext) { Write-Host "DataContext ist NULL!" -ForegroundColor Red; return }
@@ -1365,8 +1381,9 @@ $TD_BTN_FOS_PortLicenseShow.add_click({
     $UCVMMain.SelectedView = "LicenseInfo"
 })
 $TD_BTN_FOS_SensorShow.add_click({
+    $TD_GB_SearchFilter.Visibility = "Collapsed"
     <#Get all Device Cred and count them #>
-    $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_.DeviceTyp -eq "SAN"}
+    $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_.DeviceTyp -like "*SAN*" }
     <# get the DataConteext of the current View/ means UC and if its nul trow an error #>
     $UCDataContext = $TD_UserControl_BRSAN.DataContext
     if (-not $UCDataContext) { Write-Host "DataContext ist NULL!" -ForegroundColor Red; return }
@@ -1401,7 +1418,7 @@ $TD_BTN_FOS_SensorShow.add_click({
 $TD_BTN_PWR_HMCInfo.add_click({
     $TD_GBPWRHMCInfo.Visibility = "Visible"
     $TD_GBPWRLPARSum,$TD_GBPWRManagSysInfo | ForEach-Object {$_.Visibility = "Collapsed"}
-    $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource | Where-Object { $_.DeviceTyp -eq "PowerHMC" }
+    $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource | Where-Object { $_.DeviceTyp -like "*PowerHMC*" }
 
     $UCDataContext = $TD_UserControl_PWR.DataContext
     if (-not $UCDataContext) { [System.Windows.MessageBox]::Show("DataContext ist NULL!") | Out-Null; return }
@@ -1444,7 +1461,7 @@ $TD_BTN_PWR_HMCInfo.add_click({
 $TD_BTN_PWR_ManagedSystemInfo.add_click({
     $TD_GBPWRManagSysInfo.Visibility = "Visible"
     $TD_GBPWRHMCInfo,$TD_GBPWRLPARSum | ForEach-Object {$_.Visibility = "Collapsed"}
-    $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource | Where-Object { $_.DeviceTyp -eq "PowerHMC" }
+    $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource | Where-Object { $_.DeviceTyp -like "*PowerHMC*" }
 
     $UCDataContext = $TD_UserControl_PWR.DataContext
     if (-not $UCDataContext) { [System.Windows.MessageBox]::Show("DataContext ist NULL!") | Out-Null; return }
@@ -1482,7 +1499,7 @@ $TD_BTN_PWR_LparSummary.add_click({
     $TD_GBPWRLPARSum.Visibility = "Visible"
     $TD_GBPWRHMCInfo,$TD_GBPWRManagSysInfo | ForEach-Object {$_.Visibility = "Collapsed"}
     # 1) Geräte holen (wie beim HMC-Button)
-    $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource | Where-Object { $_.DeviceTyp -eq "PowerHMC" }
+    $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource | Where-Object { $_.DeviceTyp -like "*PowerHMC*" }
 
     # 2) DataContext/VM holen
     $UCDataContext = $TD_UserControl_PWR.DataContext
@@ -1494,12 +1511,11 @@ $TD_BTN_PWR_LparSummary.add_click({
     foreach($TD_Creds in $TD_Credentials){
 
         # 3) REST Call über dein Standard-Pattern
-        #$FunctionResult = New-DeviceBlock -Device $TD_Creds -ExportPath $TD_TB_ExportPath.Text -RESTFunc HMC_RESTHMCLogicalPartitions
+        $FunctionResult = New-DeviceBlock -Device $TD_Creds -ExportPath $TD_TB_ExportPath.Text -RESTFunc HMC_RESTHMCLogicalPartitions
 
         # 4) Collection für GUI sicherstellen (ObservableCollection)
         #if (-not $FunctionResult.DeviceIdent.LparRows) {
-        #    $FunctionResult.DeviceIdent | Add-Member -NotePropertyName LparRows `
-        #        -NotePropertyValue (New-Object System.Collections.ObjectModel.ObservableCollection[object]) -Force
+        #    $FunctionResult.DeviceIdent | Add-Member -NotePropertyName LparRows -NotePropertyValue (New-Object System.Collections.ObjectModel.ObservableCollection[object]) -Force
         #}
         #else {
         #    try { $FunctionResult.DeviceIdent.LparRows.Clear() | Out-Null } catch {}
@@ -1533,6 +1549,111 @@ $TD_BTN_PWR_LparSummary.add_click({
     $UCVMMain.SelectedView = "LPARs"
 })
 $TD_BTN_PWR_ShowAll.add_click({
+    $DBName = $TD_TB_CustomerInfoName.Text
+    $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource | Where-Object { $_.DeviceTyp -like "*PowerHMC*" }
+    $UCDataContext = $TD_UserControl_PWR.DataContext
+    if (-not $UCDataContext) { [System.Windows.MessageBox]::Show("DataContext ist NULL!") | Out-Null; return }
+    $UCVMMain = $UCDataContext.Main
+    $UCVMMain.DeviceToggles.Clear()
+    try {
+        [array]$DBPowerHMC = SST_CustomerPWRDBReadTable -SST_InfoType "PowerHMC" -SST_Customer $DBName
+        if($null -eq $DBPowerHMC){
+            foreach($TD_Creds in $TD_Credentials){
+
+                $FunctionResult = New-DeviceBlock -Device $TD_Creds -ExportPath $TD_TB_ExportPath.Text -RESTFunc HMC_RESTHMCConsole
+
+                $mapHMC = @{
+                    HmcName            = 'HMCName'
+                    MachineType        = 'HMCMTM'
+                    Model              = 'Model'
+                    SerialNumber       = 'SerialNumber'
+                    BIOS               = 'BIOS'
+                    DisplayVersion     = 'DisplayVersion'
+                    IFix               = 'IFix'
+                    PrimaryIP          = 'PrimaryIP'
+                    IPsAll             = 'IPsAll'
+                    ManagedSystemCount = 'ManagedSystemCount'
+                    ManagedSystemUuids = 'ManagedSystemUuids'
+                    UUID               = 'UUID'
+                    Url                = 'Url'
+                }
+            
+                Add-MappedRows -Collection $FunctionResult.DeviceIdent.HmcRows -Source $FunctionResult.FuncResult -IdProperty 'RowID' -Map $mapHMC
+            
+                $UCVMMain.DeviceToggles.Add($FunctionResult.DeviceIdent)
+            }
+            $UCVMMain.SelectedView = "HMC"
+        }else {
+            $TD_IC_IBMPowerHMCDBView.ItemsSource = $DBPowerHMC
+        }
+    }
+    catch {
+        <#Do this if a terminating exception happens#>
+        Write-Host $_.Exception.Message
+    }
+    try {
+        [array]$DBPowerSysSum = SST_CustomerPWRDBReadTable -SST_InfoType "PowerSysSummary" -SST_Customer $DBName
+        if($null -eq $DBPowerSysSum){
+            foreach($TD_Creds in $TD_Credentials){
+            
+                $FunctionResult = New-DeviceBlock -Device $TD_Creds -ExportPath $TD_TB_ExportPath.Text -RESTFunc HMC_RESTHMCManagedSystems
+            
+                $mapMS = @{
+                    SystemName       = 'SystemName'
+                    State            = 'State'
+                    SerialNumber     = 'SerialNumber'
+                    MachineTypeModel = 'MachineTypeModel'
+                    ECNumber         = 'ECNumber'
+                    ActivatedLevel   = 'ActivatedLevel'
+                    UUID             = 'UUID'
+                    Url              = 'Url'
+                }
+                Add-MappedRows -Collection $FunctionResult.DeviceIdent.ManagedSystemRows -Source $FunctionResult.FuncResult -IdProperty 'RowID' -Map $mapMS
+                $UCVMMain.DeviceToggles.Add($FunctionResult.DeviceIdent)
+            }
+        
+            $UCVMMain.SelectedView = "ManagedSystem"
+        }else {
+            $TD_IC_IBMPowerSysDBView.ItemsSource = $DBPowerSysSum
+        }
+    }
+    catch {
+        <#Do this if a terminating exception happens#>
+        Write-Host $_.Exception.Message
+    }    
+    try {
+        [array]$DBPowerLPAR = SST_CustomerPWRDBReadTable -SST_InfoType "LPARSummary" -SST_Customer $DBName
+        if($null -eq $DBPowerLPAR){
+            foreach($TD_Creds in $TD_Credentials){
+                $FunctionResult = New-DeviceBlock -Device $TD_Creds -ExportPath $TD_TB_ExportPath.Text -RESTFunc HMC_RESTHMCLogicalPartitions
+                $mapLPAR = @{
+                    ManagedSystemName   = 'ManagedSystemName'
+                    ManagedSystemMTMS   = 'ManagedSystemMTMS'
+                    ManagedSystemSerial = 'ManagedSystemSerial'
+                    ManagedSystemUuid   = 'ManagedSystemUuid'
+                
+                    LparName            = 'LparName'
+                    PartitionId         = 'PartitionId'
+                    State               = 'State'
+                    Environment         = 'Environment'
+                    OsVersion           = 'OsVersion'
+                
+                    LparUuid            = 'LparUuid'
+                    RowID               = 'RowID'
+                    RmcIp               = 'RmcIp'
+                }
+                Add-MappedRows -Collection $FunctionResult.DeviceIdent.LparRows -Source $FunctionResult.FuncResult -IdProperty 'RowID' -Map $mapLPAR
+                $UCVMMain.DeviceToggles.Add($FunctionResult.DeviceIdent)
+            }
+            $UCVMMain.SelectedView = "LPARs"
+        }else {
+            $TD_IC_IBMPowerLPARDBView.ItemsSource = $DBPowerLPAR
+        }
+    }
+    catch {
+        <#Do this if a terminating exception happens#>
+        Write-Host $_.Exception.Message
+    }   
     $TD_GBPWRHMCInfo,$TD_GBPWRManagSysInfo,$TD_GBPWRLPARSum | ForEach-Object {$_.Visibility = "Visible"}
 })
 #endregion
