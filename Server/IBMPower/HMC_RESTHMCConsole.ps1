@@ -26,6 +26,7 @@ function HMC_RESTHMCConsole {
 
     <# Write to the local database first before displaying it in the GUI! #>
     SST_CustomerPWRDBInsertTable -SST_InfoType "PowerHMC" -SST_CollectedInformations $hmc
+    Out-File -FilePath $TD_Exportpath\$($TD_Line_ID)_$($hmc.HMCName)_hmc_$(Get-Date -Format "yyyy-MM-dd").txt -InputObject $hmc
 
     # RowID for Add-MappedRows (stable for the grid)
     $i = 0
