@@ -14,6 +14,7 @@ All notable changes to this project will be documented in this file.
 - REST Function for IBM Tape
 - UseBasicParsing for Powershell 5.1 
 - TextBox for Customer Number (who is needed for Local DB)
+- Search filters have been added where useful.
 
 ### Fixed
 - ToolLog on GUI, Some entries were not displayed or were displayed incorrectly
@@ -25,6 +26,7 @@ All notable changes to this project will be documented in this file.
 - ToolLog on GUI The most recent post now always appears at the top
 
 ### Known Bugs
+- In some places, Tape and Power do not display a progress bar
 - Currently, there is no display of the current recommended firmware versions
     * This will be fixed in a future update
 
