@@ -105,16 +105,16 @@
                 ToolTip="Get an overview of the stats of your FC ports. Requirement v8.4.x and higher!" />
             </StackPanel>
         </GroupBox>  
-        <GroupBox Header="From v8.6.x and later"  HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,10,0,0">
+        <!-- <GroupBox Header="From v8.6.x and later"  HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,10,0,0">
             <StackPanel>
-                <!--IBM_PolicyBased-->
+                <!-IBM_PolicyBased->
                 <ToggleButton
                 x:Name="BTN_IBM_PolicyBased_Rep"
                 Style="{DynamicResource MainBtnStyle}"
                 Content="Policy Based (Beta)" 
                 ToolTip="Get some information about the replication policy and VolGrp replication, only if there in use!" />
             </StackPanel>
-        </GroupBox>   
+        </GroupBox>   -->
         </StackPanel> 
         <WrapPanel Grid.Column="1" Grid.Row="0" >
             <GroupBox Header="Visibility" Margin="10" >
@@ -146,9 +146,9 @@
                               HorizontalAlignment="Right"/>
                 </WrapPanel>
             </GroupBox>
-            <GroupBox Header="Filter / Suche" Margin="10">
+            <GroupBox x:Name="GB_SearchFilterSTO" Header="Filter / Search" Margin="10">
                 <DockPanel>
-                    <Label Content="Suche:" Margin="0,0,6,0" VerticalAlignment="Center" Style="{DynamicResource MainLabelStyle}"/>
+                    <Label Content="Search:" Margin="0,0,6,0" VerticalAlignment="Center" Style="{DynamicResource MainLabelStyle}"/>
                     <TextBox x:Name="TB_GlobalGridSearch"
                         Width="300"
                         Tag="Global Search"
