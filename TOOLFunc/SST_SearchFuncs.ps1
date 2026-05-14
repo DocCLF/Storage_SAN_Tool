@@ -195,27 +195,20 @@ function Initialize-GlobalDataGridSearch {
         param($sender, $e)
 
         if ($e.Key -eq [System.Windows.Input.Key]::Enter) {
-            Update-GlobalDataGridSearchFilter `
-                -RootControl $RootControl `
-                -SearchBox $SearchBox
+            Update-GlobalDataGridSearchFilter -RootControl $RootControl -SearchBox $SearchBox
         }
     }.GetNewClosure())
 
     if ($null -ne $SearchButton) {
         $SearchButton.Add_Click({
-            Update-GlobalDataGridSearchFilter `
-                -RootControl $RootControl `
-                -SearchBox $SearchBox
+            Update-GlobalDataGridSearchFilter -RootControl $RootControl -SearchBox $SearchBox
         }.GetNewClosure())
     }
 
     if ($null -ne $ClearButton) {
         $ClearButton.Add_Click({
             $SearchBox.Text = ""
-
-            Update-GlobalDataGridSearchFilter `
-                -RootControl $RootControl `
-                -SearchBox $SearchBox
+            Update-GlobalDataGridSearchFilter -RootControl $RootControl -SearchBox $SearchBox
         }.GetNewClosure())
     }
 }
