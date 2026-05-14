@@ -7,7 +7,7 @@ function SST_DashBoardMain {
         [string]$FoundLocalDB,
         $SST_UCOBJ
     )
-
+    $ErrorActionPreference="SilentlyContinue"
         if(!([string]::IsNullOrWhiteSpace($FoundLocalDB))){
             $DBPath = Join-Path $PSRootPath "Resources\DBFolder\$FoundLocalDB.db"
         }
