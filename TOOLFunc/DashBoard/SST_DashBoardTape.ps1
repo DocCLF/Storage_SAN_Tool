@@ -6,7 +6,7 @@ function SST_DashBoardTape {
         [Parameter(Mandatory)]
         $SQLConnection
     )
-
+    
     try {
         $SQLConnection.Open()
         $SQLiteCommand = $SQLConnection.CreateCommand()
