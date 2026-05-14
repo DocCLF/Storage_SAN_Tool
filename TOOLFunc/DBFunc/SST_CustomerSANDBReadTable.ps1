@@ -53,18 +53,18 @@ function SAN_PortStateInfo {
             
                 "NEW_PORT" {
                     $Message = "NEW PORT | Port: $($Result.Port) | WWNN: $($Result.SerialNumber) | State: $($Result.CurrentStatus)"
-                    Write-Host "NEW PORT found: Port $($Result.Port), WWNN $($Result.WWNN)" -ForegroundColor Cyan
+                    #Write-Host "NEW PORT found: Port $($Result.Port), WWNN $($Result.WWNN)" -ForegroundColor Cyan
                     $Global:HostStatusChanges.Add($Message)
                 }
             
                 "STATE_CHANGED" {
                     $Message = "STATE CHANGED | Port: $($Result.Port) | WWNN: $($Result.SerialNumber) | State: $($Result.CurrentStatus)"
-                    Write-Host "STATE CHANGED: $($Result.StoredStatus) -> $($Result.CurrentStatus)" -ForegroundColor Yellow
+                    #Write-Host "STATE CHANGED: $($Result.StoredStatus) -> $($Result.CurrentStatus)" -ForegroundColor Yellow
                     $Global:HostStatusChanges.Add($Message)
                 }
             
                 "NO_CHANGE" {
-                    Write-Host "NO CHANGE: $($Result.CurrentStatus)" -ForegroundColor Green
+                    #Write-Host "NO CHANGE: $($Result.CurrentStatus)" -ForegroundColor Green
                 }
             }
         
