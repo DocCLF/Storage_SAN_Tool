@@ -23,7 +23,8 @@ function HMC_RESTHMCManagedSystems {
 
     <# Write to the local database first before displaying it in the GUI! #>
     SST_CustomerPWRDBInsertTable -SST_InfoType "PowerSysSummary" -SST_CollectedInformations $ms
-
+    Out-File -FilePath $TD_Exportpath\$($TD_Line_ID)_pwr_ms_$(Get-Date -Format "yyyy-MM-dd").txt -InputObject $ms -Append
+    
     # RowID for Add-MappedRows (stable for the grid)
     $i = 0
     $ms | ForEach-Object {
