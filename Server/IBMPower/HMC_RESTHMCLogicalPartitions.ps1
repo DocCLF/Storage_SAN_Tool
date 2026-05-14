@@ -27,6 +27,7 @@ function HMC_RESTHMCLogicalPartitions {
 
     <# Write to the local database first before displaying it in the GUI! #>
     SST_CustomerPWRDBInsertTable -SST_InfoType "LPARSummary" -SST_CollectedInformations $lpars
+    Out-File -FilePath $TD_Exportpath\$($TD_Line_ID)_lpar_$(Get-Date -Format "yyyy-MM-dd").txt -InputObject $lpars -Append
 
     $i = 0
     $lpars | ForEach-Object {
