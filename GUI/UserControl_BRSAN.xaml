@@ -124,7 +124,7 @@
                               HorizontalAlignment="Right"/>
                 </WrapPanel>
             </GroupBox>
-            <GroupBox Header="Filter / Suche" Margin="10">
+            <GroupBox x:Name="GB_SearchFilter" Header="Filter / Suche" Margin="10">
                 <DockPanel>
                     <Label Content="Suche:" Margin="0,0,6,0" VerticalAlignment="Center" Style="{DynamicResource MainLabelStyle}"/>
                     <TextBox x:Name="TB_GlobalGridSearch"
