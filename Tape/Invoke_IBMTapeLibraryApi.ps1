@@ -21,7 +21,6 @@ function Invoke_IBMTapeLibraryApi {
         [string]$Endpoint,
         $Device,
         [object]$Body,
-
         [switch]$SkipCertificateCheck
     )
 
@@ -102,7 +101,6 @@ function Invoke_IBMTapeLibraryApi {
             catch {
                 Write-Host $_.Exception.Message
             }
-            Write-Host "after catch $result" -ForegroundColor Magenta
         }
         else {
             $irmParams.UseBasicParsing = $true
