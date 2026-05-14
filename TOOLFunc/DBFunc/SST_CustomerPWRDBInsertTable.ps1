@@ -11,7 +11,7 @@ function SST_CustomerPWRDBInsertTable {
     )
     
     begin {
-        $TimeStamp = Get-Date -Format "yyyy-MM-dd HH:mm"
+        $TimeStamp = Get-Date -Format "yyyy-MM-dd HH:mm:ss"
 
         if (-not [string]::IsNullOrWhiteSpace($SST_Customer)) {
             $Customer = $SST_Customer
