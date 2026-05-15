@@ -118,11 +118,11 @@ function SST_CustomerSTODBInsertTable {
                         $SQLiteCommand.Parameters.AddWithValue("@TimeStamp", $TimeStamp) | Out-Null
                     
                         # DB save
-                        $SQLiteCommand.ExecuteNonQuery()
+                        $SQLiteCommand.ExecuteNonQuery() | Out-Null
 
                         # Delete | Keep only the 128 most recent entries after TimeStamp
                         $SQLiteCommand.CommandText = "DELETE FROM IBMSTOHWTable WHERE ID NOT IN ( SELECT ID FROM IBMSTOHWTable ORDER BY TimeStamp DESC LIMIT 128 );"
-                        $SQLiteCommand.ExecuteNonQuery()
+                        $SQLiteCommand.ExecuteNonQuery() | Out-Null
                     }
                 }
                 finally {
@@ -157,11 +157,11 @@ function SST_CustomerSTODBInsertTable {
                         $SQLiteCommand.Parameters.AddWithValue("@TimeStamp", $TimeStamp) | Out-Null
                     
                         # DB save 
-                        $SQLiteCommand.ExecuteNonQuery()
+                        $SQLiteCommand.ExecuteNonQuery() | Out-Null
 
                         # Delete | Keep only the 128 most recent entries after TimeStamp
                         $SQLiteCommand.CommandText = "DELETE FROM IBMSTOHostTable WHERE ID NOT IN ( SELECT ID FROM IBMSTOHostTable ORDER BY TimeStamp DESC LIMIT 128 );"
-                        $SQLiteCommand.ExecuteNonQuery()
+                        $SQLiteCommand.ExecuteNonQuery() | Out-Null
                     }
                 }
                 finally {
@@ -201,11 +201,11 @@ function SST_CustomerSTODBInsertTable {
                         $SQLiteCommand.Parameters.AddWithValue("@TimeStamp", $TimeStamp) | Out-Null
                     
                         # DB save
-                        $SQLiteCommand.ExecuteNonQuery()
+                        $SQLiteCommand.ExecuteNonQuery() | Out-Null
 
                         # Delete | Keep only the 500 most recent entries after TimeStamp
                         $SQLiteCommand.CommandText = "DELETE FROM IBMSTOEventsTable WHERE ID NOT IN ( SELECT ID FROM IBMSTOEventsTable ORDER BY TimeStamp DESC LIMIT 500 );"
-                        $SQLiteCommand.ExecuteNonQuery()
+                        $SQLiteCommand.ExecuteNonQuery() | Out-Null
                     }
                 }
                 finally {
@@ -247,11 +247,11 @@ function SST_CustomerSTODBInsertTable {
                         $SQLiteCommand.Parameters.AddWithValue("@TimeStamp", $TimeStamp) | Out-Null
 
                         # DB save
-                        $SQLiteCommand.ExecuteNonQuery()
+                        $SQLiteCommand.ExecuteNonQuery() | Out-Null
 
                         # Delete | Keep only the 1000 most recent entries after TimeStamp
                         $SQLiteCommand.CommandText = "DELETE FROM IBMSTOFCPortStatsTable WHERE ID NOT IN ( SELECT ID FROM IBMSTOFCPortStatsTable ORDER BY TimeStamp DESC LIMIT 1000 );"
-                        $SQLiteCommand.ExecuteNonQuery()
+                        $SQLiteCommand.ExecuteNonQuery() | Out-Null
                     }
                 }
                 catch {
