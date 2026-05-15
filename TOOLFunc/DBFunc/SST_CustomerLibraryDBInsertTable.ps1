@@ -117,11 +117,11 @@ function SST_CustomerLibraryDBInsertTable {
                         $SQLiteCommand.Parameters.AddWithValue("@TimeStamp", $TimeStamp) | Out-Null
                     
                         # DB save
-                        $SQLiteCommand.ExecuteNonQuery()
+                        $SQLiteCommand.ExecuteNonQuery() | Out-Null
 
                         # Delete | Keep only the 128 most recent entries after TimeStamp
                         $SQLiteCommand.CommandText = "DELETE FROM LibraryEvents WHERE ID NOT IN ( SELECT ID FROM LibraryEvents ORDER BY TimeStamp DESC LIMIT 256 );"
-                        $SQLiteCommand.ExecuteNonQuery()
+                        $SQLiteCommand.ExecuteNonQuery() | Out-Null
                     }
                 }
                 catch {
@@ -166,11 +166,11 @@ function SST_CustomerLibraryDBInsertTable {
                         $SQLiteCommand.Parameters.AddWithValue("@TimeStamp", $TimeStamp) | Out-Null
 
                         # DB save 
-                        $SQLiteCommand.ExecuteNonQuery()
+                        $SQLiteCommand.ExecuteNonQuery() | Out-Null
 
                         # Delete | Keep only the 128 most recent entries after TimeStamp
                         $SQLiteCommand.CommandText = "DELETE FROM LibraryReports WHERE ID NOT IN ( SELECT ID FROM LibraryReports ORDER BY TimeStamp DESC LIMIT 128 );"
-                        $SQLiteCommand.ExecuteNonQuery()
+                        $SQLiteCommand.ExecuteNonQuery() | Out-Null
                     }
                 } catch {
                     Write-Host "SQL Fehler: $($_.Exception.Message)"
@@ -220,11 +220,11 @@ function SST_CustomerLibraryDBInsertTable {
                         $SQLiteCommand.Parameters.AddWithValue("@TimeStamp", $TimeStamp) | Out-Null 
                     
                         # DB save
-                        $SQLiteCommand.ExecuteNonQuery()
+                        $SQLiteCommand.ExecuteNonQuery() | Out-Null
 
                         # Delete | Keep only the 500 most recent entries after TimeStamp
                         $SQLiteCommand.CommandText = "DELETE FROM LogicalLibraryInfo WHERE ID NOT IN ( SELECT ID FROM LogicalLibraryInfo ORDER BY TimeStamp DESC LIMIT 256 );"
-                        $SQLiteCommand.ExecuteNonQuery()
+                        $SQLiteCommand.ExecuteNonQuery() | Out-Null
                     }
                 } catch {
                     Write-Host "SQL Fehler: $($_.Exception.Message)"
@@ -267,11 +267,11 @@ function SST_CustomerLibraryDBInsertTable {
                         $SQLiteCommand.Parameters.AddWithValue("@TimeStamp", $TimeStamp) | Out-Null
 
                         # DB save
-                        $SQLiteCommand.ExecuteNonQuery()
+                        $SQLiteCommand.ExecuteNonQuery() | Out-Null
 
                         # Delete | Keep only the 1000 most recent entries after TimeStamp
                         $SQLiteCommand.CommandText = "DELETE FROM LibraryInventorySlots WHERE ID NOT IN ( SELECT ID FROM LibraryInventorySlots ORDER BY TimeStamp DESC LIMIT 512 );"
-                        $SQLiteCommand.ExecuteNonQuery()
+                        $SQLiteCommand.ExecuteNonQuery() | Out-Null
                     }
                 }
                 catch {
@@ -312,11 +312,11 @@ function SST_CustomerLibraryDBInsertTable {
                         $SQLiteCommand.Parameters.AddWithValue("@TimeStamp", $TimeStamp) | Out-Null
                     
                         # DB save 
-                        $SQLiteCommand.ExecuteNonQuery()
+                        $SQLiteCommand.ExecuteNonQuery() | Out-Null
 
                         # Delete | Keep only the 16 most recent entries after TimeStamp
                         $SQLiteCommand.CommandText = "DELETE FROM LibraryInventoryDrives WHERE ID NOT IN ( SELECT ID FROM LibraryInventoryDrives ORDER BY TimeStamp DESC LIMIT 512 );"
-                        $SQLiteCommand.ExecuteNonQuery()
+                        $SQLiteCommand.ExecuteNonQuery() | Out-Null
                     }
                 }
                 catch {
@@ -376,11 +376,11 @@ function SST_CustomerLibraryDBInsertTable {
                         $SQLiteCommand.Parameters.AddWithValue("@TimeStamp", $TimeStamp) | Out-Null
 
                         # DB save 
-                        $SQLiteCommand.ExecuteNonQuery()
+                        $SQLiteCommand.ExecuteNonQuery() | Out-Null
 
                         # Then automatically clean up for this exact switch
                         $SQLiteCommand.CommandText ="DELETE FROM LibraryDrive WHERE ID NOT IN ( SELECT ID FROM LibraryDrive ORDER BY TimeStamp DESC LIMIT 512 );" 
-                        $SQLiteCommand.ExecuteNonQuery()
+                        $SQLiteCommand.ExecuteNonQuery() | Out-Null
                     }
                 }
                 catch {
@@ -429,11 +429,11 @@ function SST_CustomerLibraryDBInsertTable {
                         $SQLiteCommand.Parameters.AddWithValue("@TimeStamp", $TimeStamp) | Out-Null
                     
                         # DB save 
-                        $SQLiteCommand.ExecuteNonQuery()
+                        $SQLiteCommand.ExecuteNonQuery() | Out-Null
 
                         # Delete | Keep only the 64 most recent entries after TimeStamp
                         $SQLiteCommand.CommandText = "DELETE FROM LibraryMediaInfo WHERE ID NOT IN ( SELECT ID FROM LibraryMediaInfo ORDER BY TimeStamp DESC LIMIT 512 );"
-                        $SQLiteCommand.ExecuteNonQuery()
+                        $SQLiteCommand.ExecuteNonQuery() | Out-Null
                     }
                 }
                 catch {
