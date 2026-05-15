@@ -107,9 +107,9 @@
                               HorizontalAlignment="Right"/>
                 </WrapPanel>
             </GroupBox>
-            <GroupBox Header="Filter / Suche" Margin="10">
+            <GroupBox x:Name="GB_TapeSearch" Header="Filter / Search" Margin="10">
                 <DockPanel>
-                    <Label Content="Suche:" Margin="0,0,6,0" VerticalAlignment="Center" Style="{DynamicResource MainLabelStyle}"/>
+                    <Label Content="Search:" Margin="0,0,6,0" VerticalAlignment="Center" Style="{DynamicResource MainLabelStyle}"/>
                     <TextBox x:Name="TB_GlobalGridSearch"
                         Width="300"
                         Tag="Global Search"
@@ -336,9 +336,9 @@
                     <DataGridTextColumn Width="auto" Header="Severity" Binding ="{Binding Severity}" IsReadOnly="True"/>
                     <DataGridTextColumn Width="auto" Header="Type" Binding ="{Binding Type}" IsReadOnly="True"/>
                     <DataGridTextColumn Width="auto" Header="Location" Binding ="{Binding Location}" IsReadOnly="True"/>  
-                    <DataGridTextColumn Width="auto" Header="Description" Binding ="{Binding Description}" IsReadOnly="True"/>
                     <DataGridTextColumn Width="auto" Header="ErrorCode" Binding ="{Binding ErrorCode}" IsReadOnly="True"/>  
                     <DataGridTextColumn Width="auto" Header="EventTime" Binding ="{Binding EventTime}" IsReadOnly="True"/>
+                    <DataGridTextColumn Width="auto" Header="Description" Binding ="{Binding Description}" IsReadOnly="True"/>
                 </DataGrid.Columns>
               </DataGrid>
             </DataTemplate>
