@@ -307,9 +307,9 @@ $TD_BTN_ChangeExportPath.add_click({
     $TD_ChPathdialog = New-Object System.Windows.Forms.FolderBrowserDialog
     if ($TD_ChPathdialog.ShowDialog() -eq [System.Windows.Forms.DialogResult]::OK) {
         $TD_DirectoryName = $TD_ChPathdialog.SelectedPath
-        $TD_tb_ExportPath.Text = $TD_DirectoryName
+        $TD_TB_ExportPath.Text = $TD_DirectoryName
     }
-    $TD_LB_ExpPathMainWindow.Content ="Export Path: $($TD_tb_ExportPath.Text)"
+    $TD_LB_ExpPathMainWindow.Content ="Export Path: $($TD_TB_ExportPath.Text)"
 })
 #endregion
 #region CredentialBTN
@@ -1660,6 +1660,7 @@ $TD_BTN_PWR_ShowAll.add_click({
 #region IBM Tape
 $TD_BTN_IBM_TapeLibrary.add_click({
     $CustomerNumber = $TD_TB_CustomerInfoName.Text
+    $TD_GB_TapeSearch.Visibility="Collapsed"
     <#Get all Device Cred and count them #>
     $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_.DeviceTyp -like "*Tape"}
     <# get the DataConteext of the current View/ means UC and if its nul trow an error #>
@@ -1681,6 +1682,7 @@ $TD_BTN_IBM_TapeLibrary.add_click({
         try {
             $MergeLibObj = Merge-PSCustomObject -InputObject @($($LibBaseInfo.BaseInfo), $LibInfo)
             SST_CustomerLibraryDBInsertTable -SST_InfoType "LibraryBaseInfo" -SST_CollectedInformations $MergeLibObj
+            $MergeLibObj | Export-Csv -Path "$($TD_TB_ExportPath.Text)\$($TD_Creds.ID)_LibraryBaseInfo_$(Get-Date -Format 'yyyy-MM-dd').csv" -NoTypeInformation
         }
         catch {
             <#Do this if a terminating exception happens#>
@@ -1711,6 +1713,7 @@ $TD_BTN_IBM_TapeLibrary.add_click({
 })
 $TD_BTN_IBM_TapeInventoryDrives.add_click({
     $CustomerNumber = $TD_TB_CustomerInfoName.Text
+    $TD_GB_TapeSearch.Visibility="visible"
     <#Get all Device Cred and count them #>
     $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_.DeviceTyp -like "*Tape"}
     <# get the DataConteext of the current View/ means UC and if its nul trow an error #>
@@ -1726,6 +1729,7 @@ $TD_BTN_IBM_TapeInventoryDrives.add_click({
         try {
             $LibrarySerialNumberMTM = SST_CustomerLibraryDBReadTable -SST_InfoType "GetLibrarySerialNumberMTM" -SST_Customer $($TD_TB_CustomerInfoName.Text) -SST_NeededInformations $($TD_Creds.TapeWWNN)
             SST_CustomerLibraryDBInsertTable -SST_InfoType "LibraryInventoryDrives" -SST_CollectedInformations $($LibInventoryDrives.Drives) -SST_NeededInformations $LibrarySerialNumberMTM
+            $LibInventoryDrives | Export-Csv -Path "$($TD_TB_ExportPath.Text)\$($TD_Creds.ID)_LibraryInventoryDrives_$(Get-Date -Format "yyyy-MM-dd").csv" -NoTypeInformation
         }
         catch {
             <#Do this if a terminating exception happens#>
@@ -1752,6 +1756,7 @@ $TD_BTN_IBM_TapeInventoryDrives.add_click({
 })
 $TD_BTN_IBM_TapeInventorySlots.add_click({
     $CustomerNumber = $TD_TB_CustomerInfoName.Text
+    $TD_GB_TapeSearch.Visibility="visible"
     <#Get all Device Cred and count them #>
     $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_.DeviceTyp -like "*Tape"}
     <# get the DataConteext of the current View/ means UC and if its nul trow an error #>
@@ -1767,6 +1772,7 @@ $TD_BTN_IBM_TapeInventorySlots.add_click({
         try {
             $LibrarySerialNumberMTM = SST_CustomerLibraryDBReadTable -SST_InfoType "GetLibrarySerialNumberMTM" -SST_Customer $($TD_TB_CustomerInfoName.Text) -SST_NeededInformations $($TD_Creds.TapeWWNN)
             SST_CustomerLibraryDBInsertTable -SST_InfoType "LibraryInventorySlots" -SST_CollectedInformations $($LibInventorySlots.Slots) -SST_NeededInformations $LibrarySerialNumberMTM
+            $LibInventorySlots | Export-Csv -Path "$($TD_TB_ExportPath.Text)\$($TD_Creds.ID)_LibraryInventorySlots_$(Get-Date -Format "yyyy-MM-dd").csv" -NoTypeInformation
         }
         catch {
             <#Do this if a terminating exception happens#>
@@ -1796,6 +1802,7 @@ $TD_BTN_IBM_TapeInventorySlots.add_click({
 })
 $TD_BTN_IBM_TapeDrive.add_click({
     $CustomerNumber = $TD_TB_CustomerInfoName.Text
+    $TD_GB_TapeSearch.Visibility="visible"
     <#Get all Device Cred and count them #>
     $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_.DeviceTyp -like "*Tape"}
     <# get the DataConteext of the current View/ means UC and if its nul trow an error #>
@@ -1848,6 +1855,7 @@ $TD_BTN_IBM_TapeDrive.add_click({
             }
             $LibrarySerialNumberMTM = SST_CustomerLibraryDBReadTable -SST_InfoType "GetLibrarySerialNumberMTM" -SST_Customer $($TD_TB_CustomerInfoName.Text) -SST_NeededInformations $($TD_Creds.TapeWWNN)
             SST_CustomerLibraryDBInsertTable -SST_InfoType "LibraryDrive" -SST_CollectedInformations $MergeLibObj -SST_NeededInformations $LibrarySerialNumberMTM
+            $MergeLibObj | Export-Csv -Path "$($TD_TB_ExportPath.Text)\$($TD_Creds.ID)_LibraryDrive_$(Get-Date -Format "yyyy-MM-dd").csv" -NoTypeInformation
         }
         catch {
             <#Do this if a terminating exception happens#>
@@ -1894,6 +1902,7 @@ $TD_BTN_IBM_TapeDrive.add_click({
 #})
 $TD_BTN_IBM_TapeMediaInfo.add_click({
     $CustomerNumber = $TD_TB_CustomerInfoName.Text
+    $TD_GB_TapeSearch.Visibility="visible"
     <#Get all Device Cred and count them #>
     $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_.DeviceTyp -like "*Tape"}
     <# get the DataConteext of the current View/ means UC and if its nul trow an error #>
@@ -1910,6 +1919,7 @@ $TD_BTN_IBM_TapeMediaInfo.add_click({
         try {
             $LibrarySerialNumberMTM = SST_CustomerLibraryDBReadTable -SST_InfoType "GetLibrarySerialNumberMTM" -SST_Customer $($TD_TB_CustomerInfoName.Text) -SST_NeededInformations $($TD_Creds.TapeWWNN)
             SST_CustomerLibraryDBInsertTable -SST_InfoType "LibraryMediaInfo" -SST_CollectedInformations $LibInfo -SST_NeededInformations $LibrarySerialNumberMTM
+            $LibInfo | Export-Csv -Path "$($TD_TB_ExportPath.Text)\$($TD_Creds.ID)_LibraryMediaInfo_$(Get-Date -Format "yyyy-MM-dd").csv" -NoTypeInformation
         }
         catch {
             <#Do this if a terminating exception happens#>
@@ -1941,6 +1951,7 @@ $TD_BTN_IBM_TapeMediaInfo.add_click({
 })
 $TD_BTN_IBM_TapeReports.add_click({
     $CustomerNumber = $TD_TB_CustomerInfoName.Text
+    $TD_GB_TapeSearch.Visibility="visible"
     <#Get all Device Cred and count them #>
     $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_.DeviceTyp -like "*Tape"}
     <# get the DataConteext of the current View/ means UC and if its nul trow an error #>
@@ -1956,6 +1967,7 @@ $TD_BTN_IBM_TapeReports.add_click({
         try {
             $LibrarySerialNumberMTM = SST_CustomerLibraryDBReadTable -SST_InfoType "GetLibrarySerialNumberMTM" -SST_Customer $($TD_TB_CustomerInfoName.Text) -SST_NeededInformations $($TD_Creds.TapeWWNN)
             SST_CustomerLibraryDBInsertTable -SST_InfoType "LibraryReports" -SST_CollectedInformations $LibraryReports -SST_NeededInformations $LibrarySerialNumberMTM
+            $LibraryReports | Export-Csv -Path "$($TD_TB_ExportPath.Text)\$($TD_Creds.ID)_LibraryReports_$(Get-Date -Format "yyyy-MM-dd").csv" -NoTypeInformation
         }
         catch {
             <#Do this if a terminating exception happens#>
@@ -1986,6 +1998,7 @@ $TD_BTN_IBM_TapeReports.add_click({
 })
 $TD_BTN_IBM_TapeEvents.add_click({
     $CustomerNumber = $TD_TB_CustomerInfoName.Text
+    $TD_GB_TapeSearch.Visibility="visible"
     <#Get all Device Cred and count them #>
     $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_.DeviceTyp -like "*Tape"}
     <# get the DataConteext of the current View/ means UC and if its nul trow an error #>
@@ -2001,6 +2014,7 @@ $TD_BTN_IBM_TapeEvents.add_click({
         try {
             $LibrarySerialNumberMTM = SST_CustomerLibraryDBReadTable -SST_InfoType "GetLibrarySerialNumberMTM" -SST_Customer $($TD_TB_CustomerInfoName.Text) -SST_NeededInformations $($TD_Creds.TapeWWNN)
             SST_CustomerLibraryDBInsertTable -SST_InfoType "LibraryEvents" -SST_CollectedInformations $LibraryEvents -SST_NeededInformations $LibrarySerialNumberMTM
+            $LibraryEvents | Export-Csv -Path "$($TD_TB_ExportPath.Text)\$($TD_Creds.ID)_LibraryEvents_$(Get-Date -Format "yyyy-MM-dd").csv" -NoTypeInformation
         }
         catch {
             <#Do this if a terminating exception happens#>
