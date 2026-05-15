@@ -83,22 +83,22 @@ Function New-ProgressBar {
 
 function Write-ProgressBar
 {
-
     Param (
         [Parameter(Mandatory=$true)]
         $ProgressBar,
+
         [Parameter(Mandatory=$true)]
         [String]$Activity,
+
         [int]$PercentComplete
     )
 
-   $ProgressBar.Activity = $Activity
+    $null = ($ProgressBar.Activity = $Activity)
 
-   if($PercentComplete)
-   {
-    $ProgressBar.PercentComplete = $PercentComplete
-   }
-
+    if($PSBoundParameters.ContainsKey('PercentComplete'))
+    {
+        $null = ($ProgressBar.PercentComplete = $PercentComplete)
+    }
 }
 
 function Close-ProgressBar
@@ -109,10 +109,10 @@ function Close-ProgressBar
         [System.Object[]]$ProgressBar
     )
 
-    $ProgressBar.Window.Dispatcher.Invoke([action]{
-
+    [void]$ProgressBar.Window.Dispatcher.Invoke([action]{
+    
       $ProgressBar.Window.close()
-
+    
     }, "Normal")
 
 }
