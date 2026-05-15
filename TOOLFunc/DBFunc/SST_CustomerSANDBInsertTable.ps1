@@ -52,11 +52,11 @@ function SST_CustomerSANDBInsertTable {
                         $SQLiteCommand.Parameters.AddWithValue("@TimeStamp", $TimeStamp) | Out-Null
                     
                         # DB save 
-                        $SQLiteCommand.ExecuteNonQuery()
+                        $SQLiteCommand.ExecuteNonQuery() | Out-Null
 
                         # Delete | Keep only the 16 most recent entries after TimeStamp
                         $SQLiteCommand.CommandText = "DELETE FROM IBMSANHWTable WHERE ID NOT IN ( SELECT ID FROM IBMSANHWTable ORDER BY TimeStamp DESC LIMIT 16 );"
-                        $SQLiteCommand.ExecuteNonQuery()
+                        $SQLiteCommand.ExecuteNonQuery() | Out-Null
                     }
                 }
                 catch {
@@ -92,11 +92,11 @@ function SST_CustomerSANDBInsertTable {
                         $SQLiteCommand.Parameters.AddWithValue("@TimeStamp", $TimeStamp) | Out-Null
                     
                         # DB save 
-                        $SQLiteCommand.ExecuteNonQuery()
-
+                        $SQLiteCommand.ExecuteNonQuery() | Out-Null
+ 
                         # Then automatically clean up for this exact switch
                         $SQLiteCommand.CommandText ="DELETE FROM IBMSANPortInfoTable WHERE ID NOT IN (SELECT ID FROM (SELECT ID FROM IBMSANPortInfoTable AS t WHERE (SELECT COUNT(*) FROM IBMSANPortInfoTable AS x WHERE x.SwitchWWNN = t.SwitchWWNN AND x.Port = t.Port AND datetime(x.TimeStamp) >= datetime(t.TimeStamp) ) <= 1 ));" 
-                        $SQLiteCommand.ExecuteNonQuery()
+                        $SQLiteCommand.ExecuteNonQuery() | Out-Null
                     }
                 }
                 catch {
