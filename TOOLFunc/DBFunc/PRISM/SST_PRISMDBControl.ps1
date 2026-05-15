@@ -123,10 +123,10 @@ function SST_PRISMDBControl {
                         $SQLCommand.Parameters.AddWithValue("@TimeStamp", $TimeStamp) | Out-Null
                     
                         # DB save
-                        $SQLCommand.ExecuteNonQuery()
+                        $SQLCommand.ExecuteNonQuery() | Out-Null
                         # Delete | Keep only the 128 most recent entries after TimeStamp
                         #$SQLiteCommand.CommandText = "DELETE FROM IBMSTOHWTable WHERE ID NOT IN ( SELECT ID FROM IBMSTOHWTable ORDER BY TimeStamp DESC LIMIT 128 );"
-                        #$SQLiteCommand.ExecuteNonQuery()
+                        #$SQLiteCommand.ExecuteNonQuery() | Out-Null
                     }
                 }catch{
                     Write-Host $_.Exception.Message -ForegroundColor DarkMagenta
@@ -221,7 +221,7 @@ function SST_PRISMDBControl {
                         $SQLCommand.Parameters.AddWithValue("@TimeStamp", $TimeStamp) | Out-Null
                     
                         # DB save
-                        $SQLCommand.ExecuteNonQuery()
+                        $SQLCommand.ExecuteNonQuery() | Out-Null
 
                         # Delete | Keep only the 500 most recent entries after TimeStamp
                         #$SQLCommand.CommandText = "DELETE FROM IBMSTOEventsTable WHERE ID NOT IN ( SELECT ID FROM IBMSTOEventsTable ORDER BY TimeStamp DESC LIMIT 500 );"
@@ -262,7 +262,7 @@ function SST_PRISMDBControl {
                         $SQLCommand.Parameters.AddWithValue("@TimeStamp", $TimeStamp) | Out-Null
                     
                         # DB save 
-                        $SQLCommand.ExecuteNonQuery()
+                        $SQLCommand.ExecuteNonQuery() | Out-Null
 
                         # Delete | Keep only the 16 most recent entries after TimeStamp
                         # $SQLCommand.CommandText = "DELETE FROM IBMSANHWTable WHERE ID NOT IN ( SELECT ID FROM IBMSANHWTable ORDER BY TimeStamp DESC LIMIT 16 );"
@@ -312,7 +312,7 @@ function SST_PRISMDBControl {
                         $SQLCommand.Parameters.AddWithValue("@TimeStamp", $TimeStamp) | Out-Null
                     
                         # DB save 
-                        $SQLCommand.ExecuteNonQuery()
+                        $SQLCommand.ExecuteNonQuery() | Out-Null
 
                         # Delete | Keep only the 64 most recent entries after TimeStamp
                         #$SQLCommand.CommandText = "DELETE FROM PowerHMC WHERE ID NOT IN ( SELECT ID FROM PowerHMC ORDER BY TimeStamp DESC LIMIT 64 );"
@@ -358,7 +358,7 @@ function SST_PRISMDBControl {
                         $SQLCommand.Parameters.AddWithValue("@TimeStamp", $TimeStamp) | Out-Null
 
                         # DB save 
-                        $SQLCommand.ExecuteNonQuery()
+                        $SQLCommand.ExecuteNonQuery() | Out-Null
 
                         # Delete | Keep only the 128 most recent entries after TimeStamp
                         #$SQLCommand.CommandText = "DELETE FROM PowerSysSummary WHERE ID NOT IN ( SELECT ID FROM PowerSysSummary ORDER BY TimeStamp DESC LIMIT 128 );"
@@ -414,7 +414,7 @@ function SST_PRISMDBControl {
                         $SQLCommand.Parameters.AddWithValue("@TimeStamp", $TimeStamp) | Out-Null
                     
                         # DB save 
-                        $SQLCommand.ExecuteNonQuery()
+                        $SQLCommand.ExecuteNonQuery() | Out-Null
 
                         # Delete | Keep only the 1024 most recent entries after TimeStamp
                         #$SQLCommand.CommandText = "DELETE FROM LPARSummary WHERE ID NOT IN ( SELECT ID FROM LPARSummary ORDER BY TimeStamp DESC LIMIT 1024 );"
@@ -479,7 +479,7 @@ function SST_PRISMDBControl {
                         $SQLCommand.Parameters.AddWithValue("@TimeStamp", $TimeStamp) | Out-Null
                     
                         # DB save 
-                        $SQLCommand.ExecuteNonQuery()
+                        $SQLCommand.ExecuteNonQuery() | Out-Null
 
                         # Delete | Keep only the 1024 most recent entries after TimeStamp
                         #$SQLCommand.CommandText = "DELETE FROM LPARSummary WHERE ID NOT IN ( SELECT ID FROM LPARSummary ORDER BY TimeStamp DESC LIMIT 1024 );"
@@ -550,7 +550,7 @@ function SST_PRISMDBControl {
                         $SQLCommand.Parameters.AddWithValue("@TimeStamp", $TimeStamp) | Out-Null
                     
                         # DB save 
-                        $SQLCommand.ExecuteNonQuery()
+                        $SQLCommand.ExecuteNonQuery() | Out-Null
 
                         # Delete | Keep only the 1024 most recent entries after TimeStamp
                         #$SQLCommand.CommandText = "DELETE FROM LPARSummary WHERE ID NOT IN ( SELECT ID FROM LPARSummary ORDER BY TimeStamp DESC LIMIT 1024 );"
@@ -598,7 +598,7 @@ function SST_PRISMDBControl {
                         $SQLCommand.Parameters.AddWithValue("@TimeStamp", $TimeStamp) | Out-Null
                     
                         # DB save 
-                        $SQLCommand.ExecuteNonQuery()
+                        $SQLCommand.ExecuteNonQuery() | Out-Null
 
                         # Delete | Keep only the 1024 most recent entries after TimeStamp
                         #$SQLCommand.CommandText = "DELETE FROM LPARSummary WHERE ID NOT IN ( SELECT ID FROM LPARSummary ORDER BY TimeStamp DESC LIMIT 1024 );"
@@ -652,7 +652,7 @@ function SST_PRISMDBControl {
                         $SQLCommand.Parameters.AddWithValue("@TimeStamp", $TimeStamp) | Out-Null
                     
                         # DB save 
-                        $SQLCommand.ExecuteNonQuery()
+                        $SQLCommand.ExecuteNonQuery() | Out-Null
 
                         # Delete | Keep only the 1024 most recent entries after TimeStamp
                         #$SQLCommand.CommandText = "DELETE FROM LPARSummary WHERE ID NOT IN ( SELECT ID FROM LPARSummary ORDER BY TimeStamp DESC LIMIT 1024 );"
