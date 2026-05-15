@@ -57,11 +57,11 @@ function SST_CustomerPWRDBInsertTable {
                         $SQLiteCommand.Parameters.AddWithValue("@TimeStamp", $TimeStamp) | Out-Null
                     
                         # DB save 
-                        $SQLiteCommand.ExecuteNonQuery()
+                        $SQLiteCommand.ExecuteNonQuery() | Out-Null
 
                         # Delete | Keep only the 64 most recent entries after TimeStamp
                         $SQLiteCommand.CommandText = "DELETE FROM PowerHMC WHERE ID NOT IN ( SELECT ID FROM PowerHMC ORDER BY TimeStamp DESC LIMIT 64 );"
-                        $SQLiteCommand.ExecuteNonQuery()
+                        $SQLiteCommand.ExecuteNonQuery() | Out-Null
                     }
                 }
                 catch {
@@ -100,11 +100,11 @@ function SST_CustomerPWRDBInsertTable {
                         $SQLiteCommand.Parameters.AddWithValue("@TimeStamp", $TimeStamp) | Out-Null
 
                         # DB save 
-                        $SQLiteCommand.ExecuteNonQuery()
+                        $SQLiteCommand.ExecuteNonQuery() | Out-Null
 
                         # Delete | Keep only the 128 most recent entries after TimeStamp
                         $SQLiteCommand.CommandText = "DELETE FROM PowerSysSummary WHERE ID NOT IN ( SELECT ID FROM PowerSysSummary ORDER BY TimeStamp DESC LIMIT 128 );"
-                        $SQLiteCommand.ExecuteNonQuery()
+                        $SQLiteCommand.ExecuteNonQuery() | Out-Null
                     }
                 }
                 catch {
@@ -150,11 +150,11 @@ function SST_CustomerPWRDBInsertTable {
                         $SQLiteCommand.Parameters.AddWithValue("@TimeStamp", $TimeStamp) | Out-Null
                     
                         # DB save 
-                        $SQLiteCommand.ExecuteNonQuery()
+                        $SQLiteCommand.ExecuteNonQuery() | Out-Null
 
                         # Delete | Keep only the 1024 most recent entries after TimeStamp
                         $SQLiteCommand.CommandText = "DELETE FROM LPARSummary WHERE ID NOT IN ( SELECT ID FROM LPARSummary ORDER BY TimeStamp DESC LIMIT 1024 );"
-                        $SQLiteCommand.ExecuteNonQuery()
+                        $SQLiteCommand.ExecuteNonQuery() | Out-Null
                     }
                 }
                 catch {
