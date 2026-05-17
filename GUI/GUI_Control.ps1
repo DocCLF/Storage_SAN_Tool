@@ -1027,7 +1027,7 @@ $TD_BTN_IBM_CleanUpDumps.add_click({
     <# if there a something in, its better to clean it up befor we use it again #>
     $UCVMMain.DeviceToggles.Clear()
     foreach($TD_Creds in $TD_Credentials){
-        $FunctionResult = New-DeviceBlock -Device $TD_Creds -ExportPath $TD_TB_ExportPath.Text -SSHFunc IBM_SSHCleanUpDumps
+        $FunctionResult = New-DeviceBlock -Device $TD_Creds -ExportPath $TD_TB_ExportPath.Text -RESTFunc IBM_RESTCleanUpDumps -SSHFunc IBM_SSHCleanUpDumps
         # Links = Propertyname im PSCustomObject (das bindet dein XAML)
         # Rechts = Propertyname im Source-Objekt
         $dev = $FunctionResult.DeviceIdent
@@ -1035,6 +1035,7 @@ $TD_BTN_IBM_CleanUpDumps.add_click({
         $mapDumpInfo = @{
             DeviceName  = 'DeviceName'
             DumpMsg     = 'DumpMsg'
+            UpgradeMsg  = 'UpgradeMsg'
         }
         Add-MappedRows -Collection $dev.DumpInfoRows -Source $FunctionResult.FuncResult -IdProperty 'RowID' -Map $mapDumpInfo
         # dynamische Überschrift
