@@ -48,7 +48,7 @@ function IBM_SSHCleanUpDumps {
         SST_ToolMessageCollector -TD_ToolMSGCollector "IBM_CleanUpDumps End block " -TD_ToolMSGType Debug
         Write-Debug -Message "IBM_CleanUpDumps End block |$(Get-Date) `n"
         <# export y or n #>
-        if([String]::IsNullOrEmpty($D_CleanUpDumps)){
+        if([String]::IsNullOrEmpty($TD_CleanUpDumps)){
             $TD_CleanUpDumpResult ="Everything on Device $($TD_DeviceName) deleted."
         }else{
             $TD_CleanUpDumpResult = $TD_CleanUpDumps
