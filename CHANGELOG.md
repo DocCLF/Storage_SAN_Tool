@@ -18,10 +18,12 @@ All notable changes to this project will be documented in this file.
 
 ### Fixed
 - ToolLog on GUI, Some entries were not displayed or were displayed incorrectly
+- Write-ProgressBar and Close-ProgressBar 
 - some major and minor bugs
 
 ### Changed
 - GUI redesigned
+- Function handling in the New-ProgressBar Function 
 - PRISM Connection and Setup
 - ToolLog on GUI The most recent post now always appears at the top
 
