@@ -1,5 +1,4 @@
 function Get-BrocadeSwitchShow {
-
     [CmdletBinding()]
     param(
         [Parameter(Mandatory)]
@@ -59,13 +58,15 @@ function Get-BrocadeSwitchShow {
             }
             Speed = $Port.'protocol-speed'
             State = $Port.'operational-status-string'
-            $PortStateInfo = SAN_PortStateInfo -SANSwitchWWNN $Device.WWNN -SANSerialNumber $Device.SerialNumber -SANPort $Port.name -SANState $Port.'operational-status-string'
+            <# WWNN und SN könnte man von der DB auf basis der kdnr und ip addr herauslesen #>
+            #$PortStateInfo = SAN_PortStateInfo -SANSwitchWWNN $Device.WWNN -SANSerialNumber $Device.SerialNumber -SANPort $Port.name -SANState $Port.'operational-status-string'
+            PortStateInfo = $null
             Proto = $Port.'port-type-string'
-            WWPNs = @($NameServerInfo.'port-name') | Where-Object {$_}
+            WWPNs = @(@($NameServerInfo.'port-name') | Where-Object {$_})
             WWPN = @($NameServerInfo.'port-name') -join ', '
-            SymbolicNames = @($CleanSymbolicNames) | Where-Object {$_}
+            SymbolicNames = @(@($CleanSymbolicNames) | Where-Object {$_})
             SymbolicName = @($CleanSymbolicNames) -join ', '
-            Aliases = @($AliasList) | Where-Object {$_}
+            Aliases = @(@($AliasList) | Where-Object {$_})
             Alias = @($AliasList) -join ', '
             PortConnectList = if($PortConnectList){
                 @($PortConnectList)
