@@ -1158,7 +1158,7 @@ $TD_BTN_FOS_BasicSwitchInfo.add_click({
 
     foreach ($TD_Creds in $TD_Credentials) {
 
-        $FunctionResult = New-DeviceBlock -Device $TD_Creds -ExportPath $TD_TB_ExportPath.Text -SSHFunc FOS_SSHBasicSwitchInfos
+        $FunctionResult = New-DeviceBlock -Device $TD_Creds -ExportPath $TD_TB_ExportPath.Text -RESTFunc Get-BrocadeBaseInfo -SSHFunc FOS_SSHBasicSwitchInfos
 
         $deviceIdent = $FunctionResult['DeviceIdent']
         $funcResult  = $FunctionResult['FuncResult']
@@ -1228,7 +1228,7 @@ $TD_BTN_FOS_PortBufferShow.add_click({
     <# if there a something in, its better to clean it up befor we use it again #>
     $UCVMMain.DeviceToggles.Clear()
     foreach($TD_Creds in $TD_Credentials){
-        $FunctionResult = New-DeviceBlock -Device $TD_Creds -ExportPath $TD_TB_ExportPath.Text -SSHFunc FOS_SSHPortbufferShowInfo
+        $FunctionResult = New-DeviceBlock -Device $TD_Creds -ExportPath $TD_TB_ExportPath.Text -RESTFunc Get-BrocadePortBufferStats -SSHFunc FOS_SSHPortbufferShowInfo
         # Links = Propertyname im PSCustomObject (das bindet dein XAML)
         # Rechts = Propertyname im Source-Objekt
         $mapPortbufferShow = @{ 
@@ -1261,7 +1261,7 @@ $TD_BTN_FOS_PortErrorShow.add_click({
     <# if there a something in, its better to clean it up befor we use it again #>
     $UCVMMain.DeviceToggles.Clear()
     foreach($TD_Creds in $TD_Credentials){
-        $FunctionResult = New-DeviceBlock -Device $TD_Creds -ExportPath $TD_TB_ExportPath.Text -SSHFunc FOS_SSHPortErrShowInfos
+        $FunctionResult = New-DeviceBlock -Device $TD_Creds -ExportPath $TD_TB_ExportPath.Text -RESTFunc Get-BrocadePortErrorStats -SSHFunc FOS_SSHPortErrShowInfos
         # Links = Propertyname im PSCustomObject (das bindet dein XAML)
         # Rechts = Propertyname im Source-Objekt
         $mapPortErrorShow = @{ 
@@ -1304,17 +1304,21 @@ $TD_BTN_FOS_SFPHealthShow.add_click({
     <# if there a something in, its better to clean it up befor we use it again #>
     $UCVMMain.DeviceToggles.Clear()
     foreach($TD_Creds in $TD_Credentials){
-        $FunctionResult = New-DeviceBlock -Device $TD_Creds -ExportPath $TD_TB_ExportPath.Text -SSHFunc FOS_SSHSFPDetails
+        $FunctionResult = New-DeviceBlock -Device $TD_Creds -ExportPath $TD_TB_ExportPath.Text -RESTFunc Get-BrocadeSFPShow -SSHFunc FOS_SSHSFPDetails
         # Links = Propertyname im PSCustomObject (das bindet dein XAML)
         # Rechts = Propertyname im Source-Objekt
         $mapSFPDetails = @{ 
             Port            = 'Port'
             SFPUsed         = 'SFPUsed'
+            Media           = 'Media'
             SFPTyp          = 'SFPTyp'
             Vendor          = 'Vendor'
             SerialNo        = 'SerialNo'
             SpeedRange      = 'SpeedRange'
-            HealthStatus    = 'HealthStatus'
+            Temperature     = 'Temperature'
+            RxPower         = 'RxPower'
+            TxPower         = 'TxPower'
+            Voltage         = 'Voltage'
         }
         Add-MappedRows -Collection $FunctionResult.DeviceIdent.SANSFPDetailsRows -Source $FunctionResult.FuncResult -IdProperty 'RowID' -Map $mapSFPDetails
 
@@ -1334,7 +1338,7 @@ $TD_BTN_FOS_ZoneDetailsShow.add_click({
     <# if there a something in, its better to clean it up befor we use it again #>
     $UCVMMain.DeviceToggles.Clear()
     foreach($TD_Creds in $TD_Credentials){
-        $FunctionResult = New-DeviceBlock -Device $TD_Creds -ExportPath $TD_TB_ExportPath.Text -SSHFunc FOS_SSHZoneDetails
+        $FunctionResult = New-DeviceBlock -Device $TD_Creds -ExportPath $TD_TB_ExportPath.Text -RESTFunc Get-BrocadeEffectiveZoneShow -SSHFunc FOS_SSHZoneDetails
         # Links = Propertyname im PSCustomObject (das bindet dein XAML)
         # Rechts = Propertyname im Source-Objekt
         $mapZoneDetails = @{ 
@@ -1360,7 +1364,7 @@ $TD_BTN_FOS_PortLicenseShow.add_click({
     <# if there a something in, its better to clean it up befor we use it again #>
     $UCVMMain.DeviceToggles.Clear()
     foreach($TD_Creds in $TD_Credentials){
-        $FunctionResult = New-DeviceBlock -Device $TD_Creds -ExportPath $TD_TB_ExportPath.Text -SSHFunc FOS_SSHPortLicenseShowInfo
+        $FunctionResult = New-DeviceBlock -Device $TD_Creds -ExportPath $TD_TB_ExportPath.Text -RESTFunc Get-BrocadeLicenseOverview -SSHFunc FOS_SSHPortLicenseShowInfo
         # Links = Propertyname im PSCustomObject (das bindet dein XAML)
         # Rechts = Propertyname im Source-Objekt
         $dev = $FunctionResult.DeviceIdent
@@ -1393,7 +1397,7 @@ $TD_BTN_FOS_SensorShow.add_click({
     <# if there a something in, its better to clean it up befor we use it again #>
     $UCVMMain.DeviceToggles.Clear()
     foreach($TD_Creds in $TD_Credentials){
-        $FunctionResult = New-DeviceBlock -Device $TD_Creds -ExportPath $TD_TB_ExportPath.Text -SSHFunc FOS_SSHSensorShow
+        $FunctionResult = New-DeviceBlock -Device $TD_Creds -ExportPath $TD_TB_ExportPath.Text -RESTFunc Get-BrocadeSensorOverview -SSHFunc FOS_SSHSensorShow
         # Links = Propertyname im PSCustomObject (das bindet dein XAML)
         # Rechts = Propertyname im Source-Objekt
         $dev = $FunctionResult.DeviceIdent
