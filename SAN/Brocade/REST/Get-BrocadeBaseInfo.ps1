@@ -15,7 +15,13 @@ function Get-BrocadeBaseInfo {
     }else{
         $MTM = $RawMTM
     }
-
+    <# This is needed because WinPW 5.1 #>
+    $SwitchRole = if($SwitchInfo.'is-principal'){
+            'Principal'
+        }
+        else{
+            'Subordinate'
+        }
 
     [PSCustomObject]@{
         SwitchName = $SwitchInfo.'user-friendly-name'
@@ -35,12 +41,7 @@ function Get-BrocadeBaseInfo {
         DNSServer = @($SwitchInfo.'dns-servers'.'dns-server') -join "`n"
         DHCP = $MgmtInfo.'dhcp-enabled'
         SwitchState = $SwitchInfo.'operational-status-string'
-        SwitchRole = if($SwitchInfo.'is-principal'){
-            'Principal'
-        }
-        else{
-            'Subordinate'
-        }
+        SwitchRole = $SwitchRole
         VFenabled = $ChassisInfo.'vf-enabled'
         VFsupported = $ChassisInfo.'vf-supported'
         RowID = $SwitchInfo.'domain-id'
