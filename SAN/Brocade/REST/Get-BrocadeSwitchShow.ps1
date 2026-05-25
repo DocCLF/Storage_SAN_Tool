@@ -44,18 +44,25 @@ function Get-BrocadeSwitchShow {
                 $NS.'port-symbolic-name' -replace '^\[\d+\]\s*"', '' -replace '"$', ''
             }
         }
-
-        [PSCustomObject]@{
-            Index = $Port.index
-            Port = $Port.name
-            Address = $Port.'fcid-hex'
-            Media = if($SFPInfo){
+        <# This is needed because WinPW 5.1 #>
+        $Media = if($SFPInfo){
                 switch($SFPInfo.'transmission-type'){
                     'shortwave' { 'SWL' }
                     'longwave'  { 'LWL' }
                 default     { $SFPInfo.'transmission-type' }
                 }
             }
+        $PortConnectLists = if($PortConnectList){
+                @($PortConnectList)
+            }else{
+                $null
+            }
+
+        [PSCustomObject]@{
+            Index = $Port.index
+            Port = $Port.name
+            Address = $Port.'fcid-hex'
+            Media = $Media
             Speed = $Port.'protocol-speed'
             State = $Port.'operational-status-string'
             <# WWNN und SN könnte man von der DB auf basis der kdnr und ip addr herauslesen #>
@@ -68,11 +75,7 @@ function Get-BrocadeSwitchShow {
             SymbolicName = @($CleanSymbolicNames) -join ', '
             Aliases = @(@($AliasList) | Where-Object {$_})
             Alias = @($AliasList) -join ', '
-            PortConnectList = if($PortConnectList){
-                @($PortConnectList)
-            }else{
-                $null
-            }
+            PortConnectList = $PortConnectLists
             PortConnect = @($PortConnectList) -join "`n"
             RowID = $Port.index
         }
