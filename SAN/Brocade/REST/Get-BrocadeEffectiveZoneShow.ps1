@@ -43,6 +43,9 @@ function Get-BrocadeEffectiveZoneShow {
             $AliasInfo = $Aliases | Where-Object {
                 $_.WWPN -eq $WWPN
             } | Select-Object -First 1
+            <# This is needed because WinPW 5.1 #>
+            $Alias = if($AliasInfo){ $AliasInfo.Alias } else { '<NoAlias>' }
+            $Member = if($AliasInfo){ "$($AliasInfo.Alias) [$WWPN]" } else { "<NoAlias> [$WWPN]" }
 
             [PSCustomObject]@{
                 ZoneName        = $ZoneName
@@ -50,9 +53,9 @@ function Get-BrocadeEffectiveZoneShow {
                 ZoneTypeString  = $ZoneTypeString
                 ZoneTypeDisplay = $ZoneTypeDisplay
                 MemberRole      = 'Principal'
-                Alias           = if($AliasInfo){ $AliasInfo.Alias } else { '<NoAlias>' }
+                Alias           = $Alias
                 WWPN            = $WWPN
-                Member          = if($AliasInfo){ "$($AliasInfo.Alias) [$WWPN]" } else { "<NoAlias> [$WWPN]" }
+                Member          = $Member
             }
         }
 
@@ -61,16 +64,20 @@ function Get-BrocadeEffectiveZoneShow {
             $AliasInfo = $Aliases | Where-Object {
                 $_.WWPN -eq $WWPN
             } | Select-Object -First 1
+            <# This is needed because WinPW 5.1 #>
+            $MemberRole = if($ZoneTypeString -like '*peer*'){ 'Peer' } else { 'Member' }
+            $Alias = if($AliasInfo){ $AliasInfo.Alias } else { '<NoAlias>' }
+            $Member = if($AliasInfo){ "$($AliasInfo.Alias) [$WWPN]" } else { "<NoAlias> [$WWPN]" }
 
             [PSCustomObject]@{
                 ZoneName        = $ZoneName
                 ZoneType        = $ZoneType
                 ZoneTypeString  = $ZoneTypeString
                 ZoneTypeDisplay = $ZoneTypeDisplay
-                MemberRole      = if($ZoneTypeString -like '*peer*'){ 'Peer' } else { 'Member' }
-                Alias           = if($AliasInfo){ $AliasInfo.Alias } else { '<NoAlias>' }
+                MemberRole      = $MemberRole
+                Alias           = $Alias
                 WWPN            = $WWPN
-                Member          = if($AliasInfo){ "$($AliasInfo.Alias) [$WWPN]" } else { "<NoAlias> [$WWPN]" }
+                Member          = $Member
             }
         }
     }
