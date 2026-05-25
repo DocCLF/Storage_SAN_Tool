@@ -71,7 +71,6 @@ function Get-BrocadeSfp {
     
     $res.Data.'media-rdp'
 }
-
 function Get-BrocadeNameServer {
     [CmdletBinding()]
     param(
@@ -121,7 +120,6 @@ function Get-BrocadeFCdiagnostics {
     
     $res.Data.'brocade-fibrechannel-diagnostics'
 }
-
 function Get-BrocadeEffectiveZoneConfig {
     param($Device)
 
@@ -132,15 +130,12 @@ function Get-BrocadeEffectiveZoneConfig {
     }
     $res.Data.'effective-configuration'
 }
-
-
 function Get-BrocadeDefinedZoneConfig {
     param($Device)
 
     $res = Invoke-BrocadeRest -Device $Device -FOSOperation "running/brocade-zone/defined-configuration"
     return $res
 }
-
 function Get-BrocadeAliases {
     [CmdletBinding()]
     param(
@@ -175,11 +170,12 @@ function Get-BrocadeLicenseRaw {
     if(-not $res.Success){
         return $res
     }
-
+    <# This is needed because WinPW 5.1 #>
+    $Features = if($License.features.feature){@($License.features.feature)}else{@()}
     $Licenses = foreach($License in @($res.Data.license)){
         [PSCustomObject]@{
             LicenseName = $License.name
-            Features = if($License.features.feature){@($License.features.feature)}else{@()}
+            Features = $Features
             FeatureString = @($License.features.feature) -join ', '
             ExpirationDate = $License.'expiration-date'
             GenerationDate = $License.'generation-date'
@@ -233,21 +229,26 @@ function Get-BrocadeTemperatureInfo {
     $TemperatureInfo = @($TempSensors.temperature)
     $MaxTemp = if($TemperatureInfo){($TemperatureInfo | Measure-Object -Maximum).Maximum}
     $MinTemp = if($TemperatureInfo){($TemperatureInfo | Measure-Object -Minimum).Minimum}
-
-    [PSCustomObject]@{
-        SensorCount = $TemperatureInfo.Count
-        AverageTemp = if($TemperatureInfo){
+    <# This is needed because WinPW 5.1 #>
+    $AverageTemp = if($TemperatureInfo){
             [math]::Round((($TemperatureInfo | Measure-Object -Average).Average),1)
         }
-        MaxTemp = $MaxTemp
-        MinTemp = $MinTemp
-        HotSensors = @($TempSensors | Where-Object {$_.temperature -ge 40}).Count
-        HealthState = switch($MaxTemp){
+    $HealthState = switch($MaxTemp){
             {$_ -ge 60} { 'Critical' }
             {$_ -ge 50} { 'Warning' }
             default { 'OK' }
         }
-        FaultySensors = @($TempSensors | Where-Object {$_.state -ne 'ok'}).Count
+    $HotSensors = @($TempSensors | Where-Object {$_.temperature -ge 40}).Count
+    $FaultySensors = @($TempSensors | Where-Object {$_.state -ne 'ok'}).Count
+
+    [PSCustomObject]@{
+        SensorCount = $TemperatureInfo.Count
+        AverageTemp = $AverageTemp
+        MaxTemp = $MaxTemp
+        MinTemp = $MinTemp
+        HotSensors = $HotSensors
+        HealthState = $HealthState
+        FaultySensors = $FaultySensors
     }
 }
 function Get-BrocadeFruFanRaw{
@@ -311,16 +312,10 @@ function Get-BrocadePowerSupplyInfo {
     )
 
     $PowerSupplies = Get-BrocadeFruPowerSupplyRaw -Device $Device 
-
+    <# This is needed because WinPW 5.1 #>
     foreach($PSU in @($PowerSupplies)){
         $State = $PSU.'operational-state'
-        [PSCustomObject]@{
-
-            PowerSupply = "PSU$($PSU.'unit-number')"
-            UnitNumber = $PSU.'unit-number'
-            State = $State
-            IsHealthy = $State -eq 'ok'
-            Severity = switch($State){
+        $Severity = switch($State){
 
                 'ok'      { 'OK' }
 
@@ -330,13 +325,18 @@ function Get-BrocadePowerSupplyInfo {
 
                 default   { 'Unknown' }
             }
+        $InputVoltage = if($PSU.'input-voltage'){"$($PSU.'input-voltage') V"}
+        $PowerUsage = if($PSU.'power-usage'){"$($PSU.'power-usage') W"}
+
+        [PSCustomObject]@{
+            PowerSupply = "PSU$($PSU.'unit-number')"
+            UnitNumber = $PSU.'unit-number'
+            State = $State
+            IsHealthy = $State -eq 'ok'
+            Severity = $Severity
             PowerSource = $PSU.'power-source'
-            InputVoltage = if($PSU.'input-voltage'){
-                "$($PSU.'input-voltage') V"
-            }
-            PowerUsage = if($PSU.'power-usage'){
-                "$($PSU.'power-usage') W"
-            }
+            InputVoltage = $InputVoltage
+            PowerUsage = $PowerUsage
             Airflow = $PSU.'airflow-direction'
             TemperatureSensorSupported = $PSU.'temperature-sensor-supported'
             TimeAwakeHours = $PSU.'time-awake'
