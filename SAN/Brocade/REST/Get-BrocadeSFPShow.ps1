@@ -21,38 +21,56 @@ function Get-BrocadeSFPShow {
         $TempValue = if($SFPInfo){
             [int]$SFPInfo.temperature
         }
+        <# This is needed because WinPW 5.1 #>
+        $SFPTyp = if($SFPInfo){ $SFPInfo.identifier } else { $null }
+        $Connector = if($SFPInfo){ $SFPInfo.connector } else { $null }
+        $Media = if($SFPInfo){ $SFPInfo.'transmission-type' } else { 'No SFP' }
+        $Vendor = if($SFPInfo){ $SFPInfo.'vendor-name' } else { $null }
+        $PartNumber = if($SFPInfo){ $SFPInfo.'part-number' } else { $null }
+        $SerialNo = if($SFPInfo){ $SFPInfo.'serial-number' } else { $null }
+        $SpeedRange = if($SFPInfo){ $Port.'protocol-speed' } else { $null }
+        $Temperature = if($SFPInfo){ $TempValue } else { $null }
+        $TempState = if($SFPInfo -and $TempValue -ge 70){ 'HOT' } elseif($SFPInfo){ 'OK' } else { $null }
+        $RxPower = if($SFPInfo){ $SFPInfo.'rx-power' } else { $null }
+        $OpticalState = if($SFPInfo){
+            switch($RxPowerValue){
+                {$_ -le 0}   { 'No Light'; break }
+                {$_ -lt 100} { 'Low Signal'; break }
+                default      { 'OK' }
+            }
+        } else { $null }
+        $TxPower = if($SFPInfo){ $SFPInfo.'tx-power' } else { $null }
+        $Voltage = if($SFPInfo){ $SFPInfo.voltage } else { $null }
+        $Wavelength = if($SFPInfo){ "$($SFPInfo.wavelength) nm" } else { $null }
+        $PowerOnTime = if($SFPInfo){ $SFPInfo.'power-on-time' } else { $null }
+
+
 
         [PSCustomObject]@{
             Port = $Port.name
             State = $Port.'operational-status-string'
             SFPUsed = [bool]$SFPInfo
 
-            SFPTyp = if($SFPInfo){ $SFPInfo.identifier }
-            Connector = if($SFPInfo){ $SFPInfo.connector }
-            Media = if($SFPInfo){ $SFPInfo.'transmission-type' } else { 'No SFP' }
+            SFPTyp = $SFPTyp
+            Connector = $Connector
+            Media = $Media
 
-            Vendor = if($SFPInfo){ $SFPInfo.'vendor-name' }
-            PartNumber = if($SFPInfo){ $SFPInfo.'part-number' }
-            SerialNo = if($SFPInfo){ $SFPInfo.'serial-number' }
+            Vendor = $Vendor
+            PartNumber = $PartNumber
+            SerialNo = $SerialNo
 
-            SpeedRange = if($SFPInfo){ $Port.'protocol-speed' }
+            SpeedRange = $SpeedRange
 
-            Temperature = if($SFPInfo){ $TempValue }
-            TempState = if($SFPInfo -and $TempValue -ge 70){ 'HOT' } elseif($SFPInfo){ 'OK' }
+            Temperature = $Temperature
+            TempState = $TempState
 
-            RxPower = if($SFPInfo){ $SFPInfo.'rx-power' }
-            OpticalState = if($SFPInfo){
-                switch($RxPowerValue){
-                    {$_ -le 0}   { 'No Light'; break }
-                    {$_ -lt 100} { 'Low Signal'; break }
-                    default      { 'OK' }
-                }
-            }
+            RxPower = $RxPower
+            OpticalState = $OpticalState
 
-            TxPower = if($SFPInfo){ $SFPInfo.'tx-power' }
-            Voltage = if($SFPInfo){ $SFPInfo.voltage }
-            Wavelength = if($SFPInfo){ "$($SFPInfo.wavelength) nm" }
-            PowerOnTime = if($SFPInfo){ $SFPInfo.'power-on-time' }
+            TxPower = $TxPower
+            Voltage = $Voltage
+            Wavelength = $Wavelength
+            PowerOnTime = $PowerOnTime
         }
     }
 }
