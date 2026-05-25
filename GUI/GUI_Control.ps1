@@ -1129,295 +1129,438 @@ $TD_BTN_IBM_FCPortStats.add_click({
 #region Brocade SAN
 $TD_BTN_FOS_BasicSwitchInfo.add_click({
     $TD_GB_SearchFilter.Visibility = "Collapsed"
-    $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource | Where-Object { $_.DeviceTyp -like "*SAN*" }
+    <# for ProgressBar #>
+        $PB = New-ProgressBar
+    <# ProgressBar #>
+    try{
+        $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource | Where-Object { $_.DeviceTyp -like "*SAN*" }
+        <# for ProgressBar #>
+            $Total = $TD_Credentials.Count
+            $Current = 0
+        <# ProgressBar #>
+        $UCDataContext = $TD_UserControl_BRSAN.DataContext
+        if (-not $UCDataContext) { Write-Host "DataContext ist NULL!" -ForegroundColor Red; return }
 
-    $UCDataContext = $TD_UserControl_BRSAN.DataContext
-    if (-not $UCDataContext) { Write-Host "DataContext ist NULL!" -ForegroundColor Red; return }
+        $UCVMMain = $UCDataContext.Main
+        $UCVMMain.DeviceToggles.Clear()
 
-    $UCVMMain = $UCDataContext.Main
-    $UCVMMain.DeviceToggles.Clear()
+        $mapSANSwitchInfo = @{
+            SwichtName          = 'Swicht Name'
+            ActiveZonenCFG      = 'Active ZonenCFG'
+            DomainID            = 'DomainID'
+            SwitchWWNN          = 'Switch WWN'
+            SwitchType          = 'SwitchType'
+            FabricID            = 'Fabric ID'
+            BrocadeProductName  = 'Brocade Name'
+            MTM                 = 'MTM'
+            SerialNumber        = 'SerialNumber'
+            FabricOS            = 'Fabric OS'
+            EthernetIPAddress   = 'IP Address'
+            EthernetSubnetMask  = 'Subnet mask'
+            GatewayIPAddress    = 'Gateway IP'
+            DHCP                = 'DHCP'
+            SwitchState         = 'Switch State'
+            SwitchRole          = 'Switch Role'
+        }
 
-    $mapSANSwitchInfo = @{
-        SwichtName          = 'Swicht Name'
-        ActiveZonenCFG      = 'Active ZonenCFG'
-        DomainID            = 'DomainID'
-        SwitchWWNN          = 'Switch WWN'
-        SwitchType          = 'SwitchType'
-        FabricID            = 'Fabric ID'
-        BrocadeProductName  = 'Brocade Name'
-        MTM                 = 'MTM'
-        SerialNumber        = 'SerialNumber'
-        FabricOS            = 'Fabric OS'
-        EthernetIPAddress   = 'IP Address'
-        EthernetSubnetMask  = 'Subnet mask'
-        GatewayIPAddress    = 'Gateway IP'
-        DHCP                = 'DHCP'
-        SwitchState         = 'Switch State'
-        SwitchRole          = 'Switch Role'
+        foreach ($TD_Creds in $TD_Credentials) {
+            <# for ProgressBar #>
+                $Current++
+                $Percent = [math]::Round(($Current / $Total) * 100,0)
+                Write-ProgressBar -ProgressBar $PB -Activity "Brocade Query $Current / $Total - $($TD_Creds.DeviceIP)" -PercentComplete $Percent
+            <# ProgressBar #>
+
+            $FunctionResult = New-DeviceBlock -Device $TD_Creds -ExportPath $TD_TB_ExportPath.Text -RESTFunc Get-BrocadeBaseInfo -SSHFunc FOS_SSHBasicSwitchInfos
+
+            $deviceIdent = $FunctionResult['DeviceIdent']
+            $funcResult  = $FunctionResult['FuncResult']
+
+            # If it is an array: take the IDictionary element (and NOT the first one)
+            if ($funcResult -is [object[]]) {
+                $funcResult = @($funcResult) | Where-Object { $_ -is [System.Collections.IDictionary] } | Select-Object -First 1
+            }
+
+            # Safety: if there is still no dictionary -> cancel
+            if (-not ($funcResult -is [System.Collections.IDictionary])) {
+                Write-Host "FuncResult enthält kein IDictionary. Type: $($funcResult.GetType().FullName)" -ForegroundColor Red
+                continue
+            }
+
+            if ($deviceIdent.PSObject.Properties.Match('IsChecked').Count -gt 0) {
+                $deviceIdent.IsChecked = $true
+            }
+
+            Add-MappedKeyValueRows -Collection $deviceIdent.SANSwitchBaseRows -Source $funcResult -Map $mapSANSwitchInfo
+
+            $UCVMMain.DeviceToggles.Add($deviceIdent)
+        }
+        $UCVMMain.SelectedView = "SANSwitchBase"
+    }finally{
+        <# for ProgressBar #>
+            Close-ProgressBar -ProgressBar $PB
+        <# ProgressBar #>
     }
-
-    foreach ($TD_Creds in $TD_Credentials) {
-
-        $FunctionResult = New-DeviceBlock -Device $TD_Creds -ExportPath $TD_TB_ExportPath.Text -RESTFunc Get-BrocadeBaseInfo -SSHFunc FOS_SSHBasicSwitchInfos
-
-        $deviceIdent = $FunctionResult['DeviceIdent']
-        $funcResult  = $FunctionResult['FuncResult']
-
-        # If it is an array: take the IDictionary element (and NOT the first one)
-        if ($funcResult -is [object[]]) {
-            $funcResult = @($funcResult) | Where-Object { $_ -is [System.Collections.IDictionary] } | Select-Object -First 1
-        }
-
-        # Safety: if there is still no dictionary -> cancel
-        if (-not ($funcResult -is [System.Collections.IDictionary])) {
-            Write-Host "FuncResult enthält kein IDictionary. Type: $($funcResult.GetType().FullName)" -ForegroundColor Red
-            continue
-        }
-
-        if ($deviceIdent.PSObject.Properties.Match('IsChecked').Count -gt 0) {
-            $deviceIdent.IsChecked = $true
-        }
-
-        Add-MappedKeyValueRows -Collection $deviceIdent.SANSwitchBaseRows -Source $funcResult -Map $mapSANSwitchInfo
-
-        $UCVMMain.DeviceToggles.Add($deviceIdent)
-    }
-    $UCVMMain.SelectedView = "SANSwitchBase"
 })
 $TD_BTN_FOS_SwitchShow.add_click({
     $TD_GB_SearchFilter.Visibility = "visible"
-    <#Get all Device Cred and count them #>
-    $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_.DeviceTyp -like "*SAN*" }
-    <# get the DataConteext of the current View/ means UC and if its nul trow an error #>
-    $UCDataContext = $TD_UserControl_BRSAN.DataContext
-    if (-not $UCDataContext) { Write-Host "DataContext ist NULL!" -ForegroundColor Red; return }
-    <# if there is a DataContext find th Main Part und put it into UCVMMain#>
-    $UCVMMain = $UCDataContext.Main
-    <# if there a something in, its better to clean it up befor we use it again #>
-    $UCVMMain.DeviceToggles.Clear()
-    foreach($TD_Creds in $TD_Credentials){
-        $FunctionResult = New-DeviceBlock -Device $TD_Creds -ExportPath $TD_TB_ExportPath.Text -RESTFunc Get-BrocadeSwitchShow -SSHFunc FOS_SSHSwitchShowInfo
-        # Links = Propertyname im PSCustomObject (das bindet dein XAML)
-        # Rechts = Propertyname im Source-Objekt
-        $mapSwitchShowInfo = @{ 
-            Index           = 'Index'
-            Port            = 'Port'
-            Address         = 'Address'
-            Media           = 'Media'
-            Speed           = 'Speed'
-            State           = 'State'
-            Proto           = 'Proto'
-            PortConnect     = 'PortConnect'
-            PortStateInfo   = 'PortStateInfo'
-        }
-        Add-MappedRows -Collection $FunctionResult.DeviceIdent.SANSwitchShowRows -Source $FunctionResult.FuncResult -IdProperty 'RowID' -Map $mapSwitchShowInfo
+    <# for ProgressBar #>
+        $PB = New-ProgressBar
+    <# ProgressBar #>
+    try{
+        <#Get all Device Cred and count them #>
+        $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_.DeviceTyp -like "*SAN*" }
+        <# for ProgressBar #>
+            $Total = $TD_Credentials.Count
+            $Current = 0
+        <# ProgressBar #>
+        <# get the DataConteext of the current View/ means UC and if its nul trow an error #>
+        $UCDataContext = $TD_UserControl_BRSAN.DataContext
+        if (-not $UCDataContext) { Write-Host "DataContext ist NULL!" -ForegroundColor Red; return }
+        <# if there is a DataContext find th Main Part und put it into UCVMMain#>
+        $UCVMMain = $UCDataContext.Main
+        <# if there a something in, its better to clean it up befor we use it again #>
+        $UCVMMain.DeviceToggles.Clear()
+        foreach($TD_Creds in $TD_Credentials){
+            <# for ProgressBar #>
+                $Current++
+                $Percent = [math]::Round(($Current / $Total) * 100,0)
+                Write-ProgressBar -ProgressBar $PB -Activity "Brocade Query $Current / $Total - $($TD_Creds.DeviceIP)" -PercentComplete $Percent
+            <# ProgressBar #>
+            $FunctionResult = New-DeviceBlock -Device $TD_Creds -ExportPath $TD_TB_ExportPath.Text -RESTFunc Get-BrocadeSwitchShow -SSHFunc FOS_SSHSwitchShowInfo
+            # Links = Propertyname im PSCustomObject (das bindet dein XAML)
+            # Rechts = Propertyname im Source-Objekt
+            $mapSwitchShowInfo = @{ 
+                Index           = 'Index'
+                Port            = 'Port'
+                Address         = 'Address'
+                Media           = 'Media'
+                Speed           = 'Speed'
+                State           = 'State'
+                Proto           = 'Proto'
+                PortConnect     = 'PortConnect'
+                PortStateInfo   = 'PortStateInfo'
+            }
+            Add-MappedRows -Collection $FunctionResult.DeviceIdent.SANSwitchShowRows -Source $FunctionResult.FuncResult -IdProperty 'RowID' -Map $mapSwitchShowInfo
 
-        $UCVMMain.DeviceToggles.Add($FunctionResult.DeviceIdent)
+            $UCVMMain.DeviceToggles.Add($FunctionResult.DeviceIdent)
+        }
+        $UCVMMain.SelectedView = "SANSwitchShow"
+    }finally{
+        <# for ProgressBar #>
+            Close-ProgressBar -ProgressBar $PB
+        <# ProgressBar #>
     }
-    $UCVMMain.SelectedView = "SANSwitchShow"
 })
 $TD_BTN_FOS_PortBufferShow.add_click({
     $TD_GB_SearchFilter.Visibility = "visible"
-    <#Get all Device Cred and count them #>
-    $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_.DeviceTyp -like "*SAN*" }
-    <# get the DataConteext of the current View/ means UC and if its nul trow an error #>
-    $UCDataContext = $TD_UserControl_BRSAN.DataContext
-    if (-not $UCDataContext) { Write-Host "DataContext ist NULL!" -ForegroundColor Red; return }
-    <# if there is a DataContext find th Main Part und put it into UCVMMain#>
-    $UCVMMain = $UCDataContext.Main
-    <# if there a something in, its better to clean it up befor we use it again #>
-    $UCVMMain.DeviceToggles.Clear()
-    foreach($TD_Creds in $TD_Credentials){
-        $FunctionResult = New-DeviceBlock -Device $TD_Creds -ExportPath $TD_TB_ExportPath.Text -RESTFunc Get-BrocadePortBufferStats -SSHFunc FOS_SSHPortbufferShowInfo
-        # Links = Propertyname im PSCustomObject (das bindet dein XAML)
-        # Rechts = Propertyname im Source-Objekt
-        $mapPortbufferShow = @{ 
-            Port        = 'Port'
-            Type        = 'Type'
-            Mode        = 'Mode'
-            Max_Resv    = 'Max_Resv'
-            Tx          = 'Tx'
-            Rx          = 'Rx'
-            Usage       = 'Usage'
-            Buffers     = 'Buffers'
-            Distance    = 'Distance'
-            Buffer      = 'Buffer'
-        }
-        Add-MappedRows -Collection $FunctionResult.DeviceIdent.SANPortbufferShowRows -Source $FunctionResult.FuncResult -IdProperty 'RowID' -Map $mapPortbufferShow
+    <# for ProgressBar #>
+        $PB = New-ProgressBar
+    <# ProgressBar #>
+    try{
+        <#Get all Device Cred and count them #>
+        $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_.DeviceTyp -like "*SAN*" }
+        <# for ProgressBar #>
+            $Total = $TD_Credentials.Count
+            $Current = 0
+        <# ProgressBar #>
+        <# get the DataConteext of the current View/ means UC and if its nul trow an error #>
+        $UCDataContext = $TD_UserControl_BRSAN.DataContext
+        if (-not $UCDataContext) { Write-Host "DataContext ist NULL!" -ForegroundColor Red; return }
+        <# if there is a DataContext find th Main Part und put it into UCVMMain#>
+        $UCVMMain = $UCDataContext.Main
+        <# if there a something in, its better to clean it up befor we use it again #>
+        $UCVMMain.DeviceToggles.Clear()
+        foreach($TD_Creds in $TD_Credentials){
+            <# for ProgressBar #>
+                $Current++
+                $Percent = [math]::Round(($Current / $Total) * 100,0)
+                Write-ProgressBar -ProgressBar $PB -Activity "Brocade Query $Current / $Total - $($TD_Creds.DeviceIP)" -PercentComplete $Percent
+            <# ProgressBar #>
+            $FunctionResult = New-DeviceBlock -Device $TD_Creds -ExportPath $TD_TB_ExportPath.Text -RESTFunc Get-BrocadePortBufferStats -SSHFunc FOS_SSHPortbufferShowInfo
+            # Links = Propertyname im PSCustomObject (das bindet dein XAML)
+            # Rechts = Propertyname im Source-Objekt
+            $mapPortbufferShow = @{ 
+                Port        = 'Port'
+                Type        = 'Type'
+                Mode        = 'Mode'
+                Max_Resv    = 'Max_Resv'
+                Tx          = 'Tx'
+                Rx          = 'Rx'
+                Usage       = 'Usage'
+                Buffers     = 'Buffers'
+                Distance    = 'Distance'
+                Buffer      = 'Buffer'
+            }
+            Add-MappedRows -Collection $FunctionResult.DeviceIdent.SANPortbufferShowRows -Source $FunctionResult.FuncResult -IdProperty 'RowID' -Map $mapPortbufferShow
 
-        $UCVMMain.DeviceToggles.Add($FunctionResult.DeviceIdent)
+            $UCVMMain.DeviceToggles.Add($FunctionResult.DeviceIdent)
+        }
+        $UCVMMain.SelectedView = "SANPortbufferShow"
+    }finally{
+        <# for ProgressBar #>
+            Close-ProgressBar -ProgressBar $PB
+        <# ProgressBar #>
     }
-    $UCVMMain.SelectedView = "SANPortbufferShow"
 })
 $TD_BTN_FOS_PortErrorShow.add_click({
     $TD_GB_SearchFilter.Visibility = "visible"
-    <#Get all Device Cred and count them #>
-    $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_.DeviceTyp -like "*SAN*" }
-    <# get the DataConteext of the current View/ means UC and if its nul trow an error #>
-    $UCDataContext = $TD_UserControl_BRSAN.DataContext
-    if (-not $UCDataContext) { Write-Host "DataContext ist NULL!" -ForegroundColor Red; return }
-    <# if there is a DataContext find th Main Part und put it into UCVMMain#>
-    $UCVMMain = $UCDataContext.Main
-    <# if there a something in, its better to clean it up befor we use it again #>
-    $UCVMMain.DeviceToggles.Clear()
-    foreach($TD_Creds in $TD_Credentials){
-        $FunctionResult = New-DeviceBlock -Device $TD_Creds -ExportPath $TD_TB_ExportPath.Text -RESTFunc Get-BrocadePortErrorStats -SSHFunc FOS_SSHPortErrShowInfos
-        # Links = Propertyname im PSCustomObject (das bindet dein XAML)
-        # Rechts = Propertyname im Source-Objekt
-        $mapPortErrorShow = @{ 
-            Port            = 'Port'
-            frames_tx       = 'frames_tx'
-            frames_rx       = 'frames_rx'
-            enc_in          = 'enc_in'
-            crc_err         = 'crc_err'
-            crc_g_eof       = 'crc_g_eof'
-            too_short       = 'too_short'
-            too_long        = 'too_long'
-            bad_eof         = 'bad_eof'
-            enc_out         = 'enc_out'
-            disc_c3         = 'disc_c3'
-            link_fail       = 'link_fail'
-            loss_sync       = 'loss_sync'
-            loss_sig        = 'loss_sig'
-            f_rejected      = 'f_rejected'
-            f_busied        = 'f_busied'
-            c3timeout_tx    = 'c3timeout_tx'
-            c3timeout_rx    = 'c3timeout_rx'
-            psc_err         = 'psc_err'
-            uncor_err       = 'uncor_err'
-        }
-        Add-MappedRows -Collection $FunctionResult.DeviceIdent.SANPortErrorShowRows -Source $FunctionResult.FuncResult -IdProperty 'RowID' -Map $mapPortErrorShow
+    <# for ProgressBar #>
+        $PB = New-ProgressBar
+    <# ProgressBar #>
+    try{
+        <#Get all Device Cred and count them #>
+        $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_.DeviceTyp -like "*SAN*" }
+        <# for ProgressBar #>
+            $Total = $TD_Credentials.Count
+            $Current = 0
+        <# ProgressBar #>
+        <# get the DataConteext of the current View/ means UC and if its nul trow an error #>
+        $UCDataContext = $TD_UserControl_BRSAN.DataContext
+        if (-not $UCDataContext) { Write-Host "DataContext ist NULL!" -ForegroundColor Red; return }
+        <# if there is a DataContext find th Main Part und put it into UCVMMain#>
+        $UCVMMain = $UCDataContext.Main
+        <# if there a something in, its better to clean it up befor we use it again #>
+        $UCVMMain.DeviceToggles.Clear()
+        foreach($TD_Creds in $TD_Credentials){
+            <# for ProgressBar #>
+                $Current++
+                $Percent = [math]::Round(($Current / $Total) * 100,0)
+                Write-ProgressBar -ProgressBar $PB -Activity "Brocade Query $Current / $Total - $($TD_Creds.DeviceIP)" -PercentComplete $Percent
+            <# ProgressBar #>
+            $FunctionResult = New-DeviceBlock -Device $TD_Creds -ExportPath $TD_TB_ExportPath.Text -RESTFunc Get-BrocadePortErrorStats -SSHFunc FOS_SSHPortErrShowInfos
+            # Links = Propertyname im PSCustomObject (das bindet dein XAML)
+            # Rechts = Propertyname im Source-Objekt
+            $mapPortErrorShow = @{ 
+                Port            = 'Port'
+                frames_tx       = 'frames_tx'
+                frames_rx       = 'frames_rx'
+                enc_in          = 'enc_in'
+                crc_err         = 'crc_err'
+                crc_g_eof       = 'crc_g_eof'
+                too_short       = 'too_short'
+                too_long        = 'too_long'
+                bad_eof         = 'bad_eof'
+                enc_out         = 'enc_out'
+                disc_c3         = 'disc_c3'
+                link_fail       = 'link_fail'
+                loss_sync       = 'loss_sync'
+                loss_sig        = 'loss_sig'
+                f_rejected      = 'f_rejected'
+                f_busied        = 'f_busied'
+                c3timeout_tx    = 'c3timeout_tx'
+                c3timeout_rx    = 'c3timeout_rx'
+                psc_err         = 'psc_err'
+                uncor_err       = 'uncor_err'
+            }
+            Add-MappedRows -Collection $FunctionResult.DeviceIdent.SANPortErrorShowRows -Source $FunctionResult.FuncResult -IdProperty 'RowID' -Map $mapPortErrorShow
 
-        $UCVMMain.DeviceToggles.Add($FunctionResult.DeviceIdent)
+            $UCVMMain.DeviceToggles.Add($FunctionResult.DeviceIdent)
+        }
+        $UCVMMain.SelectedView = "SANPortErrorShow"
+    }finally{
+        <# for ProgressBar #>
+            Close-ProgressBar -ProgressBar $PB
+        <# ProgressBar #>
     }
-    $UCVMMain.SelectedView = "SANPortErrorShow"
 })
 $TD_BTN_FOS_SFPHealthShow.add_click({
     $TD_GB_SearchFilter.Visibility = "visible"
-    <#Get all Device Cred and count them #>
-    $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_.DeviceTyp -like "*SAN*" }
-    <# get the DataConteext of the current View/ means UC and if its nul trow an error #>
-    $UCDataContext = $TD_UserControl_BRSAN.DataContext
-    if (-not $UCDataContext) { Write-Host "DataContext ist NULL!" -ForegroundColor Red; return }
-    <# if there is a DataContext find th Main Part und put it into UCVMMain#>
-    $UCVMMain = $UCDataContext.Main
-    <# if there a something in, its better to clean it up befor we use it again #>
-    $UCVMMain.DeviceToggles.Clear()
-    foreach($TD_Creds in $TD_Credentials){
-        $FunctionResult = New-DeviceBlock -Device $TD_Creds -ExportPath $TD_TB_ExportPath.Text -RESTFunc Get-BrocadeSFPShow -SSHFunc FOS_SSHSFPDetails
-        # Links = Propertyname im PSCustomObject (das bindet dein XAML)
-        # Rechts = Propertyname im Source-Objekt
-        $mapSFPDetails = @{ 
-            Port            = 'Port'
-            SFPUsed         = 'SFPUsed'
-            Media           = 'Media'
-            SFPTyp          = 'SFPTyp'
-            Vendor          = 'Vendor'
-            SerialNo        = 'SerialNo'
-            SpeedRange      = 'SpeedRange'
-            Temperature     = 'Temperature'
-            RxPower         = 'RxPower'
-            TxPower         = 'TxPower'
-            Voltage         = 'Voltage'
-        }
-        Add-MappedRows -Collection $FunctionResult.DeviceIdent.SANSFPDetailsRows -Source $FunctionResult.FuncResult -IdProperty 'RowID' -Map $mapSFPDetails
+    <# for ProgressBar #>
+        $PB = New-ProgressBar
+    <# ProgressBar #>
+    try{
+        <#Get all Device Cred and count them #>
+        $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_.DeviceTyp -like "*SAN*" }
+        <# for ProgressBar #>
+            $Total = $TD_Credentials.Count
+            $Current = 0
+        <# ProgressBar #>
+        <# get the DataConteext of the current View/ means UC and if its nul trow an error #>
+        $UCDataContext = $TD_UserControl_BRSAN.DataContext
+        if (-not $UCDataContext) { Write-Host "DataContext ist NULL!" -ForegroundColor Red; return }
+        <# if there is a DataContext find th Main Part und put it into UCVMMain#>
+        $UCVMMain = $UCDataContext.Main
+        <# if there a something in, its better to clean it up befor we use it again #>
+        $UCVMMain.DeviceToggles.Clear()
+        foreach($TD_Creds in $TD_Credentials){
+            <# for ProgressBar #>
+                $Current++
+                $Percent = [math]::Round(($Current / $Total) * 100,0)
+                Write-ProgressBar -ProgressBar $PB -Activity "Brocade Query $Current / $Total - $($TD_Creds.DeviceIP)" -PercentComplete $Percent
+            <# ProgressBar #>
+            $FunctionResult = New-DeviceBlock -Device $TD_Creds -ExportPath $TD_TB_ExportPath.Text -RESTFunc Get-BrocadeSFPShow -SSHFunc FOS_SSHSFPDetails
+            # Links = Propertyname im PSCustomObject (das bindet dein XAML)
+            # Rechts = Propertyname im Source-Objekt
+            $mapSFPDetails = @{ 
+                Port            = 'Port'
+                SFPUsed         = 'SFPUsed'
+                Media           = 'Media'
+                SFPTyp          = 'SFPTyp'
+                Vendor          = 'Vendor'
+                SerialNo        = 'SerialNo'
+                SpeedRange      = 'SpeedRange'
+                Temperature     = 'Temperature'
+                RxPower         = 'RxPower'
+                TxPower         = 'TxPower'
+                Voltage         = 'Voltage'
+            }
+            Add-MappedRows -Collection $FunctionResult.DeviceIdent.SANSFPDetailsRows -Source $FunctionResult.FuncResult -IdProperty 'RowID' -Map $mapSFPDetails
 
-        $UCVMMain.DeviceToggles.Add($FunctionResult.DeviceIdent)
+            $UCVMMain.DeviceToggles.Add($FunctionResult.DeviceIdent)
+        }
+        $UCVMMain.SelectedView = "SANSFPDetails"
+    }finally{
+        <# for ProgressBar #>
+            Close-ProgressBar -ProgressBar $PB
+        <# ProgressBar #>
     }
-    $UCVMMain.SelectedView = "SANSFPDetails"
 })
 $TD_BTN_FOS_ZoneDetailsShow.add_click({
     $TD_GB_SearchFilter.Visibility = "visible"
-    <#Get all Device Cred and count them #>
-    $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_.DeviceTyp -like "*SAN*" }
-    <# get the DataConteext of the current View/ means UC and if its nul trow an error #>
-    $UCDataContext = $TD_UserControl_BRSAN.DataContext
-    if (-not $UCDataContext) { Write-Host "DataContext ist NULL!" -ForegroundColor Red; return }
-    <# if there is a DataContext find th Main Part und put it into UCVMMain#>
-    $UCVMMain = $UCDataContext.Main
-    <# if there a something in, its better to clean it up befor we use it again #>
-    $UCVMMain.DeviceToggles.Clear()
-    foreach($TD_Creds in $TD_Credentials){
-        $FunctionResult = New-DeviceBlock -Device $TD_Creds -ExportPath $TD_TB_ExportPath.Text -RESTFunc Get-BrocadeEffectiveZoneShow -SSHFunc FOS_SSHZoneDetails
-        # Links = Propertyname im PSCustomObject (das bindet dein XAML)
-        # Rechts = Propertyname im Source-Objekt
-        $mapZoneDetails = @{ 
-            Zone    = 'Zone'
-            WWPN    = 'WWPN'
-            Alias   = 'Alias'
-        }
-        Add-MappedRows -Collection $FunctionResult.DeviceIdent.SANZoneDetailsRows -Source $FunctionResult.FuncResult.FOSZoneCfg -IdProperty 'RowID' -Map $mapZoneDetails
+    <# for ProgressBar #>
+        $PB = New-ProgressBar
+    <# ProgressBar #>
+    try{
+        <#Get all Device Cred and count them #>
+        $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_.DeviceTyp -like "*SAN*" }
+        <# for ProgressBar #>
+            $Total = $TD_Credentials.Count
+            $Current = 0
+        <# ProgressBar #>
+        <# get the DataConteext of the current View/ means UC and if its nul trow an error #>
+        $UCDataContext = $TD_UserControl_BRSAN.DataContext
+        if (-not $UCDataContext) { Write-Host "DataContext ist NULL!" -ForegroundColor Red; return }
+        <# if there is a DataContext find th Main Part und put it into UCVMMain#>
+        $UCVMMain = $UCDataContext.Main
+        <# if there a something in, its better to clean it up befor we use it again #>
+        $UCVMMain.DeviceToggles.Clear()
+        foreach($TD_Creds in $TD_Credentials){
+            <# for ProgressBar #>
+                $Current++
+                $Percent = [math]::Round(($Current / $Total) * 100,0)
+                Write-ProgressBar -ProgressBar $PB -Activity "Brocade Query $Current / $Total - $($TD_Creds.DeviceIP)" -PercentComplete $Percent
+            <# ProgressBar #>
+            $FunctionResult = New-DeviceBlock -Device $TD_Creds -ExportPath $TD_TB_ExportPath.Text -RESTFunc Get-BrocadeEffectiveZoneShow -SSHFunc FOS_SSHZoneDetails
+            # Links = Propertyname im PSCustomObject (das bindet dein XAML)
+            # Rechts = Propertyname im Source-Objekt
+            $mapZoneDetails = @{ 
+                Zone    = 'Zone'
+                WWPN    = 'WWPN'
+                Alias   = 'Alias'
+            }
+            Add-MappedRows -Collection $FunctionResult.DeviceIdent.SANZoneDetailsRows -Source $FunctionResult.FuncResult.FOSZoneCfg -IdProperty 'RowID' -Map $mapZoneDetails
 
-        $UCVMMain.DeviceToggles.Add($FunctionResult.DeviceIdent)
+            $UCVMMain.DeviceToggles.Add($FunctionResult.DeviceIdent)
+        }
+        $UCVMMain.SelectedView = "SANZoneDetails"
+    }finally{
+        <# for ProgressBar #>
+            Close-ProgressBar -ProgressBar $PB
+        <# ProgressBar #>
     }
-    $UCVMMain.SelectedView = "SANZoneDetails"
 })
 $TD_BTN_FOS_PortLicenseShow.add_click({
     $TD_GB_SearchFilter.Visibility = "Collapsed"
-    <#Get all Device Cred and count them #>
-    $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_.DeviceTyp -like "*SAN*" }
-    <# get the DataConteext of the current View/ means UC and if its nul trow an error #>
-    $UCDataContext = $TD_UserControl_BRSAN.DataContext
-    if (-not $UCDataContext) { Write-Host "DataContext ist NULL!" -ForegroundColor Red; return }
-    <# if there is a DataContext find th Main Part und put it into UCVMMain#>
-    $UCVMMain = $UCDataContext.Main
-    <# if there a something in, its better to clean it up befor we use it again #>
-    $UCVMMain.DeviceToggles.Clear()
-    foreach($TD_Creds in $TD_Credentials){
-        $FunctionResult = New-DeviceBlock -Device $TD_Creds -ExportPath $TD_TB_ExportPath.Text -RESTFunc Get-BrocadeLicenseOverview -SSHFunc FOS_SSHPortLicenseShowInfo
-        # Links = Propertyname im PSCustomObject (das bindet dein XAML)
-        # Rechts = Propertyname im Source-Objekt
-        $dev = $FunctionResult.DeviceIdent
+    <# for ProgressBar #>
+        $PB = New-ProgressBar
+    <# ProgressBar #>
+    try{
+        <#Get all Device Cred and count them #>
+        $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_.DeviceTyp -like "*SAN*" }
+        <# for ProgressBar #>
+            $Total = $TD_Credentials.Count
+            $Current = 0
+        <# ProgressBar #>
+        <# get the DataConteext of the current View/ means UC and if its nul trow an error #>
+        $UCDataContext = $TD_UserControl_BRSAN.DataContext
+        if (-not $UCDataContext) { Write-Host "DataContext ist NULL!" -ForegroundColor Red; return }
+        <# if there is a DataContext find th Main Part und put it into UCVMMain#>
+        $UCVMMain = $UCDataContext.Main
+        <# if there a something in, its better to clean it up befor we use it again #>
+        $UCVMMain.DeviceToggles.Clear()
+        foreach($TD_Creds in $TD_Credentials){
+            <# for ProgressBar #>
+                $Current++
+                $Percent = [math]::Round(($Current / $Total) * 100,0)
+                Write-ProgressBar -ProgressBar $PB -Activity "Brocade Query $Current / $Total - $($TD_Creds.DeviceIP)" -PercentComplete $Percent
+            <# ProgressBar #>
+            $FunctionResult = New-DeviceBlock -Device $TD_Creds -ExportPath $TD_TB_ExportPath.Text -RESTFunc Get-BrocadeLicenseOverview -SSHFunc FOS_SSHPortLicenseShowInfo
+            # Links = Propertyname im PSCustomObject (das bindet dein XAML)
+            # Rechts = Propertyname im Source-Objekt
+            $dev = $FunctionResult.DeviceIdent
 
-        $maptLicenseShowInfo = @{
-            DeviceName  = 'DeviceName'
-            LicenseInfo     = 'LicenseInfo'
+            $maptLicenseShowInfo = @{
+                DeviceName  = 'DeviceName'
+                LicenseInfo     = 'LicenseInfo'
+            }
+            Add-MappedRows -Collection $dev.LicenseInfoRows -Source $FunctionResult.FuncResult -IdProperty 'RowID' -Map $maptLicenseShowInfo
+            # dynamische Überschrift
+            $dev.LicenseInfoTitle = "LicenseInfo for - $($dev.Label)"
+
+            # Textblock-Inhalt aus Rows zusammensetzen (DumpMsg je Zeile)
+            $dev.LicenseInfoText = (@($dev.LicenseInfoRows) | ForEach-Object { $_.LicenseInfo } | Where-Object { $_ }) -join "`n"
+
+            $UCVMMain.DeviceToggles.Add($dev)
         }
-        Add-MappedRows -Collection $dev.LicenseInfoRows -Source $FunctionResult.FuncResult -IdProperty 'RowID' -Map $maptLicenseShowInfo
-        # dynamische Überschrift
-        $dev.LicenseInfoTitle = "LicenseInfo for - $($dev.Label)"
-
-        # Textblock-Inhalt aus Rows zusammensetzen (DumpMsg je Zeile)
-        $dev.LicenseInfoText = (@($dev.LicenseInfoRows) | ForEach-Object { $_.LicenseInfo } | Where-Object { $_ }) -join "`n"
-
-        $UCVMMain.DeviceToggles.Add($dev)
+        <#one for each view is fine do need to be inside the foreach #>
+        $UCVMMain.SelectedView = "LicenseInfo"
+    }finally{
+        <# for ProgressBar #>
+            Close-ProgressBar -ProgressBar $PB
+        <# ProgressBar #>
     }
-    <#one for each view is fine do need to be inside the foreach #>
-    $UCVMMain.SelectedView = "LicenseInfo"
 })
 $TD_BTN_FOS_SensorShow.add_click({
     $TD_GB_SearchFilter.Visibility = "Collapsed"
-    <#Get all Device Cred and count them #>
-    $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_.DeviceTyp -like "*SAN*" }
-    <# get the DataConteext of the current View/ means UC and if its nul trow an error #>
-    $UCDataContext = $TD_UserControl_BRSAN.DataContext
-    if (-not $UCDataContext) { Write-Host "DataContext ist NULL!" -ForegroundColor Red; return }
-    <# if there is a DataContext find th Main Part und put it into UCVMMain#>
-    $UCVMMain = $UCDataContext.Main
-    <# if there a something in, its better to clean it up befor we use it again #>
-    $UCVMMain.DeviceToggles.Clear()
-    foreach($TD_Creds in $TD_Credentials){
-        $FunctionResult = New-DeviceBlock -Device $TD_Creds -ExportPath $TD_TB_ExportPath.Text -RESTFunc Get-BrocadeSensorOverview -SSHFunc FOS_SSHSensorShow
-        # Links = Propertyname im PSCustomObject (das bindet dein XAML)
-        # Rechts = Propertyname im Source-Objekt
-        $dev = $FunctionResult.DeviceIdent
+    <# for ProgressBar #>
+        $PB = New-ProgressBar
+    <# ProgressBar #>
+    try{
+        <#Get all Device Cred and count them #>
+        $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_.DeviceTyp -like "*SAN*" }
+        <# for ProgressBar #>
+            $Total = $TD_Credentials.Count
+            $Current = 0
+        <# ProgressBar #>
+        <# get the DataConteext of the current View/ means UC and if its nul trow an error #>
+        $UCDataContext = $TD_UserControl_BRSAN.DataContext
+        if (-not $UCDataContext) { Write-Host "DataContext ist NULL!" -ForegroundColor Red; return }
+        <# if there is a DataContext find th Main Part und put it into UCVMMain#>
+        $UCVMMain = $UCDataContext.Main
+        <# if there a something in, its better to clean it up befor we use it again #>
+        $UCVMMain.DeviceToggles.Clear()
+        foreach($TD_Creds in $TD_Credentials){
+            <# for ProgressBar #>
+                $Current++
+                $Percent = [math]::Round(($Current / $Total) * 100,0)
+                Write-ProgressBar -ProgressBar $PB -Activity "Brocade Query $Current / $Total - $($TD_Creds.DeviceIP)" -PercentComplete $Percent
+            <# ProgressBar #>
+            $FunctionResult = New-DeviceBlock -Device $TD_Creds -ExportPath $TD_TB_ExportPath.Text -RESTFunc Get-BrocadeSensorOverview -SSHFunc FOS_SSHSensorShow
+            # Links = Propertyname im PSCustomObject (das bindet dein XAML)
+            # Rechts = Propertyname im Source-Objekt
+            $dev = $FunctionResult.DeviceIdent
 
-        $mapSensorShow = @{
-            DeviceName  = 'DeviceName'
-            SensorShowInfo  = 'SensorShowInfo'
+            $mapSensorShow = @{
+                DeviceName  = 'DeviceName'
+                SensorShowInfo  = 'SensorShowInfo'
+            }
+            Add-MappedRows -Collection $dev.SensorShowRows -Source $FunctionResult.FuncResult -IdProperty 'RowID' -Map $mapSensorShow
+            # dynamische Überschrift
+            $dev.SensorShowTitle = "Sensorinfo for - $($dev.Label)"
+
+            # Textblock-Inhalt aus Rows zusammensetzen (DumpMsg je Zeile)
+            $dev.SensorShowText = (@($dev.SensorShowRows) | ForEach-Object { $_.SensorShowInfo } | Where-Object { $_ }) -join "`n"
+
+            $UCVMMain.DeviceToggles.Add($dev)
         }
-        Add-MappedRows -Collection $dev.SensorShowRows -Source $FunctionResult.FuncResult -IdProperty 'RowID' -Map $mapSensorShow
-        # dynamische Überschrift
-        $dev.SensorShowTitle = "Sensorinfo for - $($dev.Label)"
-
-        # Textblock-Inhalt aus Rows zusammensetzen (DumpMsg je Zeile)
-        $dev.SensorShowText = (@($dev.SensorShowRows) | ForEach-Object { $_.SensorShowInfo } | Where-Object { $_ }) -join "`n"
-
-        $UCVMMain.DeviceToggles.Add($dev)
+        <#one for each view is fine do need to be inside the foreach #>
+        $UCVMMain.SelectedView = "SensorInfo"
+    }finally{
+        <# for ProgressBar #>
+            Close-ProgressBar -ProgressBar $PB
+        <# ProgressBar #>
     }
-    <#one for each view is fine do need to be inside the foreach #>
-    $UCVMMain.SelectedView = "SensorInfo"
-})
+})  
 #endregion
 #region IBM Power
 $TD_BTN_PWR_HMCInfo.add_click({
