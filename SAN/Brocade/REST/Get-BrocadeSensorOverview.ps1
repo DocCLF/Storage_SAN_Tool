@@ -24,13 +24,15 @@ function Get-BrocadeSensorOverview {
     else{
         0
     }
-
+    <# This is needed because WinPW 5.1 #>
+    $OverallHealth = if($FailedFans -gt 0 -or $FailedPowerSupplies -gt 0 -or $HotSensors -gt 0 ){'Warning'}else{'OK'}
+    
     [PSCustomObject]@{
-    TemperatureInfo = $TemperatureInfo
-    TemperatureAverage = $TemperatureInfo.AverageTemp
-    TemperatureMax = $TemperatureInfo.MaxTemp
-    TemperatureMin = $TemperatureInfo.MinTemp
-    TemperatureHealth = $TemperatureInfo.HealthState
+        TemperatureInfo = $TemperatureInfo
+        TemperatureAverage = $TemperatureInfo.AverageTemp
+        TemperatureMax = $TemperatureInfo.MaxTemp
+        TemperatureMin = $TemperatureInfo.MinTemp
+        TemperatureHealth = $TemperatureInfo.HealthState
         Fans = $Fans
         PowerSupplies = $PowerSupplies
 
@@ -41,15 +43,6 @@ function Get-BrocadeSensorOverview {
         FailedPowerSupplies = $FailedPowerSupplies
         HotSensors = $HotSensors
 
-        OverallHealth = if(
-            $FailedFans -gt 0 -or
-            $FailedPowerSupplies -gt 0 -or
-            $HotSensors -gt 0
-        ){
-            'Warning'
-        }
-        else{
-            'OK'
-        }
+        OverallHealth = $OverallHealth
     }
 }
