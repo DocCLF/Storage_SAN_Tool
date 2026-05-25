@@ -44,7 +44,12 @@ function Invoke-DeviceDataFetch {
 
     if($RESTFunc){
         try {
-            $FunResult = & $RESTFunc -TD_Line_ID $Device.ID -TD_Device_UserName $Device.UserName -TD_Device_DeviceIP $Device.IPAddress -TD_Device_PW $pw -TD_Exportpath $ExportPath
+            <# It's okay for now, but we need a better solution #>
+            if($Device.DeviceTyp -like "*SAN*"){
+                $FunResult = & $RESTFunc -Device $Device
+            }else{
+                $FunResult = & $RESTFunc -TD_Line_ID $Device.ID -TD_Device_UserName $Device.UserName -TD_Device_DeviceIP $Device.IPAddress -TD_Device_PW $pw -TD_Exportpath $ExportPath
+            }
         }
         catch {
             Write-Host $_.Exception.Message
