@@ -8,6 +8,7 @@ function Get-BrocadeBaseInfo {
     $ChassisInfo = Get-BrocadeChassisInfo -Device $Device
     $EffectiveCFG = Get-BrocadeEffectiveZoneConfig -Device $Device
     $MgmtInfo = Get-BrocadeManagementIPInterface -Device $Device
+    $LogicalSwitches = @(Get-BrocadeLogicalSwitches -Device $Device)
 
     $RawMTM = $ChassisInfo.'vendor-part-number'
     if($RawMTM -match '0*(\d{4})0*([A-Z0-9]{3})'){
@@ -30,6 +31,8 @@ function Get-BrocadeBaseInfo {
         SwitchWWNN = $SwitchInfo.name
         FabricName = $SwitchInfo.'fabric-user-friendly-name'
         vFabricID = $SwitchInfo.'vf-id'
+        VFIDs = @($LogicalSwitches.'fabric-id')
+        VFIDString = @($LogicalSwitches.'fabric-id') -join ', '
         BrocadeProductName = $ChassisInfo.'product-name'
         SwitchType = $SwitchInfo.'model'
         MTM = $MTM
