@@ -115,7 +115,7 @@ function SST_DeviceConnecCheck {
             {$_ -like "*SAN"} { 
 
                 try {
-                    $TD_BasicDeviceInfosTemp = New-DeviceBlock -Device $TD_Creds -ExportPath $TD_TB_ExportPath.Text -SSHFunc FOS_SSHBasicSwitchInfos
+                    $TD_BasicDeviceInfosTemp = New-DeviceBlock -Device $TD_Creds -ExportPath $TD_TB_ExportPath.Text -RESTFunc Get-BrocadeBaseInfo -SSHFunc FOS_SSHBasicSwitchInfos
                     $TD_BasicDeviceInfos  = $TD_BasicDeviceInfosTemp['FuncResult']
                 }
                 catch {
