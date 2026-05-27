@@ -42,7 +42,6 @@
                     <ComboBoxItem >FOS 10.x</ComboBoxItem>
                     <ComboBoxItem IsSelected="True">FOS 9.x</ComboBoxItem>
                     <ComboBoxItem >FOS 8.x</ComboBoxItem>
-                    <ComboBoxItem >FOS 7.x</ComboBoxItem>
                 </ComboBox>
                 <!--FOS_BasicSwichInfo-->
                 <ToggleButton
