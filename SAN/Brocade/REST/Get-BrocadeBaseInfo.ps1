@@ -47,8 +47,3 @@ function Get-BrocadeBaseInfo {
         RowID = $SwitchInfo.'domain-id'
     }
 }
-<#Ausgabe 
-@{SwitchName=FC01-RZ1; ActiveZoneCFG=WOEHNER_SAN1; DomainID=10; SwitchWWNN=10:00:38:ba:b0:4b:2a:f0; FabricName=Fabric01; vFabricID=128; BrocadeProductName=g720; 
-    SwitchType=181.0; MTM=8960-P64; SerialNumber=786713E; FabricOS=v9.2.1a; EthernetIPAddress=192.168.107.40; EthernetSubnetMask=255.255.255.0; GatewayIPAddress=192.168.107.1; 
-    DNSServer=; DHCP=False; SwitchState=enabled; SwitchRole=Subordinate; VFenabled=True; VFsupported=True; RowID=10}
-    #>
