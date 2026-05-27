@@ -23,7 +23,21 @@ function Get-BrocadeChassisInfo {
 
     $res.Data.chassis
 }
+function Get-BrocadeLogicalSwitches {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory)]
+        $Device
+    )
 
+    $res = Invoke-BrocadeRest -Device $Device -FOSOperation "running/brocade-fibrechannel-logical-switch/fibrechannel-logical-switch"
+
+    if(-not $res.Success){ 
+        return $res 
+    }
+
+    $res.Data.'fibrechannel-logical-switch'
+}
 function Get-BrocadeManagementIPInterface {
     [CmdletBinding()]
     param(
