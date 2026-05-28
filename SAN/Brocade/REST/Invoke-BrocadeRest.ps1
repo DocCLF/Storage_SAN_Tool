@@ -41,7 +41,13 @@ function Invoke-BrocadeRest {
         }
         
 
-        $Uri = "https://$($Device.IPAddress):443/rest/$FOSOperation"
+        $BaseUrl = "https://$($Device.IPAddress)/rest/$FOSOperation"
+        <# --- VFID Support --- #>
+        if($Device.PSObject.Properties['VFID'] -and $Device.VFID -and $Device.VFID -ne 128){
+            $Uri = "$BaseUrl`?vf-id=$($Device.VFID)"
+        }else{
+            $Uri = $BaseUrl
+        }
 
         if ($PSVersionTable.PSVersion.Major -lt 7) {
 
