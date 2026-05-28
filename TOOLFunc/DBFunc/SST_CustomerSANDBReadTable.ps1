@@ -78,3 +78,45 @@ function SAN_PortStateInfo {
         }
     }
 }
+function Get-BrocadeVFIDsFromDB {
+    param (
+        [string]$SANSerialNumber
+    )
+    $TimeStamp = Get-Date -Format "yyyy-MM-dd HH:mm"
+    if (-not [string]::IsNullOrWhiteSpace($TD_TB_CustomerInfoName.Text)) {
+        $Customer = $TD_TB_CustomerInfoName.Text
+    } else {
+        $Customer = $SST_NewDBObject.CustomerNumber
+    }
+    $DBPath = Join-Path $PSRootPath "Resources\DBFolder\$Customer.db"
+    $SQLiteConnectionString = "Data Source=$DBPath;Version=3;Pooling=False;"
+    $SQLiteDBConnection = New-Object System.Data.SQLite.SQLiteConnection $SQLiteConnectionString
+    $SQLiteDBConnection.Open()
+    $SQLiteCommand = $SQLiteDBConnection.CreateCommand()
+    $SQLiteCommand.CommandText = "SELECT DISTINCT VFID FROM IBMSANHWTable WHERE CustomerNbr = @CustomerNbr AND SerialNumber = @SerialNumber AND TimeStamp = (SELECT MAX(TimeStamp)`
+                                    FROM IBMSANHWTable WHERE CustomerNbr = @CustomerNbr AND SerialNumber = @SerialNumber)`
+                                    AND VFID IS NOT NULL AND VFID <> '' ORDER BY VFID;"
+
+    $null = $SQLiteCommand.Parameters.AddWithValue('@CustomerNbr',$Customer)
+    $null = $SQLiteCommand.Parameters.AddWithValue('@SerialNumber',$SANSerialNumber)
+    try{
+        $Reader = $SQLiteCommand.ExecuteReader()
+
+        $VFIDs = @()
+
+        while($Reader.Read()){
+
+            $VFIDs += $Reader['VFID']
+        }
+
+        $Reader.Close()
+
+        return $VFIDs
+    }
+    finally {
+        if ($Reader) {
+            $Reader.Close()
+            $Reader.Dispose()
+        }
+    }
+}
