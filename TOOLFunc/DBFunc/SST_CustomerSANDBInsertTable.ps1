@@ -40,7 +40,7 @@ function SST_CustomerSANDBInsertTable {
                     foreach ($SST_CollectedInformation in $SST_CollectedInformations){
                         $SQLiteCommand.Parameters.Clear()
 
-                        $SQLiteCommand.CommandText ="INSERT INTO IBMSANHWTable (CustomerNbr, Name, Status, CodeLevel, BrocadeProdName, MTM, SerialNumber, SwitchWWNN, TimeStamp) VALUES (@CustomerNbr, @Name, @Status, @CodeLevel, @BrocadeProdName, @MTM, @SerialNumber, @SwitchWWNN, @TimeStamp);"
+                        $SQLiteCommand.CommandText ="INSERT INTO IBMSANHWTable (CustomerNbr, Name, Status, CodeLevel, BrocadeProdName, MTM, SerialNumber, SwitchWWNN, VFID, VFenabled, VFsupported, TimeStamp) VALUES (@CustomerNbr, @Name, @Status, @CodeLevel, @BrocadeProdName, @MTM, @SerialNumber, @SwitchWWNN, @VFID, @VFenabled, @VFsupported, @TimeStamp);"
                         $SQLiteCommand.Parameters.AddWithValue("@CustomerNbr", $Customer) | Out-Null
                         $SQLiteCommand.Parameters.AddWithValue("@Name", $SST_CollectedInformation.'SwichtName') | Out-Null
                         $SQLiteCommand.Parameters.AddWithValue("@Status", $SST_CollectedInformation.'SwitchState') | Out-Null
@@ -49,6 +49,9 @@ function SST_CustomerSANDBInsertTable {
                         $SQLiteCommand.Parameters.AddWithValue("@MTM", $SST_CollectedInformation.'MTM') | Out-Null
                         $SQLiteCommand.Parameters.AddWithValue("@SerialNumber", $SST_CollectedInformation.'SerialNumber') | Out-Null
                         $SQLiteCommand.Parameters.AddWithValue("@SwitchWWNN", $SST_CollectedInformation.'SwitchWWNN') | Out-Null
+                        $SQLiteCommand.Parameters.AddWithValue("@VFID", $SST_CollectedInformation.'VFID') | Out-Null
+                        $SQLiteCommand.Parameters.AddWithValue("@VFenabled", $SST_CollectedInformation.'VFenabled') | Out-Null
+                        $SQLiteCommand.Parameters.AddWithValue("@VFsupported", $SST_CollectedInformation.'VFsupported') | Out-Null
                         $SQLiteCommand.Parameters.AddWithValue("@TimeStamp", $TimeStamp) | Out-Null
                     
                         # DB save 
