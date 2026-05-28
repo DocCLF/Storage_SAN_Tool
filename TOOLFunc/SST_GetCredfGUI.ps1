@@ -103,7 +103,7 @@ function SST_GetCredfGUI {
                 $TD_ExistingCred.Password         =   ConvertTo-SecureString -string ([string]$TD_TB_DevicePassword.Password) -AsPlainText -Force;
                 $TD_ExistingCred.TapeWWNN         =   $TD_BasicDeviceInfo.TapeWWNN
                 if($TD_CB_SVCorVF.IsChecked -and ($TD_CB_DeviceType.Text -like "*Storage")){$TD_ExistingCred.SVCorVF = "SVC"}else{if($TD_CB_DeviceType.Text -like "*Storage"){$TD_ExistingCred.SVCorVF = "FSystem"}};
-                if($TD_CB_SVCorVF.IsChecked -and ($TD_CB_DeviceType.Text -like "*SAN")){$TD_ExistingCred.SVCorVF = "VF"}else{if($TD_CB_DeviceType.Text -like "*SAN"){$TD_ExistingCred.SVCorVF = ""}};
+                if(($TD_BasicDeviceInfo.VFenabled -like "True") -and ($TD_CB_DeviceType.Text -like "*SAN*")){$TD_UserInputCred.SVCorVF = "vFabric"};
                 $TD_ExistingCred.MTMCode          =   $TD_BasicDeviceInfo.Prod_MTM;
                 $TD_ExistingCred.ProductDescr     =   $TD_BasicDeviceInfo.ProductDes;
                 $TD_ExistingCred.CurrentFirmware  =   $TD_BasicDeviceInfo.Code_Level;
@@ -182,7 +182,7 @@ function SST_GetCredfGUI {
         $TD_UserInputCred.Password         =   ConvertTo-SecureString -String ([string]$TD_TB_DevicePassword.Password) -AsPlainText -Force;
         $TD_UserInputCred.TapeWWNN         =   $TD_BasicDeviceInfo.TapeWWNN;
         if($TD_CB_SVCorVF.IsChecked -and ($TD_CB_DeviceType.Text -like "*Storage")){$TD_UserInputCred.SVCorVF = "SVC"}else{if($TD_CB_DeviceType.Text -like "*Storage"){$TD_UserInputCred.SVCorVF = "FSystem"}};
-        if($TD_CB_SVCorVF.IsChecked -and ($TD_CB_DeviceType.Text -like "*SAN")){$TD_UserInputCred.SVCorVF = "VF"}else{if($TD_CB_DeviceType.Text -like "*SAN"){$TD_UserInputCred.SVCorVF = ""}};
+        if(($TD_BasicDeviceInfo.VFenabled -like "True") -and ($TD_CB_DeviceType.Text -like "*SAN*")){$TD_UserInputCred.SVCorVF = "vFabric"};
         $TD_UserInputCred.MTMCode          =   $TD_BasicDeviceInfo.Prod_MTM;
         $TD_UserInputCred.ProductDescr     =   $TD_BasicDeviceInfo.ProductDes;
         $TD_UserInputCred.CurrentFirmware  =   $TD_BasicDeviceInfo.Code_Level;
