@@ -2,13 +2,16 @@ function Get-BrocadeEffectiveZoneShow {
     [CmdletBinding()]
     param(
         [Parameter(Mandatory)]
-        $Device
+        $Device,
+        $RowCounter = 0
     )
 
     $EffectiveResBase = Get-BrocadeEffectiveZoneConfig -Device $Device
     $EffectiveRes = @($EffectiveResBase.'enabled-zone')
-
     $Aliases = @(Get-BrocadeAliases -Device $Device)
+
+    $VFID = if($Device.PSObject.Properties['VFID']){ $Device.VFID } else { $null }
+    $VFIDDisplay = if($Device.PSObject.Properties['VFID']){"FID $($Device.VFID)"}else{""}
 
     foreach($Zone in $EffectiveRes){
 
@@ -46,8 +49,12 @@ function Get-BrocadeEffectiveZoneShow {
             <# This is needed because WinPW 5.1 #>
             $Alias = if($AliasInfo){ $AliasInfo.Alias } else { '<NoAlias>' }
             $Member = if($AliasInfo){ "$($AliasInfo.Alias) [$WWPN]" } else { "<NoAlias> [$WWPN]" }
+            $RowCounter++
+            $RowID = "$($Device.ID)|$VFID|$ZoneName|Principal|$WWPN|$RowCounter"
 
             [PSCustomObject]@{
+                VFID            = $VFID 
+                VFIDDisplay     = $VFIDDisplay
                 ZoneName        = $ZoneName
                 ZoneType        = $ZoneType
                 ZoneTypeString  = $ZoneTypeString
@@ -56,6 +63,7 @@ function Get-BrocadeEffectiveZoneShow {
                 Alias           = $Alias
                 WWPN            = $WWPN
                 Member          = $Member
+                RowID           = $RowID
             }
         }
 
@@ -68,8 +76,13 @@ function Get-BrocadeEffectiveZoneShow {
             $MemberRole = if($ZoneTypeString -like '*peer*'){ 'Peer' } else { 'Member' }
             $Alias = if($AliasInfo){ $AliasInfo.Alias } else { '<NoAlias>' }
             $Member = if($AliasInfo){ "$($AliasInfo.Alias) [$WWPN]" } else { "<NoAlias> [$WWPN]" }
+            $RowCounter++
+            $RowID = "$($Device.ID)|$VFID|$ZoneName|$MemberRole|$WWPN|$RowCounter"
+
 
             [PSCustomObject]@{
+                VFID            = $VFID 
+                VFIDDisplay     = $VFIDDisplay
                 ZoneName        = $ZoneName
                 ZoneType        = $ZoneType
                 ZoneTypeString  = $ZoneTypeString
@@ -78,6 +91,7 @@ function Get-BrocadeEffectiveZoneShow {
                 Alias           = $Alias
                 WWPN            = $WWPN
                 Member          = $Member
+                RowID           = $RowID
             }
         }
     }
