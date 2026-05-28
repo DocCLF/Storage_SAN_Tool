@@ -2,13 +2,19 @@ function Get-BrocadeSFPShow {
     [CmdletBinding()]
     param(
         [Parameter(Mandatory)]
-        $Device
+        $Device,
+        $RowCounter = 0
     )
 
     $FCPorts = Get-BrocadeFcPorts -Device $Device
     $SFPs    = Get-BrocadeSfp -Device $Device
 
+    $VFID = if($Device.VFID){$Device.VFID}else{""}
+    $VFIDDisplay = if($VFID){ $VFID }else{""}
+    
     foreach($Port in $FCPorts){
+        $RowCounter++
+        $RowID = "$($FCPorts.count)|$($Device.ID)|$RowCounter)"
 
         $SFPInfo = $SFPs | Where-Object {
             ($_.name -replace '^fc/') -eq $Port.name
@@ -47,6 +53,8 @@ function Get-BrocadeSFPShow {
 
 
         [PSCustomObject]@{
+            VFID = $VFID 
+            VFIDDisplay = $VFIDDisplay
             Port = $Port.name
             State = $Port.'operational-status-string'
             SFPUsed = [bool]$SFPInfo
@@ -71,6 +79,7 @@ function Get-BrocadeSFPShow {
             Voltage = $Voltage
             Wavelength = $Wavelength
             PowerOnTime = $PowerOnTime
+            RowID = $RowID
         }
     }
 }
