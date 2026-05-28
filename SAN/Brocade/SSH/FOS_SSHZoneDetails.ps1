@@ -83,12 +83,15 @@ function FOS_SSHZoneDetails  {
         if(($FOS_EffectiveZoneList.count) -ge 4){
             #Create PowerShell Objects out of the Aliases
             [array]$FOS_ZoneCollection = foreach ($FOS_Zone in $FOS_EffectiveZoneList) {
-                $FOS_TempCollection = "" | Select-Object Zone,WWPN,Alias,SwitchWWNN,SerialNumber,RowID
-                
+                $FOS_TempCollection = "" | Select-Object VFIDDisplay,ZoneName,ZoneType,MemberRole,WWPN,Alias,Member,SwitchWWNN,SerialNumber,RowID
                 # Get the ZoneName
                 if(Select-String -InputObject $FOS_Zone -Pattern '^ zone:\s+(.*)'){
                     $FOS_ZoneName = Select-String -InputObject $FOS_Zone -Pattern '^ zone:\s+(.*)' |ForEach-Object {$_.Matches.Groups[1].Value}
-                    $FOS_TempCollection.Zone = $FOS_ZoneName
+                    $FOS_TempCollection.VFIDDisplay = ""
+                    $FOS_TempCollection.ZoneName = $FOS_ZoneName
+                    $FOS_TempCollection.ZoneType = ""
+                    $FOS_TempCollection.MemberRole = ""
+                    $FOS_TempCollection.Member = ""
                     #Write-Host $FOS_ZoneName -ForegroundColor Yellow
                 }else{
                     $EffectiveAliasWWPN = $FOS_Zone.Trim()
