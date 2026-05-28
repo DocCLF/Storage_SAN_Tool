@@ -2,16 +2,27 @@ function Get-BrocadeSwitchShow {
     [CmdletBinding()]
     param(
         [Parameter(Mandatory)]
-        $Device
+        $Device,
+        $RowCounter = 0
     )
 
     $FCPorts    = Get-BrocadeFcPorts -Device $Device
     $SFP        = Get-BrocadeSfp -Device $Device
     $NameServer = Get-BrocadeNameServer -Device $Device
     $Aliases    = Get-BrocadeAliases -Device $Device
+    <# needed for DB #>
+    $SwitchInfo = Get-BrocadeSwitchInfo -Device $Device
+    $ChassisInfo = Get-BrocadeChassisInfo -Device $Device
+    $SwitchWWNN = $SwitchInfo.name
+    $SerialNumber = $ChassisInfo.'vendor-serial-number'
+    
+    <# needed for VFID #>
+    $VFID = if($Device.VFID){$Device.VFID}else{""}
+    $VFIDDisplay = if($VFID){ $VFID }else{""}
 
     foreach($Port in $FCPorts){
-    
+        $RowCounter++
+        $RowID = "$($FCPorts.count)|$($Device.ID)|$RowCounter)"
         $SFPInfo = $SFP | Where-Object {
             ($_.name -replace '^fc/') -eq $Port.name
         }
@@ -58,16 +69,18 @@ function Get-BrocadeSwitchShow {
                 $null
             }
 
-        [PSCustomObject]@{
+        $FOS_SwBasicPortDetails = [PSCustomObject]@{
+            VFID = $VFID 
+            VFIDDisplay = $VFIDDisplay
             Index = $Port.index
             Port = $Port.name
             Address = $Port.'fcid-hex'
             Media = $Media
             Speed = $Port.'protocol-speed'
             State = $Port.'operational-status-string'
-            <# WWNN und SN könnte man von der DB auf basis der kdnr und ip addr herauslesen #>
-            #$PortStateInfo = SAN_PortStateInfo -SANSwitchWWNN $Device.WWNN -SANSerialNumber $Device.SerialNumber -SANPort $Port.name -SANState $Port.'operational-status-string'
-            PortStateInfo = $null
+            <# ask db for the last Portstatus #>
+            $PortStateInfo = SAN_PortStateInfo -SANSwitchWWNN $SwitchWWNN -SANSerialNumber $SerialNumber -SANPort $Port.name -SANState $Port.'operational-status-string'
+            PortStateInfo = $PortStateInfo
             Proto = $Port.'port-type-string'
             WWPNs = @(@($NameServerInfo.'port-name') | Where-Object {$_})
             WWPN = @($NameServerInfo.'port-name') -join ', '
@@ -77,7 +90,17 @@ function Get-BrocadeSwitchShow {
             Alias = @($AliasList) -join ', '
             PortConnectList = $PortConnectLists
             PortConnect = @($PortConnectList) -join "`n"
-            RowID = $Port.index
+            SerialNumber = $SwitchWWNN
+            SwitchWWNN = $SerialNumber
+            RowID = $RowID
         }
     }
+        try {
+            SST_CustomerSANDBInsertTable -SST_InfoType "SANPortInfo" -SST_CollectedInformations $FOS_SwBasicPortDetails
+        }
+        catch {
+            <#Do this if a terminating exception happens#>
+            Write-Host $_.Exception.Message
+        }
+        return $FOS_SwBasicPortDetails
 }
