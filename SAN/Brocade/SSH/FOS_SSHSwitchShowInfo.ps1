@@ -156,7 +156,7 @@ function FOS_SSHSwitchShowInfo {
     end {
 
         Close-ProgressBar -ProgressBar $ProgressBar
-        #SST_CustomerSANDBInsertTable -SST_InfoType "SANPortInfo" -SST_CollectedInformations $FOS_SwBasicPortDetails
+        SST_CustomerSANDBInsertTable -SST_InfoType "SANPortInfo" -SST_CollectedInformations $FOS_SwBasicPortDetails 
 
         <# returns the hashtable for further processing, not mandatory but the safe way #>
         Write-Debug -Message "End Func GET_SwitchShowInfo |$(Get-Date)`n "
