@@ -141,6 +141,7 @@ function FOS_SSHBasicSwitchInfos {
             $match = $FOS_MainInformation | Select-String -Pattern 'switchRole:\s+(\w+)'
             if ($match -and $match.Matches.Count -gt 0) {$switchRole = $match.Matches[0].Groups[1].Value }
             $FOS_SwGeneralInfos['SwitchRole'] = $switchRole
+            $FOS_SwGeneralInfos['VFID'] = $null
 
             <# Progressbar  #>
             $ProgCounter++
