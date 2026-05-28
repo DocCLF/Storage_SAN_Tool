@@ -36,7 +36,6 @@ function SST_DeviceConnecCheck {
                 $TD_Selected_DevicePassword = [string]$TD_TB_DevicePassword.Password
                 $TD_Selected_DeviceType = $TD_CB_DeviceType.Text
                 if($TD_CB_SVCorVF.IsChecked -and ($TD_Selected_DeviceType -like "*Storage")){$TD_UserInputCred = "SVC"};
-                if($TD_CB_SVCorVF.IsChecked -and ($TD_Selected_DeviceType -like "*SAN")){$TD_UserInputCred = "VF"};
                 if(!($TD_CB_SVCorVF.IsChecked)){$TD_UserInputCred = "Nothing"};
                 $TD_Creds = [PSCustomObject]@{
                     UserName = $TD_TB_DeviceUserName.Text
@@ -134,12 +133,13 @@ function SST_DeviceConnecCheck {
                 }
                 
                 if($TD_BasicDeviceInfos.count -gt 0){
-                    $TD_BInfo = "" | Select-Object ConnectionTyp,DeviceName,ProductDes,Prod_MTM,Code_Level
-                    $TD_BInfo.ConnectionTyp = "plink" #change this if we switch to REST
+                    $TD_BInfo = "" | Select-Object ConnectionTyp,DeviceName,ProductDes,Prod_MTM,Code_Level,VFenabled
+                    $TD_BInfo.ConnectionTyp = if(!($null -eq $TD_BasicDeviceInfos.VFID)){"REST"}else{"plink"}
                     $TD_BInfo.DeviceName = $TD_BasicDeviceInfos.'SwichtName'
                     $TD_BInfo.ProductDes = $TD_BasicDeviceInfos.'BrocadeProductName'
                     $TD_BInfo.Prod_MTM = $TD_BasicDeviceInfos.'MTM'
                     $TD_BInfo.Code_Level = $TD_BasicDeviceInfos.'FabricOS'
+                    $TD_BInfo.VFenabled = $TD_BasicDeviceInfos.'VFenabled'
                     $TD_BasicDeviceInfo += $TD_BInfo
                     SST_ToolMessageCollector -TD_ToolMSGCollector "Added SAN Device to the List" -TD_ToolMSGType Message
                 }else {
@@ -202,7 +202,7 @@ function SST_DeviceConnecCheck {
                     $TD_UserInputCred.UserName         =   $TD_ExistingCred.UserName;
                     <# The PwLine needs a better Option #>
                     $TD_UserInputCred.Password         =   $TD_Selected_DevicePassword;
-                    $TD_UserInputCred.SVCorVF          =   $TD_ExistingCred.SVCorVF;
+                    $TD_UserInputCred.SVCorVF          =   if($TD_BasicDeviceInfo.VFenabled -like "True"){"vFabric"}else{$TD_ExistingCred.SVCorVF;}
                     $TD_UserInputCred.MTMCode          =   $TD_BasicDeviceInfo.Prod_MTM;
                     $TD_UserInputCred.ProductDescr     =   $TD_BasicDeviceInfo.ProductDes;
                     $TD_UserInputCred.CurrentFirmware  =   $TD_BasicDeviceInfo.Code_Level;
