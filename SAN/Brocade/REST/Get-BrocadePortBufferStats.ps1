@@ -2,17 +2,25 @@ function Get-BrocadePortBufferStats {
     [CmdletBinding()]
     param(
         [Parameter(Mandatory)]
-        $Device
+        $Device,
+        $RowCounter = 0
     )
 
     $FCPorts = Get-BrocadeFcPorts -Device $Device
     $FCStats = Get-BrocadeFCstatistics -Device $Device
 
+    $VFID = if($Device.VFID){$Device.VFID}else{""}
+    $VFIDDisplay = if($VFID){ $VFID }else{""}
+
     foreach($Port in $FCPorts){
         $StatsInfo = $FCStats | Where-Object {
             $_.name -eq $Port.name
         }
+        $RowCounter++
+        $RowID = "$($FCPorts.count)|$($Device.ID)|$RowCounter)"
         [PSCustomObject]@{
+            VFID = $VFID 
+            VFIDDisplay = $VFIDDisplay
             Port = $Port.name
             PortType = $Port.'port-type-string'
             State = $Port.'operational-status-string'
@@ -30,6 +38,7 @@ function Get-BrocadePortBufferStats {
             CongestionSignalEnabled = $Port.'congestion-signal-enabled'
             FportBuffers = $Port.'f-port-buffers'
             BBzero = $StatsInfo.'bb-credit-zero'
+            RowID = $RowID
         }
     }
 }
