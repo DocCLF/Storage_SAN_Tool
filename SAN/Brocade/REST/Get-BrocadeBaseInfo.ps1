@@ -31,7 +31,7 @@ function Get-BrocadeBaseInfo {
         SwitchWWNN = $SwitchInfo.name
         FabricName = $SwitchInfo.'fabric-user-friendly-name'
         vFabricID = $SwitchInfo.'vf-id'
-        VFIDs = @($LogicalSwitches.'fabric-id')
+        VFID = @($LogicalSwitches.'fabric-id')
         VFIDString = @($LogicalSwitches.'fabric-id') -join ', '
         BrocadeProductName = $ChassisInfo.'product-name'
         SwitchType = $SwitchInfo.'model'
@@ -58,6 +58,7 @@ function Get-BrocadeBaseInfo {
         <#Do this if a terminating exception happens#>
         Write-Host $_.Exception.Message
     }
+    
     return $FOS_SwGeneralInfos
 
 }
