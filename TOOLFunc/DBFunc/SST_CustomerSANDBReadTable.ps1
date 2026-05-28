@@ -80,7 +80,7 @@ function SAN_PortStateInfo {
 }
 function Get-BrocadeVFIDsFromDB {
     param (
-        [string]$SANSerialNumber
+        $Device
     )
     $TimeStamp = Get-Date -Format "yyyy-MM-dd HH:mm"
     if (-not [string]::IsNullOrWhiteSpace($TD_TB_CustomerInfoName.Text)) {
@@ -93,12 +93,12 @@ function Get-BrocadeVFIDsFromDB {
     $SQLiteDBConnection = New-Object System.Data.SQLite.SQLiteConnection $SQLiteConnectionString
     $SQLiteDBConnection.Open()
     $SQLiteCommand = $SQLiteDBConnection.CreateCommand()
-    $SQLiteCommand.CommandText = "SELECT DISTINCT VFID FROM IBMSANHWTable WHERE CustomerNbr = @CustomerNbr AND SerialNumber = @SerialNumber AND TimeStamp = (SELECT MAX(TimeStamp)`
-                                    FROM IBMSANHWTable WHERE CustomerNbr = @CustomerNbr AND SerialNumber = @SerialNumber)`
+    $SQLiteCommand.CommandText = "SELECT DISTINCT VFID FROM IBMSANHWTable WHERE CustomerNbr = @CustomerNbr AND Name = @Name AND TimeStamp = (SELECT MAX(TimeStamp)`
+                                    FROM IBMSANHWTable WHERE CustomerNbr = @CustomerNbr AND Name = @Name)`
                                     AND VFID IS NOT NULL AND VFID <> '' ORDER BY VFID;"
 
     $null = $SQLiteCommand.Parameters.AddWithValue('@CustomerNbr',$Customer)
-    $null = $SQLiteCommand.Parameters.AddWithValue('@SerialNumber',$SANSerialNumber)
+    $null = $SQLiteCommand.Parameters.AddWithValue('@Name',$Device.DeviceName)
     try{
         $Reader = $SQLiteCommand.ExecuteReader()
 
