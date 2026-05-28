@@ -80,7 +80,7 @@ function SST_CustomerDeviceDBCreateTable {
             }
             <# SANBase #>
             try{ 
-                $SST_SQLiteTabelQuery ="CREATE TABLE IF NOT EXISTS IBMSANHWTable (ID INTEGER PRIMARY KEY AUTOINCREMENT, CustomerNbr TEXT NOT NULL, Name TEXT NOT NULL, Status TEXT NOT NULL, BrocadeProdName TEXT, MTM TEXT, CodeLevel TEXT, SerialNumber TEXT, SwitchWWNN TEXT, TimeStamp TEXT );" 
+                $SST_SQLiteTabelQuery ="CREATE TABLE IF NOT EXISTS IBMSANHWTable (ID INTEGER PRIMARY KEY AUTOINCREMENT, CustomerNbr TEXT NOT NULL, Name TEXT NOT NULL, Status TEXT NOT NULL, BrocadeProdName TEXT, MTM TEXT, CodeLevel TEXT, SerialNumber TEXT, SwitchWWNN TEXT, VFID TEXT, VFenabled TEXT, VFsupported TEXT, TimeStamp TEXT );" 
                 $SQLiteCommandCreate.CommandText = $SST_SQLiteTabelQuery
                 $SQLiteCommandCreate.ExecuteNonQuery()
             }catch{
