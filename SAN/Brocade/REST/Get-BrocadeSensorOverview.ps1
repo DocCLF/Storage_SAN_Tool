@@ -3,7 +3,8 @@ function Get-BrocadeSensorOverview {
     [CmdletBinding()]
     param(
         [Parameter(Mandatory)]
-        $Device
+        $Device,
+        $RowCounter = 0
     )
 
     $TemperatureInfo = Get-BrocadeTemperatureInfo -Device $Device
