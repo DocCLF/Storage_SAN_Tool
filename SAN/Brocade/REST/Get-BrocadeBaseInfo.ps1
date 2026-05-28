@@ -24,7 +24,7 @@ function Get-BrocadeBaseInfo {
             'Subordinate'
         }
 
-    [PSCustomObject]@{
+    $FOS_SwGeneralInfos = [PSCustomObject]@{
         SwitchName = $SwitchInfo.'user-friendly-name'
         ActiveZoneCFG = $EffectiveCFG.Data.'cfg-name'
         DomainID = $SwitchInfo.'domain-id'
@@ -49,4 +49,15 @@ function Get-BrocadeBaseInfo {
         VFsupported = $ChassisInfo.'vf-supported'
         RowID = $SwitchInfo.'domain-id'
     }
+    try {
+        if($FOS_SwGeneralInfos.VFenabled -like "True"){
+            SST_CustomerSANDBInsertTable -SST_InfoType "SANBase" -SST_CollectedInformations $FOS_SwGeneralInfos
+        }
+    }
+    catch {
+        <#Do this if a terminating exception happens#>
+        Write-Host $_.Exception.Message
+    }
+    return $FOS_SwGeneralInfos
+
 }
