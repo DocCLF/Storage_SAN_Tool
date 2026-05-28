@@ -222,6 +222,7 @@
                     </Style>
                 </DataGrid.RowStyle>
                 <DataGrid.Columns>
+                    <DataGridTextColumn Width="auto" Header="VFID"  Binding ="{Binding VFIDDisplay}" IsReadOnly="True"/>
                     <DataGridTextColumn Width="auto" Header="Index"  Binding ="{Binding Index}" IsReadOnly="True">
                         <DataGridTextColumn.CellStyle>
                             <Style TargetType="DataGridCell">
@@ -295,6 +296,7 @@
                   <GroupStyle/>
                 </DataGrid.GroupStyle>
                 <DataGrid.Columns>
+                    <DataGridTextColumn Width="auto" Header="VFID" Binding ="{Binding VFIDDisplay}" IsReadOnly="True"/>
                     <DataGridTextColumn Header="Port"  Binding ="{Binding Port}" IsReadOnly="True" Width="60"/>  
                     <DataGridTextColumn Header="Type" Binding ="{Binding Type}" IsReadOnly="True" Width="60"/>  
                     <DataGridTextColumn Header="Mode" Binding ="{Binding Mode}" IsReadOnly="True" Width="60"/>
@@ -373,6 +375,7 @@
                   <GroupStyle/>
                 </DataGrid.GroupStyle>
                 <DataGrid.Columns>
+                    <DataGridTextColumn Width="auto" Header="VFID" Binding ="{Binding VFIDDisplay}" IsReadOnly="True"/>
                     <DataGridTextColumn Width="auto" Header="Port" Binding ="{Binding Port}" IsReadOnly="True"/>
                     <DataGridTextColumn Width="auto" Header="Frames_TX" Binding ="{Binding Frames_TX}" IsReadOnly="True"/>
                     <DataGridTextColumn Width="auto" Header="Frames_RX" Binding ="{Binding Frames_RX}" IsReadOnly="True"/>  
@@ -545,6 +548,7 @@
                     </Style>
                 </DataGrid.RowStyle>
                 <DataGrid.Columns>
+                    <DataGridTextColumn Width="auto" Header="VFID" Binding ="{Binding VFIDDisplay}" IsReadOnly="True"/>
                     <DataGridTextColumn Width="auto" Header="Port"  Binding ="{Binding Port}" IsReadOnly="True"/>
                     <DataGridTextColumn Width="auto" Header="SFP Typ" Binding ="{Binding SFPTyp}" IsReadOnly="True"/>
                     <DataGridTextColumn Width="auto" Header="Vendor"  Binding ="{Binding Vendor}" IsReadOnly="True"/>  
@@ -583,9 +587,12 @@
                   <GroupStyle/>
                 </DataGrid.GroupStyle>
                     <DataGrid.Columns>
-                        <DataGridTextColumn Width="200" Header="Zone" Binding="{Binding Zone}" IsReadOnly="True"/>
-                        <DataGridTextColumn Width="150" Header="WWPN" Binding="{Binding WWPN}" IsReadOnly="True"/>
+                        <DataGridTextColumn Width="auto" Header="VFID" Binding="{Binding VFIDDisplay}" IsReadOnly="True"/>
+                        <DataGridTextColumn Width="200" Header="Zone" Binding="{Binding ZoneName}" IsReadOnly="True"/>
+                        <DataGridTextColumn Width="90" Header="Type" Binding="{Binding ZoneTypeDisplay}" IsReadOnly="True"/>
+                        <DataGridTextColumn Width="90" Header="Role" Binding="{Binding MemberRole}" IsReadOnly="True"/>
                         <DataGridTextColumn Width="300" Header="Alias" Binding="{Binding Alias}" IsReadOnly="True"/>
+                        <DataGridTextColumn Width="170" Header="WWPN" Binding="{Binding WWPN}" IsReadOnly="True"/>
                     </DataGrid.Columns>
               </DataGrid>
             </DataTemplate>
