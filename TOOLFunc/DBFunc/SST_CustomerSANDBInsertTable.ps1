@@ -49,7 +49,8 @@ function SST_CustomerSANDBInsertTable {
                         $SQLiteCommand.Parameters.AddWithValue("@MTM", $SST_CollectedInformation.'MTM') | Out-Null
                         $SQLiteCommand.Parameters.AddWithValue("@SerialNumber", $SST_CollectedInformation.'SerialNumber') | Out-Null
                         $SQLiteCommand.Parameters.AddWithValue("@SwitchWWNN", $SST_CollectedInformation.'SwitchWWNN') | Out-Null
-                        $SQLiteCommand.Parameters.AddWithValue("@VFID", $SST_CollectedInformation.'VFID') | Out-Null
+                        $VFIDString = @($SST_CollectedInformation.'VFID') -join ','
+                        $SQLiteCommand.Parameters.AddWithValue("@VFID", $VFIDString) | Out-Null
                         $SQLiteCommand.Parameters.AddWithValue("@VFenabled", $SST_CollectedInformation.'VFenabled') | Out-Null
                         $SQLiteCommand.Parameters.AddWithValue("@VFsupported", $SST_CollectedInformation.'VFsupported') | Out-Null
                         $SQLiteCommand.Parameters.AddWithValue("@TimeStamp", $TimeStamp) | Out-Null
@@ -58,7 +59,8 @@ function SST_CustomerSANDBInsertTable {
                         $SQLiteCommand.ExecuteNonQuery() | Out-Null
 
                         # Delete | Keep only the 16 most recent entries after TimeStamp
-                        $SQLiteCommand.CommandText = "DELETE FROM IBMSANHWTable WHERE ID NOT IN ( SELECT ID FROM IBMSANHWTable ORDER BY TimeStamp DESC LIMIT 16 );"
+                        $SQLiteCommand.CommandText = "DELETE FROM IBMSANHWTable WHERE CustomerNbr = @CustomerNbr AND SerialNumber = @SerialNumber AND ID NOT IN (SELECT ID FROM IBMSANHWTable`
+                                                        WHERE CustomerNbr = @CustomerNbr AND SerialNumber = @SerialNumber ORDER BY TimeStamp DESC LIMIT 16);"
                         $SQLiteCommand.ExecuteNonQuery() | Out-Null
                     }
                 }
@@ -84,7 +86,7 @@ function SST_CustomerSANDBInsertTable {
                     foreach ($SST_CollectedInformation in $SST_CollectedInformations){
                         $SQLiteCommand.Parameters.Clear()
 
-                        $SQLiteCommand.CommandText ="INSERT INTO IBMSANPortInfoTable (CustomerNbr, Port, State, Speed, PortConnect, SerialNumber, SwitchWWNN, TimeStamp) VALUES (@CustomerNbr, @Port, @State, @Speed, @PortConnect, @SerialNumber, @SwitchWWNN, @TimeStamp);"
+                        $SQLiteCommand.CommandText ="INSERT INTO IBMSANPortInfoTable (CustomerNbr, Port, State, Speed, PortConnect, SerialNumber, SwitchWWNN, VFID, TimeStamp) VALUES (@CustomerNbr, @Port, @State, @Speed, @PortConnect, @SerialNumber, @SwitchWWNN, @VFID, @TimeStamp);"
                         $SQLiteCommand.Parameters.AddWithValue("@CustomerNbr", $Customer) | Out-Null
                         $SQLiteCommand.Parameters.AddWithValue("@Port", $SST_CollectedInformation.Port) | Out-Null
                         $SQLiteCommand.Parameters.AddWithValue("@State", $SST_CollectedInformation.State) | Out-Null
@@ -92,13 +94,17 @@ function SST_CustomerSANDBInsertTable {
                         $SQLiteCommand.Parameters.AddWithValue("@PortConnect", $SST_CollectedInformation.PortConnect) | Out-Null
                         $SQLiteCommand.Parameters.AddWithValue("@SerialNumber", $SST_CollectedInformation.SerialNumber) | Out-Null
                         $SQLiteCommand.Parameters.AddWithValue("@SwitchWWNN", $SST_CollectedInformation.SwitchWWNN) | Out-Null
+                        $VFIDString = @($SST_CollectedInformation.'VFID') -join ','
+                        $SQLiteCommand.Parameters.AddWithValue("@VFID", $VFIDString) | Out-Null
                         $SQLiteCommand.Parameters.AddWithValue("@TimeStamp", $TimeStamp) | Out-Null
                     
                         # DB save 
                         $SQLiteCommand.ExecuteNonQuery() | Out-Null
  
                         # Then automatically clean up for this exact switch
-                        $SQLiteCommand.CommandText ="DELETE FROM IBMSANPortInfoTable WHERE ID NOT IN (SELECT ID FROM (SELECT ID FROM IBMSANPortInfoTable AS t WHERE (SELECT COUNT(*) FROM IBMSANPortInfoTable AS x WHERE x.SwitchWWNN = t.SwitchWWNN AND x.Port = t.Port AND datetime(x.TimeStamp) >= datetime(t.TimeStamp) ) <= 1 ));" 
+                        $SQLiteCommand.CommandText ="DELETE FROM IBMSANPortInfoTable WHERE CustomerNbr = @CustomerNbr AND SwitchWWNN = @SwitchWWNN AND Port = @Port AND IFNULL(VFID,'') = IFNULL(@VFID,'') AND ID NOT IN (SELECT ID FROM IBMSANPortInfoTable`
+                                                        WHERE CustomerNbr = @CustomerNbr AND SwitchWWNN = @SwitchWWNN AND Port = @Port AND IFNULL(VFID,'') = IFNULL(@VFID,'')`
+                                                        ORDER BY datetime(TimeStamp) DESC, ID DESC LIMIT 1);"
                         $SQLiteCommand.ExecuteNonQuery() | Out-Null
                     }
                 }
