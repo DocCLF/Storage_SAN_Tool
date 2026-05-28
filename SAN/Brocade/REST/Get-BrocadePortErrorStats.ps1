@@ -3,14 +3,21 @@ function Get-BrocadePortErrorStats {
     [CmdletBinding()]
     param(
         [Parameter(Mandatory)]
-        $Device
+        $Device,
+        $RowCounter = 0
     )
 
     $FCstatistics = Get-BrocadeFCstatistics -Device $Device
 
-    foreach($FCstatistic in $FCstatistics){
+    $VFID = if($Device.VFID){$Device.VFID}else{""}
+    $VFIDDisplay = if($VFID){ $VFID }else{""}
 
+    foreach($FCstatistic in $FCstatistics){
+        $RowCounter++
+        $RowID = "$($FCPorts.count)|$($Device.ID)|$RowCounter)"
         [PSCustomObject]@{
+            VFID = $VFID 
+            VFIDDisplay = $VFIDDisplay
             Port = $FCstatistic.name
             EncIn = $FCstatistic.'encoding-error-in'
             CrcErr = $FCstatistic.'crc-errors'
@@ -25,6 +32,7 @@ function Get-BrocadePortErrorStats {
             StateTransitions = $FCstatistic.'state-transition-count'
             BBZero = $FCstatistic.'bb-credit-zero'
             FECuncorrected = $FCstatistic.'fec-uncorrected'
+            RowID = $RowID
         }
     }
 }
