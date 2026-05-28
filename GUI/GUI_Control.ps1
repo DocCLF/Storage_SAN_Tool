@@ -325,7 +325,7 @@ $TD_BTN_SaveCredtoDG.add_click({
         
     }else{
         SST_ToolMessageCollector -TD_ToolMSGCollector "Cred AddaNewDevice" -TD_ToolMSGType Message -TD_Shown no
-        $TD_CredfGUIArray = SST_GetCredfGUI -TD_AddaNewDevice "yes"
+        $TD_CredfGUIArray = SST_GetCredfGUI -TD_AddaNewDevice "yes" .\Sign-Module.ps1
         Start-Sleep -Seconds 0.5
         if(!([string]::IsNullOrEmpty($TD_CredfGUIArray))){
             $TD_TB_DeviceIPAddr.Text=""
@@ -1225,11 +1225,42 @@ $TD_BTN_FOS_SwitchShow.add_click({
                 $Current++
                 $Percent = [math]::Round(($Current / $Total) * 100,0)
                 Write-ProgressBar -ProgressBar $PB -Activity "Brocade Query $Current / $Total - $($TD_Creds.DeviceIP)" -PercentComplete $Percent
-            <# ProgressBar #>
-            $FunctionResult = New-DeviceBlock -Device $TD_Creds -ExportPath $TD_TB_ExportPath.Text -RESTFunc Get-BrocadeSwitchShow -SSHFunc FOS_SSHSwitchShowInfo
+
+           <# VFID Check / Zone Rows sammeln #>
+            $AllSwitchShowRows = @()
+            $FunctionResult = $null
+            $VFIDs = @()
+            if($TD_Creds.SVCorVF -like "*vFabric*"){
+                $VFIDs = @(Get-BrocadeVFIDsFromDB -Device $TD_Creds)
+            }
+            if($VFIDs.Count -gt 0){
+            
+                foreach($VFID in $VFIDs){
+                
+                    $TD_Creds | Add-Member -NotePropertyName VFID -NotePropertyValue $VFID -Force
+
+                    $TmpResult = New-DeviceBlock -Device $TD_Creds -ExportPath $TD_TB_ExportPath.Text -RESTFunc Get-BrocadeSwitchShow -SSHFunc FOS_SSHSwitchShowInfo
+
+                    if(!($FunctionResult)){
+                        $FunctionResult = $TmpResult
+                    }
+                
+                    $AllSwitchShowRows += @($TmpResult.FuncResult)
+                }
+            }else{
+                if($TD_Creds.PSObject.Properties['VFID']){
+                    $TD_Creds.PSObject.Properties.Remove('VFID')
+                }
+
+                $FunctionResult = New-DeviceBlock -Device $TD_Creds -ExportPath $TD_TB_ExportPath.Text -RESTFunc Get-BrocadeSwitchShow -SSHFunc FOS_SSHSwitchShowInfo
+
+                $AllSwitchShowRows += @($FunctionResult.FuncResult)
+            }
+
             # Links = Propertyname im PSCustomObject (das bindet dein XAML)
             # Rechts = Propertyname im Source-Objekt
             $mapSwitchShowInfo = @{ 
+                VFIDDisplay     = 'VFIDDisplay'
                 Index           = 'Index'
                 Port            = 'Port'
                 Address         = 'Address'
@@ -1240,7 +1271,7 @@ $TD_BTN_FOS_SwitchShow.add_click({
                 PortConnect     = 'PortConnect'
                 PortStateInfo   = 'PortStateInfo'
             }
-            Add-MappedRows -Collection $FunctionResult.DeviceIdent.SANSwitchShowRows -Source $FunctionResult.FuncResult -IdProperty 'RowID' -Map $mapSwitchShowInfo
+            Add-MappedRows -Collection $FunctionResult.DeviceIdent.SANSwitchShowRows -Source $AllSwitchShowRows -IdProperty 'RowID' -Map $mapSwitchShowInfo
 
             $UCVMMain.DeviceToggles.Add($FunctionResult.DeviceIdent)
         }
@@ -1275,11 +1306,42 @@ $TD_BTN_FOS_PortBufferShow.add_click({
                 $Current++
                 $Percent = [math]::Round(($Current / $Total) * 100,0)
                 Write-ProgressBar -ProgressBar $PB -Activity "Brocade Query $Current / $Total - $($TD_Creds.DeviceIP)" -PercentComplete $Percent
-            <# ProgressBar #>
-            $FunctionResult = New-DeviceBlock -Device $TD_Creds -ExportPath $TD_TB_ExportPath.Text -RESTFunc Get-BrocadePortBufferStats -SSHFunc FOS_SSHPortbufferShowInfo
+
+           <# VFID Check / Zone Rows sammeln #>
+            $AllPortBufferRows = @()
+            $FunctionResult = $null
+            $VFIDs = @()
+            if($TD_Creds.SVCorVF -like "*vFabric*"){
+                $VFIDs = @(Get-BrocadeVFIDsFromDB -Device $TD_Creds)
+            }
+            if($VFIDs.Count -gt 0){
+            
+                foreach($VFID in $VFIDs){
+                
+                    $TD_Creds | Add-Member -NotePropertyName VFID -NotePropertyValue $VFID -Force
+
+                    $TmpResult = New-DeviceBlock -Device $TD_Creds -ExportPath $TD_TB_ExportPath.Text -RESTFunc Get-BrocadePortBufferStats -SSHFunc FOS_SSHPortbufferShowInfo
+
+                    if(!($FunctionResult)){
+                        $FunctionResult = $TmpResult
+                    }
+                
+                    $AllPortBufferRows += @($TmpResult.FuncResult)
+                }
+            }else{
+                if($TD_Creds.PSObject.Properties['VFID']){
+                    $TD_Creds.PSObject.Properties.Remove('VFID')
+                }
+
+                $FunctionResult = New-DeviceBlock -Device $TD_Creds -ExportPath $TD_TB_ExportPath.Text -RESTFunc Get-BrocadePortBufferStats -SSHFunc FOS_SSHPortbufferShowInfo
+
+                $AllPortBufferRows += @($FunctionResult.FuncResult)
+            }
+
             # Links = Propertyname im PSCustomObject (das bindet dein XAML)
             # Rechts = Propertyname im Source-Objekt
             $mapPortbufferShow = @{ 
+                VFIDDisplay = 'VFIDDisplay'
                 Port        = 'Port'
                 Type        = 'Type'
                 Mode        = 'Mode'
@@ -1291,7 +1353,7 @@ $TD_BTN_FOS_PortBufferShow.add_click({
                 Distance    = 'Distance'
                 Buffer      = 'Buffer'
             }
-            Add-MappedRows -Collection $FunctionResult.DeviceIdent.SANPortbufferShowRows -Source $FunctionResult.FuncResult -IdProperty 'RowID' -Map $mapPortbufferShow
+            Add-MappedRows -Collection $FunctionResult.DeviceIdent.SANPortbufferShowRows -Source $AllPortBufferRows -IdProperty 'RowID' -Map $mapPortbufferShow
 
             $UCVMMain.DeviceToggles.Add($FunctionResult.DeviceIdent)
         }
@@ -1326,11 +1388,41 @@ $TD_BTN_FOS_PortErrorShow.add_click({
                 $Current++
                 $Percent = [math]::Round(($Current / $Total) * 100,0)
                 Write-ProgressBar -ProgressBar $PB -Activity "Brocade Query $Current / $Total - $($TD_Creds.DeviceIP)" -PercentComplete $Percent
-            <# ProgressBar #>
-            $FunctionResult = New-DeviceBlock -Device $TD_Creds -ExportPath $TD_TB_ExportPath.Text -RESTFunc Get-BrocadePortErrorStats -SSHFunc FOS_SSHPortErrShowInfos
+           <# VFID Check / Zone Rows sammeln #>
+            $AllErrorsShowRows = @()
+            $FunctionResult = $null
+            $VFIDs = @()
+            if($TD_Creds.SVCorVF -like "*vFabric*"){
+                $VFIDs = @(Get-BrocadeVFIDsFromDB -Device $TD_Creds)
+            }
+            if($VFIDs.Count -gt 0){
+            
+                foreach($VFID in $VFIDs){
+                
+                    $TD_Creds | Add-Member -NotePropertyName VFID -NotePropertyValue $VFID -Force
+
+                    $TmpResult = New-DeviceBlock -Device $TD_Creds -ExportPath $TD_TB_ExportPath.Text -RESTFunc Get-BrocadePortErrorStats -SSHFunc FOS_SSHPortErrShowInfos
+
+                    if(!($FunctionResult)){
+                        $FunctionResult = $TmpResult
+                    }
+                
+                    $AllErrorsShowRows += @($TmpResult.FuncResult)
+                }
+            }else{
+                if($TD_Creds.PSObject.Properties['VFID']){
+                    $TD_Creds.PSObject.Properties.Remove('VFID')
+                }
+
+                $FunctionResult = New-DeviceBlock -Device $TD_Creds -ExportPath $TD_TB_ExportPath.Text -RESTFunc Get-BrocadePortErrorStats -SSHFunc FOS_SSHPortErrShowInfos
+
+                $AllErrorsShowRows += @($FunctionResult.FuncResult)
+            }
+
             # Links = Propertyname im PSCustomObject (das bindet dein XAML)
             # Rechts = Propertyname im Source-Objekt
             $mapPortErrorShow = @{ 
+                VFIDDisplay     = 'VFIDDisplay'
                 Port            = 'Port'
                 frames_tx       = 'frames_tx'
                 frames_rx       = 'frames_rx'
@@ -1352,7 +1444,7 @@ $TD_BTN_FOS_PortErrorShow.add_click({
                 psc_err         = 'psc_err'
                 uncor_err       = 'uncor_err'
             }
-            Add-MappedRows -Collection $FunctionResult.DeviceIdent.SANPortErrorShowRows -Source $FunctionResult.FuncResult -IdProperty 'RowID' -Map $mapPortErrorShow
+            Add-MappedRows -Collection $FunctionResult.DeviceIdent.SANPortErrorShowRows -Source $AllErrorsShowRows -IdProperty 'RowID' -Map $mapPortErrorShow
 
             $UCVMMain.DeviceToggles.Add($FunctionResult.DeviceIdent)
         }
@@ -1387,11 +1479,40 @@ $TD_BTN_FOS_SFPHealthShow.add_click({
                 $Current++
                 $Percent = [math]::Round(($Current / $Total) * 100,0)
                 Write-ProgressBar -ProgressBar $PB -Activity "Brocade Query $Current / $Total - $($TD_Creds.DeviceIP)" -PercentComplete $Percent
-            <# ProgressBar #>
-            $FunctionResult = New-DeviceBlock -Device $TD_Creds -ExportPath $TD_TB_ExportPath.Text -RESTFunc Get-BrocadeSFPShow -SSHFunc FOS_SSHSFPDetails
-            # Links = Propertyname im PSCustomObject (das bindet dein XAML)
-            # Rechts = Propertyname im Source-Objekt
+            
+           <# VFID Check / Zone Rows sammeln #>
+            $AllSFPRows = @()
+            $FunctionResult = $null
+            $VFIDs = @()
+            if($TD_Creds.SVCorVF -like "*vFabric*"){
+                $VFIDs = @(Get-BrocadeVFIDsFromDB -Device $TD_Creds)
+            }
+            if($VFIDs.Count -gt 0){
+            
+                foreach($VFID in $VFIDs){
+                
+                    $TD_Creds | Add-Member -NotePropertyName VFID -NotePropertyValue $VFID -Force
+
+                    $TmpResult = New-DeviceBlock -Device $TD_Creds -ExportPath $TD_TB_ExportPath.Text -RESTFunc Get-BrocadeSFPShow -SSHFunc FOS_SSHSFPDetails
+
+                    if(!($FunctionResult)){
+                        $FunctionResult = $TmpResult
+                    }
+                
+                    $AllSFPRows += @($TmpResult.FuncResult)
+                }
+            }else{
+                if($TD_Creds.PSObject.Properties['VFID']){
+                    $TD_Creds.PSObject.Properties.Remove('VFID')
+                }
+
+                $FunctionResult = New-DeviceBlock -Device $TD_Creds -ExportPath $TD_TB_ExportPath.Text -RESTFunc Get-BrocadeSFPShow -SSHFunc FOS_SSHSFPDetails
+
+                $AllSFPRows += @($FunctionResult.FuncResult)
+            }
+
             $mapSFPDetails = @{ 
+                VFIDDisplay     = 'VFIDDisplay'
                 Port            = 'Port'
                 SFPUsed         = 'SFPUsed'
                 Media           = 'Media'
@@ -1404,7 +1525,7 @@ $TD_BTN_FOS_SFPHealthShow.add_click({
                 TxPower         = 'TxPower'
                 Voltage         = 'Voltage'
             }
-            Add-MappedRows -Collection $FunctionResult.DeviceIdent.SANSFPDetailsRows -Source $FunctionResult.FuncResult -IdProperty 'RowID' -Map $mapSFPDetails
+            Add-MappedRows -Collection $FunctionResult.DeviceIdent.SANSFPDetailsRows -Source $AllSFPRows -IdProperty 'RowID' -Map $mapSFPDetails
 
             $UCVMMain.DeviceToggles.Add($FunctionResult.DeviceIdent)
         }
@@ -1436,19 +1557,50 @@ $TD_BTN_FOS_ZoneDetailsShow.add_click({
         $UCVMMain.DeviceToggles.Clear()
         foreach($TD_Creds in $TD_Credentials){
             <# for ProgressBar #>
-                $Current++
-                $Percent = [math]::Round(($Current / $Total) * 100,0)
-                Write-ProgressBar -ProgressBar $PB -Activity "Brocade Query $Current / $Total - $($TD_Creds.DeviceIP)" -PercentComplete $Percent
-            <# ProgressBar #>
-            $FunctionResult = New-DeviceBlock -Device $TD_Creds -ExportPath $TD_TB_ExportPath.Text -RESTFunc Get-BrocadeEffectiveZoneShow -SSHFunc FOS_SSHZoneDetails
-            # Links = Propertyname im PSCustomObject (das bindet dein XAML)
-            # Rechts = Propertyname im Source-Objekt
-            $mapZoneDetails = @{ 
-                Zone    = 'Zone'
-                WWPN    = 'WWPN'
-                Alias   = 'Alias'
+            $Current++
+            $Percent = [math]::Round(($Current / $Total) * 100,0)
+            Write-ProgressBar -ProgressBar $PB -Activity "Brocade Query $Current / $Total - $($TD_Creds.DeviceIP)" -PercentComplete $Percent
+            <# VFID Check / Zone Rows sammeln #>
+            $AllZoneRows = @()
+            $FunctionResult = $null
+            $VFIDs = @()
+            if($TD_Creds.SVCorVF -like "*vFabric*"){
+                $VFIDs = @(Get-BrocadeVFIDsFromDB -Device $TD_Creds)
             }
-            Add-MappedRows -Collection $FunctionResult.DeviceIdent.SANZoneDetailsRows -Source $FunctionResult.FuncResult.FOSZoneCfg -IdProperty 'RowID' -Map $mapZoneDetails
+            if($VFIDs.Count -gt 0){
+            
+                foreach($VFID in $VFIDs){
+                
+                    $TD_Creds | Add-Member -NotePropertyName VFID -NotePropertyValue $VFID -Force
+                
+                    $TmpResult = New-DeviceBlock -Device $TD_Creds -ExportPath $TD_TB_ExportPath.Text -RESTFunc Get-BrocadeEffectiveZoneShow -SSHFunc FOS_SSHZoneDetails
+                
+                    if(!($FunctionResult)){
+                        $FunctionResult = $TmpResult
+                    }
+                
+                    $AllZoneRows += @($TmpResult.FuncResult)
+                }
+            }else{
+                if($TD_Creds.PSObject.Properties['VFID']){
+                    $TD_Creds.PSObject.Properties.Remove('VFID')
+                }
+            
+                $FunctionResult = New-DeviceBlock -Device $TD_Creds -ExportPath $TD_TB_ExportPath.Text -RESTFunc Get-BrocadeEffectiveZoneShow -SSHFunc FOS_SSHZoneDetails
+            
+                $AllZoneRows += @($FunctionResult.FuncResult)
+            }
+            $mapZoneDetails = @{ 
+                VFIDDisplay = 'VFIDDisplay'
+                ZoneName    = 'ZoneName'
+                ZoneType    = 'ZoneTypeDisplay'
+                MemberRole  = 'MemberRole'
+                WWPN        = 'WWPN'
+                Alias       = 'Alias'
+                Member      = 'Member'
+            }
+
+            Add-MappedRows -Collection $FunctionResult.DeviceIdent.SANZoneDetailsRows -Source $AllZoneRows -IdProperty 'RowID' -Map $mapZoneDetails
 
             $UCVMMain.DeviceToggles.Add($FunctionResult.DeviceIdent)
         }
