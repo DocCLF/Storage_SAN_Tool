@@ -34,7 +34,8 @@ function Get-BrocadeSFPShow {
         $Vendor = if($SFPInfo){ $SFPInfo.'vendor-name' } else { $null }
         $PartNumber = if($SFPInfo){ $SFPInfo.'part-number' } else { $null }
         $SerialNo = if($SFPInfo){ $SFPInfo.'serial-number' } else { $null }
-        $SpeedRange = if($SFPInfo){ $Port.'protocol-speed' } else { $null }
+        $Speed = $Port.'protocol-speed'
+        if($Speed){$SpeedRange = $Speed -replace '-gfc$',' G'}
         $Temperature = if($SFPInfo){ $TempValue } else { $null }
         $TempState = if($SFPInfo -and $TempValue -ge 70){ 'HOT' } elseif($SFPInfo){ 'OK' } else { $null }
         $RxPower = if($SFPInfo){ $SFPInfo.'rx-power' } else { $null }
