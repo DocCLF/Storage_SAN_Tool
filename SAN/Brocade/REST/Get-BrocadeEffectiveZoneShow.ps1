@@ -50,11 +50,17 @@ function Get-BrocadeEffectiveZoneShow {
             $Alias = if($AliasInfo){ $AliasInfo.Alias } else { '<NoAlias>' }
             $Member = if($AliasInfo){ "$($AliasInfo.Alias) [$WWPN]" } else { "<NoAlias> [$WWPN]" }
             $RowCounter++
-            $RowID = "$($Device.ID)|$VFID|$ZoneName|Principal|$WWPN|$RowCounter"
-
+            $RowID = "$($Device.ID)|$WWPN|$RowCounter"
+            $ZoneGroup = if($VFIDDisplay){
+                "$VFIDDisplay | $ZoneName ($ZoneTypeDisplay)"
+            }
+            else{
+                "$ZoneName ($ZoneTypeDisplay)"
+            }
             [PSCustomObject]@{
                 VFID            = $VFID 
                 VFIDDisplay     = $VFIDDisplay
+                ZoneGroup       = $ZoneGroup
                 ZoneName        = $ZoneName
                 ZoneType        = $ZoneType
                 ZoneTypeString  = $ZoneTypeString
@@ -77,12 +83,18 @@ function Get-BrocadeEffectiveZoneShow {
             $Alias = if($AliasInfo){ $AliasInfo.Alias } else { '<NoAlias>' }
             $Member = if($AliasInfo){ "$($AliasInfo.Alias) [$WWPN]" } else { "<NoAlias> [$WWPN]" }
             $RowCounter++
-            $RowID = "$($Device.ID)|$VFID|$ZoneName|$MemberRole|$WWPN|$RowCounter"
+            $RowID = "$($Device.ID)|$WWPN|$RowCounter"
 
-
+            $ZoneGroup = if($VFIDDisplay){
+                "$VFIDDisplay | $ZoneName ($ZoneTypeDisplay)"
+            }
+            else{
+                "$ZoneName ($ZoneTypeDisplay)"
+            }
             [PSCustomObject]@{
                 VFID            = $VFID 
                 VFIDDisplay     = $VFIDDisplay
+                ZoneGroup       = $ZoneGroup
                 ZoneName        = $ZoneName
                 ZoneType        = $ZoneType
                 ZoneTypeString  = $ZoneTypeString
