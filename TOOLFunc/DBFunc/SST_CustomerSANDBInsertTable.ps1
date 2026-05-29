@@ -42,7 +42,7 @@ function SST_CustomerSANDBInsertTable {
 
                         $SQLiteCommand.CommandText ="INSERT INTO IBMSANHWTable (CustomerNbr, Name, Status, CodeLevel, BrocadeProdName, MTM, SerialNumber, SwitchWWNN, VFID, VFenabled, VFsupported, TimeStamp) VALUES (@CustomerNbr, @Name, @Status, @CodeLevel, @BrocadeProdName, @MTM, @SerialNumber, @SwitchWWNN, @VFID, @VFenabled, @VFsupported, @TimeStamp);"
                         $SQLiteCommand.Parameters.AddWithValue("@CustomerNbr", $Customer) | Out-Null
-                        $SQLiteCommand.Parameters.AddWithValue("@Name", $SST_CollectedInformation.'SwichtName') | Out-Null
+                        $SQLiteCommand.Parameters.AddWithValue("@Name", $SST_CollectedInformation.'SwitchName') | Out-Null
                         $SQLiteCommand.Parameters.AddWithValue("@Status", $SST_CollectedInformation.'SwitchState') | Out-Null
                         $SQLiteCommand.Parameters.AddWithValue("@CodeLevel", $SST_CollectedInformation.'FabricOS') | Out-Null
                         $SQLiteCommand.Parameters.AddWithValue("@BrocadeProdName", $SST_CollectedInformation.'BrocadeProductName') | Out-Null
