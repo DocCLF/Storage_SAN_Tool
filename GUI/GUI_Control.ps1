@@ -1331,21 +1331,26 @@ $TD_BTN_FOS_PortBufferShow.add_click({
 
                 $AllPortBufferRows += @($FunctionResult.FuncResult)
             }
-
-            # Links = Propertyname im PSCustomObject (das bindet dein XAML)
-            # Rechts = Propertyname im Source-Objekt
+        
             $mapPortbufferShow = @{ 
                 VFIDDisplay = 'VFIDDisplay'
                 Port        = 'Port'
-                Type        = 'Type'
-                Mode        = 'Mode'
-                Max_Resv    = 'Max_Resv'
-                Tx          = 'Tx'
-                Rx          = 'Rx'
-                Usage       = 'Usage'
-                Buffers     = 'Buffers'
-                Distance    = 'Distance'
-                Buffer      = 'Buffer'
+                PortType    = 'PortType'
+                State       = 'State'
+                Speed       = 'Speed'
+                ReservedBuffers     = 'ReservedBuffers'
+                CurrentBufferUsage  = 'CurrentBufferUsage'
+                RecommendedBuffers  = 'RecommendedBuffers'
+                AvgTxBufferUsage    = 'AvgTxBufferUsage'
+                AvgRxBufferUsage    = 'AvgRxBufferUsage'
+                AvgTxFrameSize      = 'AvgTxFrameSize'
+                AvgRxFrameSize      = 'AvgRxFrameSize'
+                ChipBuffersAvailable    = 'ChipBuffersAvailable'
+                CreditRecoveryEnabled   = 'CreditRecoveryEnabled'
+                CreditRecoveryActive    = 'CreditRecoveryActive'
+                CongestionSignalEnabled = 'CongestionSignalEnabled'
+                FportBuffers        = 'FportBuffers'
+                BBzero      = 'BBzero'
             }
             Add-MappedRows -Collection $FunctionResult.DeviceIdent.SANPortbufferShowRows -Source $AllPortBufferRows -IdProperty 'RowID' -Map $mapPortbufferShow
 
@@ -1415,28 +1420,23 @@ $TD_BTN_FOS_PortErrorShow.add_click({
 
             # Links = Propertyname im PSCustomObject (das bindet dein XAML)
             # Rechts = Propertyname im Source-Objekt
+
             $mapPortErrorShow = @{ 
                 VFIDDisplay     = 'VFIDDisplay'
                 Port            = 'Port'
-                frames_tx       = 'frames_tx'
-                frames_rx       = 'frames_rx'
-                enc_in          = 'enc_in'
-                crc_err         = 'crc_err'
-                crc_g_eof       = 'crc_g_eof'
-                too_short       = 'too_short'
-                too_long        = 'too_long'
-                bad_eof         = 'bad_eof'
-                enc_out         = 'enc_out'
-                disc_c3         = 'disc_c3'
-                link_fail       = 'link_fail'
-                loss_sync       = 'loss_sync'
-                loss_sig        = 'loss_sig'
-                f_rejected      = 'f_rejected'
-                f_busied        = 'f_busied'
-                c3timeout_tx    = 'c3timeout_tx'
-                c3timeout_rx    = 'c3timeout_rx'
-                psc_err         = 'psc_err'
-                uncor_err       = 'uncor_err'
+                EncIn           = 'EncIn'
+                CrcErr          = 'CrcErr'
+                TooShort        = 'TooShort'
+                TooLong         = 'TooLong'
+                BadEOF          = 'BadEOF'
+                EncOut          = 'EncOut'
+                DiscC3          = 'DiscC3'
+                LinkFail        = 'LinkFail'
+                LossSync        = 'LossSync'
+                LossSig         = 'LossSig'
+                StateTransitions    = 'StateTransitions'
+                BBZero          = 'BBZero'
+                FECuncorrected  = 'FECuncorrected'
             }
             Add-MappedRows -Collection $FunctionResult.DeviceIdent.SANPortErrorShowRows -Source $AllErrorsShowRows -IdProperty 'RowID' -Map $mapPortErrorShow
 
@@ -1515,9 +1515,13 @@ $TD_BTN_FOS_SFPHealthShow.add_click({
                 SerialNo        = 'SerialNo'
                 SpeedRange      = 'SpeedRange'
                 Temperature     = 'Temperature'
+                TempState       = 'TempState'
                 RxPower         = 'RxPower'
+                OpticalState    = 'OpticalState'
                 TxPower         = 'TxPower'
                 Voltage         = 'Voltage'
+                Wavelength      = 'Wavelength'
+                PowerOnTime     = 'PowerOnTime'
             }
             Add-MappedRows -Collection $FunctionResult.DeviceIdent.SANSFPDetailsRows -Source $AllSFPRows -IdProperty 'RowID' -Map $mapSFPDetails
 
@@ -1586,6 +1590,7 @@ $TD_BTN_FOS_ZoneDetailsShow.add_click({
             }
             $mapZoneDetails = @{ 
                 VFIDDisplay = 'VFIDDisplay'
+                ZoneGroup   = 'ZoneGroup'
                 ZoneName    = 'ZoneName'
                 ZoneType    = 'ZoneTypeDisplay'
                 MemberRole  = 'MemberRole'
@@ -1595,7 +1600,13 @@ $TD_BTN_FOS_ZoneDetailsShow.add_click({
             }
 
             Add-MappedRows -Collection $FunctionResult.DeviceIdent.SANZoneDetailsRows -Source $AllZoneRows -IdProperty 'RowID' -Map $mapZoneDetails
-
+            <# for Grouping in DG #>
+            $ZoneView = [System.Windows.Data.CollectionViewSource]::GetDefaultView($FunctionResult.DeviceIdent.SANZoneDetailsRows)
+            $ZoneView.GroupDescriptions.Clear()
+            $ZoneView.GroupDescriptions.Add(
+                (New-Object System.Windows.Data.PropertyGroupDescription("ZoneGroup"))
+            ) | Out-Null
+            $ZoneView.Refresh()
             $UCVMMain.DeviceToggles.Add($FunctionResult.DeviceIdent)
         }
         $UCVMMain.SelectedView = "SANZoneDetails"
@@ -1634,18 +1645,34 @@ $TD_BTN_FOS_PortLicenseShow.add_click({
             # Links = Propertyname im PSCustomObject (das bindet dein XAML)
             # Rechts = Propertyname im Source-Objekt
             $dev = $FunctionResult.DeviceIdent
-
-            $maptLicenseShowInfo = @{
-                DeviceName  = 'DeviceName'
-                LicenseInfo     = 'LicenseInfo'
-            }
-            Add-MappedRows -Collection $dev.LicenseInfoRows -Source $FunctionResult.FuncResult -IdProperty 'RowID' -Map $maptLicenseShowInfo
-            # dynamische Überschrift
+            $License = $FunctionResult.FuncResult
             $dev.LicenseInfoTitle = "LicenseInfo for - $($dev.Label)"
 
-            # Textblock-Inhalt aus Rows zusammensetzen (DumpMsg je Zeile)
-            $dev.LicenseInfoText = (@($dev.LicenseInfoRows) | ForEach-Object { $_.LicenseInfo } | Where-Object { $_ }) -join "`n"
+            $LicenseText = @(
+                "License ID     : $($License.LicenseID)"
+                "License Count  : $($License.LicenseCount)"
+                "Licensed Ports : $($License.LicensedPorts)"
+                "Reserved Ports : $($License.ReservedPorts)"
+                "Free Ports     : $($License.FreePorts)"
+                ""
+            )
 
+            $Counter = 0
+            foreach($Lic in @($License.Licenses)){
+                $Counter++
+            
+                $LicenseText += "License $Counter :"
+                $LicenseText += "-------------------------------------------------------------"
+                $LicenseText += "License serial number : $($Lic.LicenseName)"
+            
+                if($Lic.FeatureString){ $LicenseText += "License features : $($Lic.FeatureString)" }
+                if($Lic.GenerationDate){ $LicenseText += "Generation date : $($Lic.GenerationDate)" }
+                if($Lic.ExpirationDate){ $LicenseText += "Expiry date : $($Lic.ExpirationDate)" }
+                if($Lic.LicenseFormat){ $LicenseText += "License format : $($Lic.LicenseFormat)" }
+                $LicenseText += ""
+            }
+
+            $dev.LicenseInfoText = $LicenseText -join "`n"
             $UCVMMain.DeviceToggles.Add($dev)
         }
         <#one for each view is fine do need to be inside the foreach #>
@@ -1684,18 +1711,58 @@ $TD_BTN_FOS_SensorShow.add_click({
             $FunctionResult = New-DeviceBlock -Device $TD_Creds -ExportPath $TD_TB_ExportPath.Text -RESTFunc Get-BrocadeSensorOverview -SSHFunc FOS_SSHSensorShow
             # Links = Propertyname im PSCustomObject (das bindet dein XAML)
             # Rechts = Propertyname im Source-Objekt
+            $Sensor = $FunctionResult.FuncResult
             $dev = $FunctionResult.DeviceIdent
+            $Deg = [char]0x00B0
 
-            $mapSensorShow = @{
-                DeviceName  = 'DeviceName'
-                SensorShowInfo  = 'SensorShowInfo'
-            }
-            Add-MappedRows -Collection $dev.SensorShowRows -Source $FunctionResult.FuncResult -IdProperty 'RowID' -Map $mapSensorShow
-            # dynamische Überschrift
             $dev.SensorShowTitle = "Sensorinfo for - $($dev.Label)"
 
-            # Textblock-Inhalt aus Rows zusammensetzen (DumpMsg je Zeile)
-            $dev.SensorShowText = (@($dev.SensorShowRows) | ForEach-Object { $_.SensorShowInfo } | Where-Object { $_ }) -join "`n"
+            $SensorText = @(
+                "Overall Health : $($Sensor.OverallHealth)"
+                ""
+                "Temperature"
+                "-------------------------------------------------------------"
+                "  Average Temp : $($Sensor.TemperatureAverage) $Deg`C"
+                "  Max Temp     : $($Sensor.TemperatureMax) $Deg`C"
+                "  Min Temp     : $($Sensor.TemperatureMin) $Deg`C"
+                "  Temp Health  : $($Sensor.TemperatureHealth)"
+                "  Hot Sensors  : $($Sensor.HotSensors)"
+                ""
+                "Fans"
+                "-------------------------------------------------------------"
+                "  Fan Count    : $($Sensor.FanCount)"
+                "  Failed Fans  : $($Sensor.FailedFans)"
+            )
+
+            foreach($Fan in @($Sensor.Fans)){
+                $SensorText += ""
+                $SensorText += "  $($Fan.Fan)"
+                $SensorText += "    State              : $($Fan.State)"
+                $SensorText += "    Speed RPM          : $($Fan.SpeedRPM)"
+                $SensorText += "    Airflow            : $($Fan.Airflow)"
+                $SensorText += "    Time Awake Hours   : $($Fan.TimeAwakeHours)"
+            }
+
+            $SensorText += ""
+            $SensorText += "Power Supplies"
+            $SensorText += "-------------------------------------------------------------"
+            $SensorText += "  PSU Count            : $($Sensor.PSUCount)"
+            $SensorText += "  Failed PSUs          : $($Sensor.FailedPowerSupplies)"
+
+            foreach($PSU in @($Sensor.PowerSupplies)){
+                $SensorText += ""
+                $SensorText += "  $($PSU.PowerSupply)"
+                $SensorText += "    State              : $($PSU.State)"
+                $SensorText += "    Severity           : $($PSU.Severity)"
+                $SensorText += "    Power Source       : $($PSU.PowerSource)"
+                $SensorText += "    Input Voltage      : $($PSU.InputVoltage)"
+                $SensorText += "    Power Usage        : $($PSU.PowerUsage)"
+                $SensorText += "    Airflow            : $($PSU.Airflow)"
+                $SensorText += "    Serial Number      : $($PSU.SerialNumber)"
+                $SensorText += "    Part Number        : $($PSU.PartNumber)"
+            }
+
+            $dev.SensorShowText = $SensorText -join "`n"
 
             $UCVMMain.DeviceToggles.Add($dev)
         }
