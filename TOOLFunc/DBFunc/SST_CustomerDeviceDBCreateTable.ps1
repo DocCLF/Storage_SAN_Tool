@@ -89,7 +89,7 @@ function SST_CustomerDeviceDBCreateTable {
             }
             <# SANPortInfo #>
             try{
-                $SST_SQLiteTabelQuery ="CREATE TABLE IF NOT EXISTS IBMSANPortInfoTable (ID INTEGER PRIMARY KEY AUTOINCREMENT, CustomerNbr TEXT NOT NULL, Port TEXT, State TEXT, Speed TEXT, PortConnect TEXT, SerialNumber TEXT, SwitchWWNN TEXT, TimeStamp TEXT );"
+                $SST_SQLiteTabelQuery ="CREATE TABLE IF NOT EXISTS IBMSANPortInfoTable (ID INTEGER PRIMARY KEY AUTOINCREMENT, CustomerNbr TEXT NOT NULL, Port TEXT, State TEXT, Speed TEXT, PortConnect TEXT, VFID TEXT, SerialNumber TEXT, SwitchWWNN TEXT, TimeStamp TEXT );"
                 $SQLiteCommandCreate.CommandText = $SST_SQLiteTabelQuery
                 $SQLiteCommandCreate.ExecuteNonQuery()
             }catch{
