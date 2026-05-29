@@ -1144,23 +1144,23 @@ $TD_BTN_FOS_BasicSwitchInfo.add_click({
         $UCVMMain = $UCDataContext.Main
         $UCVMMain.DeviceToggles.Clear()
 
-        $mapSANSwitchInfo = @{
-            SwichtName          = 'Swicht Name'
-            ActiveZonenCFG      = 'Active ZonenCFG'
+        $mapSANSwitchInfo = [ordered]@{
+            SwitchName          = 'SwitchName'
+            ActiveZoneCFG      = 'ActiveZoneCFG'
             DomainID            = 'DomainID'
-            SwitchWWNN          = 'Switch WWN'
+            SwitchWWNN          = 'SwitchWWN'
             SwitchType          = 'SwitchType'
-            FabricID            = 'Fabric ID'
-            BrocadeProductName  = 'Brocade Name'
+            vFabricID           = 'FabricID'
+            BrocadeProductName  = 'BrocadeName'
             MTM                 = 'MTM'
             SerialNumber        = 'SerialNumber'
-            FabricOS            = 'Fabric OS'
-            EthernetIPAddress   = 'IP Address'
-            EthernetSubnetMask  = 'Subnet mask'
-            GatewayIPAddress    = 'Gateway IP'
+            FabricOS            = 'FabricOS'
+            EthernetIPAddress   = 'IPAddress'
+            EthernetSubnetMask  = 'Subnetmask'
+            GatewayIPAddress    = 'GatewayIP'
             DHCP                = 'DHCP'
-            SwitchState         = 'Switch State'
-            SwitchRole          = 'Switch Role'
+            SwitchState         = 'SwitchState'
+            SwitchRole          = 'SwitchRole'
         }
 
         foreach ($TD_Creds in $TD_Credentials) {
@@ -1177,18 +1177,12 @@ $TD_BTN_FOS_BasicSwitchInfo.add_click({
 
             # If it is an array: take the IDictionary element (and NOT the first one)
             if ($funcResult -is [object[]]) {
-                $funcResult = @($funcResult) | Where-Object { $_ -is [System.Collections.IDictionary] } | Select-Object -First 1
+                Where-Object { $_ -is [System.Collections.IDictionary] -or $_.PSObject.Properties.Count -gt 0 } | Select-Object -First 1
             }
 
-            # Safety: if there is still no dictionary -> cancel
-            if (-not ($funcResult -is [System.Collections.IDictionary])) {
-                Write-Host "FuncResult enthält kein IDictionary. Type: $($funcResult.GetType().FullName)" -ForegroundColor Red
-                continue
-            }
-
-            if ($deviceIdent.PSObject.Properties.Match('IsChecked').Count -gt 0) {
-                $deviceIdent.IsChecked = $true
-            }
+            #if ($deviceIdent.PSObject.Properties.Match('IsChecked').Count -gt 0) {
+            #    $deviceIdent.IsChecked = $true
+            #}
 
             Add-MappedKeyValueRows -Collection $deviceIdent.SANSwitchBaseRows -Source $funcResult -Map $mapSANSwitchInfo
 
