@@ -201,7 +201,7 @@ function Add-MappedKeyValueRows {
         $Source,
 
         [Parameter(Mandatory)]
-        [hashtable] $Map
+        $Map
     )
 
     # If Source is an array: search for the IDictionary element
