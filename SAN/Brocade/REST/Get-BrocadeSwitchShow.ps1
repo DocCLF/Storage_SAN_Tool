@@ -20,7 +20,7 @@ function Get-BrocadeSwitchShow {
     $VFID = if($Device.VFID){$Device.VFID}else{""}
     $VFIDDisplay = if($VFID){ $VFID }else{""}
 
-    foreach($Port in $FCPorts){
+    $FOS_SwBasicPortDetails = foreach($Port in $FCPorts){
         $RowCounter++
         $RowID = "$($FCPorts.count)|$($Device.ID)|$RowCounter)"
         $SFPInfo = $SFP | Where-Object {
@@ -68,20 +68,62 @@ function Get-BrocadeSwitchShow {
             }else{
                 $null
             }
+        $Proto = switch($Port.'port-type-string'){
+            'e-port'         { 'E-Port' }
+            'f-port'         { 'F-Port' }
+            'n-port'         { 'N-Port' }
+            'universal-port' { 'U-Port' }
+            default          { $Port.'port-type-string' }
+        }
 
-        $FOS_SwBasicPortDetails = [PSCustomObject]@{
+        $Speed = $Port.'protocol-speed'
+        if($Speed){$Speed = $Speed -replace '-gfc$',' G'}
+
+        $EPortConnect = $null
+
+        if($Port.'port-type-string' -eq 'e-port'){
+        
+            $NeighborName = $Port.'neighbor-switch-user-friendly-name'
+            $NeighborWWN  = $Port.'neighbor-node-wwn'
+            $NeighborPort = $Port.'neighbor-slot-port'
+        
+            if($NeighborName -or $NeighborWWN){
+                $EPortConnect = "$NeighborName [$NeighborWWN] ($NeighborPort)"
+            
+                if($NeighborPort){
+                    $EPortConnect = "$EPortConnect Port $NeighborPort"
+                }
+            
+                if($Port.'trunk-port-enabled-v2'){
+                    $EPortConnect = "$EPortConnect (Trunk)"
+                }
+            }
+        }
+
+        $PortConnectText = if($EPortConnect){
+            $EPortConnect
+        }
+        elseif($PortConnectList){
+            @($PortConnectList) -join "`n"
+        }
+        else{
+            ""
+        }
+
+        <# ask db for the last Portstatus #>
+        $PortStateInfo = SAN_PortStateInfo -SANSwitchWWNN $SwitchWWNN -SANSerialNumber $SerialNumber -SANPort $Port.name -SANState $Port.'operational-status-string'
+
+        [PSCustomObject]@{
             VFID = $VFID 
             VFIDDisplay = $VFIDDisplay
             Index = $Port.index
             Port = $Port.name
             Address = $Port.'fcid-hex'
             Media = $Media
-            Speed = $Port.'protocol-speed'
+            Speed = $Speed
             State = $Port.'operational-status-string'
-            <# ask db for the last Portstatus #>
-            $PortStateInfo = SAN_PortStateInfo -SANSwitchWWNN $SwitchWWNN -SANSerialNumber $SerialNumber -SANPort $Port.name -SANState $Port.'operational-status-string'
-            PortStateInfo = $PortStateInfo
-            Proto = $Port.'port-type-string'
+            PortStateInfo = $PortStateInfo.CheckResult
+            Proto = $Proto
             WWPNs = @(@($NameServerInfo.'port-name') | Where-Object {$_})
             WWPN = @($NameServerInfo.'port-name') -join ', '
             SymbolicNames = @(@($CleanSymbolicNames) | Where-Object {$_})
@@ -89,9 +131,9 @@ function Get-BrocadeSwitchShow {
             Aliases = @(@($AliasList) | Where-Object {$_})
             Alias = @($AliasList) -join ', '
             PortConnectList = $PortConnectLists
-            PortConnect = @($PortConnectList) -join "`n"
-            SerialNumber = $SwitchWWNN
-            SwitchWWNN = $SerialNumber
+            PortConnect = $PortConnectText
+            SerialNumber = $SerialNumber
+            SwitchWWNN   = $SwitchWWNN
             RowID = $RowID
         }
     }
