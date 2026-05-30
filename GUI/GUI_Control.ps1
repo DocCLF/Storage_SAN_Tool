@@ -325,7 +325,7 @@ $TD_BTN_SaveCredtoDG.add_click({
         
     }else{
         SST_ToolMessageCollector -TD_ToolMSGCollector "Cred AddaNewDevice" -TD_ToolMSGType Message -TD_Shown no
-        $TD_CredfGUIArray = SST_GetCredfGUI -TD_AddaNewDevice "yes" .\Sign-Module.ps1
+        $TD_CredfGUIArray = SST_GetCredfGUI -TD_AddaNewDevice "yes" 
         Start-Sleep -Seconds 0.5
         if(!([string]::IsNullOrEmpty($TD_CredfGUIArray))){
             $TD_TB_DeviceIPAddr.Text=""
@@ -2420,6 +2420,7 @@ $TD_DG_KnownDeviceList.add_SelectionChanged({
             }
 
         }else{
+            
             SST_DeviceConnecCheck -TD_Selected_Items "yes" -TD_Selected_DeviceType $TD_DG_KnownDeviceList.selecteditem.DeviceTyp -TD_Selected_DeviceConnectionType $TD_DG_KnownDeviceList.selecteditem.ConnectionTyp -TD_Selected_DeviceIPAddr $TD_DG_KnownDeviceList.selecteditem.IPAddress -TD_Selected_DeviceUserName $TD_DG_KnownDeviceList.selecteditem.UserName -TD_Selected_DevicePassword $TD_DG_KnownDeviceList.selecteditem.Password -TD_Selected_SVCorVF $TD_DG_KnownDeviceList.selecteditem.SVCorVF
         }
     }
