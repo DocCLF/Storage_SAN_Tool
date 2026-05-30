@@ -25,6 +25,7 @@ function SST_DeviceConnecCheck {
                 $TD_Selected_DevicePassword
                 $TD_UserInputCred = $TD_Selected_SVCorVF
                 $TD_Creds = [PSCustomObject]@{
+                    DeviceTyp = $TD_Selected_DeviceType
                     UserName = $TD_Selected_DeviceUserName
                     IPAddress = $TD_Selected_DeviceIPAddr
                     Password = $TD_Selected_DevicePassword
@@ -38,6 +39,7 @@ function SST_DeviceConnecCheck {
                 if($TD_CB_SVCorVF.IsChecked -and ($TD_Selected_DeviceType -like "*Storage")){$TD_UserInputCred = "SVC"};
                 if(!($TD_CB_SVCorVF.IsChecked)){$TD_UserInputCred = "Nothing"};
                 $TD_Creds = [PSCustomObject]@{
+                    DeviceTyp = $TD_Selected_DeviceType
                     UserName = $TD_TB_DeviceUserName.Text
                     IPAddress = $TD_TB_DeviceIPAddr.Text
                     Password = [string]$TD_TB_DevicePassword.Password
@@ -60,7 +62,7 @@ function SST_DeviceConnecCheck {
                     $TD_BasicInfoTemp = New-DeviceBlock -Device $TD_Creds -ExportPath $TD_TB_ExportPath.Text -RESTFunc IBM_RESTBaseStorageInfos -SSHFunc IBM_SSHBaseStorageInfos
                 }
                 catch {
-                    Write-Host $_.Exception.Message
+                    Write-Host $_.Exception.Message 
                 }finally{
                     $TD_Creds =$null
                 }
