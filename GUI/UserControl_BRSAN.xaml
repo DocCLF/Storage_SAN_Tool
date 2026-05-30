@@ -582,7 +582,7 @@
                 <StackPanel>
                   <Label Content="{Binding SensorShowTitle}"
                          Style="{DynamicResource MainLabelStyle}"
-                         Margin="5,8,5,0"
+                         Margin="5,5,5,0"
                          Visibility="{Binding IsChecked, Converter={StaticResource BooleanToVisibilityConverter}}"/>
 
                   <TextBox Text="{Binding SensorShowText}"
