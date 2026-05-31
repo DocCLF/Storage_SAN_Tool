@@ -26,7 +26,7 @@ function Get-BrocadeBaseInfo {
 
     $FOS_SwGeneralInfos = [PSCustomObject]@{
         SwitchName = $SwitchInfo.'user-friendly-name'
-        ActiveZoneCFG = $EffectiveCFG.Data.'cfg-name'
+        ActiveZoneCFG = $EffectiveCFG.'cfg-name'
         DomainID = $SwitchInfo.'domain-id'
         SwitchWWNN = $SwitchInfo.name
         FabricName = $SwitchInfo.'fabric-user-friendly-name'
