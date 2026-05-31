@@ -8,11 +8,13 @@ function Get-BrocadePortBufferStats {
 
     $FCPorts = Get-BrocadeFcPorts -Device $Device
     $FCStats = Get-BrocadeFCstatistics -Device $Device
+    <# only needed for the SN #>
+    $ChassisInfo = Get-BrocadeChassisInfo -Device $Device
 
     $VFID = if($Device.VFID){$Device.VFID}else{""}
     $VFIDDisplay = if($VFID){ $VFID }else{""}
 
-    foreach($Port in $FCPorts){
+    $FOS_PortBufferInfo = foreach($Port in $FCPorts){
         $StatsInfo = $FCStats | Where-Object {
             $_.name -eq $Port.name
         }
@@ -46,4 +48,12 @@ function Get-BrocadePortBufferStats {
             RowID = $RowID
         }
     }
+    try {
+        $FOS_PortBufferInfo | Export-Csv -Path $($TD_TB_ExportPath.Text)\PortBufferShow_$($ChassisInfo.'vendor-serial-number')_$(Get-Date -Format "yyyy-MM-dd").csv -NoTypeInformation
+    }
+    catch {
+        SST_ToolMessageCollector -TD_ToolMSGCollector "PortBufferShow: $($_.Exception.Message)" -TD_ToolMSGType "Warning" -TD_Shown "no"
+    }
+
+    return $FOS_PortBufferInfo
 }

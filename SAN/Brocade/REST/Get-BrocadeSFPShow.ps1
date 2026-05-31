@@ -8,11 +8,13 @@ function Get-BrocadeSFPShow {
 
     $FCPorts = Get-BrocadeFcPorts -Device $Device
     $SFPs    = Get-BrocadeSfp -Device $Device
+    <# only needed for the SN #>
+    $ChassisInfo = Get-BrocadeChassisInfo -Device $Device
 
     $VFID = if($Device.VFID){$Device.VFID}else{""}
     $VFIDDisplay = if($VFID){ $VFID }else{""}
     
-    foreach($Port in $FCPorts){
+    $FOS_SFPHealthInfo = foreach($Port in $FCPorts){
         $RowCounter++
         $RowID = "$($FCPorts.count)|$($Device.ID)|$RowCounter)"
 
@@ -85,4 +87,12 @@ function Get-BrocadeSFPShow {
             RowID = $RowID
         }
     }
+    try {
+        $FOS_SFPHealthInfo | Export-Csv -Path $($TD_TB_ExportPath.Text)\FOS_SFPHealthInfo_$($ChassisInfo.'vendor-serial-number')_$(Get-Date -Format "yyyy-MM-dd").csv -NoTypeInformation
+    }
+    catch {
+        SST_ToolMessageCollector -TD_ToolMSGCollector "FOS_SFPHealthInfo: $($_.Exception.Message)" -TD_ToolMSGType "Warning" -TD_Shown "no"
+    }
+
+    return $FOS_SFPHealthInfo
 }

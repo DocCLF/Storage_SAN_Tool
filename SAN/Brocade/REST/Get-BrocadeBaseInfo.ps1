@@ -50,13 +50,13 @@ function Get-BrocadeBaseInfo {
         RowID = $SwitchInfo.'domain-id'
     }
     try {
-        if($FOS_SwGeneralInfos.VFenabled -like "True"){
-            SST_CustomerSANDBInsertTable -SST_InfoType "SANBase" -SST_CollectedInformations $FOS_SwGeneralInfos
-        }
+        SST_CustomerSANDBInsertTable -SST_InfoType "SANBase" -SST_CollectedInformations $FOS_SwGeneralInfos
+        Out-File -FilePath "$($TD_TB_ExportPath.Text)\BasicSwitchInfo_$($FOS_SwGeneralInfos.SwitchName)_$($FOS_SwGeneralInfos.ActiveZoneCFG)_$(Get-Date -Format "yyyy-MM-dd").csv" -InputObject $FOS_SwGeneralInfos
     }
     catch {
         <#Do this if a terminating exception happens#>
         Write-Host $_.Exception.Message
+        SST_ToolMessageCollector -TD_ToolMSGCollector "BasicSwitchInfo: $($_.Exception.Message)" -TD_ToolMSGType "Warning"
     }
     
     return $FOS_SwGeneralInfos

@@ -27,7 +27,7 @@ function Get-BrocadeLicenseOverview {
         }
     ).Count
 
-    [PSCustomObject]@{
+    $LicenseInfo = [PSCustomObject]@{
         LicenseID = $ChassisInfo.'license-id'
         Licenses = $Licenses
         LicenseNames = @($Licenses.LicenseName)
@@ -37,4 +37,11 @@ function Get-BrocadeLicenseOverview {
         ReservedPorts = $ReservedPorts
         FreePorts = $FreePorts
     }
+    try {
+        Out-File -FilePath "$($TD_TB_ExportPath.Text)\PortLicenseShow_$($ChassisInfo.'vendor-serial-number')_$(Get-Date -Format "yyyy-MM-dd").csv" -InputObject $LicenseInfo
+    }
+    catch {
+        SST_ToolMessageCollector -TD_ToolMSGCollector "LicenseInfo: $($_.Exception.Message)" -TD_ToolMSGType "Warning" -TD_Shown "no"
+    }
+    return $LicenseInfo
 }

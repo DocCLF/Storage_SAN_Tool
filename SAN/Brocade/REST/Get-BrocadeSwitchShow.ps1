@@ -20,7 +20,7 @@ function Get-BrocadeSwitchShow {
     $VFID = if($Device.VFID){$Device.VFID}else{""}
     $VFIDDisplay = if($VFID){ $VFID }else{""}
 
-    $FOS_SwBasicPortDetails = foreach($Port in $FCPorts){
+    $FOS_SwitchShowInfo = foreach($Port in $FCPorts){
         $RowCounter++
         $RowID = "$($FCPorts.count)|$($Device.ID)|$RowCounter)"
         $SFPInfo = $SFP | Where-Object {
@@ -140,11 +140,12 @@ function Get-BrocadeSwitchShow {
         }
     }
         try {
-            SST_CustomerSANDBInsertTable -SST_InfoType "SANPortInfo" -SST_CollectedInformations $FOS_SwBasicPortDetails
+            SST_CustomerSANDBInsertTable -SST_InfoType "SANPortInfo" -SST_CollectedInformations $FOS_SwitchShowInfo
+            $FOS_SwitchShowInfo | Export-Csv -Path $($TD_TB_ExportPath.Text)\FOS_SwitchShowInfo_$($SerialNumber)_$(Get-Date -Format "yyyy-MM-dd").csv -NoTypeInformation
         }
         catch {
             <#Do this if a terminating exception happens#>
-            Write-Host $_.Exception.Message
+            SST_ToolMessageCollector -TD_ToolMSGCollector "FOS_SwitchShowInfo: $($_.Exception.Message)" -TD_ToolMSGType "Warning" -TD_Shown "no"
         }
-        return $FOS_SwBasicPortDetails
+        return $FOS_SwitchShowInfo
 }
