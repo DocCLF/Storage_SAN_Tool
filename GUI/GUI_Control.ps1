@@ -1241,6 +1241,12 @@ $TD_BTN_FOS_SwitchShow.add_click({
                 
                     $AllSwitchShowRows += @($TmpResult.FuncResult)
                 }
+                <# Sort the Ports #>
+                $AllSFPRows = @(
+                    $AllSFPRows | Sort-Object `
+                        @{ Expression = { [int](($_.Port -replace '^.*?/','')) } }, `
+                        @{ Expression = { [int]($_.VFID) } }
+                )
             }else{
                 if($TD_Creds.PSObject.Properties['VFID']){
                     $TD_Creds.PSObject.Properties.Remove('VFID')
@@ -1254,6 +1260,7 @@ $TD_BTN_FOS_SwitchShow.add_click({
             # Links = Propertyname im PSCustomObject (das bindet dein XAML)
             # Rechts = Propertyname im Source-Objekt
             $mapSwitchShowInfo = @{ 
+                IsVirtualFabricPort = 'IsVirtualFabricPort'
                 VFIDDisplay     = 'VFIDDisplay'
                 Index           = 'Index'
                 Port            = 'Port'
@@ -1322,6 +1329,12 @@ $TD_BTN_FOS_PortBufferShow.add_click({
                 
                     $AllPortBufferRows += @($TmpResult.FuncResult)
                 }
+                <# Sort the Ports #>
+                $AllSFPRows = @(
+                    $AllSFPRows | Sort-Object `
+                        @{ Expression = { [int](($_.Port -replace '^.*?/','')) } }, `
+                        @{ Expression = { [int]($_.VFID) } }
+                )
             }else{
                 if($TD_Creds.PSObject.Properties['VFID']){
                     $TD_Creds.PSObject.Properties.Remove('VFID')
@@ -1333,6 +1346,7 @@ $TD_BTN_FOS_PortBufferShow.add_click({
             }
         
             $mapPortbufferShow = @{ 
+                IsVirtualFabricPort = 'IsVirtualFabricPort'
                 VFIDDisplay = 'VFIDDisplay'
                 Port        = 'Port'
                 PortType    = 'PortType'
@@ -1408,6 +1422,12 @@ $TD_BTN_FOS_PortErrorShow.add_click({
                 
                     $AllErrorsShowRows += @($TmpResult.FuncResult)
                 }
+                <# Sort the Ports #>
+                $AllSFPRows = @(
+                    $AllSFPRows | Sort-Object `
+                        @{ Expression = { [int](($_.Port -replace '^.*?/','')) } }, `
+                        @{ Expression = { [int]($_.VFID) } }
+                )
             }else{
                 if($TD_Creds.PSObject.Properties['VFID']){
                     $TD_Creds.PSObject.Properties.Remove('VFID')
@@ -1422,6 +1442,7 @@ $TD_BTN_FOS_PortErrorShow.add_click({
             # Rechts = Propertyname im Source-Objekt
 
             $mapPortErrorShow = @{ 
+                IsVirtualFabricPort = 'IsVirtualFabricPort'
                 VFIDDisplay     = 'VFIDDisplay'
                 Port            = 'Port'
                 EncIn           = 'EncIn'
@@ -1495,6 +1516,12 @@ $TD_BTN_FOS_SFPHealthShow.add_click({
                 
                     $AllSFPRows += @($TmpResult.FuncResult)
                 }
+                <# Sort the Ports #>
+                $AllSFPRows = @(
+                    $AllSFPRows | Sort-Object `
+                        @{ Expression = { [int](($_.Port -replace '^.*?/','')) } }, `
+                        @{ Expression = { [int]($_.VFID) } }
+                )
             }else{
                 if($TD_Creds.PSObject.Properties['VFID']){
                     $TD_Creds.PSObject.Properties.Remove('VFID')
@@ -1506,6 +1533,7 @@ $TD_BTN_FOS_SFPHealthShow.add_click({
             }
 
             $mapSFPDetails = @{ 
+                IsVirtualFabricPort = 'IsVirtualFabricPort'
                 VFIDDisplay     = 'VFIDDisplay'
                 Port            = 'Port'
                 SFPUsed         = 'SFPUsed'
@@ -2420,7 +2448,6 @@ $TD_DG_KnownDeviceList.add_SelectionChanged({
             }
 
         }else{
-            
             SST_DeviceConnecCheck -TD_Selected_Items "yes" -TD_Selected_DeviceType $TD_DG_KnownDeviceList.selecteditem.DeviceTyp -TD_Selected_DeviceConnectionType $TD_DG_KnownDeviceList.selecteditem.ConnectionTyp -TD_Selected_DeviceIPAddr $TD_DG_KnownDeviceList.selecteditem.IPAddress -TD_Selected_DeviceUserName $TD_DG_KnownDeviceList.selecteditem.UserName -TD_Selected_DevicePassword $TD_DG_KnownDeviceList.selecteditem.Password -TD_Selected_SVCorVF $TD_DG_KnownDeviceList.selecteditem.SVCorVF
         }
     }
