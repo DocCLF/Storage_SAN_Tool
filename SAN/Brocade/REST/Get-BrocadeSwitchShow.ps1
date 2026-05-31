@@ -109,11 +109,13 @@ function Get-BrocadeSwitchShow {
         else{
             ""
         }
-
+        <# is required to display the other FIDs in the DG in a different color, for example #>
+        $IsVirtualFabricPort = if($VFID -and $VFID -ne 128){ $true } else { $false }
         <# ask db for the last Portstatus #>
         $PortStateInfo = SAN_PortStateInfo -SANSwitchWWNN $SwitchWWNN -SANSerialNumber $SerialNumber -SANPort $Port.name -SANState $Port.'operational-status-string'
 
         [PSCustomObject]@{
+            IsVirtualFabricPort = $IsVirtualFabricPort
             VFID = $VFID 
             VFIDDisplay = $VFIDDisplay
             Index = $Port.index
