@@ -111,7 +111,10 @@ function Get-BrocadeVFIDsFromDB {
 
         $Reader.Close()
 
-        return $VFIDs
+        return @($VFIDs -split ',' |
+            ForEach-Object { $_.Trim() } |
+            Where-Object { $_ }
+            )
     }
     finally {
         if ($Reader) {
