@@ -50,10 +50,12 @@ function Get-BrocadeSFPShow {
         $Voltage = if($SFPInfo){ $SFPInfo.voltage } else { $null }
         $Wavelength = if($SFPInfo){ "$($SFPInfo.wavelength) nm" } else { $null }
         $PowerOnTime = if($SFPInfo){ $SFPInfo.'power-on-time' } else { $null }
-
+        <# is required to display the other FIDs in the DG in a different color, for example #>
+        $IsVirtualFabricPort = if($VFID -and $VFID -ne 128){ $true } else { $false }
 
 
         [PSCustomObject]@{
+            IsVirtualFabricPort = $IsVirtualFabricPort
             VFID = $VFID 
             VFIDDisplay = $VFIDDisplay
             Port = $Port.name
