@@ -216,10 +216,10 @@
                 <DataGrid.RowStyle>
                     <Style TargetType="DataGridRow">
                         <Style.Triggers>
-                            <DataTrigger Binding="{Binding Address}" Value="virtuell">
-                                <Setter Property="Background" Value="LightGray" />
+                            <DataTrigger Binding="{Binding IsVirtualFabricPort}" Value="True">
+                                <Setter Property="Background" Value="LightBlue"/>
                             </DataTrigger>
-                        </Style.Triggers>    
+                        </Style.Triggers>   
                     </Style>
                 </DataGrid.RowStyle>
                 <DataGrid.Columns>
@@ -296,6 +296,15 @@
                 <DataGrid.GroupStyle>
                   <GroupStyle/>
                 </DataGrid.GroupStyle>
+                <DataGrid.RowStyle>
+                    <Style TargetType="DataGridRow">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding IsVirtualFabricPort}" Value="True">
+                                <Setter Property="Background" Value="LightBlue"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </DataGrid.RowStyle>
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="VFID" Binding ="{Binding VFIDDisplay}" IsReadOnly="True" Width="auto" />
                     <DataGridTextColumn Header="Port"  Binding ="{Binding Port}" IsReadOnly="True" Width="auto"/>  
@@ -346,6 +355,15 @@
                 <DataGrid.GroupStyle>
                   <GroupStyle/>
                 </DataGrid.GroupStyle>
+                <DataGrid.RowStyle>
+                    <Style TargetType="DataGridRow">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding IsVirtualFabricPort}" Value="True">
+                                <Setter Property="Background" Value="LightBlue"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </DataGrid.RowStyle>
                 <DataGrid.Columns>
                     <DataGridTextColumn Width="auto" Header="VFID" Binding ="{Binding VFIDDisplay}" IsReadOnly="True"/>
                     <DataGridTextColumn Width="auto" Header="Port" Binding ="{Binding Port}" IsReadOnly="True"/> 
@@ -456,6 +474,9 @@
                 <DataGrid.RowStyle>
                     <Style TargetType="DataGridRow">
                         <Style.Triggers>
+                            <DataTrigger Binding="{Binding IsVirtualFabricPort}" Value="True">
+                                <Setter Property="Background" Value="LightBlue"/>
+                            </DataTrigger>
                             <DataTrigger Binding="{Binding HealthStatus}" Value="Yellow">
                                 <Setter Property="Background" Value="Yellow" />
                             </DataTrigger>
