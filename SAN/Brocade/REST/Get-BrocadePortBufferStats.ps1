@@ -18,7 +18,12 @@ function Get-BrocadePortBufferStats {
         }
         $RowCounter++
         $RowID = "$($FCPorts.count)|$($Device.ID)|$RowCounter)"
+
+        <# is required to display the other FIDs in the DG in a different color, for example #>
+        $IsVirtualFabricPort = if($VFID -and $VFID -ne 128){ $true } else { $false }
+
         [PSCustomObject]@{
+            IsVirtualFabricPort = $IsVirtualFabricPort
             VFID = $VFID 
             VFIDDisplay = $VFIDDisplay
             Port = $Port.name
