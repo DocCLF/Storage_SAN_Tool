@@ -134,10 +134,10 @@ function SST_DeviceConnecCheck {
                     Default {$FOS_HWMTM = "Unknown Type"}
                 }
                 
-                if($TD_BasicDeviceInfos.count -gt 0){
+                if(!([string]::IsNullOrEmpty($TD_BasicDeviceInfos))){
                     $TD_BInfo = "" | Select-Object ConnectionTyp,DeviceName,ProductDes,Prod_MTM,Code_Level,VFenabled
                     $TD_BInfo.ConnectionTyp = if(!($null -eq $TD_BasicDeviceInfos.VFID)){"REST"}else{"plink"}
-                    $TD_BInfo.DeviceName = $TD_BasicDeviceInfos.'SwichtName'
+                    $TD_BInfo.DeviceName = $TD_BasicDeviceInfos.'SwitchName'
                     $TD_BInfo.ProductDes = $TD_BasicDeviceInfos.'BrocadeProductName'
                     $TD_BInfo.Prod_MTM = $TD_BasicDeviceInfos.'MTM'
                     $TD_BInfo.Code_Level = $TD_BasicDeviceInfos.'FabricOS'
@@ -168,7 +168,7 @@ function SST_DeviceConnecCheck {
                 }
                 $TD_BasicTapeInfos = Invoke_IBMTapeLibraryApi -Device $TD_Creds -Endpoint 'library/baseinfo'
                 $TD_BasicDeviceInfos = $TD_BasicTapeInfos.BaseInfo
-                if($TD_BasicDeviceInfos.count -gt 0){
+                if($TD_BasicDeviceInfos.Count -gt 0){
                     $CombiSNMTM = $null
                     $CombiSNMTM = $TD_BasicDeviceInfos.SerialNumber
                     $SN = $CombiSNMTM.Substring($CombiSNMTM.Length -7)
