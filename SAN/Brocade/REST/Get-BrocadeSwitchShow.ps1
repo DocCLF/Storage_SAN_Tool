@@ -141,7 +141,7 @@ function Get-BrocadeSwitchShow {
     }
         try {
             SST_CustomerSANDBInsertTable -SST_InfoType "SANPortInfo" -SST_CollectedInformations $FOS_SwitchShowInfo
-            $FOS_SwitchShowInfo | Export-Csv -Path $($TD_TB_ExportPath.Text)\FOS_SwitchShowInfo_$($SerialNumber)_$(Get-Date -Format "yyyy-MM-dd").csv -NoTypeInformation
+            $FOS_SwitchShowInfo | Export-Csv -Path "$($TD_TB_ExportPath.Text)\FOS_SwitchShowInfo_$($SerialNumber)_$(Get-Date -Format "yyyy-MM-dd").csv" -NoTypeInformation -Append
         }
         catch {
             <#Do this if a terminating exception happens#>
