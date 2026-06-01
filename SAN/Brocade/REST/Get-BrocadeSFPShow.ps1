@@ -22,12 +22,14 @@ function Get-BrocadeSFPShow {
             ($_.name -replace '^fc/') -eq $Port.name
         }
 
-        $RxPowerValue = if($SFPInfo){
-            [double]($SFPInfo.'rx-power'.ToString() -replace ',', '.')
+        $RxPowerValue = $null
+        if($SFPInfo -and $null -ne $SFPInfo.'rx-power'){
+            $RxPowerValue = [double]($SFPInfo.'rx-power'.ToString() -replace ',', '.')
         }
 
-        $TempValue = if($SFPInfo){
-            [int]$SFPInfo.temperature
+        $TempValue = $null
+        if($SFPInfo -and $null -ne $SFPInfo.temperature){
+            $TempValue = [int]$SFPInfo.temperature
         }
         <# This is needed because WinPW 5.1 #>
         $SFPTyp = if($SFPInfo){ $SFPInfo.identifier } else { $null }
@@ -41,13 +43,17 @@ function Get-BrocadeSFPShow {
         $Temperature = if($SFPInfo){ $TempValue } else { $null }
         $TempState = if($SFPInfo -and $TempValue -ge 70){ 'HOT' } elseif($SFPInfo){ 'OK' } else { $null }
         $RxPower = if($SFPInfo){ $SFPInfo.'rx-power' } else { $null }
-        $OpticalState = if($SFPInfo){
+        $OpticalState = if($SFPInfo -and $null -ne $RxPowerValue){
             switch($RxPowerValue){
                 {$_ -le 0}   { 'No Light'; break }
                 {$_ -lt 100} { 'Low Signal'; break }
                 default      { 'OK' }
             }
-        } else { $null }
+        }elseif($SFPInfo){
+            'Unknown'
+        }else{
+            $null
+        }
         $TxPower = if($SFPInfo){ $SFPInfo.'tx-power' } else { $null }
         $Voltage = if($SFPInfo){ $SFPInfo.voltage } else { $null }
         $Wavelength = if($SFPInfo){ "$($SFPInfo.wavelength) nm" } else { $null }
@@ -88,7 +94,7 @@ function Get-BrocadeSFPShow {
         }
     }
     try {
-        $FOS_SFPHealthInfo | Export-Csv -Path $($TD_TB_ExportPath.Text)\FOS_SFPHealthInfo_$($ChassisInfo.'vendor-serial-number')_$(Get-Date -Format "yyyy-MM-dd").csv -NoTypeInformation
+        $FOS_SFPHealthInfo | Export-Csv -Path "$($TD_TB_ExportPath.Text)\FOS_SFPHealthInfo_$($ChassisInfo.'vendor-serial-number')_$(Get-Date -Format "yyyy-MM-dd").csv" -NoTypeInformation -Append
     }
     catch {
         SST_ToolMessageCollector -TD_ToolMSGCollector "FOS_SFPHealthInfo: $($_.Exception.Message)" -TD_ToolMSGType "Warning" -TD_Shown "no"
