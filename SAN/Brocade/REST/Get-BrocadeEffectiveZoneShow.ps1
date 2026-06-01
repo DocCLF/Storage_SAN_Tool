@@ -108,7 +108,7 @@ function Get-BrocadeEffectiveZoneShow {
         }
     }
     try {
-        $FOS_ZoneCollection | Export-Csv -Path $($TD_TB_ExportPath.Text)\ZoneShow_$($EffectiveResBase.'cfg-name')_$(Get-Date -Format "yyyy-MM-dd").csv -NoTypeInformation
+        $FOS_ZoneCollection | Export-Csv -Path "$($TD_TB_ExportPath.Text)\ZoneShow_$($EffectiveResBase.'cfg-name')_$(Get-Date -Format "yyyy-MM-dd").csv" -NoTypeInformation
     }
     catch {
         SST_ToolMessageCollector -TD_ToolMSGCollector "ZoneShow: $($_.Exception.Message)" -TD_ToolMSGType "Warning" -TD_Shown "no"
