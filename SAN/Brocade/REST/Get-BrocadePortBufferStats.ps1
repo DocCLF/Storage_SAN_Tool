@@ -49,7 +49,7 @@ function Get-BrocadePortBufferStats {
         }
     }
     try {
-        $FOS_PortBufferInfo | Export-Csv -Path $($TD_TB_ExportPath.Text)\PortBufferShow_$($ChassisInfo.'vendor-serial-number')_$(Get-Date -Format "yyyy-MM-dd").csv -NoTypeInformation
+        $FOS_PortBufferInfo | Export-Csv -Path "$($TD_TB_ExportPath.Text)\PortBufferShow_$($ChassisInfo.'vendor-serial-number')_$(Get-Date -Format "yyyy-MM-dd").csv" -NoTypeInformation -Append
     }
     catch {
         SST_ToolMessageCollector -TD_ToolMSGCollector "PortBufferShow: $($_.Exception.Message)" -TD_ToolMSGType "Warning" -TD_Shown "no"
