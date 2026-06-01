@@ -1177,7 +1177,7 @@ $TD_BTN_FOS_BasicSwitchInfo.add_click({
 
             # If it is an array: take the IDictionary element (and NOT the first one)
             if ($funcResult -is [object[]]) {
-                Where-Object { $_ -is [System.Collections.IDictionary] -or $_.PSObject.Properties.Count -gt 0 } | Select-Object -First 1
+                $funcResult = @($funcResult) | Where-Object { $_ -is [System.Collections.IDictionary] -or $_.PSObject.Properties.Count -gt 0 } | Select-Object -First 1
             }
 
             #if ($deviceIdent.PSObject.Properties.Match('IsChecked').Count -gt 0) {
@@ -1242,8 +1242,8 @@ $TD_BTN_FOS_SwitchShow.add_click({
                     $AllSwitchShowRows += @($TmpResult.FuncResult)
                 }
                 <# Sort the Ports #>
-                $AllSFPRows = @(
-                    $AllSFPRows | Sort-Object `
+                $AllSwitchShowRows = @(
+                    $AllSwitchShowRows | Sort-Object `
                         @{ Expression = { [int](($_.Port -replace '^.*?/','')) } }, `
                         @{ Expression = { [int]($_.VFID) } }
                 )
@@ -1330,8 +1330,8 @@ $TD_BTN_FOS_PortBufferShow.add_click({
                     $AllPortBufferRows += @($TmpResult.FuncResult)
                 }
                 <# Sort the Ports #>
-                $AllSFPRows = @(
-                    $AllSFPRows | Sort-Object `
+                $AllPortBufferRows = @(
+                    $AllPortBufferRows | Sort-Object `
                         @{ Expression = { [int](($_.Port -replace '^.*?/','')) } }, `
                         @{ Expression = { [int]($_.VFID) } }
                 )
@@ -1423,8 +1423,8 @@ $TD_BTN_FOS_PortErrorShow.add_click({
                     $AllErrorsShowRows += @($TmpResult.FuncResult)
                 }
                 <# Sort the Ports #>
-                $AllSFPRows = @(
-                    $AllSFPRows | Sort-Object `
+                $AllErrorsShowRows = @(
+                    $AllErrorsShowRows | Sort-Object `
                         @{ Expression = { [int](($_.Port -replace '^.*?/','')) } }, `
                         @{ Expression = { [int]($_.VFID) } }
                 )
@@ -1631,9 +1631,7 @@ $TD_BTN_FOS_ZoneDetailsShow.add_click({
             <# for Grouping in DG #>
             $ZoneView = [System.Windows.Data.CollectionViewSource]::GetDefaultView($FunctionResult.DeviceIdent.SANZoneDetailsRows)
             $ZoneView.GroupDescriptions.Clear()
-            $ZoneView.GroupDescriptions.Add(
-                (New-Object System.Windows.Data.PropertyGroupDescription("ZoneGroup"))
-            ) | Out-Null
+            $ZoneView.GroupDescriptions.Add( (New-Object System.Windows.Data.PropertyGroupDescription("ZoneGroup")) ) | Out-Null
             $ZoneView.Refresh()
             $UCVMMain.DeviceToggles.Add($FunctionResult.DeviceIdent)
         }
