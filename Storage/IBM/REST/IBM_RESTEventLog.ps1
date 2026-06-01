@@ -83,11 +83,11 @@ function IBM_RESTEventLog {
         <# export y or n #>
         if($TD_Export -eq "yes"){
             if([string]$TD_Exportpath -ne "$PSRootPath\ToolLog\"){
-                $TD_EventCollection | Export-Csv -Path $TD_Exportpath\$($TD_Line_ID)_$($TD_Device_DeviceName)_EventLog_Result_$(Get-Date -Format "yyyy-MM-dd").csv -NoTypeInformation
-                SST_ToolMessageCollector -TD_ToolMSGCollector "$TD_Exportpath\$($TD_Line_ID)_$($TD_Device_DeviceName)_EventLog_Result_$(Get-Date -Format "yyyy-MM-dd").csv" -TD_ToolMSGType Debug
+                $TD_EventCollection | Export-Csv -Path $TD_Exportpath\$($TD_Line_ID)_$($IBMSTOSN)_EventLog_Result_$(Get-Date -Format "yyyy-MM-dd").csv -NoTypeInformation
+                SST_ToolMessageCollector -TD_ToolMSGCollector "$TD_Exportpath\$($TD_Line_ID)_$($IBMSTOSN)_EventLog_Result_$(Get-Date -Format "yyyy-MM-dd").csv" -TD_ToolMSGType Debug
             }else {
-                $TD_EventCollection | Export-Csv -Path $PSScriptRoot\ToolLog\$($TD_Line_ID)_$($TD_Device_DeviceName)_EventLog_Result_$(Get-Date -Format "yyyy-MM-dd").csv -NoTypeInformation
-                SST_ToolMessageCollector -TD_ToolMSGCollector "$PSScriptRoot\ToolLog\$($TD_Line_ID)_$($TD_Device_DeviceName)_EventLog_Result_$(Get-Date -Format "yyyy-MM-dd").csv" -TD_ToolMSGType Debug
+                $TD_EventCollection | Export-Csv -Path $PSScriptRoot\ToolLog\$($TD_Line_ID)_$($IBMSTOSN)_EventLog_Result_$(Get-Date -Format "yyyy-MM-dd").csv -NoTypeInformation
+                SST_ToolMessageCollector -TD_ToolMSGCollector "$PSScriptRoot\ToolLog\$($TD_Line_ID)_$($IBMSTOSN)_EventLog_Result_$(Get-Date -Format "yyyy-MM-dd").csv" -TD_ToolMSGType Debug
             }
         }else {
             <# output on the promt #>
