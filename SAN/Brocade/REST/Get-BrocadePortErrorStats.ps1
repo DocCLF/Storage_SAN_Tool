@@ -43,7 +43,7 @@ function Get-BrocadePortErrorStats {
         }
     }
     try {
-        $FOS_PortErrorInfo | Export-Csv -Path $($TD_TB_ExportPath.Text)\FOS_PortErrorInfo_$($ChassisInfo.'vendor-serial-number')_$(Get-Date -Format "yyyy-MM-dd").csv -NoTypeInformation
+        $FOS_PortErrorInfo | Export-Csv -Path "$($TD_TB_ExportPath.Text)\FOS_PortErrorInfo_$($ChassisInfo.'vendor-serial-number')_$(Get-Date -Format "yyyy-MM-dd").csv" -NoTypeInformation -Append
     }
     catch {
         SST_ToolMessageCollector -TD_ToolMSGCollector "FOS_PortErrorInfo: $($_.Exception.Message)" -TD_ToolMSGType "Warning" -TD_Shown "no"
