@@ -2,15 +2,19 @@
 <# important to find the dll as well #>
 $PSRootPath = Split-Path -Path $PSScriptRoot -Parent
 <# Query the PWSH version because of the DB files and REST function #>
-if($PSVersionTable.PSVersion.Major -le 7){
-    Add-Type -Path "$PSRootPath\Resources\DBFolder\System.Data.SQLite.dll"
-    #Add-Type -Path ".\OxyPlot.dll"
-    #Add-Type -Path ".\OxyPlot.Wpf.dll"
-}else {
-    Add-Type -Path "$PSRootPath\Resources\DBFolder\PWSH5\System.Data.SQLite.dll"
+if (-not $IsWindows -and $PSVersionTable.PSVersion.Major -ge 6) {
+    throw "Storage_SAN_Tool GUI uses WPF and is only supported on Windows."
+}else{
+    if($PSVersionTable.PSVersion.Major -ge 6){
+        Add-Type -Path "$PSRootPath\Resources\DBFolder\System.Data.SQLite.dll"
+        #Add-Type -Path ".\OxyPlot.dll"
+        #Add-Type -Path ".\OxyPlot.Wpf.dll"
+    }else {
+        Add-Type -Path "$PSRootPath\Resources\DBFolder\PWSH5\System.Data.SQLite.dll"
+    }
+    <# Required for WPF, etc. #>
+    Add-Type -AssemblyName PresentationFramework, PresentationCore, System.Windows.Forms, WindowsBase
 }
-<# Required for WPF, etc. #>
-Add-Type -AssemblyName PresentationFramework, PresentationCore, System.Windows.Forms, WindowsBase
 <# beginn of the Main part #>
 function Storage_SAN_Tool {
 [CmdletBinding()]
