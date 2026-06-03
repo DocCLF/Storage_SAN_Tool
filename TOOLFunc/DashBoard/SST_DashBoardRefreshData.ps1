@@ -6,7 +6,7 @@ function SST_DashBoardRefreshData {
     )
     $TD_TB_ALLHostCount.Text = "0"
     $TD_TB_ALLHostCount.Foreground = "red"
-    Write-Host $Device
+
     <# for the first Time we use the JobMode func #>
     try {
         SST_JobMode -SecData $Device
