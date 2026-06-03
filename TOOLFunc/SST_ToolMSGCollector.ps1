@@ -3,31 +3,65 @@ function SST_ToolMessageCollector {
     .SYNOPSIS
         Collects all essential information and presents it in the log window and/or in the respective log files.
     .NOTES
-        v1.0
-        Release Version
-        Currently only usable with wpf and a textbox with the name $TD_tb_ToolWindowForDebug
-    .LINK
-        https://github.com/DocCLF/ps_collection/blob/main/SSK_ToolMessageCollector.ps1
-    .EXAMPLE
-        TD_ToolMessageCollector -TD_ToolMSGCollector $("IP in row $STP_ID is not validate or set.")
-    .EXAMPLE
-        tbt
+        v1.1
+        Added automatic cleanup for log files older than 90 days.
     #>
     [CmdletBinding()]
     param (
-        [Parameter(ValueFromPipeline,HelpMessage="Here you can enter the message you want to be displayed.")]
+        [Parameter(ValueFromPipeline, HelpMessage="Here you can enter the message you want to be displayed.")]
         $TD_ToolMSGCollector,
-        [Parameter(ValueFromPipeline,HelpMessage="Enter Error, Warning or Message to be able to categorize the message correctly in the GUI and in the log files.")]
+
+        [Parameter(ValueFromPipeline, HelpMessage="Enter Error, Warning or Message to be able to categorize the message correctly in the GUI and in the log files.")]
         [ValidateSet("Error","Warning","Message","Debug")]
-        $TD_ToolMSGType ="Message",
-        [Parameter(ValueFromPipeline,HelpMessage="Some displays may be too complex to be displayed in a meaningful way.")]
+        $TD_ToolMSGType = "Message",
+
+        [Parameter(ValueFromPipeline, HelpMessage="Some displays may be too complex to be displayed in a meaningful way.")]
         [ValidateSet("yes","no")]
-        [string]$TD_Shown ="yes"
+        [string]$TD_Shown = "yes"
     )
-    <# Create a DateTime for each entry #>
+
     $TD_GetMSGDate = Get-Date -Format "dd/MM/yyyy HH:mm:ss"
     $PSRootPath = Split-Path -Path $PSScriptRoot -Parent
+    $LogFolder = Join-Path $PSRootPath "ToolLog"
+    $LogFile = Join-Path $LogFolder "SST_$(Get-Date -UFormat '%d%m%Y').log"
 
+    if(-not (Test-Path $LogFolder)){
+        New-Item -Path $LogFolder -ItemType Directory -Force | Out-Null
+    }
+
+    <# Log cleanup only once per day #>
+    $CleanupMarker = Join-Path $LogFolder "cleanup.marker"
+    $DoCleanup = $true
+
+    if(Test-Path $CleanupMarker){
+        $LastCleanup = Get-Item $CleanupMarker
+
+        if($LastCleanup.LastWriteTime.Date -eq (Get-Date).Date){
+            $DoCleanup = $false
+        }
+    }
+
+    if($DoCleanup){
+        $DeletedLogs = @(Get-ChildItem -Path $LogFolder -Filter "SST_*.log" -File -ErrorAction SilentlyContinue |
+            Where-Object { $_.LastWriteTime -lt (Get-Date).AddDays(-90) })
+
+        $DeletedCount = $DeletedLogs.Count
+
+        if($DeletedCount -gt 0){
+            $DeletedLogs | Remove-Item -Force
+
+            $CleanupMessage = [PSCustomObject]@{
+                TimeStamp = Get-Date -Format "dd/MM/yyyy HH:mm:ss"
+                Type      = "Message"
+                Message   = "Log cleanup completed. Deleted $DeletedCount log file(s) older than 90 days."
+            }
+
+            Out-File -FilePath $LogFile -InputObject $CleanupMessage -Append -Width 1000
+        }
+
+        New-Item -Path $CleanupMarker -ItemType File -Force | Out-Null
+    }
+    <# MSG Collector export and gui #>
     $TD_MSGpresenter = [PSCustomObject]@{
         TimeStamp = $TD_GetMSGDate
         Type      = $TD_ToolMSGType
@@ -36,23 +70,24 @@ function SST_ToolMessageCollector {
 
     $TD_OldMSG = @()
 
-    if ($null -ne $TD_DG_ToolEventsWindow.ItemsSource) {
+    if($null -ne $TD_DG_ToolEventsWindow.ItemsSource){
         $TD_OldMSG = @($TD_DG_ToolEventsWindow.ItemsSource) |
             Where-Object { $null -ne $_ }
     }
 
     $TD_MSG_GUIpresenter = @($TD_MSGpresenter) + @($TD_OldMSG)
 
-    $TD_DG_ToolEventsWindow.ItemsSource = $TD_MSG_GUIpresenter
-    <#present all msg #> 
     switch ($TD_Shown) {
-        "no" { Write-Debug -Message "$TD_ToolMSGCollector $TD_ToolMSGType" }
-        "yes" { $TD_DG_ToolEventsWindow.ItemsSource = $TD_MSG_GUIpresenter }
-        Default {$TD_DG_ToolEventsWindow.ItemsSource = $TD_MSG_GUIpresenter}
+        "no" {
+            Write-Debug -Message "$TD_ToolMSGCollector $TD_ToolMSGType"
+        }
+        "yes" {
+            $TD_DG_ToolEventsWindow.ItemsSource = $TD_MSG_GUIpresenter
+        }
+        Default {
+            $TD_DG_ToolEventsWindow.ItemsSource = $TD_MSG_GUIpresenter
+        }
     }
 
-    <# Example: Get-Date -UFormat "%d%m%Y" - Res: 14012025 #>
-    Out-File -FilePath $PSRootPath\ToolLog\SST_$(Get-Date -UFormat "%d%m%Y").log -InputObject $TD_MSGpresenter -Append -Width 1000
- 
-
+    Out-File -FilePath $LogFile -InputObject $TD_MSGpresenter -Append -Width 1000
 }
