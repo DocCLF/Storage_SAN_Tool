@@ -59,7 +59,7 @@ function SST_SaveLoadToolSettings {
             $SST_ExportToolSettingsXML = "" | Select-Object DevicestoInExport
             $SST_ExportToolSettingsXML.DevicestoInExport = $TD_DG_KnownDeviceList.ItemsSource
             try {
-                $SST_ExportToolSettingsXML | Export-Clixml -Path "$PSRootPath\Resources\SavedToolSettings.clixml" -Confirm:$false
+                $($SST_ExportToolSettingsXML.DevicestoInExport) | Export-Clixml -Path "$PSRootPath\Resources\SavedToolSettings.clixml" -Confirm:$false
                 SST_ToolMessageCollector -TD_ToolMSGCollector "Settings have been saved in Resources folder." -TD_ToolMSGType Message -TD_Shown yes
                 $TD_BTN_SaveToolSettings.Background="LightGreen"
             }
@@ -81,7 +81,7 @@ function SST_SaveLoadToolSettings {
                         $TD_TB_ExportPath.Text = $SST_SavedCustomerSettingsDB.ExportPath
                         $TD_LB_CerdExportPath.Content = $SST_SavedCustomerSettingsDB.ExportPathCredential
                     }
-                    $TD_InportedDevices = $SST_LoadedToolSettingsXML.DevicestoInExport
+                    $TD_InportedDevices = $SST_LoadedToolSettingsXML
                     $TD_CB_OnlineCheckbyImport.IsChecked = $SST_SavedToolSettingsDB.OnlineCheckbyImport
                     <# PRISM need a Update if is in Job mode or anything #>
                     $TD_CB_PRISMConnectOnOff.IsChecked = $SST_SavedToolSettingsDB.PRISMactiv
