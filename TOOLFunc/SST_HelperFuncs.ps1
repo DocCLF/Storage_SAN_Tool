@@ -466,25 +466,30 @@ function Add-ColumnIfNotExists {
         [string]$ColumnName,
         [string]$ColumnDefinition
     )
+    try{
+        $cmd = $Connection.CreateCommand()
+        $cmd.CommandText = "PRAGMA table_info($TableName);"
 
-    $cmd = $Connection.CreateCommand()
-    $cmd.CommandText = "PRAGMA table_info($TableName);"
+        $reader = $cmd.ExecuteReader()
 
-    $reader = $cmd.ExecuteReader()
-
-    $exists = $false
-    while ($reader.Read()) {
-        if ($reader["name"] -eq $ColumnName) {
-            $exists = $true
-            break
+        $exists = $false
+        while ($reader.Read()) {
+            if ($reader["name"] -eq $ColumnName) {
+                $exists = $true
+                break
+            }
         }
-    }
-    $reader.Close()
+        $reader.Close()
 
-    if (-not $exists) {
-        $alterCmd = $Connection.CreateCommand()
-        $alterCmd.CommandText = "ALTER TABLE $TableName ADD COLUMN $ColumnName $ColumnDefinition;"
-        $alterCmd.ExecuteNonQuery() | Out-Null
+        if (-not $exists) {
+            $alterCmd = $Connection.CreateCommand()
+            $alterCmd.CommandText = "ALTER TABLE $TableName ADD COLUMN $ColumnName $ColumnDefinition;"
+            $alterCmd.ExecuteNonQuery() | Out-Null
+        }
+    }finally {
+        if ($reader) { $reader.Close(); $reader.Dispose() }
+        if ($cmd) { $cmd.Dispose() }
+        if ($alterCmd) { $alterCmd.Dispose() }
     }
 }
 # DB Helper Check if Table contains Data
@@ -496,29 +501,31 @@ function Test-SQLiteHasAnyData {
         [Parameter(Mandatory)]
         [string]$TableName
     )
+    try{
+        # 1. Check if the table exists
+        $cmd = $Connection.CreateCommand()
+        $cmd.CommandText = "
+            SELECT 1
+            FROM sqlite_master
+            WHERE type = 'table'
+              AND name = @TableName
+            LIMIT 1;
+        "
 
-    # 1. Check if the table exists
-    $cmd = $Connection.CreateCommand()
-    $cmd.CommandText = "
-        SELECT 1
-        FROM sqlite_master
-        WHERE type = 'table'
-          AND name = @TableName
-        LIMIT 1;
-    "
+        $param = $cmd.CreateParameter()
+        $param.ParameterName = "@TableName"
+        $param.Value = $TableName
+        $cmd.Parameters.Add($param) | Out-Null
 
-    $param = $cmd.CreateParameter()
-    $param.ParameterName = "@TableName"
-    $param.Value = $TableName
-    $cmd.Parameters.Add($param) | Out-Null
+        if ($null -eq $cmd.ExecuteScalar()) {
+            return $false
+        }
 
-    if ($null -eq $cmd.ExecuteScalar()) {
-        return $false
+        # 2. Check if data is available
+        $countCmd = $Connection.CreateCommand()
+        $countCmd.CommandText = "SELECT 1 FROM [$TableName] LIMIT 1;"
+    }finally {
+        if ($cmd) { $cmd.Dispose() }
     }
-
-    # 2. Check if data is available
-    $countCmd = $Connection.CreateCommand()
-    $countCmd.CommandText = "SELECT 1 FROM [$TableName] LIMIT 1;"
-
-    return ($null -ne $countCmd.ExecuteScalar())
+        return ($null -ne $countCmd.ExecuteScalar())
 }
