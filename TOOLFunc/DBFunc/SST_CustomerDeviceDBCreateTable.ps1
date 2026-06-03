@@ -2,6 +2,7 @@ function SST_CustomerDeviceDBCreateTable {
     [CmdletBinding()]
     param (
         $SST_NewDBObject =$null,
+        [string]$SST_Customer =$null,
         [string]$TimeStamp
     )
     
