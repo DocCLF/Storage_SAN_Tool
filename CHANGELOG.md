@@ -4,6 +4,12 @@
 - LineCharts
 - Additional support for errors in the event log
 - PBHA and DR Support
+- Replace TrimEnd(“.xaml”) with GetFileNameWithoutExtension
+- Clean up duplicate style loading
+- Consistently secure DB parameters using Get-DbValue/Get-SqlParameterValue
+- Remove or migrate legacy SSH code
+- Further separate the backend/core from WPF
+    * switched to Avalonia to support additional operating systems
 
 All notable changes to this project will be documented in this file.
 # [v1.4.010_beta] - 2026-05-05
