@@ -88,7 +88,7 @@ function IBM_SSHDriveInfo {
         
         <# Node Info#>
         $TD_NodeSplitInfo = "" | Select-Object NodeName,ProdName,NodeFW
-        [arry]$TD_NodeSplitInfo = foreach($TD_NodeInfoLine in $TD_NodeInfoTemp){
+        [array]$TD_NodeSplitInfo = foreach($TD_NodeInfoLine in $TD_NodeInfoTemp){
             $TD_NodeSplitInfo.NodeName = ($TD_NodeInfoLine|Select-String -Pattern '^failover_name\s+([a-zA-Z0-9-_]+)' -AllMatches).Matches.Groups[1].Value
             $TD_NodeSplitInfo.ProdName = ($TD_NodeInfoLine|Select-String -Pattern '^product_mtm\s+([a-zA-Z0-9-_]+)' -AllMatches).Matches.Groups[1].Value
             $TD_NodeSplitInfo.NodeFW = ($TD_NodeInfoLine|Select-String -Pattern '^code_level\s+([a-zA-Z0-9-_.]+)' -AllMatches).Matches.Groups[1].Value
