@@ -198,7 +198,7 @@ function SST_PRISMDBControl {
                     foreach ($SST_CollectedInformation in $SST_CollectedInformations){
                         $SQLCommand.Parameters.Clear()
 
-                        $SQLCommand.CommandText =$SQLCommand.CommandText = "UPDATE IBMSTOEventsTable SET LastTime = @LastTime, ObjectType = @ObjectType, ObjectID = @ObjectID, ObjectName = @ObjectName, CopyID = @CopyID, Status = @Status, Fixed = @Fixed,`
+                        $SQLCommand.CommandText = "UPDATE IBMSTOEventsTable SET LastTime = @LastTime, ObjectType = @ObjectType, ObjectID = @ObjectID, ObjectName = @ObjectName, CopyID = @CopyID, Status = @Status, Fixed = @Fixed,`
                                                                                 ErrorCode = @ErrorCode, Description = @Description, TimeStamp = @TimeStamp`
                                                                             WHERE CustomerNbr = @CustomerNbr AND SeqID = @SeqID AND WWNN = @WWNN AND SerialNumber = @SerialNumber;`
                                                                             IF @@ROWCOUNT = 0`
@@ -245,7 +245,7 @@ function SST_PRISMDBControl {
                     foreach ($SST_CollectedInformation in $SST_CollectedInformations){
                         $SQLCommand.Parameters.Clear()
 
-                        $SQLCommand.CommandText =$SQLCommand.CommandText = "UPDATE IBMSANHWTable SET Name = @Name, Status = @Status, CodeLevel = @CodeLevel, BrocadeProdName = @BrocadeProdName, MTM = @MTM, SwitchWWNN = @SwitchWWNN, TimeStamp = @TimeStamp`
+                        $SQLCommand.CommandText = "UPDATE IBMSANHWTable SET Name = @Name, Status = @Status, CodeLevel = @CodeLevel, BrocadeProdName = @BrocadeProdName, MTM = @MTM, SwitchWWNN = @SwitchWWNN, TimeStamp = @TimeStamp`
                                                                                 WHERE CustomerNbr = @CustomerNbr AND SerialNumber = @SerialNumber AND SwitchWWNN = @SwitchWWNN;`
                                                                             IF @@ROWCOUNT = 0`
                                                                             BEGIN`
@@ -290,7 +290,7 @@ function SST_PRISMDBControl {
                     foreach ($SST_CollectedInformation in $SST_CollectedInformations){
                         $SQLCommand.Parameters.Clear()
 
-                        $SQLCommand.CommandText =$SQLCommand.CommandText = "UPDATE PowerHMC SET HMCName = @HMCName, HMCMTM = @HMCMTM, BIOS = @BIOS, DisplayVersion = @DisplayVersion, BaseVersion = @BaseVersion, BuildLevel = @BuildLevel,IFix = @IFix,`
+                        $SQLCommand.CommandText = "UPDATE PowerHMC SET HMCName = @HMCName, HMCMTM = @HMCMTM, BIOS = @BIOS, DisplayVersion = @DisplayVersion, BaseVersion = @BaseVersion, BuildLevel = @BuildLevel,IFix = @IFix,`
                                                                                 ManagedSystemCount = @ManagedSystemCount, ManagedSystemUUIDs = @ManagedSystemUUIDs,TimeStamp = @TimeStamp`
                                                                             WHERE CustomerNbr = @CustomerNbr AND SerialNumber = @SerialNumber AND HMCUUID = @HMCUUID;`
                                                                             IF @@ROWCOUNT = 0`
@@ -340,7 +340,7 @@ function SST_PRISMDBControl {
                     foreach ($SST_CollectedInformation in $SST_CollectedInformations){
                         $SQLCommand.Parameters.Clear()
                         
-                        $SQLCommand.CommandText =$SQLCommand.CommandText = "UPDATE PowerSysSummary SET SystemName = @SystemName, MachineTypeModel = @MachineTypeModel, State = @State, ECNumber = @ECNumber,ActivatedLevel = @ActivatedLevel, URL = @URL, TimeStamp = @TimeStamp`
+                        $SQLCommand.CommandText = "UPDATE PowerSysSummary SET SystemName = @SystemName, MachineTypeModel = @MachineTypeModel, State = @State, ECNumber = @ECNumber,ActivatedLevel = @ActivatedLevel, URL = @URL, TimeStamp = @TimeStamp`
                                                                             WHERE CustomerNbr = @CustomerNbr AND SerialNumber = @SerialNumber AND UUID = @UUID;`
                                                                             IF @@ROWCOUNT = 0`
                                                                             BEGIN`
@@ -385,7 +385,7 @@ function SST_PRISMDBControl {
 
                     foreach ($SST_CollectedInformation in $SST_CollectedInformations){
                         $SQLCommand.Parameters.Clear()
-                        $SQLCommand.CommandText =$SQLCommand.CommandText = "UPDATE LPARSummary SET ManagedSystemName = @ManagedSystemName, ManagedSystemUUID = @ManagedSystemUUID, ManagedSystemMTMS = @ManagedSystemMTMS, ManagedSystemSerial = @ManagedSystemSerial, LparName = @LparName,`
+                        $SQLCommand.CommandText = "UPDATE LPARSummary SET ManagedSystemName = @ManagedSystemName, ManagedSystemUUID = @ManagedSystemUUID, ManagedSystemMTMS = @ManagedSystemMTMS, ManagedSystemSerial = @ManagedSystemSerial, LparName = @LparName,`
                                                                                 PartitionId = @PartitionId, State = @State, Environment = @Environment, OsVersion = @OsVersion, RmcIp = @RmcIp, RmcState = @RmcState, DefaultProfile = @DefaultProfile,`
                                                                                 CurrentProcessingUnits = @CurrentProcessingUnits,CurrentMemoryMB = @CurrentMemoryMB, TimeStamp = @TimeStamp`
                                                                             WHERE CustomerNbr = @CustomerNbr AND ManagedSystemSerial = @ManagedSystemSerial AND LparUUID = @LparUUID;`
@@ -442,7 +442,7 @@ function SST_PRISMDBControl {
                     foreach ($SST_CollectedInformation in $SST_CollectedInformations){
 
                         $SQLCommand.Parameters.Clear()
-                        $SQLCommand.CommandText =$SQLCommand.CommandText = "UPDATE LibraryBaseInfo SET Name = @Name, Status = @Status, Vendor = @Vendor, ProductID = @ProductID, BaseFWRevision = @BaseFWRevision, SerialNumber = @SerialNumber, MTM = @MTM,`
+                        $SQLCommand.CommandText = "UPDATE LibraryBaseInfo SET Name = @Name, Status = @Status, Vendor = @Vendor, ProductID = @ProductID, BaseFWRevision = @BaseFWRevision, SerialNumber = @SerialNumber, MTM = @MTM,`
                                                                                 TotalCartridges = @TotalCartridges, AssignedCartridges = @AssignedCartridges, TotalCapacity = @TotalCapacity, LicensedCapacity = @LicensedCapacity, BaseFWBuildDate = @BaseFWBuildDate,`
                                                                                 ExpansionFWRevision = @ExpansionFWRevision, WWNN = @WWNN, RoboticHWRevision = @RoboticHWRevision, RoboticFWRevision = @RoboticFWRevision, RoboticSerialNumber = @RoboticSerialNumber,`
                                                                                 NoOfModules = @NoOfModules, LibraryType = @LibraryType, SecureCommunications = @SecureCommunications, SerialNumberMTM = @SerialNumberMTM, TimeStamp = @TimeStamp`
@@ -507,7 +507,7 @@ function SST_PRISMDBControl {
                     foreach ($SST_CollectedInformation in $SST_CollectedInformations){
 
                         $SQLCommand.Parameters.Clear()
-                        $SQLCommand.CommandText =$SQLCommand.CommandText = "UPDATE LibraryDrive SET Location = @Location, SerialNumber = @SerialNumber, MFGSerialNumber = @MFGSerialNumber, MediaType = @MediaType, State = @State, MTM = @MTM, Interface = @Interface,`
+                        $SQLCommand.CommandText = "UPDATE LibraryDrive SET Location = @Location, SerialNumber = @SerialNumber, MFGSerialNumber = @MFGSerialNumber, MediaType = @MediaType, State = @State, MTM = @MTM, Interface = @Interface,`
                                                                                 LogicalLibrary = @LogicalLibrary, LogicalLibraryID = @LogicalLibraryID, Usage = @Usage, Firmware = @Firmware, Encryption = @Encryption,Mounts = @Mounts, Barcode = @Barcode, WWNN = @WWNN,`
                                                                                 ElementAddress = @ElementAddress, LogicalNumber = @LogicalNumber,PhysicalNumber = @PhysicalNumber, Module = @Module, Generation = @Generation, Cartridge = @Cartridge,`
                                                                                 Vendor = @Vendor, ErrorState = @ErrorState, Power = @Power, Presence = @Presence, ADTMode = @ADTMode, SerialNumberMTM = @SerialNumberMTM, TimeStamp = @TimeStamp`
@@ -578,7 +578,7 @@ function SST_PRISMDBControl {
                     foreach ($SST_CollectedInformation in $SST_CollectedInformations){
 
                         $SQLCommand.Parameters.Clear()
-                        $SQLCommand.CommandText =$SQLCommand.CommandText = "UPDATE LibraryEvents SET LibID = @LibID, Severity = @Severity, Type = @Type, Location = @Location, Description = @Description, ErrorCode = @ErrorCode, EventTime = @EventTime,`
+                        $SQLCommand.CommandText = "UPDATE LibraryEvents SET LibID = @LibID, Severity = @Severity, Type = @Type, Location = @Location, Description = @Description, ErrorCode = @ErrorCode, EventTime = @EventTime,`
                                                                                 SerialNumberMTM = @SerialNumberMTM, TimeStamp = @TimeStamp`
                                                                             WHERE CustomerNbr = @CustomerNbr AND SerialNumberMTM = @SerialNumberMTM AND LibID = @LibID;`
                                                                             IF @@ROWCOUNT = 0`
@@ -626,7 +626,7 @@ function SST_PRISMDBControl {
                     foreach ($SST_CollectedInformation in $SST_CollectedInformations){
 
                         $SQLCommand.Parameters.Clear()
-                        $SQLCommand.CommandText =$SQLCommand.CommandText = "UPDATE LibraryReports SET Barcode = @Barcode, LogicalLibrary = @LogicalLibrary, Location = @Location, MountTime = @MountTime, UnmountTime = @UnmountTime, HostIOReads = @HostIOReads, HostIOWrites = @HostIOWrites,`
+                        $SQLCommand.CommandText = "UPDATE LibraryReports SET Barcode = @Barcode, LogicalLibrary = @LogicalLibrary, Location = @Location, MountTime = @MountTime, UnmountTime = @UnmountTime, HostIOReads = @HostIOReads, HostIOWrites = @HostIOWrites,`
                                                                                 CompressionRate = @CompressionRate, ErrorsCorrectedWrites = @ErrorsCorrectedWrites, ErrorsUncorrectedWrites = @ErrorsUncorrectedWrites, ErrorsCorrectedReads = @ErrorsCorrectedReads, ErrorsUncorrectedReads = @ErrorsUncorrectedReads,`
                                                                                 SerialNumberMTM = @SerialNumberMTM, TimeStamp = @TimeStamp`
                                                                             WHERE CustomerNbr = @CustomerNbr AND SerialNumberMTM = @SerialNumberMTM AND Barcode = @Barcode;`
