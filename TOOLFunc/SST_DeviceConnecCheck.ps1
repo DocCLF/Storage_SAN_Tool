@@ -150,11 +150,22 @@ function SST_DeviceConnecCheck {
                 }
             }
             {$_ -like "*PowerHMC"} {
-                $TD_BInfo = "" | Select-Object DeviceName,ProductDes
-                $TD_BInfo.DeviceName = "HMC"
-                $TD_BInfo.ProductDes = "PowerHMC"
-                $TD_BasicDeviceInfo += $TD_BInfo
-                SST_ToolMessageCollector -TD_ToolMSGCollector "It's a HMC, is okay" -TD_ToolMSGType Message
+                $TD_BasicDeviceInfos = $null
+                $FunctionResult = New-DeviceBlock -Device $TD_Creds -ExportPath $TD_TB_ExportPath.Text -RESTFunc HMC_RESTHMCConsole
+                $TD_BasicDeviceInfos = $FunctionResult.FuncResult
+                if($null -ne $TD_BasicDeviceInfos){
+                    $TD_BInfo = "" | Select-Object ConnectionTyp,DeviceName,ProductDes,Prod_MTM,Code_Level
+                    $TD_BInfo.ConnectionTyp = if(!($null -eq $TD_BasicDeviceInfos.HMCMTM)){"REST"}else{"unkonwn"}
+                    $TD_BInfo.DeviceName = $TD_BasicDeviceInfos.HMCName
+                    $TD_BInfo.ProductDes = "PowerHMC"
+                    $TD_BInfo.Prod_MTM = $TD_BasicDeviceInfos.HMCMTM
+                    $TD_BInfo.Code_Level = $TD_BasicDeviceInfos.BaseVersion
+                    $TD_BasicDeviceInfo += $TD_BInfo
+                    SST_ToolMessageCollector -TD_ToolMSGCollector "Added HMC Device to the List" -TD_ToolMSGType Message
+                }else {
+                    SST_ToolMessageCollector -TD_ToolMSGCollector "Something went wrong, no data could be received from HMC device." -TD_ToolMSGType Error
+                    break
+                }
             }
             {$_ -like "*Tape"} {
                 if($null -eq $TD_TapeCred){
@@ -173,7 +184,8 @@ function SST_DeviceConnecCheck {
                     $CombiSNMTM = $TD_BasicDeviceInfos.SerialNumber
                     $SN = $CombiSNMTM.Substring($CombiSNMTM.Length -7)
                     #$SN = $CombiSNMTM.Substring($CombiSNMTM.Length -7) # not needed at moment
-                    $TD_BInfo = "" | Select-Object DeviceName,ProductDes,Prod_MTM,Code_Level,TapeWWNN
+                    $TD_BInfo = "" | Select-Object ConnectionTyp,DeviceName,ProductDes,Prod_MTM,Code_Level,TapeWWNN
+                    $TD_BInfo.ConnectionTyp = if(!($null -eq $TD_BasicTapeInfos.Prod_MTM)){"REST"}else{"unkonwn"}
                     $TD_BInfo.DeviceName = if([string]::IsNullOrWhiteSpace($($TD_BasicDeviceInfos.name))){$SN}else{$($TD_BasicDeviceInfos.name)}
                     $TD_BInfo.ProductDes = "Tape Library"
                     $TD_BInfo.Prod_MTM = $($CombiSNMTM.TrimEnd($SN)).Insert(4,"-")
