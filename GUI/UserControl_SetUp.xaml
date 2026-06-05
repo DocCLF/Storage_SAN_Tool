@@ -98,14 +98,17 @@
                                 <DataGrid.RowStyle>
                                     <Style TargetType="DataGridRow">
                                         <Style.Triggers>
-                                            <DataTrigger Binding="{Binding DeviceTyp}" Value="Storage">
+                                            <DataTrigger Binding="{Binding DeviceTyp}" Value="IBM Storage">
                                                 <Setter Property="Background" Value="LightBlue" />
                                             </DataTrigger>
-                                            <DataTrigger Binding="{Binding DeviceTyp}" Value="SAN">
+                                            <DataTrigger Binding="{Binding DeviceTyp}" Value="Brocade SAN">
                                                 <Setter Property="Background" Value="LightYellow" />
                                             </DataTrigger>
                                             <DataTrigger Binding="{Binding DeviceTyp}" Value="PowerHMC">
                                                 <Setter Property="Background" Value="LightGreen" />
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding DeviceTyp}" Value="IBM Tape">
+                                                <Setter Property="Background" Value="LightPink" />
                                             </DataTrigger>
                                         </Style.Triggers>
                                     </Style>
