@@ -24,7 +24,7 @@ function IBM_RESTBaseStorageInfos {
                     $TD_Device_ConnectionTyp = SST_GetSpectrumToken -TD_Device_UserName $TD_Device_UserName -TD_Device_DeviceIP $TD_Device_DeviceIP -TD_Device_PW $TD_Device_PW
                 }
                 catch {
-                    Write-Host $_.Exception.Message
+                    SST_ToolMessageCollector -TD_ToolMSGCollector "IBM_RESTBaseStorageInfos $($_.Exception.Message)" -TD_ToolMSGType Error -TD_Shown yes
                 }
             }
         }
@@ -34,7 +34,7 @@ function IBM_RESTBaseStorageInfos {
                 $TD_Device_ConnectionTyp = SST_GetSpectrumToken -TD_Device_UserName $TD_Device_UserName -TD_Device_DeviceIP $TD_Device_DeviceIP -TD_Device_PW $TD_Device_PW
             }
             catch {
-                Write-Host $_.Exception.Message
+                SST_ToolMessageCollector -TD_ToolMSGCollector "IBM_RESTBaseStorageInfos $($_.Exception.Message)" -TD_ToolMSGType Error -TD_Shown yes
             }
         }
         Clear-Variable -Name TD_Device_PW -Force
@@ -45,7 +45,7 @@ function IBM_RESTBaseStorageInfos {
                 $STOSystemInfo = SST_SpectrumSystemAPI -Endpoint lssystem -Body $null -BaseUrl $BaseUrl -RESTInfo $RESTInfo
             }
             catch {
-                Write-Host $_.Exception.Message
+                SST_ToolMessageCollector -TD_ToolMSGCollector "IBM_RESTBaseStorageInfos $($_.Exception.Message)" -TD_ToolMSGType Error -TD_Shown yes 
             }
         }else {
             <#switch to the ssh version and leave this func #>
@@ -105,10 +105,10 @@ function IBM_RESTBaseStorageInfos {
         if($TD_export -eq "yes"){
             if([string]$TD_Exportpath -ne "$PSRootPath\ToolLog\"){
                 $TD_StorageInfo | Export-Csv -Path $TD_Exportpath\$($TD_Line_ID)_$($TD_Device_DeviceName)_StorageBaseInfo_$(Get-Date -Format "yyyy-MM-dd").csv -NoTypeInformation
-                SST_ToolMessageCollector -TD_ToolMSGCollector "$TD_Exportpath\$($TD_Line_ID)_$($TD_Device_DeviceName)_StorageBaseInfo_$(Get-Date -Format "yyyy-MM-dd").csv" -TD_ToolMSGType Debug
+                SST_ToolMessageCollector -TD_ToolMSGCollector "$TD_Exportpath\$($TD_Line_ID)_$($TD_Device_DeviceName)_StorageBaseInfo_$(Get-Date -Format "yyyy-MM-dd").csv" -TD_ToolMSGType Debug -TD_Shown no
             }else {
                 $TD_StorageInfo | Export-Csv -Path $PSScriptRoot\ToolLog\$($TD_Line_ID)_$($TD_Device_DeviceName)_StorageBaseInfo_$(Get-Date -Format "yyyy-MM-dd").csv -NoTypeInformation
-                SST_ToolMessageCollector -TD_ToolMSGCollector "$PSScriptRoot\ToolLog\$($TD_Line_ID)_$($TD_Device_DeviceName)_StorageBaseInfo_$(Get-Date -Format "yyyy-MM-dd").csv" -TD_ToolMSGType Debug
+                SST_ToolMessageCollector -TD_ToolMSGCollector "$PSScriptRoot\ToolLog\$($TD_Line_ID)_$($TD_Device_DeviceName)_StorageBaseInfo_$(Get-Date -Format "yyyy-MM-dd").csv" -TD_ToolMSGType Debug -TD_Shown no
             }
         }
 
