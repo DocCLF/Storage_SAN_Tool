@@ -15,9 +15,9 @@ function SST_CreateButton {
         
         SST_ToolMessageCollector -TD_ToolMSGCollector "Start to create Button for $DeviceTyp Healthcheck" -TD_ToolMSGType Message -TD_Shown no
 
-        if($DeviceTyp -eq "Storage"){$ButtonIcon = "$PSRootPath\Resources\Icons\IBMFS73Icon.png"}
-        if($DeviceTyp -eq "SAN"){$ButtonIcon = "$PSRootPath\Resources\Icons\SAN64B7Icon.png"}
-        if($DeviceTyp -eq "PowerHMC"){$ButtonIcon = "$PSRootPath\Resources\Icons\IBMPower11Icon.png"}
+        if($DeviceTyp -like "*Storage*"){$ButtonIcon = "$PSRootPath\Resources\Icons\IBMFS73Icon.png"}
+        if($DeviceTyp -like "*SAN*"){$ButtonIcon = "$PSRootPath\Resources\Icons\SAN64B7Icon.png"}
+        if($DeviceTyp -like "*PowerHMC*"){$ButtonIcon = "$PSRootPath\Resources\Icons\IBMPower11Icon.png"}
 
     }
     
