@@ -34,7 +34,7 @@ function SST_PRISMDBControl {
             <#Do this if a terminating exception happens#>
             SST_ToolMessageCollector -TD_ToolMSGCollector "PRISM $($_.Exception.Message)" -TD_ToolMSGType Error -TD_Shown yes
         }
-       
+       Write-Host $ConnectionStringPRISM
         try {
             if (-not $SQLConnection) {
                 $SQLConnection=New-Object System.Data.SqlClient.SqlConnection($ConnectionStringPRISM)
@@ -96,30 +96,30 @@ function SST_PRISMDBControl {
                                                     VALUES (@CustomerNbr, @Name, @ClusterName, @WWNN, @Status, @IOgroupid, @IOgroupName, @SerialNumber, @CodeLevel, @ConfigNode, @SideID, @SideName, @ProdMTM, @RecommendedPTF, @MDiskTotalCapacity, @MDiskFreeCapacity, @MDiskUsedCapacity,`
                                                     @PhysicalTotalCapacity, @PhysicalFreeCapacity, @HostUnmap, @BackendUnmap, @Topology, @Layer, @QuorumMode, @TimeStamp);END"
                         $SQLCommand.Parameters.AddWithValue("@CustomerNbr", $AZCredN) | Out-Null
-                        $SQLCommand.Parameters.AddWithValue("@Name", $SST_CollectedInformation.Name) | Out-Null
-                        $SQLCommand.Parameters.AddWithValue("@ClusterName", $SST_CollectedInformation.ClusterName) | Out-Null
-                        $SQLCommand.Parameters.AddWithValue("@Status", $SST_CollectedInformation.Status) | Out-Null
-                        $SQLCommand.Parameters.AddWithValue("@IOgroupid", $SST_CollectedInformation.IOgroupid) | Out-Null
-                        $SQLCommand.Parameters.AddWithValue("@IOgroupName", $SST_CollectedInformation.IOgroupName) | Out-Null
-                        $SQLCommand.Parameters.AddWithValue("@CodeLevel", $SST_CollectedInformation.CodeLevel) | Out-Null
-                        $SQLCommand.Parameters.AddWithValue("@ConfigNode", $SST_CollectedInformation.ConfigNode) | Out-Null
-                        $SQLCommand.Parameters.AddWithValue("@SideID", $SST_CollectedInformation.SideID) | Out-Null
-                        $SQLCommand.Parameters.AddWithValue("@SideName", $SST_CollectedInformation.SideName) | Out-Null
-                        $SQLCommand.Parameters.AddWithValue("@ProdMTM", $SST_CollectedInformation.ProdMTM) | Out-Null
+                        $SQLCommand.Parameters.AddWithValue("@Name", (Get-SqlParameterValue -Value $SST_CollectedInformation.Name -Default "No data found" -TreatEmptyStringAsNull)) | Out-Null 
+                        $SQLCommand.Parameters.AddWithValue("@ClusterName", (Get-SqlParameterValue -Value $SST_CollectedInformation.ClusterName -Default "No data found" -TreatEmptyStringAsNull)) | Out-Null 
+                        $SQLCommand.Parameters.AddWithValue("@Status", (Get-SqlParameterValue -Value $SST_CollectedInformation.Status -Default "No data found" -TreatEmptyStringAsNull)) | Out-Null 
+                        $SQLCommand.Parameters.AddWithValue("@IOgroupid", (Get-SqlParameterValue -Value $SST_CollectedInformation.IOgroupid -Default 999 -TreatEmptyStringAsNull)) | Out-Null 
+                        $SQLCommand.Parameters.AddWithValue("@IOgroupName", (Get-SqlParameterValue -Value $SST_CollectedInformation.IOgroupName -Default "No data found" -TreatEmptyStringAsNull)) | Out-Null 
+                        $SQLCommand.Parameters.AddWithValue("@CodeLevel", (Get-SqlParameterValue -Value $SST_CollectedInformation.CodeLevel -Default "No data found" -TreatEmptyStringAsNull)) | Out-Null 
+                        $SQLCommand.Parameters.AddWithValue("@ConfigNode", (Get-SqlParameterValue -Value $SST_CollectedInformation.ConfigNode -Default "No data found" -TreatEmptyStringAsNull)) | Out-Null 
+                        $SQLCommand.Parameters.AddWithValue("@SideID", (Get-SqlParameterValue -Value $SST_CollectedInformation.SideID -Default 999 -TreatEmptyStringAsNull)) | Out-Null 
+                        $SQLCommand.Parameters.AddWithValue("@SideName", (Get-SqlParameterValue -Value $SST_CollectedInformation.SideName -Default "No data found" -TreatEmptyStringAsNull)) | Out-Null 
+                        $SQLCommand.Parameters.AddWithValue("@ProdMTM", (Get-SqlParameterValue -Value $SST_CollectedInformation.ProdMTM -Default "No data found" -TreatEmptyStringAsNull)) | Out-Null 
                         $SQLCommand.Parameters.AddWithValue("@RecommendedPTF", (Get-SqlParameterValue -Value $SST_CollectedInformation.RecommendedPTF -Default "Not available" -TreatEmptyStringAsNull)) | Out-Null
-                        $SQLCommand.Parameters.AddWithValue("@MDiskTotalCapacity", $SST_CollectedInformation.'MDiskTotalCapacity') | Out-Null
-                        $SQLCommand.Parameters.AddWithValue("@MDiskFreeCapacity", $SST_CollectedInformation.'MDiskFreeCapacity') | Out-Null
-                        $SQLCommand.Parameters.AddWithValue("@MDiskUsedCapacity", $SST_CollectedInformation.'MDiskUsedCapacity') | Out-Null
-                        $SQLCommand.Parameters.AddWithValue("@PhysicalTotalCapacity", $SST_CollectedInformation.'PhysicalTotalCapacity') | Out-Null
-                        $SQLCommand.Parameters.AddWithValue("@PhysicalFreeCapacity", $SST_CollectedInformation.'PhysicalFreeCapacity') | Out-Null
-                        $SQLCommand.Parameters.AddWithValue("@HostUnmap", $SST_CollectedInformation.'HostUnmap') | Out-Null
-                        $SQLCommand.Parameters.AddWithValue("@BackendUnmap", $SST_CollectedInformation.'BackendUnmap') | Out-Null
-                        $SQLCommand.Parameters.AddWithValue("@Topology", $SST_CollectedInformation.Topology) | Out-Null
-                        $SQLCommand.Parameters.AddWithValue("@Layer", $SST_CollectedInformation.Layer) | Out-Null
-                        $SQLCommand.Parameters.AddWithValue("@QuorumMode", $SST_CollectedInformation.QuorumMode) | Out-Null
-                        $SQLCommand.Parameters.AddWithValue("@SerialNumber", $SST_CollectedInformation.SerialNumber) | Out-Null
-                        $SQLCommand.Parameters.AddWithValue("@WWNN", $SST_CollectedInformation.WWNN) | Out-Null
-                        $SQLCommand.Parameters.AddWithValue("@LocalCreationTimeStamp", $SST_CollectedInformation.TimeStamp) | Out-Null  #maybe for later
+                        $SQLCommand.Parameters.AddWithValue("@MDiskTotalCapacity", (Get-SqlParameterValue -Value $SST_CollectedInformation.'MDiskTotalCapacity' -Default "No data found" -TreatEmptyStringAsNull)) | Out-Null 
+                        $SQLCommand.Parameters.AddWithValue("@MDiskFreeCapacity", (Get-SqlParameterValue -Value $SST_CollectedInformation.'MDiskFreeCapacity' -Default "No data found" -TreatEmptyStringAsNull)) | Out-Null 
+                        $SQLCommand.Parameters.AddWithValue("@MDiskUsedCapacity", (Get-SqlParameterValue -Value $SST_CollectedInformation.'MDiskUsedCapacity' -Default "No data found" -TreatEmptyStringAsNull)) | Out-Null 
+                        $SQLCommand.Parameters.AddWithValue("@PhysicalTotalCapacity", (Get-SqlParameterValue -Value $SST_CollectedInformation.'PhysicalTotalCapacity' -Default "No data found" -TreatEmptyStringAsNull)) | Out-Null 
+                        $SQLCommand.Parameters.AddWithValue("@PhysicalFreeCapacity", (Get-SqlParameterValue -Value $SST_CollectedInformation.'PhysicalFreeCapacity' -Default "No data found" -TreatEmptyStringAsNull)) | Out-Null 
+                        $SQLCommand.Parameters.AddWithValue("@HostUnmap", (Get-SqlParameterValue -Value $SST_CollectedInformation.'HostUnmap' -Default "No data found" -TreatEmptyStringAsNull)) | Out-Null 
+                        $SQLCommand.Parameters.AddWithValue("@BackendUnmap", (Get-SqlParameterValue -Value $SST_CollectedInformation.'BackendUnmap' -Default "No data found" -TreatEmptyStringAsNull)) | Out-Null 
+                        $SQLCommand.Parameters.AddWithValue("@Topology",  (Get-SqlParameterValue -Value $SST_CollectedInformation.Topology -Default "No data found" -TreatEmptyStringAsNull)) | Out-Null 
+                        $SQLCommand.Parameters.AddWithValue("@Layer",  (Get-SqlParameterValue -Value $SST_CollectedInformation.Layer -Default "No data found" -TreatEmptyStringAsNull)) | Out-Null 
+                        $SQLCommand.Parameters.AddWithValue("@QuorumMode",  (Get-SqlParameterValue -Value $SST_CollectedInformation.QuorumMode -Default "No data found" -TreatEmptyStringAsNull)) | Out-Null 
+                        $SQLCommand.Parameters.AddWithValue("@SerialNumber", (Get-SqlParameterValue -Value $SST_CollectedInformation.SerialNumber -Default "No data found" -TreatEmptyStringAsNull)) | Out-Null 
+                        $SQLCommand.Parameters.AddWithValue("@WWNN", (Get-SqlParameterValue -Value $SST_CollectedInformation.WWNN -Default "No data found" -TreatEmptyStringAsNull)) | Out-Null 
+                        $SQLCommand.Parameters.AddWithValue("@LocalCreationTimeStamp", (Get-SqlParameterValue -Value $SST_CollectedInformation.TimeStamp -Default "No data found" -TreatEmptyStringAsNull)) | Out-Null 
                         $SQLCommand.Parameters.AddWithValue("@TimeStamp", $TimeStamp) | Out-Null
                     
                         # DB save
