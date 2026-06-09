@@ -19,7 +19,7 @@ function SST_GetTapeLibraryToken {
         [string]$TD_Device_PW,
         [int]$TD_Device_Port = 3031,
         [ValidateSet('v1','rest')]
-        [string]$PreferredApi = 'v1',
+        [string]$PreferredLoginApi = 'v1',
         [switch]$SkipCertificateCheck
     )
 
@@ -38,6 +38,8 @@ function SST_GetTapeLibraryToken {
         password = $TD_Device_PW
     } | ConvertTo-Json -Compress
     
+    $response = $null
+    $usedEndpoint = $null
 
     foreach ($loginEndpoint in $loginCandidates) {
         $loginUri = "$BaseUrl$loginEndpoint"
@@ -55,8 +57,10 @@ function SST_GetTapeLibraryToken {
             $irmParams.SkipCertificateCheck = $true
             try{
             $response = Invoke-RestMethod @irmParams
+            $usedEndpoint = $loginEndpoint
+            break
             }catch{
-             Write-Host $_.Exception.Message
+                SST_ToolMessageCollector -TD_ToolMSGCollector "Tape get Token: $($_.Exception.Message)" -TD_ToolMSGType Error -TD_Shown yes
             }
 
         }else {
@@ -81,7 +85,7 @@ function SST_GetTapeLibraryToken {
     }
 
     if (-not $response) {
-        Write-Error -Message "The login was successful, but no token was returned."
+        SST_ToolMessageCollector -TD_ToolMSGCollector "The login was successful, but no token was returned." -TD_ToolMSGType Error -TD_Shown yes
     }
     
     # Some APIs return { token = â€˜Bearer ...â€™ }, while others may return string content directly.
@@ -98,7 +102,7 @@ function SST_GetTapeLibraryToken {
     }
 
     if ([string]::IsNullOrWhiteSpace($token)) {
-        Write-Information "The login was successful, but no token was returned."
+        SST_ToolMessageCollector -TD_ToolMSGCollector "The login was successful, but no token was returned." -TD_ToolMSGType Error -TD_Shown yes
     }
 
     [pscustomobject]@{

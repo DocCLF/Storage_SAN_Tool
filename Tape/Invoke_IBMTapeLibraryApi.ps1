@@ -79,7 +79,7 @@ function Invoke_IBMTapeLibraryApi {
                     
                 }
                 catch {
-                    Write-Host $_.Exception.Message
+                    SST_ToolMessageCollector -TD_ToolMSGCollector "Invoke_IBMTapeLibraryApi: $($_.Exception.Message)" -TD_ToolMSGType Error -TD_Shown yes
                     continue
                 }
                 
@@ -99,7 +99,7 @@ function Invoke_IBMTapeLibraryApi {
              
             }
             catch {
-                Write-Host $_.Exception.Message
+                SST_ToolMessageCollector -TD_ToolMSGCollector "Invoke_IBMTapeLibraryApi: $($_.Exception.Message)" -TD_ToolMSGType Error -TD_Shown yes
             }
         }
         else {
@@ -123,7 +123,7 @@ function Invoke_IBMTapeLibraryApi {
                     
                 }
                 catch {
-                    Write-Host $_.Exception.Message
+                    SST_ToolMessageCollector -TD_ToolMSGCollector "Invoke_IBMTapeLibraryApi: $($_.Exception.Message)" -TD_ToolMSGType Error -TD_Shown yes
                     continue
                 }
                 if ($null -eq $TapeTokenObj) {
@@ -141,7 +141,7 @@ function Invoke_IBMTapeLibraryApi {
                 return $result
             }
             catch {
-                Write-Verbose $_.Exception.Message
+                SST_ToolMessageCollector -TD_ToolMSGCollector "Invoke_IBMTapeLibraryApi: $($_.Exception.Message)" -TD_ToolMSGType Error -TD_Shown yes
             }
             finally {
                 [System.Net.ServicePointManager]::SecurityProtocol = $oldProtocol
