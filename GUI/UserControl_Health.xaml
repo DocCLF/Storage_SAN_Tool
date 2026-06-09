@@ -43,7 +43,7 @@
             
             <WrapPanel Grid.Row="0" x:name="WP_STOHealthCheck" Visibility="{Binding ElementName=StorageCheckboxHealth, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Visible}"></WrapPanel>
             <WrapPanel Grid.Row="0" x:name="WP_SANHealthCheck" Visibility="{Binding ElementName=SANCheckboxHealth, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Visible}"></WrapPanel>
-            <WrapPanel Grid.Row="0" x:name="WP_SVRHealthCheck" Visibility="{Binding ElementName=ServerCheckboxHealth, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Visible}"></WrapPanel>
+            <!-- <WrapPanel Grid.Row="0" x:name="WP_SVRHealthCheck" Visibility="{Binding ElementName=ServerCheckboxHealth, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Visible}"></WrapPanel> -->
             <WrapPanel Grid.Row="1" x:Name="WP_HealthResaultsVisibility" Orientation="Horizontal" ></WrapPanel>
             <WrapPanel Grid.Row="2" x:Name="WP_HealthResaults" Orientation="Horizontal" ></WrapPanel>
         </Grid>
