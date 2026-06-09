@@ -28,7 +28,7 @@ function IBM_RESTCleanUpDumps {
         Write-ProgressBar -ProgressBar $ProgressBar -Activity "Collect data for Device $($TD_Line_ID) $($TD_Device_DeviceName)" -PercentComplete (25)
         Clear-Variable -Name TD_Device_PW -Force
         if($TD_Device_ConnectionTyp -eq "REST"){
-            $TD_DeviceClearDumps = SST_SpectrumSystemAPI -Endpoint "cleardumps -prefix /dumps"-Body $null -BaseUrl $BaseUrl -RESTInfo $RESTInfo
+            $TD_DeviceClearDumps = SST_SpectrumSystemAPI -Endpoint "cleardumps -prefix /dumps" -Body $null -BaseUrl $BaseUrl -RESTInfo $RESTInfo
             Write-ProgressBar -ProgressBar $ProgressBar -Activity "Collect data for Device $($TD_Line_ID) $($TD_Device_DeviceName)" -PercentComplete (50)
             Start-Sleep -Milliseconds 1500
             $TD_DeviceClearUpgrade = SST_SpectrumSystemAPI -Endpoint "cleardumps -prefix /home/admin/upgrade"-Body $null -BaseUrl $BaseUrl -RESTInfo $RESTInfo
