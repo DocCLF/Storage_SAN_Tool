@@ -101,8 +101,7 @@ function Invoke_IBMTapeLibraryApi {
             catch {
                 SST_ToolMessageCollector -TD_ToolMSGCollector "Invoke_IBMTapeLibraryApi: $($_.Exception.Message)" -TD_ToolMSGType Error -TD_Shown yes
             }
-        }
-        else {
+        }else {
             $irmParams.UseBasicParsing = $true
             $oldCallback = $null
             $oldProtocol = [System.Net.ServicePointManager]::SecurityProtocol
