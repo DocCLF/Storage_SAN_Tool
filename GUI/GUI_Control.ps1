@@ -1134,15 +1134,8 @@ $TD_BTN_IBM_FCPortStats.add_click({
 #region Brocade SAN
 $TD_BTN_FOS_BasicSwitchInfo.add_click({
     $TD_GB_SearchFilter.Visibility = "Collapsed"
-    <# for ProgressBar #>
-        $PB = New-ProgressBar
-    <# ProgressBar #>
     try{
         $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource | Where-Object { $_.DeviceTyp -like "*SAN*" }
-        <# for ProgressBar #>
-            $Total = $TD_Credentials.Count
-            $Current = 0
-        <# ProgressBar #>
         $UCDataContext = $TD_UserControl_BRSAN.DataContext
         if (-not $UCDataContext) { Write-Host "DataContext ist NULL!" -ForegroundColor Red; return }
 
@@ -1169,11 +1162,6 @@ $TD_BTN_FOS_BasicSwitchInfo.add_click({
         }
 
         foreach ($TD_Creds in $TD_Credentials) {
-            <# for ProgressBar #>
-                $Current++
-                $Percent = [math]::Round(($Current / $Total) * 100,0)
-                Write-ProgressBar -ProgressBar $PB -Activity "Brocade Query $Current / $Total - $($TD_Creds.DeviceIP)" -PercentComplete $Percent
-            <# ProgressBar #>
 
             $FunctionResult = New-DeviceBlock -Device $TD_Creds -ExportPath $TD_TB_ExportPath.Text -RESTFunc Get-BrocadeBaseInfo -SSHFunc FOS_SSHBasicSwitchInfos
 
@@ -1195,23 +1183,15 @@ $TD_BTN_FOS_BasicSwitchInfo.add_click({
         }
         $UCVMMain.SelectedView = "SANSwitchBase"
     }finally{
-        <# for ProgressBar #>
-            Close-ProgressBar -ProgressBar $PB
-        <# ProgressBar #>
+        SST_ToolMessageCollector -TD_ToolMSGCollector "Get-BrocadeBaseInfo done" -TD_ToolMSGType Message -TD_Shown yes
     }
 })
 $TD_BTN_FOS_SwitchShow.add_click({
     $TD_GB_SearchFilter.Visibility = "visible"
-    <# for ProgressBar #>
-        $PB = New-ProgressBar
-    <# ProgressBar #>
+
     try{
         <#Get all Device Cred and count them #>
         $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_.DeviceTyp -like "*SAN*" }
-        <# for ProgressBar #>
-            $Total = $TD_Credentials.Count
-            $Current = 0
-        <# ProgressBar #>
         <# get the DataConteext of the current View/ means UC and if its nul trow an error #>
         $UCDataContext = $TD_UserControl_BRSAN.DataContext
         if (-not $UCDataContext) { Write-Host "DataContext ist NULL!" -ForegroundColor Red; return }
@@ -1220,10 +1200,6 @@ $TD_BTN_FOS_SwitchShow.add_click({
         <# if there a something in, its better to clean it up befor we use it again #>
         $UCVMMain.DeviceToggles.Clear()
         foreach($TD_Creds in $TD_Credentials){
-            <# for ProgressBar #>
-                $Current++
-                $Percent = [math]::Round(($Current / $Total) * 100,0)
-                Write-ProgressBar -ProgressBar $PB -Activity "Brocade Query $Current / $Total - $($TD_Creds.DeviceIP)" -PercentComplete $Percent
 
            <# VFID Check / Zone Rows sammeln #>
             $AllSwitchShowRows = @()
@@ -1283,23 +1259,16 @@ $TD_BTN_FOS_SwitchShow.add_click({
         }
         $UCVMMain.SelectedView = "SANSwitchShow"
     }finally{
-        <# for ProgressBar #>
-            Close-ProgressBar -ProgressBar $PB
-        <# ProgressBar #>
+        SST_ToolMessageCollector -TD_ToolMSGCollector "Get-BrocadeSwitchShow done" -TD_ToolMSGType Message -TD_Shown yes
     }
 })
 $TD_BTN_FOS_PortBufferShow.add_click({
     $TD_GB_SearchFilter.Visibility = "visible"
-    <# for ProgressBar #>
-        $PB = New-ProgressBar
-    <# ProgressBar #>
+
     try{
         <#Get all Device Cred and count them #>
         $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_.DeviceTyp -like "*SAN*" }
-        <# for ProgressBar #>
-            $Total = $TD_Credentials.Count
-            $Current = 0
-        <# ProgressBar #>
+
         <# get the DataConteext of the current View/ means UC and if its nul trow an error #>
         $UCDataContext = $TD_UserControl_BRSAN.DataContext
         if (-not $UCDataContext) { Write-Host "DataContext ist NULL!" -ForegroundColor Red; return }
@@ -1308,10 +1277,6 @@ $TD_BTN_FOS_PortBufferShow.add_click({
         <# if there a something in, its better to clean it up befor we use it again #>
         $UCVMMain.DeviceToggles.Clear()
         foreach($TD_Creds in $TD_Credentials){
-            <# for ProgressBar #>
-                $Current++
-                $Percent = [math]::Round(($Current / $Total) * 100,0)
-                Write-ProgressBar -ProgressBar $PB -Activity "Brocade Query $Current / $Total - $($TD_Creds.DeviceIP)" -PercentComplete $Percent
 
            <# VFID Check / Zone Rows sammeln #>
             $AllPortBufferRows = @()
@@ -1377,23 +1342,16 @@ $TD_BTN_FOS_PortBufferShow.add_click({
         }
         $UCVMMain.SelectedView = "SANPortbufferShow"
     }finally{
-        <# for ProgressBar #>
-            Close-ProgressBar -ProgressBar $PB
-        <# ProgressBar #>
+        SST_ToolMessageCollector -TD_ToolMSGCollector "Get-BrocadePortBufferStats done" -TD_ToolMSGType Message -TD_Shown yes
     }
 })
 $TD_BTN_FOS_PortErrorShow.add_click({
     $TD_GB_SearchFilter.Visibility = "visible"
-    <# for ProgressBar #>
-        $PB = New-ProgressBar
-    <# ProgressBar #>
+
     try{
         <#Get all Device Cred and count them #>
         $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_.DeviceTyp -like "*SAN*" }
-        <# for ProgressBar #>
-            $Total = $TD_Credentials.Count
-            $Current = 0
-        <# ProgressBar #>
+
         <# get the DataConteext of the current View/ means UC and if its nul trow an error #>
         $UCDataContext = $TD_UserControl_BRSAN.DataContext
         if (-not $UCDataContext) { Write-Host "DataContext ist NULL!" -ForegroundColor Red; return }
@@ -1402,10 +1360,7 @@ $TD_BTN_FOS_PortErrorShow.add_click({
         <# if there a something in, its better to clean it up befor we use it again #>
         $UCVMMain.DeviceToggles.Clear()
         foreach($TD_Creds in $TD_Credentials){
-            <# for ProgressBar #>
-                $Current++
-                $Percent = [math]::Round(($Current / $Total) * 100,0)
-                Write-ProgressBar -ProgressBar $PB -Activity "Brocade Query $Current / $Total - $($TD_Creds.DeviceIP)" -PercentComplete $Percent
+
            <# VFID Check / Zone Rows sammeln #>
             $AllErrorsShowRows = @()
             $FunctionResult = $null
@@ -1470,23 +1425,16 @@ $TD_BTN_FOS_PortErrorShow.add_click({
         }
         $UCVMMain.SelectedView = "SANPortErrorShow"
     }finally{
-        <# for ProgressBar #>
-            Close-ProgressBar -ProgressBar $PB
-        <# ProgressBar #>
+        SST_ToolMessageCollector -TD_ToolMSGCollector "Get-BrocadePortErrorStats done" -TD_ToolMSGType Message -TD_Shown yes
     }
 })
 $TD_BTN_FOS_SFPHealthShow.add_click({
     $TD_GB_SearchFilter.Visibility = "visible"
-    <# for ProgressBar #>
-        $PB = New-ProgressBar
-    <# ProgressBar #>
+
     try{
         <#Get all Device Cred and count them #>
         $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_.DeviceTyp -like "*SAN*" }
-        <# for ProgressBar #>
-            $Total = $TD_Credentials.Count
-            $Current = 0
-        <# ProgressBar #>
+ 
         <# get the DataConteext of the current View/ means UC and if its nul trow an error #>
         $UCDataContext = $TD_UserControl_BRSAN.DataContext
         if (-not $UCDataContext) { Write-Host "DataContext ist NULL!" -ForegroundColor Red; return }
@@ -1495,11 +1443,7 @@ $TD_BTN_FOS_SFPHealthShow.add_click({
         <# if there a something in, its better to clean it up befor we use it again #>
         $UCVMMain.DeviceToggles.Clear()
         foreach($TD_Creds in $TD_Credentials){
-            <# for ProgressBar #>
-                $Current++
-                $Percent = [math]::Round(($Current / $Total) * 100,0)
-                Write-ProgressBar -ProgressBar $PB -Activity "Brocade Query $Current / $Total - $($TD_Creds.DeviceIP)" -PercentComplete $Percent
-            
+
            <# VFID Check / Zone Rows sammeln #>
             $AllSFPRows = @()
             $FunctionResult = $null
@@ -1562,23 +1506,16 @@ $TD_BTN_FOS_SFPHealthShow.add_click({
         }
         $UCVMMain.SelectedView = "SANSFPDetails"
     }finally{
-        <# for ProgressBar #>
-            Close-ProgressBar -ProgressBar $PB
-        <# ProgressBar #>
+        SST_ToolMessageCollector -TD_ToolMSGCollector "Get-BrocadeSFPShow done" -TD_ToolMSGType Message -TD_Shown yes
     }
 })
 $TD_BTN_FOS_ZoneDetailsShow.add_click({
     $TD_GB_SearchFilter.Visibility = "visible"
-    <# for ProgressBar #>
-        $PB = New-ProgressBar
-    <# ProgressBar #>
+
     try{
         <#Get all Device Cred and count them #>
         $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_.DeviceTyp -like "*SAN*" }
-        <# for ProgressBar #>
-            $Total = $TD_Credentials.Count
-            $Current = 0
-        <# ProgressBar #>
+
         <# get the DataConteext of the current View/ means UC and if its nul trow an error #>
         $UCDataContext = $TD_UserControl_BRSAN.DataContext
         if (-not $UCDataContext) { Write-Host "DataContext ist NULL!" -ForegroundColor Red; return }
@@ -1587,10 +1524,7 @@ $TD_BTN_FOS_ZoneDetailsShow.add_click({
         <# if there a something in, its better to clean it up befor we use it again #>
         $UCVMMain.DeviceToggles.Clear()
         foreach($TD_Creds in $TD_Credentials){
-            <# for ProgressBar #>
-            $Current++
-            $Percent = [math]::Round(($Current / $Total) * 100,0)
-            Write-ProgressBar -ProgressBar $PB -Activity "Brocade Query $Current / $Total - $($TD_Creds.DeviceIP)" -PercentComplete $Percent
+
             <# VFID Check / Zone Rows sammeln #>
             $AllZoneRows = @()
             $FunctionResult = $null
@@ -1642,23 +1576,16 @@ $TD_BTN_FOS_ZoneDetailsShow.add_click({
         }
         $UCVMMain.SelectedView = "SANZoneDetails"
     }finally{
-        <# for ProgressBar #>
-            Close-ProgressBar -ProgressBar $PB
-        <# ProgressBar #>
+        SST_ToolMessageCollector -TD_ToolMSGCollector "Get-BrocadeEffectiveZoneShow done" -TD_ToolMSGType Message -TD_Shown yes
     }
 })
 $TD_BTN_FOS_PortLicenseShow.add_click({
     $TD_GB_SearchFilter.Visibility = "Collapsed"
-    <# for ProgressBar #>
-        $PB = New-ProgressBar
-    <# ProgressBar #>
+
     try{
         <#Get all Device Cred and count them #>
         $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_.DeviceTyp -like "*SAN*" }
-        <# for ProgressBar #>
-            $Total = $TD_Credentials.Count
-            $Current = 0
-        <# ProgressBar #>
+
         <# get the DataConteext of the current View/ means UC and if its nul trow an error #>
         $UCDataContext = $TD_UserControl_BRSAN.DataContext
         if (-not $UCDataContext) { Write-Host "DataContext ist NULL!" -ForegroundColor Red; return }
@@ -1667,11 +1594,7 @@ $TD_BTN_FOS_PortLicenseShow.add_click({
         <# if there a something in, its better to clean it up befor we use it again #>
         $UCVMMain.DeviceToggles.Clear()
         foreach($TD_Creds in $TD_Credentials){
-            <# for ProgressBar #>
-                $Current++
-                $Percent = [math]::Round(($Current / $Total) * 100,0)
-                Write-ProgressBar -ProgressBar $PB -Activity "Brocade Query $Current / $Total - $($TD_Creds.DeviceIP)" -PercentComplete $Percent
-            <# ProgressBar #>
+
             $FunctionResult = New-DeviceBlock -Device $TD_Creds -ExportPath $TD_TB_ExportPath.Text -RESTFunc Get-BrocadeLicenseOverview -SSHFunc FOS_SSHPortLicenseShowInfo
             # Links = Propertyname im PSCustomObject (das bindet dein XAML)
             # Rechts = Propertyname im Source-Objekt
@@ -1709,23 +1632,16 @@ $TD_BTN_FOS_PortLicenseShow.add_click({
         <#one for each view is fine do need to be inside the foreach #>
         $UCVMMain.SelectedView = "LicenseInfo"
     }finally{
-        <# for ProgressBar #>
-            Close-ProgressBar -ProgressBar $PB
-        <# ProgressBar #>
+        SST_ToolMessageCollector -TD_ToolMSGCollector "Get-BrocadeLicenseOverview done" -TD_ToolMSGType Message -TD_Shown yes
     }
 })
 $TD_BTN_FOS_SensorShow.add_click({
     $TD_GB_SearchFilter.Visibility = "Collapsed"
-    <# for ProgressBar #>
-        $PB = New-ProgressBar
-    <# ProgressBar #>
+
     try{
         <#Get all Device Cred and count them #>
         $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_.DeviceTyp -like "*SAN*" }
-        <# for ProgressBar #>
-            $Total = $TD_Credentials.Count
-            $Current = 0
-        <# ProgressBar #>
+
         <# get the DataConteext of the current View/ means UC and if its nul trow an error #>
         $UCDataContext = $TD_UserControl_BRSAN.DataContext
         if (-not $UCDataContext) { Write-Host "DataContext ist NULL!" -ForegroundColor Red; return }
@@ -1734,11 +1650,7 @@ $TD_BTN_FOS_SensorShow.add_click({
         <# if there a something in, its better to clean it up befor we use it again #>
         $UCVMMain.DeviceToggles.Clear()
         foreach($TD_Creds in $TD_Credentials){
-            <# for ProgressBar #>
-                $Current++
-                $Percent = [math]::Round(($Current / $Total) * 100,0)
-                Write-ProgressBar -ProgressBar $PB -Activity "Brocade Query $Current / $Total - $($TD_Creds.DeviceIP)" -PercentComplete $Percent
-            <# ProgressBar #>
+
             $FunctionResult = New-DeviceBlock -Device $TD_Creds -ExportPath $TD_TB_ExportPath.Text -RESTFunc Get-BrocadeSensorOverview -SSHFunc FOS_SSHSensorShow
             # Links = Propertyname im PSCustomObject (das bindet dein XAML)
             # Rechts = Propertyname im Source-Objekt
@@ -1800,9 +1712,7 @@ $TD_BTN_FOS_SensorShow.add_click({
         <#one for each view is fine do need to be inside the foreach #>
         $UCVMMain.SelectedView = "SensorInfo"
     }finally{
-        <# for ProgressBar #>
-            Close-ProgressBar -ProgressBar $PB
-        <# ProgressBar #>
+        SST_ToolMessageCollector -TD_ToolMSGCollector "Get-BrocadeSensorOverview done" -TD_ToolMSGType Message -TD_Shown yes
     }
 })  
 #endregion

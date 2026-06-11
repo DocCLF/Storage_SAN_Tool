@@ -5,11 +5,14 @@ function Get-BrocadePortBufferStats {
         $Device,
         $RowCounter = 0
     )
-
+    $PB = New-ProgressBar
     $FCPorts = Get-BrocadeFcPorts -Device $Device
+    Write-ProgressBar -ProgressBar $PB -Activity "Get-FcPorts completed" -PercentComplete 20
     $FCStats = Get-BrocadeFCstatistics -Device $Device
+    Write-ProgressBar -ProgressBar $PB -Activity "Get-FCstatistics completed" -PercentComplete 40
     <# only needed for the SN #>
     $ChassisInfo = Get-BrocadeChassisInfo -Device $Device
+    Write-ProgressBar -ProgressBar $PB -Activity "Get-ChassisInfo completed" -PercentComplete 60
 
     $VFID = if($Device.VFID){$Device.VFID}else{""}
     $VFIDDisplay = if($VFID){ $VFID }else{""}
@@ -48,11 +51,14 @@ function Get-BrocadePortBufferStats {
             RowID = $RowID
         }
     }
+    Write-ProgressBar -ProgressBar $PB -Activity "Create Obj completed" -PercentComplete 80
     try {
         $FOS_PortBufferInfo | Export-Csv -Path "$($TD_TB_ExportPath.Text)\PortBufferShow_$($ChassisInfo.'vendor-serial-number')_$(Get-Date -Format "yyyy-MM-dd").csv" -NoTypeInformation -Append
     }
     catch {
         SST_ToolMessageCollector -TD_ToolMSGCollector "PortBufferShow: $($_.Exception.Message)" -TD_ToolMSGType "Warning" -TD_Shown "no"
+    }finally{
+        Close-ProgressBar -ProgressBar $PB
     }
 
     return $FOS_PortBufferInfo

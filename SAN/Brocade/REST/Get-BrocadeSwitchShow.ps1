@@ -5,14 +5,21 @@ function Get-BrocadeSwitchShow {
         $Device,
         $RowCounter = 0
     )
+    $PB = New-ProgressBar
 
     $FCPorts    = Get-BrocadeFcPorts -Device $Device
+    Write-ProgressBar -ProgressBar $PB -Activity "Get-FcPorts completed" -PercentComplete 10
     $SFP        = Get-BrocadeSfp -Device $Device
+    Write-ProgressBar -ProgressBar $PB -Activity "Get-Sfp completed" -PercentComplete 20
     $NameServer = Get-BrocadeNameServer -Device $Device
+    Write-ProgressBar -ProgressBar $PB -Activity "Get-NameServer completed" -PercentComplete 30
     $Aliases    = Get-BrocadeAliases -Device $Device
+    Write-ProgressBar -ProgressBar $PB -Activity "Get-Aliases completed" -PercentComplete 40
     <# needed for DB #>
     $SwitchInfo = Get-BrocadeSwitchInfo -Device $Device
+    Write-ProgressBar -ProgressBar $PB -Activity "Get-SwitchInfo completed" -PercentComplete 55
     $ChassisInfo = Get-BrocadeChassisInfo -Device $Device
+    Write-ProgressBar -ProgressBar $PB -Activity "Get-ChassisInfo completed" -PercentComplete 70
     $SwitchWWNN = $SwitchInfo.name
     $SerialNumber = $ChassisInfo.'vendor-serial-number'
     
@@ -139,13 +146,16 @@ function Get-BrocadeSwitchShow {
             RowID = $RowID
         }
     }
-        try {
-            SST_CustomerSANDBInsertTable -SST_InfoType "SANPortInfo" -SST_CollectedInformations $FOS_SwitchShowInfo
-            $FOS_SwitchShowInfo | Export-Csv -Path "$($TD_TB_ExportPath.Text)\FOS_SwitchShowInfo_$($SerialNumber)_$(Get-Date -Format "yyyy-MM-dd").csv" -NoTypeInformation -Append
-        }
-        catch {
-            <#Do this if a terminating exception happens#>
-            SST_ToolMessageCollector -TD_ToolMSGCollector "FOS_SwitchShowInfo: $($_.Exception.Message)" -TD_ToolMSGType "Warning" -TD_Shown "no"
-        }
-        return $FOS_SwitchShowInfo
+    Write-ProgressBar -ProgressBar $PB -Activity "Create Obj completed" -PercentComplete 90
+    try {
+        SST_CustomerSANDBInsertTable -SST_InfoType "SANPortInfo" -SST_CollectedInformations $FOS_SwitchShowInfo
+        $FOS_SwitchShowInfo | Export-Csv -Path "$($TD_TB_ExportPath.Text)\FOS_SwitchShowInfo_$($SerialNumber)_$(Get-Date -Format "yyyy-MM-dd").csv" -NoTypeInformation -Append
+    }
+    catch {
+        <#Do this if a terminating exception happens#>
+        SST_ToolMessageCollector -TD_ToolMSGCollector "FOS_SwitchShowInfo: $($_.Exception.Message)" -TD_ToolMSGType "Warning" -TD_Shown "no"
+    }finally{
+    Close-ProgressBar -ProgressBar $PB
+    }
+    return $FOS_SwitchShowInfo
 }

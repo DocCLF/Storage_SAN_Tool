@@ -5,11 +5,15 @@ function Get-BrocadeSFPShow {
         $Device,
         $RowCounter = 0
     )
+    $PB = New-ProgressBar
 
     $FCPorts = Get-BrocadeFcPorts -Device $Device
-    $SFPs    = Get-BrocadeSfp -Device $Device
+    Write-ProgressBar -ProgressBar $PB -Activity "Get-FcPorts completed" -PercentComplete 20
+    $SFPs = Get-BrocadeSfp -Device $Device
+    Write-ProgressBar -ProgressBar $PB -Activity "Get-Sfp completed" -PercentComplete 40
     <# only needed for the SN #>
     $ChassisInfo = Get-BrocadeChassisInfo -Device $Device
+    Write-ProgressBar -ProgressBar $PB -Activity "Get-ChassisInfo completed" -PercentComplete 65
 
     $VFID = if($Device.VFID){$Device.VFID}else{""}
     $VFIDDisplay = if($VFID){ $VFID }else{""}
@@ -93,11 +97,14 @@ function Get-BrocadeSFPShow {
             RowID = $RowID
         }
     }
+    Write-ProgressBar -ProgressBar $PB -Activity "Create Obj completed" -PercentComplete 90
     try {
         $FOS_SFPHealthInfo | Export-Csv -Path "$($TD_TB_ExportPath.Text)\FOS_SFPHealthInfo_$($ChassisInfo.'vendor-serial-number')_$(Get-Date -Format "yyyy-MM-dd").csv" -NoTypeInformation -Append
     }
     catch {
         SST_ToolMessageCollector -TD_ToolMSGCollector "FOS_SFPHealthInfo: $($_.Exception.Message)" -TD_ToolMSGType "Warning" -TD_Shown "no"
+    }finally{
+        Close-ProgressBar -ProgressBar $PB
     }
 
     return $FOS_SFPHealthInfo
