@@ -4,6 +4,12 @@ function Get-VisualChildren {
         [type] $Type = [System.Windows.Controls.DataGrid]
     )
 
+    if ($null -eq $Parent) {
+        return
+    }
+
+    $GetVisualChildrenFunc = ${function:Get-VisualChildren}
+
     $count = [System.Windows.Media.VisualTreeHelper]::GetChildrenCount($Parent)
 
     for ($i = 0; $i -lt $count; $i++) {
@@ -13,35 +19,8 @@ function Get-VisualChildren {
             $child
         }
 
-        Get-VisualChildren -Parent $child -Type $Type
+        & $GetVisualChildrenFunc -Parent $child -Type $Type
     }
-}
-
-function Get-SearchableRowText {
-    param(
-        [Parameter(Mandatory)] $Item,
-        [Parameter(Mandatory)] [System.Windows.Controls.DataGrid] $DataGrid
-    )
-
-    $values = New-Object System.Collections.Generic.List[string]
-
-    foreach ($col in $DataGrid.Columns) {
-        if ($col -is [System.Windows.Controls.DataGridBoundColumn]) {
-            $binding = $col.Binding
-
-            if ($null -ne $binding -and $null -ne $binding.Path) {
-                $path = $binding.Path.Path
-
-                $value = Get-ValueByBindingPath -Item $Item -Path $path
-
-                if ($null -ne $value) {
-                    [void]$values.Add([string]$value)
-                }
-            }
-        }
-    }
-
-    return ($values -join " ")
 }
 
 function Get-ValueByBindingPath {
@@ -105,6 +84,37 @@ function Get-ValueByBindingPath {
     return $current
 }
 
+function Get-SearchableRowText {
+    param(
+        [Parameter(Mandatory)] $Item,
+        [Parameter(Mandatory)] [System.Windows.Controls.DataGrid] $DataGrid
+    )
+
+    $GetValueByBindingPathFunc = ${function:Get-ValueByBindingPath}
+
+    $values = New-Object System.Collections.Generic.List[string]
+
+    foreach ($col in $DataGrid.Columns) {
+        if ($col -is [System.Windows.Controls.DataGridBoundColumn]) {
+            $binding = $col.Binding
+
+            if ($null -ne $binding -and $null -ne $binding.Path) {
+                $path = $binding.Path.Path
+
+                if (-not [string]::IsNullOrWhiteSpace($path)) {
+                    $value = & $GetValueByBindingPathFunc -Item $Item -Path $path
+
+                    if ($null -ne $value) {
+                        [void]$values.Add([string]$value)
+                    }
+                }
+            }
+        }
+    }
+
+    return ($values -join " ")
+}
+
 function Set-DataGridSearchFilter {
     param(
         [Parameter(Mandatory)] [System.Windows.Controls.DataGrid] $DataGrid,
@@ -121,6 +131,10 @@ function Set-DataGridSearchFilter {
         return
     }
 
+    # Important for WPF/CollectionView scopes:
+    # Include the helper function in the closure as a ScriptBlock reference.
+    $GetSearchableRowTextFunc = ${function:Get-SearchableRowText}
+
     $dg = $DataGrid
     $tb = $SearchBox
 
@@ -133,11 +147,11 @@ function Set-DataGridSearchFilter {
             return $true
         }
 
-        $rowText = Get-SearchableRowText -Item $row -DataGrid $dg
+        $rowText = & $GetSearchableRowTextFunc -Item $row -DataGrid $dg
 
-        # Debug temporary:
-        #Write-Host "FILTER ROWTYPE: $($row.GetType().FullName)" -ForegroundColor Cyan
-        #Write-Host "FILTER ROWTEXT: $rowText" -ForegroundColor Yellow
+        # Debug optional:
+        # Write-Host "FILTER ROWTYPE: $($row.GetType().FullName)" -ForegroundColor Cyan
+        # Write-Host "FILTER ROWTEXT: $rowText" -ForegroundColor Yellow
 
         if ([string]::IsNullOrWhiteSpace($rowText)) {
             return $false
@@ -166,14 +180,19 @@ function Update-GlobalDataGridSearchFilter {
         [Parameter(Mandatory)] [System.Windows.Controls.TextBox] $SearchBox
     )
 
-    $dataGrids = Get-VisualChildren -Parent $RootControl -Type ([System.Windows.Controls.DataGrid])
+    # Important for WPF event scope:
+    # Use these helper functions as ScriptBlock references as well.
+    $GetVisualChildrenFunc       = ${function:Get-VisualChildren}
+    $SetDataGridSearchFilterFunc = ${function:Set-DataGridSearchFilter}
+
+    $dataGrids = & $GetVisualChildrenFunc -Parent $RootControl -Type ([System.Windows.Controls.DataGrid])
 
     foreach ($dg in $dataGrids) {
         if ($null -eq $dg.ItemsSource) {
             continue
         }
 
-        Set-DataGridSearchFilter -DataGrid $dg -SearchBox $SearchBox
+        & $SetDataGridSearchFilterFunc -DataGrid $dg -SearchBox $SearchBox
 
         $view = [System.Windows.Data.CollectionViewSource]::GetDefaultView($dg.ItemsSource)
 
@@ -182,6 +201,7 @@ function Update-GlobalDataGridSearchFilter {
         }
     }
 }
+
 function Initialize-GlobalDataGridSearch {
     param(
         [Parameter(Mandatory)] $RootControl,
@@ -191,24 +211,28 @@ function Initialize-GlobalDataGridSearch {
     $SearchButton = $RootControl.FindName("BTN_GlobalGridSearch")
     $ClearButton  = $RootControl.FindName("BTN_GlobalGridSearchClear")
 
+    # Important for WPF event scope:
+    # Include the function as a ScriptBlock in the closure.
+    $UpdateGlobalGridFilterFunc = ${function:Update-GlobalDataGridSearchFilter}
+
     $SearchBox.Add_KeyDown({
         param($sender, $e)
 
         if ($e.Key -eq [System.Windows.Input.Key]::Enter) {
-            Update-GlobalDataGridSearchFilter -RootControl $RootControl -SearchBox $SearchBox
+            & $UpdateGlobalGridFilterFunc -RootControl $RootControl -SearchBox $SearchBox
         }
     }.GetNewClosure())
 
     if ($null -ne $SearchButton) {
         $SearchButton.Add_Click({
-            Update-GlobalDataGridSearchFilter -RootControl $RootControl -SearchBox $SearchBox
+            & $UpdateGlobalGridFilterFunc -RootControl $RootControl -SearchBox $SearchBox
         }.GetNewClosure())
     }
 
     if ($null -ne $ClearButton) {
         $ClearButton.Add_Click({
             $SearchBox.Text = ""
-            Update-GlobalDataGridSearchFilter -RootControl $RootControl -SearchBox $SearchBox
+            & $UpdateGlobalGridFilterFunc -RootControl $RootControl -SearchBox $SearchBox
         }.GetNewClosure())
     }
 }
