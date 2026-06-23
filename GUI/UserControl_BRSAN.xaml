@@ -256,8 +256,14 @@
                         <DataGridTextColumn.CellStyle>
                             <Style TargetType="DataGridCell">
                                 <Style.Triggers>
-                                    <DataTrigger Binding="{Binding PortStateInfo}" Value="no change">
+                                    <DataTrigger Binding="{Binding PortStateInfo}" Value="NO_CHANGE">
                                         <Setter Property="Background" Value="LightGreen" />
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding PortStateInfo}" Value="STATE_CHANGED">
+                                        <Setter Property="Background" Value="Coral" />
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding PortStateInfo}" Value="NEW_PORT">
+                                        <Setter Property="Background" Value="Yellow" />
                                     </DataTrigger>
                                 </Style.Triggers>
                                 <Setter Property="ToolTip" Value="Shows the change from the last check to the current one." />
