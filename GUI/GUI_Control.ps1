@@ -1783,7 +1783,10 @@ $TD_BTN_PWR_ManagedSystemInfo.add_click({
     try{
         $TD_GBPWRHMCInfo,$TD_GBPWRLPARSum | ForEach-Object {$_.Visibility = "Collapsed"}
         $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource | Where-Object { $_.DeviceTyp -like "*PowerHMC*" }
-
+        <# for ProgressBar #>
+            $Total = $TD_Credentials.Count
+            $Current = 0
+        <# ProgressBar #>
         $UCDataContext = $TD_UserControl_PWR.DataContext
         if (-not $UCDataContext) { [System.Windows.MessageBox]::Show("DataContext ist NULL!") | Out-Null; return }
         $UCVMMain = $UCDataContext.Main
@@ -1794,7 +1797,7 @@ $TD_BTN_PWR_ManagedSystemInfo.add_click({
             <# for ProgressBar #>
                 $Current++
                 $Percent = [math]::Round(($Current / $Total) * 100,0)
-                Write-ProgressBar -ProgressBar $PB -Activity "Brocade Query $Current / $Total - $($TD_Creds.DeviceIP)" -PercentComplete $Percent
+                Write-ProgressBar -ProgressBar $PB -Activity "PWR Managed System Query $Current / $Total $($TD_Creds.DeviceIP)" -PercentComplete $Percent
             $FunctionResult = New-DeviceBlock -Device $TD_Creds -ExportPath $TD_TB_ExportPath.Text -RESTFunc HMC_RESTHMCManagedSystems
 
             # Falls Rows-Collection noch nicht existiert
@@ -1833,7 +1836,10 @@ $TD_BTN_PWR_LparSummary.add_click({
         $TD_GBPWRHMCInfo,$TD_GBPWRManagSysInfo | ForEach-Object {$_.Visibility = "Collapsed"}
         # 1) Geräte holen (wie beim HMC-Button)
         $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource | Where-Object { $_.DeviceTyp -like "*PowerHMC*" }
-
+        <# for ProgressBar #>
+            $Total = $TD_Credentials.Count
+            $Current = 0
+        <# ProgressBar #>
         # 2) DataContext/VM holen
         $UCDataContext = $TD_UserControl_PWR.DataContext
         if (-not $UCDataContext) { [System.Windows.MessageBox]::Show("DataContext ist NULL!") | Out-Null; return }
@@ -1845,7 +1851,7 @@ $TD_BTN_PWR_LparSummary.add_click({
             <# for ProgressBar #>
                 $Current++
                 $Percent = [math]::Round(($Current / $Total) * 100,0)
-                Write-ProgressBar -ProgressBar $PB -Activity "Brocade Query $Current / $Total - $($TD_Creds.DeviceIP)" -PercentComplete $Percent
+                Write-ProgressBar -ProgressBar $PB -Activity "LPAR Query $Current / $Total $($TD_Creds.DeviceIP)" -PercentComplete $Percent
             # 3) REST Call über dein Standard-Pattern
             $FunctionResult = New-DeviceBlock -Device $TD_Creds -ExportPath $TD_TB_ExportPath.Text -RESTFunc HMC_RESTHMCLogicalPartitions
 

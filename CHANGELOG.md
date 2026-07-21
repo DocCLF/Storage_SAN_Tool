@@ -12,7 +12,7 @@
     * switched to Avalonia to support additional operating systems
 
 All notable changes to this project will be documented in this file.
-# [v1.4.010_beta] - 2026-05-05
+# [v1.4.010_beta] - 2026-07-21
 ### Added 
 - Support for IBM Tape (only via REST)
 - REST Function for IBM Storage
