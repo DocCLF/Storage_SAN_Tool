@@ -22,6 +22,7 @@ All notable changes to this project will be documented in this file.
 - UseBasicParsing for Powershell 5.1 
 - TextBox for Customer Number (who is needed for Local DB)
 - Search filters have been added where useful.
+- SnapShot view at Volume Info
 
 ### Fixed
 - ToolLog on GUI, Some entries were not displayed or were displayed incorrectly
