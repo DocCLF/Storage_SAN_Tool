@@ -75,7 +75,7 @@ function IBM_RESTFCPortInfo {
 
                 if(($TD_WWPNaEqual)-and ($($TD_FCPortInfo.PortID) -eq $($TD_SecondDeviceInformation.port_id[$ni]))){
                     $TD_FCPortInfo.CardID             = $TD_SecondDeviceInformation.adapter_location[$ni]
-                    $TD_FCPortInfo.CardPortID         = $TD_SecondDeviceInformation.adapter_location[$ni]
+                    $TD_FCPortInfo.CardPortID         = $TD_SecondDeviceInformation.adapter_port_id[$ni]
                     $TD_FCPortInfo.Speed              = $TD_SecondDeviceInformation.port_speed[$ni]
                     $TD_FCPortInfo.Status             = $TD_SecondDeviceInformation.status[$ni]
                     $TD_FCPortInfo.NodeName           = $TD_SecondDeviceInformation.node_name[$ni]
