@@ -479,6 +479,7 @@
                     <DataGridTextColumn Width="auto" Header="HostCluster" Binding="{Binding HostCluster}" IsReadOnly="True"/>
                     <DataGridTextColumn Width="auto" Header="VolumeID" Binding="{Binding VolumeID}" IsReadOnly="True"/>
                     <DataGridTextColumn Width="auto" Header="VolumeName" Binding="{Binding VolumeName}" IsReadOnly="True"/>
+                    <DataGridTextColumn Width="auto" Header="Volume Group" Binding="{Binding VolumeGroupName}" IsReadOnly="True"/>
                     <DataGridTextColumn Width="auto" Header="UID" Binding="{Binding UID}" IsReadOnly="True"/>
                     <DataGridTextColumn Width="auto" Header="Capacity" Binding="{Binding Capacity}" IsReadOnly="True"/>
                 </DataGrid.Columns>
@@ -716,37 +717,27 @@
                                 <Style TargetType="{x:Type GroupItem}">
                                     <Setter Property="Margin"
                                             Value="0,4,0,4"/>
-
                                     <Setter Property="Template">
                                         <Setter.Value>
                                             <ControlTemplate TargetType="{x:Type GroupItem}">
                                                 <Expander IsExpanded="True">
-
                                                     <Expander.Header>
                                                         <Border Background="LightSteelBlue"
                                                                 BorderBrush="SteelBlue"
                                                                 BorderThickness="0,0,0,1"
                                                                 Padding="8,4">
-
                                                             <StackPanel Orientation="Horizontal">
-
                                                                 <TextBlock Text="Volume: "
                                                                            FontWeight="Bold"/>
-
                                                                 <TextBlock Text="{Binding Items[0].GroupName}"
                                                                            FontWeight="Bold"/>
-
                                                                 <TextBlock Text="  |  Einträge: "
                                                                            Margin="12,0,0,0"/>
-
                                                                 <TextBlock Text="{Binding ItemCount}"/>
-
                                                             </StackPanel>
                                                         </Border>
                                                     </Expander.Header>
-
                                                     <ItemsPresenter/>
-
                                                 </Expander>
                                             </ControlTemplate>
                                         </Setter.Value>
@@ -807,7 +798,7 @@
                         <DataGridTextColumn Width="Auto" Header="IO Group" Binding="{Binding IOGroupName}" IsReadOnly="True"/>
                         <DataGridTextColumn Width="Auto" Header="Status" Binding="{Binding Status}" IsReadOnly="True"/>
                         <DataGridTextColumn Width="Auto" Header="Pool" Binding="{Binding MdiskGrpName}" IsReadOnly="True"/>
-                        <DataGridTextColumn Width="Auto" Header="Volume Grp" Binding="{Binding VolumeGroupName" IsReadOnly="True"/>
+                        <DataGridTextColumn Width="Auto" Header="Volume Grp" Binding="{Binding VolumeGroupName}" IsReadOnly="True"/>
                         <DataGridTextColumn Width="Auto" Header="Capacity" Binding="{Binding Capacity}" IsReadOnly="True"/>
                         <DataGridTextColumn Width="Auto" Header="Protocol" Binding="{Binding Protocol}" IsReadOnly="True"/>
                         <DataGridTextColumn Width="Auto" Header="VolumeType" Binding="{Binding VolumeType}" IsReadOnly="True"/>
