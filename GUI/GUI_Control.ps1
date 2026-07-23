@@ -821,6 +821,7 @@ $TD_BTN_IBM_HostVolumeMap.add_click({
             SCSIID          = 'SCSIID'      <# not to display #>
             VolumeID        = 'VolumeID'
             VolumeName      = 'VolumeName'
+            VolumeGroupName = 'VolumeGroupName'
             UID             = 'UID'      
             Capacity        = 'Capacity'    
         }
@@ -937,7 +938,7 @@ $TD_BTN_IBM_PoolVolumeInfo.add_click({
             SnapshotCount           = 'SnapshotCount'
             VdiskUID                = 'VdiskUID'
             Protocol                = 'Protocol'
-            Type                    = 'VolumeType'
+            VolumeType              = 'VolumeType'
             Safeguarded             = 'Safeguarded'
         
             IsSnapshot              = 'IsSnapshot'
