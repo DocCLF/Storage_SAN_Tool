@@ -45,6 +45,14 @@ function IBM_RESTVolumeInfo {
 
     process{
         [int]$imax = $TD_DeviceInformation.Count
+        $TD_VolumeSnapshots = @()
+
+        $VolumesWithSnapshots = @( $TD_DeviceInformation | Where-Object { [int]$_.snapshot_count -ge 1 } )
+
+        if ($VolumesWithSnapshots.Count -gt 0) {
+            $TD_VolumeSnapshots = @(SST_SpectrumSystemAPI -Endpoint lsvolumesnapshot -Body $null -BaseUrl $BaseUrl -RESTInfo $RESTInfo)
+        }
+
         $TD_VDiskFuncResault = for ($i = 0; $i -lt $imax; $i++) {
             <# Max requests/sec to command endpoints = 10 -.- #>
             if ($i % 8 -eq 0) { Start-Sleep -Milliseconds 1500 }
@@ -52,7 +60,8 @@ function IBM_RESTVolumeInfo {
             $TD_VDiskinfo = "" | Select-Object RowID,ID,Name,IOGroupID,IOGroupName,Status,MdiskGrpID,MdiskGrpName,Capacity,Type,FCID,FCName,`
                                             RCID,RCName,VdiskUID,FCMapCount,CopyCount,FastWriteState,SECopyCount,RCChange,CompressedCopyCount,ParentMdiskGrpID,ParentMdiskGrpName,`
                                             OwnerID,OwnerName,Formatting,Encrypt,VolumeID,VolumeName,Function,VolumeGroupID,VolumeGroupName,Protocol,PreferredNodeID,PreferredNodeName,isSnapshot,`
-                                            SnapshotCount,VolumeType,ReplicationMode,isSafeguardedSnapshot,SafeguardedSnapshotCount,WWNN,SerialNumber
+                                            SnapshotCount,VolumeType,ReplicationMode,isSafeguardedSnapshot,SafeguardedSnapshotCount,SnapshotID,SnapshotName,ParentUID,SnapshotTime,ExpirationTime,`
+                                            SnapshotState,Safeguarded,VolumeSizeMismatch,Mirrored,WrittenCapacity,GroupKey,GroupName,RowType,RowOrder,WWNN,SerialNumber
 
             $TD_VDiskinfo.ID                         = $TD_DeviceInformation.id[$i]
             $TD_VDiskinfo.Name                       = $TD_DeviceInformation.name[$i]
@@ -98,15 +107,115 @@ function IBM_RESTVolumeInfo {
             $TD_VDiskinfo.isSafeguardedSnapshot      = $TD_DeviceInformation.is_safeguarded_snapshot[$i]
             $TD_VDiskinfo.SafeguardedSnapshotCount   = $TD_DeviceInformation.safeguarded_snapshot_count[$i]
 
+            $TD_VDiskinfo.WWNN         = $IBMSTOWWNN
+            $TD_VDiskinfo.SerialNumber = $IBMSTOSN
 
-            $TD_VDiskinfo.WWNN           = $IBMSTOWWNN
-            $TD_VDiskinfo.SerialNumber   = $IBMSTOSN
-            $TD_VDiskinfo.RowID          = "$IBMSTOSN|$($TD_VDiskinfo.VdiskUID)"
+            # Volume.ID is the common reference to Snapshot.volume_id.
+            $TD_VDiskinfo.GroupKey  = "$IBMSTOSN|VOLUME|$($TD_VDiskinfo.ID)"
+            $TD_VDiskinfo.GroupName = $TD_VDiskinfo.Name
+            $TD_VDiskinfo.RowType   = "Volume"
+            $TD_VDiskinfo.RowOrder  = 0
+
+            $TD_VDiskinfo.RowID = "$IBMSTOSN|VOLUME|$($TD_VDiskinfo.ID)"
+
+            # Display the volume on its own line.
             $TD_VDiskinfo
+
+            # --------------------------------------------------------
+            # Determine snapshots of the current volume.
+            # Assignment:
+            #   Volume.ID = Snapshot.volume_id
+            # --------------------------------------------------------
+            if ([int]$TD_VDiskinfo.SnapshotCount -ge 1) {
+                $MatchingSnapshots = @(
+                    $TD_VolumeSnapshots | Where-Object {
+                        [string]$_.volume_id -eq [string]$TD_VDiskinfo.ID
+                    }
+                )
+
+                [int]$SnapshotOrder = 1
+
+                foreach ($Snapshot in $MatchingSnapshots) {
+
+                    # Prefer a unique snapshot ID. If it is empty,
+                    # the name and sequential number are used as a fallback.
+                    $SnapshotIdentity = $Snapshot.snapshot_id
+
+                    if ([string]::IsNullOrWhiteSpace([string]$SnapshotIdentity)) {
+                        $SnapshotIdentity = "$($Snapshot.snapshot_name)|$SnapshotOrder"
+                    }
+
+                    [PSCustomObject]@{
+                        RowID                     = "$IBMSTOSN|SNAPSHOT|$SnapshotIdentity"
+                        ID                        = $Snapshot.snapshot_id
+                        Name                      = $Snapshot.snapshot_name
+                        DisplayName               = "↳ $($Snapshot.snapshot_name)"
+                        IOGroupID                 = $TD_VDiskinfo.IOGroupID
+                        IOGroupName               = $TD_VDiskinfo.IOGroupName
+                        Status                    = $Snapshot.state
+                        MdiskGrpID                = $TD_VDiskinfo.MdiskGrpID
+                        MdiskGrpName              = $TD_VDiskinfo.MdiskGrpName
+                        Capacity                  = $Snapshot.written_capacity
+                        Type                      = "Snapshot"
+                        FCID                      = $null
+                        FCName                    = $null
+                        RCID                      = $null
+                        RCName                    = $null
+                        VdiskUID                  = $Snapshot.parent_uid
+                        FCMapCount                = $null
+                        CopyCount                 = $null
+                        FastWriteState            = $null
+                        SECopyCount               = $null
+                        RCChange                  = $null
+                        CompressedCopyCount       = $null
+                        ParentMdiskGrpID           = $TD_VDiskinfo.ParentMdiskGrpID
+                        ParentMdiskGrpName         = $TD_VDiskinfo.ParentMdiskGrpName
+                        OwnerID                   = $TD_VDiskinfo.OwnerID
+                        OwnerName                 = $TD_VDiskinfo.OwnerName
+                        Formatting                = $null
+                        Encrypt                   = $TD_VDiskinfo.Encrypt
+                        VolumeID                  = $Snapshot.volume_id
+                        VolumeName                = $Snapshot.volume_name
+                        Function                  = $null
+                        VolumeGroupID             = $Snapshot.volume_group_id
+                        VolumeGroupName           = $Snapshot.volume_group_name
+                        Protocol                  = $null
+                        PreferredNodeID           = $TD_VDiskinfo.PreferredNodeID
+                        PreferredNodeName         = $TD_VDiskinfo.PreferredNodeName
+                        IsSnapshot                = $true
+                        SnapshotCount             = $null
+                        VolumeType                = "Snapshot"
+                        ReplicationMode           = $TD_VDiskinfo.ReplicationMode
+                        IsSafeguardedSnapshot     = $Snapshot.safeguarded
+                        SafeguardedSnapshotCount  = $null
+                        SnapshotID                = $Snapshot.snapshot_id
+                        SnapshotName              = $Snapshot.snapshot_name
+                        ParentUID                 = $Snapshot.parent_uid
+                        SnapshotTime              = $Snapshot.time
+                        ExpirationTime            = $Snapshot.expiration_time
+                        SnapshotState             = $Snapshot.state
+                        Safeguarded               = $Snapshot.safeguarded
+                        VolumeSizeMismatch        = $Snapshot.volume_size_mismatch
+                        Mirrored                  = $Snapshot.mirrored
+                        WrittenCapacity           = $Snapshot.written_capacity
+
+                        # The same group key as the source volume.
+                        GroupKey                  = "$IBMSTOSN|VOLUME|$($Snapshot.volume_id)"
+                        GroupName                 = $TD_VDiskinfo.Name
+                        RowType                   = "Snapshot"
+                        RowOrder                  = $SnapshotOrder
+
+                        WWNN                      = $IBMSTOWWNN
+                        SerialNumber              = $IBMSTOSN
+                    }
+
+                    $SnapshotOrder++
+                }
+            }
 
             <# Progressbar  #>
             $ProgCounter++
-            Write-ProgressBar -ProgressBar $ProgressBar -Activity "Collect data for Device $($TD_Line_ID) $($TD_Device_DeviceName)" -PercentComplete (($ProgCounter/$imax) * 100)
+            Write-ProgressBar -ProgressBar $ProgressBar -Activity "Collect data for Device $($TD_Line_ID) $($IBMSTOSN)" -PercentComplete (($ProgCounter/$imax) * 100)
         }
     }
     
@@ -116,11 +225,11 @@ function IBM_RESTVolumeInfo {
         if($TD_Export -eq "yes"){
 
             if([string]$TD_Exportpath -ne "$PSCommandPath\ToolLog\"){
-                $TD_VDiskFuncResault | Export-Csv -Path $TD_Exportpath\$($TD_Line_ID)_$($TD_Device_DeviceName)_Volume_Result_$(Get-Date -Format "yyyy-MM-dd").csv -NoTypeInformation
-                SST_ToolMessageCollector -TD_ToolMSGCollector "$TD_Exportpath\$($TD_Line_ID)_$($TD_Device_DeviceName)_Volume_Result_$(Get-Date -Format "yyyy-MM-dd").csv" -TD_ToolMSGType Debug
+                $TD_VDiskFuncResault | Export-Csv -Path $TD_Exportpath\$($TD_Line_ID)_$($IBMSTOSN)_Volume_Result_$(Get-Date -Format "yyyy-MM-dd").csv -NoTypeInformation
+                SST_ToolMessageCollector -TD_ToolMSGCollector "$TD_Exportpath\$($TD_Line_ID)_$($IBMSTOSN)_Volume_Result_$(Get-Date -Format "yyyy-MM-dd").csv" -TD_ToolMSGType Debug
             }else {
-                $TD_VDiskFuncResault | Export-Csv -Path $PSCommandPath\ToolLog\$($TD_Line_ID)_$($TD_Device_DeviceName)_Volume_Result_$(Get-Date -Format "yyyy-MM-dd").csv -NoTypeInformation
-                SST_ToolMessageCollector -TD_ToolMSGCollector "$PSCommandPath\ToolLog\$($TD_Line_ID)_$($TD_Device_DeviceName)_Volume_Result_$(Get-Date -Format "yyyy-MM-dd").csv" -TD_ToolMSGType Debug
+                $TD_VDiskFuncResault | Export-Csv -Path $PSCommandPath\ToolLog\$($TD_Line_ID)_$($IBMSTOSN)_Volume_Result_$(Get-Date -Format "yyyy-MM-dd").csv -NoTypeInformation
+                SST_ToolMessageCollector -TD_ToolMSGCollector "$PSCommandPath\ToolLog\$($TD_Line_ID)_$($IBMSTOSN)_Volume_Result_$(Get-Date -Format "yyyy-MM-dd").csv" -TD_ToolMSGType Debug
             }
         }else {
             <# output on the promt #>

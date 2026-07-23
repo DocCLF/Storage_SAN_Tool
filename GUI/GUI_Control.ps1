@@ -927,21 +927,45 @@ $TD_BTN_IBM_PoolVolumeInfo.add_click({
         $VolumeResult  = RestThenSshForCombiView -Device $TD_Creds -ExportPath $TD_TB_ExportPath.Text -RESTFunc IBM_RESTVolumeInfo -SSHFunc IBM_SSHVolumeInfo
 
         $mapVolumeInfo = @{
-            Name           = 'Name'
-            IOGroupName    = 'IOGroupName'
-            Status         = 'Status'
-            MdiskGrpName   = 'MdiskGrpName'
-            Capacity       = 'Capacity'
-            VdiskUID       = 'VdiskUID'
-            PreferredNodeID = 'PreferredNodeID'
-            PreferredNodeName   = 'PreferredNodeName'
-            Function       = 'Function'
-            VolumeType     = 'VolumeType'
-            HAType         = 'HAType'       <# not to display #>
-        } 
+            Name                    = 'Name'
+            DisplayName             = 'DisplayName'
+            IOGroupName             = 'IOGroupName'
+            Status                  = 'Status'
+            MdiskGrpName            = 'MdiskGrpName'
+            VolumeGroupName         = 'VolumeGroupName'
+            Capacity                = 'Capacity'
+            SnapshotCount           = 'SnapshotCount'
+            VdiskUID                = 'VdiskUID'
+            Protocol                = 'Protocol'
+            Type                    = 'VolumeType'
+            Safeguarded             = 'Safeguarded'
+        
+            IsSnapshot              = 'IsSnapshot'
+            SnapshotID              = 'SnapshotID'
+            SnapshotName            = 'SnapshotName'
+            SnapshotTime            = 'SnapshotTime'
+            ExpirationTime          = 'ExpirationTime'
+            WrittenCapacity         = 'WrittenCapacity'
+        
+            GroupKey                = 'GroupKey'
+            GroupName               = 'GroupName'
+            RowType                 = 'RowType'
+            RowOrder                = 'RowOrder'
+        
+            HAType                  = 'HAType'
+        }
 
         Add-MappedRows -Collection $dev.VolumeRows -Source $VolumeResult -IdProperty 'RowID' -Map $mapVolumeInfo
 
+        $VolumeView = [System.Windows.Data.CollectionViewSource]::GetDefaultView($dev.VolumeRows)
+        $VolumeView.GroupDescriptions.Clear()
+        $VolumeView.SortDescriptions.Clear()
+        $VolumeView.GroupDescriptions.Add(
+            [System.Windows.Data.PropertyGroupDescription]::new('GroupKey')
+        )
+        $VolumeView.SortDescriptions.Add(
+            [System.ComponentModel.SortDescription]::new('RowOrder', [System.ComponentModel.ListSortDirection]::Ascending)
+        )
         $UCVMMain.DeviceToggles.Add($dev)
         
     }
