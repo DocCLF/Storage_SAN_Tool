@@ -78,6 +78,7 @@ function IBM_RESTHost_Volume_Map {
 
             if ($VdiskLookup.ContainsKey($key)) {
                 $TD_SplitInfos.Capacity = $VdiskLookup[$key].capacity
+                $TD_SplitInfos.VolumeGroupName = $VdiskLookup[$key].volume_group_name
             }
 
             $TD_SplitInfos.RowID = "$IBMSTOSN|$($TD_SplitInfos.HostID)"
