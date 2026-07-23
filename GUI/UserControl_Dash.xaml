@@ -133,9 +133,9 @@
         </GroupBox>
         <StackPanel Grid.Row="1" Margin="10,10,0,5" Orientation="Horizontal">
             <CheckBox x:Name="CB_DashBoardSTO" Content="View Storages" IsChecked="True" Margin="2" FontSize="10" Style="{DynamicResource MainCheckBoxStyle}"/>
-            <CheckBox x:Name="CB_DashBoardSAN" Content="View SAN-Switches" IsChecked="True" Margin="10,2,0,2" FontSize="10" Style="{DynamicResource MainCheckBoxStyle}"/>
-            <CheckBox x:Name="CB_DashBoardPWR" Content="View PowerServer" IsChecked="True" Margin="10,2,0,2"  FontSize="10" Style="{DynamicResource MainCheckBoxStyle}"/>
-            <CheckBox x:Name="CB_DashBoardTape" Content="View TapeLibrary" IsChecked="True" Margin="10,2,0,2"  FontSize="10" Style="{DynamicResource MainCheckBoxStyle}"/>
+            <CheckBox x:Name="CB_DashBoardSAN" Content="View SAN-Switches" IsChecked="False" Margin="10,2,0,2" FontSize="10" Style="{DynamicResource MainCheckBoxStyle}"/>
+            <CheckBox x:Name="CB_DashBoardPWR" Content="View PowerServer" IsChecked="False" Margin="10,2,0,2"  FontSize="10" Style="{DynamicResource MainCheckBoxStyle}"/>
+            <CheckBox x:Name="CB_DashBoardTape" Content="View TapeLibrary" IsChecked="False" Margin="10,2,0,2"  FontSize="10" Style="{DynamicResource MainCheckBoxStyle}"/>
         </StackPanel>
         <GroupBox Grid.Row="2" Header="Storage Info" MinWidth="400" MaxHeight="340" HorizontalAlignment="Left" Margin="10,10,0,0"  VerticalAlignment="Top" Visibility="{Binding ElementName=CB_DashBoardSTO, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
             <ScrollViewer Margin="5" VerticalScrollBarVisibility="Auto">
