@@ -1056,9 +1056,9 @@
           </ItemsControl.ItemTemplate>
         </ItemsControl>
         <!-- IBM_Partition -->
-        <ItemsControl 
-                ItemsSource="{Binding Main.DeviceToggles}"
-                Style="{DynamicResource ShowWhenPartition}">
+        <ItemsControl Grid.Column="1" Grid.Row="1"
+                      ItemsSource="{Binding Main.DeviceToggles}"
+                      Style="{DynamicResource ShowWhenPartition}">
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
                     <WrapPanel />
@@ -1128,29 +1128,29 @@
                                                        VerticalAlignment="Center" Text="Replication Name:" Margin="3,0"/>
                                             <TextBlock Grid.Row="2" Grid.Column="2" Style="{DynamicResource DashBoardTB1}"
                                                        VerticalAlignment="Center" Text="{Binding ReplicationPolicyName}" />
-                                            <TextBlock Grid.Row="4" Grid.Column="1" Style="{DynamicResource DashBoardTB1}"
+                                            <TextBlock Grid.Row="3" Grid.Column="1" Style="{DynamicResource DashBoardTB1}"
                                                        VerticalAlignment="Center" Text="Preferred SysName:" Margin="3,0"/>
-                                            <TextBlock Grid.Row="4" Grid.Column="2" Style="{DynamicResource DashBoardTB1}"
+                                            <TextBlock Grid.Row="3" Grid.Column="2" Style="{DynamicResource DashBoardTB1}"
                                                        VerticalAlignment="Center" Text="{Binding PreferredManagementSystemName}" />
-                                            <TextBlock Grid.Row="5" Grid.Column="1" Style="{DynamicResource DashBoardTB1}"
+                                            <TextBlock Grid.Row="4" Grid.Column="1" Style="{DynamicResource DashBoardTB1}"
                                                        VerticalAlignment="Center" Text="Hosts:" Margin="3,0"/>
-                                            <TextBlock Grid.Row="5" Grid.Column="2" Style="{DynamicResource DashBoardTB1}"
+                                            <TextBlock Grid.Row="4" Grid.Column="2" Style="{DynamicResource DashBoardTB1}"
                                                        VerticalAlignment="Center" Text="{Binding HostCount}" />
-                                            <TextBlock Grid.Row="3" Grid.Column="1" Style="{DynamicResource DashBoardTB1}"
+                                            <TextBlock Grid.Row="5" Grid.Column="1" Style="{DynamicResource DashBoardTB1}"
                                                        VerticalAlignment="Center" Text="HostClusters:" Margin="3,0"/>
-                                            <TextBlock Grid.Row="3" Grid.Column="2" Style="{DynamicResource DashBoardTB1}"
+                                            <TextBlock Grid.Row="5" Grid.Column="2" Style="{DynamicResource DashBoardTB1}"
                                                        VerticalAlignment="Center" Text="{Binding HostClusterCount}" />
-                                            <TextBlock Grid.Row="3" Grid.Column="1" Style="{DynamicResource DashBoardTB1}"
+                                            <TextBlock Grid.Row="6" Grid.Column="1" Style="{DynamicResource DashBoardTB1}"
                                                        VerticalAlignment="Center" Text="VolumeGroups:" Margin="3,0"/>
-                                            <TextBlock Grid.Row="3" Grid.Column="2" Style="{DynamicResource DashBoardTB1}"
+                                            <TextBlock Grid.Row="6" Grid.Column="2" Style="{DynamicResource DashBoardTB1}"
                                                        VerticalAlignment="Center" Text="{Binding VolumeGroupCount}" />
-                                            <TextBlock Grid.Row="3" Grid.Column="1" Style="{DynamicResource DashBoardTB1}"
+                                            <TextBlock Grid.Row="7" Grid.Column="1" Style="{DynamicResource DashBoardTB1}"
                                                        VerticalAlignment="Center" Text="HA Status:" Margin="3,0"/>
-                                            <TextBlock Grid.Row="3" Grid.Column="2" Style="{DynamicResource DashBoardTB1}"
+                                            <TextBlock Grid.Row="7" Grid.Column="2" Style="{DynamicResource DashBoardTB1}"
                                                        VerticalAlignment="Center" Text="{Binding HAStatus}" />
-                                            <TextBlock Grid.Row="3" Grid.Column="1" Style="{DynamicResource DashBoardTB1}"
+                                            <TextBlock Grid.Row="8" Grid.Column="1" Style="{DynamicResource DashBoardTB1}"
                                                        VerticalAlignment="Center" Text="Link Status:" Margin="3,0"/>
-                                            <TextBlock Grid.Row="3" Grid.Column="2" Style="{DynamicResource DashBoardTB1}"
+                                            <TextBlock Grid.Row="8" Grid.Column="2" Style="{DynamicResource DashBoardTB1}"
                                                        VerticalAlignment="Center" Text="{Binding LinkStatus}" />
                                         </Grid>
                                         <!-- optional: Timestamp etc. wenn vorhanden -->
