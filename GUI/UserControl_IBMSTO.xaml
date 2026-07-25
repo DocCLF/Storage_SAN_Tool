@@ -80,7 +80,18 @@
                 Style="{DynamicResource MainBtnStyle}"
                 Content="FC Port Info"
                 ToolTip="Generate a list of host count and login count for each worldwide port names (WWPNs) required to set up Fibre Channel (FC) zoning and to display the current failover status of host IO ports." />
-                <!--IBM_IPPortInfo-->
+                <!--IBM_FCPortStats-->
+                <ToggleButton
+                x:Name="BTN_IBM_FCPortStats"
+                Style="{DynamicResource MainBtnStyle}"
+                Content="FC Port Stats" 
+                ToolTip="Get an overview of the stats of your FC ports. Requirement v8.4.x and higher!" />
+                <!--IBM_PartitionInfo-->
+                <ToggleButton
+                x:Name="BTN_IBM_PartitionInfo"
+                Style="{DynamicResource MainBtnStyle}"
+                Content="Partition Info"
+                ToolTip="Get the most important information about your Partitions" />
                 <!--IBM_CleanUpDumps-->
                 <ToggleButton
                 x:Name="BTN_IBM_CleanUpDumps"
@@ -95,26 +106,6 @@
                 ToolTip="Create a config backup and download it with the help of pscp."/>
             </StackPanel>
         </GroupBox>
-        <GroupBox Header="From v8.4.x and later"  HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,10,0,0">
-            <StackPanel>
-                <!--IBM_FCPortStats-->
-                <ToggleButton
-                x:Name="BTN_IBM_FCPortStats"
-                Style="{DynamicResource MainBtnStyle}"
-                Content="FC Port Stats" 
-                ToolTip="Get an overview of the stats of your FC ports. Requirement v8.4.x and higher!" />
-            </StackPanel>
-        </GroupBox>  
-        <!-- <GroupBox Header="From v8.6.x and later"  HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,10,0,0">
-            <StackPanel>
-                <!-IBM_PolicyBased->
-                <ToggleButton
-                x:Name="BTN_IBM_PolicyBased_Rep"
-                Style="{DynamicResource MainBtnStyle}"
-                Content="Policy Based (Beta)" 
-                ToolTip="Get some information about the replication policy and VolGrp replication, only if there in use!" />
-            </StackPanel>
-        </GroupBox>   -->
         </StackPanel> 
         <WrapPanel Grid.Column="1" Grid.Row="0" >
             <GroupBox Header="Visibility" Margin="10" >
@@ -1063,6 +1054,119 @@
               </DataGrid>
             </DataTemplate>
           </ItemsControl.ItemTemplate>
+        </ItemsControl>
+        <!-- IBM_Partition -->
+        <ItemsControl 
+                ItemsSource="{Binding Main.DeviceToggles}"
+                Style="{DynamicResource ShowWhenPartition}">
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <WrapPanel />
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <ItemsControl ItemsSource="{Binding PartitionRows}"
+                                  Visibility="{Binding IsChecked,
+                                                       Converter={StaticResource BooleanToVisibilityConverter},
+                                                       FallbackValue=Collapsed}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <WrapPanel/>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <!-- Hide if there are no items -->
+                        <ItemsControl.Style>
+                            <Style TargetType="ItemsControl">
+                                <Style.Triggers>
+                                    <Trigger Property="HasItems" Value="False">
+                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </ItemsControl.Style>
+                        <!-- Button pro HMC Row -->
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Button Style="{DynamicResource DashBoardBTNStyle}"
+                                        Margin="0,5,5,5"
+                                        MaxWidth="400"
+                                        ToolTipService.InitialShowDelay="10">
+                                    <Grid Margin="5">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition MaxHeight="150"/>
+                                            <RowDefinition Height="20"/>
+                                        </Grid.RowDefinitions>
+                                        <Grid Grid.Row="0">
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition />
+                                                <RowDefinition />
+                                                <RowDefinition />
+                                                <RowDefinition />
+                                                <RowDefinition />
+                                                <RowDefinition />
+                                                <RowDefinition />
+                                            </Grid.RowDefinitions>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition MaxWidth="70" />
+                                                <ColumnDefinition Width="Auto" />
+                                                <ColumnDefinition />
+                                            </Grid.ColumnDefinitions>
+                                            <!-- Falls deine Row ein Icon hat: -->
+                                             <Ellipse Grid.RowSpan="6" Width="60" Height="60">
+                                                <Ellipse.Fill>
+                                                    <ImageBrush 
+                                                        ImageSource="{Binding DataContext.HMCIcon, RelativeSource={RelativeSource AncestorType=UserControl}}" 
+                                                        Stretch="Uniform" />
+                                                </Ellipse.Fill>
+                                            </Ellipse>
+                                            <TextBlock Grid.Column="1" Style="{DynamicResource DashBoardTB1}"
+                                                       VerticalAlignment="Center" Text="Name:" Margin="3,0"/>
+                                            <TextBlock Grid.Column="2" Style="{DynamicResource DashBoardTB1}"
+                                                       VerticalAlignment="Center" Text="{Binding Name}" />
+                                            <TextBlock Grid.Row="2" Grid.Column="1" Style="{DynamicResource DashBoardTB1}"
+                                                       VerticalAlignment="Center" Text="Replication Name:" Margin="3,0"/>
+                                            <TextBlock Grid.Row="2" Grid.Column="2" Style="{DynamicResource DashBoardTB1}"
+                                                       VerticalAlignment="Center" Text="{Binding ReplicationPolicyName}" />
+                                            <TextBlock Grid.Row="4" Grid.Column="1" Style="{DynamicResource DashBoardTB1}"
+                                                       VerticalAlignment="Center" Text="Preferred SysName:" Margin="3,0"/>
+                                            <TextBlock Grid.Row="4" Grid.Column="2" Style="{DynamicResource DashBoardTB1}"
+                                                       VerticalAlignment="Center" Text="{Binding PreferredManagementSystemName}" />
+                                            <TextBlock Grid.Row="5" Grid.Column="1" Style="{DynamicResource DashBoardTB1}"
+                                                       VerticalAlignment="Center" Text="Hosts:" Margin="3,0"/>
+                                            <TextBlock Grid.Row="5" Grid.Column="2" Style="{DynamicResource DashBoardTB1}"
+                                                       VerticalAlignment="Center" Text="{Binding HostCount}" />
+                                            <TextBlock Grid.Row="3" Grid.Column="1" Style="{DynamicResource DashBoardTB1}"
+                                                       VerticalAlignment="Center" Text="HostClusters:" Margin="3,0"/>
+                                            <TextBlock Grid.Row="3" Grid.Column="2" Style="{DynamicResource DashBoardTB1}"
+                                                       VerticalAlignment="Center" Text="{Binding HostClusterCount}" />
+                                            <TextBlock Grid.Row="3" Grid.Column="1" Style="{DynamicResource DashBoardTB1}"
+                                                       VerticalAlignment="Center" Text="VolumeGroups:" Margin="3,0"/>
+                                            <TextBlock Grid.Row="3" Grid.Column="2" Style="{DynamicResource DashBoardTB1}"
+                                                       VerticalAlignment="Center" Text="{Binding VolumeGroupCount}" />
+                                            <TextBlock Grid.Row="3" Grid.Column="1" Style="{DynamicResource DashBoardTB1}"
+                                                       VerticalAlignment="Center" Text="HA Status:" Margin="3,0"/>
+                                            <TextBlock Grid.Row="3" Grid.Column="2" Style="{DynamicResource DashBoardTB1}"
+                                                       VerticalAlignment="Center" Text="{Binding HAStatus}" />
+                                            <TextBlock Grid.Row="3" Grid.Column="1" Style="{DynamicResource DashBoardTB1}"
+                                                       VerticalAlignment="Center" Text="Link Status:" Margin="3,0"/>
+                                            <TextBlock Grid.Row="3" Grid.Column="2" Style="{DynamicResource DashBoardTB1}"
+                                                       VerticalAlignment="Center" Text="{Binding LinkStatus}" />
+                                        </Grid>
+                                        <!-- optional: Timestamp etc. wenn vorhanden -->
+                                        <Grid Grid.Row="1">
+                                            <StackPanel Orientation="Horizontal" Margin="5,0" ToolTip="Last Changes">
+                                                <Image Source="{Binding DataContext.ClockIcon96, RelativeSource={RelativeSource AncestorType=UserControl}}" MaxHeight="30" />
+                                                <TextBlock Text="20260215 17:12" Margin="5,2" />
+                                            </StackPanel>
+                                        </Grid>
+                                    </Grid>
+                                </Button>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
         </ItemsControl>
         <!-- IBM_CleanUpDumps -->
         <ItemsControl Grid.Column="1" Grid.Row="1"

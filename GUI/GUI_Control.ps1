@@ -1044,7 +1044,41 @@ $TD_BTN_IBM_FCPortInfo.add_click({
     }
     $UCVMMain.SelectedView = "FCPort"
 })
-#$TD_BTN_IBM_IPPortInfo.add_click({})
+$TD_BTN_IBM_PartitionInfo.add_click({
+    $TD_GB_SearchFilterSTO.Visibility="visible"
+    <#Get all Device Cred and count them #>
+    $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_.DeviceTyp -like "*Storage*"}
+    <# get the DataConteext of the current View/ means UC and if its nul trow an error #>
+    $UCDataContext = $TD_UserControl_IBMSTO.DataContext
+    if (-not $UCDataContext) { Write-Host "DataContext ist NULL!" -ForegroundColor Red; return }
+    <# if there is a DataContext find th Main Part und put it into UCVMMain#>
+    $UCVMMain = $UCDataContext.Main
+    <# if there a something in, its better to clean it up befor we use it again #>
+    $UCVMMain.DeviceToggles.Clear()
+    foreach($TD_Creds in $TD_Credentials){
+        if($TD_Creds.SVCorVF -like "*SVC*"){continue}
+        $FunctionResult = New-DeviceBlock -Device $TD_Creds -ExportPath $TD_TB_ExportPath.Text -RESTFunc IBM_RESTPartitionInfos -SSHFunc IBM_SSHDriveInfo
+        # Links = Propertyname im PSCustomObject (das bindet dein XAML)
+        # Rechts = Propertyname im Source-Objekt
+        $mapPartition = @{
+            ID                      = 'ID'  
+            Name                    = 'Name'
+            PreferredManagementSystemName = 'PreferredManagementSystemName'
+            ReplicationPolicyName   = 'ReplicationPolicyName'  
+            Location1SystemName     = 'Location1SystemName'  
+            Location2SystemName     = 'Location2SystemName'
+            HostCount               = 'HostCount'      
+            HostClusterCount        = 'HostClusterCount'    
+            VolumeGroupCount        = 'VolumeGroupCount'      
+            HAStatus                = 'HAStatus'   
+            LinkStatus              = 'LinkStatus'  
+        }
+        Add-MappedRows -Collection $FunctionResult.DeviceIdent.PartitionRows -Source $FunctionResult.FuncResult -IdProperty 'RowID' -Map $mapPartition
+
+        $UCVMMain.DeviceToggles.Add($FunctionResult.DeviceIdent)
+        $UCVMMain.SelectedView = "Partition"
+    }
+})
 $TD_BTN_IBM_CleanUpDumps.add_click({
     $TD_GB_SearchFilterSTO.Visibility="Collapsed"
     <#Get all Device Cred and count them #>
