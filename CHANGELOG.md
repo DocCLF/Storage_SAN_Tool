@@ -29,6 +29,7 @@ All notable changes to this project will be documented in this file.
 - ToolLog on GUI, Some entries were not displayed or were displayed incorrectly
 - Write-ProgressBar and Close-ProgressBar 
 - some major and minor bugs
+- STOName was not displayed in the “Online/Offline Hosts” view of the dashboard.
 
 ### Changed
 - GUI redesigned

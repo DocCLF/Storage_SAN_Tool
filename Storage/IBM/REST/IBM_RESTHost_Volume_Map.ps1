@@ -70,6 +70,7 @@ function IBM_RESTHost_Volume_Map {
                 VolumeName    = $device.vdisk_name
                 UID           = $device.vdisk_UID
                 Capacity      = $null
+                VolumeGroupName = $null
                 WWNN          = $IBMSTOWWNN
                 SerialNumber  = $IBMSTOSN
             }
@@ -81,7 +82,7 @@ function IBM_RESTHost_Volume_Map {
                 $TD_SplitInfos.VolumeGroupName = $VdiskLookup[$key].volume_group_name
             }
 
-            $TD_SplitInfos.RowID = "$IBMSTOSN|$($TD_SplitInfos.HostID)"
+            $TD_SplitInfos.RowID = "$IBMSTOSN|$($TD_SplitInfos.HostID)|$($TD_SplitInfos.VolumeID)"
 
             $TD_SplitInfos
 

@@ -1194,8 +1194,8 @@
                         HorizontalAlignment="Stretch"
                         Margin="5"
                         MaxWidth="960"
-                        MaxHeight="460"
-                        ItemsSource="{Binding FCPortStatsRows}"
+                        MaxHeight="660"
+                        ItemsSource="{Binding SecurityRows}"
                         CanUserAddRows="False"
                         Visibility="{Binding IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
 
@@ -1203,16 +1203,25 @@
                 <DataGrid.GroupStyle>
                   <GroupStyle/>
                 </DataGrid.GroupStyle>
+                <DataGrid.RowStyle>
+                    <Style TargetType="DataGridRow">
+                        <Setter Property="Background" Value="LightGreen"/>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding IsRecommended}" Value="False">
+                                <Setter Property="Background" Value="LightCoral"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </DataGrid.RowStyle>
                 <DataGrid.Columns>
-                    <DataGridTextColumn Width="auto" Header="NodeID"  Binding ="{Binding Key}" IsReadOnly="True"/>
+                    <DataGridTextColumn Width="auto" Header="Setting"  Binding ="{Binding Key}" IsReadOnly="True"/>
                     <!-- <DataGridTextColumn Width="auto" Header="NodeSN" Binding ="{Binding NodeSN}" IsReadOnly="True"/> -->
-                    <DataGridTextColumn Width="auto" Header="NodeName" Binding ="{Binding Value}" IsReadOnly="True"/>
+                    <DataGridTextColumn Width="auto" Header="Current value" Binding ="{Binding Value}" IsReadOnly="True"/>
                     <!-- <DataGridTextColumn Width="auto" Header="NodeWWNN"  Binding ="{Binding NodeWWNN}" IsReadOnly="True"/> -->
-                    <DataGridTextColumn Width="auto" Header="CardType" Binding ="{Binding RecommendedValue}" IsReadOnly="True"/>  
-                    <DataGridTextColumn Width="auto" Header="LinkFailure" Binding ="{Binding LinkFailure}" IsReadOnly="True">
+                    <DataGridTextColumn Width="auto" Header="Recommended value" Binding ="{Binding RecommendedValue}" IsReadOnly="True">
                         <DataGridTextColumn.CellStyle>
                             <Style TargetType="DataGridCell">
-                                <Setter Property="ToolTip" Value="Indicates the link failure error count." />
+                                <Setter Property="ToolTip" Value="This is just a recommendation, not a requirement!" />
                             </Style>
                         </DataGridTextColumn.CellStyle>
                     </DataGridTextColumn>

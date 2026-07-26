@@ -30,6 +30,7 @@ function IBM_RESTHostInfo {
         if($TD_Device_ConnectionTyp -eq "REST"){
             $TD_DeviceInformation = SST_SpectrumSystemAPI -Endpoint lshost -Body $null -BaseUrl $BaseUrl -RESTInfo $RESTInfo
             $STONodeInfo = SST_SpectrumSystemAPI -Endpoint lsnode -Body $null -BaseUrl $BaseUrl -RESTInfo $RESTInfo
+            $STOSystemInfo = SST_SpectrumSystemAPI -Endpoint lssystem -Body $null -BaseUrl $BaseUrl -RESTInfo $RESTInfo
         }else {
             <#switch to the ssh version and leave this func #>
             return $null
@@ -38,6 +39,7 @@ function IBM_RESTHostInfo {
         for ($i = 0; $i -le $imax; $i++) {
             if($STONodeInfo.config_node[$i] -eq "yes"){
                 $IBMSTOWWNN = $STONodeInfo.WWNN[$i]
+                $IBMSTOSideName = $STONodeInfo.site_name[$i]
                 $IBMSTOSN = if($STONodeInfo.enclosure_serial_number[$i] -eq ""){$STONodeInfo.panel_name[$i]}else{$STONodeInfo.enclosure_serial_number[$i]}
             }
         }
@@ -53,7 +55,8 @@ function IBM_RESTHostInfo {
             <# HostStateInfo is this part where is check if the host state is different as at the last check see ssh func hostinfo #>
             $TD_HostBaseTemp = "" | Select-Object RowID,ID,HostName,PortCount,Type,IOGrpCount,Status,SiteID,SiteName,HostStateInfo,HostClusterID,HostClusterName,Protocol,StatusPolicy,StatusSite,`
                                     WWPNOne,NodeLoggedInCountOne,StateOne,WWPNTwo,NodeLoggedInCountTwo,StateTwo,WWPNThree,NodeLoggedInCountThree,StateThree,WWPNFour,NodeLoggedInCountFour,StateFour,`
-                                    OwnerID,OwnerName,PortsetID,PortsetName,WWNN,SerialNumber
+                                    OwnerID,OwnerName,PortsetID,PortsetName,PartitionID,PartitionName,Location1Status,Location2Status,DraftPartitionID,DraftPartitionName,UngroupedVolumeMapping,`
+                                    AutoStorageDiscovery,LocationSystemName,AuthMethod,HostUsername,StorageUsername,HostSecret,StorageSecret,OfflineAlertSuppressed,WWNN,SerialNumber,STOName,SideName
             $TD_HostBaseTemp.ID                 = $TD_HostIDInformation.id
             $TD_HostBaseTemp.HostName           = $TD_HostIDInformation.name
             $TD_HostBaseTemp.PortCount          = $TD_HostIDInformation.port_count
@@ -93,25 +96,27 @@ function IBM_RESTHostInfo {
             $TD_HostBaseTemp.OwnerName         = $TD_HostIDInformation.owner_name
             $TD_HostBaseTemp.PortsetID         = $TD_HostIDInformation.portset_id
             $TD_HostBaseTemp.PortsetName       = $TD_HostIDInformation.portset_name
-            $TD_HostBaseTemp.partition_id       = $TD_HostIDInformation.partition_id
-            $TD_HostBaseTemp.partition_name     = $TD_HostIDInformation.partition_name
-            $TD_HostBaseTemp.location1_status   = $TD_HostIDInformation.location1_status
-            $TD_HostBaseTemp.location2_status   = $TD_HostIDInformation.location2_status
-            $TD_HostBaseTemp.draft_partition_id = $TD_HostIDInformation.draft_partition_id
-            $TD_HostBaseTemp.draft_partition_name       = $TD_HostIDInformation.draft_partition_name
-            $TD_HostBaseTemp.ungrouped_volume_mapping   = $TD_HostIDInformation.ungrouped_volume_mapping
-            $TD_HostBaseTemp.auto_storage_discovery     = $TD_HostIDInformation.auto_storage_discovery
-            $TD_HostBaseTemp.location_system_name       = $TD_HostIDInformation.location_system_name
-            $TD_HostBaseTemp.auth_method        = $TD_HostIDInformation.auth_method
-            $TD_HostBaseTemp.host_username      = $TD_HostIDInformation.host_username
-            $TD_HostBaseTemp.storage_username   = $TD_HostIDInformation.storage_username
-            $TD_HostBaseTemp.host_secret        = $TD_HostIDInformation.host_secret
-            $TD_HostBaseTemp.storage_secret     = $TD_HostIDInformation.storage_secret
-            $TD_HostBaseTemp.offline_alert_suppressed   = $TD_HostIDInformation.offline_alert_suppressed
+            $TD_HostBaseTemp.PartitionID       = $TD_HostIDInformation.partition_id
+            $TD_HostBaseTemp.PartitionName     = $TD_HostIDInformation.partition_name
+            $TD_HostBaseTemp.Location1Status   = $TD_HostIDInformation.location1_status
+            $TD_HostBaseTemp.Location2Status   = $TD_HostIDInformation.location2_status
+            $TD_HostBaseTemp.DraftPartitionID = $TD_HostIDInformation.draft_partition_id
+            $TD_HostBaseTemp.DraftPartitionName       = $TD_HostIDInformation.draft_partition_name
+            $TD_HostBaseTemp.UngroupedVolumeMapping   = $TD_HostIDInformation.ungrouped_volume_mapping
+            $TD_HostBaseTemp.AutoStorageDiscovery     = $TD_HostIDInformation.auto_storage_discovery
+            $TD_HostBaseTemp.LocationSystemName       = $TD_HostIDInformation.location_system_name
+            $TD_HostBaseTemp.AuthMethod        = $TD_HostIDInformation.auth_method
+            $TD_HostBaseTemp.HostUsername      = $TD_HostIDInformation.host_username
+            $TD_HostBaseTemp.StorageUsername   = $TD_HostIDInformation.storage_username
+            $TD_HostBaseTemp.HostSecret        = $TD_HostIDInformation.host_secret
+            $TD_HostBaseTemp.StorageSecret     = $TD_HostIDInformation.storage_secret
+            $TD_HostBaseTemp.OfflineAlertSuppressed   = $TD_HostIDInformation.offline_alert_suppressed
 
             $TD_HostBaseTemp.WWNN = $IBMSTOWWNN
             $TD_HostBaseTemp.SerialNumber = $IBMSTOSN
             $TD_HostBaseTemp.RowID = "$IBMSTOSN|$($TD_HostBaseTemp.ID)"
+            $TD_HostBaseTemp.STOName = $STOSystemInfo.name
+            $TD_HostBaseTemp.SideName = $IBMSTOSideName
 
             $TD_HostBaseTemp
 
