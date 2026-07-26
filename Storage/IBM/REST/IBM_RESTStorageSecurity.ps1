@@ -29,28 +29,37 @@ function IBM_RESTStorageSecurity {
         Clear-Variable -Name TD_Device_PW -Force
         if($TD_Device_ConnectionTyp -eq "REST"){
             $TD_DeviceInformation = SST_SpectrumSystemAPI -Endpoint lssecurity -Body $null -BaseUrl $BaseUrl -RESTInfo $RESTInfo
-            #$STONodeInfo = SST_SpectrumSystemAPI -Endpoint lsnode -Body $null -BaseUrl $BaseUrl -RESTInfo $RESTInfo
+            $STONodeInfo = SST_SpectrumSystemAPI -Endpoint lsnode -Body $null -BaseUrl $BaseUrl -RESTInfo $RESTInfo
         }else {
             <#switch to the ssh version and leave this func #>
             return $null
         }
-        #[int]$imax = $STONodeInfo.Count
-        #for ($i = 0; $i -le $imax; $i++) {
-        #    if($STONodeInfo.config_node[$i] -eq "yes"){
-        #        $IBMSTOWWNN = $STONodeInfo.WWNN[$i]
-        #        $IBMSTOSN = if($STONodeInfo.enclosure_serial_number[$i] -eq ""){$STONodeInfo.panel_name[$i]}else{$STONodeInfo.enclosure_serial_number[$i]}
-        #    }
-        #}
+        [int]$imax = $STONodeInfo.Count
+        
+        for ($i = 0; $i -le $imax; $i++) {
+            if($STONodeInfo.config_node[$i] -eq "yes"){
+                $IBMSTOWWNN = $STONodeInfo.WWNN[$i]
+                $IBMSTOSN = if($STONodeInfo.enclosure_serial_number[$i] -eq ""){$STONodeInfo.panel_name[$i]}else{$STONodeInfo.enclosure_serial_number[$i]}
+            }
+        }
     }
     
     process {
-        $TD_lsSecSettings = $TD_DeviceInformation | ForEach-Object {
-            $TD_SecSettingsInfo = "" | Select-Object Key,Value,RecommendedValue
-            # Split name into Attribute and Value
-            $Spliter = $_ -split ':'
-            $TD_SecSettingsInfo.Key = $Spliter[0]
-            $TD_SecSettingsInfo.Value = $Spliter[1]
-            switch ($Spliter) {
+        $Properties = @($TD_DeviceInformation.PSObject.Properties)
+        $imax = $Properties.Count
+        $ProgCounter = 0
+
+        $TD_lsSecSettings = foreach ($Property in $TD_DeviceInformation.PSObject.Properties) {
+        
+            $TD_SecSettingsInfo = [PSCustomObject][ordered]@{
+                RowID            = $null
+                Key              = $Property.Name
+                Value            = $Property.Value
+                RecommendedValue = $null
+                IsRecommended    = $false
+            }
+        
+            switch ($Property.Name) {
                 "sslprotocol"                           { $TD_SecSettingsInfo.RecommendedValue = 5 }
                 "sshprotocol"                           { $TD_SecSettingsInfo.RecommendedValue = 3 }
                 "gui_timeout_mins"                      { $TD_SecSettingsInfo.RecommendedValue = 5 }
@@ -84,16 +93,26 @@ function IBM_RESTStorageSecurity {
                 "patch_auto_update"                     { $TD_SecSettingsInfo.RecommendedValue = "no" }
                 "iscsi_host_auth_mode"                  { $TD_SecSettingsInfo.RecommendedValue = "0" }
                 "ssh_port"                              { $TD_SecSettingsInfo.RecommendedValue = "22" }
-                Default {}
+            
+                default {
+                    $TD_SecSettingsInfo.RecommendedValue = ""
+                }
+            }
+            $TD_SecSettingsInfo.IsRecommended = ([string]$TD_SecSettingsInfo.Value).Trim() -eq ([string]$TD_SecSettingsInfo.RecommendedValue).Trim()
+
+            $TD_SecSettingsInfo.RowID = "$IBMSTOSN|SECURITY|$($Property.Name)"
+            
+            $ProgCounter++
+
+            if ($imax -gt 0) {
+                Write-ProgressBar `
+                    -ProgressBar $ProgressBar `
+                    -Activity "Collect data for Device $TD_Line_ID $TD_Device_DeviceName" `
+                    -PercentComplete (($ProgCounter / $imax) * 100)
             }
 
             $TD_SecSettingsInfo
-            <# Progressbar  #>
-            $ProgCounter++
-            Write-ProgressBar -ProgressBar $ProgressBar -Activity "Collect data for Device $($TD_Line_ID) $($TD_Device_DeviceName)" -PercentComplete (($ProgCounter/$TD_DeviceInformation.Count) * 100)
         }
-        Start-Sleep -Seconds 0.5
-        
     }
     
     end {

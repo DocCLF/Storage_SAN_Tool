@@ -1134,10 +1134,12 @@ $TD_BTN_IBM_SecurityInfo.add_click({
     $UCVMMain.DeviceToggles.Clear()
     foreach($TD_Creds in $TD_Credentials){
         $FunctionResult = New-DeviceBlock -Device $TD_Creds -ExportPath $TD_TB_ExportPath.Text -RESTFunc IBM_RESTStorageSecurity -SSHFunc $null
+        
         $mapSecurity = @{
             Key             = 'Key'
             Value           = 'Value'
             RecommendedValue = 'RecommendedValue'  
+            IsRecommended    = 'IsRecommended'
         }
         Add-MappedRows -Collection $FunctionResult.DeviceIdent.SecurityRows -Source $FunctionResult.FuncResult -IdProperty 'RowID' -Map $mapSecurity
 
