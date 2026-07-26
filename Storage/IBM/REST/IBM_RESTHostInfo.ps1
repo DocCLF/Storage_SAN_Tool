@@ -57,7 +57,7 @@ function IBM_RESTHostInfo {
             $TD_HostBaseTemp.ID                 = $TD_HostIDInformation.id
             $TD_HostBaseTemp.HostName           = $TD_HostIDInformation.name
             $TD_HostBaseTemp.PortCount          = $TD_HostIDInformation.port_count
-            $TD_HostBaseTemp.Type               = $TD_HostIDInformation.type
+            #$TD_HostBaseTemp.Type               = $TD_HostIDInformation.type
             $TD_HostBaseTemp.IOGrpCount         = $TD_HostIDInformation.iogrp_count
             $TD_HostBaseTemp.Status             = $TD_HostIDInformation.status
             $HostCheckResult = STO_HostStateInfo -STOWWN $IBMSTOWWNN -STOSN $IBMSTOSN -STOHostID $($TD_HostIDInformation.id) -STOHostStatus $($TD_HostIDInformation.status)
@@ -93,6 +93,21 @@ function IBM_RESTHostInfo {
             $TD_HostBaseTemp.OwnerName         = $TD_HostIDInformation.owner_name
             $TD_HostBaseTemp.PortsetID         = $TD_HostIDInformation.portset_id
             $TD_HostBaseTemp.PortsetName       = $TD_HostIDInformation.portset_name
+            $TD_HostBaseTemp.partition_id       = $TD_HostIDInformation.partition_id
+            $TD_HostBaseTemp.partition_name     = $TD_HostIDInformation.partition_name
+            $TD_HostBaseTemp.location1_status   = $TD_HostIDInformation.location1_status
+            $TD_HostBaseTemp.location2_status   = $TD_HostIDInformation.location2_status
+            $TD_HostBaseTemp.draft_partition_id = $TD_HostIDInformation.draft_partition_id
+            $TD_HostBaseTemp.draft_partition_name       = $TD_HostIDInformation.draft_partition_name
+            $TD_HostBaseTemp.ungrouped_volume_mapping   = $TD_HostIDInformation.ungrouped_volume_mapping
+            $TD_HostBaseTemp.auto_storage_discovery     = $TD_HostIDInformation.auto_storage_discovery
+            $TD_HostBaseTemp.location_system_name       = $TD_HostIDInformation.location_system_name
+            $TD_HostBaseTemp.auth_method        = $TD_HostIDInformation.auth_method
+            $TD_HostBaseTemp.host_username      = $TD_HostIDInformation.host_username
+            $TD_HostBaseTemp.storage_username   = $TD_HostIDInformation.storage_username
+            $TD_HostBaseTemp.host_secret        = $TD_HostIDInformation.host_secret
+            $TD_HostBaseTemp.storage_secret     = $TD_HostIDInformation.storage_secret
+            $TD_HostBaseTemp.offline_alert_suppressed   = $TD_HostIDInformation.offline_alert_suppressed
 
             $TD_HostBaseTemp.WWNN = $IBMSTOWWNN
             $TD_HostBaseTemp.SerialNumber = $IBMSTOSN
