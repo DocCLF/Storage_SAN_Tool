@@ -852,7 +852,7 @@ $TD_BTN_IBM_HostInfo.add_click({
             HostID                  = 'ID'  
             HostName                = 'HostName'
             PortCount               = 'PortCount'
-            Type                    = 'Type'  
+            PartitionName           = 'PartitionName'  
             IOGrpCount              = 'IOGrpCount'  <# not to display #>
             Status                  = 'Status'
             SiteID                  = 'SiteID'      <# not to display #>
@@ -1044,6 +1044,48 @@ $TD_BTN_IBM_FCPortInfo.add_click({
     }
     $UCVMMain.SelectedView = "FCPort"
 })
+$TD_BTN_IBM_FCPortStats.add_click({
+    $TD_GB_SearchFilterSTO.Visibility="visible"
+    <#Get all Device Cred and count them #>
+    $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_.DeviceTyp -like "*Storage*"}
+    <# get the DataConteext of the current View/ means UC and if its nul trow an error #>
+    $UCDataContext = $TD_UserControl_IBMSTO.DataContext
+    if (-not $UCDataContext) { Write-Host "DataContext ist NULL!" -ForegroundColor Red; return }
+    <# if there is a DataContext find th Main Part und put it into UCVMMain#>
+    $UCVMMain = $UCDataContext.Main
+    <# if there a something in, its better to clean it up befor we use it again #>
+    $UCVMMain.DeviceToggles.Clear()
+    foreach($TD_Creds in $TD_Credentials){
+        $FunctionResult = New-DeviceBlock -Device $TD_Creds -ExportPath $TD_TB_ExportPath.Text -RESTFunc IBM_RESTFCPortStats -SSHFunc IBM_SSHFCPortStats
+        # Links = Propertyname im PSCustomObject (das bindet dein XAML)
+        # Rechts = Propertyname im Source-Objekt
+        
+        $mapFCPortStats = @{
+            NodeID      = 'NodeID'
+            NodeName    = 'NodeName'
+            CardType    = 'CardType'
+            PortID      = 'PortID'
+            WWPN        = 'WWPN'
+            LinkFailure = 'LinkFailure'
+            LoseSync    = 'LoseSync'
+            LoseSig     = 'LoseSig'
+            PSErrCount  = 'PSErrCount'
+            InvTransErr = 'InvTransErr'
+            CRCErr      = 'CRCErr'
+            ZeroBtB     = 'ZeroBtB'
+            SFPTemp     = 'SFPTemp'
+            TXPwr       = 'TXPwr'
+            TXPwrlow    = 'TXPwrlow'
+            RXPwr       = 'RXPwr'
+            RXPwrlow    = 'RXPwrlow'
+
+        }
+        Add-MappedRows -Collection $FunctionResult.DeviceIdent.FCPortStatsRows -Source $FunctionResult.FuncResult -IdProperty 'RowID' -Map $mapFCPortStats
+
+        $UCVMMain.DeviceToggles.Add($FunctionResult.DeviceIdent)
+    }
+    $UCVMMain.SelectedView = "FCPortStats"
+})
 $TD_BTN_IBM_PartitionInfo.add_click({
     $TD_GB_SearchFilterSTO.Visibility="visible"
     <#Get all Device Cred and count them #>
@@ -1056,8 +1098,8 @@ $TD_BTN_IBM_PartitionInfo.add_click({
     <# if there a something in, its better to clean it up befor we use it again #>
     $UCVMMain.DeviceToggles.Clear()
     foreach($TD_Creds in $TD_Credentials){
-        if($TD_Creds.SVCorVF -like "*SVC*"){continue}
-        $FunctionResult = New-DeviceBlock -Device $TD_Creds -ExportPath $TD_TB_ExportPath.Text -RESTFunc IBM_RESTPartitionInfos -SSHFunc IBM_SSHDriveInfo
+        
+        $FunctionResult = New-DeviceBlock -Device $TD_Creds -ExportPath $TD_TB_ExportPath.Text -RESTFunc IBM_RESTPartitionInfos -SSHFunc $null
         # Links = Propertyname im PSCustomObject (das bindet dein XAML)
         # Rechts = Propertyname im Source-Objekt
         $mapPartition = @{
@@ -1077,6 +1119,30 @@ $TD_BTN_IBM_PartitionInfo.add_click({
 
         $UCVMMain.DeviceToggles.Add($FunctionResult.DeviceIdent)
         $UCVMMain.SelectedView = "Partition"
+    }
+})
+$TD_BTN_IBM_SecurityInfo.add_click({
+    $TD_GB_SearchFilterSTO.Visibility="Collapsed"
+    <#Get all Device Cred and count them #>
+    $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_.DeviceTyp -like "*Storage*"}
+    <# get the DataConteext of the current View/ means UC and if its nul trow an error #>
+    $UCDataContext = $TD_UserControl_IBMSTO.DataContext
+    if (-not $UCDataContext) { Write-Host "DataContext ist NULL!" -ForegroundColor Red; return }
+    <# if there is a DataContext find th Main Part und put it into UCVMMain#>
+    $UCVMMain = $UCDataContext.Main
+    <# if there a something in, its better to clean it up befor we use it again #>
+    $UCVMMain.DeviceToggles.Clear()
+    foreach($TD_Creds in $TD_Credentials){
+        $FunctionResult = New-DeviceBlock -Device $TD_Creds -ExportPath $TD_TB_ExportPath.Text -RESTFunc IBM_RESTStorageSecurity -SSHFunc $null
+        $mapSecurity = @{
+            Key             = 'Key'
+            Value           = 'Value'
+            RecommendedValue = 'RecommendedValue'  
+        }
+        Add-MappedRows -Collection $FunctionResult.DeviceIdent.SecurityRows -Source $FunctionResult.FuncResult -IdProperty 'RowID' -Map $mapSecurity
+
+        $UCVMMain.DeviceToggles.Add($FunctionResult.DeviceIdent)
+        $UCVMMain.SelectedView = "Security"
     }
 })
 $TD_BTN_IBM_CleanUpDumps.add_click({
@@ -1146,49 +1212,6 @@ $TD_BTN_IBM_BackUpConfig.add_click({
     <#one for each view is fine do need to be inside the foreach #>
     $UCVMMain.SelectedView = "BackUpInfo"
 })
-$TD_BTN_IBM_FCPortStats.add_click({
-    $TD_GB_SearchFilterSTO.Visibility="visible"
-    <#Get all Device Cred and count them #>
-    $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_.DeviceTyp -like "*Storage*"}
-    <# get the DataConteext of the current View/ means UC and if its nul trow an error #>
-    $UCDataContext = $TD_UserControl_IBMSTO.DataContext
-    if (-not $UCDataContext) { Write-Host "DataContext ist NULL!" -ForegroundColor Red; return }
-    <# if there is a DataContext find th Main Part und put it into UCVMMain#>
-    $UCVMMain = $UCDataContext.Main
-    <# if there a something in, its better to clean it up befor we use it again #>
-    $UCVMMain.DeviceToggles.Clear()
-    foreach($TD_Creds in $TD_Credentials){
-        $FunctionResult = New-DeviceBlock -Device $TD_Creds -ExportPath $TD_TB_ExportPath.Text -RESTFunc IBM_RESTFCPortStats -SSHFunc IBM_SSHFCPortStats
-        # Links = Propertyname im PSCustomObject (das bindet dein XAML)
-        # Rechts = Propertyname im Source-Objekt
-        
-        $mapFCPortStats = @{
-            NodeID      = 'NodeID'
-            NodeName    = 'NodeName'
-            CardType    = 'CardType'
-            PortID      = 'PortID'
-            WWPN        = 'WWPN'
-            LinkFailure = 'LinkFailure'
-            LoseSync    = 'LoseSync'
-            LoseSig     = 'LoseSig'
-            PSErrCount  = 'PSErrCount'
-            InvTransErr = 'InvTransErr'
-            CRCErr      = 'CRCErr'
-            ZeroBtB     = 'ZeroBtB'
-            SFPTemp     = 'SFPTemp'
-            TXPwr       = 'TXPwr'
-            TXPwrlow    = 'TXPwrlow'
-            RXPwr       = 'RXPwr'
-            RXPwrlow    = 'RXPwrlow'
-
-        }
-        Add-MappedRows -Collection $FunctionResult.DeviceIdent.FCPortStatsRows -Source $FunctionResult.FuncResult -IdProperty 'RowID' -Map $mapFCPortStats
-
-        $UCVMMain.DeviceToggles.Add($FunctionResult.DeviceIdent)
-    }
-    $UCVMMain.SelectedView = "FCPortStats"
-})
-#$TD_BTN_IBM_PolicyBased_Rep.add_click({})
 #endregion
 #region Brocade SAN
 $TD_BTN_FOS_BasicSwitchInfo.add_click({

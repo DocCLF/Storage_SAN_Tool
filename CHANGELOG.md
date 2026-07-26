@@ -3,7 +3,6 @@
 - History Data 
 - LineCharts
 - Additional support for errors in the event log
-- PBHA and DR Support
 - Replace TrimEnd(“.xaml”) with GetFileNameWithoutExtension
 - Clean up duplicate style loading
 - Consistently secure DB parameters using Get-DbValue/Get-SqlParameterValue
@@ -12,7 +11,7 @@
     * switched to Avalonia to support additional operating systems
 
 All notable changes to this project will be documented in this file.
-# [v1.4.010_beta] - 2026-07-21
+# [v1.4.055_beta] - 2026-07-21
 ### Added 
 - Support for IBM Tape (only via REST)
 - REST Function for IBM Storage
@@ -23,6 +22,8 @@ All notable changes to this project will be documented in this file.
 - TextBox for Customer Number (who is needed for Local DB)
 - Search filters have been added where useful.
 - SnapShot view at Volume Info
+- PBHA and DR Support
+- STO Security Check
 
 ### Fixed
 - ToolLog on GUI, Some entries were not displayed or were displayed incorrectly

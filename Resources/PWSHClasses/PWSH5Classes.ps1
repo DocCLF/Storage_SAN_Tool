@@ -129,6 +129,7 @@ public class DeviceToggle : INotifyPropertyChanged
     private ObservableCollection<object> _fCPortRows;
     private ObservableCollection<object> _fCPortStatsRows;
     private ObservableCollection<object> _partitionRows;
+    private ObservableCollection<object> _securityRows;
 
     private ObservableCollection<object> _sANSwitchBaseRows;
     private ObservableCollection<object> _sANSwitchShowRows;
@@ -177,6 +178,7 @@ public class DeviceToggle : INotifyPropertyChanged
         _fCPortRows = new ObservableCollection<object>();
         _fCPortStatsRows = new ObservableCollection<object>();
         _partitionRows = new ObservableCollection<object>();
+        _securityRows = new ObservableCollection<object>();
         _sANSwitchBaseRows = new ObservableCollection<object>();
         _sANSwitchShowRows = new ObservableCollection<object>();
         _sANPortbufferShowRows = new ObservableCollection<object>();
@@ -226,6 +228,7 @@ public class DeviceToggle : INotifyPropertyChanged
     public ObservableCollection<object> FCPortRows { get { return _fCPortRows; } }
     public ObservableCollection<object> FCPortStatsRows { get { return _fCPortStatsRows; } }
     public ObservableCollection<object> PartitionRows { get { return _partitionRows; } }
+    public ObservableCollection<object> SecurityRows { get { return _securityRows; } }
 
     public ObservableCollection<object> SANSwitchBaseRows { get { return _sANSwitchBaseRows; } }
     public ObservableCollection<object> SANSwitchShowRows { get { return _sANSwitchShowRows; } }

@@ -92,6 +92,12 @@
                 Style="{DynamicResource MainBtnStyle}"
                 Content="Partition Info"
                 ToolTip="Get the most important information about your Partitions" />
+                <!--IBM_Security-->
+                <ToggleButton
+                x:Name="BTN_IBM_SecurityInfo"
+                Style="{DynamicResource MainBtnStyle}"
+                Content="Security Info"
+                ToolTip="Get the most important information about your Security" />
                 <!--IBM_CleanUpDumps-->
                 <ToggleButton
                 x:Name="BTN_IBM_CleanUpDumps"
@@ -520,7 +526,7 @@
                       <DataGridTextColumn Width="auto" Header="Host ID"       Binding="{Binding HostID}" IsReadOnly="True"/>
                       <DataGridTextColumn Width="auto" Header="Host Name"     Binding="{Binding HostName}" IsReadOnly="True"/>
                       <DataGridTextColumn Width="auto" Header="Port Count"    Binding="{Binding PortCount}" IsReadOnly="True"/>
-                      <DataGridTextColumn Width="auto" Header="Type"          Binding="{Binding Type}" IsReadOnly="True"/>
+                      <DataGridTextColumn Width="auto" Header="Partition"     Binding="{Binding PartitionName}" IsReadOnly="True"/>
                       <DataGridTextColumn Width="auto" Header="Status"        Binding="{Binding Status}" IsReadOnly="True"/>
                       <DataGridTextColumn Width="auto" Header="HostStateInfo" Binding="{Binding HostStateInfo}" IsReadOnly="True">
                           <DataGridTextColumn.CellStyle>
@@ -1090,11 +1096,11 @@
                             <DataTemplate>
                                 <Button Style="{DynamicResource DashBoardBTNStyle}"
                                         Margin="0,5,5,5"
-                                        MaxWidth="400"
+                                        MaxWidth="500"
                                         ToolTipService.InitialShowDelay="10">
                                     <Grid Margin="5">
                                         <Grid.RowDefinitions>
-                                            <RowDefinition MaxHeight="150"/>
+                                            <RowDefinition MaxHeight="250"/>
                                             <RowDefinition Height="20"/>
                                         </Grid.RowDefinitions>
                                         <Grid Grid.Row="0">
@@ -1106,17 +1112,20 @@
                                                 <RowDefinition />
                                                 <RowDefinition />
                                                 <RowDefinition />
+                                                <RowDefinition />
+                                                <RowDefinition />
+                                                <RowDefinition />
                                             </Grid.RowDefinitions>
                                             <Grid.ColumnDefinitions>
-                                                <ColumnDefinition MaxWidth="70" />
+                                                <ColumnDefinition MaxWidth="100" />
                                                 <ColumnDefinition Width="Auto" />
                                                 <ColumnDefinition />
                                             </Grid.ColumnDefinitions>
                                             <!-- Falls deine Row ein Icon hat: -->
-                                             <Ellipse Grid.RowSpan="6" Width="60" Height="60">
+                                             <Ellipse Grid.RowSpan="10" Width="90" Height="90">
                                                 <Ellipse.Fill>
                                                     <ImageBrush 
-                                                        ImageSource="{Binding DataContext.HMCIcon, RelativeSource={RelativeSource AncestorType=UserControl}}" 
+                                                        ImageSource="{Binding DataContext.STOIcon, RelativeSource={RelativeSource AncestorType=UserControl}}" 
                                                         Stretch="Uniform" />
                                                 </Ellipse.Fill>
                                             </Ellipse>
@@ -1167,6 +1176,50 @@
                     </ItemsControl>
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
+        </ItemsControl>
+        <!-- IBM_Security -->
+        <ItemsControl Grid.Column="1" Grid.Row="1"
+                      ItemsSource="{Binding Main.DeviceToggles}"
+                      Style="{DynamicResource ShowWhenSecurity}">
+          <ItemsControl.ItemsPanel>
+            <ItemsPanelTemplate>
+              <StackPanel/>
+            </ItemsPanelTemplate>
+          </ItemsControl.ItemsPanel>
+
+          <ItemsControl.ItemTemplate>
+            <DataTemplate>
+              <DataGrid AutoGenerateColumns="False"
+                        ColumnWidth="*"
+                        HorizontalAlignment="Stretch"
+                        Margin="5"
+                        MaxWidth="960"
+                        MaxHeight="460"
+                        ItemsSource="{Binding FCPortStatsRows}"
+                        CanUserAddRows="False"
+                        Visibility="{Binding IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
+
+                <!-- Optional: Header pro Device -->
+                <DataGrid.GroupStyle>
+                  <GroupStyle/>
+                </DataGrid.GroupStyle>
+                <DataGrid.Columns>
+                    <DataGridTextColumn Width="auto" Header="NodeID"  Binding ="{Binding Key}" IsReadOnly="True"/>
+                    <!-- <DataGridTextColumn Width="auto" Header="NodeSN" Binding ="{Binding NodeSN}" IsReadOnly="True"/> -->
+                    <DataGridTextColumn Width="auto" Header="NodeName" Binding ="{Binding Value}" IsReadOnly="True"/>
+                    <!-- <DataGridTextColumn Width="auto" Header="NodeWWNN"  Binding ="{Binding NodeWWNN}" IsReadOnly="True"/> -->
+                    <DataGridTextColumn Width="auto" Header="CardType" Binding ="{Binding RecommendedValue}" IsReadOnly="True"/>  
+                    <DataGridTextColumn Width="auto" Header="LinkFailure" Binding ="{Binding LinkFailure}" IsReadOnly="True">
+                        <DataGridTextColumn.CellStyle>
+                            <Style TargetType="DataGridCell">
+                                <Setter Property="ToolTip" Value="Indicates the link failure error count." />
+                            </Style>
+                        </DataGridTextColumn.CellStyle>
+                    </DataGridTextColumn>
+                </DataGrid.Columns>
+              </DataGrid>
+            </DataTemplate>
+          </ItemsControl.ItemTemplate>
         </ItemsControl>
         <!-- IBM_CleanUpDumps -->
         <ItemsControl Grid.Column="1" Grid.Row="1"

@@ -57,19 +57,19 @@ function IBM_RESTStorageSecurity {
                 "cli_timeout_mins"                      { $TD_SecSettingsInfo.RecommendedValue = 5 }
                 "restapi_timeout_mins"                  { $TD_SecSettingsInfo.RecommendedValue = 10 }
                 "min_password_length"                   { $TD_SecSettingsInfo.RecommendedValue = 16 }
-                "password_special_chars"                { $TD_SecSettingsInfo.RecommendedValue = 1 }
-                "password_upper_case"                   { $TD_SecSettingsInfo.RecommendedValue = 1 }
-                "password_lower_case"                   { $TD_SecSettingsInfo.RecommendedValue = 1 }
-                "password_digits"                       { $TD_SecSettingsInfo.RecommendedValue = 1 }
+                "password_special_chars"                { $TD_SecSettingsInfo.RecommendedValue = 2 }
+                "password_upper_case"                   { $TD_SecSettingsInfo.RecommendedValue = 2 }
+                "password_lower_case"                   { $TD_SecSettingsInfo.RecommendedValue = 2 }
+                "password_digits"                       { $TD_SecSettingsInfo.RecommendedValue = 3 }
                 "check_password_history"                { $TD_SecSettingsInfo.RecommendedValue = "yes" }
-                "max_password_history"                  { $TD_SecSettingsInfo.RecommendedValue = 2 }
-                "min_password_age_days"                 { $TD_SecSettingsInfo.RecommendedValue = 30 }
+                "max_password_history"                  { $TD_SecSettingsInfo.RecommendedValue = 3 }
+                "min_password_age_days"                 { $TD_SecSettingsInfo.RecommendedValue = 10 }
                 "password_expiry_days"                  { $TD_SecSettingsInfo.RecommendedValue = 360 }
-                "expiry_warning_days"                   { $TD_SecSettingsInfo.RecommendedValue = 21 }
-                "superuser_locking"                     { $TD_SecSettingsInfo.RecommendedValue = "enable" }
+                "expiry_warning_days"                   { $TD_SecSettingsInfo.RecommendedValue = 25 }
+                "superuser_locking"                     { $TD_SecSettingsInfo.RecommendedValue = "disabled" }
                 "max_failed_login_attempts"             { $TD_SecSettingsInfo.RecommendedValue = 5 }
-                "lockout_period_mins"                   { $TD_SecSettingsInfo.RecommendedValue = 30 }
-                "superuser_multi_factor"                { $TD_SecSettingsInfo.RecommendedValue = "yes" }
+                "lockout_period_mins"                   { $TD_SecSettingsInfo.RecommendedValue = 20 }
+                "superuser_multi_factor"                { $TD_SecSettingsInfo.RecommendedValue = "no" }
                 "ssh_grace_time_seconds"                { $TD_SecSettingsInfo.RecommendedValue = 60 }
                 "ssh_max_tries"                         { $TD_SecSettingsInfo.RecommendedValue = 5 }
                 "superuser_password_sshkey_required"    { $TD_SecSettingsInfo.RecommendedValue = "yes" }
@@ -78,9 +78,12 @@ function IBM_RESTStorageSecurity {
                 "superuser_cim_disabled"                { $TD_SecSettingsInfo.RecommendedValue = "yes" }
                 "two_person_integrity_enabled"          { $TD_SecSettingsInfo.RecommendedValue = "---" }
                 "two_person_integrity_superuser_locked" { $TD_SecSettingsInfo.RecommendedValue = "---" }
-                "ssl_protocols_enabled"                 { $TD_SecSettingsInfo.RecommendedValue = "---" }
+                "ssl_protocols_enabled"                 { $TD_SecSettingsInfo.RecommendedValue = "TLSv1.2:TLSv1.3" }
                 "ssl_protocol_suggested"                { $TD_SecSettingsInfo.RecommendedValue = "yes" }
                 "ssh_protocol_suggested"                { $TD_SecSettingsInfo.RecommendedValue = "yes" }
+                "patch_auto_update"                     { $TD_SecSettingsInfo.RecommendedValue = "no" }
+                "iscsi_host_auth_mode"                  { $TD_SecSettingsInfo.RecommendedValue = "0" }
+                "ssh_port"                              { $TD_SecSettingsInfo.RecommendedValue = "22" }
                 Default {}
             }
 

@@ -100,6 +100,16 @@
         </Style.Triggers>
     </Style>
 
+    <!-- Nur sichtbar, wenn Main.SelectedView == Security -->
+    <Style x:Key="ShowWhenSecurity" TargetType="ItemsControl">
+        <Setter Property="Visibility" Value="Collapsed"/>
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding Main.SelectedView}" Value="Security">
+                <Setter Property="Visibility" Value="Visible"/>
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+
     <!-- Nur sichtbar, wenn Main.SelectedView == DumpInfo -->
     <Style x:Key="ShowWhenDumpInfo" TargetType="ItemsControl">
         <Setter Property="Visibility" Value="Collapsed"/>
