@@ -59,7 +59,15 @@ Copyright (C) Microsoft Corporation. Alle Rechte vorbehalten.
     * It may be necessary to execute the following command once, as Sign-Module.ps1 is also not signed.
         Set-ExecutionPolicy -ExecutionPolicy Bypass -Scope Process
         and then repeat: PS C:\<PathtoModulRootFolder\Storage_SAN_Tool> . .\Sign-Module.ps1 -CertificateName "MyCodeSigningCert"
-        
+    * If the step described above does not work, the following steps may be necessary:
+        $cert = Get-ChildItem Cert:\CurrentUser\My -CodeSigningCert | Where-Object {$_.Subject -match "MyCodeSigningCert"} | Select-Object -First 1
+        Import-Certificate -FilePath $certPath -CertStoreLocation Cert:\CurrentUser\Root
+        Import-Certificate -FilePath $certPath -CertStoreLocation Cert:\CurrentUser\TrustedPublisher
+        Set-AuthenticodeSignature -FilePath ".\Sign-Module.ps1" -Certificate $cert -TimestampServer "http://timestamp.digicert.com"
+
+        Then, using the Sign-Module.ps1 script—which has now been modified—repeat the process described in step 5.
+        It's also worth moving the Sign-Module.ps1 file to your “My Documents” folder or desktop rather than trying to run it directly from the Module folder.
+
     The script signs:
     All .ps1 files in your function folders
     Your .psm1 files
