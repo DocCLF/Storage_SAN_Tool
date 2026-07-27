@@ -29,9 +29,12 @@ function Get-BrocadeBaseInfo {
         else{
             'Subordinate'
         }
-
+    $SwitchName = $SwitchInfo.'user-friendly-name'
+    if ([string]::IsNullOrWhiteSpace($SwitchName)) {
+        $SwitchName = "Unknown_$($ChassisInfo.'vendor-serial-number')"
+    }
     $FOS_SwGeneralInfos = [PSCustomObject]@{
-        SwitchName = $SwitchInfo.'user-friendly-name'
+        SwitchName = $SwitchName
         ActiveZoneCFG = $EffectiveCFG.'cfg-name'
         DomainID = $SwitchInfo.'domain-id'
         SwitchWWNN = $SwitchInfo.name
