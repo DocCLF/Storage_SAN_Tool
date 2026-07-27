@@ -140,8 +140,43 @@ function SST_CustomerSTODBInsertTable {
                 try {
                     $SQLiteDBConnection.Open()
                     $SQLiteCommand = $SQLiteDBConnection.CreateCommand()
+                    $HostCounter = 0
 
                     foreach ($SST_CollectedInformation in $SST_CollectedInformations){
+
+                        # Debug part becaue sometimes O,o
+                        $HostCounter++
+                        # Debugging: Prüfen, ob alle Pflichtwerte für den DB-Insert vorhanden sind
+                        $MissingValues = [System.Collections.Generic.List[string]]::new()
+
+                        if ($null -eq $SST_CollectedInformation) {
+                            Write-Host "Hostdatensatz $HostCounter will be skipped. Object is null." -ForegroundColor DarkCyan
+                            SST_ToolMessageCollector -TD_ToolMSGCollector "Hostdatensatz $HostCounter will be skipped. Object is null." -TD_ToolMSGType Error -TD_Shown yes
+                            continue
+                        }
+                    
+                        if ([string]::IsNullOrWhiteSpace([string]$SST_CollectedInformation.HostName)) {$null = $MissingValues.Add('HostName')}
+                        if ([string]::IsNullOrWhiteSpace([string]$SST_CollectedInformation.Status)) {$null = $MissingValues.Add('Status')}
+                        if ([string]::IsNullOrWhiteSpace([string]$SST_CollectedInformation.WWNN)) {$null = $MissingValues.Add('WWNN')}
+                    
+                        if ($MissingValues.Count -gt 0) {
+                        
+                            $MissingValuesText = $MissingValues -join ', '
+                        
+                            $DebugMessage = (
+                                "Hostdatensatz $HostCounter will be skipped. " +
+                                "Missing required values: $MissingValuesText"
+                            )
+                        
+                            Write-Host $DebugMessage -ForegroundColor DarkCyan
+                        
+                            SST_ToolMessageCollector -TD_ToolMSGCollector $DebugMessage -TD_ToolMSGType Error -TD_Shown yes
+                            # Display only on the console; do not write to the function pipeline
+                            $SST_CollectedInformation | Format-List * | Out-Host
+                            continue
+                        }
+                        
+                        # normal function goes on
                         $SQLiteCommand.Parameters.Clear()
 
                         $SQLiteCommand.CommandText ="INSERT INTO IBMSTOHostTable (CustomerNbr, HID, HostName, Status, HostClusterName, SideName, STOName, WWNN, SerialNumber, TimeStamp) VALUES (@CustomerNbr, @HID, @HostName, @Status, @HostClusterName, @SideName, @STOName, @WWNN, @SerialNumber, @TimeStamp);"
