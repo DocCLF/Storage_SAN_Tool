@@ -23,13 +23,15 @@ All notable changes to this project will be documented in this file.
 - Search filters have been added where useful.
 - SnapShot view at Volume Info
 - PBHA and DR Support
-- STO Security Check
+- STO simple Security Check
+- Brocade simple Security Check
 
 ### Fixed
 - ToolLog on GUI, Some entries were not displayed or were displayed incorrectly
 - Write-ProgressBar and Close-ProgressBar 
 - some major and minor bugs
 - STOName was not displayed in the “Online/Offline Hosts” view of the dashboard.
+- HostInfo Bug when there is a Empty entry
 
 ### Changed
 - GUI redesigned
@@ -37,6 +39,8 @@ All notable changes to this project will be documented in this file.
 - Function handling in the New-ProgressBar Function 
 - PRISM Connection and Setup
 - ToolLog on GUI The most recent post now always appears at the top
+- add some tipps to the "Guide to signing the Module"
+- If there is no Partition, suppress the output in the prompt and write it to the log and the Events log in the GUI
 
 ### Known Bugs
 - In some places, Tape and Power do not display a progress bar
