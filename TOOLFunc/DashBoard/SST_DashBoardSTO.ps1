@@ -38,7 +38,7 @@ function SST_DashBoardSTO {
             $DashBoardSTODeviceView.Add($DashBoardSTOsObj)
         }
         # Merge Devices to Events Function found in HelperFunction.ps1
-        $eventMergeResult = Add-EventInfoToDevices -Devices $DashBoardSTODeviceView -Events $Events
+        $eventMergeResult = Add-EventInfoToDevices -Devices @($DashBoardSTODeviceView) -Events @($Events)
         # split the pscustomobject
         $DashBoardSTODeviceView = $eventMergeResult.Devices
         $OrphanEvents = $eventMergeResult.OrphanEvents
