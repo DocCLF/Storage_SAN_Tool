@@ -54,13 +54,13 @@ function STO_HostStateInfo {
                 "NEW_HOST" {
                     $Message = "NEW HOST | HID: $($Result.HID) | WWNN: $($Result.SerialNumber) | Status: $($Result.CurrentStatus)"
                     #Write-Host "NEW HOST found: HID $($Result.HID), WWNN $($Result.WWNN)" -ForegroundColor Cyan
-                    $Global:HostStatusChanges.Add($Message)
+                    $Global:HostStatusChanges.Add($Message) | Out-Null
                 }
             
                 "STATUS_CHANGED" {
                     $Message = "STATUS CHANGED | HID: $($Result.HID) | WWNN: $($Result.SerialNumber) | Status: $($Result.CurrentStatus)"
                     #Write-Host "STATUS CHANGED: $($Result.StoredStatus) -> $($Result.CurrentStatus)" -ForegroundColor Yellow
-                    $Global:HostStatusChanges.Add($Message)
+                    $Global:HostStatusChanges.Add($Message) | Out-Null
                 }
             
                 "NO_CHANGE" {
@@ -68,8 +68,9 @@ function STO_HostStateInfo {
                 }
             }
         
-            $Result
+            return $Result
         }
+        return $null
     }
     finally {
         if ($Reader) {
