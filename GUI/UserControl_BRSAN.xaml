@@ -92,6 +92,12 @@
                 Style="{DynamicResource MainBtnStyle}"
                 Content="Port Buffer Show" 
                 ToolTip="Get the buffer usage information for a port group or for all port groups in the switch"/>
+                <!--FOS_PortBufferShow-->
+                <ToggleButton
+                x:Name="BTN_FOS_SecureCheck"
+                Style="{DynamicResource MainBtnStyle}"
+                Content="Simple SecureCheck" 
+                ToolTip="Need to put something in"/>
             </StackPanel>
         </GroupBox>
         <WrapPanel Grid.Column="1" Grid.Row="0" >

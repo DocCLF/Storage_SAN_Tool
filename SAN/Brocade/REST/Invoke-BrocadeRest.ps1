@@ -1,60 +1,106 @@
 function Invoke-BrocadeRest {
     <#
     .DESCRIPTION
-        URIs are case-sensitive.
-        URIs have two parts:
-            + Base URI — For Fabric OS modules for Fibre Channel features, the base URI is https://host:port/rest/running. For Fabric OS modules for operations, the base URI is http://host:port/rest.
-            + Request URI — The request URI displays in the REST API URI column of the mapping tables. For example, /brocade-security/ldap-server.
-        In this example of a Fibre Channel feature module URI, the text in bold is the base URI, and the remaining portion is the request 
-            URI: https://10.10.10.10:443/rest/running/brocade-zone/defined-configuration/zone/zone-name/memberentry/entry-name
-        In this example of operations module URI, the text in bold is the base URI, and the remaining portion is the request 
-            URI: https://10.10.10.10:443/rest/operations/fibrechannel-zone/action=rename
-    .EXAMPLE
-        Invoke-BrocadeRest -Device $sw -FOSOperation "running/brocade-fabric/fabric-switch"
-    .EXAMPLE
-        Invoke-BrocadeRest -Device $sw -Method PATCH -FOSOperation "running/brocade-interface/fibrechannel"
-    .OUTPUTS
+        Central wrapper for Brocade Fabric OS REST API calls.
 
+        Fabric OS feature modules:
+            https://host/rest/running/<request-uri>
+
+        Fabric OS operation modules:
+            https://host/rest/operations/<request-uri>
+
+        VFID:
+            The vf-id query parameter is only added for endpoints that support
+            a Logical Switch context.
+
+            Chassis-wide endpoints such as sec-crypto-cfg must be called with
+            -IgnoreVFID.
+
+    .EXAMPLE
+        Invoke-BrocadeRest `
+            -Device $sw `
+            -FOSOperation "running/brocade-fabric/fabric-switch"
+
+    .EXAMPLE
+        Invoke-BrocadeRest `
+            -Device $sw `
+            -FOSOperation "running/brocade-security/sec-crypto-cfg" `
+            -IgnoreVFID
+
+    .EXAMPLE
+        Invoke-BrocadeRest `
+            -Device $sw `
+            -Method PATCH `
+            -FOSOperation "running/brocade-interface/fibrechannel" `
+            -Body $Body
     #>
+
     [CmdletBinding()]
     param(
         [Parameter(Mandatory)]
         $Device,
+
         [Parameter(Mandatory)]
         [string]$FOSOperation,
-        [ValidateSet("GET","POST","PATCH","PUT","DELETE")]
+
+        [ValidateSet("GET", "POST", "PATCH", "PUT", "DELETE")]
         [string]$Method = "GET",
-        $Body
+
+        $Body,
+
+        # Prevents adding ?vf-id=... for chassis-wide endpoints.
+        [switch]$IgnoreVFID,
+
+        [PSCredential]$Credential
     )
 
-    try {
-        $pw = [Net.NetworkCredential]::new('', $Device.Password).Password
+    # Initialize Uri before try so it is always available in catch.
+    $Uri = $null
 
-        $pair   = "$($Device.UserName):$pw"
+    try {
+        if ($null -ne $Credential) {
+            $UserName = $Credential.UserName
+            $pw = $Credential.GetNetworkCredential().Password
+        }else {
+            $UserName = $($Device.UserName)
+            $pw = [Net.NetworkCredential]::new('',$Device.Password).Password
+        }
+        $pair   = "$($UserName):$pw"
         $bytes  = [System.Text.Encoding]::ASCII.GetBytes($pair)
         $base64 = [Convert]::ToBase64String($bytes)
+
+        # Remove plaintext password reference as soon as possible.
         $pw = $null
 
         $Headers = @{
             Authorization = "Basic $base64"
-            Accept         = "application/yang-data+json"
+            Accept        = "application/yang-data+json"
         }
-        
 
         $BaseUrl = "https://$($Device.IPAddress)/rest/$FOSOperation"
-        <# --- VFID Support --- #>
-        if($Device.PSObject.Properties['VFID'] -and $Device.VFID -and $Device.VFID -ne 128){
+
+        # Add VFID only when:
+        # - the endpoint is not explicitly chassis-wide,
+        # - the device actually has a VFID property,
+        # - the VFID contains a value,
+        # - and it is not the default VFID 128.
+        if (
+            -not $IgnoreVFID -and
+            $Device.PSObject.Properties['VFID'] -and
+            $null -ne $Device.VFID -and
+            -not [string]::IsNullOrWhiteSpace([string]$Device.VFID) -and
+            [int]$Device.VFID -ne 128
+        ) {
             $Uri = "$BaseUrl`?vf-id=$($Device.VFID)"
-        }else{
+        }
+        else {
             $Uri = $BaseUrl
         }
 
         if ($PSVersionTable.PSVersion.Major -lt 7) {
-
             [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 
             if (-not ("TrustAllCertsPolicy" -as [type])) {
-
                 Add-Type @"
 using System.Net;
 using System.Security.Cryptography.X509Certificates;
@@ -82,8 +128,8 @@ public class TrustAllCertsPolicy : ICertificatePolicy {
             ErrorAction = 'Stop'
         }
 
-        if ($Body) {
-            $irmParams.Body = ($Body | ConvertTo-Json -Depth 10)
+        if ($null -ne $Body) {
+            $irmParams.Body = $Body | ConvertTo-Json -Depth 10
             $irmParams.ContentType = "application/yang-data+json"
         }
 
@@ -93,10 +139,12 @@ public class TrustAllCertsPolicy : ICertificatePolicy {
 
         $result = Invoke-RestMethod @irmParams
 
-        if($null -ne $result.Response){
+        # Some FOS responses wrap the actual result in Response,
+        # while others return the object directly.
+        if ($null -ne $result.Response) {
             $data = $result.Response
         }
-        else{
+        else {
             $data = $result
         }
 
@@ -108,12 +156,29 @@ public class TrustAllCertsPolicy : ICertificatePolicy {
         }
     }
     catch {
+        # Collect all nested exception messages.
+        $exceptionMessages = [System.Collections.Generic.List[string]]::new()
+        $currentException  = $_.Exception
+
+        while ($null -ne $currentException) {
+            $exceptionMessages.Add($currentException.Message)
+            $currentException = $currentException.InnerException
+        }
+
+        # PowerShell 7 may expose the HTTP response body here.
+        $responseBody = $null
+
+        if ($_.ErrorDetails.Message) {
+            $responseBody = $_.ErrorDetails.Message
+        }
 
         [PSCustomObject]@{
-            Success = $false
-            Uri     = $Uri
-            Data    = $null
-            Error   = $_.Exception.Message
+            Success     = $false
+            Uri         = $Uri
+            Data        = $null
+            Error       = $_.Exception.Message
+            ErrorPath   = $exceptionMessages -join " --> "
+            ResponseBody = $responseBody
         }
     }
 }

@@ -1115,8 +1115,10 @@ $TD_BTN_IBM_PartitionInfo.add_click({
             HAStatus                = 'HAStatus'   
             LinkStatus              = 'LinkStatus'  
         }
-        Add-MappedRows -Collection $FunctionResult.DeviceIdent.PartitionRows -Source $FunctionResult.FuncResult -IdProperty 'RowID' -Map $mapPartition
-
+        $PartitionResult = @($FunctionResult.FuncResult)
+        if ($PartitionResult.Count -gt 0) {
+            Add-MappedRows -Collection $FunctionResult.DeviceIdent.PartitionRows -Source $FunctionResult.FuncResult -IdProperty 'RowID' -Map $mapPartition
+        }
         $UCVMMain.DeviceToggles.Add($FunctionResult.DeviceIdent)
         $UCVMMain.SelectedView = "Partition"
     }
@@ -1591,6 +1593,26 @@ $TD_BTN_FOS_SFPHealthShow.add_click({
         $UCVMMain.SelectedView = "SANSFPDetails"
     }finally{
         SST_ToolMessageCollector -TD_ToolMSGCollector "Get-BrocadeSFPShow done" -TD_ToolMSGType Message -TD_Shown yes
+    }
+})
+$TD_BTN_FOS_SecureCheck.add_click({
+        #$TD_GB_SearchFilter.Visibility = "visible"
+    try{
+        <#Get all Device Cred and count them #>
+        $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_.DeviceTyp -like "*SAN*" }
+
+        <# get the DataConteext of the current View/ means UC and if its nul trow an error #>
+        $UCDataContext = $TD_UserControl_BRSAN.DataContext
+        if (-not $UCDataContext) { Write-Host "DataContext ist NULL!" -ForegroundColor Red; return }
+        <# if there is a DataContext find th Main Part und put it into UCVMMain#>
+        $UCVMMain = $UCDataContext.Main
+        <# if there a something in, its better to clean it up befor we use it again #>
+        $UCVMMain.DeviceToggles.Clear()
+        foreach($TD_Creds in $TD_Credentials){
+            $FunctionResult = New-DeviceBlock -Device $TD_Creds -ExportPath $TD_TB_ExportPath.Text -RESTFunc Get-BrocadeBaseInfo -SSHFunc $null
+        }
+    }finally{
+        SST_ToolMessageCollector -TD_ToolMSGCollector "GET_BrocadeSecureCheck done" -TD_ToolMSGType Message -TD_Shown yes
     }
 })
 $TD_BTN_FOS_ZoneDetailsShow.add_click({

@@ -69,7 +69,32 @@ function Get-BrocadeFcPorts {
     
     $res.Data.fibrechannel
 }
+function Get-BrocadeSecurity {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory)]
+        $Device,
+        [PSCredential]$Credential
+    )
 
+    $InvokeParams = @{
+        Device        = $Device
+        FOSOperation  = "running/brocade-security/sec-crypto-cfg"
+        IgnoreVFID    = $true
+    }
+
+    if ($Credential) {
+        $InvokeParams.Credential = $Credential
+    }
+
+    $res = Invoke-BrocadeRest @InvokeParams
+
+    if (-not $res.Success) {
+        return $res
+    }
+
+    $res.Data.'sec-crypto-cfg'
+}
 function Get-BrocadeSfp {
     [CmdletBinding()]
     param(

@@ -70,7 +70,7 @@ function Invoke-DeviceDataFetch {
         $FallbacktoSSH = $true
     }
 
-    if ($FallbacktoSSH) {
+    if ($FallbacktoSSH -and $SSHFunc) {
         try {
             $FunResult = & $SSHFunc -TD_Line_ID $Device.ID -TD_Device_ConnectionTyp $Device.ConnectionTyp -TD_Device_UserName $Device.UserName -TD_Device_DeviceIP $Device.IPAddress -TD_Device_PW $pw -TD_Exportpath $ExportPath
         }
@@ -92,17 +92,23 @@ function New-DeviceBlock {
         [object]$RESTFunc,
         [object]$SSHFunc
     )
+
+    $FunResult = @()
+
     try {
         $FunResult = Invoke-DeviceDataFetch -Device $Device -ExportPath $ExportPath -RESTFunc $RESTFunc -SSHFunc $SSHFunc
+        if ($null -eq $FunResult) {$FunResult = @() }
     }
     catch {
-        Write-Host $_.Exception.Message
+        Write-Host $_.Exception.Message -ForegroundColor DarkCyan
+        SST_ToolMessageCollector -TD_ToolMSGCollector "Data fetch failed for $($Device.IPAddress): $($_.Exception.Message)" -TD_ToolMSGType Error -TD_Shown yes
+        $FunResult = @()
     }
-    
 
     # 2) DeviceToggle bauen
     $DeviceIdent = [DeviceToggle]::new()
     $DeviceIdent.Id = "DeviceBlock$($Device.ID)"
+    $LabelName = $null
     # Label robust: ClusterName kann je nach Result-Shape anders sein
     if ($SSHFunc -like "FOS*" -and $FunResult.PSObject.Properties.Name -contains 'FOSZoneCfgName') {
         $LabelName = $FunResult.FOSZoneCfgName
@@ -112,7 +118,7 @@ function New-DeviceBlock {
     $DeviceIdent.Label = if ([string]::IsNullOrWhiteSpace([string]$LabelName)) { "$($Device.IPAddress)" } else { "$LabelName" }
     $DeviceIdent.IsChecked = $false
 
-    return @{ DeviceIdent = $DeviceIdent; FuncResult = $FunResult }
+    return @{ DeviceIdent = $DeviceIdent; FuncResult = @($FunResult) }
 }
 # Helper Func for Reaad DB in GUi.ps1 Tape Area
 function ReadDBandBuildDB{
@@ -368,11 +374,11 @@ function Add-EventInfoToDevices {
     [CmdletBinding()]
     param(
         [Parameter(Mandatory)]
-        [System.Collections.IEnumerable]$Devices,
-
+        [object[]]$Devices,
+    
         [Parameter()]
         [AllowNull()]
-        [System.Collections.IEnumerable]$Events
+        [object[]]$Events = @()
     )
     # If no devices are provided → return empty result structure
     if ($null -eq $Devices) {
