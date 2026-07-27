@@ -1183,7 +1183,7 @@
                       Style="{DynamicResource ShowWhenSecurity}">
           <ItemsControl.ItemsPanel>
             <ItemsPanelTemplate>
-              <StackPanel/>
+              <WrapPanel />
             </ItemsPanelTemplate>
           </ItemsControl.ItemsPanel>
 
