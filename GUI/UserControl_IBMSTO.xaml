@@ -1334,7 +1334,7 @@
                                             <TextBlock Grid.Row="7" Grid.Column="2" Style="{DynamicResource DashBoardTB1}"
                                                        VerticalAlignment="Center" Text="{Binding Locked}" />
                                             <TextBlock Grid.Row="8" Grid.Column="1" Style="{DynamicResource DashBoardTB1}"
-                                                       VerticalAlignment="Center" Text="Link PWChange Required:" Margin="3,0"/>
+                                                       VerticalAlignment="Center" Text="PWChange Required:" Margin="3,0"/>
                                             <TextBlock Grid.Row="8" Grid.Column="2" Style="{DynamicResource DashBoardTB1}"
                                                        VerticalAlignment="Center" Text="{Binding PWChangerequired}" />
                                         </Grid>
