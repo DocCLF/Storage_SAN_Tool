@@ -110,6 +110,16 @@
         </Style.Triggers>
     </Style>
 
+    <!-- Nur sichtbar, wenn Main.SelectedView == UserInfo -->
+    <Style x:Key="ShowWhenUserInfo" TargetType="ItemsControl">
+        <Setter Property="Visibility" Value="Collapsed"/>
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding Main.SelectedView}" Value="UserInfo">
+                <Setter Property="Visibility" Value="Visible"/>
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+
     <!-- Nur sichtbar, wenn Main.SelectedView == DumpInfo -->
     <Style x:Key="ShowWhenDumpInfo" TargetType="ItemsControl">
         <Setter Property="Visibility" Value="Collapsed"/>

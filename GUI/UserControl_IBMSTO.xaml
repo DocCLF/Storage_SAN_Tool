@@ -98,6 +98,12 @@
                 Style="{DynamicResource MainBtnStyle}"
                 Content="Security Info"
                 ToolTip="Get the most important information about your Security" />
+                <!--IBM_UserInfo-->
+                <ToggleButton
+                x:Name="BTN_IBM_UserInfo"
+                Style="{DynamicResource MainBtnStyle}"
+                Content="User Info"
+                ToolTip="Get the most important information about your User" />
                 <!--IBM_CleanUpDumps-->
                 <ToggleButton
                 x:Name="BTN_IBM_CleanUpDumps"
@@ -632,7 +638,7 @@
             </DataTemplate>
           </ItemsControl.ItemTemplate>
         </ItemsControl>
-       <!-- IBM_PoolVolumeInfo -->
+        <!-- IBM_PoolVolumeInfo -->
         <ItemsControl Grid.Column="1" Grid.Row="1"
                       ItemsSource="{Binding Main.DeviceToggles}"
                       Style="{DynamicResource ShowWhenPoolVolumeInfo}">
@@ -1067,7 +1073,7 @@
                       Style="{DynamicResource ShowWhenPartition}">
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
-                    <WrapPanel />
+                    <WrapPanel Orientation="Horizontal" MaxWidth="1200"/>
                 </ItemsPanelTemplate>
             </ItemsControl.ItemsPanel>
             <ItemsControl.ItemTemplate>
@@ -1095,7 +1101,7 @@
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
                                 <Button Style="{DynamicResource DashBoardBTNStyle}"
-                                        Margin="0,5,5,5"
+                                        Margin="8,5,5,5"
                                         MaxWidth="500"
                                         ToolTipService.InitialShowDelay="10">
                                     <Grid Margin="5">
@@ -1183,7 +1189,7 @@
                       Style="{DynamicResource ShowWhenSecurity}">
           <ItemsControl.ItemsPanel>
             <ItemsPanelTemplate>
-              <WrapPanel />
+              <WrapPanel Orientation="Horizontal" MaxWidth="1200"/>
             </ItemsPanelTemplate>
           </ItemsControl.ItemsPanel>
 
@@ -1229,6 +1235,123 @@
               </DataGrid>
             </DataTemplate>
           </ItemsControl.ItemTemplate>
+        </ItemsControl>
+        <!-- IBM_UserInfo -->
+        <ItemsControl Grid.Column="1" Grid.Row="1"
+                      ItemsSource="{Binding Main.DeviceToggles}"
+                      Style="{DynamicResource ShowWhenUserInfo}">
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <WrapPanel Orientation="Horizontal" MaxWidth="1400" />
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <ItemsControl ItemsSource="{Binding UserInfoRows}"
+                                  Visibility="{Binding IsChecked,
+                                                       Converter={StaticResource BooleanToVisibilityConverter},
+                                                       FallbackValue=Collapsed}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <WrapPanel/>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <!-- Hide if there are no items -->
+                        <ItemsControl.Style>
+                            <Style TargetType="ItemsControl">
+                                <Style.Triggers>
+                                    <Trigger Property="HasItems" Value="False">
+                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </ItemsControl.Style>
+                        <!-- Button pro HMC Row -->
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Button Style="{DynamicResource DashBoardBTNStyle}"
+                                        Margin="8,5,5,5"
+                                        MinWidth="380"
+                                        MaxWidth="500"
+                                        ToolTipService.InitialShowDelay="10">
+                                    <Grid Margin="5">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition MaxHeight="250"/>
+                                            <RowDefinition Height="20"/>
+                                        </Grid.RowDefinitions>
+                                        <Grid Grid.Row="0">
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition />
+                                                <RowDefinition />
+                                                <RowDefinition />
+                                                <RowDefinition />
+                                                <RowDefinition />
+                                                <RowDefinition />
+                                                <RowDefinition />
+                                                <RowDefinition />
+                                                <RowDefinition />
+                                                <RowDefinition />
+                                            </Grid.RowDefinitions>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition MaxWidth="100" />
+                                                <ColumnDefinition Width="Auto" />
+                                                <ColumnDefinition />
+                                            </Grid.ColumnDefinitions>
+                                            <!-- Falls deine Row ein Icon hat: -->
+                                             <Ellipse Grid.RowSpan="10" Width="90" Height="90">
+                                                <Ellipse.Fill>
+                                                    <ImageBrush 
+                                                        ImageSource="{Binding DataContext.STOIcon, RelativeSource={RelativeSource AncestorType=UserControl}}" 
+                                                        Stretch="Uniform" />
+                                                </Ellipse.Fill>
+                                            </Ellipse>
+                                            <TextBlock Grid.Column="1" Style="{DynamicResource DashBoardTB1}"
+                                                       VerticalAlignment="Center" Text="Name:" Margin="3,0"/>
+                                            <TextBlock Grid.Column="2" Style="{DynamicResource DashBoardTB1}"
+                                                       VerticalAlignment="Center" Text="{Binding UserName}" />
+                                            <TextBlock Grid.Row="2" Grid.Column="1" Style="{DynamicResource DashBoardTB1}"
+                                                       VerticalAlignment="Center" Text="Password:" Margin="3,0"/>
+                                            <TextBlock Grid.Row="2" Grid.Column="2" Style="{DynamicResource DashBoardTB1}"
+                                                       VerticalAlignment="Center" Text="{Binding Password}" />
+                                            <TextBlock Grid.Row="3" Grid.Column="1" Style="{DynamicResource DashBoardTB1}"
+                                                       VerticalAlignment="Center" Text="SSHKey:" Margin="3,0"/>
+                                            <TextBlock Grid.Row="3" Grid.Column="2" Style="{DynamicResource DashBoardTB1}"
+                                                       VerticalAlignment="Center" Text="{Binding SSHKey}" />
+                                            <TextBlock Grid.Row="4" Grid.Column="1" Style="{DynamicResource DashBoardTB1}"
+                                                       VerticalAlignment="Center" Text="Remote:" Margin="3,0"/>
+                                            <TextBlock Grid.Row="4" Grid.Column="2" Style="{DynamicResource DashBoardTB1}"
+                                                       VerticalAlignment="Center" Text="{Binding Remote}" />
+                                            <TextBlock Grid.Row="5" Grid.Column="1" Style="{DynamicResource DashBoardTB1}"
+                                                       VerticalAlignment="Center" Text="UserGrp Name:" Margin="3,0"/>
+                                            <TextBlock Grid.Row="5" Grid.Column="2" Style="{DynamicResource DashBoardTB1}"
+                                                       VerticalAlignment="Center" Text="{Binding UserGrpName}" />
+                                            <TextBlock Grid.Row="6" Grid.Column="1" Style="{DynamicResource DashBoardTB1}"
+                                                       VerticalAlignment="Center" Text="Owner Name:" Margin="3,0"/>
+                                            <TextBlock Grid.Row="6" Grid.Column="2" Style="{DynamicResource DashBoardTB1}"
+                                                       VerticalAlignment="Center" Text="{Binding OwnerName}" />
+                                            <TextBlock Grid.Row="7" Grid.Column="1" Style="{DynamicResource DashBoardTB1}"
+                                                       VerticalAlignment="Center" Text="Locked:" Margin="3,0"/>
+                                            <TextBlock Grid.Row="7" Grid.Column="2" Style="{DynamicResource DashBoardTB1}"
+                                                       VerticalAlignment="Center" Text="{Binding Locked}" />
+                                            <TextBlock Grid.Row="8" Grid.Column="1" Style="{DynamicResource DashBoardTB1}"
+                                                       VerticalAlignment="Center" Text="Link PWChange Required:" Margin="3,0"/>
+                                            <TextBlock Grid.Row="8" Grid.Column="2" Style="{DynamicResource DashBoardTB1}"
+                                                       VerticalAlignment="Center" Text="{Binding PWChangerequired}" />
+                                        </Grid>
+                                        <!-- optional: Timestamp etc. wenn vorhanden -->
+                                        <Grid Grid.Row="1">
+                                            <StackPanel Orientation="Horizontal" Margin="5,0" ToolTip="Last Changes">
+                                                <Image Source="{Binding DataContext.ClockIcon96, RelativeSource={RelativeSource AncestorType=UserControl}}" MaxHeight="30" />
+                                                <TextBlock Text="20260215 17:12" Margin="5,2" />
+                                            </StackPanel>
+                                        </Grid>
+                                    </Grid>
+                                </Button>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
         </ItemsControl>
         <!-- IBM_CleanUpDumps -->
         <ItemsControl Grid.Column="1" Grid.Row="1"

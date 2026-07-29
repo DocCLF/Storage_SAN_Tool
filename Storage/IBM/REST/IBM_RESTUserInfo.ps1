@@ -46,20 +46,22 @@ function IBM_RESTUserInfo {
     process{
         [int]$imax = $TD_DeviceInformation.Count
         [array]$TD_UserInfoResault = for ($i = 0; $i -le $imax; $i++) {
+            if([string]::IsNullOrWhiteSpace($TD_DeviceInformation.id[$i])){continue}
             <# Node Info#>
-            $TD_Userinfo = "" | Select-Object ID,User_Name,Password,SSH_Key,Remote,UserGrp_ID,UserGrp_Name,Owner_ID,Owner_Name,Locked,PW_Change_required,WWNN,SerialNumber
+            $TD_Userinfo = "" | Select-Object ID,UserName,Password,SSHKey,Remote,UserGrpID,UserGrpName,OwnerID,OwnerName,Locked,PWChangerequired,WWNN,SerialNumber,RowID
 
             $TD_Userinfo.ID                 = $TD_DeviceInformation.id[$i]
-            $TD_Userinfo.User_Name          = $TD_DeviceInformation.name[$i]
+            $TD_Userinfo.UserName          = $TD_DeviceInformation.name[$i]
             $TD_Userinfo.Password           = $TD_DeviceInformation.password[$i]
-            $TD_Userinfo.SSH_Key            = $TD_DeviceInformation.ssh_key[$i]
+            $TD_Userinfo.SSHKey            = $TD_DeviceInformation.ssh_key[$i]
             $TD_Userinfo.Remote             = $TD_DeviceInformation.remote[$i]
-            $TD_Userinfo.UserGrp_ID         = $TD_DeviceInformation.usergrp_id[$i]
-            $TD_Userinfo.UserGrp_Name       = $TD_DeviceInformation.usergrp_name[$i]
-            $TD_Userinfo.Owner_ID           = $TD_DeviceInformation.owner_id[$i]
-            $TD_Userinfo.Owner_Name         = $TD_DeviceInformation.owner_name[$i]
+            $TD_Userinfo.UserGrpID         = $TD_DeviceInformation.usergrp_id[$i]
+            $TD_Userinfo.UserGrpName       = $TD_DeviceInformation.usergrp_name[$i]
+            $TD_Userinfo.OwnerID           = $TD_DeviceInformation.owner_id[$i]
+            $TD_Userinfo.OwnerName         = $TD_DeviceInformation.owner_name[$i]
             $TD_Userinfo.Locked             = $TD_DeviceInformation.locked[$i]
-            $TD_Userinfo.PW_Change_required = $TD_DeviceInformation.password_change_required[$i]
+            $TD_Userinfo.PWChangerequired = $TD_DeviceInformation.password_change_required[$i]
+            $TD_Userinfo.RowID          = "$IBMSTOSN|$($TD_DeviceInformation.id)"
 
             $TD_Userinfo.WWNN = $IBMSTOWWNN
             $TD_Userinfo.SerialNumber = $IBMSTOSN

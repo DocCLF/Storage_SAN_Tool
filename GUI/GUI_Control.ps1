@@ -1149,6 +1149,39 @@ $TD_BTN_IBM_SecurityInfo.add_click({
         $UCVMMain.SelectedView = "Security"
     }
 })
+$TD_BTN_IBM_UserInfo.add_click({
+    $TD_GB_SearchFilterSTO.Visibility="Collapsed"
+    <#Get all Device Cred and count them #>
+    $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_.DeviceTyp -like "*Storage*"}
+    <# get the DataConteext of the current View/ means UC and if its nul trow an error #>
+    $UCDataContext = $TD_UserControl_IBMSTO.DataContext
+    if (-not $UCDataContext) { Write-Host "DataContext ist NULL!" -ForegroundColor Red; return }
+    <# if there is a DataContext find th Main Part und put it into UCVMMain#>
+    $UCVMMain = $UCDataContext.Main
+    <# if there a something in, its better to clean it up befor we use it again #>
+    $UCVMMain.DeviceToggles.Clear()
+    foreach($TD_Creds in $TD_Credentials){
+        $FunctionResult = New-DeviceBlock -Device $TD_Creds -ExportPath $TD_TB_ExportPath.Text -RESTFunc IBM_RESTUserInfo -SSHFunc $null
+        
+        $mapUserInfo = @{
+            ID                 = 'ID'
+            UserName           = 'UserName'
+            Password           = 'Password'
+            SSHKey            = 'SSHKey'
+            Remote             = 'Remote'
+            UserGrpID         = 'UserGrpID'
+            UserGrpName       = 'UserGrpName'
+            OwnerID           = 'OwnerID'
+            OwnerName         = 'OwnerName'
+            Locked             = 'Locked'
+            PWChangerequired = 'PWChangerequired'
+        }
+        Add-MappedRows -Collection $FunctionResult.DeviceIdent.UserInfoRows -Source $FunctionResult.FuncResult -IdProperty 'RowID' -Map $mapUserInfo
+
+        $UCVMMain.DeviceToggles.Add($FunctionResult.DeviceIdent)
+        $UCVMMain.SelectedView = "UserInfo"
+    }
+})
 $TD_BTN_IBM_CleanUpDumps.add_click({
     $TD_GB_SearchFilterSTO.Visibility="Collapsed"
     <#Get all Device Cred and count them #>

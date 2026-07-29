@@ -94,6 +94,7 @@ public class DeviceToggle : INotifyPropertyChanged
     public ObservableCollection<object> FCPortStatsRows { get; } = new ObservableCollection<object>();
     public ObservableCollection<object> PartitionRows { get; } = new ObservableCollection<object>();
     public ObservableCollection<object> SecurityRows { get; } = new ObservableCollection<object>();
+    public ObservableCollection<object> UserInfoRows { get; } = new ObservableCollection<object>();
     // === DG SAN ===
     public ObservableCollection<object> SANSwitchBaseRows { get; } = new ObservableCollection<object>();
     public ObservableCollection<object> SANSwitchShowRows { get; } = new ObservableCollection<object>();
