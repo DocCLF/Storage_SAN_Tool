@@ -80,4 +80,14 @@
             </DataTrigger>
         </Style.Triggers>
     </Style>
+
+    <!-- Nur sichtbar, wenn Main.SelectedView == SecureCheck -->
+    <Style x:Key="ShowWhenSecureCheck" TargetType="ItemsControl">
+        <Setter Property="Visibility" Value="Collapsed"/>
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding Main.SelectedView}" Value="SecureCheck">
+                <Setter Property="Visibility" Value="Visible"/>
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
 </ResourceDictionary>

@@ -110,8 +110,8 @@ function New-DeviceBlock {
     $DeviceIdent.Id = "DeviceBlock$($Device.ID)"
     $LabelName = $null
     # Label robust: ClusterName kann je nach Result-Shape anders sein
-    if ($SSHFunc -like "FOS*" -and $FunResult.PSObject.Properties.Name -contains 'FOSZoneCfgName') {
-        $LabelName = $FunResult.FOSZoneCfgName
+    if ($RESTFunc -like "*Brocade*" -and $FunResult.PSObject.Properties.Name -contains 'SwitchName') {
+        $LabelName = $FunResult.SwitchName
     }else {
         $LabelName = $FunResult.ClusterName
     }

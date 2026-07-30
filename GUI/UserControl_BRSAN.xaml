@@ -33,6 +33,7 @@
         <GroupBox Grid.Column="0" Grid.RowSpan="4" Header="Actions"  HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,10,0,0">
             <StackPanel>
                 <!--FOS_Versio-->
+                <!-- Not needed since REST usage
                 <ComboBox
                     x:Name="cb_FOS_Version"
                     Foreground="Red"
@@ -44,6 +45,7 @@
                     <ComboBoxItem IsSelected="True">FOS 9.x</ComboBoxItem>
                     <ComboBoxItem >FOS 8.x</ComboBoxItem>
                 </ComboBox>
+                -->
                 <!--FOS_BasicSwichInfo-->
                 <ToggleButton
                 x:Name="BTN_FOS_BasicSwitchInfo"
@@ -629,6 +631,493 @@
                 </StackPanel>
             </DataTemplate>
           </ItemsControl.ItemTemplate>
+        </ItemsControl>
+        <!-- FOS Secure Check -->
+        <ItemsControl Grid.Column="1"
+                      Grid.Row="1"
+                      ItemsSource="{Binding Main.DeviceToggles}"
+                      Style="{DynamicResource ShowWhenSecureCheck}">
+
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <StackPanel/>
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+
+                    <!--
+                        DataContext ist hier das aktuelle DeviceIdent-Objekt:
+                        DeviceName
+                        DeviceIP
+                        IsChecked
+                        SecureCheckRows
+                    -->
+                    <Border Margin="5"
+                            Padding="10"
+                            Width="940"
+                            BorderBrush="LightGray"
+                            BorderThickness="1"
+                            CornerRadius="3"
+                            Visibility="{Binding IsChecked,
+                                                 Converter={StaticResource BooleanToVisibilityConverter},
+                                                 FallbackValue=Collapsed}">
+
+                        <!-- Ein Expander pro Switch -->
+                        <Expander IsExpanded="False">
+
+                            <Expander.Header>
+                                    <TextBlock Text="{Binding SecureCheckTitle}" FontWeight="Bold" FontSize="14"/>
+                            </Expander.Header>
+
+                            <!--
+                                Erst hier wechseln wir vom DeviceIdent
+                                auf die SecureCheckRows des aktuellen Switches.
+                            -->
+                            <ItemsControl ItemsSource="{Binding SecureCheckRows}">
+
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+
+                                        <!--
+                                            DataContext ist hier ein einzelner
+                                            SecureCheckRows-Datensatz.
+                                        -->
+                                        <StackPanel Margin="5,10,5,5">
+
+                                            <!-- SSH -->
+                                            <GroupBox Header="SSH Crypto"
+                                                      Margin="0,0,0,10">
+
+                                                <Grid Margin="10">
+
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="190"/>
+                                                        <ColumnDefinition Width="*"/>
+                                                    </Grid.ColumnDefinitions>
+
+                                                    <Grid.RowDefinitions>
+                                                        <RowDefinition Height="Auto"/>
+                                                        <RowDefinition Height="Auto"/>
+                                                        <RowDefinition Height="Auto"/>
+                                                        <RowDefinition Height="Auto"/>
+                                                        <RowDefinition Height="Auto"/>
+                                                    </Grid.RowDefinitions>
+
+                                                    <TextBlock Grid.Row="0"
+                                                               Grid.Column="0"
+                                                               Text="SSH Cipher:"
+                                                               FontWeight="SemiBold"
+                                                               Margin="0,4,10,4"/>
+
+                                                    <TextBlock Grid.Row="0"
+                                                               Grid.Column="1"
+                                                               Text="{Binding SSHCipher}"
+                                                               TextWrapping="Wrap"
+                                                               Margin="0,4"/>
+
+                                                    <TextBlock Grid.Row="1"
+                                                               Grid.Column="0"
+                                                               Text="SSH Key Exchange:"
+                                                               FontWeight="SemiBold"
+                                                               Margin="0,4,10,4"/>
+
+                                                    <TextBlock Grid.Row="1"
+                                                               Grid.Column="1"
+                                                               Text="{Binding SSHKeyExchange}"
+                                                               TextWrapping="Wrap"
+                                                               Margin="0,4"/>
+
+                                                    <TextBlock Grid.Row="2"
+                                                               Grid.Column="0"
+                                                               Text="SSH MAC:"
+                                                               FontWeight="SemiBold"
+                                                               Margin="0,4,10,4"/>
+
+                                                    <TextBlock Grid.Row="2"
+                                                               Grid.Column="1"
+                                                               Text="{Binding SSHMacConfiguration}"
+                                                               TextWrapping="Wrap"
+                                                               Margin="0,4"/>
+
+                                                    <TextBlock Grid.Row="3"
+                                                               Grid.Column="0"
+                                                               Text="Host Key Algorithms:"
+                                                               FontWeight="SemiBold"
+                                                               Margin="0,4,10,4"/>
+
+                                                    <TextBlock Grid.Row="3"
+                                                               Grid.Column="1"
+                                                               Text="{Binding SSHHostKeyAlgorithms}"
+                                                               TextWrapping="Wrap"
+                                                               Margin="0,4"/>
+
+                                                    <TextBlock Grid.Row="4"
+                                                               Grid.Column="0"
+                                                               Text="Public Key Algorithms:"
+                                                               FontWeight="SemiBold"
+                                                               Margin="0,4,10,4"/>
+
+                                                    <TextBlock Grid.Row="4"
+                                                               Grid.Column="1"
+                                                               Text="{Binding SSHPublicKeyAlgorithms}"
+                                                               TextWrapping="Wrap"
+                                                               Margin="0,4"/>
+
+                                                </Grid>
+                                            </GroupBox>
+
+                                            <!-- TLS Ciphers -->
+                                            <GroupBox Header="TLS Ciphers"
+                                                      Margin="0,0,0,10">
+
+                                                <Grid Margin="10">
+
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="190"/>
+                                                        <ColumnDefinition Width="*"/>
+                                                    </Grid.ColumnDefinitions>
+
+                                                    <Grid.RowDefinitions>
+                                                        <RowDefinition Height="Auto"/>
+                                                        <RowDefinition Height="Auto"/>
+                                                        <RowDefinition Height="Auto"/>
+                                                        <RowDefinition Height="Auto"/>
+                                                        <RowDefinition Height="Auto"/>
+                                                        <RowDefinition Height="Auto"/>
+                                                        <RowDefinition Height="Auto"/>
+                                                        <RowDefinition Height="Auto"/>
+                                                    </Grid.RowDefinitions>
+
+                                                    <TextBlock Grid.Row="0"
+                                                               Grid.Column="0"
+                                                               Text="HTTPS:"
+                                                               FontWeight="SemiBold"
+                                                               Margin="0,4,10,4"/>
+
+                                                    <TextBlock Grid.Row="0"
+                                                               Grid.Column="1"
+                                                               Text="{Binding HTTPSCipherExpression}"
+                                                               TextWrapping="Wrap"
+                                                               Margin="0,4"/>
+
+                                                    <TextBlock Grid.Row="1"
+                                                               Grid.Column="0"
+                                                               Text="HTTPS TLS 1.3:"
+                                                               FontWeight="SemiBold"
+                                                               Margin="0,4,10,4"/>
+
+                                                    <TextBlock Grid.Row="1"
+                                                               Grid.Column="1"
+                                                               Text="{Binding HTTPSTLS13Cipher}"
+                                                               TextWrapping="Wrap"
+                                                               Margin="0,4"/>
+
+                                                    <TextBlock Grid.Row="2"
+                                                               Grid.Column="0"
+                                                               Text="RADIUS:"
+                                                               FontWeight="SemiBold"
+                                                               Margin="0,4,10,4"/>
+
+                                                    <TextBlock Grid.Row="2"
+                                                               Grid.Column="1"
+                                                               Text="{Binding RADIUSCipherExpression}"
+                                                               TextWrapping="Wrap"
+                                                               Margin="0,4"/>
+
+                                                    <TextBlock Grid.Row="3"
+                                                               Grid.Column="0"
+                                                               Text="LDAP:"
+                                                               FontWeight="SemiBold"
+                                                               Margin="0,4,10,4"/>
+
+                                                    <TextBlock Grid.Row="3"
+                                                               Grid.Column="1"
+                                                               Text="{Binding LDAPCipherExpression}"
+                                                               TextWrapping="Wrap"
+                                                               Margin="0,4"/>
+
+                                                    <TextBlock Grid.Row="4"
+                                                               Grid.Column="0"
+                                                               Text="SYSLOG:"
+                                                               FontWeight="SemiBold"
+                                                               Margin="0,4,10,4"/>
+
+                                                    <TextBlock Grid.Row="4"
+                                                               Grid.Column="1"
+                                                               Text="{Binding SYSLOGCipherExpression}"
+                                                               TextWrapping="Wrap"
+                                                               Margin="0,4"/>
+
+                                                    <TextBlock Grid.Row="5"
+                                                               Grid.Column="0"
+                                                               Text="RSA:"
+                                                               FontWeight="SemiBold"
+                                                               Margin="0,4,10,4"/>
+
+                                                    <TextBlock Grid.Row="5"
+                                                               Grid.Column="1"
+                                                               Text="{Binding RSACipher}"
+                                                               TextWrapping="Wrap"
+                                                               Margin="0,4"/>
+
+                                                    <TextBlock Grid.Row="6"
+                                                               Grid.Column="0"
+                                                               Text="FA:"
+                                                               FontWeight="SemiBold"
+                                                               Margin="0,4,10,4"/>
+
+                                                    <TextBlock Grid.Row="6"
+                                                               Grid.Column="1"
+                                                               Text="{Binding FACipher}"
+                                                               TextWrapping="Wrap"
+                                                               Margin="0,4"/>
+
+                                                    <TextBlock Grid.Row="7"
+                                                               Grid.Column="0"
+                                                               Text="SMTPS:"
+                                                               FontWeight="SemiBold"
+                                                               Margin="0,4,10,4"/>
+
+                                                    <TextBlock Grid.Row="7"
+                                                               Grid.Column="1"
+                                                               Text="{Binding SMTPSCipher}"
+                                                               TextWrapping="Wrap"
+                                                               Margin="0,4"/>
+
+                                                </Grid>
+                                            </GroupBox>
+
+                                            <!-- TLS Protocols -->
+                                            <GroupBox Header="TLS Protocols"
+                                                      Margin="0,0,0,10">
+
+                                                <Grid Margin="10">
+
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="190"/>
+                                                        <ColumnDefinition Width="*"/>
+                                                    </Grid.ColumnDefinitions>
+
+                                                    <Grid.RowDefinitions>
+                                                        <RowDefinition Height="Auto"/>
+                                                        <RowDefinition Height="Auto"/>
+                                                        <RowDefinition Height="Auto"/>
+                                                        <RowDefinition Height="Auto"/>
+                                                        <RowDefinition Height="Auto"/>
+                                                        <RowDefinition Height="Auto"/>
+                                                        <RowDefinition Height="Auto"/>
+                                                    </Grid.RowDefinitions>
+
+                                                    <TextBlock Grid.Row="0"
+                                                               Grid.Column="0"
+                                                               Text="HTTPS:"
+                                                               FontWeight="SemiBold"
+                                                               Margin="0,4,10,4"/>
+
+                                                    <TextBlock Grid.Row="0"
+                                                               Grid.Column="1"
+                                                               Text="{Binding HTTPSTLSProtocol}"
+                                                               TextWrapping="Wrap"
+                                                               Margin="0,4"/>
+
+                                                    <TextBlock Grid.Row="1"
+                                                               Grid.Column="0"
+                                                               Text="RADIUS:"
+                                                               FontWeight="SemiBold"
+                                                               Margin="0,4,10,4"/>
+
+                                                    <TextBlock Grid.Row="1"
+                                                               Grid.Column="1"
+                                                               Text="{Binding RADIUSTLSProtocol}"
+                                                               TextWrapping="Wrap"
+                                                               Margin="0,4"/>
+
+                                                    <TextBlock Grid.Row="2"
+                                                               Grid.Column="0"
+                                                               Text="LDAP:"
+                                                               FontWeight="SemiBold"
+                                                               Margin="0,4,10,4"/>
+
+                                                    <TextBlock Grid.Row="2"
+                                                               Grid.Column="1"
+                                                               Text="{Binding LDAPTLSProtocol}"
+                                                               TextWrapping="Wrap"
+                                                               Margin="0,4"/>
+
+                                                    <TextBlock Grid.Row="3"
+                                                               Grid.Column="0"
+                                                               Text="SYSLOG:"
+                                                               FontWeight="SemiBold"
+                                                               Margin="0,4,10,4"/>
+
+                                                    <TextBlock Grid.Row="3"
+                                                               Grid.Column="1"
+                                                               Text="{Binding SYSLOGTLSProtocol}"
+                                                               TextWrapping="Wrap"
+                                                               Margin="0,4"/>
+
+                                                    <TextBlock Grid.Row="4"
+                                                               Grid.Column="0"
+                                                               Text="RSA:"
+                                                               FontWeight="SemiBold"
+                                                               Margin="0,4,10,4"/>
+
+                                                    <TextBlock Grid.Row="4"
+                                                               Grid.Column="1"
+                                                               Text="{Binding RSATLSProtocol}"
+                                                               TextWrapping="Wrap"
+                                                               Margin="0,4"/>
+
+                                                    <TextBlock Grid.Row="5"
+                                                               Grid.Column="0"
+                                                               Text="FA:"
+                                                               FontWeight="SemiBold"
+                                                               Margin="0,4,10,4"/>
+
+                                                    <TextBlock Grid.Row="5"
+                                                               Grid.Column="1"
+                                                               Text="{Binding FATLSProtocol}"
+                                                               TextWrapping="Wrap"
+                                                               Margin="0,4"/>
+
+                                                    <TextBlock Grid.Row="6"
+                                                               Grid.Column="0"
+                                                               Text="SMTPS:"
+                                                               FontWeight="SemiBold"
+                                                               Margin="0,4,10,4"/>
+
+                                                    <TextBlock Grid.Row="6"
+                                                               Grid.Column="1"
+                                                               Text="{Binding SMTPSTLSProtocol}"
+                                                               TextWrapping="Wrap"
+                                                               Margin="0,4"/>
+
+                                                </Grid>
+                                            </GroupBox>
+
+                                            <!-- Compliance -->
+                                            <GroupBox Header="X509 / Compliance"
+                                                      Margin="0,0,0,10">
+
+                                                <Grid Margin="10">
+
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="190"/>
+                                                        <ColumnDefinition Width="*"/>
+                                                    </Grid.ColumnDefinitions>
+
+                                                    <Grid.RowDefinitions>
+                                                        <RowDefinition Height="Auto"/>
+                                                        <RowDefinition Height="Auto"/>
+                                                        <RowDefinition Height="Auto"/>
+                                                        <RowDefinition Height="Auto"/>
+                                                    </Grid.RowDefinitions>
+
+                                                    <TextBlock Grid.Row="0"
+                                                               Grid.Column="0"
+                                                               Text="X509 Validation:"
+                                                               FontWeight="SemiBold"
+                                                               Margin="0,4,10,4"/>
+
+                                                    <TextBlock Grid.Row="0"
+                                                               Grid.Column="1"
+                                                               Text="{Binding X509ValidationMode}"
+                                                               TextWrapping="Wrap"
+                                                               Margin="0,4"/>
+
+                                                    <TextBlock Grid.Row="1"
+                                                               Grid.Column="0"
+                                                               Text="Crypto Version:"
+                                                               FontWeight="SemiBold"
+                                                               Margin="0,4,10,4"/>
+
+                                                    <TextBlock Grid.Row="1"
+                                                               Grid.Column="1"
+                                                               Text="{Binding CryptoVersion}"
+                                                               Margin="0,4"/>
+
+                                                    <TextBlock Grid.Row="2"
+                                                               Grid.Column="0"
+                                                               Text="FIPS Inside:"
+                                                               FontWeight="SemiBold"
+                                                               Margin="0,4,10,4"/>
+
+                                                    <TextBlock Grid.Row="2"
+                                                               Grid.Column="1"
+                                                               Text="{Binding FIPSInside}"
+                                                               Margin="0,4"/>
+
+                                                    <TextBlock Grid.Row="3"
+                                                               Grid.Column="0"
+                                                               Text="Boot-up Selftests:"
+                                                               FontWeight="SemiBold"
+                                                               Margin="0,4,10,4"/>
+
+                                                    <TextBlock Grid.Row="3"
+                                                               Grid.Column="1"
+                                                               Text="{Binding BootUpSelfTestEnabled}"
+                                                               Margin="0,4"/>
+
+                                                </Grid>
+                                            </GroupBox>
+
+                                            <!-- Source -->
+                                            <GroupBox Header="Source">
+
+                                                <Grid Margin="10">
+
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="190"/>
+                                                        <ColumnDefinition Width="*"/>
+                                                    </Grid.ColumnDefinitions>
+
+                                                    <Grid.RowDefinitions>
+                                                        <RowDefinition Height="Auto"/>
+                                                        <RowDefinition Height="Auto"/>
+                                                    </Grid.RowDefinitions>
+
+                                                    <TextBlock Grid.Row="0"
+                                                               Grid.Column="0"
+                                                               Text="Data Source:"
+                                                               FontWeight="SemiBold"
+                                                               Margin="0,4,10,4"/>
+
+                                                    <TextBlock Grid.Row="0"
+                                                               Grid.Column="1"
+                                                               Text="{Binding DataSource}"
+                                                               Margin="0,4"/>
+
+                                                    <TextBlock Grid.Row="1"
+                                                               Grid.Column="0"
+                                                               Text="REST Endpoint:"
+                                                               FontWeight="SemiBold"
+                                                               Margin="0,4,10,4"/>
+
+                                                    <TextBlock Grid.Row="1"
+                                                               Grid.Column="1"
+                                                               Text="{Binding RestEndpoint}"
+                                                               TextWrapping="Wrap"
+                                                               Margin="0,4"/>
+
+                                                </Grid>
+                                            </GroupBox>
+
+                                        </StackPanel>
+
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+
+                            </ItemsControl>
+
+                        </Expander>
+
+                    </Border>
+
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+
         </ItemsControl>
     </Grid>
     </ScrollViewer>

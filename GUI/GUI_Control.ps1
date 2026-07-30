@@ -1642,8 +1642,80 @@ $TD_BTN_FOS_SecureCheck.add_click({
         <# if there a something in, its better to clean it up befor we use it again #>
         $UCVMMain.DeviceToggles.Clear()
         foreach($TD_Creds in $TD_Credentials){
-            $FunctionResult = New-DeviceBlock -Device $TD_Creds -ExportPath $TD_TB_ExportPath.Text -RESTFunc Get-BrocadeBaseInfo -SSHFunc $null
+            $FunctionResult = New-DeviceBlock -Device $TD_Creds -ExportPath $TD_TB_ExportPath.Text -RESTFunc GET-BrocadeSecureCheck -SSHFunc $null
+            # Get the function's return value
+            $dev = $FunctionResult.DeviceIdent
+            $SecureResult = $FunctionResult.FuncResult
+
+            $dev.SecureCheckTitle = "SecureCheck for - $($dev.Label)"
+
+            $OptionalProperties = @(
+                'SSHHostKeyAlgorithms'
+                'SSHPublicKeyAlgorithms'
+                'RSACipher'
+                'FACipher'
+                'SMTPSCipher'
+                'RSATLSProtocol'
+                'FATLSProtocol'
+                'SMTPSTLSProtocol'
+                'FIPSInside'
+            )
+
+            # Check each result object individually
+            foreach ($SecureRow in @($SecureResult)) {
+            
+                foreach ($PropertyName in $OptionalProperties) {
+                
+                    $Property = $SecureRow.PSObject.Properties[$PropertyName]
+                
+                    if ($null -eq $Property) {
+                        # REST—or rather, the function—did not create this property on this object at all
+                        $SecureRow | Add-Member -MemberType NoteProperty -Name $PropertyName -Value 'Not provided by REST or FOS Version'
+                    }
+                    elseif ($null -eq $Property.Value) {
+                        # The property exists but does not contain a value
+                        $Property.Value = 'Not provided by REST or FOS Version'
+                    }
+                }
+            }
+
+            $mapSecureCheck = @{
+                SSHCipher                 = 'SSHCipher'
+                SSHKeyExchange            = 'SSHKeyExchange'
+                SSHMacConfiguration       = 'SSHMacConfiguration'
+                SSHHostKeyAlgorithms      = 'SSHHostKeyAlgorithms'
+                SSHPublicKeyAlgorithms    = 'SSHPublicKeyAlgorithms'
+
+                HTTPSCipherExpression     = 'HTTPSCipherExpression'
+                HTTPSTLS13Cipher          = 'HTTPSTLS13Cipher'
+                RADIUSCipherExpression    = 'RADIUSCipherExpression'
+                LDAPCipherExpression      = 'LDAPCipherExpression'
+                SYSLOGCipherExpression    = 'SYSLOGCipherExpression'
+                RSACipher                 = 'RSACipher'
+                FACipher                  = 'FACipher'
+                SMTPSCipher               = 'SMTPSCipher'
+
+                HTTPSTLSProtocol          = 'HTTPSTLSProtocol'
+                RADIUSTLSProtocol         = 'RADIUSTLSProtocol'
+                LDAPTLSProtocol           = 'LDAPTLSProtocol'
+                SYSLOGTLSProtocol         = 'SYSLOGTLSProtocol'
+                RSATLSProtocol            = 'RSATLSProtocol'
+                FATLSProtocol             = 'FATLSProtocol'
+                SMTPSTLSProtocol          = 'SMTPSTLSProtocol'
+
+                X509ValidationMode        = 'X509ValidationMode'
+                CryptoVersion             = 'CryptoVersion'
+                FIPSInside                = 'FIPSInside'
+                BootUpSelfTestEnabled     = 'BootUpSelfTestEnabled'
+
+                DataSource                = 'DataSource'
+                RestEndpoint              = 'RestEndpoint'
+            }
+            Add-MappedRows -Collection $dev.SecureCheckRows -Source $SecureResult -IdProperty 'RowID' -Map $mapSecureCheck
+
+            $UCVMMain.DeviceToggles.Add($FunctionResult.DeviceIdent)
         }
+        $UCVMMain.SelectedView = "SecureCheck"
     }finally{
         SST_ToolMessageCollector -TD_ToolMSGCollector "GET_BrocadeSecureCheck done" -TD_ToolMSGType Message -TD_Shown yes
     }

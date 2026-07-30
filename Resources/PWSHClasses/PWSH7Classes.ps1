@@ -102,6 +102,7 @@ public class DeviceToggle : INotifyPropertyChanged
     public ObservableCollection<object> SANPortErrorShowRows { get; } = new ObservableCollection<object>();
     public ObservableCollection<object> SANSFPDetailsRows { get; } = new ObservableCollection<object>();
     public ObservableCollection<object> SANZoneDetailsRows { get; } = new ObservableCollection<object>();
+    public ObservableCollection<object> SecureCheckRows { get; } = new ObservableCollection<object>();
     // === BTN PWR ===
     public ObservableCollection<object> HmcRows { get; } = new ObservableCollection<object>();
     public ObservableCollection<object> ManagedSystemRows { get; } = new ObservableCollection<object>();
