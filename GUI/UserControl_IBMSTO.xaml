@@ -1247,6 +1247,14 @@
             </ItemsControl.ItemsPanel>
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
+                 <StackPanel>
+                    <!-- Headline Label pro Device -->
+                    <Label Content="User Info"
+                        Style="{DynamicResource MainLabelStyle}"
+                        FontSize="12"
+                        Margin="5,8,5,0"
+                        Visibility="{Binding IsChecked, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                        
                     <ItemsControl ItemsSource="{Binding UserInfoRows}"
                                   Visibility="{Binding IsChecked,
                                                        Converter={StaticResource BooleanToVisibilityConverter},
@@ -1266,7 +1274,7 @@
                                 </Style.Triggers>
                             </Style>
                         </ItemsControl.Style>
-                        <!-- Button pro HMC Row -->
+                        <!-- Button pro User -->
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
                                 <Button Style="{DynamicResource DashBoardBTNStyle}"
@@ -1350,6 +1358,7 @@
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>
                     </ItemsControl>
+                 </StackPanel>
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
         </ItemsControl>
