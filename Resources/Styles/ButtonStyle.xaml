@@ -156,6 +156,23 @@
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
+        <!-- Properties from the bound UserInfoRow object -->
+        <Style.Triggers>
+            <!-- Password change required -->
+            <DataTrigger Binding="{Binding PWChangerequired}" Value="yes">
+                <Setter Property="Background" Value="OrangeRed"/>
+                <Setter Property="Foreground" Value="White"/>
+                <Setter Property="BorderBrush" Value="DarkRed"/>
+                <Setter Property="BorderThickness" Value="2"/>
+            </DataTrigger>
+            <!-- The user is blocked -->
+            <DataTrigger Binding="{Binding Locked}" Value="True">
+                <Setter Property="Background" Value="Red"/>
+                <Setter Property="Foreground" Value="White"/>
+                <Setter Property="BorderBrush" Value="DarkRed"/>
+                <Setter Property="BorderThickness" Value="2"/>
+            </DataTrigger>
+        </Style.Triggers>
     </Style>
 
     <Style TargetType="{x:Type Button}" x:Key="HealthBoardBTNStyle" >
