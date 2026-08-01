@@ -113,6 +113,71 @@ public class MainViewModel : INotifyPropertyChanged
     }
 }
 
+public class SANHealthCheckStep : INotifyPropertyChanged
+{
+    private string _status;
+    private string _details;
+    private int _dataCount;
+
+    public string Id { get; set; }
+    public string Name { get; set; }
+
+    public SANHealthCheckStep()
+    {
+        _status = "Pending";
+        _details = "";
+        _dataCount = 0;
+    }
+
+    public string Status
+    {
+        get { return _status; }
+        set
+        {
+            if (_status != value)
+            {
+                _status = value;
+                OnPropertyChanged("Status");
+            }
+        }
+    }
+
+    public string Details
+    {
+        get { return _details; }
+        set
+        {
+            if (_details != value)
+            {
+                _details = value;
+                OnPropertyChanged("Details");
+            }
+        }
+    }
+
+    public int DataCount
+    {
+        get { return _dataCount; }
+        set
+        {
+            if (_dataCount != value)
+            {
+                _dataCount = value;
+                OnPropertyChanged("DataCount");
+            }
+        }
+    }
+
+    public event PropertyChangedEventHandler PropertyChanged;
+
+    protected void OnPropertyChanged(string name)
+    {
+        var handler = PropertyChanged;
+        if (handler != null)
+            handler(this, new PropertyChangedEventArgs(name));
+    }
+}
+
 public class DeviceToggle : INotifyPropertyChanged
 {
     private bool _isChecked;
@@ -139,6 +204,9 @@ public class DeviceToggle : INotifyPropertyChanged
     private ObservableCollection<object> _sANSFPDetailsRows;
     private ObservableCollection<object> _sANZoneDetailsRows;
     private ObservableCollection<object> _secureCheckRows;
+    private ObservableCollection<object> _sANHealthCheckRows;
+    private ObservableCollection<object> _userCFGCheckRows;
+    private ObservableCollection<object> _pWCFGCheckRows;
 
     private ObservableCollection<object> _hmcRows;
     private ObservableCollection<object> _managedSystemRows;
@@ -161,11 +229,12 @@ public class DeviceToggle : INotifyPropertyChanged
     private string _backUpInfoTitle;
     private string _backUpInfoText;
     private ObservableCollection<object> _licenseInfoRows;
-    private string _licenseInfoTitle;
+    private string _DeviceTitle;
     private string _licenseInfoText;
     private ObservableCollection<object> _sensorShowRows;
     private string _sensorShowTitle;
     private string _sensorShowText;
+    private string _sanHealthCheckTitle;
 
     public DeviceToggle()
     {
@@ -191,6 +260,9 @@ public class DeviceToggle : INotifyPropertyChanged
         _sANSFPDetailsRows = new ObservableCollection<object>();
         _sANZoneDetailsRows = new ObservableCollection<object>();
         _secureCheckRows = new ObservableCollection<object>();
+        _sANHealthCheckRows = new ObservableCollection<object>();
+        _userCFGCheckRows = new ObservableCollection<object>();
+        _pWCFGCheckRows = new ObservableCollection<object>();
 
         _hmcRows = new ObservableCollection<object>();
         _managedSystemRows = new ObservableCollection<object>();
@@ -213,11 +285,12 @@ public class DeviceToggle : INotifyPropertyChanged
         _backUpInfoTitle = "";
         _backUpInfoText = "";
         _licenseInfoRows = new ObservableCollection<object>();
-        _licenseInfoTitle = "";
+        _DeviceTitle = "";
         _licenseInfoText = "";
         _sensorShowRows = new ObservableCollection<object>();
         _sensorShowTitle = "";
         _sensorShowText = "";
+        _sanHealthCheckTitle = "";
     }
 
     public string Id { get; set; }
@@ -245,6 +318,9 @@ public class DeviceToggle : INotifyPropertyChanged
     public ObservableCollection<object> SANSFPDetailsRows { get { return _sANSFPDetailsRows; } }
     public ObservableCollection<object> SANZoneDetailsRows { get { return _sANZoneDetailsRows; } }
     public ObservableCollection<object> SecureCheckRows { get { return _secureCheckRows; } }
+    public ObservableCollection<object> SANHealthCheckRows { get { return _sANHealthCheckRows; } }
+    public ObservableCollection<object> UserCFGCheckRows { get { return _userCFGCheckRows; } }
+    public ObservableCollection<object> PWCFGCheckRows { get { return _pWCFGCheckRows; } }
 
     public ObservableCollection<object> HmcRows { get { return _hmcRows; } }
     public ObservableCollection<object> ManagedSystemRows { get { return _managedSystemRows; } }
@@ -300,15 +376,28 @@ public class DeviceToggle : INotifyPropertyChanged
             }
         }
     }
-    public string LicenseInfoTitle
+    public string DeviceTitle
     {
-        get { return _licenseInfoTitle; }
+        get { return _DeviceTitle; }
         set
         {
-            if (_licenseInfoTitle != value)
+            if (_DeviceTitle != value)
             {
-                _licenseInfoTitle = value;
-                OnPropertyChanged("LicenseInfoTitle");
+                _DeviceTitle = value;
+                OnPropertyChanged("DeviceTitle");
+            }
+        }
+    }
+
+    public string SANHealthCheckTitle
+    {
+        get { return _sanHealthCheckTitle; }
+        set
+        {
+            if (_sanHealthCheckTitle != value)
+            {
+                _sanHealthCheckTitle = value;
+                OnPropertyChanged("SANHealthCheckTitle");
             }
         }
     }

@@ -53,7 +53,6 @@ function Get-BrocadeManagementIPInterface {
 
     $res.Data.'management-ip-interface'
 }
-
 function Get-BrocadeFcPorts {
     [CmdletBinding()]
     param(
@@ -94,6 +93,97 @@ function Get-BrocadeSecurity {
     }
 
     $res.Data.'sec-crypto-cfg'
+}
+function Get-BrocadePasswdcfg {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory)]
+        $Device,
+        [PSCredential]$Credential
+    )
+
+    $InvokeParams = @{
+        Device        = $Device
+        FOSOperation  = "running/brocade-security/password-cfg"
+        IgnoreVFID    = $true
+    }
+
+    if ($Credential) {
+        $InvokeParams.Credential = $Credential
+    }
+
+    $res = Invoke-BrocadeRest @InvokeParams
+
+    if (-not $res.Success) {
+        return $res
+    }
+
+    $res.Data.'password-cfg'
+}
+function Get-BrocadeIPfilter {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory)]
+        $Device,
+
+        [PSCredential]$Credential
+    )
+
+    $InvokeParams = @{
+        Device       = $Device
+        FOSOperation = 'running/brocade-security/ipfilter-policy'
+        IgnoreVFID   = $true
+    }
+
+    if ($Credential) {
+        $InvokeParams.Credential = $Credential
+    }
+
+    $res = Invoke-BrocadeRest @InvokeParams
+
+    if (-not $res.Success) {
+        return $res
+    }
+
+    $IPFilterPolicies = @(
+        $res.Data.'ipfilter-policy'
+    )
+
+    foreach ($Policy in $IPFilterPolicies) {
+        [PSCustomObject]@{
+            PolicyName = $Policy.name
+            IPVersion  = $Policy.'ip-version'
+            IsActive   = [bool]$Policy.'is-policy-active'
+            IsDefault  = [bool]$Policy.'is-default-policy'
+            RawData    = $Policy
+        }
+    }
+}
+function Get-BrocadeUsercfg {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory)]
+        $Device,
+        [PSCredential]$Credential
+    )
+
+    $InvokeParams = @{
+        Device        = $Device
+        FOSOperation  = "running/brocade-security/user-config"
+        IgnoreVFID    = $true
+    }
+
+    if ($Credential) {
+        $InvokeParams.Credential = $Credential
+    }
+
+    $res = Invoke-BrocadeRest @InvokeParams
+
+    if (-not $res.Success) {
+        return $res
+    }
+
+    $res.Data.'user-config'
 }
 function Get-BrocadeSfp {
     [CmdletBinding()]
@@ -139,25 +229,6 @@ function Get-BrocadeFCstatistics {
     }
     
     $res.Data.'fibrechannel-statistics'
-}
-<# The “diag” requires higher privileges than the “user” role, so this will not be pursued further for now. #>
-<# The function returns the following with (user role): 
-    Error=Response status code does not indicate success: 405 (Method Not Allowed)
-#>
-function Get-BrocadeFCdiagnostics {
-    [CmdletBinding()]
-    param(
-        [Parameter(Mandatory)]
-        $Device
-    )
-
-    $res = Invoke-BrocadeRest -Device $Device -FOSOperation "running/brocade-fibrechannel-diagnostics"
-
-    if(-not $res.Success){
-        return $res
-    }
-    
-    $res.Data.'brocade-fibrechannel-diagnostics'
 }
 function Get-BrocadeEffectiveZoneConfig {
     param($Device)
@@ -239,7 +310,6 @@ function Get-BrocadeLicenseInfo {
 
     return $LicenseRes.Data
 }
-
 function Get-BrocadeFruSensorRaw{
     [CmdletBinding()]
     param(
@@ -264,29 +334,62 @@ function Get-BrocadeTemperatureInfo {
 
     $Sensor = Get-BrocadeFruSensorRaw -Device $Device
 
-    $TempSensors = @($Sensor | Where-Object {$_.category -eq 'temperature'})
+    # REST-Fehler unverändert nach oben weitergeben.
+    if (
+        $null -ne $Sensor -and
+        $null -ne $Sensor.PSObject.Properties['Success'] -and
+        -not [bool]$Sensor.Success
+    ) {
+        return $Sensor
+    }
+
+    $TempSensors = @(
+        $Sensor |
+            Where-Object { $_.category -eq 'temperature' }
+    )
+
     $TemperatureInfo = @($TempSensors.temperature)
-    $MaxTemp = if($TemperatureInfo){($TemperatureInfo | Measure-Object -Maximum).Maximum}
-    $MinTemp = if($TemperatureInfo){($TemperatureInfo | Measure-Object -Minimum).Minimum}
-    <# This is needed because WinPW 5.1 #>
-    $AverageTemp = if($TemperatureInfo){
-            [math]::Round((($TemperatureInfo | Measure-Object -Average).Average),1)
-        }
-    $HealthState = switch($MaxTemp){
-            {$_ -ge 60} { 'Critical' }
-            {$_ -ge 50} { 'Warning' }
-            default { 'OK' }
-        }
-    $HotSensors = @($TempSensors | Where-Object {$_.temperature -ge 40}).Count
-    $FaultySensors = @($TempSensors | Where-Object {$_.state -ne 'ok'}).Count
+
+    # Keine Temperatursensoren gefunden.
+    if ($TemperatureInfo.Count -eq 0) {
+        return
+    }
+
+    $MaxTemp = ($TemperatureInfo |
+        Measure-Object -Maximum).Maximum
+
+    $MinTemp = ($TemperatureInfo |
+        Measure-Object -Minimum).Minimum
+
+    $AverageTemp = [math]::Round(
+        (($TemperatureInfo |
+            Measure-Object -Average).Average),
+        1
+    )
+
+    $HealthState = switch ($MaxTemp) {
+        { $_ -ge 60 } { 'Critical'; break }
+        { $_ -ge 50 } { 'Warning';  break }
+        default       { 'OK' }
+    }
+
+    $HotSensors = @(
+        $TempSensors |
+            Where-Object { $_.temperature -ge 40 }
+    ).Count
+
+    $FaultySensors = @(
+        $TempSensors |
+            Where-Object { $_.state -ne 'ok' }
+    ).Count
 
     [PSCustomObject]@{
-        SensorCount = $TemperatureInfo.Count
-        AverageTemp = $AverageTemp
-        MaxTemp = $MaxTemp
-        MinTemp = $MinTemp
-        HotSensors = $HotSensors
-        HealthState = $HealthState
+        SensorCount  = $TemperatureInfo.Count
+        AverageTemp  = $AverageTemp
+        MaxTemp      = $MaxTemp
+        MinTemp      = $MinTemp
+        HotSensors   = $HotSensors
+        HealthState  = $HealthState
         FaultySensors = $FaultySensors
     }
 }
@@ -314,17 +417,25 @@ function Get-BrocadeFanInfo {
 
     $Fans = Get-BrocadeFruFanRaw -Device $Device
 
-    foreach($Fan in @($Fans)){
+    # REST-Fehler unverändert zurückgeben.
+    if (
+        $null -ne $Fans -and
+        $null -ne $Fans.PSObject.Properties['Success'] -and
+        -not [bool]$Fans.Success
+    ) {
+        return $Fans
+    }
 
+    foreach ($Fan in @($Fans)) {
         [PSCustomObject]@{
-            Fan = "Fan$($Fan.'unit-number')"
-            State = $Fan.'operational-state'
-            SpeedRPM = $Fan.speed
-            Airflow = $Fan.'airflow-direction'
+            Fan            = "Fan$($Fan.'unit-number')"
+            State          = $Fan.'operational-state'
+            SpeedRPM       = $Fan.speed
+            Airflow        = $Fan.'airflow-direction'
             TimeAwakeHours = $Fan.'time-awake'
-            SerialNumber = $Fan.'serial-number'
-            PartNumber = $Fan.'part-number'
-            IsHealthy = $Fan.'operational-state' -eq 'ok'
+            SerialNumber   = $Fan.'serial-number'
+            PartNumber     = $Fan.'part-number'
+            IsHealthy      = $Fan.'operational-state' -eq 'ok'
         }
     }
 }
@@ -350,54 +461,65 @@ function Get-BrocadePowerSupplyInfo {
         $Device
     )
 
-    $PowerSupplies = Get-BrocadeFruPowerSupplyRaw -Device $Device 
-    <# This is needed because WinPW 5.1 #>
-    foreach($PSU in @($PowerSupplies)){
+    $PowerSupplies = Get-BrocadeFruPowerSupplyRaw -Device $Device
+
+    # REST-Fehler unverändert zurückgeben.
+    if (
+        $null -ne $PowerSupplies -and
+        $null -ne $PowerSupplies.PSObject.Properties['Success'] -and
+        -not [bool]$PowerSupplies.Success
+    ) {
+        return $PowerSupplies
+    }
+
+    foreach ($PSU in @($PowerSupplies)) {
         $State = $PSU.'operational-state'
-        $Severity = switch($State){
 
-                'ok'      { 'OK' }
+        $Severity = switch ($State) {
+            'ok'      { 'OK';       break }
+            'warning' { 'Warning';  break }
+            'faulty'  { 'Critical'; break }
+            default   { 'Unknown' }
+        }
 
-                'warning' { 'Warning' }
+        $InputVoltage = if ($null -ne $PSU.'input-voltage') {
+            "$($PSU.'input-voltage') V"
+        }
 
-                'faulty'  { 'Critical' }
-
-                default   { 'Unknown' }
-            }
-        $InputVoltage = if($PSU.'input-voltage'){"$($PSU.'input-voltage') V"}
-        $PowerUsage = if($PSU.'power-usage'){"$($PSU.'power-usage') W"}
+        $PowerUsage = if ($null -ne $PSU.'power-usage') {
+            "$($PSU.'power-usage') W"
+        }
 
         [PSCustomObject]@{
-            PowerSupply = "PSU$($PSU.'unit-number')"
-            UnitNumber = $PSU.'unit-number'
-            State = $State
-            IsHealthy = $State -eq 'ok'
-            Severity = $Severity
-            PowerSource = $PSU.'power-source'
-            InputVoltage = $InputVoltage
-            PowerUsage = $PowerUsage
-            Airflow = $PSU.'airflow-direction'
+            PowerSupply                = "PSU$($PSU.'unit-number')"
+            UnitNumber                 = $PSU.'unit-number'
+            State                      = $State
+            IsHealthy                  = $State -eq 'ok'
+            Severity                   = $Severity
+            PowerSource                = $PSU.'power-source'
+            InputVoltage               = $InputVoltage
+            PowerUsage                 = $PowerUsage
+            Airflow                    = $PSU.'airflow-direction'
             TemperatureSensorSupported = $PSU.'temperature-sensor-supported'
-            TimeAwakeHours = $PSU.'time-awake'
-            SerialNumber = $PSU.'serial-number'
-            PartNumber = $PSU.'part-number'
-            ManufactureDate = $PSU.'manufacture-date'
+            TimeAwakeHours             = $PSU.'time-awake'
+            SerialNumber               = $PSU.'serial-number'
+            PartNumber                 = $PSU.'part-number'
         }
     }
 }
-function Get-BrocadeFruWwnRaw{
-    [CmdletBinding()]
-    param(
-        [Parameter(Mandatory)]
-        $Device
-    )
-
-    $res = Invoke-BrocadeRest -Device $Device -FOSOperation "running/brocade-fru/wwn"
-
-    if(-not $res.Success){
-        return $res
-    }
-    
-    $res.Data.'fibrechannel-statistics'
-}
-
+# Get-BrocadeFCdiagnostics needs more study
+#function Get-BrocadeFCdiagnostics {
+#    [CmdletBinding()]
+#    param(
+#        [Parameter(Mandatory)]
+#        $Device
+#    )
+#
+#    $res = Invoke-BrocadeRest -Device $Device -FOSOperation "running/brocade-fibrechannel-diagnostics"
+#    Write-Host $res
+#    if(-not $res.Success){
+#        return $res
+#    }
+#    
+#    $res.Data.'brocade-fibrechannel-diagnostics'
+#}

@@ -17,7 +17,7 @@ All notable changes to this project will be documented in this file.
 - REST Function for IBM Storage
 - REST Function for IBM Power
 - REST Function for IBM Tape
-- REST Function for Brocade SAN Switches (min. FOS 9.0 / lower FOS 9.0 is using cli-Standard)
+- REST Function for Brocade SAN Switches (min. FOS 9.0 / lower FOS 9.0 is using cli-Standard (but cil will removed))
 - UseBasicParsing for Powershell 5.1 
 - TextBox for Customer Number (who is needed for Local DB)
 - Search filters have been added where useful.
@@ -25,6 +25,8 @@ All notable changes to this project will be documented in this file.
 - PBHA and DR Support
 - STO simple Security Check
 - Brocade simple Security Check
+- Brocade User Info
+- Brocade PW Info
 
 ### Fixed
 - ToolLog on GUI, Some entries were not displayed or were displayed incorrectly

@@ -1162,7 +1162,9 @@ $TD_BTN_IBM_UserInfo.add_click({
     $UCVMMain.DeviceToggles.Clear()
     foreach($TD_Creds in $TD_Credentials){
         $FunctionResult = New-DeviceBlock -Device $TD_Creds -ExportPath $TD_TB_ExportPath.Text -RESTFunc IBM_RESTUserInfo -SSHFunc $null
-        
+        $dev = $FunctionResult.DeviceIdent
+        $dev.DeviceTitle = "UserInfo for - $($dev.DeviceTitle)"
+
         $mapUserInfo = @{
             ID                 = 'ID'
             UserName           = 'UserName'
@@ -1176,9 +1178,9 @@ $TD_BTN_IBM_UserInfo.add_click({
             Locked             = 'Locked'
             PWChangerequired = 'PWChangerequired'
         }
-        Add-MappedRows -Collection $FunctionResult.DeviceIdent.UserInfoRows -Source $FunctionResult.FuncResult -IdProperty 'RowID' -Map $mapUserInfo
+        Add-MappedRows -Collection $dev.UserInfoRows -Source $FunctionResult.FuncResult -IdProperty 'RowID' -Map $mapUserInfo
 
-        $UCVMMain.DeviceToggles.Add($FunctionResult.DeviceIdent)
+        $UCVMMain.DeviceToggles.Add($dev)
         $UCVMMain.SelectedView = "UserInfo"
     }
 })
@@ -1647,7 +1649,7 @@ $TD_BTN_FOS_SecureCheck.add_click({
             $dev = $FunctionResult.DeviceIdent
             $SecureResult = $FunctionResult.FuncResult
 
-            $dev.SecureCheckTitle = "SecureCheck for - $($dev.Label)"
+            $dev.DeviceTitle = "SecureCheck for - $($dev.Label)"
 
             $OptionalProperties = @(
                 'SSHHostKeyAlgorithms'
@@ -1680,6 +1682,10 @@ $TD_BTN_FOS_SecureCheck.add_click({
             }
 
             $mapSecureCheck = @{
+                #IP Filter
+                IPFilterPolicyCount       = 'IPFilterPolicyCount'
+                IPFilterError             = 'IPFilterError'
+                # Security
                 SSHCipher                 = 'SSHCipher'
                 SSHKeyExchange            = 'SSHKeyExchange'
                 SSHMacConfiguration       = 'SSHMacConfiguration'
@@ -1712,12 +1718,149 @@ $TD_BTN_FOS_SecureCheck.add_click({
                 RestEndpoint              = 'RestEndpoint'
             }
             Add-MappedRows -Collection $dev.SecureCheckRows -Source $SecureResult -IdProperty 'RowID' -Map $mapSecureCheck
-
+            $MappedSecureRow = $dev.SecureCheckRows |  Select-Object -Last 1
+            $SourceSecureRow = @($SecureResult) | Select-Object -First 1
+            if ($null -ne $MappedSecureRow -and $null -ne $SourceSecureRow) {
+                $IPFilterPolicies = @($SourceSecureRow.IPFilterPolicies | Where-Object { $null -ne $_ })
+                $MappedSecureRow | Add-Member -MemberType NoteProperty -Name IPFilterPolicies -Value ([object[]]@($SourceSecureRow.IPFilterPolicies)) -Force      
+            }
             $UCVMMain.DeviceToggles.Add($FunctionResult.DeviceIdent)
         }
         $UCVMMain.SelectedView = "SecureCheck"
     }finally{
         SST_ToolMessageCollector -TD_ToolMSGCollector "GET_BrocadeSecureCheck done" -TD_ToolMSGType Message -TD_Shown yes
+    }
+})
+$TD_BTN_FOS_UserCFG.add_click({
+        #$TD_GB_SearchFilter.Visibility = "visible"
+    try{
+        <#Get all Device Cred and count them #>
+        $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_.DeviceTyp -like "*SAN*" }
+
+        <# get the DataConteext of the current View/ means UC and if its nul trow an error #>
+        $UCDataContext = $TD_UserControl_BRSAN.DataContext
+        if (-not $UCDataContext) { Write-Host "DataContext ist NULL!" -ForegroundColor Red; return }
+        <# if there is a DataContext find th Main Part und put it into UCVMMain#>
+        $UCVMMain = $UCDataContext.Main
+        <# if there a something in, its better to clean it up befor we use it again #>
+        $UCVMMain.DeviceToggles.Clear()
+        foreach($TD_Creds in $TD_Credentials){
+            $FunctionResult = New-DeviceBlock -Device $TD_Creds -ExportPath $TD_TB_ExportPath.Text -RESTFunc Get-BrocadeUserCFGOverview -SSHFunc $null
+            # Get the function's return value
+            $dev = $FunctionResult.DeviceIdent
+            $UserCFGResult = $FunctionResult.FuncResult
+
+            $mapUserCFGCheck = @{
+                UserName                = 'UserName'              
+                Description             = 'Description'           
+                IsEnabled               = 'IsEnabled'             
+                UsesDefaultPassword     = 'UsesDefaultPassword'   
+                PasswordChangeEnforced  = 'PasswordChangeEnforced'
+                IsLocked                = 'IsLocked'              
+                HomeVirtualFabric       = 'HomeVirtualFabric'     
+                VirtualFabricRoles      = 'VirtualFabricRoles'    
+                VirtualFabricRolesText  = 'VirtualFabricRolesText'
+                ChassisAccessRole       = 'ChassisAccessRole'     
+                AccessStartTime         = 'AccessStartTime'       
+                AccessEndTime           = 'AccessEndTime'         
+                AuthTokenPresent        = 'AuthTokenPresent'
+                CreationTime            = 'CreationTime'      
+                RawData                 = 'RawData'                            
+            }
+            Add-MappedRows -Collection $dev.UserCFGCheckRows -Source $UserCFGResult -IdProperty 'RowID' -Map $mapUserCFGCheck
+
+            $UCVMMain.DeviceToggles.Add($FunctionResult.DeviceIdent)
+        }
+        $UCVMMain.SelectedView = "UserCFGCheck"
+    }finally{
+        SST_ToolMessageCollector -TD_ToolMSGCollector "Get-BrocadeUserCFG done" -TD_ToolMSGType Message -TD_Shown yes
+    }
+})
+$TD_BTN_FOS_PWCFG.add_click({
+    #$TD_GB_SearchFilter.Visibility = "visible"
+    try {
+        # Get all Device Cred and count them 
+        $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource | Where-Object { $_.DeviceTyp -like '*SAN*' }
+        # Retrieve the DataContext of the Brocade UserControl.
+        $UCDataContext = $TD_UserControl_BRSAN.DataContext
+        if (-not $UCDataContext) { 
+            Write-Host 'DataContext ist NULL!' -ForegroundColor Red
+            return
+        }
+
+        $UCVMMain = $UCDataContext.Main
+
+        # Remove the previous device view.
+        $UCVMMain.DeviceToggles.Clear()
+
+        # The order will later correspond to the order in the DataGrid.
+        $mapPWCFGCheck = [ordered]@{
+            HashType                   = 'HashType'
+            ManualHashEnabled          = 'ManualHashEnabled'
+            MinimumLength              = 'MinimumLength'
+            CharacterSet               = 'CharacterSet'
+            UserNameAllowed            = 'UserNameAllowed'
+
+            MinimumLowerCaseCharacters = 'MinimumLowerCaseCharacters'
+            MinimumUpperCaseCharacters = 'MinimumUpperCaseCharacters'
+            MinimumNumericCharacters   = 'MinimumNumericCharacters'
+            MinimumSpecialCharacters   = 'MinimumSpecialCharacters'
+
+            PastPasswordHistory        = 'PastPasswordHistory'
+            MinimumPasswordAge         = 'MinimumPasswordAge'
+            MaximumPasswordAge         = 'MaximumPasswordAge'
+            WarnOnExpire               = 'WarnOnExpire'
+
+            LockOutThreshold           = 'LockOutThreshold'
+            LockOutDuration            = 'LockOutDuration'
+            AdminLockOutEnabled        = 'AdminLockOutEnabled'
+
+            RepeatCharacterLimit       = 'RepeatCharacterLimit'
+            SequenceCharacterLimit     = 'SequenceCharacterLimit'
+            ReverseUserNameAllowed     = 'ReverseUserNameAllowed'
+            MinimumDifference          = 'MinimumDifference'
+
+            PasswordConfigChanged      = 'PasswordConfigChanged'
+            DataSource                 = 'DataSource'
+            CreationTime               = 'CreationTime'
+        }
+
+        foreach ($TD_Creds in $TD_Credentials) {
+
+            $FunctionResult = New-DeviceBlock -Device $TD_Creds -ExportPath $TD_TB_ExportPath.Text -RESTFunc Get-BrocadePWCFG -SSHFunc $null
+
+            $deviceIdent = $FunctionResult['DeviceIdent']
+            $funcResult  = $FunctionResult['FuncResult']
+
+            # New-DeviceBlock currently returns FuncResult as an array.
+            # For the static password policy, we need exactly
+            # a single result object.
+            if ($funcResult -is [object[]]) {
+                $funcResult = @($funcResult | Where-Object {$null -ne $_ -and $_.PSObject.Properties.Count -gt 0 }) | Select-Object -First 1
+            }
+
+            # Do not display the REST error object as a password policy.
+            $IsRestError = $null -ne $funcResult -and $funcResult.PSObject.Properties['Success'] -and -not [bool]$funcResult.Success
+
+            if ($IsRestError) {
+                SST_ToolMessageCollector -TD_ToolMSGCollector "Get-BrocadePWCFG failed for $($TD_Creds.IPAddress): $($funcResult.Error)" -TD_ToolMSGType Error -TD_Shown yes
+                continue
+            }
+
+            if ($null -eq $funcResult) {
+                SST_ToolMessageCollector -TD_ToolMSGCollector "Get-BrocadePWCFG returned no data for $($TD_Creds.IPAddress)." -TD_ToolMSGType Warning -TD_Shown yes
+                continue
+            }
+
+            # Generate key/value rows from the static object.
+            Add-MappedKeyValueRows -Collection $deviceIdent.PWCFGCheckRows -Source $funcResult -Map $mapPWCFGCheck
+
+            $UCVMMain.DeviceToggles.Add($deviceIdent)
+        }
+        $UCVMMain.SelectedView = 'PWCFGCheck'
+    }
+    finally {
+        SST_ToolMessageCollector -TD_ToolMSGCollector 'Get-BrocadePWCFG done' -TD_ToolMSGType Message -TD_Shown yes
     }
 })
 $TD_BTN_FOS_ZoneDetailsShow.add_click({
@@ -1811,7 +1954,7 @@ $TD_BTN_FOS_PortLicenseShow.add_click({
             # Rechts = Propertyname im Source-Objekt
             $dev = $FunctionResult.DeviceIdent
             $License = $FunctionResult.FuncResult
-            $dev.LicenseInfoTitle = "LicenseInfo for - $($dev.Label)"
+            $dev.DeviceTitle = "LicenseInfo for - $($dev.Label)"
 
             $LicenseText = @(
                 "License ID     : $($License.LicenseID)"

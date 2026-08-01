@@ -11,6 +11,7 @@ function GET-BrocadeSecureCheck {
         $SwitchInfo = Get-BrocadeSwitchInfo -Device $Device
         $ChassisInfo = Get-BrocadeChassisInfo -Device $Device
         $SwitchSecurityInfo = Get-BrocadeSecurity -Device $Device
+        #$SwitchIPfilterInfo = Get-BrocadeIPfilter -Device $Device
 
         $SwitchName = $SwitchInfo.'user-friendly-name'
         if ([string]::IsNullOrWhiteSpace($SwitchName)) {
@@ -44,10 +45,12 @@ Please enter a user with sufficient permissions.
                 Write-ProgressBar -ProgressBar $PB -Activity 'Retry with privileged credentials' -PercentComplete 40
 
                 $SwitchSecurityInfo = Get-BrocadeSecurity -Device $Device -Credential $PrivilegedCredential
+                $SwitchIPfilterInfo = Get-BrocadeIPfilter -Device $Device -Credential $PrivilegedCredential
+                
 
                 $PrivilegedCredential = $null
 
-                if ($SwitchSecurityInfo.PSObject.Properties['Success'] -and-not $SwitchSecurityInfo.Success) {
+                if ($SwitchSecurityInfo.PSObject.Properties['Success'] -and -not $SwitchSecurityInfo.Success) {
                     return $SwitchSecurityInfo
                 }
             }
@@ -55,6 +58,11 @@ Please enter a user with sufficient permissions.
                 return $SwitchSecurityInfo
             }
         }
+        Write-ProgressBar -ProgressBar $PB -Activity 'Retry with privileged credentials' -PercentComplete 60
+
+        $IPFilterRestError = $null -ne $SwitchIPfilterInfo -and $SwitchIPfilterInfo.PSObject.Properties['Success'] -and -not $SwitchIPfilterInfo.Success
+        $IPFilterPolicies = if ($IPFilterRestError) { @() } else { @($SwitchIPfilterInfo) }
+        $IPFilterError          = if ($IPFilterRestError) {$SwitchIPfilterInfo.Error} else {$null}
 
         $SSHHostKeyAlgorithms   = if($SwitchSecurityInfo.PSObject.Properties['ssh-host-key-algorithms']){$SwitchSecurityInfo.'ssh-host-key-algorithms'}else{$null}
         $SSHPublicKeyAlgorithms = if($SwitchSecurityInfo.PSObject.Properties['ssh-pub-key-algorithms']){$SwitchSecurityInfo.'ssh-pub-key-algorithms'}else{$null}
@@ -65,12 +73,17 @@ Please enter a user with sufficient permissions.
         $FATLSProtocol          = if($SwitchSecurityInfo.PSObject.Properties['fa-tls-protocol']){$SwitchSecurityInfo.'fa-tls-protocol'}else{$null}
         $SMTPSTLSProtocol       = if($SwitchSecurityInfo.PSObject.Properties['smtps-tls-protocol']){$SwitchSecurityInfo.'smtps-tls-protocol'}else{$null}
         $FIPSInside             = if($SwitchSecurityInfo.PSObject.Properties['fips-inside']){$SwitchSecurityInfo.'fips-inside'}else{$null}
+        
 
         Write-ProgressBar -ProgressBar $PB -Activity 'Security information collected' -PercentComplete 100
 
         $RowID = "$($SwitchSecurityInfo.count)|$($Device.ID)"
 
         $FOS_SwitchSecurityInfo = [PSCustomObject]@{
+            IPFilterPolicies       = $IPFilterPolicies
+            IPFilterPolicyCount    = $IPFilterPolicies.Count
+            IPFilterError          = $IPFilterError
+
             SSHCipher                  = $SwitchSecurityInfo.'ssh-cipher'
             SSHKeyExchange             = $SwitchSecurityInfo.'ssh-kex'
             SSHMacConfiguration        = $SwitchSecurityInfo.'ssh-mac'
@@ -106,7 +119,7 @@ Please enter a user with sufficient permissions.
             RowID                       = $RowID
         }
 
-        Out-File -FilePath "$($TD_TB_ExportPath.Text)\BasicSwitchInfo_$($SwitchName)_$(Get-Date -Format "yyyy-MM-dd").csv" -InputObject $FOS_SwitchSecurityInfo
+        Out-File -FilePath "$($TD_TB_ExportPath.Text)\SwitchSecurityInfo_$($SwitchName)_$(Get-Date -Format "yyyy-MM-dd").csv" -InputObject $FOS_SwitchSecurityInfo
         
     }
     finally {

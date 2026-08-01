@@ -94,7 +94,19 @@
                 Style="{DynamicResource MainBtnStyle}"
                 Content="Port Buffer Show" 
                 ToolTip="Get the buffer usage information for a port group or for all port groups in the switch"/>
-                <!--FOS_PortBufferShow-->
+                <!--IBM_UserInfo-->
+                <ToggleButton
+                x:Name="BTN_FOS_UserCFG"
+                Style="{DynamicResource MainBtnStyle}"
+                Content="User Overview" 
+                ToolTip="Need to put something in"/>
+                <!--FOS_PWCFGCheck-->
+                <ToggleButton
+                x:Name="BTN_FOS_PWCFG"
+                Style="{DynamicResource MainBtnStyle}"
+                Content="PW Settings" 
+                ToolTip="Need to put something in"/>
+                <!--FOS_SecureCheck-->
                 <ToggleButton
                 x:Name="BTN_FOS_SecureCheck"
                 Style="{DynamicResource MainBtnStyle}"
@@ -585,7 +597,7 @@
           <ItemsControl.ItemTemplate>
             <DataTemplate>
                 <StackPanel>
-                  <Label Content="{Binding LicenseInfoTitle}"
+                  <Label Content="{Binding DeviceTitle}"
                          Style="{DynamicResource MainLabelStyle}"
                          Margin="5,8,5,0"
                          Visibility="{Binding IsChecked, Converter={StaticResource BooleanToVisibilityConverter}}"/>
@@ -633,8 +645,7 @@
           </ItemsControl.ItemTemplate>
         </ItemsControl>
         <!-- FOS Secure Check -->
-        <ItemsControl Grid.Column="1"
-                      Grid.Row="1"
+        <ItemsControl Grid.Column="1" Grid.Row="1"
                       ItemsSource="{Binding Main.DeviceToggles}"
                       Style="{DynamicResource ShowWhenSecureCheck}">
 
@@ -648,13 +659,13 @@
                 <DataTemplate>
 
                     <!--
-                        DataContext ist hier das aktuelle DeviceIdent-Objekt:
+                        DataContext is the current DeviceIdent object here:
                         DeviceName
                         DeviceIP
                         IsChecked
                         SecureCheckRows
                     -->
-                    <Border Margin="5"
+                    <Border Margin="2"
                             Padding="10"
                             Width="940"
                             BorderBrush="LightGray"
@@ -664,16 +675,16 @@
                                                  Converter={StaticResource BooleanToVisibilityConverter},
                                                  FallbackValue=Collapsed}">
 
-                        <!-- Ein Expander pro Switch -->
-                        <Expander IsExpanded="False">
+                        <!-- One expander per switch -->
+                        <Expander IsExpanded="true">
 
                             <Expander.Header>
-                                    <TextBlock Text="{Binding SecureCheckTitle}" FontWeight="Bold" FontSize="14"/>
+                                    <TextBlock Text="{Binding DeviceTitle}" FontWeight="Bold" FontSize="14"/>
                             </Expander.Header>
 
                             <!--
-                                Erst hier wechseln wir vom DeviceIdent
-                                auf die SecureCheckRows des aktuellen Switches.
+                                It is only here that we switch from DeviceIdent
+                                to the SecureCheckRows of the current switch.
                             -->
                             <ItemsControl ItemsSource="{Binding SecureCheckRows}">
 
@@ -681,8 +692,8 @@
                                     <DataTemplate>
 
                                         <!--
-                                            DataContext ist hier ein einzelner
-                                            SecureCheckRows-Datensatz.
+                                It is only here that we switch from DeviceIdent
+                                to the SecureCheckRows of the current switch.
                                         -->
                                         <StackPanel Margin="5,10,5,5">
 
@@ -1062,7 +1073,128 @@
 
                                                 </Grid>
                                             </GroupBox>
+                                            <!-- IP Filter Policies -->
+                                            <GroupBox Header="IP Filter Policies"
+                                                      Margin="0,0,0,10">
 
+                                                <StackPanel Margin="10">
+
+                                                    <!-- Summary -->
+                                                    <Grid Margin="0,0,0,8">
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition Width="190"/>
+                                                            <ColumnDefinition Width="*"/>
+                                                        </Grid.ColumnDefinitions>
+
+                                                        <Grid.RowDefinitions>
+                                                            <RowDefinition Height="Auto"/>
+                                                            <RowDefinition Height="Auto"/>
+                                                        </Grid.RowDefinitions>
+
+                                                        <TextBlock Grid.Row="0"
+                                                                   Grid.Column="0"
+                                                                   Text="Policy Count:"
+                                                                   FontWeight="SemiBold"
+                                                                   Margin="0,4,10,4"/>
+
+                                                        <TextBlock Grid.Row="0"
+                                                                   Grid.Column="1"
+                                                                   Text="{Binding IPFilterPolicyCount}"
+                                                                   Margin="0,4"/>
+
+                                                        <TextBlock Grid.Row="1"
+                                                                   Grid.Column="0"
+                                                                   Text="Collection Error:"
+                                                                   FontWeight="SemiBold"
+                                                                   Margin="0,4,10,4"/>
+
+                                                        <TextBlock Grid.Row="1"
+                                                                   Grid.Column="1"
+                                                                   Text="{Binding IPFilterError}"
+                                                                   TextWrapping="Wrap"
+                                                                   Margin="0,4"/>
+                                                    </Grid>
+
+                                                    <!-- Dynamic list of all existing policies -->
+                                                    <ItemsControl ItemsSource="{Binding IPFilterPolicies}">
+
+                                                        <ItemsControl.ItemTemplate>
+                                                            <DataTemplate>
+
+                                                                <!-- DataContext refers to a single IP filter policy here -->
+                                                                <Border Margin="0,3"
+                                                                        Padding="8"
+                                                                        BorderBrush="LightGray"
+                                                                        BorderThickness="1"
+                                                                        CornerRadius="3">
+
+                                                                    <Grid>
+                                                                        <Grid.ColumnDefinitions>
+                                                                            <ColumnDefinition Width="190"/>
+                                                                            <ColumnDefinition Width="*"/>
+                                                                        </Grid.ColumnDefinitions>
+
+                                                                        <Grid.RowDefinitions>
+                                                                            <RowDefinition Height="Auto"/>
+                                                                            <RowDefinition Height="Auto"/>
+                                                                            <RowDefinition Height="Auto"/>
+                                                                            <RowDefinition Height="Auto"/>
+                                                                        </Grid.RowDefinitions>
+
+                                                                        <TextBlock Grid.Row="0"
+                                                                                   Grid.Column="0"
+                                                                                   Text="Policy Name:"
+                                                                                   FontWeight="SemiBold"
+                                                                                   Margin="0,3,10,3"/>
+
+                                                                        <TextBlock Grid.Row="0"
+                                                                                   Grid.Column="1"
+                                                                                   Text="{Binding PolicyName}"
+                                                                                   Margin="0,3"/>
+
+                                                                        <TextBlock Grid.Row="1"
+                                                                                   Grid.Column="0"
+                                                                                   Text="IP Version:"
+                                                                                   FontWeight="SemiBold"
+                                                                                   Margin="0,3,10,3"/>
+
+                                                                        <TextBlock Grid.Row="1"
+                                                                                   Grid.Column="1"
+                                                                                   Text="{Binding IPVersion}"
+                                                                                   Margin="0,3"/>
+
+                                                                        <TextBlock Grid.Row="2"
+                                                                                   Grid.Column="0"
+                                                                                   Text="Active:"
+                                                                                   FontWeight="SemiBold"
+                                                                                   Margin="0,3,10,3"/>
+
+                                                                        <TextBlock Grid.Row="2"
+                                                                                   Grid.Column="1"
+                                                                                   Text="{Binding IsActive}"
+                                                                                   Margin="0,3"/>
+
+                                                                        <TextBlock Grid.Row="3"
+                                                                                   Grid.Column="0"
+                                                                                   Text="Default Policy:"
+                                                                                   FontWeight="SemiBold"
+                                                                                   Margin="0,3,10,3"/>
+
+                                                                        <TextBlock Grid.Row="3"
+                                                                                   Grid.Column="1"
+                                                                                   Text="{Binding IsDefault}"
+                                                                                   Margin="0,3"/>
+
+                                                                    </Grid>
+                                                                </Border>
+
+                                                            </DataTemplate>
+                                                        </ItemsControl.ItemTemplate>
+
+                                                    </ItemsControl>
+
+                                                </StackPanel>
+                                            </GroupBox>
                                             <!-- Source -->
                                             <GroupBox Header="Source">
 
@@ -1118,6 +1250,178 @@
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
 
+        </ItemsControl>
+        <!-- IBM_UserInfo -->
+        <ItemsControl Grid.Column="1" Grid.Row="1"
+                      ItemsSource="{Binding Main.DeviceToggles}"
+                      Style="{DynamicResource ShowWhenUserCFGCheck}">
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <WrapPanel Orientation="Horizontal" MaxWidth="1400" />
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                 <StackPanel>
+                    <!-- Headline Label pro Device -->
+                    <Label Content="{Binding DeviceTitle}"
+                        Style="{DynamicResource MainLabelStyle}"
+                        FontSize="12"
+                        Margin="5,8,5,0"
+                        Visibility="{Binding IsChecked, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                        
+                    <ItemsControl ItemsSource="{Binding UserCFGCheckRows}"
+                                  Visibility="{Binding IsChecked,
+                                                       Converter={StaticResource BooleanToVisibilityConverter},
+                                                       FallbackValue=Collapsed}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <WrapPanel/>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <!-- Hide if there are no items -->
+                        <ItemsControl.Style>
+                            <Style TargetType="ItemsControl">
+                                <Style.Triggers>
+                                    <Trigger Property="HasItems" Value="False">
+                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </ItemsControl.Style>
+                        <!-- Button pro User -->
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Button Style="{DynamicResource DashBoardBTNStyle}"
+                                        Margin="8,5,5,5"
+                                        MinWidth="380"
+                                        MaxWidth="500"
+                                        ToolTipService.InitialShowDelay="10">
+                                    <Grid Margin="5">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition MaxHeight="250"/>
+                                            <RowDefinition Height="20"/>
+                                        </Grid.RowDefinitions>
+                                        <Grid Grid.Row="0">
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition />
+                                                <RowDefinition />
+                                                <RowDefinition />
+                                                <RowDefinition />
+                                                <RowDefinition />
+                                                <RowDefinition />
+                                                <RowDefinition />
+                                                <RowDefinition />
+                                                <RowDefinition />
+                                                <RowDefinition />
+                                            </Grid.RowDefinitions>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition MaxWidth="100" />
+                                                <ColumnDefinition Width="Auto" />
+                                                <ColumnDefinition />
+                                            </Grid.ColumnDefinitions>
+                                            <!-- Falls deine Row ein Icon hat: -->
+                                             <Ellipse Grid.RowSpan="10" Width="90" Height="90">
+                                                <Ellipse.Fill>
+                                                    <ImageBrush 
+                                                        ImageSource="{Binding DataContext.STOIcon, RelativeSource={RelativeSource AncestorType=UserControl}}" 
+                                                        Stretch="Uniform" />
+                                                </Ellipse.Fill>
+                                            </Ellipse>
+                                            <TextBlock Grid.Column="1" Style="{DynamicResource DashBoardTB1}"
+                                                       VerticalAlignment="Center" Text="Name:" Margin="3,0"/>
+                                            <TextBlock Grid.Column="2" Style="{DynamicResource DashBoardTB1}"
+                                                       VerticalAlignment="Center" Text="{Binding UserName}" />
+                                            <TextBlock Grid.Row="2" Grid.Column="1" Style="{DynamicResource DashBoardTB1}"
+                                                       VerticalAlignment="Center" Text="Description:" Margin="3,0"/>
+                                            <TextBlock Grid.Row="2" Grid.Column="2" Style="{DynamicResource DashBoardTB1}"
+                                                       VerticalAlignment="Center" Text="{Binding Description}" />
+                                            <TextBlock Grid.Row="3" Grid.Column="1" Style="{DynamicResource DashBoardTB1}"
+                                                       VerticalAlignment="Center" Text="IsEnabled:" Margin="3,0"/>
+                                            <TextBlock Grid.Row="3" Grid.Column="2" Style="{DynamicResource DashBoardTB1}"
+                                                       VerticalAlignment="Center" Text="{Binding IsEnabled}" />
+                                            <TextBlock Grid.Row="4" Grid.Column="1" Style="{DynamicResource DashBoardTB1}"
+                                                       VerticalAlignment="Center" Text="UsesDefaultPassword:" Margin="3,0"/>
+                                            <TextBlock Grid.Row="4" Grid.Column="2" Style="{DynamicResource DashBoardTB1}"
+                                                       VerticalAlignment="Center" Text="{Binding UsesDefaultPassword}" />
+                                            <TextBlock Grid.Row="5" Grid.Column="1" Style="{DynamicResource DashBoardTB1}"
+                                                       VerticalAlignment="Center" Text="UserGrp PasswordChangeEnforced:" Margin="3,0"/>
+                                            <TextBlock Grid.Row="5" Grid.Column="2" Style="{DynamicResource DashBoardTB1}"
+                                                       VerticalAlignment="Center" Text="{Binding PasswordChangeEnforced}" />
+                                            <TextBlock Grid.Row="6" Grid.Column="1" Style="{DynamicResource DashBoardTB1}"
+                                                       VerticalAlignment="Center" Text="Owner IsLocked:" Margin="3,0"/>
+                                            <TextBlock Grid.Row="6" Grid.Column="2" Style="{DynamicResource DashBoardTB1}"
+                                                       VerticalAlignment="Center" Text="{Binding IsLocked}" />
+                                            <TextBlock Grid.Row="7" Grid.Column="1" Style="{DynamicResource DashBoardTB1}"
+                                                       VerticalAlignment="Center" Text="HomeVirtualFabric:" Margin="3,0"/>
+                                            <TextBlock Grid.Row="7" Grid.Column="2" Style="{DynamicResource DashBoardTB1}"
+                                                       VerticalAlignment="Center" Text="{Binding HomeVirtualFabric}" />
+                                            <TextBlock Grid.Row="8" Grid.Column="1" Style="{DynamicResource DashBoardTB1}"
+                                                       VerticalAlignment="Center" Text="VirtualFabricRoles:" Margin="3,0"/>
+                                            <TextBlock Grid.Row="8" Grid.Column="2" Style="{DynamicResource DashBoardTB1}"
+                                                       VerticalAlignment="Center" Text="{Binding VirtualFabricRoles}" />
+                                            <TextBlock Grid.Row="9" Grid.Column="1" Style="{DynamicResource DashBoardTB1}"
+                                                       VerticalAlignment="Center" Text="ChassisAccessRole:" Margin="3,0"/>
+                                            <TextBlock Grid.Row="9" Grid.Column="2" Style="{DynamicResource DashBoardTB1}"
+                                                       VerticalAlignment="Center" Text="{Binding ChassisAccessRole}" />
+                                        </Grid>
+                                        <!-- optional: Timestamp etc. wenn vorhanden -->
+                                        <Grid Grid.Row="1">
+                                            <StackPanel Orientation="Horizontal" Margin="5,0" ToolTip="Last Changes">
+                                                <Image Source="{Binding DataContext.ClockIcon96, RelativeSource={RelativeSource AncestorType=UserControl}}" MaxHeight="30" />
+                                                <TextBlock Text="{Binding CreationTime}" Margin="5,2" />
+                                            </StackPanel>
+                                        </Grid>
+                                    </Grid>
+                                </Button>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                 </StackPanel>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+        <!-- FOS_PWCFGCheck -->
+        <ItemsControl Grid.Column="1" Grid.Row="1"
+                      ItemsSource="{Binding Main.DeviceToggles}"
+                      Style="{DynamicResource ShowWhenPWCFGCheck}">
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <WrapPanel Orientation="Horizontal" MaxWidth="1200"/>
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <DataGrid
+                        AutoGenerateColumns="False"
+                        CanUserSortColumns="False"
+                        HeadersVisibility="Column"
+                        RowHeaderWidth="0"
+                        ColumnWidth="*"
+                        CanUserAddRows="False"
+                        Margin="5,0,5,5"
+                        MaxHeight="500"
+                        MaxWidth="350"
+                        ItemsSource="{Binding PWCFGCheckRows}"
+                        Visibility="{Binding IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
+                        <!-- wie bei dir: ausblenden wenn keine Items -->
+                        <DataGrid.Style>
+                            <Style TargetType="DataGrid">
+                                <Style.Triggers>
+                                    <Trigger Property="HasItems" Value="False">
+                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </DataGrid.Style>
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Name"  Binding="{Binding Key}"   IsReadOnly="True"/>
+                            <DataGridTextColumn Header="Value" Binding="{Binding Value}" IsReadOnly="True"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
         </ItemsControl>
     </Grid>
     </ScrollViewer>

@@ -90,4 +90,24 @@
             </DataTrigger>
         </Style.Triggers>
     </Style>
+
+    <!-- Nur sichtbar, wenn Main.SelectedView == UserCFGCheck -->
+    <Style x:Key="ShowWhenUserCFGCheck" TargetType="ItemsControl">
+        <Setter Property="Visibility" Value="Collapsed"/>
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding Main.SelectedView}" Value="UserCFGCheck">
+                <Setter Property="Visibility" Value="Visible"/>
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+
+    <!-- Nur sichtbar, wenn Main.SelectedView == PWCFGCheck -->
+    <Style x:Key="ShowWhenPWCFGCheck" TargetType="ItemsControl">
+        <Setter Property="Visibility" Value="Collapsed"/>
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding Main.SelectedView}" Value="PWCFGCheck">
+                <Setter Property="Visibility" Value="Visible"/>
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
 </ResourceDictionary>

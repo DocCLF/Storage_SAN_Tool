@@ -113,9 +113,16 @@ function New-DeviceBlock {
     if ($RESTFunc -like "*Brocade*" -and $FunResult.PSObject.Properties.Name -contains 'SwitchName') {
         $LabelName = $FunResult.SwitchName
     }else {
-        $LabelName = $FunResult.ClusterName
+        if(!([string]::IsNullOrWhiteSpace([string]$FunResult.ClusterName))){
+            $LabelName = $FunResult.ClusterName
+        }
+        #else {
+        #    $LabelName = $FunResult.SerialNumber[0]
+        #}
     }
-    $DeviceIdent.Label = if ([string]::IsNullOrWhiteSpace([string]$LabelName)) { "$($Device.IPAddress)" } else { "$LabelName" }
+    $DeviceIdent.Label = "$($Device.IPAddress)"
+    Write-Host $LabelName -ForegroundColor Green
+    $DeviceIdent.DeviceTitle = if ([string]::IsNullOrWhiteSpace([string]$LabelName)) { "$($Device.IPAddress)" } else { $LabelName }
     $DeviceIdent.IsChecked = $false
 
     return @{ DeviceIdent = $DeviceIdent; FuncResult = @($FunResult) }
