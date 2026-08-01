@@ -1249,7 +1249,7 @@
                 <DataTemplate>
                  <StackPanel>
                     <!-- Headline Label pro Device -->
-                    <Label Content="User Info"
+                    <Label Content="{Binding DeviceTitle}"
                         Style="{DynamicResource MainLabelStyle}"
                         FontSize="12"
                         Margin="5,8,5,0"
