@@ -134,7 +134,7 @@ function SST_DeviceConnecCheck {
                     Default {$FOS_HWMTM = "Unknown Type"}
                 }
                 
-                if(!([string]::IsNullOrEmpty($TD_BasicDeviceInfos))){
+                if($null -ne $TD_BasicDeviceInfos){
                     $TD_BInfo = "" | Select-Object ConnectionTyp,DeviceName,ProductDes,Prod_MTM,Code_Level,VFenabled
                     $TD_BInfo.ConnectionTyp = if(!($null -eq $TD_BasicDeviceInfos.VFID)){"REST"}else{"plink"}
                     $TD_BInfo.DeviceName = $TD_BasicDeviceInfos.'SwitchName'
