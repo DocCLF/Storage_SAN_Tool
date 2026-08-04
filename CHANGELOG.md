@@ -11,7 +11,7 @@
     * switched to Avalonia to support additional operating systems
 
 All notable changes to this project will be documented in this file.
-# [v1.4.055_beta] - 2026-07-21
+# [v1.4.068_beta] - 2026-08-04
 ### Added 
 - Support for IBM Tape (only via REST)
 - REST Function for IBM Storage
@@ -34,6 +34,7 @@ All notable changes to this project will be documented in this file.
 - some major and minor bugs
 - STOName was not displayed in the “Online/Offline Hosts” view of the dashboard.
 - HostInfo Bug when there is a Empty entry
+- DG Device Overview – SAN Switches: No information is displayed
 
 ### Changed
 - GUI redesigned
