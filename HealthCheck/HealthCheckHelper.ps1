@@ -122,7 +122,7 @@ function Initialize-SANHealthCheckSteps {
             Command = 'Get-BrocadePowerSupplyInfo'
             RequiresPrivilege = $false
         }
-        
+
         [PSCustomObject]@{
             Id      = 'PasswordPolicy'
             Name    = 'Collect password policy'
@@ -151,12 +151,6 @@ function Initialize-SANHealthCheckSteps {
             RequiresPrivilege = $true
         }
 
-        [PSCustomObject]@{
-            Id      = 'FCDiagnostics'
-            Name    = 'Collect FC diagnostics'
-            Command = 'Get-BrocadeFCdiagnostics'
-            RequiresPrivilege = $true
-        }
 
     )
 
@@ -531,9 +525,7 @@ function Invoke-SANHealthStep {
 
         $StepResult = & $Command @InvokeParameters
 
-        $HasSuccessProperty =
-            $null -ne $StepResult -and
-            $null -ne $StepResult.PSObject.Properties['Success']
+        $HasSuccessProperty = $null -ne $StepResult -and $null -ne $StepResult.PSObject.Properties['Success']
 
         if ($HasSuccessProperty -and -not [bool]$StepResult.Success) {
             $ErrorDetails = if ($StepResult.PSObject.Properties['Error'] -and -not [string]::IsNullOrWhiteSpace([string]$StepResult.Error)) {
@@ -564,6 +556,8 @@ function Invoke-SANHealthStep {
 
         Set-SANHealthCheckStep -DeviceIdent $DeviceIdent -Id $Id -Status Completed -Details "$StepName completed." -DataCount $ValidItems.Count | Out-Null
 
+        Out-File -FilePath "$($TD_TB_ExportPath.Text)\HealthCheckCollection$($Id)_$($CommandName)_$(Get-Date -Format "yyyy-MM-dd").csv" -InputObject $StepResult
+        
         return $StepResult
     }
     catch {

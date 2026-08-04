@@ -2077,29 +2077,21 @@ $TD_BTN_FOS_SensorShow.add_click({
 #endregion
 #region IBM Power
 $TD_BTN_PWR_HMCInfo.add_click({
-    $TD_GBPWRHMCInfo.Visibility = "Visible"
+    $TD_GBPWRHMCInfo.Visibility = "Visible";$TD_GB_SearchFilterPWR.Visibility="Collapsed"
     <# for ProgressBar #>
     $PB = New-ProgressBar
     <# ProgressBar #>
     try{
+        Write-ProgressBar -ProgressBar $PB -Activity "Prepare the function" -PercentComplete 10
         $TD_GBPWRLPARSum,$TD_GBPWRManagSysInfo | ForEach-Object {$_.Visibility = "Collapsed"}
         $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource | Where-Object { $_.DeviceTyp -like "*PowerHMC*" }
-        <# for ProgressBar #>
-            $Total = $TD_Credentials.Count
-            $Current = 0
-        <# ProgressBar #>
         $UCDataContext = $TD_UserControl_PWR.DataContext
         if (-not $UCDataContext) { [System.Windows.MessageBox]::Show("DataContext ist NULL!") | Out-Null; return }
         $UCVMMain = $UCDataContext.Main
 
         $UCVMMain.DeviceToggles.Clear()
-
+        Write-ProgressBar -ProgressBar $PB -Activity "Call REST HMCConsole, pls wait. This may take a while." -PercentComplete 25
         foreach($TD_Creds in $TD_Credentials){
-            <# for ProgressBar #>
-            $Current++
-            $Percent = [math]::Round(($Current / $Total) * 100,0)
-            Write-ProgressBar -ProgressBar $PB -Activity "Brocade Query $Current / $Total - $($TD_Creds.DeviceIP)" -PercentComplete $Percent
-
             $FunctionResult = New-DeviceBlock -Device $TD_Creds -ExportPath $TD_TB_ExportPath.Text -RESTFunc HMC_RESTHMCConsole
 
             #if (-not $FunctionResult.DeviceIdent.HmcRows) {
@@ -2127,6 +2119,7 @@ $TD_BTN_PWR_HMCInfo.add_click({
 
             $UCVMMain.DeviceToggles.Add($FunctionResult.DeviceIdent)
         }
+        Write-ProgressBar -ProgressBar $PB -Activity "Prepare GUI" -PercentComplete 60
         $UCVMMain.SelectedView = "HMC"
     }finally{
         <# for ProgressBar #>
@@ -2135,28 +2128,22 @@ $TD_BTN_PWR_HMCInfo.add_click({
     }
 })
 $TD_BTN_PWR_ManagedSystemInfo.add_click({
-    $TD_GBPWRManagSysInfo.Visibility = "Visible"
+    $TD_GBPWRManagSysInfo.Visibility = "Visible";$TD_GB_SearchFilterPWR.Visibility="Collapsed"
     <# for ProgressBar #>
     $PB = New-ProgressBar
     <# ProgressBar #>
     try{
+        Write-ProgressBar -ProgressBar $PB -Activity "Prepare the function" -PercentComplete 10
         $TD_GBPWRHMCInfo,$TD_GBPWRLPARSum | ForEach-Object {$_.Visibility = "Collapsed"}
         $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource | Where-Object { $_.DeviceTyp -like "*PowerHMC*" }
-        <# for ProgressBar #>
-            $Total = $TD_Credentials.Count
-            $Current = 0
-        <# ProgressBar #>
+
         $UCDataContext = $TD_UserControl_PWR.DataContext
         if (-not $UCDataContext) { [System.Windows.MessageBox]::Show("DataContext ist NULL!") | Out-Null; return }
         $UCVMMain = $UCDataContext.Main
 
         $UCVMMain.DeviceToggles.Clear()
-
+        Write-ProgressBar -ProgressBar $PB -Activity "Call REST ManagedSystems, pls wait. This may take a while!" -PercentComplete 25
         foreach($TD_Creds in $TD_Credentials){
-            <# for ProgressBar #>
-                $Current++
-                $Percent = [math]::Round(($Current / $Total) * 100,0)
-                Write-ProgressBar -ProgressBar $PB -Activity "PWR Managed System Query $Current / $Total $($TD_Creds.DeviceIP)" -PercentComplete $Percent
             $FunctionResult = New-DeviceBlock -Device $TD_Creds -ExportPath $TD_TB_ExportPath.Text -RESTFunc HMC_RESTHMCManagedSystems
 
             # Falls Rows-Collection noch nicht existiert
@@ -2180,6 +2167,7 @@ $TD_BTN_PWR_ManagedSystemInfo.add_click({
         }
 
         $UCVMMain.SelectedView = "ManagedSystem"
+        Write-ProgressBar -ProgressBar $PB -Activity "Prepare GUI" -PercentComplete 60
     }finally{
         <# for ProgressBar #>
         Close-ProgressBar -ProgressBar $PB
@@ -2187,60 +2175,55 @@ $TD_BTN_PWR_ManagedSystemInfo.add_click({
     }
 })
 $TD_BTN_PWR_LparSummary.add_click({
-    $TD_GBPWRLPARSum.Visibility = "Visible"
+    $TD_GBPWRLPARSum.Visibility = "Visible"; $TD_GB_SearchFilterPWR.Visibility="visible"
     <# for ProgressBar #>
     $PB = New-ProgressBar
     <# ProgressBar #>
     try{
+        Write-ProgressBar -ProgressBar $PB -Activity "Prepare the function" -PercentComplete 10
         $TD_GBPWRHMCInfo,$TD_GBPWRManagSysInfo | ForEach-Object {$_.Visibility = "Collapsed"}
-        # 1) Geräte holen (wie beim HMC-Button)
+        
         $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource | Where-Object { $_.DeviceTyp -like "*PowerHMC*" }
-        <# for ProgressBar #>
-            $Total = $TD_Credentials.Count
-            $Current = 0
-        <# ProgressBar #>
-        # 2) DataContext/VM holen
+        
         $UCDataContext = $TD_UserControl_PWR.DataContext
         if (-not $UCDataContext) { [System.Windows.MessageBox]::Show("DataContext ist NULL!") | Out-Null; return }
         $UCVMMain = $UCDataContext.Main
 
         $UCVMMain.DeviceToggles.Clear()
-
+        Write-ProgressBar -ProgressBar $PB -Activity "Call LogicalPartitions, pls wait. This may take a while." -PercentComplete 25
         foreach($TD_Creds in $TD_Credentials){
-            <# for ProgressBar #>
-                $Current++
-                $Percent = [math]::Round(($Current / $Total) * 100,0)
-                Write-ProgressBar -ProgressBar $PB -Activity "LPAR Query $Current / $Total $($TD_Creds.DeviceIP)" -PercentComplete $Percent
-            # 3) REST Call über dein Standard-Pattern
             $FunctionResult = New-DeviceBlock -Device $TD_Creds -ExportPath $TD_TB_ExportPath.Text -RESTFunc HMC_RESTHMCLogicalPartitions
 
-            # 4) do not needed anymore
-
-            # 5) Mapping der Spalten (Label -> PropertyName aus FuncResult)
             $mapLPAR = @{
-                ManagedSystemName   = 'ManagedSystemName'
-                ManagedSystemMTMS   = 'ManagedSystemMTMS'
-                ManagedSystemSerial = 'ManagedSystemSerial'
-                ManagedSystemUuid   = 'ManagedSystemUuid'
-
-                LparName            = 'LparName'
-                PartitionId         = 'PartitionId'
-                State               = 'State'
-                Environment         = 'Environment'
-                OsVersion           = 'OsVersion'
-
-                LparUuid            = 'LparUuid'
-                RowID               = 'RowID'
-                RmcIp               = 'RmcIp'
+                ManagedSystemName       = 'ManagedSystemName'
+                ManagedSystemMTMS       = 'ManagedSystemMTMS'
+                ManagedSystemSerial     = 'ManagedSystemSerial'
+                ManagedSystemUUID       = 'ManagedSystemUUID'
+            
+                LparName                = 'LparName'
+                LparUUID                = 'LparUUID'
+                PartitionId             = 'PartitionId'
+                PartitionRole           = 'PartitionRole'
+            
+                State                   = 'State'
+                Environment             = 'Environment'
+                OsVersion               = 'OsVersion'
+                RmcIp                   = 'RmcIp'
+                RmcState                = 'RmcState'
+            
+                DefaultProfile          = 'DefaultProfile'
+                CurrentProfileHref      = 'CurrentProfileHref'
+                CurrentProcessingUnits  = 'CurrentProcessingUnits'
+                CurrentMemoryMB         = 'CurrentMemoryMB'
             }
 
             Add-MappedRows -Collection $FunctionResult.DeviceIdent.LparRows -Source $FunctionResult.FuncResult -IdProperty 'RowID' -Map $mapLPAR
 
-            # 6) Toggle zur Liste hinzufügen
+            
             $UCVMMain.DeviceToggles.Add($FunctionResult.DeviceIdent)
         }
-
-        # 7) View umschalten (Name muss zu deinem UI passen!)
+        Write-ProgressBar -ProgressBar $PB -Activity "Prepare GUI" -PercentComplete 60
+        
         $UCVMMain.SelectedView = "LPARs"
     }finally{
         <# for ProgressBar #>
@@ -2255,6 +2238,7 @@ $TD_BTN_PWR_ShowAll.add_click({
     if (-not $UCDataContext) { [System.Windows.MessageBox]::Show("DataContext ist NULL!") | Out-Null; return }
     $UCVMMain = $UCDataContext.Main
     $UCVMMain.DeviceToggles.Clear()
+    Write-ProgressBar -ProgressBar $PB -Activity "Prepare the collection" -PercentComplete 10
     try {
         [array]$DBPowerHMC = SST_CustomerPWRDBReadTable -SST_InfoType "PowerHMC" -SST_Customer $DBName
         if($null -eq $DBPowerHMC){
@@ -2291,7 +2275,9 @@ $TD_BTN_PWR_ShowAll.add_click({
         <#Do this if a terminating exception happens#>
         SST_ToolMessageCollector -TD_ToolMSGCollector "PWR_ShowAll HMC: $($_.Exception.Message)" -TD_ToolMSGType Error -TD_Shown yes
     }
+    Write-ProgressBar -ProgressBar $PB -Activity "HMC RESTHMCConsole done" -PercentComplete 20
     try {
+        Write-ProgressBar -ProgressBar $PB -Activity "Prepare HMC_RESTHMCManagedSystems" -PercentComplete 30
         [array]$DBPowerSysSum = SST_CustomerPWRDBReadTable -SST_InfoType "PowerSysSummary" -SST_Customer $DBName
         if($null -eq $DBPowerSysSum){
             foreach($TD_Creds in $TD_Credentials){
@@ -2321,26 +2307,34 @@ $TD_BTN_PWR_ShowAll.add_click({
         <#Do this if a terminating exception happens#>
         SST_ToolMessageCollector -TD_ToolMSGCollector "PWR_ShowAll ManagedSystem: $($_.Exception.Message)" -TD_ToolMSGType Error -TD_Shown yes
     }    
+    Write-ProgressBar -ProgressBar $PB -Activity "REST ManagedSystems done" -PercentComplete 45
     try {
+        Write-ProgressBar -ProgressBar $PB -Activity "Prepare REST LogicalPartitions" -PercentComplete 60
         [array]$DBPowerLPAR = SST_CustomerPWRDBReadTable -SST_InfoType "LPARSummary" -SST_Customer $DBName
         if($null -eq $DBPowerLPAR){
             foreach($TD_Creds in $TD_Credentials){
                 $FunctionResult = New-DeviceBlock -Device $TD_Creds -ExportPath $TD_TB_ExportPath.Text -RESTFunc HMC_RESTHMCLogicalPartitions
                 $mapLPAR = @{
-                    ManagedSystemName   = 'ManagedSystemName'
-                    ManagedSystemMTMS   = 'ManagedSystemMTMS'
-                    ManagedSystemSerial = 'ManagedSystemSerial'
-                    ManagedSystemUuid   = 'ManagedSystemUuid'
+                    ManagedSystemName       = 'ManagedSystemName'
+                    ManagedSystemMTMS       = 'ManagedSystemMTMS'
+                    ManagedSystemSerial     = 'ManagedSystemSerial'
+                    ManagedSystemUUID       = 'ManagedSystemUUID'
                 
-                    LparName            = 'LparName'
-                    PartitionId         = 'PartitionId'
-                    State               = 'State'
-                    Environment         = 'Environment'
-                    OsVersion           = 'OsVersion'
+                    LparName                = 'LparName'
+                    LparUUID                = 'LparUUID'
+                    PartitionId             = 'PartitionId'
+                    PartitionRole           = 'PartitionRole'
                 
-                    LparUuid            = 'LparUuid'
-                    RowID               = 'RowID'
-                    RmcIp               = 'RmcIp'
+                    State                   = 'State'
+                    Environment             = 'Environment'
+                    OsVersion               = 'OsVersion'
+                    RmcIp                   = 'RmcIp'
+                    RmcState                = 'RmcState'
+                
+                    DefaultProfile          = 'DefaultProfile'
+                    CurrentProfileHref      = 'CurrentProfileHref'
+                    CurrentProcessingUnits  = 'CurrentProcessingUnits'
+                    CurrentMemoryMB         = 'CurrentMemoryMB'
                 }
                 Add-MappedRows -Collection $FunctionResult.DeviceIdent.LparRows -Source $FunctionResult.FuncResult -IdProperty 'RowID' -Map $mapLPAR
                 $UCVMMain.DeviceToggles.Add($FunctionResult.DeviceIdent)
@@ -2349,6 +2343,7 @@ $TD_BTN_PWR_ShowAll.add_click({
         }else {
             $TD_IC_IBMPowerLPARDBView.ItemsSource = $DBPowerLPAR
         }
+        Write-ProgressBar -ProgressBar $PB -Activity "REST LogicalPartitions done" -PercentComplete 80
     }
     catch {
         <#Do this if a terminating exception happens#>
