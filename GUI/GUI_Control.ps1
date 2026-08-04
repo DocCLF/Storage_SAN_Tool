@@ -2232,6 +2232,9 @@ $TD_BTN_PWR_LparSummary.add_click({
     }
 })
 $TD_BTN_PWR_ShowAll.add_click({
+    <# for ProgressBar #>
+    $PB = New-ProgressBar
+    <# ProgressBar #>
     $DBName = $TD_TB_CustomerInfoName.Text
     $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource | Where-Object { $_.DeviceTyp -like "*PowerHMC*" }
     $UCDataContext = $TD_UserControl_PWR.DataContext
@@ -2348,6 +2351,10 @@ $TD_BTN_PWR_ShowAll.add_click({
     catch {
         <#Do this if a terminating exception happens#>
         SST_ToolMessageCollector -TD_ToolMSGCollector "PWR_ShowAll LPARs: $($_.Exception.Message)" -TD_ToolMSGType Error -TD_Shown yes
+    }finally{
+        <# for ProgressBar #>
+        Close-ProgressBar -ProgressBar $PB
+        <# ProgressBar #>
     }   
     $TD_GBPWRHMCInfo,$TD_GBPWRManagSysInfo,$TD_GBPWRLPARSum | ForEach-Object {$_.Visibility = "Visible"}
 })

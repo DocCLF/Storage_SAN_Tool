@@ -1,44 +1,51 @@
 function HMC_InvokeHmcQuery {
     <#
-      .SYNOPSIS
-        High-Level Wrapper: Login -> Query (ManagedSystems/LPARs/Both) -> Logout (always).
-      .DESCRIPTION
-        Designed for tools/GUI usage: everything runs in one scope and cleans up the session in finally.
-      .PARAMETER HMCIP
-        HMC IP/Hostname
-      .PARAMETER HMCPort
-        HMC port (default 12443)
-      .PARAMETER CredentialUN
-        Username (if -Credential not supplied)
-      .PARAMETER CredentialPW
-        Password (if -Credential not supplied)
-      .PARAMETER Credential
-        PSCredential (preferred in scripts/tools)
-      .PARAMETER Query
-        HMC | ManagedSystems | LPARs
-      .PARAMETER ManagedSystemUuid
-        If Query=LPARs: optional filter for one ManagedSystem UUID
-      .PARAMETER IgnoreCertificate
-        Ignore TLS cert validation (PS5.1 via callback, PS7 via SkipCertificateCheck in lower funcs)
+    .SYNOPSIS
+        High-level wrapper: Login -> Query -> Logout.
+
+    .DESCRIPTION
+        Opens one HMC session, performs the requested query and always
+        closes the session in the finally block.
+
+    .PARAMETER Query
+        HMC            - Management Console information
+        ManagedSystems - Managed System information
+        LPARs          - Logical Partitions only
+        VIOS           - Virtual I/O Servers only
+        Partitions     - Logical Partitions and VIOS
+        Both           - Managed Systems and all Partitions
     #>
+
     [CmdletBinding()]
     param(
-        [Parameter(Mandatory)][string]$HMCIP,
-        [Parameter()][int]$HMCPort = 12443,
+        [Parameter(Mandatory)]
+        [string]$HMCIP,
 
-        [Parameter(Mandatory=$false)]$CredentialUN,
-        [Parameter(Mandatory=$false)]$CredentialPW,
-        [Parameter(Mandatory=$false)][pscredential]$Credential,
+        [int]$HMCPort = 12443,
 
-        [ValidateSet('HMC','ManagedSystems','LPARs','Both')]
+        $CredentialUN,
+
+        $CredentialPW,
+
+        [pscredential]$Credential,
+
+        [ValidateSet(
+            'HMC',
+            'ManagedSystems',
+            'LPARs',
+            'VIOS',
+            'Partitions',
+            'Both'
+        )]
         [string]$Query = 'ManagedSystems',
 
-        [Parameter(Mandatory=$false)][string]$ManagedSystemUuid,
+        [string]$ManagedSystemUuid,
 
         [switch]$IgnoreCertificate
     )
 
-    [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+    [Net.ServicePointManager]::SecurityProtocol =
+        [Net.SecurityProtocolType]::Tls12
 
     # Resolve credentials
     if ($Credential) {
@@ -46,16 +53,21 @@ function HMC_InvokeHmcQuery {
         $pass = $Credential.GetNetworkCredential().Password
     }
     else {
-        if ([string]::IsNullOrWhiteSpace($CredentialUN) -or [string]::IsNullOrWhiteSpace([string]$CredentialPW)) {
-            throw "No credentials supplied. Use -Credential or (-CredentialUN and -CredentialPW)."
+        if (
+            [string]::IsNullOrWhiteSpace([string]$CredentialUN) -or
+            [string]::IsNullOrWhiteSpace([string]$CredentialPW)
+        ) {
+            throw 'No credentials supplied. Use -Credential or CredentialUN/CredentialPW.'
         }
+
         $user = [string]$CredentialUN
         $pass = [string]$CredentialPW
     }
 
     $session = $null
+
     try {
-        # 1) Login / Token
+        # Login
         $session = SST_GetHMCPowerToken `
             -HMCIP $HMCIP `
             -HMCPort $HMCPort `
@@ -64,54 +76,118 @@ function HMC_InvokeHmcQuery {
             -IgnoreCertificate:$IgnoreCertificate
 
         if (-not $session -or -not $session.Session) {
-            throw "Login failed: session token is empty."
+            throw 'Login failed: session token is empty.'
         }
 
-        # 2) Query
-        switch ($Query) {
+        # Managed-system data is required by all partition queries.
+        $msList = $null
 
+        if ($Query -in @('LPARs', 'VIOS', 'Partitions', 'Both')) {
+            $msList = @(
+                HMC_GetManagedSystems `
+                    -HmcSession $session `
+                    -IgnoreCertificate:$IgnoreCertificate
+            )
+
+            if ($ManagedSystemUuid) {
+                $msList = @(
+                    $msList | Where-Object {
+                        $_.UUID -eq $ManagedSystemUuid -or
+                        $_.Uuid -eq $ManagedSystemUuid
+                    }
+                )
+
+                if ($msList.Count -eq 0) {
+                    throw "ManagedSystemUuid not found: $ManagedSystemUuid"
+                }
+            }
+        }
+
+        switch ($Query) {
             'HMC' {
-                return (HMC_GetManagementConsole -HmcSession $session -IgnoreCertificate:$IgnoreCertificate)
+                return HMC_GetManagementConsole -HmcSession $session -IgnoreCertificate:$IgnoreCertificate
             }
 
             'ManagedSystems' {
-                return (HMC_GetManagedSystems -HmcSession $session -IgnoreCertificate:$IgnoreCertificate)
+                return HMC_GetManagedSystems -HmcSession $session -IgnoreCertificate:$IgnoreCertificate
             }
 
             'LPARs' {
-                $msList = HMC_GetManagedSystems -HmcSession $session -IgnoreCertificate:$IgnoreCertificate
+                $all = foreach ($m in $msList) {
+                    if (-not $m.UUID) {
+                        continue
+                    }
+                    HMC_GetLogicalPartitionSummary -HmcSession $session -ManagedSystemUuid $m.UUID -ManagedSystemName $m.SystemName -ManagedSystemMTMS $m.MachineTypeModel -ManagedSystemSerial $m.SerialNumber -IgnoreCertificate:$IgnoreCertificate
+                }
 
-                if ($ManagedSystemUuid) {
-                    $m = $msList | Where-Object { $_.Uuid -eq $ManagedSystemUuid -or $_.UUID -eq $ManagedSystemUuid } | Select-Object -First 1
-                    if (-not $m) {
-                        throw "ManagedSystemUuid not found: $ManagedSystemUuid"
+                return $all
+            }
+
+            'VIOS' {
+                $all = foreach ($m in $msList) {
+                    if (-not $m.UUID) {
+                        continue
                     }
 
-                    return (HMC_GetLogicalPartitionSummary `
-                        -HmcSession $session `
-                        -ManagedSystemUuid $m.UUID `
-                        -ManagedSystemName $m.SystemName `
-                        -ManagedSystemMTMS $m.MachineTypeModel `
-                        -ManagedSystemSerial $m.SerialNumber `
-                        -IgnoreCertificate:$IgnoreCertificate)
+                    HMC_GetVirtualIOServerSummary -HmcSession $session -ManagedSystemUuid $m.UUID -ManagedSystemName $m.SystemName -ManagedSystemMTMS $m.MachineTypeModel -ManagedSystemSerial $m.SerialNumber -IgnoreCertificate:$IgnoreCertificate
                 }
 
-                $all = foreach ($m in $msList) {
-                    if (-not $m.UUID) { continue }
-                    HMC_GetLogicalPartitionSummary `
-                        -HmcSession $session `
-                        -ManagedSystemUuid $m.UUID `
-                        -ManagedSystemName $m.SystemName `
-                        -ManagedSystemMTMS $m.MachineTypeModel `
-                        -ManagedSystemSerial $m.SerialNumber `
-                        -IgnoreCertificate:$IgnoreCertificate
-                }
                 return $all
+            }
+
+            'Partitions' {
+                $all = foreach ($m in $msList) {
+                    if (-not $m.UUID) {
+                        continue
+                    }
+                
+                    # Normale LPARs
+                    try {
+                        HMC_GetLogicalPartitionSummary -HmcSession $session -ManagedSystemUuid $m.UUID -ManagedSystemName $m.SystemName -ManagedSystemMTMS $m.MachineTypeModel -ManagedSystemSerial $m.SerialNumber -IgnoreCertificate:$IgnoreCertificate
+                    }
+                    catch {
+                        Write-Warning (
+                            "LPAR query failed for Managed System '{0}': {1}" -f
+                            $m.SystemName,
+                            $_.Exception.Message
+                        )
+                    }
+                
+                    # VIOS unabhängig davon abrufen
+                    try {
+                        HMC_GetVirtualIOServerSummary -HmcSession $session -ManagedSystemUuid $m.UUID -ManagedSystemName $m.SystemName -ManagedSystemMTMS $m.MachineTypeModel -ManagedSystemSerial $m.SerialNumber -IgnoreCertificate:$IgnoreCertificate
+                    }
+                    catch {
+                        Write-Warning (
+                            "VIOS query failed for Managed System '{0}': {1}" -f
+                            $m.SystemName,
+                            $_.Exception.Message
+                        )
+                    }
+                }
+            
+                return @($all)
+            }
+
+            'Both' {
+                $partitions = foreach ($m in $msList) {
+                    if (-not $m.UUID) {
+                        continue
+                    }
+
+                    HMC_GetLogicalPartitionSummary -HmcSession $session -ManagedSystemUuid $m.UUID -ManagedSystemName $m.SystemName -ManagedSystemMTMS $m.MachineTypeModel -ManagedSystemSerial $m.SerialNumber -IgnoreCertificate:$IgnoreCertificate
+
+                    HMC_GetVirtualIOServerSummary -HmcSession $session -ManagedSystemUuid $m.UUID -ManagedSystemName $m.SystemName -ManagedSystemMTMS $m.MachineTypeModel -ManagedSystemSerial $m.SerialNumber -IgnoreCertificate:$IgnoreCertificate
+                }
+
+                return [pscustomobject]@{
+                    ManagedSystems = $msList
+                    Partitions     = $partitions
+                }
             }
         }
     }
     finally {
-        # 3) Logout always
         if ($session) {
             SST_RemoveHMCPowerToken -HmcSession $session -IgnoreCertificate:$IgnoreCertificate | Out-Null
         }

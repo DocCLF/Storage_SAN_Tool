@@ -18,17 +18,50 @@ function HMC_GetLogicalPartitionSummary {
 
     $feedPath = "ManagedSystem/$ManagedSystemUuid/LogicalPartition?group=Advanced"
     $feed = Invoke-HmcUomGet -HmcSession $HmcSession -Path $feedPath -Type "LogicalPartition" -IgnoreCertificate:$IgnoreCertificate
+    if ([string]::IsNullOrWhiteSpace([string]$feed)) {
+        Write-Verbose (
+            "No LogicalPartition feed returned for Managed System '{0}' ({1})." -f
+            $ManagedSystemName,
+            $ManagedSystemUuid
+        )
 
-    $lparUrls = Get-AtomSelfLinks -AtomXml $feed
+        return
+    }
+    $lparUrls = @(Get-AtomSelfLinks -AtomXml $feed)
+    if ($lparUrls.Count -eq 0) {
+        Write-Host (
+            "No LogicalPartition SELF links found for Managed System '{0}' ({1})." -f
+            $ManagedSystemName,
+            $ManagedSystemUuid
+        )
+    
+        return
+    }
 
     foreach($u in $lparUrls){
+        try{
         # Get details
         $entry = HMC_GetUomXml -HmcSession $HmcSession -Url $u -Type "LogicalPartition" -IgnoreCertificate:$IgnoreCertificate
-
+        if ([string]::IsNullOrWhiteSpace([string]$entry)) {
+            Write-Verbose "Empty LogicalPartition response for '$u'."
+            continue
+        }
         # Atom->UOM (if atom entry), otherwise directly UOM
         $uom = $null
         try { $uom = Convert-AtomEntryToUomXml -AtomEntryXml $entry }
-        catch { [xml]$uom = $entry }
+        catch { 
+            try{
+                [xml]$uom = $entry 
+            }catch{
+                Write-Warning (
+                    "LogicalPartition XML could not be parsed for '{0}': {1}" -f
+                    $u,
+                    $_.Exception.Message
+                )
+
+                continue
+            }
+        }
 
         $lparUuid = ($u.TrimEnd("/") -split "/")[-1]
         # There's a chance that an invalid UUID might be generated, so here's the check again
@@ -84,28 +117,40 @@ function HMC_GetLogicalPartitionSummary {
         # CPU/Mem (currently)
         $curCpu = Get-FirstXmlValue -Xml $uom -Names @("CurrentProcessingUnits","CurrentProcUnits","CurrentProcessingUnit")
         $curMem = Get-FirstXmlValue -Xml $uom -Names @("CurrentMemoryMB","CurrentMemory","CurrentMemorySize")
+        $LparName = Get-FirstXmlValue -Xml $uom -Names @("PartitionName","LogicalPartitionName","Name")
+        $PartitionId = Get-FirstXmlValue -Xml $uom -Names @("PartitionID","PartitionId")
 
         [pscustomobject]@{
+            DeviceTitle         = $ManagedSystemName
             ManagedSystemName   = $ManagedSystemName
             ManagedSystemUUID   = $ManagedSystemUUID
             ManagedSystemMTMS   = $ManagedSystemMTMS
             ManagedSystemSerial = $ManagedSystemSerial
 
-            LparName            = Get-FirstXmlValue -Xml $uom -Names @("PartitionName","LogicalPartitionName","Name")
+            LparName            = $LparName
             LparUUID            = $lparUuid
-            PartitionId         = Get-FirstXmlValue -Xml $uom -Names @("PartitionID","PartitionId")
+            PartitionId         = $PartitionId
 
-            State               = $state
-            Environment         = $env
-            OsVersion           = $os
+            State                   = $state
+            Environment             = $env
+            OsVersion               = $os
+            RmcIp                   = $rmcIp
+            RmcState                = $rmcState
+            DefaultProfile          = $defaultProfile
+            CurrentProfileHref      = $currentProfileHref
+            CurrentProcessingUnits  = $curCpu
+            CurrentMemoryMB         = $curMem
 
-            RmcIp               = $rmcIp
-            RmcState            = $rmcState
-
-            DefaultProfile      = $defaultProfile
-            CurrentProfileHref  = $currentProfileHref
-            CurrentProcessingUnits = $curCpu
-            CurrentMemoryMB        = $curMem
+            PartitionRole           = "LPAR"
         }
+    }catch {
+        Write-Warning (
+            "LogicalPartition query failed for '{0}': {1}" -f
+            $u,
+            $_.Exception.Message
+        )
+
+        continue
+    }
     }
 }

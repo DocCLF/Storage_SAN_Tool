@@ -17,22 +17,16 @@ function HMC_RESTHMCLogicalPartitions {
     $user = $TD_Device_UserName
     $pass = $TD_Device_PW
 
-    $lpars = HMC_InvokeHmcQuery `
-        -HMCIP $ip `
-        -HMCPort $port `
-        -CredentialUN $user `
-        -CredentialPW $pass `
-        -Query LPARs `
-        -IgnoreCertificate
+    $partitions = HMC_InvokeHmcQuery -HMCIP $ip -HMCPort $port -CredentialUN $user -CredentialPW $pass -Query Partitions -IgnoreCertificate
 
     <# Write to the local database first before displaying it in the GUI! #>
-    SST_CustomerPWRDBInsertTable -SST_InfoType "LPARSummary" -SST_CollectedInformations $lpars
-    Out-File -FilePath $TD_Exportpath\$($TD_Line_ID)_lpar_$(Get-Date -Format "yyyy-MM-dd").txt -InputObject $lpars -Append
+    SST_CustomerPWRDBInsertTable -SST_InfoType "LPARSummary" -SST_CollectedInformations $partitions 
+    Out-File -FilePath $TD_Exportpath\$($TD_Line_ID)_lpar_$(Get-Date -Format "yyyy-MM-dd").txt -InputObject $partitions  -Append
 
     $i = 0
-    $lpars | ForEach-Object {
+    $partitions  | ForEach-Object {
         $i++
-        $_ | Add-Member -NotePropertyName RowID -NotePropertyValue ("{0}-LPAR-{1}" -f $ip, $i) -Force
+        $_ | Add-Member -NotePropertyName RowID -NotePropertyValue ("{0}-LPAR-{1}" -f $ip, $_.PartitionRole, $i) -Force
         $_
     }
 }
