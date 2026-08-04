@@ -507,6 +507,32 @@ function Get-BrocadePowerSupplyInfo {
         }
     }
 }
+function Get-BrocadeAuditDump {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory)]
+        $Device,
+        [PSCredential]$Credential
+    )
+
+    $InvokeParams = @{
+        Device        = $Device
+        FOSOperation  = "running//brocade-logging/audit-log"
+        IgnoreVFID    = $true
+    }
+
+    if ($Credential) {
+        $InvokeParams.Credential = $Credential
+    }
+
+    $res = Invoke-BrocadeRest @InvokeParams
+
+    if (-not $res.Success) {
+        return $res
+    }
+
+    $res.Data.'audit-log'
+}
 # Get-BrocadeFCdiagnostics needs more study
 #function Get-BrocadeFCdiagnostics {
 #    [CmdletBinding()]

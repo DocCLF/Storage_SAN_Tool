@@ -2074,6 +2074,35 @@ $TD_BTN_FOS_SensorShow.add_click({
         SST_ToolMessageCollector -TD_ToolMSGCollector "Get-BrocadeSensorOverview done" -TD_ToolMSGType Message -TD_Shown yes
     }
 })  
+$TD_BTN_FOS_AuditDump.add_click({
+    $TD_GB_SearchFilter.Visibility = "visible"
+    try{
+        <#Get all Device Cred and count them #>
+        $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource |Where-Object {$_.DeviceTyp -like "*SAN*" }
+
+        <# get the DataConteext of the current View/ means UC and if its nul trow an error #>
+        $UCDataContext = $TD_UserControl_BRSAN.DataContext
+        if (-not $UCDataContext) { Write-Host "DataContext ist NULL!" -ForegroundColor Red; return }
+        <# if there is a DataContext find th Main Part und put it into UCVMMain#>
+        $UCVMMain = $UCDataContext.Main
+        <# if there a something in, its better to clean it up befor we use it again #>
+        $UCVMMain.DeviceToggles.Clear()
+        foreach($TD_Creds in $TD_Credentials){
+            $FunctionResult = New-DeviceBlock -Device $TD_Creds -ExportPath $TD_TB_ExportPath.Text -RESTFunc GET-BrocadeAuditInfo -SSHFunc $null
+            # Get the function's return value
+            $dev = $FunctionResult.DeviceIdent
+            $UserCFGResult = $FunctionResult.FuncResult
+
+            $mapUserCFGCheck = @{
+                          
+            }
+
+        }
+        
+    }finally{
+        SST_ToolMessageCollector -TD_ToolMSGCollector "Get-BrocadeUserCFG done" -TD_ToolMSGType Message -TD_Shown yes
+    }
+})
 #endregion
 #region IBM Power
 $TD_BTN_PWR_HMCInfo.add_click({

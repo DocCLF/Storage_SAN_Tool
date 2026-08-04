@@ -58,6 +58,12 @@
                 Style="{DynamicResource MainBtnStyle}"
                 Content="Switch Show" 
                 ToolTip="Get switch and port status information"/>
+                <!--FOS_AuditDump-->
+                <ToggleButton
+                x:Name="BTN_FOS_AuditDump"
+                Style="{DynamicResource MainBtnStyle}"
+                Content="AuditDump" 
+                ToolTip="Use this command to display the audit log on the switch"/>
                 <!--FOS_PortLicenseShow-->
                 <ToggleButton
                 x:Name="BTN_FOS_PortLicenseShow"
