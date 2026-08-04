@@ -420,7 +420,12 @@ $TD_BTN_DeleteDB.add_click({
     $DBName = $TD_TB_CustomerInfoName.Text -replace ".db",""
     try {
         [System.Data.SQLite.SQLiteConnection]::ClearAllPools()
-        Remove-Item -Path "$PSRootPath\Resources\DBFolder\$DBName.db" -Confirm:$false -Force -ErrorAction SilentlyContinue
+        if ($DBName -match '^\d{6}$') {
+            $DBFilePath = Join-Path $PSRootPath "Resources\DBFolder\$DBName.db"
+            if (Test-Path -LiteralPath $DBFilePath) {
+                Remove-Item -LiteralPath $DBFilePath -Confirm:$false -Force -ErrorAction SilentlyContinue
+            }
+        }
         $TD_DataBaseChoice = @(Get-ChildItem "$PSRootPath\Resources\DBFolder\*" -Filter "*.db" | Select-Object -ExpandProperty Basename)
         if([string]::IsNullOrWhiteSpace($TD_DataBaseChoice)){
             $TD_TB_CustomerInfoName.Text = "Customer Nbr"

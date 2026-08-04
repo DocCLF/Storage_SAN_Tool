@@ -38,10 +38,16 @@ function SST_DashBoardSTO {
             $DashBoardSTODeviceView.Add($DashBoardSTOsObj)
         }
         # Merge Devices to Events Function found in HelperFunction.ps1
-        $eventMergeResult = Add-EventInfoToDevices -Devices @($DashBoardSTODeviceView) -Events @($Events)
-        # split the pscustomobject
-        $DashBoardSTODeviceView = $eventMergeResult.Devices
-        $OrphanEvents = $eventMergeResult.OrphanEvents
+        $Devices = @($DashBoardSTODeviceView | Where-Object { $null -ne $_ })
+        if ($Devices.Count -gt 0) {
+            $eventMergeResult = Add-EventInfoToDevices -Devices $Devices -Events @($Events)
+            # split the pscustomobject
+            $DashBoardSTODeviceView = $eventMergeResult.Devices
+            $OrphanEvents           = $eventMergeResult.OrphanEvents
+        }else {
+            $DashBoardSTODeviceView = @()
+            $OrphanEvents           = @()
+        }
 
         # Normally, the following section is used only by the SVC cluster
         # Hashtable for grouping OrphanEvents by ObjectName (e.g., ClusterName)

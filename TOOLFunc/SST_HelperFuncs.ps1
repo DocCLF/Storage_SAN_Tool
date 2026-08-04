@@ -381,14 +381,16 @@ function Add-EventInfoToDevices {
     [CmdletBinding()]
     param(
         [Parameter(Mandatory)]
+        [AllowEmptyCollection()]
         [object[]]$Devices,
     
         [Parameter()]
         [AllowNull()]
+        [AllowEmptyCollection()]
         [object[]]$Events = @()
     )
     # If no devices are provided → return empty result structure
-    if ($null -eq $Devices) {
+    if (@($Devices).Count -eq 0) {
         return [PSCustomObject]@{
             Devices      = [System.Collections.Generic.List[object]]::new()
             OrphanEvents = [System.Collections.Generic.List[object]]::new()
@@ -537,8 +539,14 @@ function Test-SQLiteHasAnyData {
         # 2. Check if data is available
         $countCmd = $Connection.CreateCommand()
         $countCmd.CommandText = "SELECT 1 FROM [$TableName] LIMIT 1;"
+        $FirstValue = $countCmd.ExecuteScalar()
+        return ($null -ne $FirstValue)
+    }catch {
+        Write-Warning ( "Could not check table '{0}' for data: {1}" -f $TableName, $_.Exception.Message )
+        return $false
+    
     }finally {
         if ($cmd) { $cmd.Dispose() }
+        if ($countCmd) {$TableCheckCommand.Dispose()}
     }
-        return ($null -ne $countCmd.ExecuteScalar())
 }

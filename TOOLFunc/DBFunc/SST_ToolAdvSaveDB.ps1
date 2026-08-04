@@ -23,11 +23,8 @@ function SST_ToolAdvSaveDB {
 
         # Ensure table
         $SQLiteCommandCreate = $SQLiteDBConnection.CreateCommand()
-        if($SST_InfoType -like "*PRISM*"){
-            $SQLiteCommandCreate.CommandText = " CREATE TABLE IF NOT EXISTS AdvSettings ( Id INTEGER PRIMARY KEY AUTOINCREMENT, CustomerNbr INTEGER NOT NULL UNIQUE, AZConString TEXT NOT NULL, CustomerP TEXT NOT NULL, AZDBNAM TEXT NOT NULL,TimeStamp TEXT);"
-            $SQLiteCommandCreate.ExecuteNonQuery() | Out-Null
-        }
-        
+        $SQLiteCommandCreate.CommandText = " CREATE TABLE IF NOT EXISTS AdvSettings ( Id INTEGER PRIMARY KEY AUTOINCREMENT, CustomerNbr INTEGER NOT NULL UNIQUE, AZConString TEXT NOT NULL, CustomerP TEXT NOT NULL, AZDBNAM TEXT NOT NULL,TimeStamp TEXT);"
+        $SQLiteCommandCreate.ExecuteNonQuery() | Out-Null
 
         switch ($SST_InfoType) {
 
@@ -46,6 +43,10 @@ function SST_ToolAdvSaveDB {
             }
 
             "LoadPRISMSettings" {
+                $CustomerNumberText = [string]$TD_TB_CustomerInfoName.Text
+                $GUICustomerNBR = 0
+                if (-not [int]::TryParse($CustomerNumberText,[ref]$GUICustomerNBR)) {return $null}
+
                 $SQLiteCommand = $SQLiteDBConnection.CreateCommand()
                 $SQLiteCommand.CommandText = "SELECT CustomerNbr, AZConString, CustomerP, AZDBNAM, TimeStamp FROM AdvSettings WHERE CustomerNbr = @CustomerNbr;"
                 $SQLiteCommand.Parameters.AddWithValue("@CustomerNbr", $GUICustomerNBR) | Out-Null

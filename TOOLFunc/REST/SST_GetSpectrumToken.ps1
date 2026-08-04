@@ -4,7 +4,7 @@ function SST_GetSpectrumToken {
         [Int16]$TD_PSVersion = $PSVersionTable.PSVersion.Major,
         [string]$TD_Device_UserName,
         [string]$TD_Device_DeviceIP,
-        [string]$TD_Device_PW
+        [string]$TD_Device_PW 
     )
     
     begin {
@@ -24,61 +24,129 @@ function SST_GetSpectrumToken {
     
     process {
         try {
-            if($TD_PSVersion -ge 7){        
+            if ($TD_PSVersion -ge 7) {
                 $response = Invoke-RestMethod -Uri "$BaseUrl/rest/v1/auth" -Method Post -Headers $Headers -Body "" -ContentType 'application/json' -SkipCertificateCheck -ErrorAction Stop
-            }else{
-                # Save old callback
-                $OldCallback = [System.Net.ServicePointManager]::ServerCertificateValidationCallback
-                # Disable certificate validation
-                [System.Net.ServicePointManager]::ServerCertificateValidationCallback = { $true }
-                $response = Invoke-RestMethod -Uri "$BaseUrl/rest/v1/auth" -Method Post -Headers $Headers -Body "" -ContentType 'application/json'
-                # Restore original callback
-                [System.Net.ServicePointManager]::ServerCertificateValidationCallback = $OldCallback
             }
-            $FlashAPI_Token = $response.token
-            $FlashAPI_TokenExpiry = $null
-            if ($response.expires) {
-            # Try the most common formats
-                try { $FlashAPI_TokenExpiry = [datetime]::Parse($response.expires) } catch {}
-            }else{
-                if($TD_PSVersion -ge 7){        
-                    $lssecurityInfo = Invoke-RestMethod -Uri $BaseUrl/rest/v1/lssecurity -Method Post -Headers @{"accept"="application/json"; "X-Auth-Token"=$FlashAPI_Token } -ContentType "application/json" -SkipCertificateCheck -SslProtocol Tls12 -Body ""
-                }else{
-                    # Save old callback
-                    $OldCallback = [System.Net.ServicePointManager]::ServerCertificateValidationCallback
-                    # Disable certificate validation
+            else {
+                $OldCallback =
+                    [System.Net.ServicePointManager]::ServerCertificateValidationCallback
+
+                try {
                     [System.Net.ServicePointManager]::ServerCertificateValidationCallback = { $true }
-                    $lssecurityInfo = Invoke-RestMethod -Uri $BaseUrl/rest/v1/lssecurity -Method Post -Headers @{"accept"="application/json"; "X-Auth-Token"=$FlashAPI_Token } -ContentType "application/json" -Body ""
-                    # Restore original callback
+
+                    $response = Invoke-RestMethod -Uri "$BaseUrl/rest/v1/auth" -Method Post -Headers $Headers -Body "" -ContentType 'application/json' -ErrorAction Stop
+                }
+                finally {
                     [System.Net.ServicePointManager]::ServerCertificateValidationCallback = $OldCallback
                 }
-                $FlashAPI_TokenExpiry = (Get-Date).AddMinutes($lssecurityInfo.restapi_timeout_mins)
             }
-            $TokenExpiryinISO = $FlashAPI_TokenExpiry.ToString("o")   # ISO 8601 round-trip
+
+            $FlashAPI_Token = [string]$response.token
+
+            if ([string]::IsNullOrWhiteSpace($FlashAPI_Token)) {
+                throw "The authentication response did not contain a token."
+            }
+
+            $FlashAPI_TokenExpiry = [datetime]::MinValue
+
+            if ($response.PSObject.Properties['expires'] -and -not [string]::IsNullOrWhiteSpace([string]$response.expires)) {
+                $ExpiresText = [string]$response.expires
+
+                $HasValidExpiry = [datetime]::TryParse(
+                        $ExpiresText,
+                        [System.Globalization.CultureInfo]::InvariantCulture,
+                        [System.Globalization.DateTimeStyles]::RoundtripKind,
+                        [ref]$FlashAPI_TokenExpiry
+                    )
+
+                if (-not $HasValidExpiry) {
+                    throw "The authentication response contains an invalid expiry value: '$ExpiresText'."
+                }
+            }
+            else {
+                if ($TD_PSVersion -ge 7) {
+                    $lssecurityInfo = Invoke-RestMethod -Uri "$BaseUrl/rest/v1/lssecurity" -Method Post `
+                        -Headers @{
+                            accept         = "application/json"
+                            "X-Auth-Token" = $FlashAPI_Token
+                        } `
+                        -ContentType "application/json" `
+                        -SkipCertificateCheck `
+                        -SslProtocol Tls12 `
+                        -Body "" `
+                        -ErrorAction Stop
+                }
+                else {
+                    $OldCallback = [System.Net.ServicePointManager]::ServerCertificateValidationCallback
+
+                    try {
+                        [System.Net.ServicePointManager]::
+                            ServerCertificateValidationCallback = {
+                                $true
+                            }
+
+                        $lssecurityInfo = Invoke-RestMethod -Uri "$BaseUrl/rest/v1/lssecurity" -Method Post `
+                            -Headers @{
+                                accept         = "application/json"
+                                "X-Auth-Token" = $FlashAPI_Token
+                            } `
+                            -ContentType "application/json" `
+                            -Body "" `
+                            -ErrorAction Stop
+                    }
+                    finally {
+                        [System.Net.ServicePointManager]::ServerCertificateValidationCallback = $OldCallback
+                    }
+                }
+
+                $TimeoutMinutes = 0
+
+                if (-not [int]::TryParse([string]$lssecurityInfo.restapi_timeout_mins,[ref]$TimeoutMinutes)) {
+                    throw "The REST API timeout value is missing or invalid."
+                }
+
+                $FlashAPI_TokenExpiry = (Get-Date).AddMinutes($TimeoutMinutes)
+            }
+
+            $TokenExpiryinISO = $FlashAPI_TokenExpiry.ToString("o",[System.Globalization.CultureInfo]::InvariantCulture)
         }
         catch {
-            <#Do this if a terminating exception happens#>
-        } finally {
-            # Delete variable
+            $TokenRequestError = $_
+
+            SST_ToolMessageCollector -TD_ToolMSGCollector "Spectrum REST authentication failed for $TD_Device_DeviceIP`: $($_.Exception.Message)" -TD_ToolMSGType Error -TD_Shown yes
+
+            $FlashAPI_Token     = $null
+            $TokenExpiryinISO   = $null
+        }
+        finally {
             $TD_Device_PW = $null
-            # really remove
+
             Remove-Variable TD_Device_PW -ErrorAction SilentlyContinue
         }
     }
-    
+
     end {
-        $RESTInfoObj = [pscustomobject]@{
+        if ($null -ne $TokenRequestError -or [string]::IsNullOrWhiteSpace([string]$FlashAPI_Token) -or [string]::IsNullOrWhiteSpace([string]$TokenExpiryinISO)) {
+            return "plink"
+        }
+
+        $RESTInfoObj = [PSCustomObject]@{
             BaseUrl = $BaseUrl
             Token   = $FlashAPI_Token
             Expires = $TokenExpiryinISO
         }
-        
-        $RESTInfo = SST_RESTDBControl -SST_InfoType "SaveStorageToken" -SST_NewDBObject $RESTInfoObj
 
-        if($RESTInfo -eq "DataSaved"){
-            return "REST"
-        }else{
-            return "plink"
+        try {
+            $RESTInfo = SST_RESTDBControl -SST_InfoType "SaveStorageToken" -SST_NewDBObject $RESTInfoObj
+
+            if ($RESTInfo -eq "DataSaved") {
+                return "REST"
+            }
         }
+        catch {
+            SST_ToolMessageCollector -TD_ToolMSGCollector "Saving the Spectrum REST token failed for $TD_Device_DeviceIP`: $($_.Exception.Message)" -TD_ToolMSGType Error -TD_Shown yes
+        }
+
+        return "plink"
     }
 }

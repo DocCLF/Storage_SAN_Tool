@@ -14,15 +14,21 @@ function SST_SaveLoadToolSettings {
         $PSRootPath = Split-Path -Path $PSScriptRoot -Parent
         try {
             $SST_SavedToolSettingsDB = SST_ToolSettingsDB -SST_InfoType "LoadToolSettings"
-            <# die clixml muss da abgelegt werden wo die Cred abgelegt werden $TD_LB_CerdExportPath.Content #>
-            $SST_SavedToolSettingsXML = Get-Item -Path "$PSRootPath\Resources\SavedToolSettings.clixml" -ErrorAction SilentlyContinue
+            <# die clixml muss da abgelegt werden wo die Cred abgelegt werden $TD_LB_CerdExportPath.Content SST_SavedToolSettingsXML #>
+            $SettingsPath = Join-Path $PSRootPath 'Resources\SavedToolSettings.clixml'
+            if (Test-Path -LiteralPath $SettingsPath) {
+                $SettingsXML = Get-Item -LiteralPath $SettingsPath
+            }
+            else {
+                $SettingsXML = $null
+            }
         }
         catch {
             SST_ToolMessageCollector -TD_ToolMSGCollector $("SaveLoadToolSettings $($_.Exception.Message)") -TD_ToolMSGType Error -TD_Shown no
             Write-Error $_.Exception.Message
             #$TD_BTN_LoadToolSettings.Background="LightCoral"
             $SST_SavedToolSettingsDB = $null
-            $SST_SavedToolSettingsXML = $null
+            $SettingsXML = $null
         }
     }
     
@@ -69,10 +75,10 @@ function SST_SaveLoadToolSettings {
             }
         }
         <#Load Toolsettings#>
-        if($SST_LoadSettingsBTN -or ($SST_LoadSettings -and (($null -ne $SST_SavedToolSettingsXML)-and($SST_SavedToolSettingsDB.LoadSettingsOnStartUp)))){
+        if($SST_LoadSettingsBTN -or ($SST_LoadSettings -and (($null -ne $SettingsXML)-and($SST_SavedToolSettingsDB.LoadSettingsOnStartUp)))){
             try {
                 $SST_SavedCustomerSettingsDB = SST_CustomerDB -SST_InfoType "LoadCustomerSetUp" -SST_Customer $SST_SavedToolSettingsDB.CustomerNumber
-                $SST_LoadedToolSettingsXML = Import-Clixml -Path "$PSRootPath\Resources\SavedToolSettings.clixml" 
+                $SST_LoadedToolSettingsXML = Import-Clixml -LiteralPath $SettingsXML.FullName
                 if($SST_SavedToolSettingsDB.LoadSettingsOnStartUp -eq $true){
                     $TD_CB_LoadSettingsatStartUp.IsChecked = $SST_SavedToolSettingsDB.LoadSettingsOnStartUp
                     if($SST_SavedToolSettingsDB.IsCustomer){
@@ -118,7 +124,7 @@ function SST_SaveLoadToolSettings {
             }
 
         }else {
-            if((($null -ne $SST_SavedToolSettingsXML)-and($SST_SavedToolSettingsDB.LoadSettingsOnStartUp)) -and $SST_SaveSettings -eq $false){
+            if((($null -ne $SettingsXML)-and($SST_SavedToolSettingsDB.LoadSettingsOnStartUp)) -and $SST_SaveSettings -eq $false){
                 SST_ToolMessageCollector -TD_ToolMSGCollector "No settings have been loaded, check whether the settings have been saved. (File)" -TD_ToolMSGType Warning -TD_Shown yes
                 $TD_BTN_LoadToolSettings.Background="LightCoral"
             }
@@ -132,7 +138,7 @@ function SST_SaveLoadToolSettings {
     }
     
     end {
-        if($SST_LoadSettings -and (($null -ne $SST_SavedToolSettingsXML)-and($SST_SavedToolSettingsDB.LoadSettingsOnStartUp))){
+        if($SST_LoadSettings -and (($null -ne $SettingsXML)-and($SST_SavedToolSettingsDB.LoadSettingsOnStartUp))){
             SST_ImportCredential -SST_ImportDevicesonStartUp "yes" -SST_ToInportDeviceInfos $TD_InportedDevices -CockpitView $CockpitView | Out-Null
         }
         $SST_ExportToolSettingsXML = $null
