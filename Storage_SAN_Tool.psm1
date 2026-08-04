@@ -18,8 +18,6 @@ By default, these files are blocked to protect the computer from untrusted files
     $DashBoard_Functions = @(Get-ChildItem -Path $PSScriptRoot\TOOLFunc\DashBoard\*.ps1 -ErrorAction SilentlyContinue)
     Unblock-File -Path $PSScriptRoot\TOOLFunc\*.ps1 -Confirm:$false
     $TOOL_Functions = @(Get-ChildItem -Path $PSScriptRoot\TOOLFunc\*.ps1 -ErrorAction SilentlyContinue)
-    Unblock-File -Path $PSScriptRoot\USER\*.ps1 -Confirm:$false
-    $USER_Functions = @(Get-ChildItem -Path $PSScriptRoot\USER\*.ps1 -ErrorAction SilentlyContinue)
     Unblock-File -Path $PSScriptRoot\Server\IBMPower\*.ps1 -Confirm:$false
     $IBMPower_Functions = @(Get-ChildItem -Path $PSScriptRoot\Server\IBMPower\*.ps1 -ErrorAction SilentlyContinue)
     Unblock-File -Path $PSScriptRoot\Storage\IBM\REST\*.ps1 -Confirm:$false
@@ -48,7 +46,7 @@ By default, these files are blocked to protect the computer from untrusted files
             }
         }
 
-        foreach($import in @($REST_Functions + $GUIBasics_Functions + $DBFunc_Functions + $IBMTape_Functions +$PRISIMFunc_Functions + $DashBoard_Functions + $TOOL_Functions + $USER_Functions + $IBMPower_Functions + $IBMStorage_SSHFunctions + $IBMStorage_RESTFunctions + $FOSBrocade_SSHFunctions + $FOSBrocade_RESTFunctions + $HealthCheck_Functions + $GUI_Functions)) {
+        foreach($import in @($REST_Functions + $GUIBasics_Functions + $DBFunc_Functions + $IBMTape_Functions +$PRISIMFunc_Functions + $DashBoard_Functions + $TOOL_Functions + $IBMPower_Functions + $IBMStorage_SSHFunctions + $IBMStorage_RESTFunctions + $FOSBrocade_SSHFunctions + $FOSBrocade_RESTFunctions + $HealthCheck_Functions + $GUI_Functions)) {
             try {
                . $import.fullname
             }
