@@ -547,6 +547,6 @@ function Test-SQLiteHasAnyData {
     
     }finally {
         if ($cmd) { $cmd.Dispose() }
-        if ($countCmd) {$TableCheckCommand.Dispose()}
+        if ($countCmd) {$countCmd.Dispose()}
     }
 }
