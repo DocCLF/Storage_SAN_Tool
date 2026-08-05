@@ -21,14 +21,14 @@ function IBM_SANHealthCheck {
                         try {
                             SST_ToolMessageCollector -TD_ToolMSGCollector "Starting SAN HealthCheck for IP: $($Device.IPAddress)" -TD_ToolMSGType Message -TD_Shown no
                         
-                            # GUI-Block für den Switch erzeugen.
+                            # Create a GUI block for the switch.
                             $DeviceIdent = New-SANHealthCheckBlock -Device $Device -UCOBJ $UCOBJ
                             
-                            # HealthCheck-Zeilen erzeugen und gleichzeitig die
-                            # auszuführenden HealthCheck-Definitionen erhalten.
+                            # Generate HealthCheck lines while simultaneously obtaining the
+                            # HealthCheck definitions to be executed.
                             $HealthCheckSteps = Initialize-SANHealthCheckSteps -DeviceIdent $DeviceIdent -Device $Device 
                             
-                            # Alle definierten HealthCheck-Schritte nacheinander ausführen.
+                            # Run all defined HealthCheck steps one after another.
                             $HealthResult = Get-BrocadeHealthOverview -Device $Device -DeviceIdent $DeviceIdent -UCOBJ $UCOBJ -HealthCheckSteps $HealthCheckSteps
                         
                             if (
@@ -37,16 +37,12 @@ function IBM_SANHealthCheck {
                             ) {
                                 $SwitchInfo = $HealthResult.SwitchInfo
                             
-                                # Den tatsächlichen Property-Namen an deine Rückgabe
-                                # von Get-BrocadeSwitchInfo anpassen.
-                                $SwitchName = if (
-                                    $SwitchInfo.PSObject.Properties['Name']
-                                ) {
+                                # Adjust the actual property name in your return value
+                                # from Get-BrocadeSwitchInfo.
+                                $SwitchName = if ($SwitchInfo.PSObject.Properties['Name']) {
                                     [string]$SwitchInfo.Name
                                 }
-                                elseif (
-                                    $SwitchInfo.PSObject.Properties['SwitchName']
-                                ) {
+                                elseif ($SwitchInfo.PSObject.Properties['SwitchName']) {
                                     [string]$SwitchInfo.SwitchName
                                 }
                             
