@@ -2,6 +2,7 @@ function IBM_StorageHealthCheck {
     [CmdletBinding()]
     param(
         $SST_DeviceLoggingInfo,
+        $ExportPath,
         $UCOBJ
     )
 
@@ -16,7 +17,7 @@ function IBM_StorageHealthCheck {
                     # Generate status lines and definitions to be executed.
                     $HealthCheckSteps = Initialize-IBMStorageHealthCheckSteps -DeviceIdent $DeviceIdent
                     # Execute all IBM REST steps.
-                    $HealthResult = Get-IBMHealthOverview -Device $Device -DeviceIdent $DeviceIdent -UCOBJ $UCOBJ -HealthCheckSteps $HealthCheckSteps
+                    $HealthResult = Get-IBMHealthOverview -Device $Device -DeviceIdent $DeviceIdent -UCOBJ $UCOBJ -HealthCheckSteps $HealthCheckSteps -ExportPath $ExportPath
                     # Import names from the BaseStorage return value.
                     if ($null -ne $HealthResult -and $HealthResult.PSObject.Properties['StorageInfo']) {
                         $BaseResult = $HealthResult.StorageInfo

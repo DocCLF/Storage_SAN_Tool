@@ -11,6 +11,9 @@ function Get-IBMHealthOverview {
         $UCOBJ,
 
         [Parameter(Mandatory)]
+        $ExportPath,
+
+        [Parameter(Mandatory)]
         [object[]]$HealthCheckSteps
     )
 
@@ -26,7 +29,7 @@ function Get-IBMHealthOverview {
         $RequiresPrivilege = ($HealthCheckStep.PSObject.Properties['RequiresPrivilege'] -and [bool]$HealthCheckStep.RequiresPrivilege)
 
         # First attempt using the standard device credentials
-        $StepResult = Invoke-IBMStorageHealthStep -DeviceIdent $DeviceIdent -Id $HealthCheckStep.Id -CommandName $CommandName -Device $Device -UCOBJ $UCOBJ
+        $StepResult = Invoke-IBMStorageHealthStep -DeviceIdent $DeviceIdent -Id $HealthCheckStep.Id -CommandName $CommandName -Device $Device -UCOBJ $UCOBJ -ExportPath $ExportPath
 
         # Only for marked steps and in the event of a
         # authorization error, prompt for privileged credentials.
@@ -51,7 +54,7 @@ The credentials are used temporarily for this HealthCheck only.
             if ($null -ne $PrivilegedCredential) {
                 Set-IBMStorageHealthCheckStep -DeviceIdent $DeviceIdent -Id $HealthCheckStep.Id -Status Running -Details 'Retrying with privileged credentials.' -DataCount 0 | Out-Null
 
-                $StepResult = Invoke-IBMStorageHealthStep -DeviceIdent $DeviceIdent -Id $HealthCheckStep.Id -CommandName $CommandName -Device $Device -UCOBJ $UCOBJ -Credential $PrivilegedCredential
+                $StepResult = Invoke-IBMStorageHealthStep -DeviceIdent $DeviceIdent -Id $HealthCheckStep.Id -CommandName $CommandName -Device $Device -UCOBJ $UCOBJ -Credential $PrivilegedCredential -ExportPath $ExportPath
             }
             else {
                 Set-IBMStorageHealthCheckStep -DeviceIdent $DeviceIdent -Id $HealthCheckStep.Id -Status Error -Details 'Privileged credentials were required, but credential entry was canceled.' -DataCount 0 | Out-Null
