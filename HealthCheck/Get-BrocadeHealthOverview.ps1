@@ -11,7 +11,10 @@ function Get-BrocadeHealthOverview {
         $UCOBJ,
 
         [Parameter(Mandatory)]
-        [object[]]$HealthCheckSteps
+        [object[]]$HealthCheckSteps,
+
+        [Parameter(Mandatory)]
+        $ExportPath
     )
 
     $Result = [ordered]@{}
@@ -27,7 +30,7 @@ function Get-BrocadeHealthOverview {
         # --------------------------------------------------------
         # First attempt using the standard device credentials
         # --------------------------------------------------------
-        $StepResult = Invoke-SANHealthStep -DeviceIdent $DeviceIdent -Id $HealthCheckStep.Id -CommandName $CommandName -Device $Device -UCOBJ $UCOBJ
+        $StepResult = Invoke-SANHealthStep -DeviceIdent $DeviceIdent -Id $HealthCheckStep.Id -CommandName $CommandName -Device $Device -UCOBJ $UCOBJ -ExportPath $ExportPath
 
         # --------------------------------------------------------
         # For privileged steps and authorization errors:
@@ -54,7 +57,7 @@ The credentials are used temporarily for this HealthCheck only.
             if ($null -ne $PrivilegedCredential) {
                 Set-SANHealthCheckStep -DeviceIdent $DeviceIdent -Id $HealthCheckStep.Id -Status Running -Details 'Retrying with privileged credentials.' -DataCount 0 | Out-Null
 
-                $StepResult = Invoke-SANHealthStep -DeviceIdent $DeviceIdent -Id $HealthCheckStep.Id -CommandName $CommandName -Device $Device -UCOBJ $UCOBJ -Credential $PrivilegedCredential
+                $StepResult = Invoke-SANHealthStep -DeviceIdent $DeviceIdent -Id $HealthCheckStep.Id -CommandName $CommandName -Device $Device -UCOBJ $UCOBJ -Credential $PrivilegedCredential -ExportPath $ExportPath
             }
             else {
                 Set-SANHealthCheckStep -DeviceIdent $DeviceIdent -Id $HealthCheckStep.Id -Status Error -Details 'Privileged credentials were required, but credential entry was canceled.' -DataCount 0 | Out-Null

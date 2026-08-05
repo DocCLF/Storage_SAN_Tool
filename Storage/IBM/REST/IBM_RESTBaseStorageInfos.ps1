@@ -100,7 +100,7 @@ function IBM_RESTBaseStorageInfos {
     end {
         Close-ProgressBar -ProgressBar $ProgressBar
         SST_CustomerSTODBInsertTable -SST_InfoType "StorageBase" -SST_CollectedInformations $TD_StorageInfo
-        if([string]::IsNullOrEmpty($TD_Device_DeviceName)){$TD_Device_DeviceName = $TD_StorageInfo.Name[0]}
+        if([string]::IsNullOrEmpty($TD_Device_DeviceName)){$TD_Device_DeviceName = $TD_StorageInfo.SerialNumber}
         <# export y or n #>
         if($TD_export -eq "yes"){
             if([string]$TD_Exportpath -ne "$PSRootPath\ToolLog\"){

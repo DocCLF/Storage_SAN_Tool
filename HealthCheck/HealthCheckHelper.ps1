@@ -310,7 +310,10 @@ function Invoke-IBMStorageHealthStep {
         [Parameter(Mandatory)]
         $UCOBJ,
 
-        [PSCredential]$Credential
+        [PSCredential]$Credential,
+
+        [Parameter(Mandatory)]
+        $ExportPath
     )
 
     $Step = $DeviceIdent.StorageHealthCheckRows |
@@ -353,7 +356,8 @@ function Invoke-IBMStorageHealthStep {
             TD_Device_UserName      = $CurrentUserName
             TD_Device_DeviceIP      = $Device.IPAddress
             TD_Device_PW            = $CurrentPassword
-            TD_Export               = 'no'
+            TD_Export               = 'yes'
+            TD_Exportpath           = $ExportPath
         }
 
         # Pass only the parameters that the respective function accepts.
@@ -954,7 +958,9 @@ function Invoke-SANHealthStep {
         [Parameter(Mandatory)]
         $UCOBJ,
 
-        [PSCredential]$Credential
+        [PSCredential]$Credential,
+
+        $ExportPath
     )
 
     $Step = $DeviceIdent.SANHealthCheckRows |
@@ -1012,10 +1018,7 @@ function Invoke-SANHealthStep {
             return $StepResult
         }
 
-        $ValidItems = @(
-            @($StepResult) |
-                Where-Object { $null -ne $_ }
-        )
+        $ValidItems = @(@($StepResult) | Where-Object { $null -ne $_ })
 
         if ($ValidItems.Count -eq 0) {
             Set-SANHealthCheckStep -DeviceIdent $DeviceIdent -Id $Id -Status NoData -Details "No data returned for $StepName." -DataCount 0 | Out-Null
@@ -1025,7 +1028,19 @@ function Invoke-SANHealthStep {
 
         Set-SANHealthCheckStep -DeviceIdent $DeviceIdent -Id $Id -Status Completed -Details "$StepName completed." -DataCount $ValidItems.Count | Out-Null
 
-        Out-File -FilePath "$($TD_TB_ExportPath.Text)\HealthCheckCollection$($Id)_$($CommandName)_$(Get-Date -Format "yyyy-MM-dd").csv" -InputObject $StepResult
+        if (-not [string]::IsNullOrWhiteSpace([string]$ExportPath)) {
+        
+            if (-not (Test-Path -LiteralPath $ExportPath)) {New-Item -Path $ExportPath -ItemType Directory -Force | Out-Null}
+        
+            $SafeCommandName = $CommandName -replace '[^\w\-]', '_'
+            $SafeDeviceName  = [string]$Device.IPAddress -replace '[^\w\-]', '_'
+        
+            $FileName = '{0}_{1}_{2}_{3}.csv' -f $Device.ID, $SafeDeviceName, $SafeCommandName, (Get-Date -Format 'yyyy-MM-dd')
+        
+            $FilePath = Join-Path $ExportPath $FileName
+        
+            $ValidItems | Export-Csv -Path $FilePath -NoTypeInformation -Encoding UTF8
+        }
         
         return $StepResult
     }

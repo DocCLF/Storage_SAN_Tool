@@ -2,6 +2,7 @@ function IBM_SANHealthCheck {
     [CmdletBinding()]
     param (
         $SST_DeviceLoggingInfo,
+        $ExportPath,
         $UCOBJ
     )
     
@@ -29,7 +30,7 @@ function IBM_SANHealthCheck {
                             $HealthCheckSteps = Initialize-SANHealthCheckSteps -DeviceIdent $DeviceIdent -Device $Device 
                             
                             # Run all defined HealthCheck steps one after another.
-                            $HealthResult = Get-BrocadeHealthOverview -Device $Device -DeviceIdent $DeviceIdent -UCOBJ $UCOBJ -HealthCheckSteps $HealthCheckSteps
+                            $HealthResult = Get-BrocadeHealthOverview -Device $Device -DeviceIdent $DeviceIdent -UCOBJ $UCOBJ -HealthCheckSteps $HealthCheckSteps -ExportPath $ExportPath
                         
                             if (
                                 $null -ne $HealthResult -and
