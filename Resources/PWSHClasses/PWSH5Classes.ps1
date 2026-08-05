@@ -113,7 +113,7 @@ public class MainViewModel : INotifyPropertyChanged
     }
 }
 
-public class SANHealthCheckStep : INotifyPropertyChanged
+public class HealthCheckStep : INotifyPropertyChanged
 {
     private string _status;
     private string _details;
@@ -122,7 +122,7 @@ public class SANHealthCheckStep : INotifyPropertyChanged
     public string Id { get; set; }
     public string Name { get; set; }
 
-    public SANHealthCheckStep()
+    public HealthCheckStep()
     {
         _status = "Pending";
         _details = "";
@@ -196,6 +196,7 @@ public class DeviceToggle : INotifyPropertyChanged
     private ObservableCollection<object> _partitionRows;
     private ObservableCollection<object> _securityRows;
     private ObservableCollection<object> _userInfoRows;
+    private ObservableCollection<object> _storageHealthCheckRows;
 
     private ObservableCollection<object> _sANSwitchBaseRows;
     private ObservableCollection<object> _sANSwitchShowRows;
@@ -235,6 +236,7 @@ public class DeviceToggle : INotifyPropertyChanged
     private string _sensorShowTitle;
     private string _sensorShowText;
     private string _sanHealthCheckTitle;
+    private string _storageHealthCheckTitle;
 
     public DeviceToggle()
     {
@@ -252,6 +254,7 @@ public class DeviceToggle : INotifyPropertyChanged
         _partitionRows = new ObservableCollection<object>();
         _securityRows = new ObservableCollection<object>();
         _userInfoRows = new ObservableCollection<object>();
+        _storageHealthCheckRows = new ObservableCollection<object>();
 
         _sANSwitchBaseRows = new ObservableCollection<object>();
         _sANSwitchShowRows = new ObservableCollection<object>();
@@ -291,6 +294,7 @@ public class DeviceToggle : INotifyPropertyChanged
         _sensorShowTitle = "";
         _sensorShowText = "";
         _sanHealthCheckTitle = "";
+        _storageHealthCheckTitle = "";
     }
 
     public string Id { get; set; }
@@ -310,6 +314,7 @@ public class DeviceToggle : INotifyPropertyChanged
     public ObservableCollection<object> PartitionRows { get { return _partitionRows; } }
     public ObservableCollection<object> SecurityRows { get { return _securityRows; } }
     public ObservableCollection<object> UserInfoRows { get { return _userInfoRows; } }
+    public ObservableCollection<object> StorageHealthCheckRows { get { return _storageHealthCheckRows ; } }
 
     public ObservableCollection<object> SANSwitchBaseRows { get { return _sANSwitchBaseRows; } }
     public ObservableCollection<object> SANSwitchShowRows { get { return _sANSwitchShowRows; } }
@@ -398,6 +403,19 @@ public class DeviceToggle : INotifyPropertyChanged
             {
                 _sanHealthCheckTitle = value;
                 OnPropertyChanged("SANHealthCheckTitle");
+            }
+        }
+    }
+
+    public string StorageHealthCheckTitle
+    {
+        get { return _storageHealthCheckTitle; }
+        set
+        {
+            if (_storageHealthCheckTitle != value)
+            {
+                _storageHealthCheckTitle = value;
+                OnPropertyChanged("StorageHealthCheckTitle");
             }
         }
     }

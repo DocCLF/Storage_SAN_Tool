@@ -77,7 +77,7 @@ public class MainViewModel : INotifyPropertyChanged
 // Status     = Pending, Running, Completed, NoData, Error
 // Details    = Additional information or error message
 // DataCount  = Number of collected data records
-public class SANHealthCheckStep : INotifyPropertyChanged
+public class HealthCheckStep : INotifyPropertyChanged
 {
     private string _status;
     private string _details;
@@ -125,7 +125,7 @@ public class SANHealthCheckStep : INotifyPropertyChanged
         }
     }
 
-    public SANHealthCheckStep()
+    public HealthCheckStep()
     {
         _status = "Pending";
         _details = "";
@@ -167,6 +167,7 @@ public class DeviceToggle : INotifyPropertyChanged
     public ObservableCollection<object> PartitionRows { get; } = new ObservableCollection<object>();
     public ObservableCollection<object> SecurityRows { get; } = new ObservableCollection<object>();
     public ObservableCollection<object> UserInfoRows { get; } = new ObservableCollection<object>();
+    public ObservableCollection<object> StorageHealthCheckRows { get; } = new ObservableCollection<object>();
 
     // === DG SAN ===
     public ObservableCollection<object> SANSwitchBaseRows { get; } = new ObservableCollection<object>();
@@ -329,7 +330,26 @@ public class DeviceToggle : INotifyPropertyChanged
             }
         }
     }
-    
+
+    private string _storageHealthCheckTitle;
+
+    public string StorageHealthCheckTitle
+    {
+        get { return _storageHealthCheckTitle; }
+        set
+        {
+            if (_storageHealthCheckTitle != value)
+            {
+                _storageHealthCheckTitle = value;
+
+                PropertyChanged?.Invoke(
+                    this,
+                    new PropertyChangedEventArgs(nameof(StorageHealthCheckTitle))
+                );
+            }
+        }
+    }
+        
     public bool IsChecked
     {
         get { return _isChecked; }
