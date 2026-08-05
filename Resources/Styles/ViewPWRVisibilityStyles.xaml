@@ -8,6 +8,9 @@
             <DataTrigger Binding="{Binding Main.SelectedView}" Value="HMC">
                 <Setter Property="Visibility" Value="Visible"/>
             </DataTrigger>
+            <DataTrigger Binding="{Binding Main.SelectedView}" Value="PowerShowAll">
+                <Setter Property="Visibility" Value="Visible"/>
+            </DataTrigger>
         </Style.Triggers>
     </Style>
     <!-- Nur sichtbar, wenn Main.SelectedView == ManagedSystem -->
@@ -17,6 +20,9 @@
             <DataTrigger Binding="{Binding Main.SelectedView}" Value="ManagedSystem">
                 <Setter Property="Visibility" Value="Visible"/>
             </DataTrigger>
+            <DataTrigger Binding="{Binding Main.SelectedView}" Value="PowerShowAll">
+                <Setter Property="Visibility" Value="Visible"/>
+            </DataTrigger>
         </Style.Triggers>
     </Style>
     <!-- Nur sichtbar, wenn Main.SelectedView == LPARs -->
@@ -24,6 +30,9 @@
         <Setter Property="Visibility" Value="Collapsed"/>
         <Style.Triggers>
             <DataTrigger Binding="{Binding Main.SelectedView}" Value="LPARs">
+                <Setter Property="Visibility" Value="Visible"/>
+            </DataTrigger>
+            <DataTrigger Binding="{Binding Main.SelectedView}" Value="PowerShowAll">
                 <Setter Property="Visibility" Value="Visible"/>
             </DataTrigger>
         </Style.Triggers>

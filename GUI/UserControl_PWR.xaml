@@ -62,7 +62,7 @@
             </StackPanel>
         </GroupBox>
         <WrapPanel Grid.Column="1" Grid.Row="0" >
-            <GroupBox Header="Visibility" Margin="10" >
+            <GroupBox x:Name="GB_SelectAllSTOCB" Header="Visibility" Margin="10" >
                 <WrapPanel Orientation="Horizontal" ToolTip="klick for visibility" >
                     <!-- Dynamische Checkboxen -->
                     <ItemsControl ItemsSource="{Binding Main.DeviceToggles}">
@@ -746,144 +746,133 @@
             </WrapPanel>
         </GroupBox>
         <!-- PWR_LparSummary -->
-        <GroupBox x:Name="GBPWRLPARSum" Visibility="Collapsed" Grid.Column="1" Grid.Row="1" Header="Partition Info" MinWidth="820" MaxWidth="1600" MaxHeight="800" HorizontalAlignment="Left" Margin="10,10,0,0"  VerticalAlignment="Top" >
+        <GroupBox x:Name="GBPWRLPARSum" Visibility="Collapsed" Grid.Column="1" Grid.Row="1" Header="Partition Info" MinWidth="820" MaxWidth="1600" MaxHeight="800" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top">
             <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
-                <ItemsControl
-                    ItemsSource="{Binding Main.DeviceToggles}"
-                    Style="{DynamicResource ShowWhenLPAR}">
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate>
-                            <StackPanel
-                                Margin="5"
-                                Visibility="{Binding IsChecked,
-                                    Converter={StaticResource BooleanToVisibilityConverter},
-                                    FallbackValue=Collapsed}">
-                                <!-- Is that really necessary?
-                                <TextBlock
-                                    Text="{Binding DeviceTitle}"
-                                    FontSize="14"
-                                    FontWeight="Bold"
-                                    Margin="0,0,0,5"/>
-                                    -->
+                <StackPanel>
+                    <!-- ==================================================
+                         REST-/MVVM-Ansicht
+                         ================================================== -->
+                    <ItemsControl x:Name="IC_IBMPowerLPARRestView"
+                                  ItemsSource="{Binding Main.DeviceToggles}"
+                                  Style="{DynamicResource ShowWhenLPAR}">
 
-                                <DataGrid
-                                    ItemsSource="{Binding LparRows}"
-                                    AutoGenerateColumns="False"
-                                    IsReadOnly="True"
-                                    CanUserAddRows="False"
-                                    CanUserDeleteRows="False"
-                                    CanUserSortColumns="True"
-                                    CanUserResizeColumns="True"
-                                    SelectionMode="Single"
-                                    SelectionUnit="FullRow"
-                                    HeadersVisibility="Column"
-                                    GridLinesVisibility="Horizontal"
-                                    RowHeaderWidth="0"
-                                    MaxHeight="500"
-                                    HorizontalScrollBarVisibility="Auto"
-                                    VerticalScrollBarVisibility="Auto"
-                                    AlternatingRowBackground="WhiteSmoke">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
 
-                                    <DataGrid.RowStyle>
-                                        <Style TargetType="DataGridRow">
-                                            <Style.Triggers>
+                                <StackPanel Margin="5"
+                                            Visibility="{Binding IsChecked,
+                                                Converter={StaticResource BooleanToVisibilityConverter},
+                                                FallbackValue=Collapsed}">
 
-                                                <DataTrigger
-                                                    Binding="{Binding PartitionRole}"
-                                                    Value="VIOS">
-                                                    <Setter Property="Background" Value="LightBlue"/>
-                                                    <Setter Property="FontWeight" Value="SemiBold"/>
-                                                </DataTrigger>
+                                    <DataGrid ItemsSource="{Binding LparRows}"
+                                              AutoGenerateColumns="False"
+                                              IsReadOnly="True"
+                                              CanUserAddRows="False"
+                                              CanUserDeleteRows="False"
+                                              CanUserSortColumns="True"
+                                              CanUserResizeColumns="True"
+                                              SelectionMode="Single"
+                                              SelectionUnit="FullRow"
+                                              HeadersVisibility="Column"
+                                              GridLinesVisibility="Horizontal"
+                                              RowHeaderWidth="0"
+                                              MaxHeight="500"
+                                              HorizontalScrollBarVisibility="Auto"
+                                              VerticalScrollBarVisibility="Auto"
+                                              AlternatingRowBackground="WhiteSmoke">
 
-                                                <DataTrigger
-                                                    Binding="{Binding State}"
-                                                    Value="not activated">
-                                                    <Setter Property="Foreground" Value="DarkGoldenrod"/>
-                                                </DataTrigger>
+                                        <DataGrid.RowStyle>
+                                            <Style TargetType="DataGridRow">
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding PartitionRole}" Value="VIOS">
+                                                        <Setter Property="Background" Value="LightBlue"/>
+                                                        <Setter Property="FontWeight" Value="SemiBold"/>
+                                                    </DataTrigger>
+                                                    <DataTrigger Binding="{Binding State}" Value="not activated">
+                                                        <Setter Property="Foreground" Value="DarkGoldenrod"/>
+                                                    </DataTrigger>
+                                                    <DataTrigger Binding="{Binding State}" Value="not available">
+                                                        <Setter Property="Foreground" Value="Gray"/>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </DataGrid.RowStyle>
+                                        <DataGrid.Columns>
+                                            <DataGridTextColumn Header="Managed System" Binding="{Binding ManagedSystemName}" Width="220"/>
+                                            <DataGridTextColumn Header="Partition" Binding="{Binding LparName}" Width="220"/>
+                                            <DataGridTextColumn Header="Type" Binding="{Binding PartitionRole}" Width="70"/>
+                                            <DataGridTextColumn Header="ID" Binding="{Binding PartitionId}" Width="50"/>
+                                            <DataGridTextColumn Header="State" Binding="{Binding State}" Width="105"/>
+                                            <DataGridTextColumn Header="Environment" Binding="{Binding Environment}" Width="95"/>
+                                            <DataGridTextColumn Header="OS Version" Binding="{Binding OsVersion}" Width="260"/>
+                                            <DataGridTextColumn Header="RMC State" Binding="{Binding RmcState}" Width="90"/>
+                                            <DataGridTextColumn Header="RMC IP" Binding="{Binding RmcIp}" Width="120"/>
+                                            <DataGridTextColumn Header="CPU" Binding="{Binding CurrentProcessingUnits}" Width="65"/>
+                                            <DataGridTextColumn Header="Memory MB" Binding="{Binding CurrentMemoryMB}" Width="90"/>
+                                            <DataGridTextColumn Header="Profile" Binding="{Binding DefaultProfile}" Width="150"/>
+                                        </DataGrid.Columns>
+                                    </DataGrid>
+                                </StackPanel>
 
-                                                <DataTrigger
-                                                    Binding="{Binding State}"
-                                                    Value="not available">
-                                                    <Setter Property="Foreground" Value="Gray"/>
-                                                </DataTrigger>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
 
-                                            </Style.Triggers>
-                                        </Style>
-                                    </DataGrid.RowStyle>
+                    <!-- ==================================================
+                         DB-Ansicht
+                         ItemsSource wird direkt aus PowerShell gesetzt
+                         ================================================== -->
+                    <DataGrid x:Name="DG_IBMPowerLPARDBView"
+                              Visibility="Collapsed"
+                              Margin="5"
+                              AutoGenerateColumns="False"
+                              IsReadOnly="True"
+                              CanUserAddRows="False"
+                              CanUserDeleteRows="False"
+                              CanUserSortColumns="True"
+                              CanUserResizeColumns="True"
+                              SelectionMode="Single"
+                              SelectionUnit="FullRow"
+                              HeadersVisibility="Column"
+                              GridLinesVisibility="Horizontal"
+                              RowHeaderWidth="0"
+                              MaxHeight="500"
+                              HorizontalScrollBarVisibility="Auto"
+                              VerticalScrollBarVisibility="Auto"
+                              AlternatingRowBackground="WhiteSmoke">
 
-                                    <DataGrid.Columns>
-
-                                        <DataGridTextColumn
-                                            Header="Managed System"
-                                            Binding="{Binding ManagedSystemName}"
-                                            Width="220"/>
-
-                                        <DataGridTextColumn
-                                            Header="Partition"
-                                            Binding="{Binding LparName}"
-                                            Width="220"/>
-
-                                        <DataGridTextColumn
-                                            Header="Type"
-                                            Binding="{Binding PartitionRole}"
-                                            Width="70"/>
-
-                                        <DataGridTextColumn
-                                            Header="ID"
-                                            Binding="{Binding PartitionId}"
-                                            Width="50"/>
-
-                                        <DataGridTextColumn
-                                            Header="State"
-                                            Binding="{Binding State}"
-                                            Width="105"/>
-
-                                        <DataGridTextColumn
-                                            Header="Environment"
-                                            Binding="{Binding Environment}"
-                                            Width="95"/>
-
-                                        <DataGridTextColumn
-                                            Header="OS Version"
-                                            Binding="{Binding OsVersion}"
-                                            Width="260"/>
-
-                                        <DataGridTextColumn
-                                            Header="RMC State"
-                                            Binding="{Binding RmcState}"
-                                            Width="90"/>
-
-                                        <DataGridTextColumn
-                                            Header="RMC IP"
-                                            Binding="{Binding RmcIp}"
-                                            Width="120"/>
-
-                                        <DataGridTextColumn
-                                            Header="CPU"
-                                            Binding="{Binding CurrentProcessingUnits}"
-                                            Width="65"/>
-
-                                        <DataGridTextColumn
-                                            Header="Memory MB"
-                                            Binding="{Binding CurrentMemoryMB}"
-                                            Width="90"/>
-
-                                        <DataGridTextColumn
-                                            Header="Profile"
-                                            Binding="{Binding DefaultProfile}"
-                                            Width="150"/>
-
-                                    </DataGrid.Columns>
-
-                                </DataGrid>
-
-                            </StackPanel>
-
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-
-                </ItemsControl>
-
+                        <DataGrid.RowStyle>
+                            <Style TargetType="DataGridRow">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding PartitionRole}" Value="VIOS">
+                                        <Setter Property="Background" Value="LightBlue"/>
+                                        <Setter Property="FontWeight" Value="SemiBold"/>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding State}" Value="not activated">
+                                        <Setter Property="Foreground" Value="DarkGoldenrod"/>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding State}" Value="not available">
+                                        <Setter Property="Foreground" Value="Gray"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </DataGrid.RowStyle>
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="Managed System" Binding="{Binding ManagedSystemName}" Width="220"/>
+                                <DataGridTextColumn Header="Partition" Binding="{Binding LparName}" Width="220"/>
+                                <DataGridTextColumn Header="Type" Binding="{Binding PartitionRole}" Width="70"/>
+                                <DataGridTextColumn Header="ID" Binding="{Binding PartitionId}" Width="50"/>
+                                <DataGridTextColumn Header="State" Binding="{Binding State}" Width="105"/>
+                                <DataGridTextColumn Header="Environment" Binding="{Binding Environment}" Width="95"/>
+                                <DataGridTextColumn Header="OS Version" Binding="{Binding OsVersion}" Width="260"/>
+                                <DataGridTextColumn Header="RMC State" Binding="{Binding RmcState}" Width="90"/>
+                                <DataGridTextColumn Header="RMC IP" Binding="{Binding RmcIp}" Width="120"/>
+                                <DataGridTextColumn Header="CPU" Binding="{Binding CurrentProcessingUnits}" Width="65"/>
+                                <DataGridTextColumn Header="Memory MB" Binding="{Binding CurrentMemoryMB}" Width="90"/>
+                                <DataGridTextColumn Header="Profile" Binding="{Binding DefaultProfile}" Width="150"/>
+                            </DataGrid.Columns>
+                    </DataGrid>
+                </StackPanel>
             </ScrollViewer>
         </GroupBox>
         </WrapPanel>

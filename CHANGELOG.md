@@ -11,7 +11,7 @@
     * switched to Avalonia to support additional operating systems
 
 All notable changes to this project will be documented in this file.
-# [v1.4.068_beta] - 2026-08-04
+# [v1.4.071_beta] - 2026-08-05
 ### Added 
 - Support for IBM Tape (only via REST)
 - REST Function for IBM Storage
@@ -35,6 +35,7 @@ All notable changes to this project will be documented in this file.
 - STOName was not displayed in the “Online/Offline Hosts” view of the dashboard.
 - HostInfo Bug when there is a Empty entry
 - DG Device Overview – SAN Switches: No information is displayed
+- “Showall” Display for the HMC, PWR systems and LPARs
 
 ### Changed
 - GUI redesigned
@@ -44,6 +45,8 @@ All notable changes to this project will be documented in this file.
 - ToolLog on GUI The most recent post now always appears at the top
 - add some tipps to the "Guide to signing the Module"
 - If there is no Partition, suppress the output in the prompt and write it to the log and the Events log in the GUI
+- HealthCheck: In its current version, this system acts as a data collector that retrieves individual data points, which still need to be evaluated by a technician.
+    * In a future version, the tool will be able to handle some of that as well.
 
 ### Known Bugs
 - In some places, Tape and Power do not display a progress bar

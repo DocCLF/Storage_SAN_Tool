@@ -2261,131 +2261,193 @@ $TD_BTN_PWR_LparSummary.add_click({
     }
 })
 $TD_BTN_PWR_ShowAll.add_click({
-    <# for ProgressBar #>
     $PB = New-ProgressBar
-    <# ProgressBar #>
-    $DBName = $TD_TB_CustomerInfoName.Text
-    $TD_Credentials = $TD_DG_KnownDeviceList.ItemsSource | Where-Object { $_.DeviceTyp -like "*PowerHMC*" }
-    $UCDataContext = $TD_UserControl_PWR.DataContext
-    if (-not $UCDataContext) { [System.Windows.MessageBox]::Show("DataContext ist NULL!") | Out-Null; return }
-    $UCVMMain = $UCDataContext.Main
-    $UCVMMain.DeviceToggles.Clear()
-    Write-ProgressBar -ProgressBar $PB -Activity "Prepare the collection" -PercentComplete 10
+
     try {
-        [array]$DBPowerHMC = SST_CustomerPWRDBReadTable -SST_InfoType "PowerHMC" -SST_Customer $DBName
-        if($null -eq $DBPowerHMC){
-            foreach($TD_Creds in $TD_Credentials){
-
-                $FunctionResult = New-DeviceBlock -Device $TD_Creds -ExportPath $TD_TB_ExportPath.Text -RESTFunc HMC_RESTHMCConsole
-
-                $mapHMC = @{
-                    HmcName            = 'HMCName'
-                    MachineType        = 'HMCMTM'
-                    Model              = 'Model'
-                    SerialNumber       = 'SerialNumber'
-                    BIOS               = 'BIOS'
-                    DisplayVersion     = 'DisplayVersion'
-                    IFix               = 'IFix'
-                    PrimaryIP          = 'PrimaryIP'
-                    IPsAll             = 'IPsAll'
-                    ManagedSystemCount = 'ManagedSystemCount'
-                    ManagedSystemUuids = 'ManagedSystemUuids'
-                    UUID               = 'UUID'
-                    Url                = 'Url'
-                }
-            
-                Add-MappedRows -Collection $FunctionResult.DeviceIdent.HmcRows -Source $FunctionResult.FuncResult -IdProperty 'RowID' -Map $mapHMC
-            
-                $UCVMMain.DeviceToggles.Add($FunctionResult.DeviceIdent)
-            }
-            $UCVMMain.SelectedView = "HMC"
-        }else {
-            $TD_IC_IBMPowerHMCDBView.ItemsSource = $DBPowerHMC
+        $DBName = $TD_TB_CustomerInfoName.Text
+        $TD_Credentials = @($TD_DG_KnownDeviceList.ItemsSource | Where-Object { $_.DeviceTyp -like '*PowerHMC*' })
+        $UCDataContext = $TD_UserControl_PWR.DataContext
+        if (-not $UCDataContext) {
+            [System.Windows.MessageBox]::Show('DataContext ist NULL!') | Out-Null
+            return
         }
-    }
-    catch {
-        <#Do this if a terminating exception happens#>
-        SST_ToolMessageCollector -TD_ToolMSGCollector "PWR_ShowAll HMC: $($_.Exception.Message)" -TD_ToolMSGType Error -TD_Shown yes
-    }
-    Write-ProgressBar -ProgressBar $PB -Activity "HMC RESTHMCConsole done" -PercentComplete 20
-    try {
-        Write-ProgressBar -ProgressBar $PB -Activity "Prepare HMC_RESTHMCManagedSystems" -PercentComplete 30
-        [array]$DBPowerSysSum = SST_CustomerPWRDBReadTable -SST_InfoType "PowerSysSummary" -SST_Customer $DBName
-        if($null -eq $DBPowerSysSum){
-            foreach($TD_Creds in $TD_Credentials){
-            
-                $FunctionResult = New-DeviceBlock -Device $TD_Creds -ExportPath $TD_TB_ExportPath.Text -RESTFunc HMC_RESTHMCManagedSystems
-            
-                $mapMS = @{
-                    SystemName       = 'SystemName'
-                    State            = 'State'
-                    SerialNumber     = 'SerialNumber'
-                    MachineTypeModel = 'MachineTypeModel'
-                    ECNumber         = 'ECNumber'
-                    ActivatedLevel   = 'ActivatedLevel'
-                    UUID             = 'UUID'
-                    Url              = 'Url'
+        $UCVMMain = $UCDataContext.Main
+        $UCVMMain.DeviceToggles.Clear()
+        Write-ProgressBar -ProgressBar $PB -Activity 'Prepare the collection' -PercentComplete 10
+        # ========================================================
+        # HMC
+        # ========================================================
+        try {
+            [array]$DBPowerHMC = SST_CustomerPWRDBReadTable -SST_InfoType 'PowerHMC' -SST_Customer $DBName
+
+            if (@($DBPowerHMC).Count -eq 0) {
+                foreach ($TD_Creds in $TD_Credentials) {
+                    $FunctionResult = New-DeviceBlock -Device $TD_Creds -ExportPath $TD_TB_ExportPath.Text -RESTFunc HMC_RESTHMCConsole
+
+                    $mapHMC = @{
+                        HmcName            = 'HMCName'
+                        MachineType        = 'HMCMTM'
+                        Model              = 'Model'
+                        SerialNumber       = 'SerialNumber'
+                        BIOS               = 'BIOS'
+                        DisplayVersion     = 'DisplayVersion'
+                        IFix               = 'IFix'
+                        PrimaryIP          = 'PrimaryIP'
+                        IPsAll             = 'IPsAll'
+                        ManagedSystemCount = 'ManagedSystemCount'
+                        ManagedSystemUuids = 'ManagedSystemUuids'
+                        UUID               = 'UUID'
+                        Url                = 'Url'
+                    }
+
+                    Add-MappedRows -Collection $FunctionResult.DeviceIdent.HmcRows -Source $FunctionResult.FuncResult -IdProperty 'RowID' -Map $mapHMC
+
+                    $UCVMMain.DeviceToggles.Add($FunctionResult.DeviceIdent)
                 }
-                Add-MappedRows -Collection $FunctionResult.DeviceIdent.ManagedSystemRows -Source $FunctionResult.FuncResult -IdProperty 'RowID' -Map $mapMS
-                $UCVMMain.DeviceToggles.Add($FunctionResult.DeviceIdent)
+
+                # Clear the database view so that no old database data remains
+                $TD_IC_IBMPowerHMCDBView.ItemsSource = $null
+            }
+            else {
+                $TD_IC_IBMPowerHMCDBView.ItemsSource = $DBPowerHMC
+            }
+        }
+        catch {
+            SST_ToolMessageCollector -TD_ToolMSGCollector "PWR_ShowAll HMC: $($_.Exception.Message)" -TD_ToolMSGType Error -TD_Shown yes
+        }
+
+        Write-ProgressBar -ProgressBar $PB -Activity 'HMC RESTHMCConsole done' -PercentComplete 25
+
+        # ========================================================
+        # Managed Systems
+        # ========================================================
+        try {
+            [array]$DBPowerSysSum = SST_CustomerPWRDBReadTable -SST_InfoType 'PowerSysSummary' -SST_Customer $DBName
+
+            if (@($DBPowerSysSum).Count -eq 0) {
+                foreach ($TD_Creds in $TD_Credentials) {
+                    $FunctionResult = New-DeviceBlock -Device $TD_Creds -ExportPath $TD_TB_ExportPath.Text -RESTFunc HMC_RESTHMCManagedSystems
+
+                    $mapMS = @{
+                        SystemName       = 'SystemName'
+                        State            = 'State'
+                        SerialNumber     = 'SerialNumber'
+                        MachineTypeModel = 'MachineTypeModel'
+                        ECNumber         = 'ECNumber'
+                        ActivatedLevel   = 'ActivatedLevel'
+                        UUID             = 'UUID'
+                        Url              = 'Url'
+                    }
+
+                    Add-MappedRows -Collection $FunctionResult.DeviceIdent.ManagedSystemRows -Source $FunctionResult.FuncResult -IdProperty 'RowID' -Map $mapMS
+                    $UCVMMain.DeviceToggles.Add($FunctionResult.DeviceIdent)
+                }
+                $TD_IC_IBMPowerSysDBView.ItemsSource = $null
+            }
+            else {
+                $TD_IC_IBMPowerSysDBView.ItemsSource = $DBPowerSysSum
+            }
+        }
+        catch {
+            SST_ToolMessageCollector -TD_ToolMSGCollector "PWR_ShowAll ManagedSystem: $($_.Exception.Message)" -TD_ToolMSGType Error -TD_Shown yes
+        }
+
+        Write-ProgressBar -ProgressBar $PB -Activity 'REST ManagedSystems done' -PercentComplete 55
+
+        # ========================================================
+        # LPARs
+        # ========================================================
+        try {
+            [array]$DBPowerLPAR = SST_CustomerPWRDBReadTable `
+                -SST_InfoType 'LPARSummary' `
+                -SST_Customer $DBName
+        
+            $mapLPAR = @{
+                ManagedSystemName      = 'ManagedSystemName'
+                ManagedSystemMTMS      = 'ManagedSystemMTMS'
+                ManagedSystemSerial    = 'ManagedSystemSerial'
+                ManagedSystemUUID      = 'ManagedSystemUUID'
+            
+                LparName               = 'LparName'
+                LparUUID               = 'LparUUID'
+                PartitionId            = 'PartitionId'
+                PartitionRole          = 'PartitionRole'
+            
+                State                  = 'State'
+                Environment            = 'Environment'
+                OsVersion              = 'OsVersion'
+                RmcIp                  = 'RmcIp'
+                RmcState               = 'RmcState'
+            
+                DefaultProfile         = 'DefaultProfile'
+                CurrentProfileHref     = 'CurrentProfileHref'
+                CurrentProcessingUnits = 'CurrentProcessingUnits'
+                CurrentMemoryMB        = 'CurrentMemoryMB'
             }
         
-            $UCVMMain.SelectedView = "ManagedSystem"
-        }else {
-            $TD_IC_IBMPowerSysDBView.ItemsSource = $DBPowerSysSum
-        }
-    }
-    catch {
-        <#Do this if a terminating exception happens#>
-        SST_ToolMessageCollector -TD_ToolMSGCollector "PWR_ShowAll ManagedSystem: $($_.Exception.Message)" -TD_ToolMSGType Error -TD_Shown yes
-    }    
-    Write-ProgressBar -ProgressBar $PB -Activity "REST ManagedSystems done" -PercentComplete 45
-    try {
-        Write-ProgressBar -ProgressBar $PB -Activity "Prepare REST LogicalPartitions" -PercentComplete 60
-        [array]$DBPowerLPAR = SST_CustomerPWRDBReadTable -SST_InfoType "LPARSummary" -SST_Customer $DBName
-        if($null -eq $DBPowerLPAR){
-            foreach($TD_Creds in $TD_Credentials){
-                $FunctionResult = New-DeviceBlock -Device $TD_Creds -ExportPath $TD_TB_ExportPath.Text -RESTFunc HMC_RESTHMCLogicalPartitions
-                $mapLPAR = @{
-                    ManagedSystemName       = 'ManagedSystemName'
-                    ManagedSystemMTMS       = 'ManagedSystemMTMS'
-                    ManagedSystemSerial     = 'ManagedSystemSerial'
-                    ManagedSystemUUID       = 'ManagedSystemUUID'
+            if (@($DBPowerLPAR).Count -eq 0) {
+            
+                # ----------------------------------------------------
+                # No current database data available:
+                # Use REST/MVVM view
+                # ----------------------------------------------------
+                $TD_DG_IBMPowerLPARDBView.ItemsSource = $null
+                $TD_DG_IBMPowerLPARDBView.Visibility = 'Collapsed'
+            
+                $TD_IC_IBMPowerLPARRestView.Visibility = 'Visible'
+            
+                foreach ($TD_Creds in $TD_Credentials) {
+                    $FunctionResult = New-DeviceBlock `
+                        -Device $TD_Creds `
+                        -ExportPath $TD_TB_ExportPath.Text `
+                        -RESTFunc HMC_RESTHMCLogicalPartitions
                 
-                    LparName                = 'LparName'
-                    LparUUID                = 'LparUUID'
-                    PartitionId             = 'PartitionId'
-                    PartitionRole           = 'PartitionRole'
+                    if (
+                        $null -eq $FunctionResult -or
+                        $null -eq $FunctionResult.DeviceIdent
+                    ) {
+                        continue
+                    }
                 
-                    State                   = 'State'
-                    Environment             = 'Environment'
-                    OsVersion               = 'OsVersion'
-                    RmcIp                   = 'RmcIp'
-                    RmcState                = 'RmcState'
+                    Add-MappedRows `
+                        -Collection $FunctionResult.DeviceIdent.LparRows `
+                        -Source $FunctionResult.FuncResult `
+                        -IdProperty 'RowID' `
+                        -Map $mapLPAR
                 
-                    DefaultProfile          = 'DefaultProfile'
-                    CurrentProfileHref      = 'CurrentProfileHref'
-                    CurrentProcessingUnits  = 'CurrentProcessingUnits'
-                    CurrentMemoryMB         = 'CurrentMemoryMB'
+                    $UCVMMain.DeviceToggles.Add(
+                        $FunctionResult.DeviceIdent
+                    )
                 }
-                Add-MappedRows -Collection $FunctionResult.DeviceIdent.LparRows -Source $FunctionResult.FuncResult -IdProperty 'RowID' -Map $mapLPAR
-                $UCVMMain.DeviceToggles.Add($FunctionResult.DeviceIdent)
             }
-            $UCVMMain.SelectedView = "LPARs"
-        }else {
-            $TD_IC_IBMPowerLPARDBView.ItemsSource = $DBPowerLPAR
+            else {
+            
+                # ----------------------------------------------------
+                # Current DB data available:
+                # Use the DB DataGrid directly
+                # ----------------------------------------------------
+                $TD_DG_IBMPowerLPARDBView.ItemsSource = $DBPowerLPAR
+                $TD_DG_IBMPowerLPARDBView.Visibility = 'Visible'
+            
+                $TD_IC_IBMPowerLPARRestView.Visibility = 'Collapsed'
+            }
         }
-        Write-ProgressBar -ProgressBar $PB -Activity "REST LogicalPartitions done" -PercentComplete 80
+        catch {
+            SST_ToolMessageCollector -TD_ToolMSGCollector "PWR_ShowAll LPARs: $($_.Exception.Message)" -TD_ToolMSGType Error -TD_Shown yes
+        }
+
+        Write-ProgressBar -ProgressBar $PB -Activity 'REST LogicalPartitions done' -PercentComplete 85
+        # ========================================================
+        # Enable all three views
+        # ========================================================
+        $UCVMMain.SelectedView = 'PowerShowAll'
+        $TD_GBPWRHMCInfo,$TD_GBPWRManagSysInfo,$TD_GBPWRLPARSum |ForEach-Object {$_.Visibility = 'Visible'}
+        $TD_GB_SelectAllSTOCB.Visibility ='Collapsed'
+        Write-ProgressBar -ProgressBar $PB -Activity 'Power information completed' -PercentComplete 100
     }
-    catch {
-        <#Do this if a terminating exception happens#>
-        SST_ToolMessageCollector -TD_ToolMSGCollector "PWR_ShowAll LPARs: $($_.Exception.Message)" -TD_ToolMSGType Error -TD_Shown yes
-    }finally{
-        <# for ProgressBar #>
+    finally {
         Close-ProgressBar -ProgressBar $PB
-        <# ProgressBar #>
-    }   
-    $TD_GBPWRHMCInfo,$TD_GBPWRManagSysInfo,$TD_GBPWRLPARSum | ForEach-Object {$_.Visibility = "Visible"}
+    }
 })
 #endregion
 #region IBM Tape
