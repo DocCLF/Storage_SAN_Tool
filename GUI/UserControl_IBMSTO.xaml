@@ -1,0 +1,1443 @@
+﻿<UserControl x:Name="IBMSTO"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+    mc:Ignorable="d" 
+    >
+    <UserControl.Background>
+            <LinearGradientBrush>
+            <GradientStopCollection>
+                <GradientStop Offset="0.1" Color="White" />
+                <GradientStop Offset="0.5" Color="LightGray" />
+                <GradientStop Offset="0.8" Color="White" />
+            </GradientStopCollection>
+        </LinearGradientBrush>
+    </UserControl.Background>
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" >
+    <Grid >
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="auto" />
+            <ColumnDefinition Width="auto" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <StackPanel Grid.Column="0" Grid.RowSpan="4" >
+        <GroupBox Header="For all Versions"  HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,10,0,0">
+            <StackPanel>
+                <!--IBM_BaseStorageInfo-->
+                <ToggleButton
+                x:Name="BTN_IBM_BaseStorageInfo"
+                Style="{DynamicResource MainBtnStyle}"
+                Content="Storage Info" 
+                ToolTip="Get basic Storage information"/>
+                <!--IBM_EventLog-->
+                <ToggleButton
+                x:Name="BTN_IBM_Eventlog"
+                Style="{DynamicResource MainBtnStyle}"
+                Content="Eventlog" 
+                ToolTip="Get the last 100 Events"/>
+                <!--IBM_CatAuditLog-->
+                <ToggleButton
+                x:Name="BTN_IBM_CatAuditLog"
+                Style="{DynamicResource MainBtnStyle}"
+                Content="Audit Log"
+                ToolTip="Get the last 100 in-memory commands of the audit log" /> 
+                <!--IBM_HostVolumeMap-->
+                <ToggleButton
+                x:Name="BTN_IBM_HostVolumeMap"
+                Style="{DynamicResource MainBtnStyle}"
+                Content="Host Volume Info" 
+                ToolTip="Get Infos to Host, HostCluster and their Volumes" />
+                <!--IBM_HostInfo-->
+                <ToggleButton
+                x:Name="BTN_IBM_HostInfo"
+                Style="{DynamicResource MainBtnStyle}"
+                Content="Hosts Info" 
+                ToolTip="Get Infos to Host, HostCluster only" />
+                <!--IBM_PoolVolumeInfo-->
+                <ToggleButton
+                x:Name="BTN_IBM_PoolVolumeInfo"
+                Style="{DynamicResource MainBtnStyle}"
+                Content="Pool+Volume Info" 
+                ToolTip="Get Infos to Pool and Volume only" />
+                <!--IBM_DriveInfo-->
+                <ToggleButton
+                x:Name="BTN_IBM_DriveInfo"
+                Style="{DynamicResource MainBtnStyle}"
+                Content="Drive Info"
+                ToolTip="Get the most important information about your Drives" />
+                <!--IBM_FCPortInfo-->
+                <ToggleButton
+                x:Name="BTN_IBM_FCPortInfo"
+                Style="{DynamicResource MainBtnStyle}"
+                Content="FC Port Info"
+                ToolTip="Generate a list of host count and login count for each worldwide port names (WWPNs) required to set up Fibre Channel (FC) zoning and to display the current failover status of host IO ports." />
+                <!--IBM_FCPortStats-->
+                <ToggleButton
+                x:Name="BTN_IBM_FCPortStats"
+                Style="{DynamicResource MainBtnStyle}"
+                Content="FC Port Stats" 
+                ToolTip="Get an overview of the stats of your FC ports. Requirement v8.4.x and higher!" />
+                <!--IBM_PartitionInfo-->
+                <ToggleButton
+                x:Name="BTN_IBM_PartitionInfo"
+                Style="{DynamicResource MainBtnStyle}"
+                Content="Partition Info"
+                ToolTip="Get the most important information about your Partitions" />
+                <!--IBM_Security-->
+                <ToggleButton
+                x:Name="BTN_IBM_SecurityInfo"
+                Style="{DynamicResource MainBtnStyle}"
+                Content="Security Info"
+                ToolTip="Get the most important information about your Security" />
+                <!--IBM_UserInfo-->
+                <ToggleButton
+                x:Name="BTN_IBM_UserInfo"
+                Style="{DynamicResource MainBtnStyle}"
+                Content="User Info"
+                ToolTip="Get the most important information about your User" />
+                <!--IBM_CleanUpDumps-->
+                <ToggleButton
+                x:Name="BTN_IBM_CleanUpDumps"
+                Style="{DynamicResource MainBtnStyle}"
+                Content="CleanUp Dumps" 
+                ToolTip="Use the cleardumps command to clear (or delete) the various dump directories on a specified node or node canister."/>
+                <!--IBM_BackUpConfig-->
+                <ToggleButton
+                x:Name="BTN_IBM_BackUpConfig"
+                Style="{DynamicResource MainBtnStyle}"
+                Content="BackUp CFG" 
+                ToolTip="Create a config backup and download it with the help of pscp."/>
+            </StackPanel>
+        </GroupBox>
+        </StackPanel> 
+        <WrapPanel Grid.Column="1" Grid.Row="0" >
+            <GroupBox Header="Visibility" Margin="10" >
+                <WrapPanel Orientation="Horizontal" ToolTip="klick for visibility" >
+                    <!-- Dynamische Checkboxen -->
+                    <ItemsControl ItemsSource="{Binding Main.DeviceToggles}">
+                      <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                          <WrapPanel Orientation="Horizontal"/>
+                        </ItemsPanelTemplate>
+                      </ItemsControl.ItemsPanel>
+    
+                      <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                          <CheckBox Content="{Binding Label}"
+                                    IsChecked="{Binding IsChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                    Style="{DynamicResource MainCheckBoxStyle}"
+                                    Margin="2"/>
+                        </DataTemplate>
+                      </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+    
+                    <!-- Select All -->
+                    <CheckBox x:Name="CB_SelectAllSTOCB"
+                              Content="Select All"
+                              IsChecked="{Binding Main.SelectAll, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                              Margin="30,2,2,2"
+                              Style="{DynamicResource MainCheckBoxStyle}"
+                              HorizontalAlignment="Right"/>
+                </WrapPanel>
+            </GroupBox>
+            <GroupBox x:Name="GB_SearchFilterSTO" Header="Filter / Search" Margin="10">
+                <DockPanel>
+                    <Label Content="Search:" Margin="0,0,6,0" VerticalAlignment="Center" Style="{DynamicResource MainLabelStyle}"/>
+                    <TextBox x:Name="TB_GlobalGridSearch"
+                        Width="300"
+                        Tag="Global Search"
+                        ToolTip="Sucht über alle geladenen DataGrids und alle Row-Properties"
+                        Style="{DynamicResource TBAZWaterMarkStyle}"/>
+                    <ToggleButton x:Name="BTN_GlobalGridSearch"
+                        Style="{DynamicResource MainBtnStyle}"
+                        Content="Search"
+                        Width="80"
+                        Margin="6,0,0,0"/>
+                    <ToggleButton x:Name="BTN_GlobalGridSearchClear"
+                        Style="{DynamicResource MainBtnStyle}"
+                        Content="X"
+                        Width="30"
+                        Margin="6,0,0,0"/>
+                </DockPanel>
+            </GroupBox>
+        </WrapPanel>
+        <!-- IBM_BaseStorageInfo -->
+        <ItemsControl Grid.Column="1" Grid.Row="1"
+                      ItemsSource="{Binding Main.DeviceToggles}"
+                      Style="{DynamicResource ShowWhenBase}">
+          <ItemsControl.ItemsPanel>
+            <ItemsPanelTemplate>
+              <StackPanel/>
+            </ItemsPanelTemplate>
+          </ItemsControl.ItemsPanel>
+
+          <ItemsControl.ItemTemplate>
+            <DataTemplate>
+                <StackPanel>
+                    <!-- Headline Label pro Device -->
+                    <Label Content="Storage Info"
+                        Style="{DynamicResource MainLabelStyle}"
+                        FontSize="12"
+                        Margin="5,8,5,0"
+                        Visibility="{Binding IsChecked, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                    <DataGrid AutoGenerateColumns="False"
+                        ColumnWidth="*"
+                        HorizontalAlignment="Stretch"
+                        Margin="5"
+                        MaxWidth="1024"
+                        MaxHeight="460"
+                        ItemsSource="{Binding BaseRows}"
+                        CanUserAddRows="False"
+                        Visibility="{Binding IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
+
+                        <!-- Optional: Header pro Device -->
+                        <DataGrid.GroupStyle>
+                          <GroupStyle/>
+                        </DataGrid.GroupStyle>
+
+                        <DataGrid.RowStyle>
+                          <Style TargetType="DataGridRow">
+                            <Style.Triggers>
+                              <DataTrigger Binding="{Binding Status}" Value="online">
+                                <Setter Property="Background" Value="LightGreen" />
+                              </DataTrigger>
+                              <DataTrigger Binding="{Binding Status}" Value="service">
+                                <Setter Property="Background" Value="Yellow" />
+                              </DataTrigger>
+                              <DataTrigger Binding="{Binding Status}" Value="offline">
+                                <Setter Property="Background" Value="Red" />
+                              </DataTrigger>
+                            </Style.Triggers>
+                          </Style>
+                        </DataGrid.RowStyle>
+
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Width="auto" Header="NodeID" Binding="{Binding ID}" IsReadOnly="True"/>
+                            <DataGridTextColumn Width="auto" Header="NodeName" Binding="{Binding Name}" IsReadOnly="True"/>
+                            <DataGridTextColumn Width="auto" Header="NodeWWNN" Binding="{Binding WWNN}" IsReadOnly="True"/>
+                            <DataGridTextColumn Width="auto" Header="Status" Binding="{Binding Status}" IsReadOnly="True"/>
+                            <DataGridTextColumn Width="auto" Header="Serial Number" Binding="{Binding SerialNumber}" IsReadOnly="True"/>
+                            <DataGridTextColumn Width="auto" Header="IO_group_id" Binding="{Binding IO_group_id}" IsReadOnly="True"/>
+                            <DataGridTextColumn Width="auto" Header="IO_group_Name" Binding="{Binding IO_group_Name}" IsReadOnly="True"/>
+                            <DataGridTextColumn Width="auto" Header="Code Level" Binding ="{Binding CodeLevel}" IsReadOnly="True">
+                                <DataGridTextColumn.CellStyle>
+                                    <Style TargetType="DataGridCell">
+                                        <Setter Property="ToolTip" Value="Indicates the current level of machine code that is running on the node or node canister" />
+                                    </Style>
+                                </DataGridTextColumn.CellStyle>
+                            </DataGridTextColumn>
+                            <DataGridTextColumn Width="auto" Header="Recommended Level" Binding ="{Binding RecommendedPTF}" IsReadOnly="True">
+                                <DataGridTextColumn.CellStyle>
+                                    <Style TargetType="DataGridCell">
+                                        <Setter Property="ToolTip" Value="Indicates the Recommended level for the machine or node" />
+                                    </Style>
+                                </DataGridTextColumn.CellStyle>
+                            </DataGridTextColumn>
+                            <DataGridTextColumn Width="auto" Header="Config Node" Binding ="{Binding ConfigNode}" IsReadOnly="True">
+                                <DataGridTextColumn.CellStyle>
+                                    <Style TargetType="DataGridCell">
+                                        <Setter Property="ToolTip" Value="Indicates if the node is a configuration node." />
+                                    </Style>
+                                </DataGridTextColumn.CellStyle>
+                            </DataGridTextColumn>
+                            <DataGridTextColumn Width="auto" Header="SideID" Binding ="{Binding SideID}" IsReadOnly="True"/>
+                            <DataGridTextColumn Width="auto" Header="Side Name" Binding ="{Binding SideName}" IsReadOnly="True"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                    <!-- Label zwischen den Grids -->
+                    <Label Content="Quorum Info"
+                        Style="{DynamicResource MainLabelStyle}"
+                        FontSize="12"
+                        Margin="5,8,5,0"
+                        Visibility="{Binding IsChecked, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+          
+                    <!-- IP Quorum Grid -->
+                    <DataGrid AutoGenerateColumns="False"
+                              ColumnWidth="*"
+                              HorizontalAlignment="Stretch"
+                              Margin="5"
+                              MaxWidth="1024"
+                              MaxHeight="460"
+                              ItemsSource="{Binding IPQuorumRows}"
+                              CanUserAddRows="False"
+                              Visibility="{Binding IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
+
+                      <!-- Optional: Header pro Device -->
+                        <DataGrid.GroupStyle>
+                          <GroupStyle/>
+                        </DataGrid.GroupStyle>
+
+                        <DataGrid.CellStyle>
+                           <Style TargetType="DataGridCell">
+                               <Style.Triggers>
+                                   <DataTrigger Binding="{Binding Status}" Value="Online">
+                                       <Setter Property="Background" Value="LightGreen" />
+                                   </DataTrigger>
+                                   <DataTrigger Binding="{Binding Status}" Value="Offline">
+                                       <Setter Property="Background" Value="yellow" />
+                                   </DataTrigger>
+                               </Style.Triggers>
+                           </Style>
+                        </DataGrid.CellStyle>
+
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Width="auto" Header="QuorumIndex"  Binding ="{Binding QuorumIndex}" IsReadOnly="True"/>
+                            <DataGridTextColumn Width="auto" Header="Status" Binding ="{Binding Status}" IsReadOnly="True"/>
+                            <DataGridTextColumn Width="auto" Header="ID"  Binding ="{Binding ID}" IsReadOnly="True"/>  
+                            <DataGridTextColumn Width="auto" Header="Name" Binding ="{Binding Name}" IsReadOnly="True"/>  
+                            <DataGridTextColumn Width="auto" Header="Active" Binding ="{Binding Active}" IsReadOnly="True"/> 
+                            <DataGridTextColumn Width="auto" Header="Object Type" Binding ="{Binding ObjectType}" IsReadOnly="True"/>
+                            <DataGridTextColumn Width="auto" Header="Override" Binding ="{Binding Override}" IsReadOnly="True"/> 
+                            <DataGridTextColumn Width="auto" Header="Site Name" Binding ="{Binding SideName}" IsReadOnly="True"/>
+                        </DataGrid.Columns>
+
+                    </DataGrid>
+                </StackPanel>
+            </DataTemplate>
+          </ItemsControl.ItemTemplate>
+        </ItemsControl>
+        <!-- IBM_EventLog -->
+        <ItemsControl Grid.Column="1" Grid.Row="1"
+                      ItemsSource="{Binding Main.DeviceToggles}"
+                      Style="{DynamicResource ShowWhenEvents}">
+          <ItemsControl.ItemsPanel>
+            <ItemsPanelTemplate>
+              <StackPanel/>
+            </ItemsPanelTemplate>
+          </ItemsControl.ItemsPanel>
+
+          <ItemsControl.ItemTemplate>
+            <DataTemplate>
+              <DataGrid AutoGenerateColumns="False"
+                        ColumnWidth="*"
+                        HorizontalAlignment="Stretch"
+                        Margin="5"
+                        MaxWidth="960"
+                        MaxHeight="460"
+                        ItemsSource="{Binding EventRows}"
+                        CanUserAddRows="False"
+                        Visibility="{Binding IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
+
+                <!-- Optional: Header pro Device -->
+                <DataGrid.GroupStyle>
+                  <GroupStyle/>
+                </DataGrid.GroupStyle>
+                  <DataGrid.Style>
+                      <Style TargetType="DataGrid">
+                          <Style.Triggers>
+                              <Trigger Property="HasItems" Value="False">
+                                <Setter Property="Visibility" Value="Collapsed"></Setter>
+                              </Trigger>
+                          </Style.Triggers>
+                      </Style>
+                  </DataGrid.Style>
+                  <DataGrid.RowStyle>
+                      <Style TargetType="DataGridRow">
+                          <Style.Triggers>
+                              <DataTrigger Binding="{Binding Status}" Value="alert">
+                                  <Setter Property="Background" Value="Red" />
+                              </DataTrigger>
+                              <DataTrigger Binding="{Binding Status}" Value="expired">
+                                  <Setter Property="Background" Value="Yellow" />
+                              </DataTrigger>
+                          </Style.Triggers>
+                      </Style>
+                  </DataGrid.RowStyle>
+                  <DataGrid.Columns>
+                      <DataGridTextColumn Width="auto" Header="Time" Binding="{Binding LastTime}" IsReadOnly="True">
+                          <DataGridTextColumn.CellStyle>
+                              <Style TargetType="DataGridCell">
+                                  <Setter Property="ToolTip" Value="Indicates when the event was most recently updated." />
+                              </Style>
+                          </DataGridTextColumn.CellStyle>
+                      </DataGridTextColumn>
+                      <DataGridTextColumn Width="auto" Header="ObjectType" Binding="{Binding ObjectType}" IsReadOnly="True">
+                          <DataGridTextColumn.CellStyle>
+                              <Style TargetType="DataGridCell">
+                                  <Setter Property="ToolTip" Value="Indicates the type of the object the event is logged against." />
+                              </Style>
+                          </DataGridTextColumn.CellStyle>
+                      </DataGridTextColumn>
+                      <DataGridTextColumn Width="auto" Header="ObjectName" Binding="{Binding ObjectName}" IsReadOnly="True">
+                          <DataGridTextColumn.CellStyle>
+                              <Style TargetType="DataGridCell">
+                                  <Setter Property="ToolTip" Value="Indicates the name of the object the event is logged against." />
+                              </Style>
+                          </DataGridTextColumn.CellStyle>
+                      </DataGridTextColumn>
+                      <DataGridTextColumn Width="auto" Header="Status" Binding="{Binding Status}" IsReadOnly="True">
+                          <DataGridTextColumn.CellStyle>
+                              <Style TargetType="DataGridCell">
+                                  <Setter Property="ToolTip" Value="Indicates the event category." />
+                              </Style>
+                          </DataGridTextColumn.CellStyle>
+                      </DataGridTextColumn>
+                      <DataGridTextColumn Width="auto"  Header="Fixed" Binding="{Binding Fixed}" IsReadOnly="True">
+                          <DataGridTextColumn.CellStyle>
+                              <Style TargetType="DataGridCell">
+                                  <Setter Property="ToolTip" Value="Indicates whether the event was marked fixed (for an alert) or read (for a message)." />
+                              </Style>
+                          </DataGridTextColumn.CellStyle>
+                      </DataGridTextColumn>
+                      <DataGridTextColumn Width="auto" Header="ErrorCode" Binding="{Binding ErrorCode}" IsReadOnly="True">
+                          <DataGridTextColumn.CellStyle>
+                              <Style TargetType="DataGridCell">
+                                  <Setter Property="ToolTip" Value="Indicates the error code that is associated with this event, google for it!" />
+                              </Style>
+                          </DataGridTextColumn.CellStyle>
+                      </DataGridTextColumn>
+                      <DataGridTextColumn Width="auto" Header="Description" Binding="{Binding Description}" IsReadOnly="True">
+                          <DataGridTextColumn.CellStyle>
+                              <Style TargetType="DataGridCell">
+                                  <Setter Property="ToolTip" Value="Indicates the description that is associated with the event." />
+                              </Style>
+                          </DataGridTextColumn.CellStyle>
+                      </DataGridTextColumn>
+                  </DataGrid.Columns>
+              </DataGrid>
+            </DataTemplate>
+          </ItemsControl.ItemTemplate>
+        </ItemsControl>
+        <!-- IBM_CatAuditLog -->
+        <ItemsControl Grid.Column="1" Grid.Row="1"
+                      ItemsSource="{Binding Main.DeviceToggles}"
+                      Style="{DynamicResource ShowWhenCatAuditLog}">
+          <ItemsControl.ItemsPanel>
+            <ItemsPanelTemplate>
+              <StackPanel/>
+            </ItemsPanelTemplate>
+          </ItemsControl.ItemsPanel>
+
+          <ItemsControl.ItemTemplate>
+            <DataTemplate>
+              <DataGrid AutoGenerateColumns="False"
+                        ColumnWidth="*"
+                        HorizontalAlignment="Stretch"
+                        Margin="5"
+                        MaxWidth="960"
+                        MaxHeight="460"
+                        ItemsSource="{Binding AuditLogRows}"
+                        CanUserAddRows="False"
+                        Visibility="{Binding IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
+
+                <!-- Optional: Header pro Device -->
+                <DataGrid.GroupStyle>
+                  <GroupStyle/>
+                </DataGrid.GroupStyle>
+                  <DataGrid.Columns>
+                      <DataGridTextColumn Width="auto" Header="TimeStamp" Binding="{Binding TimeStamp}" IsReadOnly="True"/>
+                      <DataGridTextColumn Width="auto" Header="User" Binding="{Binding User}" IsReadOnly="True"/>
+                      <DataGridTextColumn Width="auto" Header="SourceAddress" Binding="{Binding SSH_IP}" IsReadOnly="True"/>
+                      <DataGridTextColumn Width="auto" Header="Command" Binding="{Binding UsedCommand}" IsReadOnly="True">
+                          <DataGridTextColumn.CellStyle>
+                              <Style TargetType="DataGridCell">
+                                  <Setter Property="ToolTip" Value="The user's executed command" />
+                              </Style>
+                          </DataGridTextColumn.CellStyle>
+                      </DataGridTextColumn>
+                  </DataGrid.Columns>
+              </DataGrid>
+            </DataTemplate>
+          </ItemsControl.ItemTemplate>
+        </ItemsControl>
+        <!-- IBM_HostVolumeMap -->
+        <ItemsControl Grid.Column="1" Grid.Row="1"
+                      ItemsSource="{Binding Main.DeviceToggles}"
+                      Style="{DynamicResource ShowWhenHostVolumeMap}">
+          <ItemsControl.ItemsPanel>
+            <ItemsPanelTemplate>
+              <StackPanel/>
+            </ItemsPanelTemplate>
+          </ItemsControl.ItemsPanel>
+
+          <ItemsControl.ItemTemplate>
+            <DataTemplate>
+              <DataGrid AutoGenerateColumns="False"
+                        ColumnWidth="*"
+                        HorizontalAlignment="Stretch"
+                        Margin="5"
+                        MaxWidth="960"
+                        MaxHeight="460"
+                        ItemsSource="{Binding HostVolumeMapRows}"
+                        CanUserAddRows="False"
+                        Visibility="{Binding IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
+
+                <!-- Optional: Header pro Device -->
+                <DataGrid.GroupStyle>
+                  <GroupStyle/>
+                </DataGrid.GroupStyle>
+                <DataGrid.Columns>
+                    <DataGridTextColumn Width="auto" Header="HostID" Binding="{Binding HostID}" IsReadOnly="True"/>
+                    <DataGridTextColumn Width="auto" Header="HostName" Binding="{Binding HostName}" IsReadOnly="True"/>
+                    <DataGridTextColumn Width="auto" Header="HostClusterID" Binding="{Binding HostClusterID}" IsReadOnly="True"/>
+                    <DataGridTextColumn Width="auto" Header="HostCluster" Binding="{Binding HostCluster}" IsReadOnly="True"/>
+                    <DataGridTextColumn Width="auto" Header="VolumeID" Binding="{Binding VolumeID}" IsReadOnly="True"/>
+                    <DataGridTextColumn Width="auto" Header="VolumeName" Binding="{Binding VolumeName}" IsReadOnly="True"/>
+                    <DataGridTextColumn Width="auto" Header="Volume Group" Binding="{Binding VolumeGroupName}" IsReadOnly="True"/>
+                    <DataGridTextColumn Width="auto" Header="UID" Binding="{Binding UID}" IsReadOnly="True"/>
+                    <DataGridTextColumn Width="auto" Header="Capacity" Binding="{Binding Capacity}" IsReadOnly="True"/>
+                </DataGrid.Columns>
+              </DataGrid>
+            </DataTemplate>
+          </ItemsControl.ItemTemplate>
+        </ItemsControl>
+        <!-- IBM_Host -->
+        <ItemsControl Grid.Column="1" Grid.Row="1"
+                      ItemsSource="{Binding Main.DeviceToggles}"
+                      Style="{DynamicResource ShowWhenHost}">
+          <ItemsControl.ItemsPanel>
+            <ItemsPanelTemplate>
+              <StackPanel/>
+            </ItemsPanelTemplate>
+          </ItemsControl.ItemsPanel>
+
+          <ItemsControl.ItemTemplate>
+            <DataTemplate>
+              <DataGrid AutoGenerateColumns="False"
+                        ColumnWidth="*"
+                        HorizontalAlignment="Stretch"
+                        Margin="5"
+                        MaxWidth="960"
+                        MaxHeight="460"
+                        ItemsSource="{Binding HostRows}"
+                        CanUserAddRows="False"
+                        Visibility="{Binding IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
+
+                <!-- Optional: Header pro Device -->
+                <DataGrid.GroupStyle>
+                  <GroupStyle/>
+                </DataGrid.GroupStyle>
+                  <DataGrid.RowStyle>
+                      <Style TargetType="DataGridRow">
+                          <Style.Triggers>
+                              <DataTrigger Binding="{Binding Status}" Value="degraded">
+                                  <Setter Property="Background" Value="yellow" />
+                              </DataTrigger>
+                              <DataTrigger Binding="{Binding Status}" Value="offline">
+                                  <Setter Property="Background" Value="Orange" />
+                              </DataTrigger>
+                          </Style.Triggers>
+                      </Style>
+                  </DataGrid.RowStyle>
+                  <DataGrid.Columns> 
+                      <DataGridTextColumn Width="auto" Header="Host ID"       Binding="{Binding HostID}" IsReadOnly="True"/>
+                      <DataGridTextColumn Width="auto" Header="Host Name"     Binding="{Binding HostName}" IsReadOnly="True"/>
+                      <DataGridTextColumn Width="auto" Header="Port Count"    Binding="{Binding PortCount}" IsReadOnly="True"/>
+                      <DataGridTextColumn Width="auto" Header="Partition"     Binding="{Binding PartitionName}" IsReadOnly="True"/>
+                      <DataGridTextColumn Width="auto" Header="Status"        Binding="{Binding Status}" IsReadOnly="True"/>
+                      <DataGridTextColumn Width="auto" Header="HostStateInfo" Binding="{Binding HostStateInfo}" IsReadOnly="True">
+                          <DataGridTextColumn.CellStyle>
+                                <Style TargetType="DataGridCell">
+                                    <Setter Property="Background" Value="OrangeRed" />
+                                    <Setter Property="ToolTip" Value="Shows the change from the last check to the current one." />
+                                    <Setter Property="ToolTipService.InitialShowDelay" Value="10" />
+                                
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding HostStateInfo}" Value="NO_CHANGE">
+                                            <Setter Property="Background" Value="LightGreen" />
+                                        </DataTrigger>
+                                
+                                        <DataTrigger Binding="{Binding HostStateInfo}" Value="NEW_HOST">
+                                            <Setter Property="Background" Value="Yellow" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                          </DataGridTextColumn.CellStyle>
+                      </DataGridTextColumn>
+                      <DataGridTextColumn Width="auto" Header="SiteName" Binding="{Binding SiteName}" IsReadOnly="True"/>
+                      <DataGridTextColumn Width="auto" Header="Host Cluster Name" Binding="{Binding HostClusterName}" IsReadOnly="True"/>
+                      <DataGridTextColumn Width="auto" Header="Protocol" Binding="{Binding Protocol}" IsReadOnly="True"/>
+                      <DataGridTextColumn Width="auto" Header="StatusPolicy" Binding="{Binding StatusPolicy}" IsReadOnly="True">
+                          <DataGridTextColumn.CellStyle>
+                              <Style TargetType="DataGridCell">
+                                  <Setter Property="ToolTip" Value="Displays the connectivity requirements that are used to calculate the host status. The value is either complete or redundant." />
+                                  <Setter Property="ToolTipService.InitialShowDelay" Value="10" />
+                              </Style>
+                          </DataGridTextColumn.CellStyle>
+                      </DataGridTextColumn>
+                      <DataGridTextColumn Width="auto" Header="StatusSite" Binding="{Binding StatusSite}" IsReadOnly="True"/>
+                      <DataGridTextColumn Width="auto" Header="WWPN" Binding="{Binding WWPNOne}" IsReadOnly="True"/>
+                      <DataGridTextColumn Width="auto" Header="Node LoggedIn" Binding="{Binding NodeLoggedInCountOne}" IsReadOnly="True">
+                          <DataGridTextColumn.CellStyle>
+                              <Style TargetType="DataGridCell">
+                                  <Setter Property="ToolTip" Value="Indicates the number of nodes the WWPN or NQN is logged in to." />
+                                  <Setter Property="ToolTipService.InitialShowDelay" Value="10" />
+                              </Style>
+                          </DataGridTextColumn.CellStyle>
+                      </DataGridTextColumn>
+                      <DataGridTextColumn Width="auto" Header="Node State" Binding="{Binding StateOne}" IsReadOnly="True">
+                          <DataGridTextColumn.CellStyle>
+                              <Style TargetType="DataGridCell">
+                                  <Setter Property="ToolTip" Value="Indicates the state of the WWPN login. The values are: Offline, Online, Active" />
+                                  <Setter Property="ToolTipService.InitialShowDelay" Value="10" />
+                              </Style>
+                          </DataGridTextColumn.CellStyle>
+                      </DataGridTextColumn>
+                      <DataGridTextColumn Width="auto" Header="WWPN" Binding="{Binding WWPNTwo}" IsReadOnly="True"/>
+                      <DataGridTextColumn Width="auto" Header="Node LoggedIn" Binding="{Binding NodeLoggedInCountTwo}" IsReadOnly="True">
+                          <DataGridTextColumn.CellStyle>
+                              <Style TargetType="DataGridCell">
+                                  <Setter Property="ToolTip" Value="Indicates the number of nodes the WWPN or NQN is logged in to." />
+                                  <Setter Property="ToolTipService.InitialShowDelay" Value="10" />
+                              </Style>
+                          </DataGridTextColumn.CellStyle>
+                      </DataGridTextColumn>
+                      <DataGridTextColumn Width="auto" Header="Node State" Binding="{Binding StateTwo}" IsReadOnly="True">
+                          <DataGridTextColumn.CellStyle>
+                              <Style TargetType="DataGridCell">
+                                  <Setter Property="ToolTip" Value="Indicates the state of the WWPN login. The values are: Offline, Online, Active" />
+                                  <Setter Property="ToolTipService.InitialShowDelay" Value="10" />
+                              </Style>
+                          </DataGridTextColumn.CellStyle>
+                      </DataGridTextColumn>
+                      <DataGridTextColumn Width="auto" Header="WWPN" Binding="{Binding WWPNThree}" IsReadOnly="True"/>
+                      <DataGridTextColumn Width="auto" Header="Node LoggedIn" Binding="{Binding NodeLoggedInCountThree}" IsReadOnly="True">
+                          <DataGridTextColumn.CellStyle>
+                              <Style TargetType="DataGridCell">
+                                  <Setter Property="ToolTip" Value="Indicates the number of nodes the WWPN or NQN is logged in to." />
+                                  <Setter Property="ToolTipService.InitialShowDelay" Value="10" />
+                              </Style>
+                          </DataGridTextColumn.CellStyle>
+                      </DataGridTextColumn>
+                      <DataGridTextColumn Width="auto" Header="Node State" Binding="{Binding StateThree}" IsReadOnly="True">
+                          <DataGridTextColumn.CellStyle>
+                              <Style TargetType="DataGridCell">
+                                  <Setter Property="ToolTip" Value="Indicates the state of the WWPN login. The values are: Offline, Online, Active" />
+                                  <Setter Property="ToolTipService.InitialShowDelay" Value="10" />
+                              </Style>
+                          </DataGridTextColumn.CellStyle>
+                      </DataGridTextColumn>
+                      <DataGridTextColumn Width="auto" Header="WWPN" Binding="{Binding WWPNFour}" IsReadOnly="True"/>
+                      <DataGridTextColumn Width="auto" Header="Node LoggedIn" Binding="{Binding NodeLoggedInCountFour}" IsReadOnly="True">
+                          <DataGridTextColumn.CellStyle>
+                              <Style TargetType="DataGridCell">
+                                  <Setter Property="ToolTip" Value="Indicates the number of nodes the WWPN or NQN is logged in to." />
+                                  <Setter Property="ToolTipService.InitialShowDelay" Value="10" />
+                              </Style>
+                          </DataGridTextColumn.CellStyle>
+                      </DataGridTextColumn>
+                      <DataGridTextColumn Width="auto" Header="Node State" Binding="{Binding StateFour}" IsReadOnly="True">
+                          <DataGridTextColumn.CellStyle>
+                              <Style TargetType="DataGridCell">
+                                  <Setter Property="ToolTip" Value="Indicates the state of the WWPN login. The values are: Offline, Online, Active" />
+                                  <Setter Property="ToolTipService.InitialShowDelay" Value="10" />
+                              </Style>
+                          </DataGridTextColumn.CellStyle>
+                      </DataGridTextColumn>
+                  </DataGrid.Columns>
+              </DataGrid>
+            </DataTemplate>
+          </ItemsControl.ItemTemplate>
+        </ItemsControl>
+        <!-- IBM_PoolVolumeInfo -->
+        <ItemsControl Grid.Column="1" Grid.Row="1"
+                      ItemsSource="{Binding Main.DeviceToggles}"
+                      Style="{DynamicResource ShowWhenPoolVolumeInfo}">
+          <ItemsControl.ItemsPanel>
+            <ItemsPanelTemplate>
+              <StackPanel/>
+            </ItemsPanelTemplate>
+          </ItemsControl.ItemsPanel>
+
+          <ItemsControl.ItemTemplate>
+            <DataTemplate>
+            <StackPanel>
+              <DataGrid AutoGenerateColumns="False"
+                        ColumnWidth="*"
+                        HorizontalAlignment="Stretch"
+                        Margin="5"
+                        MaxWidth="1024"
+                        MaxHeight="460"
+                        ItemsSource="{Binding MDiskRows}"
+                        CanUserAddRows="False"
+                        Visibility="{Binding IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
+
+                <!-- Optional: Header pro Device -->
+                <DataGrid.GroupStyle>
+                  <GroupStyle/>
+                </DataGrid.GroupStyle>
+
+                <DataGrid.RowStyle>
+                  <Style TargetType="DataGridRow">
+                    <Style.Triggers>
+                      <DataTrigger Binding="{Binding Status}" Value="online">
+                        <Setter Property="Background" Value="LightGreen" />
+                      </DataTrigger>
+                      <DataTrigger Binding="{Binding Status}" Value="offline">
+                        <Setter Property="Background" Value="Red" />
+                      </DataTrigger>
+                    </Style.Triggers>
+                  </Style>
+                </DataGrid.RowStyle>
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Width="auto" Header="MDiskGrpID"  Binding ="{Binding ID}" IsReadOnly="True"/>
+                        <DataGridTextColumn Width="auto" Header="Name" Binding ="{Binding Name}" IsReadOnly="True"/>
+                        <DataGridTextColumn Width="auto" Header="Status" Binding ="{Binding Status}" IsReadOnly="True"/>  
+                        <DataGridTextColumn Width="auto" Header="MDiskCount" Binding ="{Binding MDiskCount}" IsReadOnly="True"/> 
+                        <DataGridTextColumn Width="auto" Header="VDiskCount" Binding ="{Binding VdiskCount}" IsReadOnly="True"/>
+                        <DataGridTextColumn Width="auto" Header="Capacity" Binding ="{Binding Capacity}" IsReadOnly="True"/>  
+                        <DataGridTextColumn Width="auto" Header="Extent Size"  Binding ="{Binding ExtentSize}" IsReadOnly="True"/>
+                        <DataGridTextColumn Width="auto" Header="Free Capacity" Binding ="{Binding FreeCapacity}" IsReadOnly="True"/>
+                        <DataGridTextColumn Width="auto" Header="Virtual Capacity"  Binding ="{Binding VirtualCapacity}" IsReadOnly="True"/>  
+                        <DataGridTextColumn Width="auto" Header="Used Capacity" Binding ="{Binding UsedCapacity}" IsReadOnly="True"/>  
+                        <DataGridTextColumn Width="auto" Header="Real Capacity" Binding ="{Binding RealCapacity}" IsReadOnly="True"/> 
+                        <DataGridTextColumn Width="auto" Header="Overallocation" Binding ="{Binding Overallocation}" IsReadOnly="True"/>
+                    </DataGrid.Columns>
+              </DataGrid>
+              <!-- Label between the grids -->
+              <Label Content="Volume Info"
+                     Style="{DynamicResource MainLabelStyle}"
+                     Margin="5,8,5,0"
+                     Visibility="{Binding IsChecked, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+          
+              <!-- IP Volume Grid -->
+                <DataGrid AutoGenerateColumns="False"
+                          ColumnWidth="*"
+                          HorizontalAlignment="Stretch"
+                          Margin="5"
+                          MaxWidth="1024"
+                          MaxHeight="460"
+                          ItemsSource="{Binding VolumeRows}"
+                          CanUserAddRows="False"
+                          HeadersVisibility="Column"
+                          GridLinesVisibility="Horizontal"
+                          Visibility="{Binding IsChecked,
+                                               Converter={StaticResource BooleanToVisibilityConverter},
+                                               FallbackValue=Collapsed}">
+
+                    <DataGrid.GroupStyle>
+                        <GroupStyle>
+                            <GroupStyle.ContainerStyle>
+                                <Style TargetType="{x:Type GroupItem}">
+                                    <Setter Property="Margin"
+                                            Value="0,4,0,4"/>
+                                    <Setter Property="Template">
+                                        <Setter.Value>
+                                            <ControlTemplate TargetType="{x:Type GroupItem}">
+                                                <Expander IsExpanded="True">
+                                                    <Expander.Header>
+                                                        <Border Background="LightSteelBlue"
+                                                                BorderBrush="SteelBlue"
+                                                                BorderThickness="0,0,0,1"
+                                                                Padding="8,4">
+                                                            <StackPanel Orientation="Horizontal">
+                                                                <TextBlock Text="Volume: "
+                                                                           FontWeight="Bold"/>
+                                                                <TextBlock Text="{Binding Items[0].GroupName}"
+                                                                           FontWeight="Bold"/>
+                                                                <TextBlock Text="  |  Einträge: "
+                                                                           Margin="12,0,0,0"/>
+                                                                <TextBlock Text="{Binding ItemCount}"/>
+                                                            </StackPanel>
+                                                        </Border>
+                                                    </Expander.Header>
+                                                    <ItemsPresenter/>
+                                                </Expander>
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Style>
+                            </GroupStyle.ContainerStyle>
+                        </GroupStyle>
+                    </DataGrid.GroupStyle>
+
+                    <DataGrid.RowStyle>
+                        <Style TargetType="DataGridRow">
+                            <Setter Property="ToolTip"
+                                    Value="{Binding RowType}"/>
+                            <Style.Triggers>
+                                <!-- Online-Volume -->
+                                <MultiDataTrigger>
+                                    <MultiDataTrigger.Conditions>
+                                        <Condition Binding="{Binding Status}"
+                                                   Value="online"/>
+                                        <Condition Binding="{Binding RowType}"
+                                                   Value="Volume"/>
+                                    </MultiDataTrigger.Conditions>
+
+                                    <Setter Property="Background"
+                                            Value="LightGreen"/>
+                                </MultiDataTrigger>
+                                <!-- Offline-Volume -->
+                                <MultiDataTrigger>
+                                    <MultiDataTrigger.Conditions>
+                                        <Condition Binding="{Binding Status}"
+                                                   Value="offline"/>
+                                        <Condition Binding="{Binding RowType}"
+                                                   Value="Volume"/>
+                                    </MultiDataTrigger.Conditions>
+
+                                    <Setter Property="Background"
+                                            Value="Red"/>
+                                </MultiDataTrigger>
+                                <!-- Visually Distinguish Snapshots -->
+                                <DataTrigger Binding="{Binding RowType}"
+                                             Value="Snapshot">
+
+                                    <Setter Property="Background"
+                                            Value="Gainsboro"/>
+
+                                    <Setter Property="FontStyle"
+                                            Value="Italic"/>
+
+                                    <Setter Property="Foreground"
+                                            Value="DarkSlateGray"/>
+                                </DataTrigger>
+
+                            </Style.Triggers>
+                        </Style>
+                    </DataGrid.RowStyle>
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Width="Auto" Header="Volume / Snapshot" Binding="{Binding DisplayName}" IsReadOnly="True"/>
+                        <DataGridTextColumn Width="Auto" Header="IO Group" Binding="{Binding IOGroupName}" IsReadOnly="True"/>
+                        <DataGridTextColumn Width="Auto" Header="Status" Binding="{Binding Status}" IsReadOnly="True"/>
+                        <DataGridTextColumn Width="Auto" Header="Pool" Binding="{Binding MdiskGrpName}" IsReadOnly="True"/>
+                        <DataGridTextColumn Width="Auto" Header="Volume Grp" Binding="{Binding VolumeGroupName}" IsReadOnly="True"/>
+                        <DataGridTextColumn Width="Auto" Header="Capacity" Binding="{Binding Capacity}" IsReadOnly="True"/>
+                        <DataGridTextColumn Width="Auto" Header="Protocol" Binding="{Binding Protocol}" IsReadOnly="True"/>
+                        <DataGridTextColumn Width="Auto" Header="VolumeType" Binding="{Binding VolumeType}" IsReadOnly="True"/>
+                        <DataGridTextColumn Width="Auto" Header="Safeguarded" Binding="{Binding Safeguarded}" IsReadOnly="True"/>
+                        <DataGridTextColumn Width="Auto" Header="Snapshot Time" Binding="{Binding SnapshotTime}" IsReadOnly="True"/>
+                        <DataGridTextColumn Width="Auto" Header="Expiration" Binding="{Binding ExpirationTime}" IsReadOnly="True"/>
+                        <DataGridTextColumn Width="Auto" Header="Volume UID / Snapshot ID" Binding="{Binding VdiskUID}" IsReadOnly="True"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+              </StackPanel>
+            </DataTemplate>
+          </ItemsControl.ItemTemplate>
+        </ItemsControl>
+        <!-- IBM_DriveInfo -->
+        <ItemsControl Grid.Column="1" Grid.Row="1"
+                      ItemsSource="{Binding Main.DeviceToggles}"
+                      Style="{DynamicResource ShowWhenDriveInfo}">
+          <ItemsControl.ItemsPanel>
+            <ItemsPanelTemplate>
+              <StackPanel/>
+            </ItemsPanelTemplate>
+          </ItemsControl.ItemsPanel>
+
+          <ItemsControl.ItemTemplate>
+            <DataTemplate>
+              <DataGrid AutoGenerateColumns="False"
+                        ColumnWidth="*"
+                        HorizontalAlignment="Stretch"
+                        Margin="5"
+                        MaxWidth="960"
+                        MaxHeight="460"
+                        ItemsSource="{Binding DriveRows}"
+                        CanUserAddRows="False"
+                        Visibility="{Binding IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
+
+                <!-- Optional: Header pro Device -->
+                <DataGrid.GroupStyle>
+                  <GroupStyle/>
+                </DataGrid.GroupStyle>
+                <DataGrid.Columns>
+                    <DataGridTextColumn Width="auto" Header="DriveID" Binding="{Binding ID}" IsReadOnly="True"/>
+                    <DataGridTextColumn Width="auto" Header="Status" Binding="{Binding Status}" IsReadOnly="True"/>
+                    <DataGridTextColumn Width="auto" Header="Capacity" Binding="{Binding Capacity}" IsReadOnly="True"/>
+                    <DataGridTextColumn Width="auto" Header="ProductID" Binding="{Binding ProductID}" IsReadOnly="True"/>
+                    <DataGridTextColumn Width="auto" Header="FirmwareLevel" Binding="{Binding FirmwareLevel}" IsReadOnly="True"/>
+                    <DataGridTextColumn Width="auto" Header="LatestFirmwareLevel" Binding="{Binding LatestFirmwareLevel}" IsReadOnly="True"/>
+                    <DataGridTextColumn Width="auto" Header="SlotID" Binding="{Binding SlotID}" IsReadOnly="True"/>
+                    <DataGridTextColumn Width="auto" Header="PhysicalCapacity" Binding="{Binding PhysicalCapacity}" IsReadOnly="True"/>
+                </DataGrid.Columns>
+              </DataGrid>
+            </DataTemplate>
+          </ItemsControl.ItemTemplate>
+        </ItemsControl>
+        <!-- IBM_FCPortInfo -->
+        <ItemsControl Grid.Column="1" Grid.Row="1"
+                      ItemsSource="{Binding Main.DeviceToggles}"
+                      Style="{DynamicResource ShowWhenFCPort}">
+          <ItemsControl.ItemsPanel>
+            <ItemsPanelTemplate>
+              <StackPanel/>
+            </ItemsPanelTemplate>
+          </ItemsControl.ItemsPanel>
+
+          <ItemsControl.ItemTemplate>
+            <DataTemplate>
+              <DataGrid AutoGenerateColumns="False"
+                        ColumnWidth="*"
+                        HorizontalAlignment="Stretch"
+                        Margin="5"
+                        MaxWidth="960"
+                        MaxHeight="460"
+                        ItemsSource="{Binding FCPortRows}"
+                        CanUserAddRows="False"
+                        Visibility="{Binding IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
+
+                <!-- Optional: Header pro Device -->
+                <DataGrid.GroupStyle>
+                  <GroupStyle/>
+                </DataGrid.GroupStyle>
+                <DataGrid.RowStyle>
+                    <Style TargetType="DataGridRow">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding Status}" Value="active">
+                                <Setter Property="Background" Value="LightGreen" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </DataGrid.RowStyle>
+                <DataGrid.Columns>
+                    <DataGridTextColumn Width="auto" Header="Card ID"  Binding ="{Binding CardID}" IsReadOnly="True">
+                    <DataGridTextColumn.CellStyle>
+                            <Style TargetType="DataGridCell">
+                                <Setter Property="ToolTip" Value="Indicates the location of the adapter containing the FC ports." />
+                            </Style>
+                        </DataGridTextColumn.CellStyle>
+                    </DataGridTextColumn>
+                    <DataGridTextColumn Width="auto" Header="Card Port ID" Binding ="{Binding CardPortID}" IsReadOnly="True">
+                    <DataGridTextColumn.CellStyle>
+                            <Style TargetType="DataGridCell">
+                                <Setter Property="ToolTip" Value="Indicates the location ID of the Port containing in the FC Cards." />
+                            </Style>
+                        </DataGridTextColumn.CellStyle>
+                    </DataGridTextColumn>
+                    <DataGridTextColumn Width="auto" Header="Speed"  Binding ="{Binding Speed}" IsReadOnly="True"/>  
+                    <DataGridTextColumn Width="auto" Header="Status" Binding ="{Binding Status}" IsReadOnly="True">
+                    <DataGridTextColumn.CellStyle>
+                            <Style TargetType="DataGridCell">
+                                <Setter Property="ToolTip" Value="Indicates whether the port is configured to a device of Fibre Channel (FC) port." />
+                            </Style>
+                        </DataGridTextColumn.CellStyle>
+                    </DataGridTextColumn>
+                    <DataGridTextColumn Width="auto" Header="WWPN" Binding ="{Binding WWPN}" IsReadOnly="True"/> 
+                    <DataGridTextColumn Width="auto" Header="WWNN" Binding ="{Binding WWNN}" IsReadOnly="True"/>
+                    <DataGridTextColumn Width="auto" Header="Node Name" Binding ="{Binding NodeName}" IsReadOnly="True">
+                    <DataGridTextColumn.CellStyle>
+                            <Style TargetType="DataGridCell">
+                                <Setter Property="ToolTip" Value="Indicates the name of the node containing the port." />
+                            </Style>
+                        </DataGridTextColumn.CellStyle>
+                    </DataGridTextColumn>
+                    <DataGridTextColumn Width="auto" Header="Host IO Permitted" Binding ="{Binding HostIOPermitted}" IsReadOnly="True">
+                    <DataGridTextColumn.CellStyle>
+                            <Style TargetType="DataGridCell">
+                                <Setter Property="ToolTip" Value="Indicates whether host I/O operations can run on the port. " />
+                            </Style>
+                        </DataGridTextColumn.CellStyle>
+                    </DataGridTextColumn>
+                    <DataGridTextColumn Width="auto" Header="Virtualized" Binding ="{Binding Virtualized}" IsReadOnly="True">
+                    <DataGridTextColumn.CellStyle>
+                            <Style TargetType="DataGridCell">
+                                <Setter Property="ToolTip" Value="Indicates whether it is a virtualized port." />
+                            </Style>
+                        </DataGridTextColumn.CellStyle>
+                    </DataGridTextColumn>
+                    <DataGridTextColumn Width="auto" Header="Protocol" Binding ="{Binding Protocol}" IsReadOnly="True">
+                    <DataGridTextColumn.CellStyle>
+                            <Style TargetType="DataGridCell">
+                                <Setter Property="ToolTip" Value="Indicates the protocol supported by the port." />
+                            </Style>
+                        </DataGridTextColumn.CellStyle>
+                    </DataGridTextColumn>
+                    <DataGridTextColumn Width="auto" Header="Host Count" Binding ="{Binding HostCount}" IsReadOnly="True">
+                    <DataGridTextColumn.CellStyle>
+                            <Style TargetType="DataGridCell">
+                                <Setter Property="ToolTip" Value="Indicates the number of hosts configured through WWPN through the same portset." />
+                            </Style>
+                        </DataGridTextColumn.CellStyle>
+                    </DataGridTextColumn>
+                    <DataGridTextColumn Width="auto" Header="Active Login Count" Binding ="{Binding ActiveLoginCount}" IsReadOnly="True">
+                    <DataGridTextColumn.CellStyle>
+                            <Style TargetType="DataGridCell">
+                                <Setter Property="ToolTip" Value="Indicates the number of active login counts through WWPN. For a configured host, blocked login will not be included." />
+                            </Style>
+                        </DataGridTextColumn.CellStyle>
+                    </DataGridTextColumn>
+                    <DataGridTextColumn Width="auto" Header="Attachment" Binding ="{Binding Attachment}" IsReadOnly="True">
+                    <DataGridTextColumn.CellStyle>
+                            <Style TargetType="DataGridCell">
+                                <Setter Property="ToolTip" Value="Indicates if the port is attached to an FC switch or directly to an FC host." />
+                            </Style>
+                        </DataGridTextColumn.CellStyle>
+                    </DataGridTextColumn>
+                </DataGrid.Columns>
+              </DataGrid>
+            </DataTemplate>
+          </ItemsControl.ItemTemplate>
+        </ItemsControl>
+        <!-- IBM_FCPortStats -->
+        <Grid Grid.Column="1" Grid.Row="1" Style="{DynamicResource ShowWhenFCPortStats}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <!-- Toolbar für die FC-Port-Stats-Ansicht -->
+            <StackPanel Grid.Row="0"
+                        Orientation="Horizontal"
+                        HorizontalAlignment="left"
+                        Margin="5,5,5,0">
+
+                <ToggleButton x:Name="BTN_IBM_OpenSFPHistory"
+                        Style="{DynamicResource MainBtnStyle}"
+                        Content="SFP Chart"
+                        MinWidth="130"
+                        Height="30"
+                        Padding="12,4"
+                        ToolTip="Historische Temperatur-, TX- und RX-Werte der Storage-SFPs anzeigen"/>
+            </StackPanel>
+            <ItemsControl Grid.Row="1"
+                          ItemsSource="{Binding Main.DeviceToggles}">
+              <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                  <StackPanel/>
+                </ItemsPanelTemplate>
+              </ItemsControl.ItemsPanel>
+
+              <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                  <DataGrid AutoGenerateColumns="False"
+                            ColumnWidth="*"
+                            HorizontalAlignment="Stretch"
+                            Margin="5"
+                            MaxWidth="960"
+                            MaxHeight="460"
+                            ItemsSource="{Binding FCPortStatsRows}"
+                            CanUserAddRows="False"
+                            Visibility="{Binding IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
+
+                    <!-- Optional: Header pro Device -->
+                    <DataGrid.GroupStyle>
+                      <GroupStyle/>
+                    </DataGrid.GroupStyle>
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Width="auto" Header="NodeID"  Binding ="{Binding NodeID}" IsReadOnly="True"/>
+                        <!-- <DataGridTextColumn Width="auto" Header="NodeSN" Binding ="{Binding NodeSN}" IsReadOnly="True"/> -->
+                        <DataGridTextColumn Width="auto" Header="NodeName" Binding ="{Binding NodeName}" IsReadOnly="True"/>
+                        <!-- <DataGridTextColumn Width="auto" Header="NodeWWNN"  Binding ="{Binding NodeWWNN}" IsReadOnly="True"/> -->
+                        <DataGridTextColumn Width="auto" Header="CardType" Binding ="{Binding CardType}" IsReadOnly="True"/>  
+                        <!-- <DataGridTextColumn Width="auto" Header="CardID" Binding ="{Binding CardID}" IsReadOnly="True"/> -->
+                        <DataGridTextColumn Width="auto" Header="PortID" Binding ="{Binding PortID}" IsReadOnly="True"/>
+                        <DataGridTextColumn Width="auto" Header="WWPN" Binding ="{Binding WWPN}" IsReadOnly="True"/>  
+                        <DataGridTextColumn Width="auto" Header="LinkFailure" Binding ="{Binding LinkFailure}" IsReadOnly="True">
+                            <DataGridTextColumn.CellStyle>
+                                <Style TargetType="DataGridCell">
+                                    <Setter Property="ToolTip" Value="Indicates the link failure error count." />
+                                </Style>
+                            </DataGridTextColumn.CellStyle>
+                        </DataGridTextColumn>
+                        <DataGridTextColumn Width="auto" Header="LoseSync" Binding ="{Binding LoseSync}" IsReadOnly="True">
+                            <DataGridTextColumn.CellStyle>
+                                <Style TargetType="DataGridCell">
+                                    <Setter Property="ToolTip" Value="Indicates the loss of sync error count." />
+                                </Style>
+                            </DataGridTextColumn.CellStyle>
+                        </DataGridTextColumn>
+                        <DataGridTextColumn Width="auto" Header="LoseSig" Binding ="{Binding LoseSig}" IsReadOnly="True">
+                            <DataGridTextColumn.CellStyle>
+                                <Style TargetType="DataGridCell">
+                                    <Setter Property="ToolTip" Value="Indicates the loss of signal error count." />
+                                </Style>
+                            </DataGridTextColumn.CellStyle>
+                        </DataGridTextColumn>
+                        <DataGridTextColumn Width="auto" Header="PSErrCount" Binding ="{Binding PSErrCount}" IsReadOnly="True"/> 
+                        <DataGridTextColumn Width="auto" Header="InvTransErr" Binding ="{Binding InvTransErr}" IsReadOnly="True"/>  
+                        <DataGridTextColumn Width="auto" Header="CRCErr" Binding ="{Binding CRCErr}" IsReadOnly="True">
+                            <DataGridTextColumn.CellStyle>
+                                <Style TargetType="DataGridCell">
+                                    <Setter Property="ToolTip" Value="Indicates the invalid CRC error count." />
+                                </Style>
+                            </DataGridTextColumn.CellStyle>
+                        </DataGridTextColumn>
+                        <DataGridTextColumn Width="auto" Header="ZeroBtB" Binding ="{Binding ZeroBtB}" IsReadOnly="True">
+                            <DataGridTextColumn.CellStyle>
+                                <Style TargetType="DataGridCell">
+                                    <Setter Property="ToolTip" Value="Indicates the zero buffer-buffer credit timer in microseconds (µs)." />
+                                </Style>
+                            </DataGridTextColumn.CellStyle>
+                        </DataGridTextColumn>
+                        <DataGridTextColumn Width="auto" Header="SFPTemp" Binding ="{Binding SFPTemp}" IsReadOnly="True">
+                            <DataGridTextColumn.CellStyle>
+                                <Style TargetType="DataGridCell">
+                                    <Setter Property="ToolTip" Value="SFP temperature high alarm threshold = 85" />
+                                </Style>
+                            </DataGridTextColumn.CellStyle>
+                        </DataGridTextColumn>
+                        <DataGridTextColumn Width="auto" Header="TXPwr" Binding ="{Binding TXPwr}" IsReadOnly="True">
+                            <DataGridTextColumn.CellStyle>
+                                <Style TargetType="DataGridCell">
+                                    <Setter Property="ToolTip" Value="TX power low alarm threshold = 126" />
+                                </Style>
+                            </DataGridTextColumn.CellStyle>
+                        </DataGridTextColumn>
+                        <DataGridTextColumn Width="auto" Header="RXPwr" Binding ="{Binding RXPwr}" IsReadOnly="True">
+                            <DataGridTextColumn.CellStyle>
+                                <Style TargetType="DataGridCell">
+                                    <Setter Property="ToolTip" Value="RX power low alarm threshold = 31" />
+                                </Style>
+                            </DataGridTextColumn.CellStyle>
+                        </DataGridTextColumn>
+                    </DataGrid.Columns>
+                  </DataGrid>
+                </DataTemplate>
+              </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </Grid>
+        <!-- IBM_Partition -->
+        <ItemsControl Grid.Column="1" Grid.Row="1"
+                      ItemsSource="{Binding Main.DeviceToggles}"
+                      Style="{DynamicResource ShowWhenPartition}">
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <WrapPanel Orientation="Horizontal" MaxWidth="1200"/>
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <ItemsControl ItemsSource="{Binding PartitionRows}"
+                                  Visibility="{Binding IsChecked,
+                                                       Converter={StaticResource BooleanToVisibilityConverter},
+                                                       FallbackValue=Collapsed}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <WrapPanel/>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <!-- Hide if there are no items -->
+                        <ItemsControl.Style>
+                            <Style TargetType="ItemsControl">
+                                <Style.Triggers>
+                                    <Trigger Property="HasItems" Value="False">
+                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </ItemsControl.Style>
+                        <!-- Button pro HMC Row -->
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Button Style="{DynamicResource DashBoardBTNStyle}"
+                                        Margin="8,5,5,5"
+                                        MaxWidth="500"
+                                        ToolTipService.InitialShowDelay="10">
+                                    <Grid Margin="5">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition MaxHeight="250"/>
+                                            <RowDefinition Height="20"/>
+                                        </Grid.RowDefinitions>
+                                        <Grid Grid.Row="0">
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition />
+                                                <RowDefinition />
+                                                <RowDefinition />
+                                                <RowDefinition />
+                                                <RowDefinition />
+                                                <RowDefinition />
+                                                <RowDefinition />
+                                                <RowDefinition />
+                                                <RowDefinition />
+                                                <RowDefinition />
+                                            </Grid.RowDefinitions>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition MaxWidth="100" />
+                                                <ColumnDefinition Width="Auto" />
+                                                <ColumnDefinition />
+                                            </Grid.ColumnDefinitions>
+                                            <!-- Falls deine Row ein Icon hat: -->
+                                             <Ellipse Grid.RowSpan="10" Width="90" Height="90">
+                                                <Ellipse.Fill>
+                                                    <ImageBrush 
+                                                        ImageSource="{Binding DataContext.STOIcon, RelativeSource={RelativeSource AncestorType=UserControl}}" 
+                                                        Stretch="Uniform" />
+                                                </Ellipse.Fill>
+                                            </Ellipse>
+                                            <TextBlock Grid.Column="1" Style="{DynamicResource DashBoardTB1}"
+                                                       VerticalAlignment="Center" Text="Name:" Margin="3,0"/>
+                                            <TextBlock Grid.Column="2" Style="{DynamicResource DashBoardTB1}"
+                                                       VerticalAlignment="Center" Text="{Binding Name}" />
+                                            <TextBlock Grid.Row="2" Grid.Column="1" Style="{DynamicResource DashBoardTB1}"
+                                                       VerticalAlignment="Center" Text="Replication Name:" Margin="3,0"/>
+                                            <TextBlock Grid.Row="2" Grid.Column="2" Style="{DynamicResource DashBoardTB1}"
+                                                       VerticalAlignment="Center" Text="{Binding ReplicationPolicyName}" />
+                                            <TextBlock Grid.Row="3" Grid.Column="1" Style="{DynamicResource DashBoardTB1}"
+                                                       VerticalAlignment="Center" Text="Preferred SysName:" Margin="3,0"/>
+                                            <TextBlock Grid.Row="3" Grid.Column="2" Style="{DynamicResource DashBoardTB1}"
+                                                       VerticalAlignment="Center" Text="{Binding PreferredManagementSystemName}" />
+                                            <TextBlock Grid.Row="4" Grid.Column="1" Style="{DynamicResource DashBoardTB1}"
+                                                       VerticalAlignment="Center" Text="Hosts:" Margin="3,0"/>
+                                            <TextBlock Grid.Row="4" Grid.Column="2" Style="{DynamicResource DashBoardTB1}"
+                                                       VerticalAlignment="Center" Text="{Binding HostCount}" />
+                                            <TextBlock Grid.Row="5" Grid.Column="1" Style="{DynamicResource DashBoardTB1}"
+                                                       VerticalAlignment="Center" Text="HostClusters:" Margin="3,0"/>
+                                            <TextBlock Grid.Row="5" Grid.Column="2" Style="{DynamicResource DashBoardTB1}"
+                                                       VerticalAlignment="Center" Text="{Binding HostClusterCount}" />
+                                            <TextBlock Grid.Row="6" Grid.Column="1" Style="{DynamicResource DashBoardTB1}"
+                                                       VerticalAlignment="Center" Text="VolumeGroups:" Margin="3,0"/>
+                                            <TextBlock Grid.Row="6" Grid.Column="2" Style="{DynamicResource DashBoardTB1}"
+                                                       VerticalAlignment="Center" Text="{Binding VolumeGroupCount}" />
+                                            <TextBlock Grid.Row="7" Grid.Column="1" Style="{DynamicResource DashBoardTB1}"
+                                                       VerticalAlignment="Center" Text="HA Status:" Margin="3,0"/>
+                                            <TextBlock Grid.Row="7" Grid.Column="2" Style="{DynamicResource DashBoardTB1}"
+                                                       VerticalAlignment="Center" Text="{Binding HAStatus}" />
+                                            <TextBlock Grid.Row="8" Grid.Column="1" Style="{DynamicResource DashBoardTB1}"
+                                                       VerticalAlignment="Center" Text="Link Status:" Margin="3,0"/>
+                                            <TextBlock Grid.Row="8" Grid.Column="2" Style="{DynamicResource DashBoardTB1}"
+                                                       VerticalAlignment="Center" Text="{Binding LinkStatus}" />
+                                        </Grid>
+                                        <!-- optional: Timestamp etc. wenn vorhanden -->
+                                        <Grid Grid.Row="1">
+                                            <StackPanel Orientation="Horizontal" Margin="5,0" ToolTip="Last Changes">
+                                                <Image Source="{Binding DataContext.ClockIcon96, RelativeSource={RelativeSource AncestorType=UserControl}}" MaxHeight="30" />
+                                                <TextBlock Text="20260215 17:12" Margin="5,2" />
+                                            </StackPanel>
+                                        </Grid>
+                                    </Grid>
+                                </Button>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+        <!-- IBM_Security -->
+        <ItemsControl Grid.Column="1" Grid.Row="1"
+                      ItemsSource="{Binding Main.DeviceToggles}"
+                      Style="{DynamicResource ShowWhenSecurity}">
+          <ItemsControl.ItemsPanel>
+            <ItemsPanelTemplate>
+              <WrapPanel Orientation="Horizontal" MaxWidth="1200"/>
+            </ItemsPanelTemplate>
+          </ItemsControl.ItemsPanel>
+
+          <ItemsControl.ItemTemplate>
+            <DataTemplate>
+              <DataGrid AutoGenerateColumns="False"
+                        ColumnWidth="*"
+                        HorizontalAlignment="Stretch"
+                        Margin="5"
+                        MaxWidth="960"
+                        MaxHeight="660"
+                        ItemsSource="{Binding SecurityRows}"
+                        CanUserAddRows="False"
+                        Visibility="{Binding IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
+
+                <!-- Optional: Header pro Device -->
+                <DataGrid.GroupStyle>
+                  <GroupStyle/>
+                </DataGrid.GroupStyle>
+                <DataGrid.RowStyle>
+                    <Style TargetType="DataGridRow">
+                        <Setter Property="Background" Value="LightGreen"/>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding IsRecommended}" Value="False">
+                                <Setter Property="Background" Value="LightCoral"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </DataGrid.RowStyle>
+                <DataGrid.Columns>
+                    <DataGridTextColumn Width="auto" Header="Setting"  Binding ="{Binding Key}" IsReadOnly="True"/>
+                    <!-- <DataGridTextColumn Width="auto" Header="NodeSN" Binding ="{Binding NodeSN}" IsReadOnly="True"/> -->
+                    <DataGridTextColumn Width="auto" Header="Current value" Binding ="{Binding Value}" IsReadOnly="True"/>
+                    <!-- <DataGridTextColumn Width="auto" Header="NodeWWNN"  Binding ="{Binding NodeWWNN}" IsReadOnly="True"/> -->
+                    <DataGridTextColumn Width="auto" Header="Recommended value" Binding ="{Binding RecommendedValue}" IsReadOnly="True">
+                        <DataGridTextColumn.CellStyle>
+                            <Style TargetType="DataGridCell">
+                                <Setter Property="ToolTip" Value="This is just a recommendation, not a requirement!" />
+                            </Style>
+                        </DataGridTextColumn.CellStyle>
+                    </DataGridTextColumn>
+                </DataGrid.Columns>
+              </DataGrid>
+            </DataTemplate>
+          </ItemsControl.ItemTemplate>
+        </ItemsControl>
+        <!-- IBM_UserInfo -->
+        <ItemsControl Grid.Column="1" Grid.Row="1"
+                      ItemsSource="{Binding Main.DeviceToggles}"
+                      Style="{DynamicResource ShowWhenUserInfo}">
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <WrapPanel Orientation="Horizontal" MaxWidth="1400" />
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                 <StackPanel>
+                    <!-- Headline Label pro Device -->
+                    <Label Content="{Binding DeviceTitle}"
+                        Style="{DynamicResource MainLabelStyle}"
+                        FontSize="12"
+                        Margin="5,8,5,0"
+                        Visibility="{Binding IsChecked, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                        
+                    <ItemsControl ItemsSource="{Binding UserInfoRows}"
+                                  Visibility="{Binding IsChecked,
+                                                       Converter={StaticResource BooleanToVisibilityConverter},
+                                                       FallbackValue=Collapsed}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <WrapPanel/>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <!-- Hide if there are no items -->
+                        <ItemsControl.Style>
+                            <Style TargetType="ItemsControl">
+                                <Style.Triggers>
+                                    <Trigger Property="HasItems" Value="False">
+                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </ItemsControl.Style>
+                        <!-- Button pro User -->
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Button Style="{DynamicResource DashBoardBTNStyle}"
+                                        Margin="8,5,5,5"
+                                        MinWidth="380"
+                                        MaxWidth="500"
+                                        ToolTipService.InitialShowDelay="10">
+                                    <Grid Margin="5">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition MaxHeight="250"/>
+                                            <RowDefinition Height="20"/>
+                                        </Grid.RowDefinitions>
+                                        <Grid Grid.Row="0">
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition />
+                                                <RowDefinition />
+                                                <RowDefinition />
+                                                <RowDefinition />
+                                                <RowDefinition />
+                                                <RowDefinition />
+                                                <RowDefinition />
+                                                <RowDefinition />
+                                                <RowDefinition />
+                                                <RowDefinition />
+                                            </Grid.RowDefinitions>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition MaxWidth="100" />
+                                                <ColumnDefinition Width="Auto" />
+                                                <ColumnDefinition />
+                                            </Grid.ColumnDefinitions>
+                                            <!-- Falls deine Row ein Icon hat: -->
+                                             <Ellipse Grid.RowSpan="10" Width="90" Height="90">
+                                                <Ellipse.Fill>
+                                                    <ImageBrush 
+                                                        ImageSource="{Binding DataContext.STOIcon, RelativeSource={RelativeSource AncestorType=UserControl}}" 
+                                                        Stretch="Uniform" />
+                                                </Ellipse.Fill>
+                                            </Ellipse>
+                                            <TextBlock Grid.Column="1" Style="{DynamicResource DashBoardTB1}"
+                                                       VerticalAlignment="Center" Text="Name:" Margin="3,0"/>
+                                            <TextBlock Grid.Column="2" Style="{DynamicResource DashBoardTB1}"
+                                                       VerticalAlignment="Center" Text="{Binding UserName}" />
+                                            <TextBlock Grid.Row="2" Grid.Column="1" Style="{DynamicResource DashBoardTB1}"
+                                                       VerticalAlignment="Center" Text="Password:" Margin="3,0"/>
+                                            <TextBlock Grid.Row="2" Grid.Column="2" Style="{DynamicResource DashBoardTB1}"
+                                                       VerticalAlignment="Center" Text="{Binding Password}" />
+                                            <TextBlock Grid.Row="3" Grid.Column="1" Style="{DynamicResource DashBoardTB1}"
+                                                       VerticalAlignment="Center" Text="SSHKey:" Margin="3,0"/>
+                                            <TextBlock Grid.Row="3" Grid.Column="2" Style="{DynamicResource DashBoardTB1}"
+                                                       VerticalAlignment="Center" Text="{Binding SSHKey}" />
+                                            <TextBlock Grid.Row="4" Grid.Column="1" Style="{DynamicResource DashBoardTB1}"
+                                                       VerticalAlignment="Center" Text="Remote:" Margin="3,0"/>
+                                            <TextBlock Grid.Row="4" Grid.Column="2" Style="{DynamicResource DashBoardTB1}"
+                                                       VerticalAlignment="Center" Text="{Binding Remote}" />
+                                            <TextBlock Grid.Row="5" Grid.Column="1" Style="{DynamicResource DashBoardTB1}"
+                                                       VerticalAlignment="Center" Text="UserGrp Name:" Margin="3,0"/>
+                                            <TextBlock Grid.Row="5" Grid.Column="2" Style="{DynamicResource DashBoardTB1}"
+                                                       VerticalAlignment="Center" Text="{Binding UserGrpName}" />
+                                            <TextBlock Grid.Row="6" Grid.Column="1" Style="{DynamicResource DashBoardTB1}"
+                                                       VerticalAlignment="Center" Text="Owner Name:" Margin="3,0"/>
+                                            <TextBlock Grid.Row="6" Grid.Column="2" Style="{DynamicResource DashBoardTB1}"
+                                                       VerticalAlignment="Center" Text="{Binding OwnerName}" />
+                                            <TextBlock Grid.Row="7" Grid.Column="1" Style="{DynamicResource DashBoardTB1}"
+                                                       VerticalAlignment="Center" Text="Locked:" Margin="3,0"/>
+                                            <TextBlock Grid.Row="7" Grid.Column="2" Style="{DynamicResource DashBoardTB1}"
+                                                       VerticalAlignment="Center" Text="{Binding Locked}" />
+                                            <TextBlock Grid.Row="8" Grid.Column="1" Style="{DynamicResource DashBoardTB1}"
+                                                       VerticalAlignment="Center" Text="PWChange Required:" Margin="3,0"/>
+                                            <TextBlock Grid.Row="8" Grid.Column="2" Style="{DynamicResource DashBoardTB1}"
+                                                       VerticalAlignment="Center" Text="{Binding PWChangerequired}" />
+                                        </Grid>
+                                        <!-- optional: Timestamp etc. wenn vorhanden -->
+                                        <Grid Grid.Row="1">
+                                            <StackPanel Orientation="Horizontal" Margin="5,0" ToolTip="Last Changes">
+                                                <Image Source="{Binding DataContext.ClockIcon96, RelativeSource={RelativeSource AncestorType=UserControl}}" MaxHeight="30" />
+                                                <TextBlock Text="20260215 17:12" Margin="5,2" />
+                                            </StackPanel>
+                                        </Grid>
+                                    </Grid>
+                                </Button>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                 </StackPanel>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+        <!-- IBM_CleanUpDumps -->
+        <ItemsControl Grid.Column="1" Grid.Row="1"
+                      ItemsSource="{Binding Main.DeviceToggles}"
+                      Style="{DynamicResource ShowWhenDumpInfo}">
+          <ItemsControl.ItemsPanel>
+            <ItemsPanelTemplate>
+              <WrapPanel/>
+            </ItemsPanelTemplate>
+          </ItemsControl.ItemsPanel>
+
+          <ItemsControl.ItemTemplate>
+            <DataTemplate>
+                <StackPanel>
+                  <Label Content="{Binding DumpInfoTitle}"
+                         Style="{DynamicResource MainLabelStyle}"
+                         Margin="5,8,5,0"
+                         Visibility="{Binding IsChecked, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+
+                  <TextBlock Text="{Binding DumpInfoText}"
+                             TextWrapping="Wrap"
+                             MaxWidth ="400"
+                             Style="{DynamicResource MainTextblockStyle}"
+                             Margin="5,8,5,0"
+                             Visibility="{Binding IsChecked, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                </StackPanel>
+            </DataTemplate>
+          </ItemsControl.ItemTemplate>
+        </ItemsControl>
+        <!-- IBM_BackUpInfo -->
+        <ItemsControl Grid.Column="1" Grid.Row="1"
+                      ItemsSource="{Binding Main.DeviceToggles}"
+                      Style="{DynamicResource ShowWhenBackUpInfo}">
+          <ItemsControl.ItemsPanel>
+            <ItemsPanelTemplate>
+              <WrapPanel />
+            </ItemsPanelTemplate>
+          </ItemsControl.ItemsPanel>
+
+          <ItemsControl.ItemTemplate>
+            <DataTemplate>
+                <StackPanel>
+                  <Label Content="{Binding BackUpInfoTitle}"
+                         Style="{DynamicResource MainLabelStyle}"
+                         Margin="5,8,5,0"
+                         Visibility="{Binding IsChecked, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+
+                  <TextBlock Text="{Binding BackUpInfoText}"
+                             TextWrapping="Wrap"
+                             MaxWidth ="400"
+                             Style="{DynamicResource MainTextblockStyle}"
+                             Margin="5,8,5,0"
+                             Visibility="{Binding IsChecked, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                </StackPanel>
+            </DataTemplate>
+          </ItemsControl.ItemTemplate>
+        </ItemsControl>
+    </Grid>
+    </ScrollViewer>
+</UserControl>
