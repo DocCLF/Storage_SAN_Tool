@@ -3,8 +3,12 @@
 - History Data 
 - LineCharts
 - Additional support for errors in the event log
-- PBHA and DR Support
-
+- Replace TrimEnd(“.xaml”) with GetFileNameWithoutExtension
+- Clean up duplicate style loading
+- Consistently secure DB parameters using Get-DbValue/Get-SqlParameterValue
+- Remove or migrate legacy SSH code
+- Further separate the backend/core from WPF
+    * switched to Avalonia to support additional operating systems
 
 # [v1.5.01_alpha] - 2026-08-07
 ### Added 
@@ -16,6 +20,49 @@
 
 
 All notable changes to this project will be documented in this file.
+# [v1.4.071_beta] - 2026-08-05
+### Added 
+- Support for IBM Tape (only via REST)
+- REST Function for IBM Storage
+- REST Function for IBM Power
+- REST Function for IBM Tape
+- REST Function for Brocade SAN Switches (min. FOS 9.0 / lower FOS 9.0 is using cli-Standard (but cil will removed))
+- UseBasicParsing for Powershell 5.1 
+- TextBox for Customer Number (who is needed for Local DB)
+- Search filters have been added where useful.
+- SnapShot view at Volume Info
+- PBHA and DR Support
+- STO simple Security Check
+- Brocade simple Security Check
+- Brocade User Info
+- Brocade PW Info
+
+### Fixed
+- ToolLog on GUI, Some entries were not displayed or were displayed incorrectly
+- Write-ProgressBar and Close-ProgressBar 
+- some major and minor bugs
+- STOName was not displayed in the “Online/Offline Hosts” view of the dashboard.
+- HostInfo Bug when there is a Empty entry
+- DG Device Overview – SAN Switches: No information is displayed
+- “Showall” Display for the HMC, PWR systems and LPARs
+
+### Changed
+- GUI redesigned
+- IBM Power Infos only via REST no HMC Scanner needed
+- Function handling in the New-ProgressBar Function 
+- PRISM Connection and Setup
+- ToolLog on GUI The most recent post now always appears at the top
+- add some tipps to the "Guide to signing the Module"
+- If there is no Partition, suppress the output in the prompt and write it to the log and the Events log in the GUI
+- HealthCheck: In its current version, this system acts as a data collector that retrieves individual data points, which still need to be evaluated by a technician.
+    * In a future version, the tool will be able to handle some of that as well.
+
+### Known Bugs
+- In some places, Tape and Power do not display a progress bar
+- Currently, there is no display of the current recommended firmware versions
+    * This will be fixed in a future update
+
+
 # [v1.3.135] - 2025-10-31
 ### Added 
 - Dashboard for a first fast Overview

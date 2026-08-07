@@ -10,34 +10,65 @@ function SST_GetCredfGUI {
     $ErrorActionPreference="SilentlyContinue"
     if($TD_AddaNewDevice -eq "yes"){
         switch ($TD_CB_DeviceType.Text) {
-            "Storage" { 
-                $TD_BasicDeviceInfo = SST_DeviceConnecCheck -TD_Selected_Items "no"
+            {$_ -like "*Storage"} { 
+                try {
+                    $TD_BasicDeviceInfo = SST_DeviceConnecCheck -TD_Selected_Items "no"
+                }
+                catch {
+                    Write-Host $_.Exception.Message
+                }
+                
                 if([string]::IsNullOrEmpty($TD_BasicDeviceInfo)){
                     $TD_ErrorCode = 1
-                    #$TD_BTN_AddSSHKey.Background="#FFDDDDDD"
-                    #$TD_BTN_AddSSHKey.Content="Add SSH-Key"
+
                     break
                 }
             }
-            "SAN" { 
-                $TD_BasicDeviceInfo = SST_DeviceConnecCheck -TD_Selected_Items "no"
+            {$_ -like "*SAN"} { 
+                try {
+                    $TD_BasicDeviceInfo = SST_DeviceConnecCheck -TD_Selected_Items "no"
+                }
+                catch {
+                    Write-Host $_.Exception.Message
+                }
+                
                 if([string]::IsNullOrEmpty($TD_BasicDeviceInfo)){
                     $TD_ErrorCode = 1
-                    #$TD_BTN_AddSSHKey.Background="#FFDDDDDD"
-                    #$TD_BTN_AddSSHKey.Content="Add SSH-Key"
+
                     break
                 }
             }
-            "PowerHMC" { 
-                $TD_BasicDeviceInfo = SST_DeviceConnecCheck -TD_Selected_Items "no"
+            {$_ -like "*PowerHMC*"} { 
+                try {
+                    $TD_BasicDeviceInfo = SST_DeviceConnecCheck -TD_Selected_Items "no"
+                }
+                catch {
+                    Write-Host $_.Exception.Message
+                }
+                
                 if([string]::IsNullOrEmpty($TD_BasicDeviceInfo)){
                     $TD_ErrorCode = 1
-                    #$TD_BTN_AddSSHKey.Background="#FFDDDDDD"
-                    #$TD_BTN_AddSSHKey.Content="Add SSH-Key"
+
                     break
                 }
             }
-            Default {SST_ToolMessageCollector -TD_ToolMSGCollector "Something went wrong at SST_GetCredfGUI Func or no Device Type was found, please check the promt." -TD_ToolMSGType Warning}
+            {$_ -like "*Tape"} { 
+                try {
+                    $TD_BasicDeviceInfo = SST_DeviceConnecCheck -TD_Selected_Items "no"
+                }
+                catch {
+                    Write-Host $_.Exception.Message
+                }
+                
+                if([string]::IsNullOrEmpty($TD_BasicDeviceInfo)){
+                    $TD_ErrorCode = 1
+
+                    break
+                }
+            }
+            Default {
+                SST_ToolMessageCollector -TD_ToolMSGCollector "Something went wrong at SST_GetCredfGUI Func or no Device Type was found, please check the promt." -TD_ToolMSGType Warning
+            }
         }
         #$TD_AddaNewDevice="no"
     }else {
@@ -53,26 +84,26 @@ function SST_GetCredfGUI {
         }
         catch {
             <#Do this if a terminating exception happens#>
+            Write-Host $_.Exception.Message
             SST_ToolMessageCollector -TD_ToolMSGCollector "Update Cred $($_.exception.message)" -TD_ToolMSGType Warning -TD_Shown yes
         }
         
         [array]$TD_Credentials = foreach ($TD_ExistingCred in $TD_ExistingCreds) {
             if(($TD_ExistingCred.ID -eq $TD_InportCred.ID)-and($TD_ExistingCred.DeviceTyp -eq $TD_InportCred.DeviceTyp)){
-                $TD_CB_DeviceConnectionTypeText="plink"
                 $TD_CredentialsCount = $TD_InportCred.ID;
                 <# Create the Main_CredObj #>
-                $TD_ExistingCred = "" | Select-Object ID,DeviceTyp,ConnectionTyp,IPAddress,DeviceName,UserName,Password,SSHKeyPath,SVCorVF,MTMCode,ProductDescr,CurrentFirmware,Exportpath
+                $TD_ExistingCred = "" | Select-Object ID,DeviceTyp,ConnectionTyp,IPAddress,DeviceName,UserName,Password,TapeWWNN,SVCorVF,MTMCode,ProductDescr,CurrentFirmware,Exportpath
                 $TD_ExistingCred.ID               =   $TD_InportCred.ID;
                 $TD_ExistingCred.DeviceTyp        =   $TD_CB_DeviceType.Text;
-                $TD_ExistingCred.ConnectionTyp    =   $TD_CB_DeviceConnectionTypeText;
+                $TD_ExistingCred.ConnectionTyp    =   $TD_BasicDeviceInfo.ConnectionTyp;
                 $TD_ExistingCred.IPAddress        =   $TD_TB_DeviceIPAddr.Text;
                 $TD_ExistingCred.DeviceName       =   $TD_BasicDeviceInfo.DeviceName;
                 $TD_ExistingCred.UserName         =   $TD_TB_DeviceUserName.Text;
                 <# The PwLine needs a better Option #>
                 $TD_ExistingCred.Password         =   ConvertTo-SecureString -string ([string]$TD_TB_DevicePassword.Password) -AsPlainText -Force;
-                $TD_ExistingCred.SSHKeyPath       =   $TD_TB_PathtoSSHKeyNotVisibil.Text;
-                if($TD_CB_SVCorVF.IsChecked -and ($TD_CB_DeviceType.Text -eq "Storage")){$TD_ExistingCred.SVCorVF = "SVC"}else{if($TD_CB_DeviceType.Text -eq "Storage"){$TD_ExistingCred.SVCorVF = "FSystem"}};
-                if($TD_CB_SVCorVF.IsChecked -and ($TD_CB_DeviceType.Text -eq "SAN")){$TD_ExistingCred.SVCorVF = "VF"}else{if($TD_CB_DeviceType.Text -eq "SAN"){$TD_ExistingCred.SVCorVF = ""}};
+                $TD_ExistingCred.TapeWWNN         =   $TD_BasicDeviceInfo.TapeWWNN
+                if($TD_CB_SVCorVF.IsChecked -and ($TD_CB_DeviceType.Text -like "*Storage")){$TD_ExistingCred.SVCorVF = "SVC"}else{if($TD_CB_DeviceType.Text -like "*Storage"){$TD_ExistingCred.SVCorVF = "FSystem"}};
+                if(($TD_BasicDeviceInfo.VFenabled -like "True") -and ($TD_CB_DeviceType.Text -like "*SAN*")){$TD_UserInputCred.SVCorVF = "vFabric"};
                 $TD_ExistingCred.MTMCode          =   $TD_BasicDeviceInfo.Prod_MTM;
                 $TD_ExistingCred.ProductDescr     =   $TD_BasicDeviceInfo.ProductDes;
                 $TD_ExistingCred.CurrentFirmware  =   $TD_BasicDeviceInfo.Code_Level;
@@ -89,6 +120,7 @@ function SST_GetCredfGUI {
         }
         catch {
             <#Do this if a terminating exception happens#>
+            Write-Host $_.Exception.Message
             SST_ToolMessageCollector -TD_ToolMSGCollector "Update Cred $($_.exception.message)" -TD_ToolMSGType Warning -TD_Shown yes
         }
     }
@@ -109,41 +141,48 @@ function SST_GetCredfGUI {
         }
         <# Split between Storage and SAN #>
         if($TD_AddaNewDevice -eq "yes"){
-            if($TD_CB_DeviceType.Text -eq "Storage"){
-                [int]$TD_CredentialsCount=(($TD_Credentials |Where-Object {$_.DeviceTyp -eq "Storage"}).count + 1)
-                if($TD_Credentials |Where-Object {($_.DeviceTyp -eq "Storage") -and ($_.ID -eq $TD_CredentialsCount)}){$TD_CredentialsCount = $TD_CredentialsCount +1}
+            if($TD_CB_DeviceType.Text -like "*Storage"){
+                [int]$TD_CredentialsCount=(($TD_Credentials |Where-Object {$_.DeviceTyp -like "*Storage"}).count + 1)
+                if($TD_Credentials |Where-Object {($_.DeviceTyp -like "*Storage") -and ($_.ID -eq $TD_CredentialsCount)}){$TD_CredentialsCount = $TD_CredentialsCount +1}
                 SST_ToolMessageCollector -TD_ToolMSGCollector "Storage ID is $TD_CredentialsCount" -TD_ToolMSGType Debug -TD_Shown yes
             }
         }
         if($TD_AddaNewDevice -eq "yes"){
-            if($TD_CB_DeviceType.Text -eq "SAN"){   
-                [int]$TD_CredentialsCount= (($TD_Credentials |Where-Object {$_.DeviceTyp -eq "SAN"}).count + 1)
-                if($TD_Credentials |Where-Object {($_.DeviceTyp -eq "SAN") -and ($_.ID -eq $TD_CredentialsCount)}){$TD_CredentialsCount = $TD_CredentialsCount +1}
+            if($TD_CB_DeviceType.Text -like "*SAN"){   
+                [int]$TD_CredentialsCount= (($TD_Credentials |Where-Object {$_.DeviceTyp -like "*SAN"}).count + 1)
+                if($TD_Credentials |Where-Object {($_.DeviceTyp -like "*SAN") -and ($_.ID -eq $TD_CredentialsCount)}){$TD_CredentialsCount = $TD_CredentialsCount +1}
                 SST_ToolMessageCollector -TD_ToolMSGCollector "SAN ID is $TD_CredentialsCount" -TD_ToolMSGType Debug -TD_Shown yes
             }
         }
         if($TD_AddaNewDevice -eq "yes"){
-            if($TD_CB_DeviceType.Text -eq "PowerHMC"){   
+            if($TD_CB_DeviceType.Text -like "*PowerHMC*"){   
                 [int]$TD_CredentialsCount= (($TD_Credentials |Where-Object {$_.DeviceTyp -eq "PowerHMC"}).count + 1)
                 if($TD_Credentials |Where-Object {($_.DeviceTyp -eq "PowerHMC") -and ($_.ID -eq $TD_CredentialsCount)}){$TD_CredentialsCount = $TD_CredentialsCount +1}
-                SST_ToolMessageCollector -TD_ToolMSGCollector "SAN ID is $TD_CredentialsCount" -TD_ToolMSGType Debug -TD_Shown yes
+                SST_ToolMessageCollector -TD_ToolMSGCollector "PowerHMC ID is $TD_CredentialsCount" -TD_ToolMSGType Debug -TD_Shown yes
+            }
+        }
+        if($TD_AddaNewDevice -eq "yes"){
+            if($TD_CB_DeviceType.Text -like "*Tape"){   
+                [int]$TD_CredentialsCount= (($TD_Credentials |Where-Object {$_.DeviceTyp -like "*Tape"}).count + 1)
+                if($TD_Credentials |Where-Object {($_.DeviceTyp -like "*Tape") -and ($_.ID -eq $TD_CredentialsCount)}){$TD_CredentialsCount = $TD_CredentialsCount +1}
+                SST_ToolMessageCollector -TD_ToolMSGCollector "Tape ID is $TD_CredentialsCount" -TD_ToolMSGType Debug -TD_Shown yes
             }
         }
         <# needs more tests to be able to use it safely thats why plink is plink and not plink and ssh #>
         if($TD_CB_DeviceConnectionType.Text -like "Classic*"){$TD_CB_DeviceConnectionTypeText="plink"}else{$TD_CB_DeviceConnectionTypeText="plink"}
         <# Create the Main_CredObj #>
-        $TD_UserInputCred = "" | Select-Object ID,DeviceTyp,ConnectionTyp,IPAddress,DeviceName,UserName,Password,SSHKeyPath,SVCorVF,MTMCode,ProductDescr,CurrentFirmware,Exportpath
+        $TD_UserInputCred = "" | Select-Object ID,DeviceTyp,ConnectionTyp,IPAddress,DeviceName,UserName,Password,TapeWWNN,SVCorVF,MTMCode,ProductDescr,CurrentFirmware,Exportpath
         $TD_UserInputCred.ID               =   $TD_CredentialsCount;
         $TD_UserInputCred.DeviceTyp        =   $TD_CB_DeviceType.Text;
-        $TD_UserInputCred.ConnectionTyp    =   $TD_CB_DeviceConnectionTypeText;
+        $TD_UserInputCred.ConnectionTyp    =   $TD_BasicDeviceInfo.ConnectionTyp;
         $TD_UserInputCred.IPAddress        =   $TD_TB_DeviceIPAddr.Text;
         $TD_UserInputCred.DeviceName       =   $TD_BasicDeviceInfo.DeviceName;
         $TD_UserInputCred.UserName         =   $TD_TB_DeviceUserName.Text;
         <# The PwLine needs a better Option #>
         $TD_UserInputCred.Password         =   ConvertTo-SecureString -String ([string]$TD_TB_DevicePassword.Password) -AsPlainText -Force;
-        $TD_UserInputCred.SSHKeyPath       =   $TD_TB_PathtoSSHKeyNotVisibil.Text;
-        if($TD_CB_SVCorVF.IsChecked -and ($TD_CB_DeviceType.Text -eq "Storage")){$TD_UserInputCred.SVCorVF = "SVC"}else{if($TD_CB_DeviceType.Text -eq "Storage"){$TD_UserInputCred.SVCorVF = "FSystem"}};
-        if($TD_CB_SVCorVF.IsChecked -and ($TD_CB_DeviceType.Text -eq "SAN")){$TD_UserInputCred.SVCorVF = "VF"}else{if($TD_CB_DeviceType.Text -eq "SAN"){$TD_UserInputCred.SVCorVF = ""}};
+        $TD_UserInputCred.TapeWWNN         =   $TD_BasicDeviceInfo.TapeWWNN;
+        if($TD_CB_SVCorVF.IsChecked -and ($TD_CB_DeviceType.Text -like "*Storage")){$TD_UserInputCred.SVCorVF = "SVC"}else{if($TD_CB_DeviceType.Text -like "*Storage"){$TD_UserInputCred.SVCorVF = "FSystem"}};
+        if(($TD_BasicDeviceInfo.VFenabled -like "True") -and ($TD_CB_DeviceType.Text -like "*SAN*")){$TD_UserInputCred.SVCorVF = "vFabric"};
         $TD_UserInputCred.MTMCode          =   $TD_BasicDeviceInfo.Prod_MTM;
         $TD_UserInputCred.ProductDescr     =   $TD_BasicDeviceInfo.ProductDes;
         $TD_UserInputCred.CurrentFirmware  =   $TD_BasicDeviceInfo.Code_Level;
@@ -152,10 +191,6 @@ function SST_GetCredfGUI {
         $TD_Credentials += $TD_UserInputCred
         $TD_DG_KnownDeviceList.ItemsSource = $TD_Credentials
 
-        if(($TD_DG_KnownDeviceList.ItemsSource.count -gt 0)-and($TD_CB_DeviceConnectionType.Text -like "Secure*")){
-            $TD_BTN_AddSSHKey.Background="#FFDDDDDD"
-            $TD_BTN_AddSSHKey.Content="Add SSH-Key"
-        }
         $TD_TB_DevicePassword.Password = $null
     }
 

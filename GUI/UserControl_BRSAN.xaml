@@ -1,0 +1,1434 @@
+<UserControl x:Name="BRSAN"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+    xmlns:scm="clr-namespace:System.Windows.Data;assembly=PresentationFramework"
+    mc:Ignorable="d" 
+    >
+    <UserControl.Background>
+            <LinearGradientBrush>
+            <GradientStopCollection>
+                <GradientStop Offset="0.1" Color="White" />
+                <GradientStop Offset="0.5" Color="LightGray" />
+                <GradientStop Offset="0.8" Color="White" />
+            </GradientStopCollection>
+        </LinearGradientBrush>
+    </UserControl.Background>
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" >
+    <Grid >
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="auto" />
+            <ColumnDefinition Width="auto" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <GroupBox Grid.Column="0" Grid.RowSpan="4" Header="Actions"  HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,10,0,0">
+            <StackPanel>
+                <!--FOS_Versio-->
+                <!-- Not needed since REST usage
+                <ComboBox
+                    x:Name="cb_FOS_Version"
+                    Foreground="Red"
+                    SelectedIndex="0" 
+                    SelectedValuePath="Content"
+                    ToolTip="Selcet your FOS-Version"
+                    Style="{DynamicResource MainComboBoxStyle}">
+                    <ComboBoxItem >FOS 10.x</ComboBoxItem>
+                    <ComboBoxItem IsSelected="True">FOS 9.x</ComboBoxItem>
+                    <ComboBoxItem >FOS 8.x</ComboBoxItem>
+                </ComboBox>
+                -->
+                <!--FOS_BasicSwichInfo-->
+                <ToggleButton
+                x:Name="BTN_FOS_BasicSwitchInfo"
+                Style="{DynamicResource MainBtnStyle}"
+                Content="Switch Info" 
+                ToolTip="Get basic SAN-Switch information"/>                
+                <!--FOS_SwitchShow-->
+                <ToggleButton
+                x:Name="BTN_FOS_SwitchShow"
+                Style="{DynamicResource MainBtnStyle}"
+                Content="Switch Show" 
+                ToolTip="Get switch and port status information"/>
+                <!--FOS_AuditDump-->
+                <ToggleButton
+                x:Name="BTN_FOS_AuditDump"
+                Style="{DynamicResource MainBtnStyle}"
+                Content="AuditDump" 
+                ToolTip="Use this command to display the audit log on the switch"/>
+                <!--FOS_PortLicenseShow-->
+                <ToggleButton
+                x:Name="BTN_FOS_PortLicenseShow"
+                Style="{DynamicResource MainBtnStyle}"
+                Content="License/ -Port Show" 
+                ToolTip="Get the current license keys and information."/>
+                <!--FOS_ZoneDetails-->
+                <ToggleButton
+                x:Name="BTN_FOS_ZoneDetailsShow"
+                Style="{DynamicResource MainBtnStyle}"
+                Content="Effective Zone Show" 
+                ToolTip="Get all Effective zone configuration information"/>
+                <!--FOS_SensorShow-->
+                <ToggleButton
+                x:Name="BTN_FOS_SensorShow"
+                Style="{DynamicResource MainBtnStyle}"
+                Content="Sensor Show" 
+                ToolTip="Get the current temperature, fan, and power supply status and readings from sensors located on the switch"/>
+                <!--FOS_SFPDetails-->
+                <ToggleButton
+                x:Name="BTN_FOS_SFPHealthShow"
+                Style="{DynamicResource MainBtnStyle}"
+                Content="SFP Basic Infos" 
+                ToolTip="Get a summary of all SFPs in the switch"/>
+                <!--FOS_PortErrorShow-->
+                <ToggleButton
+                x:Name="BTN_FOS_PortErrorShow"
+                Style="{DynamicResource MainBtnStyle}"
+                Content="Port Error Show" 
+                ToolTip="Get a port error summary"/>
+                <!--FOS_PortBufferShow-->
+                <ToggleButton
+                x:Name="BTN_FOS_PortBufferShow"
+                Style="{DynamicResource MainBtnStyle}"
+                Content="Port Buffer Show" 
+                ToolTip="Get the buffer usage information for a port group or for all port groups in the switch"/>
+                <!--IBM_UserInfo-->
+                <ToggleButton
+                x:Name="BTN_FOS_UserCFG"
+                Style="{DynamicResource MainBtnStyle}"
+                Content="User Overview" 
+                ToolTip="Need to put something in"/>
+                <!--FOS_PWCFGCheck-->
+                <ToggleButton
+                x:Name="BTN_FOS_PWCFG"
+                Style="{DynamicResource MainBtnStyle}"
+                Content="PW Settings" 
+                ToolTip="Need to put something in"/>
+                <!--FOS_SecureCheck-->
+                <ToggleButton
+                x:Name="BTN_FOS_SecureCheck"
+                Style="{DynamicResource MainBtnStyle}"
+                Content="Simple SecureCheck" 
+                ToolTip="Need to put something in"/>
+            </StackPanel>
+        </GroupBox>
+        <WrapPanel Grid.Column="1" Grid.Row="0" >
+            <GroupBox Header="Visibility" Margin="10" >
+                <WrapPanel Orientation="Horizontal" ToolTip="klick for visibility" >
+                    <!-- Dynamische Checkboxen -->
+                    <ItemsControl ItemsSource="{Binding Main.DeviceToggles}">
+                      <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                          <WrapPanel Orientation="Horizontal"/>
+                        </ItemsPanelTemplate>
+                      </ItemsControl.ItemsPanel>
+    
+                      <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                          <CheckBox Content="{Binding Label}"
+                                    IsChecked="{Binding IsChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                    Style="{DynamicResource MainCheckBoxStyle}"
+                                    Margin="2"/>
+                        </DataTemplate>
+                      </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+    
+                    <!-- Select All -->
+                    <CheckBox x:Name="CB_SelectAllSTOCB"
+                              Content="Select All"
+                              IsChecked="{Binding Main.SelectAll, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                              Margin="30,2,2,2"
+                              Style="{DynamicResource MainCheckBoxStyle}"
+                              HorizontalAlignment="Right"/>
+                </WrapPanel>
+            </GroupBox>
+            <GroupBox x:Name="GB_SearchFilter" Header="Filter / Suche" Margin="10">
+                <DockPanel>
+                    <Label Content="Suche:" Margin="0,0,6,0" VerticalAlignment="Center" Style="{DynamicResource MainLabelStyle}"/>
+                    <TextBox x:Name="TB_GlobalGridSearch"
+                        Width="300"
+                        Tag="Global Search"
+                        ToolTip="Sucht über alle geladenen DataGrids und alle Row-Properties"
+                        Style="{DynamicResource TBAZWaterMarkStyle}"/>
+                    <ToggleButton x:Name="BTN_GlobalGridSearch"
+                        Style="{DynamicResource MainBtnStyle}"
+                        Content="Search"
+                        Width="80"
+                        Margin="6,0,0,0"/>
+                    <ToggleButton x:Name="BTN_GlobalGridSearchClear"
+                        Style="{DynamicResource MainBtnStyle}"
+                        Content="X"
+                        Width="30"
+                        Margin="6,0,0,0"/>
+                </DockPanel>
+            </GroupBox>
+        </WrapPanel>
+        <!-- FOS_BasicSwichInfo -->
+        <ItemsControl Grid.Column="1" Grid.Row="1"
+                      ItemsSource="{Binding Main.DeviceToggles}"
+                      Style="{DynamicResource ShowWhenSANSwitchBase}">
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <WrapPanel Orientation="Horizontal" MaxWidth="1200"/>
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <DataGrid
+                        AutoGenerateColumns="False"
+                        CanUserSortColumns="False"
+                        HeadersVisibility="Column"
+                        RowHeaderWidth="0"
+                        ColumnWidth="*"
+                        CanUserAddRows="False"
+                        Margin="5,0,5,5"
+                        MaxHeight="500"
+                        MaxWidth="350"
+                        ItemsSource="{Binding SANSwitchBaseRows}"
+                        Visibility="{Binding IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
+                        <!-- wie bei dir: ausblenden wenn keine Items -->
+                        <DataGrid.Style>
+                            <Style TargetType="DataGrid">
+                                <Style.Triggers>
+                                    <Trigger Property="HasItems" Value="False">
+                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </DataGrid.Style>
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Name"  Binding="{Binding Key}"   IsReadOnly="True"/>
+                            <DataGridTextColumn Header="Value" Binding="{Binding Value}" IsReadOnly="True"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+        <!-- FOS_SwitchShow -->
+        <ItemsControl Grid.Column="1" Grid.Row="1"
+                      ItemsSource="{Binding Main.DeviceToggles}"
+                      Style="{DynamicResource ShowWhenSANSwitchShow}">
+          <ItemsControl.ItemsPanel>
+            <ItemsPanelTemplate>
+              <StackPanel/>
+            </ItemsPanelTemplate>
+          </ItemsControl.ItemsPanel>
+
+          <ItemsControl.ItemTemplate>
+            <DataTemplate>
+              <DataGrid AutoGenerateColumns="False"
+                        ColumnWidth="*"
+                        HorizontalAlignment="Stretch"
+                        Margin="5"
+                        MaxWidth="960"
+                        MaxHeight="460"
+                        ItemsSource="{Binding SANSwitchShowRows}"
+                        CanUserAddRows="False"
+                        Visibility="{Binding IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
+
+                <!-- Optional: Header pro Device -->
+                <DataGrid.GroupStyle>
+                  <GroupStyle/>
+                </DataGrid.GroupStyle>
+                <DataGrid.RowStyle>
+                    <Style TargetType="DataGridRow">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding IsVirtualFabricPort}" Value="True">
+                                <Setter Property="Background" Value="LightBlue"/>
+                            </DataTrigger>
+                        </Style.Triggers>   
+                    </Style>
+                </DataGrid.RowStyle>
+                <DataGrid.Columns>
+                    <DataGridTextColumn Width="auto" Header="VFID"  Binding ="{Binding VFIDDisplay}" IsReadOnly="True"/>
+                    <DataGridTextColumn Width="auto" Header="Index"  Binding ="{Binding Index}" IsReadOnly="True">
+                        <DataGridTextColumn.CellStyle>
+                            <Style TargetType="DataGridCell">
+                                <Setter Property="ToolTip" Value="The port index identifies the port number relative to the switch." />
+                                <Setter Property="ToolTipService.InitialShowDelay" Value="10" />
+                            </Style>
+                        </DataGridTextColumn.CellStyle>
+                    </DataGridTextColumn>
+                    <DataGridTextColumn Width="auto" Header="Port" Binding ="{Binding Port}" IsReadOnly="True"/>
+                    <DataGridTextColumn Width="auto" Header="Address" Binding ="{Binding Address}" IsReadOnly="True">  
+                        <DataGridTextColumn.CellStyle>
+                            <Style TargetType="DataGridCell">
+                                <Setter Property="ToolTip" Value="The 24-bit Address Identifier." />
+                                <Setter Property="ToolTipService.InitialShowDelay" Value="10" />
+                            </Style>
+                        </DataGridTextColumn.CellStyle>
+                    </DataGridTextColumn>
+                    <DataGridTextColumn Width="auto" Header="Media" Binding ="{Binding Media}" IsReadOnly="True"/>  
+                    <DataGridTextColumn Width="auto" Header="Speed" Binding ="{Binding Speed}" IsReadOnly="True"/>
+                    <DataGridTextColumn Width="auto" Header="State" Binding ="{Binding State}" IsReadOnly="True"/>
+                    <DataGridTextColumn Width="auto" Header="Proto" Binding ="{Binding Proto}" IsReadOnly="True"/>  
+                    <DataGridTextColumn Width="auto" Header="PortConnect" Binding ="{Binding PortConnect}" IsReadOnly="True">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="TextWrapping" Value="Wrap"/>
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+                    <DataGridTextColumn Width="auto" Header="PortStateInfo" Binding ="{Binding PortStateInfo}" IsReadOnly="True">
+                        <DataGridTextColumn.CellStyle>
+                            <Style TargetType="DataGridCell">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding PortStateInfo}" Value="NO_CHANGE">
+                                        <Setter Property="Background" Value="LightGreen" />
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding PortStateInfo}" Value="STATE_CHANGED">
+                                        <Setter Property="Background" Value="Coral" />
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding PortStateInfo}" Value="NEW_PORT">
+                                        <Setter Property="Background" Value="Yellow" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                                <Setter Property="ToolTip" Value="Shows the change from the last check to the current one." />
+                                <Setter Property="ToolTipService.InitialShowDelay" Value="10" />
+                            </Style>
+                        </DataGridTextColumn.CellStyle>
+                    </DataGridTextColumn>
+                </DataGrid.Columns>
+              </DataGrid>
+            </DataTemplate>
+          </ItemsControl.ItemTemplate>
+        </ItemsControl>
+        <!-- FOS_PortBufferShow -->
+        <ItemsControl Grid.Column="1" Grid.Row="1"
+                      ItemsSource="{Binding Main.DeviceToggles}"
+                      Style="{DynamicResource ShowWhenSANPortbufferShow}">
+          <ItemsControl.ItemsPanel>
+            <ItemsPanelTemplate>
+              <StackPanel/>
+            </ItemsPanelTemplate>
+          </ItemsControl.ItemsPanel>
+
+          <ItemsControl.ItemTemplate>
+            <DataTemplate>
+              <DataGrid AutoGenerateColumns="False"
+                        ColumnWidth="*"
+                        HorizontalAlignment="Stretch"
+                        Margin="5"
+                        MaxWidth="960"
+                        MaxHeight="460"
+                        ItemsSource="{Binding SANPortbufferShowRows}"
+                        CanUserAddRows="False"
+                        Visibility="{Binding IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
+
+                <!-- Optional: Header pro Device -->
+                <DataGrid.GroupStyle>
+                  <GroupStyle/>
+                </DataGrid.GroupStyle>
+                <DataGrid.RowStyle>
+                    <Style TargetType="DataGridRow">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding IsVirtualFabricPort}" Value="True">
+                                <Setter Property="Background" Value="LightBlue"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </DataGrid.RowStyle>
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="VFID" Binding ="{Binding VFIDDisplay}" IsReadOnly="True" Width="auto" />
+                    <DataGridTextColumn Header="Port"  Binding ="{Binding Port}" IsReadOnly="True" Width="auto"/>  
+                    <DataGridTextColumn Header="Type" Binding ="{Binding PortType}" IsReadOnly="True" Width="auto"/>  
+                    <DataGridTextColumn Header="State" Binding ="{Binding State}" IsReadOnly="True" Width="auto"/>
+                    <DataGridTextColumn Header="Speed"  Binding ="{Binding Speed}" IsReadOnly="True" Width="auto"/>
+                    <DataGridTextColumn Header="ReservedBuffers"  Binding ="{Binding ReservedBuffers}" IsReadOnly="True" Width="auto"/>
+                    <DataGridTextColumn Header="CurrentBufferUsage" Binding ="{Binding CurrentBufferUsage}" IsReadOnly="True" Width="auto" />
+                    <DataGridTextColumn Header="RecommendedBuffers"  Binding ="{Binding RecommendedBuffers}" IsReadOnly="True" Width="auto"/>  
+                    <DataGridTextColumn Header="AvgTxBufferUsage" Binding ="{Binding AvgTxBufferUsage}" IsReadOnly="True" Width="auto"/>  
+                    <DataGridTextColumn Header="AvgRxBufferUsage" Binding ="{Binding AvgRxBufferUsage}" IsReadOnly="True" Width="auto"/>
+                    <DataGridTextColumn Header="AvgTxFrameSize"  Binding ="{Binding AvgTxFrameSize}" IsReadOnly="True" Width="auto"/>
+                    <DataGridTextColumn Header="AvgRxFrameSize"  Binding ="{Binding AvgRxFrameSize}" IsReadOnly="True" Width="auto"/>
+                    <DataGridTextColumn Header="ChipBuffersAvailable" Binding ="{Binding ChipBuffersAvailable}" IsReadOnly="True" Width="auto" />
+                    <DataGridTextColumn Header="CreditRecoveryEnabled"  Binding ="{Binding CreditRecoveryEnabled}" IsReadOnly="True" Width="auto"/>  
+                    <DataGridTextColumn Header="CreditRecoveryActive" Binding ="{Binding CreditRecoveryActive}" IsReadOnly="True" Width="auto"/>  
+                    <DataGridTextColumn Header="CongestionSignalEnabled" Binding ="{Binding CongestionSignalEnabled}" IsReadOnly="True" Width="auto"/>
+                    <DataGridTextColumn Header="FportBuffers"  Binding ="{Binding FportBuffers}" IsReadOnly="True" Width="auto"/>
+                    <DataGridTextColumn Header="BBzero"  Binding ="{Binding BBzero}" IsReadOnly="True" Width="auto"/>
+                </DataGrid.Columns>
+              </DataGrid>
+            </DataTemplate>
+          </ItemsControl.ItemTemplate>
+        </ItemsControl>
+        <!-- FOS_PortErrorShow -->
+        <ItemsControl Grid.Column="1" Grid.Row="1"
+                      ItemsSource="{Binding Main.DeviceToggles}"
+                      Style="{DynamicResource ShowWhenSANPortErrorShow}">
+          <ItemsControl.ItemsPanel>
+            <ItemsPanelTemplate>
+              <StackPanel/>
+            </ItemsPanelTemplate>
+          </ItemsControl.ItemsPanel>
+
+          <ItemsControl.ItemTemplate>
+            <DataTemplate>
+              <DataGrid AutoGenerateColumns="False"
+                        ColumnWidth="*"
+                        HorizontalAlignment="Stretch"
+                        Margin="5"
+                        MaxWidth="960"
+                        MaxHeight="460"
+                        ItemsSource="{Binding SANPortErrorShowRows}"
+                        CanUserAddRows="False"
+                        Visibility="{Binding IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
+
+                <!-- Optional: Header pro Device -->
+                <DataGrid.GroupStyle>
+                  <GroupStyle/>
+                </DataGrid.GroupStyle>
+                <DataGrid.RowStyle>
+                    <Style TargetType="DataGridRow">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding IsVirtualFabricPort}" Value="True">
+                                <Setter Property="Background" Value="LightBlue"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </DataGrid.RowStyle>
+                <DataGrid.Columns>
+                    <DataGridTextColumn Width="auto" Header="VFID" Binding ="{Binding VFIDDisplay}" IsReadOnly="True"/>
+                    <DataGridTextColumn Width="auto" Header="Port" Binding ="{Binding Port}" IsReadOnly="True"/> 
+                    <DataGridTextColumn Width="auto" Header="EncIn" Binding ="{Binding EncIn}" IsReadOnly="True">
+                        <DataGridTextColumn.CellStyle>
+                            <Style TargetType="DataGridCell">
+                                <Setter Property="ToolTip" Value="Number of encoding errors inside frames received (Rx)" />
+                            </Style>
+                        </DataGridTextColumn.CellStyle>
+                    </DataGridTextColumn>
+                    <DataGridTextColumn Width="auto" Header="CrcErr" Binding ="{Binding CrcErr}" IsReadOnly="True">
+                        <DataGridTextColumn.CellStyle>
+                            <Style TargetType="DataGridCell">
+                                <Setter Property="ToolTip" Value="Number of frames with CRC errors received (Rx)." />
+                            </Style>
+                        </DataGridTextColumn.CellStyle>
+                    </DataGridTextColumn>
+                    <DataGridTextColumn Width="auto" Header="TooShort" Binding ="{Binding TooShort}" IsReadOnly="True">
+                        <DataGridTextColumn.CellStyle>
+                            <Style TargetType="DataGridCell">
+                                <Setter Property="ToolTip" Value="Number of frames shorter than minimum received (Rx)." />
+                            </Style>
+                        </DataGridTextColumn.CellStyle>
+                    </DataGridTextColumn>
+                    <DataGridTextColumn Width="auto" Header="TooLong" Binding ="{Binding TooLong}" IsReadOnly="True">
+                        <DataGridTextColumn.CellStyle>
+                            <Style TargetType="DataGridCell">
+                                <Setter Property="ToolTip" Value="Number of frames longer than maximum received (Rx)." />
+                            </Style>
+                        </DataGridTextColumn.CellStyle>
+                    </DataGridTextColumn>
+                    <DataGridTextColumn Width="auto" Header="BadEOF" Binding ="{Binding BadEOF}" IsReadOnly="True">
+                        <DataGridTextColumn.CellStyle>
+                            <Style TargetType="DataGridCell">
+                                <Setter Property="ToolTip" Value="Number of frames with bad end-of-frame delimiters received (Rx)." />
+                            </Style>
+                        </DataGridTextColumn.CellStyle>
+                    </DataGridTextColumn>
+                    <DataGridTextColumn Width="auto" Header="EncOut" Binding ="{Binding EncOut}" IsReadOnly="True">
+                        <DataGridTextColumn.CellStyle>
+                            <Style TargetType="DataGridCell">
+                                <Setter Property="ToolTip" Value="Number of encoding error outside of frames received (Rx)." />
+                            </Style>
+                        </DataGridTextColumn.CellStyle>
+                    </DataGridTextColumn>
+                    <DataGridTextColumn Width="auto" Header="DiscC3" Binding ="{Binding DiscC3}" IsReadOnly="True">
+                        <DataGridTextColumn.CellStyle>
+                            <Style TargetType="DataGridCell">
+                                <Setter Property="ToolTip" Value="Number of Class 3 frames discarded (Rx)." />
+                            </Style>
+                        </DataGridTextColumn.CellStyle>
+                    </DataGridTextColumn>
+                    <DataGridTextColumn Width="auto" Header="LinkFail" Binding ="{Binding LinkFail}" IsReadOnly="True">
+                        <DataGridTextColumn.CellStyle>
+                            <Style TargetType="DataGridCell">
+                                <Setter Property="ToolTip" Value="Number of link failures (LF1 or LF2 states) received (Rx)." />
+                            </Style>
+                        </DataGridTextColumn.CellStyle>
+                    </DataGridTextColumn>
+                    <DataGridTextColumn Width="auto" Header="LossSync" Binding ="{Binding LossSync}" IsReadOnly="True">
+                        <DataGridTextColumn.CellStyle>
+                            <Style TargetType="DataGridCell">
+                                <Setter Property="ToolTip" Value="Number of times synchronization was lost (Rx)." />
+                            </Style>
+                        </DataGridTextColumn.CellStyle>
+                    </DataGridTextColumn>
+                    <DataGridTextColumn Width="auto" Header="LossSig" Binding ="{Binding LossSig}" IsReadOnly="True">
+                        <DataGridTextColumn.CellStyle>
+                            <Style TargetType="DataGridCell">
+                                <Setter Property="ToolTip" Value="Number of times a loss of signal was received (increments whenever an SFP is removed) (Rx)." />
+                            </Style>
+                        </DataGridTextColumn.CellStyle>
+                    </DataGridTextColumn>
+                    <DataGridTextColumn Width="auto" Header="StateTransitions" Binding ="{Binding StateTransitions}" IsReadOnly="True"/>
+                    <DataGridTextColumn Width="auto" Header="BBZero" Binding ="{Binding BBZero}" IsReadOnly="True"/>
+                    <DataGridTextColumn Width="auto" Header="FECuncorrected" Binding ="{Binding FECuncorrected}" IsReadOnly="True"/>
+                </DataGrid.Columns>
+              </DataGrid>
+            </DataTemplate>
+          </ItemsControl.ItemTemplate>
+        </ItemsControl>
+        <!-- FOS_SFPDetails -->
+        <ItemsControl Grid.Column="1" Grid.Row="1"
+                      ItemsSource="{Binding Main.DeviceToggles}"
+                      Style="{DynamicResource ShowWhenSANSFPDetailsShow}">
+          <ItemsControl.ItemsPanel>
+            <ItemsPanelTemplate>
+              <StackPanel/>
+            </ItemsPanelTemplate>
+          </ItemsControl.ItemsPanel>
+
+          <ItemsControl.ItemTemplate>
+            <DataTemplate>
+              <DataGrid AutoGenerateColumns="False"
+                        ColumnWidth="*"
+                        HorizontalAlignment="Stretch"
+                        Margin="5"
+                        MaxWidth="960"
+                        MaxHeight="460"
+                        ItemsSource="{Binding SANSFPDetailsRows}"
+                        CanUserAddRows="False"
+                        Visibility="{Binding IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
+
+                <!-- Optional: Header pro Device -->
+                <DataGrid.GroupStyle>
+                  <GroupStyle/>
+                </DataGrid.GroupStyle>
+                <DataGrid.RowStyle>
+                    <Style TargetType="DataGridRow">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding IsVirtualFabricPort}" Value="True">
+                                <Setter Property="Background" Value="LightBlue"/>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding HealthStatus}" Value="Yellow">
+                                <Setter Property="Background" Value="Yellow" />
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding HealthStatus}" Value="No License">
+                                <Setter Property="Background" Value="LightBlue" />
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding HealthStatus}" Value="Unknown">
+                                <Setter Property="Background" Value="LightGray" />
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding HealthStatus}" Value="Green">
+                                <Setter Property="Background" Value="LightGreen" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </DataGrid.RowStyle>
+                <DataGrid.Columns>
+                    <DataGridTextColumn Width="auto" Header="VFID" Binding ="{Binding VFIDDisplay}" IsReadOnly="True"/>
+                    <DataGridTextColumn Width="auto" Header="Port"  Binding ="{Binding Port}" IsReadOnly="True"/>
+                    <DataGridTextColumn Width="auto" Header="SFP Typ" Binding ="{Binding SFPTyp}" IsReadOnly="True"/>
+                    <DataGridTextColumn Width="auto" Header="Vendor"  Binding ="{Binding Vendor}" IsReadOnly="True"/>  
+                    <DataGridTextColumn Width="auto" Header="Serial No" Binding ="{Binding SerialNo}" IsReadOnly="True"/>  
+                    <DataGridTextColumn Width="auto" Header="Speed Range" Binding ="{Binding SpeedRange}" IsReadOnly="True"/> 
+                    <DataGridTextColumn Width="auto" Header="Temperature" Binding ="{Binding Temperature}" IsReadOnly="True"/>
+                    <DataGridTextColumn Width="auto" Header="TempState" Binding ="{Binding TempState}" IsReadOnly="True"/>
+                    <DataGridTextColumn Width="auto" Header="RxPower" Binding ="{Binding RxPower}" IsReadOnly="True"/>
+                    <DataGridTextColumn Width="auto" Header="OpticalState" Binding ="{Binding OpticalState}" IsReadOnly="True"/>
+                    <DataGridTextColumn Width="auto" Header="TxPower" Binding ="{Binding TxPower}" IsReadOnly="True"/>
+                    <DataGridTextColumn Width="auto" Header="Voltage" Binding ="{Binding Voltage}" IsReadOnly="True"/>
+                    <DataGridTextColumn Width="auto" Header="Wavelength" Binding ="{Binding Wavelength}" IsReadOnly="True"/>
+                    <DataGridTextColumn Width="auto" Header="PowerOnTime" Binding ="{Binding PowerOnTime}" IsReadOnly="True"/>
+                </DataGrid.Columns>
+              </DataGrid>
+            </DataTemplate>
+          </ItemsControl.ItemTemplate>
+        </ItemsControl>
+        <!-- FOS_ZoneDetails -->
+        <ItemsControl Grid.Column="1" Grid.Row="1"
+                      ItemsSource="{Binding Main.DeviceToggles}"
+                      Style="{DynamicResource ShowWhenSANZoneDetails}">
+          <ItemsControl.ItemsPanel>
+            <ItemsPanelTemplate>
+              <StackPanel/>
+            </ItemsPanelTemplate>
+          </ItemsControl.ItemsPanel>
+
+          <ItemsControl.ItemTemplate>
+            <DataTemplate>
+              <DataGrid AutoGenerateColumns="False"
+                        ColumnWidth="*"
+                        HorizontalAlignment="Stretch"
+                        Margin="5"
+                        MaxWidth="960"
+                        MaxHeight="460"
+                        ItemsSource="{Binding SANZoneDetailsRows}"
+                        CanUserAddRows="False"
+                        Visibility="{Binding IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
+
+                    <!-- Optional: Header pro Device -->
+                    <DataGrid.GroupStyle>
+                        <GroupStyle>
+                            <GroupStyle.HeaderTemplate>
+                                <DataTemplate>
+                                    <Border Background="LightGray" Padding="6" Margin="0,6,0,2">
+                                        <TextBlock Text="{Binding Name}" FontWeight="Bold"/>
+                                    </Border>
+                                </DataTemplate>
+                            </GroupStyle.HeaderTemplate>
+                        </GroupStyle>
+                    </DataGrid.GroupStyle>
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Width="auto" Header="VFID" Binding="{Binding VFIDDisplay}" IsReadOnly="True"/>
+                        <DataGridTextColumn Width="200" Header="Zone" Binding="{Binding ZoneName}" IsReadOnly="True"/>
+                        <DataGridTextColumn Width="90" Header="Type" Binding="{Binding ZoneType}" IsReadOnly="True"/>
+                        <DataGridTextColumn Width="90" Header="Role" Binding="{Binding MemberRole}" IsReadOnly="True"/>
+                        <DataGridTextColumn Width="300" Header="Alias" Binding="{Binding Alias}" IsReadOnly="True"/>
+                        <DataGridTextColumn Width="170" Header="WWPN" Binding="{Binding WWPN}" IsReadOnly="True"/>
+                    </DataGrid.Columns>
+              </DataGrid>
+            </DataTemplate>
+          </ItemsControl.ItemTemplate>
+        </ItemsControl>
+        <!-- FOS_PortLicenseShow -->
+        <ItemsControl Grid.Column="1" Grid.Row="1"
+                      ItemsSource="{Binding Main.DeviceToggles}"
+                      Style="{DynamicResource ShowWhenLicenseInfo}">
+          <ItemsControl.ItemsPanel>
+            <ItemsPanelTemplate>
+              <WrapPanel />
+            </ItemsPanelTemplate>
+          </ItemsControl.ItemsPanel>
+
+          <ItemsControl.ItemTemplate>
+            <DataTemplate>
+                <StackPanel>
+                  <Label Content="{Binding DeviceTitle}"
+                         Style="{DynamicResource MainLabelStyle}"
+                         Margin="5,8,5,0"
+                         Visibility="{Binding IsChecked, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+
+                  <TextBox Text="{Binding LicenseInfoText}"
+                            HorizontalAlignment="Left"
+                            TextWrapping="WrapWithOverflow"
+                            Margin="5,0,5,5" 
+                            IsReadOnly="True"
+                            MaxHeight="600" 
+                            MaxWidth="350"
+                            Visibility="{Binding IsChecked, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                </StackPanel>
+            </DataTemplate>
+          </ItemsControl.ItemTemplate>
+        </ItemsControl>
+        <!-- FOS_SensorShow -->
+        <ItemsControl Grid.Column="1" Grid.Row="1"
+                      ItemsSource="{Binding Main.DeviceToggles}"
+                      Style="{DynamicResource ShowWhenSensorInfo}">
+          <ItemsControl.ItemsPanel>
+            <ItemsPanelTemplate>
+              <WrapPanel />
+            </ItemsPanelTemplate>
+          </ItemsControl.ItemsPanel>
+
+          <ItemsControl.ItemTemplate>
+            <DataTemplate>
+                <StackPanel>
+                  <Label Content="{Binding SensorShowTitle}"
+                         Style="{DynamicResource MainLabelStyle}"
+                         Margin="5,5,5,0"
+                         Visibility="{Binding IsChecked, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+
+                  <TextBox Text="{Binding SensorShowText}"
+                            HorizontalAlignment="Left"
+                            TextWrapping="WrapWithOverflow"
+                            Margin="5,0,5,5" 
+                            IsReadOnly="True"
+                            MaxHeight="600" 
+                            MaxWidth="300"
+                            Visibility="{Binding IsChecked, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                </StackPanel>
+            </DataTemplate>
+          </ItemsControl.ItemTemplate>
+        </ItemsControl>
+        <!-- FOS Secure Check -->
+        <ItemsControl Grid.Column="1" Grid.Row="1"
+                      ItemsSource="{Binding Main.DeviceToggles}"
+                      Style="{DynamicResource ShowWhenSecureCheck}">
+
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <StackPanel/>
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+
+                    <!--
+                        DataContext is the current DeviceIdent object here:
+                        DeviceName
+                        DeviceIP
+                        IsChecked
+                        SecureCheckRows
+                    -->
+                    <Border Margin="2"
+                            Padding="10"
+                            Width="940"
+                            BorderBrush="LightGray"
+                            BorderThickness="1"
+                            CornerRadius="3"
+                            Visibility="{Binding IsChecked,
+                                                 Converter={StaticResource BooleanToVisibilityConverter},
+                                                 FallbackValue=Collapsed}">
+
+                        <!-- One expander per switch -->
+                        <Expander IsExpanded="true">
+
+                            <Expander.Header>
+                                    <TextBlock Text="{Binding DeviceTitle}" FontWeight="Bold" FontSize="14"/>
+                            </Expander.Header>
+
+                            <!--
+                                It is only here that we switch from DeviceIdent
+                                to the SecureCheckRows of the current switch.
+                            -->
+                            <ItemsControl ItemsSource="{Binding SecureCheckRows}">
+
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+
+                                        <!--
+                                It is only here that we switch from DeviceIdent
+                                to the SecureCheckRows of the current switch.
+                                        -->
+                                        <StackPanel Margin="5,10,5,5">
+
+                                            <!-- SSH -->
+                                            <GroupBox Header="SSH Crypto"
+                                                      Margin="0,0,0,10">
+
+                                                <Grid Margin="10">
+
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="190"/>
+                                                        <ColumnDefinition Width="*"/>
+                                                    </Grid.ColumnDefinitions>
+
+                                                    <Grid.RowDefinitions>
+                                                        <RowDefinition Height="Auto"/>
+                                                        <RowDefinition Height="Auto"/>
+                                                        <RowDefinition Height="Auto"/>
+                                                        <RowDefinition Height="Auto"/>
+                                                        <RowDefinition Height="Auto"/>
+                                                    </Grid.RowDefinitions>
+
+                                                    <TextBlock Grid.Row="0"
+                                                               Grid.Column="0"
+                                                               Text="SSH Cipher:"
+                                                               FontWeight="SemiBold"
+                                                               Margin="0,4,10,4"/>
+
+                                                    <TextBlock Grid.Row="0"
+                                                               Grid.Column="1"
+                                                               Text="{Binding SSHCipher}"
+                                                               TextWrapping="Wrap"
+                                                               Margin="0,4"/>
+
+                                                    <TextBlock Grid.Row="1"
+                                                               Grid.Column="0"
+                                                               Text="SSH Key Exchange:"
+                                                               FontWeight="SemiBold"
+                                                               Margin="0,4,10,4"/>
+
+                                                    <TextBlock Grid.Row="1"
+                                                               Grid.Column="1"
+                                                               Text="{Binding SSHKeyExchange}"
+                                                               TextWrapping="Wrap"
+                                                               Margin="0,4"/>
+
+                                                    <TextBlock Grid.Row="2"
+                                                               Grid.Column="0"
+                                                               Text="SSH MAC:"
+                                                               FontWeight="SemiBold"
+                                                               Margin="0,4,10,4"/>
+
+                                                    <TextBlock Grid.Row="2"
+                                                               Grid.Column="1"
+                                                               Text="{Binding SSHMacConfiguration}"
+                                                               TextWrapping="Wrap"
+                                                               Margin="0,4"/>
+
+                                                    <TextBlock Grid.Row="3"
+                                                               Grid.Column="0"
+                                                               Text="Host Key Algorithms:"
+                                                               FontWeight="SemiBold"
+                                                               Margin="0,4,10,4"/>
+
+                                                    <TextBlock Grid.Row="3"
+                                                               Grid.Column="1"
+                                                               Text="{Binding SSHHostKeyAlgorithms}"
+                                                               TextWrapping="Wrap"
+                                                               Margin="0,4"/>
+
+                                                    <TextBlock Grid.Row="4"
+                                                               Grid.Column="0"
+                                                               Text="Public Key Algorithms:"
+                                                               FontWeight="SemiBold"
+                                                               Margin="0,4,10,4"/>
+
+                                                    <TextBlock Grid.Row="4"
+                                                               Grid.Column="1"
+                                                               Text="{Binding SSHPublicKeyAlgorithms}"
+                                                               TextWrapping="Wrap"
+                                                               Margin="0,4"/>
+
+                                                </Grid>
+                                            </GroupBox>
+
+                                            <!-- TLS Ciphers -->
+                                            <GroupBox Header="TLS Ciphers"
+                                                      Margin="0,0,0,10">
+
+                                                <Grid Margin="10">
+
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="190"/>
+                                                        <ColumnDefinition Width="*"/>
+                                                    </Grid.ColumnDefinitions>
+
+                                                    <Grid.RowDefinitions>
+                                                        <RowDefinition Height="Auto"/>
+                                                        <RowDefinition Height="Auto"/>
+                                                        <RowDefinition Height="Auto"/>
+                                                        <RowDefinition Height="Auto"/>
+                                                        <RowDefinition Height="Auto"/>
+                                                        <RowDefinition Height="Auto"/>
+                                                        <RowDefinition Height="Auto"/>
+                                                        <RowDefinition Height="Auto"/>
+                                                    </Grid.RowDefinitions>
+
+                                                    <TextBlock Grid.Row="0"
+                                                               Grid.Column="0"
+                                                               Text="HTTPS:"
+                                                               FontWeight="SemiBold"
+                                                               Margin="0,4,10,4"/>
+
+                                                    <TextBlock Grid.Row="0"
+                                                               Grid.Column="1"
+                                                               Text="{Binding HTTPSCipherExpression}"
+                                                               TextWrapping="Wrap"
+                                                               Margin="0,4"/>
+
+                                                    <TextBlock Grid.Row="1"
+                                                               Grid.Column="0"
+                                                               Text="HTTPS TLS 1.3:"
+                                                               FontWeight="SemiBold"
+                                                               Margin="0,4,10,4"/>
+
+                                                    <TextBlock Grid.Row="1"
+                                                               Grid.Column="1"
+                                                               Text="{Binding HTTPSTLS13Cipher}"
+                                                               TextWrapping="Wrap"
+                                                               Margin="0,4"/>
+
+                                                    <TextBlock Grid.Row="2"
+                                                               Grid.Column="0"
+                                                               Text="RADIUS:"
+                                                               FontWeight="SemiBold"
+                                                               Margin="0,4,10,4"/>
+
+                                                    <TextBlock Grid.Row="2"
+                                                               Grid.Column="1"
+                                                               Text="{Binding RADIUSCipherExpression}"
+                                                               TextWrapping="Wrap"
+                                                               Margin="0,4"/>
+
+                                                    <TextBlock Grid.Row="3"
+                                                               Grid.Column="0"
+                                                               Text="LDAP:"
+                                                               FontWeight="SemiBold"
+                                                               Margin="0,4,10,4"/>
+
+                                                    <TextBlock Grid.Row="3"
+                                                               Grid.Column="1"
+                                                               Text="{Binding LDAPCipherExpression}"
+                                                               TextWrapping="Wrap"
+                                                               Margin="0,4"/>
+
+                                                    <TextBlock Grid.Row="4"
+                                                               Grid.Column="0"
+                                                               Text="SYSLOG:"
+                                                               FontWeight="SemiBold"
+                                                               Margin="0,4,10,4"/>
+
+                                                    <TextBlock Grid.Row="4"
+                                                               Grid.Column="1"
+                                                               Text="{Binding SYSLOGCipherExpression}"
+                                                               TextWrapping="Wrap"
+                                                               Margin="0,4"/>
+
+                                                    <TextBlock Grid.Row="5"
+                                                               Grid.Column="0"
+                                                               Text="RSA:"
+                                                               FontWeight="SemiBold"
+                                                               Margin="0,4,10,4"/>
+
+                                                    <TextBlock Grid.Row="5"
+                                                               Grid.Column="1"
+                                                               Text="{Binding RSACipher}"
+                                                               TextWrapping="Wrap"
+                                                               Margin="0,4"/>
+
+                                                    <TextBlock Grid.Row="6"
+                                                               Grid.Column="0"
+                                                               Text="FA:"
+                                                               FontWeight="SemiBold"
+                                                               Margin="0,4,10,4"/>
+
+                                                    <TextBlock Grid.Row="6"
+                                                               Grid.Column="1"
+                                                               Text="{Binding FACipher}"
+                                                               TextWrapping="Wrap"
+                                                               Margin="0,4"/>
+
+                                                    <TextBlock Grid.Row="7"
+                                                               Grid.Column="0"
+                                                               Text="SMTPS:"
+                                                               FontWeight="SemiBold"
+                                                               Margin="0,4,10,4"/>
+
+                                                    <TextBlock Grid.Row="7"
+                                                               Grid.Column="1"
+                                                               Text="{Binding SMTPSCipher}"
+                                                               TextWrapping="Wrap"
+                                                               Margin="0,4"/>
+
+                                                </Grid>
+                                            </GroupBox>
+
+                                            <!-- TLS Protocols -->
+                                            <GroupBox Header="TLS Protocols"
+                                                      Margin="0,0,0,10">
+
+                                                <Grid Margin="10">
+
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="190"/>
+                                                        <ColumnDefinition Width="*"/>
+                                                    </Grid.ColumnDefinitions>
+
+                                                    <Grid.RowDefinitions>
+                                                        <RowDefinition Height="Auto"/>
+                                                        <RowDefinition Height="Auto"/>
+                                                        <RowDefinition Height="Auto"/>
+                                                        <RowDefinition Height="Auto"/>
+                                                        <RowDefinition Height="Auto"/>
+                                                        <RowDefinition Height="Auto"/>
+                                                        <RowDefinition Height="Auto"/>
+                                                    </Grid.RowDefinitions>
+
+                                                    <TextBlock Grid.Row="0"
+                                                               Grid.Column="0"
+                                                               Text="HTTPS:"
+                                                               FontWeight="SemiBold"
+                                                               Margin="0,4,10,4"/>
+
+                                                    <TextBlock Grid.Row="0"
+                                                               Grid.Column="1"
+                                                               Text="{Binding HTTPSTLSProtocol}"
+                                                               TextWrapping="Wrap"
+                                                               Margin="0,4"/>
+
+                                                    <TextBlock Grid.Row="1"
+                                                               Grid.Column="0"
+                                                               Text="RADIUS:"
+                                                               FontWeight="SemiBold"
+                                                               Margin="0,4,10,4"/>
+
+                                                    <TextBlock Grid.Row="1"
+                                                               Grid.Column="1"
+                                                               Text="{Binding RADIUSTLSProtocol}"
+                                                               TextWrapping="Wrap"
+                                                               Margin="0,4"/>
+
+                                                    <TextBlock Grid.Row="2"
+                                                               Grid.Column="0"
+                                                               Text="LDAP:"
+                                                               FontWeight="SemiBold"
+                                                               Margin="0,4,10,4"/>
+
+                                                    <TextBlock Grid.Row="2"
+                                                               Grid.Column="1"
+                                                               Text="{Binding LDAPTLSProtocol}"
+                                                               TextWrapping="Wrap"
+                                                               Margin="0,4"/>
+
+                                                    <TextBlock Grid.Row="3"
+                                                               Grid.Column="0"
+                                                               Text="SYSLOG:"
+                                                               FontWeight="SemiBold"
+                                                               Margin="0,4,10,4"/>
+
+                                                    <TextBlock Grid.Row="3"
+                                                               Grid.Column="1"
+                                                               Text="{Binding SYSLOGTLSProtocol}"
+                                                               TextWrapping="Wrap"
+                                                               Margin="0,4"/>
+
+                                                    <TextBlock Grid.Row="4"
+                                                               Grid.Column="0"
+                                                               Text="RSA:"
+                                                               FontWeight="SemiBold"
+                                                               Margin="0,4,10,4"/>
+
+                                                    <TextBlock Grid.Row="4"
+                                                               Grid.Column="1"
+                                                               Text="{Binding RSATLSProtocol}"
+                                                               TextWrapping="Wrap"
+                                                               Margin="0,4"/>
+
+                                                    <TextBlock Grid.Row="5"
+                                                               Grid.Column="0"
+                                                               Text="FA:"
+                                                               FontWeight="SemiBold"
+                                                               Margin="0,4,10,4"/>
+
+                                                    <TextBlock Grid.Row="5"
+                                                               Grid.Column="1"
+                                                               Text="{Binding FATLSProtocol}"
+                                                               TextWrapping="Wrap"
+                                                               Margin="0,4"/>
+
+                                                    <TextBlock Grid.Row="6"
+                                                               Grid.Column="0"
+                                                               Text="SMTPS:"
+                                                               FontWeight="SemiBold"
+                                                               Margin="0,4,10,4"/>
+
+                                                    <TextBlock Grid.Row="6"
+                                                               Grid.Column="1"
+                                                               Text="{Binding SMTPSTLSProtocol}"
+                                                               TextWrapping="Wrap"
+                                                               Margin="0,4"/>
+
+                                                </Grid>
+                                            </GroupBox>
+
+                                            <!-- Compliance -->
+                                            <GroupBox Header="X509 / Compliance"
+                                                      Margin="0,0,0,10">
+
+                                                <Grid Margin="10">
+
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="190"/>
+                                                        <ColumnDefinition Width="*"/>
+                                                    </Grid.ColumnDefinitions>
+
+                                                    <Grid.RowDefinitions>
+                                                        <RowDefinition Height="Auto"/>
+                                                        <RowDefinition Height="Auto"/>
+                                                        <RowDefinition Height="Auto"/>
+                                                        <RowDefinition Height="Auto"/>
+                                                    </Grid.RowDefinitions>
+
+                                                    <TextBlock Grid.Row="0"
+                                                               Grid.Column="0"
+                                                               Text="X509 Validation:"
+                                                               FontWeight="SemiBold"
+                                                               Margin="0,4,10,4"/>
+
+                                                    <TextBlock Grid.Row="0"
+                                                               Grid.Column="1"
+                                                               Text="{Binding X509ValidationMode}"
+                                                               TextWrapping="Wrap"
+                                                               Margin="0,4"/>
+
+                                                    <TextBlock Grid.Row="1"
+                                                               Grid.Column="0"
+                                                               Text="Crypto Version:"
+                                                               FontWeight="SemiBold"
+                                                               Margin="0,4,10,4"/>
+
+                                                    <TextBlock Grid.Row="1"
+                                                               Grid.Column="1"
+                                                               Text="{Binding CryptoVersion}"
+                                                               Margin="0,4"/>
+
+                                                    <TextBlock Grid.Row="2"
+                                                               Grid.Column="0"
+                                                               Text="FIPS Inside:"
+                                                               FontWeight="SemiBold"
+                                                               Margin="0,4,10,4"/>
+
+                                                    <TextBlock Grid.Row="2"
+                                                               Grid.Column="1"
+                                                               Text="{Binding FIPSInside}"
+                                                               Margin="0,4"/>
+
+                                                    <TextBlock Grid.Row="3"
+                                                               Grid.Column="0"
+                                                               Text="Boot-up Selftests:"
+                                                               FontWeight="SemiBold"
+                                                               Margin="0,4,10,4"/>
+
+                                                    <TextBlock Grid.Row="3"
+                                                               Grid.Column="1"
+                                                               Text="{Binding BootUpSelfTestEnabled}"
+                                                               Margin="0,4"/>
+
+                                                </Grid>
+                                            </GroupBox>
+                                            <!-- IP Filter Policies -->
+                                            <GroupBox Header="IP Filter Policies"
+                                                      Margin="0,0,0,10">
+
+                                                <StackPanel Margin="10">
+
+                                                    <!-- Summary -->
+                                                    <Grid Margin="0,0,0,8">
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition Width="190"/>
+                                                            <ColumnDefinition Width="*"/>
+                                                        </Grid.ColumnDefinitions>
+
+                                                        <Grid.RowDefinitions>
+                                                            <RowDefinition Height="Auto"/>
+                                                            <RowDefinition Height="Auto"/>
+                                                        </Grid.RowDefinitions>
+
+                                                        <TextBlock Grid.Row="0"
+                                                                   Grid.Column="0"
+                                                                   Text="Policy Count:"
+                                                                   FontWeight="SemiBold"
+                                                                   Margin="0,4,10,4"/>
+
+                                                        <TextBlock Grid.Row="0"
+                                                                   Grid.Column="1"
+                                                                   Text="{Binding IPFilterPolicyCount}"
+                                                                   Margin="0,4"/>
+
+                                                        <TextBlock Grid.Row="1"
+                                                                   Grid.Column="0"
+                                                                   Text="Collection Error:"
+                                                                   FontWeight="SemiBold"
+                                                                   Margin="0,4,10,4"/>
+
+                                                        <TextBlock Grid.Row="1"
+                                                                   Grid.Column="1"
+                                                                   Text="{Binding IPFilterError}"
+                                                                   TextWrapping="Wrap"
+                                                                   Margin="0,4"/>
+                                                    </Grid>
+
+                                                    <!-- Dynamic list of all existing policies -->
+                                                    <ItemsControl ItemsSource="{Binding IPFilterPolicies}">
+
+                                                        <ItemsControl.ItemTemplate>
+                                                            <DataTemplate>
+
+                                                                <!-- DataContext refers to a single IP filter policy here -->
+                                                                <Border Margin="0,3"
+                                                                        Padding="8"
+                                                                        BorderBrush="LightGray"
+                                                                        BorderThickness="1"
+                                                                        CornerRadius="3">
+
+                                                                    <Grid>
+                                                                        <Grid.ColumnDefinitions>
+                                                                            <ColumnDefinition Width="190"/>
+                                                                            <ColumnDefinition Width="*"/>
+                                                                        </Grid.ColumnDefinitions>
+
+                                                                        <Grid.RowDefinitions>
+                                                                            <RowDefinition Height="Auto"/>
+                                                                            <RowDefinition Height="Auto"/>
+                                                                            <RowDefinition Height="Auto"/>
+                                                                            <RowDefinition Height="Auto"/>
+                                                                        </Grid.RowDefinitions>
+
+                                                                        <TextBlock Grid.Row="0"
+                                                                                   Grid.Column="0"
+                                                                                   Text="Policy Name:"
+                                                                                   FontWeight="SemiBold"
+                                                                                   Margin="0,3,10,3"/>
+
+                                                                        <TextBlock Grid.Row="0"
+                                                                                   Grid.Column="1"
+                                                                                   Text="{Binding PolicyName}"
+                                                                                   Margin="0,3"/>
+
+                                                                        <TextBlock Grid.Row="1"
+                                                                                   Grid.Column="0"
+                                                                                   Text="IP Version:"
+                                                                                   FontWeight="SemiBold"
+                                                                                   Margin="0,3,10,3"/>
+
+                                                                        <TextBlock Grid.Row="1"
+                                                                                   Grid.Column="1"
+                                                                                   Text="{Binding IPVersion}"
+                                                                                   Margin="0,3"/>
+
+                                                                        <TextBlock Grid.Row="2"
+                                                                                   Grid.Column="0"
+                                                                                   Text="Active:"
+                                                                                   FontWeight="SemiBold"
+                                                                                   Margin="0,3,10,3"/>
+
+                                                                        <TextBlock Grid.Row="2"
+                                                                                   Grid.Column="1"
+                                                                                   Text="{Binding IsActive}"
+                                                                                   Margin="0,3"/>
+
+                                                                        <TextBlock Grid.Row="3"
+                                                                                   Grid.Column="0"
+                                                                                   Text="Default Policy:"
+                                                                                   FontWeight="SemiBold"
+                                                                                   Margin="0,3,10,3"/>
+
+                                                                        <TextBlock Grid.Row="3"
+                                                                                   Grid.Column="1"
+                                                                                   Text="{Binding IsDefault}"
+                                                                                   Margin="0,3"/>
+
+                                                                    </Grid>
+                                                                </Border>
+
+                                                            </DataTemplate>
+                                                        </ItemsControl.ItemTemplate>
+
+                                                    </ItemsControl>
+
+                                                </StackPanel>
+                                            </GroupBox>
+                                            <!-- Source -->
+                                            <GroupBox Header="Source">
+
+                                                <Grid Margin="10">
+
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="190"/>
+                                                        <ColumnDefinition Width="*"/>
+                                                    </Grid.ColumnDefinitions>
+
+                                                    <Grid.RowDefinitions>
+                                                        <RowDefinition Height="Auto"/>
+                                                        <RowDefinition Height="Auto"/>
+                                                    </Grid.RowDefinitions>
+
+                                                    <TextBlock Grid.Row="0"
+                                                               Grid.Column="0"
+                                                               Text="Data Source:"
+                                                               FontWeight="SemiBold"
+                                                               Margin="0,4,10,4"/>
+
+                                                    <TextBlock Grid.Row="0"
+                                                               Grid.Column="1"
+                                                               Text="{Binding DataSource}"
+                                                               Margin="0,4"/>
+
+                                                    <TextBlock Grid.Row="1"
+                                                               Grid.Column="0"
+                                                               Text="REST Endpoint:"
+                                                               FontWeight="SemiBold"
+                                                               Margin="0,4,10,4"/>
+
+                                                    <TextBlock Grid.Row="1"
+                                                               Grid.Column="1"
+                                                               Text="{Binding RestEndpoint}"
+                                                               TextWrapping="Wrap"
+                                                               Margin="0,4"/>
+
+                                                </Grid>
+                                            </GroupBox>
+
+                                        </StackPanel>
+
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+
+                            </ItemsControl>
+
+                        </Expander>
+
+                    </Border>
+
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+
+        </ItemsControl>
+        <!-- IBM_UserInfo -->
+        <ItemsControl Grid.Column="1" Grid.Row="1"
+                      ItemsSource="{Binding Main.DeviceToggles}"
+                      Style="{DynamicResource ShowWhenUserCFGCheck}">
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <WrapPanel Orientation="Horizontal" MaxWidth="1400" />
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                 <StackPanel>
+                    <!-- Headline Label pro Device -->
+                    <Label Content="{Binding DeviceTitle}"
+                        Style="{DynamicResource MainLabelStyle}"
+                        FontSize="12"
+                        Margin="5,8,5,0"
+                        Visibility="{Binding IsChecked, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                        
+                    <ItemsControl ItemsSource="{Binding UserCFGCheckRows}"
+                                  Visibility="{Binding IsChecked,
+                                                       Converter={StaticResource BooleanToVisibilityConverter},
+                                                       FallbackValue=Collapsed}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <WrapPanel/>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <!-- Hide if there are no items -->
+                        <ItemsControl.Style>
+                            <Style TargetType="ItemsControl">
+                                <Style.Triggers>
+                                    <Trigger Property="HasItems" Value="False">
+                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </ItemsControl.Style>
+                        <!-- Button pro User -->
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Button Style="{DynamicResource DashBoardBTNStyle}"
+                                        Margin="8,5,5,5"
+                                        MinWidth="380"
+                                        MaxWidth="500"
+                                        ToolTipService.InitialShowDelay="10">
+                                    <Grid Margin="5">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition MaxHeight="250"/>
+                                            <RowDefinition Height="20"/>
+                                        </Grid.RowDefinitions>
+                                        <Grid Grid.Row="0">
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition />
+                                                <RowDefinition />
+                                                <RowDefinition />
+                                                <RowDefinition />
+                                                <RowDefinition />
+                                                <RowDefinition />
+                                                <RowDefinition />
+                                                <RowDefinition />
+                                                <RowDefinition />
+                                                <RowDefinition />
+                                            </Grid.RowDefinitions>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition MaxWidth="100" />
+                                                <ColumnDefinition Width="Auto" />
+                                                <ColumnDefinition />
+                                            </Grid.ColumnDefinitions>
+                                            <!-- Falls deine Row ein Icon hat: -->
+                                             <Ellipse Grid.RowSpan="10" Width="90" Height="90">
+                                                <Ellipse.Fill>
+                                                    <ImageBrush 
+                                                        ImageSource="{Binding DataContext.STOIcon, RelativeSource={RelativeSource AncestorType=UserControl}}" 
+                                                        Stretch="Uniform" />
+                                                </Ellipse.Fill>
+                                            </Ellipse>
+                                            <TextBlock Grid.Column="1" Style="{DynamicResource DashBoardTB1}"
+                                                       VerticalAlignment="Center" Text="Name:" Margin="3,0"/>
+                                            <TextBlock Grid.Column="2" Style="{DynamicResource DashBoardTB1}"
+                                                       VerticalAlignment="Center" Text="{Binding UserName}" />
+                                            <TextBlock Grid.Row="2" Grid.Column="1" Style="{DynamicResource DashBoardTB1}"
+                                                       VerticalAlignment="Center" Text="Description:" Margin="3,0"/>
+                                            <TextBlock Grid.Row="2" Grid.Column="2" Style="{DynamicResource DashBoardTB1}"
+                                                       VerticalAlignment="Center" Text="{Binding Description}" />
+                                            <TextBlock Grid.Row="3" Grid.Column="1" Style="{DynamicResource DashBoardTB1}"
+                                                       VerticalAlignment="Center" Text="IsEnabled:" Margin="3,0"/>
+                                            <TextBlock Grid.Row="3" Grid.Column="2" Style="{DynamicResource DashBoardTB1}"
+                                                       VerticalAlignment="Center" Text="{Binding IsEnabled}" />
+                                            <TextBlock Grid.Row="4" Grid.Column="1" Style="{DynamicResource DashBoardTB1}"
+                                                       VerticalAlignment="Center" Text="UsesDefaultPassword:" Margin="3,0"/>
+                                            <TextBlock Grid.Row="4" Grid.Column="2" Style="{DynamicResource DashBoardTB1}"
+                                                       VerticalAlignment="Center" Text="{Binding UsesDefaultPassword}" />
+                                            <TextBlock Grid.Row="5" Grid.Column="1" Style="{DynamicResource DashBoardTB1}"
+                                                       VerticalAlignment="Center" Text="UserGrp PasswordChangeEnforced:" Margin="3,0"/>
+                                            <TextBlock Grid.Row="5" Grid.Column="2" Style="{DynamicResource DashBoardTB1}"
+                                                       VerticalAlignment="Center" Text="{Binding PasswordChangeEnforced}" />
+                                            <TextBlock Grid.Row="6" Grid.Column="1" Style="{DynamicResource DashBoardTB1}"
+                                                       VerticalAlignment="Center" Text="Owner IsLocked:" Margin="3,0"/>
+                                            <TextBlock Grid.Row="6" Grid.Column="2" Style="{DynamicResource DashBoardTB1}"
+                                                       VerticalAlignment="Center" Text="{Binding IsLocked}" />
+                                            <TextBlock Grid.Row="7" Grid.Column="1" Style="{DynamicResource DashBoardTB1}"
+                                                       VerticalAlignment="Center" Text="HomeVirtualFabric:" Margin="3,0"/>
+                                            <TextBlock Grid.Row="7" Grid.Column="2" Style="{DynamicResource DashBoardTB1}"
+                                                       VerticalAlignment="Center" Text="{Binding HomeVirtualFabric}" />
+                                            <TextBlock Grid.Row="8" Grid.Column="1" Style="{DynamicResource DashBoardTB1}"
+                                                       VerticalAlignment="Center" Text="VirtualFabricRoles:" Margin="3,0"/>
+                                            <TextBlock Grid.Row="8" Grid.Column="2" Style="{DynamicResource DashBoardTB1}"
+                                                       VerticalAlignment="Center" Text="{Binding VirtualFabricRoles}" />
+                                            <TextBlock Grid.Row="9" Grid.Column="1" Style="{DynamicResource DashBoardTB1}"
+                                                       VerticalAlignment="Center" Text="ChassisAccessRole:" Margin="3,0"/>
+                                            <TextBlock Grid.Row="9" Grid.Column="2" Style="{DynamicResource DashBoardTB1}"
+                                                       VerticalAlignment="Center" Text="{Binding ChassisAccessRole}" />
+                                        </Grid>
+                                        <!-- optional: Timestamp etc. wenn vorhanden -->
+                                        <Grid Grid.Row="1">
+                                            <StackPanel Orientation="Horizontal" Margin="5,0" ToolTip="Last Changes">
+                                                <Image Source="{Binding DataContext.ClockIcon96, RelativeSource={RelativeSource AncestorType=UserControl}}" MaxHeight="30" />
+                                                <TextBlock Text="{Binding CreationTime}" Margin="5,2" />
+                                            </StackPanel>
+                                        </Grid>
+                                    </Grid>
+                                </Button>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                 </StackPanel>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+        <!-- FOS_PWCFGCheck -->
+        <ItemsControl Grid.Column="1" Grid.Row="1"
+                      ItemsSource="{Binding Main.DeviceToggles}"
+                      Style="{DynamicResource ShowWhenPWCFGCheck}">
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <WrapPanel Orientation="Horizontal" MaxWidth="1200"/>
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <DataGrid
+                        AutoGenerateColumns="False"
+                        CanUserSortColumns="False"
+                        HeadersVisibility="Column"
+                        RowHeaderWidth="0"
+                        ColumnWidth="*"
+                        CanUserAddRows="False"
+                        Margin="5,0,5,5"
+                        MaxHeight="500"
+                        MaxWidth="350"
+                        ItemsSource="{Binding PWCFGCheckRows}"
+                        Visibility="{Binding IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
+                        <!-- wie bei dir: ausblenden wenn keine Items -->
+                        <DataGrid.Style>
+                            <Style TargetType="DataGrid">
+                                <Style.Triggers>
+                                    <Trigger Property="HasItems" Value="False">
+                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </DataGrid.Style>
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Name"  Binding="{Binding Key}"   IsReadOnly="True"/>
+                            <DataGridTextColumn Header="Value" Binding="{Binding Value}" IsReadOnly="True"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+    </Grid>
+    </ScrollViewer>
+</UserControl>

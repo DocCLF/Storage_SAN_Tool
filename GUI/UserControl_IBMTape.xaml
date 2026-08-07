@@ -1,0 +1,668 @@
+<UserControl x:Name="IBMTape"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+    mc:Ignorable="d" 
+    >
+    <UserControl.Background>
+            <LinearGradientBrush>
+            <GradientStopCollection>
+                <GradientStop Offset="0.1" Color="White" />
+                <GradientStop Offset="0.5" Color="LightGray" />
+                <GradientStop Offset="0.8" Color="White" />
+            </GradientStopCollection>
+        </LinearGradientBrush>
+    </UserControl.Background>
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" >
+    <Grid >
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="auto" />
+            <ColumnDefinition Width="auto" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <StackPanel Grid.Column="0" Grid.RowSpan="4" >
+        <GroupBox Header="Actions"  HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,10,0,0">
+            <StackPanel>
+                <!--IBM_TapeLibrary-->
+                <ToggleButton
+                x:Name="BTN_IBM_TapeLibrary"
+                Style="{DynamicResource MainBtnStyle}"
+                Content="Library Info" 
+                ToolTip="The general information about the tape library and its settings"/>
+                <!--IBM_TapeEvents-->
+                <ToggleButton
+                x:Name="BTN_IBM_TapeEvents"
+                Style="{DynamicResource MainBtnStyle}"
+                Content="Events" 
+                ToolTip="Events requests"/>
+                <!--IBM_TapeDrives-->
+                <ToggleButton
+                x:Name="BTN_IBM_TapeDrive"
+                Style="{DynamicResource MainBtnStyle}"
+                Content="Drive" 
+                ToolTip="Returns the information about drives like Product Id, Model, Serialno and other useful information" />
+                <!--IBM_TapeMediaInfo-->
+                <ToggleButton
+                x:Name="BTN_IBM_TapeMediaInfo"
+                Style="{DynamicResource MainBtnStyle}"
+                Content="Media Info" 
+                ToolTip="Returns the list of media which are located in the library including detailed information about them" />
+                <!--IBM_TapeReports-->
+                <ToggleButton
+                x:Name="BTN_IBM_TapeReports"
+                Style="{DynamicResource MainBtnStyle}"
+                Content="Reports" 
+                ToolTip="Retrieve a single resource for every drive mount done in the library for the past describing the activity done during a mount. These metrics are updated once a cartridge is unmounted from a drive. This history goes back one year." />
+                <!--IBM_TapeInventory_Drives-->
+                <ToggleButton
+                x:Name="BTN_IBM_TapeInventoryDrives"
+                Style="{DynamicResource MainBtnStyle}"
+                Content="Inventory/ Drives"
+                ToolTip="Execute an inventory drives info scan on the library. This does not return until the inventory is finished." /> 
+                <!--IBM_TapeInventory_Slots-->
+                <ToggleButton
+                x:Name="BTN_IBM_TapeInventorySlots"
+                Style="{DynamicResource MainBtnStyle}"
+                Content="Inventory/ Slots" 
+                ToolTip="Execute an inventory slots info scan on the library. This does not return until the inventory is finished." />
+            </StackPanel>
+        </GroupBox> 
+        </StackPanel> 
+        <WrapPanel Grid.Column="1" Grid.Row="0" >
+            <GroupBox Header="Visibility" Margin="10" >
+                <WrapPanel Orientation="Horizontal" ToolTip="klick for visibility" >
+                    <!-- Dynamische Checkboxen -->
+                    <ItemsControl ItemsSource="{Binding Main.DeviceToggles}">
+                      <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                          <WrapPanel Orientation="Horizontal"/>
+                        </ItemsPanelTemplate>
+                      </ItemsControl.ItemsPanel>
+    
+                      <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                          <CheckBox Content="{Binding Label}"
+                                    IsChecked="{Binding IsChecked, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                    Style="{DynamicResource MainCheckBoxStyle}"
+                                    Margin="2"/>
+                        </DataTemplate>
+                      </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+    
+                    <!-- Select All -->
+                    <CheckBox x:Name="CB_SelectAllSTOCB"
+                              Content="Select All"
+                              IsChecked="{Binding Main.SelectAll, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                              Margin="30,2,2,2"
+                              Style="{DynamicResource MainCheckBoxStyle}"
+                              HorizontalAlignment="Right"/>
+                </WrapPanel>
+            </GroupBox>
+            <GroupBox x:Name="GB_TapeSearch" Header="Filter / Search" Margin="10">
+                <DockPanel>
+                    <Label Content="Search:" Margin="0,0,6,0" VerticalAlignment="Center" Style="{DynamicResource MainLabelStyle}"/>
+                    <TextBox x:Name="TB_GlobalGridSearch"
+                        Width="300"
+                        Tag="Global Search"
+                        ToolTip="Sucht über alle geladenen DataGrids und alle Row-Properties"
+                        Style="{DynamicResource TBAZWaterMarkStyle}"/>
+                    <ToggleButton x:Name="BTN_GlobalGridSearch"
+                        Style="{DynamicResource MainBtnStyle}"
+                        Content="Search"
+                        Width="80"
+                        Margin="6,0,0,0"/>
+                    <ToggleButton x:Name="BTN_GlobalGridSearchClear"
+                        Style="{DynamicResource MainBtnStyle}"
+                        Content="X"
+                        Width="30"
+                        Margin="6,0,0,0"/>
+                </DockPanel>
+            </GroupBox>
+        </WrapPanel>
+        <!-- TapeLibraryBase -->
+          <ItemsControl Grid.Column="1" Grid.Row="1"
+                        ItemsSource="{Binding Main.DeviceToggles}"
+                        Style="{DynamicResource ShowWhenTapeLibraryShow}">
+              <ItemsControl.ItemsPanel>
+                  <ItemsPanelTemplate>
+                      <WrapPanel />
+                  </ItemsPanelTemplate>
+              </ItemsControl.ItemsPanel>
+              <ItemsControl.ItemTemplate>
+                  <DataTemplate>
+                      <!-- Ebene 2: echte ManagedSystem-Daten (HmcRows) -->
+                      <ItemsControl ItemsSource="{Binding LibraryBaseRows}"
+                                    Visibility="{Binding IsChecked,
+                                                         Converter={StaticResource BooleanToVisibilityConverter},
+                                                         FallbackValue=Collapsed}">
+                          <ItemsControl.ItemsPanel>
+                              <ItemsPanelTemplate>
+                                  <WrapPanel/>
+                              </ItemsPanelTemplate>
+                          </ItemsControl.ItemsPanel>
+                          <!-- ausblenden wenn keine Items -->
+                          <ItemsControl.Style>
+                              <Style TargetType="ItemsControl">
+                                  <Style.Triggers>
+                                      <Trigger Property="HasItems" Value="False">
+                                          <Setter Property="Visibility" Value="Collapsed"/>
+                                      </Trigger>
+                                  </Style.Triggers>
+                              </Style>
+                          </ItemsControl.Style>
+                          <!-- Button pro ManagedSystem Row -->
+                          <ItemsControl.ItemTemplate>
+                              <DataTemplate>
+                                  <Button Style="{DynamicResource DashBoardBTNStyle}"
+                                          Margin="0,5,5,5"
+                                          MaxWidth="400"
+                                          ToolTipService.InitialShowDelay="10">
+                                      <Grid Margin="5">
+                                          <Grid.RowDefinitions>
+                                              <RowDefinition MaxHeight="150"/>
+                                              <RowDefinition Height="20"/>
+                                          </Grid.RowDefinitions>
+                                          <Grid Grid.Row="0">
+                                              <Grid.RowDefinitions>
+                                                  <RowDefinition />
+                                                  <RowDefinition />
+                                                  <RowDefinition />
+                                                  <RowDefinition />
+                                                  <RowDefinition />
+                                                  <RowDefinition />
+                                                  <RowDefinition />
+                                              </Grid.RowDefinitions>
+                                              <Grid.ColumnDefinitions>
+                                                  <ColumnDefinition MaxWidth="70" />
+                                                  <ColumnDefinition Width="auto" />
+                                                  <ColumnDefinition />
+                                              </Grid.ColumnDefinitions>
+                                              <Ellipse Grid.RowSpan="6" Width="65" Height="65" Fill="WhiteSmoke" Stretch="Uniform" >
+                                                  <Ellipse.Effect>
+                                                      <DropShadowEffect Direction="320" ShadowDepth="2" Color="LightBlue" BlurRadius="5" />
+                                                  </Ellipse.Effect>
+                                              </Ellipse>
+                                              <Ellipse Grid.RowSpan="6" Width="60" Height="60" >
+                                                 <Ellipse.Fill> 
+                                                     <ImageBrush ImageSource = "{Binding DataContext.PowerIcon, RelativeSource={RelativeSource AncestorType=UserControl}}" Stretch="Uniform" />
+                                                 </Ellipse.Fill>
+                                              </Ellipse>
+                                              <TextBlock
+                                                  Grid.Column="1"
+                                                  Style="{DynamicResource DashBoardTB1}"
+                                                  HorizontalAlignment="Left"
+                                                  VerticalAlignment="Center"
+                                                  Text="MTM:" 
+                                                  Margin="3,0"/>
+                                              <TextBlock
+                                                  Grid.Column="2"
+                                                  Style="{DynamicResource DashBoardTB1}"
+                                                  HorizontalAlignment="Left"
+                                                  VerticalAlignment="Center"
+                                                  Text="{Binding MTM}"
+                                                  Margin="0"/>
+                                              <TextBlock
+                                                  Grid.Row="1"
+                                                  Grid.Column="1"
+                                                  Style="{DynamicResource DashBoardTB1}"
+                                                  HorizontalAlignment="Left"
+                                                  VerticalAlignment="Center"
+                                                  Text="SerialNumber:" 
+                                                  Margin="3,0"/>
+                                              <TextBlock
+                                                  Grid.Row="1"
+                                                  Grid.Column="2"
+                                                  Style="{DynamicResource DashBoardTB1}"
+                                                  Margin="0"
+                                                  HorizontalAlignment="Left"
+                                                  VerticalAlignment="Center"
+                                                  Text="{Binding SerialNumber}"/>
+                                              <TextBlock
+                                                  Grid.Row="2"
+                                                  Grid.Column="1"
+                                                  Style="{DynamicResource DashBoardTB1}"
+                                                  HorizontalAlignment="Left"
+                                                  VerticalAlignment="Center"
+                                                  Text="FW:" 
+                                                  Margin="3,0"/>
+                                              <TextBlock
+                                                  Grid.Row="2"
+                                                  Grid.Column="2"
+                                                  Style="{DynamicResource DashBoardTB1}"
+                                                  HorizontalAlignment="Left"
+                                                  VerticalAlignment="Center"
+                                                  Text="{Binding BaseFWRevision}"
+                                                  Margin="0"/>
+                                              <TextBlock
+                                                  Grid.Row="3"
+                                                  Grid.Column="1"
+                                                  Style="{DynamicResource DashBoardTB1}"
+                                                  HorizontalAlignment="Left"
+                                                  VerticalAlignment="Center"
+                                                  Text="LicensedCapacity:" 
+                                                  Margin="3,0"/>
+                                              <TextBlock
+                                                  Grid.Row="3"
+                                                  Grid.Column="2"
+                                                  Style="{DynamicResource DashBoardTB1}"
+                                                  HorizontalAlignment="Left"
+                                                  VerticalAlignment="Center"
+                                                  Text="{Binding LicensedCapacity}"
+                                                  Margin="0"/>
+                                              <TextBlock
+                                                  Grid.Row="4"
+                                                  Grid.Column="1"
+                                                  Style="{DynamicResource DashBoardTB1}"
+                                                  HorizontalAlignment="Left"
+                                                  VerticalAlignment="Center"
+                                                  Text="AssignedCartridges:" 
+                                                  Margin="3,0"/>
+                                              <TextBlock
+                                                  Grid.Row="4"
+                                                  Grid.Column="2"
+                                                  Style="{DynamicResource DashBoardTB1}"
+                                                  HorizontalAlignment="Left"
+                                                  VerticalAlignment="Center"
+                                                  Text="{Binding AssignedCartridges}"
+                                                  Margin="0"/>
+                                              <TextBlock
+                                                  Grid.Row="5"
+                                                  Grid.Column="1"
+                                                  Style="{DynamicResource DashBoardTB1}"
+                                                  HorizontalAlignment="Left"
+                                                  VerticalAlignment="Center"
+                                                  Text="SecCommunications:" 
+                                                  Margin="3,0"/>
+                                              <TextBlock
+                                                  Grid.Row="5"
+                                                  Grid.Column="2"
+                                                  Style="{DynamicResource DashBoardTB1}"
+                                                  HorizontalAlignment="Left"
+                                                  VerticalAlignment="Center"
+                                                  Text="{Binding SecureCommunications}"
+                                                  Margin="0"/>
+                                          </Grid>
+                                          <Grid Grid.Row="1">
+                                              <StackPanel Orientation="Horizontal" Margin="5,0" ToolTip="Last Changes">
+                                                  <Image Source="{Binding DataContext.ClockIcon96, RelativeSource={RelativeSource AncestorType=UserControl}}" MaxHeight="30" />
+                                                  <TextBlock Text="20260215 17:12" Margin="5,2" />
+                                              </StackPanel>
+                                          </Grid>
+                                      </Grid>
+                                  </Button>
+                              </DataTemplate>
+                          </ItemsControl.ItemTemplate>
+                      </ItemsControl>
+                  </DataTemplate>
+              </ItemsControl.ItemTemplate>
+          </ItemsControl>
+        <!-- LibraryEvents -->
+        <ItemsControl Grid.Column="1" Grid.Row="1"
+                      ItemsSource="{Binding Main.DeviceToggles}"
+                      Style="{DynamicResource ShowWhenTapeLibraryEvents}">
+          <ItemsControl.ItemsPanel>
+            <ItemsPanelTemplate>
+              <StackPanel/>
+            </ItemsPanelTemplate>
+          </ItemsControl.ItemsPanel>
+
+          <ItemsControl.ItemTemplate>
+            <DataTemplate>
+              <DataGrid AutoGenerateColumns="False"
+                        ColumnWidth="*"
+                        HorizontalAlignment="Stretch"
+                        Margin="5"
+                        MaxWidth="960"
+                        MaxHeight="460"
+                        ItemsSource="{Binding LibraryEventsRows}"
+                        CanUserAddRows="False"
+                        Visibility="{Binding IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
+
+                <!-- Optional: Header pro Device -->
+                <DataGrid.GroupStyle>
+                  <GroupStyle/>
+                </DataGrid.GroupStyle>
+                <DataGrid.Columns>
+                    <DataGridTextColumn Width="auto" Header="LibID" Binding ="{Binding LibID}" IsReadOnly="True"/>  
+                    <DataGridTextColumn Width="auto" Header="Severity" Binding ="{Binding Severity}" IsReadOnly="True"/>
+                    <DataGridTextColumn Width="auto" Header="Type" Binding ="{Binding Type}" IsReadOnly="True"/>
+                    <DataGridTextColumn Width="auto" Header="Location" Binding ="{Binding Location}" IsReadOnly="True"/>  
+                    <DataGridTextColumn Width="auto" Header="ErrorCode" Binding ="{Binding ErrorCode}" IsReadOnly="True"/>  
+                    <DataGridTextColumn Width="auto" Header="EventTime" Binding ="{Binding EventTime}" IsReadOnly="True"/>
+                    <DataGridTextColumn Width="auto" Header="Description" Binding ="{Binding Description}" IsReadOnly="True"/>
+                </DataGrid.Columns>
+              </DataGrid>
+            </DataTemplate>
+          </ItemsControl.ItemTemplate>
+        </ItemsControl>
+        <!-- LibraryReports -->
+        <ItemsControl Grid.Column="1" Grid.Row="1"
+                      ItemsSource="{Binding Main.DeviceToggles}"
+                      Style="{DynamicResource ShowWhenLibraryReports}">
+          <ItemsControl.ItemsPanel>
+            <ItemsPanelTemplate>
+              <StackPanel/>
+            </ItemsPanelTemplate>
+          </ItemsControl.ItemsPanel>
+
+          <ItemsControl.ItemTemplate>
+            <DataTemplate>
+              <DataGrid AutoGenerateColumns="False"
+                        ColumnWidth="*"
+                        HorizontalAlignment="Stretch"
+                        Margin="5"
+                        MaxWidth="960"
+                        MaxHeight="460"
+                        ItemsSource="{Binding LibraryReportsRows}"
+                        CanUserAddRows="False"
+                        Visibility="{Binding IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
+
+                <!-- Optional: Header pro Device -->
+                <DataGrid.GroupStyle>
+                  <GroupStyle/>
+                </DataGrid.GroupStyle>
+                <DataGrid.Columns>
+                    <DataGridTextColumn Width="auto" Header="Barcode" Binding ="{Binding Barcode}" IsReadOnly="True"/> 
+                    <DataGridTextColumn Width="auto" Header="LogicalLibrary" Binding ="{Binding LogicalLibrary}" IsReadOnly="True"/> 
+                    <DataGridTextColumn Width="auto" Header="Location" Binding ="{Binding Location}" IsReadOnly="True"/> 
+                    <DataGridTextColumn Width="auto" Header="MountTime" Binding ="{Binding MountTime}" IsReadOnly="True"/> 
+                    <DataGridTextColumn Width="auto" Header="UnmountTime" Binding ="{Binding UnmountTime}" IsReadOnly="True"/> 
+                    <DataGridTextColumn Width="auto" Header="HostIOReads" Binding ="{Binding HostIOReads}" IsReadOnly="True"/> 
+                    <DataGridTextColumn Width="auto" Header="HostIOWrites" Binding ="{Binding HostIOWrites}" IsReadOnly="True"/> 
+                    <DataGridTextColumn Width="auto" Header="CompressionRate" Binding ="{Binding CompressionRate}" IsReadOnly="True"/> 
+                    <DataGridTextColumn Width="auto" Header="ErrorsCorrectedWrites" Binding ="{Binding ErrorsCorrectedWrites}" IsReadOnly="True"/> 
+                    <DataGridTextColumn Width="auto" Header="ErrorsUncorrectedWrites" Binding ="{Binding ErrorsUncorrectedWrites}" IsReadOnly="True"/> 
+                    <DataGridTextColumn Width="auto" Header="ErrorsCorrectedReads" Binding ="{Binding ErrorsCorrectedReads}" IsReadOnly="True"/> 
+                    <DataGridTextColumn Width="auto" Header="ErrorsUncorrectedReads" Binding ="{Binding ErrorsUncorrectedReads}" IsReadOnly="True"/> 
+                </DataGrid.Columns>
+              </DataGrid>
+            </DataTemplate>
+          </ItemsControl.ItemTemplate>
+        </ItemsControl>
+        <!-- LibraryMediaInfo -->
+        <ItemsControl Grid.Column="1" Grid.Row="1"
+                      ItemsSource="{Binding Main.DeviceToggles}"
+                      Style="{DynamicResource ShowWhenLibraryMediaInfo}">
+          <ItemsControl.ItemsPanel>
+            <ItemsPanelTemplate>
+              <StackPanel/>
+            </ItemsPanelTemplate>
+          </ItemsControl.ItemsPanel>
+
+          <ItemsControl.ItemTemplate>
+            <DataTemplate>
+              <DataGrid AutoGenerateColumns="False"
+                        ColumnWidth="*"
+                        HorizontalAlignment="Stretch"
+                        Margin="5"
+                        MaxWidth="960"
+                        MaxHeight="460"
+                        ItemsSource="{Binding LibraryMediaRows}"
+                        CanUserAddRows="False"
+                        Visibility="{Binding IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
+
+                <!-- Optional: Header pro Device -->
+                <DataGrid.GroupStyle>
+                  <GroupStyle/>
+                </DataGrid.GroupStyle>
+                <DataGrid.Columns>
+                    <DataGridTextColumn Width="auto" Header="Barcode" Binding ="{Binding Barcode}" IsReadOnly="True"/> 
+                    <DataGridTextColumn Width="auto" Header="LocationType" Binding ="{Binding LocationType}" IsReadOnly="True"/> 
+                    <DataGridTextColumn Width="auto" Header="LogicalNumber" Binding ="{Binding LogicalNumber}" IsReadOnly="True"/> 
+                    <DataGridTextColumn Width="auto" Header="PhysicalNumber" Binding ="{Binding PhysicalNumber}" IsReadOnly="True"/> 
+                    <DataGridTextColumn Width="auto" Header="Cleaning" Binding ="{Binding Cleaning}" IsReadOnly="True"/> 
+                    <DataGridTextColumn Width="auto" Header="LogicalLibrary" Binding ="{Binding LogicalLibrary}" IsReadOnly="True"/> 
+                    <DataGridTextColumn Width="auto" Header="Generation" Binding ="{Binding Generation}" IsReadOnly="True"/> 
+                    <DataGridTextColumn Width="auto" Header="Encryption" Binding ="{Binding Encryption}" IsReadOnly="True"/> 
+                    <DataGridTextColumn Width="auto" Header="NoLoads" Binding ="{Binding NoLoads}" IsReadOnly="True"/> 
+                    <DataGridTextColumn Width="auto" Header="MBRead" Binding ="{Binding MBRead}" IsReadOnly="True"/> 
+                    <DataGridTextColumn Width="auto" Header="MBWritten" Binding ="{Binding MBWritten}" IsReadOnly="True"/> 
+                </DataGrid.Columns>
+              </DataGrid>
+            </DataTemplate>
+          </ItemsControl.ItemTemplate>
+        </ItemsControl>
+        <!-- LibraryDrive -->
+        <ItemsControl Grid.Column="1" Grid.Row="1"
+                      ItemsSource="{Binding Main.DeviceToggles}"
+                      Style="{DynamicResource ShowWhenLibraryDrive}">
+          <ItemsControl.ItemsPanel>
+            <ItemsPanelTemplate>
+              <StackPanel/>
+            </ItemsPanelTemplate>
+          </ItemsControl.ItemsPanel>
+
+          <ItemsControl.ItemTemplate>
+            <DataTemplate>
+              <DataGrid AutoGenerateColumns="False"
+                        ColumnWidth="*"
+                        HorizontalAlignment="Stretch"
+                        Margin="5"
+                        MaxWidth="960"
+                        MaxHeight="460"
+                        ItemsSource="{Binding LibraryDriveRows}"
+                        CanUserAddRows="False"
+                        Visibility="{Binding IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
+
+                <!-- Optional: Header pro Device -->
+                <DataGrid.GroupStyle>
+                  <GroupStyle/>
+                </DataGrid.GroupStyle>
+                <DataGrid.Columns>
+                    <DataGridTextColumn Width="auto" Header="Location" Binding ="{Binding Location}" IsReadOnly="True"/> 
+                    <DataGridTextColumn Width="auto" Header="SerialNumber" Binding ="{Binding SerialNumber}" IsReadOnly="True"/> 
+                    <DataGridTextColumn Width="auto" Header="MFGSerialNumber" Binding ="{Binding MFGSerialNumber}" IsReadOnly="True"/> 
+                    <DataGridTextColumn Width="auto" Header="MediaType" Binding ="{Binding MediaType}" IsReadOnly="True"/> 
+                    <DataGridTextColumn Width="auto" Header="State" Binding ="{Binding State}" IsReadOnly="True"/> 
+                    <DataGridTextColumn Width="auto" Header="LogicalLibrary" Binding ="{Binding LogicalLibrary}" IsReadOnly="True"/> 
+                    <DataGridTextColumn Width="auto" Header="USE" Binding ="{Binding USE}" IsReadOnly="True"/> 
+                    <DataGridTextColumn Width="auto" Header="Firmware" Binding ="{Binding Firmware}" IsReadOnly="True"/> 
+                    <DataGridTextColumn Width="auto" Header="Encryption" Binding ="{Binding Encryption}" IsReadOnly="True"/> 
+                    <DataGridTextColumn Width="auto" Header="Mounts" Binding ="{Binding Mounts}" IsReadOnly="True"/> 
+                    <DataGridTextColumn Width="auto" Header="Barcode" Binding ="{Binding Barcode}" IsReadOnly="True"/> 
+                    <DataGridTextColumn Width="auto" Header="WWNN" Binding ="{Binding WWNN}" IsReadOnly="True"/>
+                </DataGrid.Columns>
+              </DataGrid>
+            </DataTemplate>
+          </ItemsControl.ItemTemplate>
+        </ItemsControl>
+        <!-- IBM_TapeInventory_Slots -->
+        <ItemsControl Grid.Column="1" Grid.Row="1"
+                      ItemsSource="{Binding Main.DeviceToggles}"
+                      Style="{DynamicResource ShowWhenLibraryInventorySlots}">
+          <ItemsControl.ItemsPanel>
+            <ItemsPanelTemplate>
+              <StackPanel/>
+            </ItemsPanelTemplate>
+          </ItemsControl.ItemsPanel>
+
+          <ItemsControl.ItemTemplate>
+            <DataTemplate>
+              <DataGrid AutoGenerateColumns="False"
+                        ColumnWidth="*"
+                        HorizontalAlignment="Stretch"
+                        Margin="5"
+                        MaxWidth="960"
+                        MaxHeight="460"
+                        ItemsSource="{Binding LibraryInventorySlotsRows}"
+                        CanUserAddRows="False"
+                        Visibility="{Binding IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
+
+                <!-- Optional: Header pro Device -->
+                <DataGrid.GroupStyle>
+                  <GroupStyle/>
+                </DataGrid.GroupStyle>
+                <DataGrid.Columns>
+                    <DataGridTextColumn Width="auto" Header="PhysicalNumber" Binding ="{Binding PhysicalNumber}" IsReadOnly="True"/> 
+                    <DataGridTextColumn Width="auto" Header="LogicalNumber" Binding ="{Binding LogicalNumber}" IsReadOnly="True"/> 
+                    <DataGridTextColumn Width="auto" Header="Module" Binding ="{Binding Module}" IsReadOnly="True"/> 
+                    <DataGridTextColumn Width="auto" Header="LogicalLibrary" Binding ="{Binding LogicalLibrary}" IsReadOnly="True"/> 
+                    <DataGridTextColumn Width="auto" Header="Mailslot" Binding ="{Binding Mailslot}" IsReadOnly="True"/> 
+                    <DataGridTextColumn Width="auto" Header="Cartridge" Binding ="{Binding Cartridge}" IsReadOnly="True"/> 
+                    <DataGridTextColumn Width="auto" Header="CartridgeType" Binding ="{Binding CartridgeType}" IsReadOnly="True"/> 
+                    <DataGridTextColumn Width="auto" Header="CartridgeSubType" Binding ="{Binding CartridgeSubType}" IsReadOnly="True"/> 
+                    <DataGridTextColumn Width="auto" Header="CartridgeGeneration" Binding ="{Binding CartridgeGeneration}" IsReadOnly="True"/> 
+                    <DataGridTextColumn Width="auto" Header="Access" Binding ="{Binding Access}" IsReadOnly="True"/> 
+                    <DataGridTextColumn Width="auto" Header="Blocked" Binding ="{Binding Blocked}" IsReadOnly="True"/> 
+                </DataGrid.Columns>
+              </DataGrid>
+            </DataTemplate>
+          </ItemsControl.ItemTemplate>
+        </ItemsControl>
+        <!-- IBM_TapeInventory_Drives -->
+          <ItemsControl Grid.Column="1" Grid.Row="1"
+                        ItemsSource="{Binding Main.DeviceToggles}"
+                        Style="{DynamicResource ShowWhenLibraryInventoryDrives}">
+              <ItemsControl.ItemsPanel>
+                  <ItemsPanelTemplate>
+                      <WrapPanel />
+                  </ItemsPanelTemplate>
+              </ItemsControl.ItemsPanel>
+              <ItemsControl.ItemTemplate>
+                  <DataTemplate>
+                      <!-- Ebene 2: echte ManagedSystem-Daten (HmcRows) -->
+                      <ItemsControl ItemsSource="{Binding LibraryInventoryDrivesRows}"
+                                    Visibility="{Binding IsChecked,
+                                                         Converter={StaticResource BooleanToVisibilityConverter},
+                                                         FallbackValue=Collapsed}">
+                          <ItemsControl.ItemsPanel>
+                              <ItemsPanelTemplate>
+                                  <WrapPanel/>
+                              </ItemsPanelTemplate>
+                          </ItemsControl.ItemsPanel>
+                          <!-- ausblenden wenn keine Items -->
+                          <ItemsControl.Style>
+                              <Style TargetType="ItemsControl">
+                                  <Style.Triggers>
+                                      <Trigger Property="HasItems" Value="False">
+                                          <Setter Property="Visibility" Value="Collapsed"/>
+                                      </Trigger>
+                                  </Style.Triggers>
+                              </Style>
+                          </ItemsControl.Style>
+                          <!-- Button pro ManagedSystem Row -->
+                          <ItemsControl.ItemTemplate>
+                              <DataTemplate>
+                                  <Button Style="{DynamicResource DashBoardBTNStyle}"
+                                          Margin="0,5,5,5"
+                                          MaxWidth="400"
+                                          ToolTipService.InitialShowDelay="10">
+                                      <Grid Margin="5">
+                                          <Grid.RowDefinitions>
+                                              <RowDefinition MaxHeight="150"/>
+                                              <RowDefinition Height="20"/>
+                                          </Grid.RowDefinitions>
+                                          <Grid Grid.Row="0">
+                                              <Grid.RowDefinitions>
+                                                  <RowDefinition />
+                                                  <RowDefinition />
+                                                  <RowDefinition />
+                                                  <RowDefinition />
+                                                  <RowDefinition />
+                                                  <RowDefinition />
+                                                  <RowDefinition />
+                                              </Grid.RowDefinitions>
+                                              <Grid.ColumnDefinitions>
+                                                  <ColumnDefinition MaxWidth="70" />
+                                                  <ColumnDefinition Width="auto" />
+                                                  <ColumnDefinition />
+                                              </Grid.ColumnDefinitions>
+                                              <Ellipse Grid.RowSpan="6" Width="65" Height="65" Fill="WhiteSmoke" Stretch="Uniform" >
+                                                  <Ellipse.Effect>
+                                                      <DropShadowEffect Direction="320" ShadowDepth="2" Color="LightBlue" BlurRadius="5" />
+                                                  </Ellipse.Effect>
+                                              </Ellipse>
+                                              <Ellipse Grid.RowSpan="6" Width="60" Height="60" >
+                                                 <Ellipse.Fill> 
+                                                     <ImageBrush ImageSource = "{Binding DataContext.PowerIcon, RelativeSource={RelativeSource AncestorType=UserControl}}" Stretch="Uniform" />
+                                                 </Ellipse.Fill>
+                                              </Ellipse>
+                                              <TextBlock
+                                                  Grid.Column="1"
+                                                  Style="{DynamicResource DashBoardTB1}"
+                                                  HorizontalAlignment="Left"
+                                                  VerticalAlignment="Center"
+                                                  Text="Product:" 
+                                                  Margin="3,0"/>
+                                              <TextBlock
+                                                  Grid.Column="2"
+                                                  Style="{DynamicResource DashBoardTB1}"
+                                                  HorizontalAlignment="Left"
+                                                  VerticalAlignment="Center"
+                                                  Text="{Binding Product}"
+                                                  Margin="0"/>
+                                              <TextBlock
+                                                  Grid.Row="1"
+                                                  Grid.Column="1"
+                                                  Style="{DynamicResource DashBoardTB1}"
+                                                  HorizontalAlignment="Left"
+                                                  VerticalAlignment="Center"
+                                                  Text="SerialNumber:" 
+                                                  Margin="3,0"/>
+                                              <TextBlock
+                                                  Grid.Row="1"
+                                                  Grid.Column="2"
+                                                  Style="{DynamicResource DashBoardTB1}"
+                                                  Margin="0"
+                                                  HorizontalAlignment="Left"
+                                                  VerticalAlignment="Center"
+                                                  Text="{Binding SerialNumber}"/>
+                                              <TextBlock
+                                                  Grid.Row="2"
+                                                  Grid.Column="1"
+                                                  Style="{DynamicResource DashBoardTB1}"
+                                                  HorizontalAlignment="Left"
+                                                  VerticalAlignment="Center"
+                                                  Text="FW:" 
+                                                  Margin="3,0"/>
+                                              <TextBlock
+                                                  Grid.Row="2"
+                                                  Grid.Column="2"
+                                                  Style="{DynamicResource DashBoardTB1}"
+                                                  HorizontalAlignment="Left"
+                                                  VerticalAlignment="Center"
+                                                  Text="{Binding FWRevision}"
+                                                  Margin="0"/>
+                                              <TextBlock
+                                                  Grid.Row="3"
+                                                  Grid.Column="1"
+                                                  Style="{DynamicResource DashBoardTB1}"
+                                                  HorizontalAlignment="Left"
+                                                  VerticalAlignment="Center"
+                                                  Text="Barcode:" 
+                                                  Margin="3,0"/>
+                                              <TextBlock
+                                                  Grid.Row="3"
+                                                  Grid.Column="2"
+                                                  Style="{DynamicResource DashBoardTB1}"
+                                                  HorizontalAlignment="Left"
+                                                  VerticalAlignment="Center"
+                                                  Text="{Binding Barcode}"
+                                                  Margin="0"/>
+                                          </Grid>
+                                          <Grid Grid.Row="1">
+                                              <StackPanel Orientation="Horizontal" Margin="5,0" ToolTip="Last Changes">
+                                                  <Image Source="{Binding DataContext.ClockIcon96, RelativeSource={RelativeSource AncestorType=UserControl}}" MaxHeight="30" />
+                                                  <TextBlock Text="20260215 17:12" Margin="5,2" />
+                                              </StackPanel>
+                                          </Grid>
+                                      </Grid>
+                                  </Button>
+                              </DataTemplate>
+                          </ItemsControl.ItemTemplate>
+                      </ItemsControl>
+                  </DataTemplate>
+              </ItemsControl.ItemTemplate>
+          </ItemsControl>
+    </Grid>
+    </ScrollViewer>
+</UserControl>
