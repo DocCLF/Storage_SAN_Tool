@@ -1,0 +1,68 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+
+    <!-- Nur sichtbar, wenn Main.SelectedView == TapeLibraryBase -->
+    <Style x:Key="ShowWhenTapeLibraryShow" TargetType="ItemsControl">
+        <Setter Property="Visibility" Value="Collapsed"/>
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding Main.SelectedView}" Value="TapeLibraryShow">
+                <Setter Property="Visibility" Value="Visible"/>
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+    <!-- Nur sichtbar, wenn Main.SelectedView == LibraryEvents -->
+    <Style x:Key="ShowWhenTapeLibraryEvents" TargetType="ItemsControl">
+        <Setter Property="Visibility" Value="Collapsed"/>
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding Main.SelectedView}" Value="TapeLibraryEventsShow">
+                <Setter Property="Visibility" Value="Visible"/>
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+    <!-- Nur sichtbar, wenn Main.SelectedView == LibraryReports -->
+    <Style x:Key="ShowWhenLibraryReports" TargetType="ItemsControl">
+        <Setter Property="Visibility" Value="Collapsed"/>
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding Main.SelectedView}" Value="LibraryReportsShow">
+                <Setter Property="Visibility" Value="Visible"/>
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+    <!-- Nur sichtbar, wenn Main.SelectedView == LibraryMediaInfo -->
+    <Style x:Key="ShowWhenLibraryMediaInfo" TargetType="ItemsControl">
+        <Setter Property="Visibility" Value="Collapsed"/>
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding Main.SelectedView}" Value="LibraryMediaShow">
+                <Setter Property="Visibility" Value="Visible"/>
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+    <!-- Nur sichtbar, wenn Main.SelectedView == LibraryDrive -->
+    <Style x:Key="ShowWhenLibraryDrive" TargetType="ItemsControl">
+        <Setter Property="Visibility" Value="Collapsed"/>
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding Main.SelectedView}" Value="LibraryDriveShow">
+                <Setter Property="Visibility" Value="Visible"/>
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+    <!-- Nur sichtbar, wenn Main.SelectedView == LibraryInventorySlots -->
+    <Style x:Key="ShowWhenLibraryInventorySlots" TargetType="ItemsControl">
+        <Setter Property="Visibility" Value="Collapsed"/>
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding Main.SelectedView}" Value="LibraryInventorySlotsShow">
+                <Setter Property="Visibility" Value="Visible"/>
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+    <!-- Nur sichtbar, wenn Main.SelectedView == LibraryInventoryDrives -->
+    <Style x:Key="ShowWhenLibraryInventoryDrives" TargetType="ItemsControl">
+        <Setter Property="Visibility" Value="Collapsed"/>
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding Main.SelectedView}" Value="LibraryInventoryDrivesShow">
+                <Setter Property="Visibility" Value="Visible"/>
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+</ResourceDictionary>

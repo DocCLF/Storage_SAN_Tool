@@ -1,0 +1,1088 @@
+<UserControl
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+    mc:Ignorable="d" 
+    >
+    <UserControl.Background>
+        <LinearGradientBrush>
+            <GradientStopCollection>
+                <GradientStop Offset="0.1" Color="White" />
+                <GradientStop Offset="0.5" Color="LightGray" />
+                <GradientStop Offset="0.8" Color="White" />
+            </GradientStopCollection>
+        </LinearGradientBrush>
+    </UserControl.Background>
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <!-- ScrollViewer can be enabeld to auto if needed -->
+    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" >
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
+        </Grid.RowDefinitions>
+        <GroupBox Grid.Row="0" Header="Overview" MinWidth="400" Margin="10,10,10,0" HorizontalAlignment="Left" VerticalAlignment="Top">
+            <Grid>
+                <WrapPanel>
+                    <Label MinWidth="150" Margin="5">
+                        <StackPanel Width="150">
+                            <TextBlock Text="Overall Status" FontWeight="Bold" HorizontalAlignment="Left"/>
+                            <TextBlock x:Name="TB_HealthStatus" Text="Health OK" Foreground="Green" FontWeight="Bold" HorizontalAlignment="Center"/>
+                            <Button x:name="BTN_RefreshDashBoard" Height="50" Width="50" HorizontalAlignment="center" Background="Transparent" BorderThickness="0" >
+                                <Image Source = "{Binding RefreshIcon96 , Mode=TwoWay}" Stretch="Uniform" VerticalAlignment="Bottom" HorizontalAlignment="Left" MaxHeight="30" />
+                            </Button>
+                        </StackPanel>
+                    </Label>
+                    <Label MinWidth="150" Margin="0">
+                        <Grid >
+                            <Grid.RowDefinitions>
+                                <RowDefinition />
+                                <RowDefinition />
+                                <RowDefinition />
+                                <RowDefinition />
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="auto"/>
+                                <ColumnDefinition />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Row="0" Text="Storage Devices:" FontWeight="Bold" HorizontalAlignment="Left" Padding="5"/>
+                            <TextBlock x:Name="TB_STODEVCount" Grid.Row="0" Grid.Column="1" Text="0" Foreground="Green" FontWeight="Bold" Padding="5"/>
+                            <TextBlock Grid.Row="1" Text="Events:" FontWeight="Bold" HorizontalAlignment="Left" Padding="5"/>
+                            <TextBlock x:Name="TB_STOEventsCount" Grid.Row="1" Grid.Column="1" Text="0" Foreground="Green" FontWeight="Bold" Padding="5"/>
+                            <TextBlock Grid.Row="2" Text="SAN Devices:" FontWeight="Bold" HorizontalAlignment="Left" Padding="5"/>
+                            <TextBlock x:Name="TB_SANDEVCount" Grid.Row="2" Grid.Column="1" Text="0" Foreground="Green" FontWeight="Bold" Padding="5"/>
+                            <TextBlock Grid.Row="3" Text="Events:" FontWeight="Bold" HorizontalAlignment="Left" Padding="5"/>
+                            <TextBlock Grid.Row="3" Grid.Column="1" Text="0" Foreground="Green" FontWeight="Bold" Padding="5"/>
+                        </Grid>
+                    </Label>
+                    <Label MinWidth="150" Margin="0">
+                        <Grid >
+                            <Grid.RowDefinitions>
+                                <RowDefinition />
+                                <RowDefinition />
+                                <RowDefinition />
+                                <RowDefinition />
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="auto"/>
+                                <ColumnDefinition />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Row="0" Text="Host Devices:" FontWeight="Bold" HorizontalAlignment="Left" Padding="5"/>
+                            <TextBlock x:Name="TB_ALLHostCount" Grid.Row="0" Grid.Column="1" Text="0" Foreground="Green" FontWeight="Bold" Padding="5"/>
+                            <TextBlock Grid.Row="1" Text="Events:" FontWeight="Bold" HorizontalAlignment="Left" Padding="5"/>
+                            <TextBlock Grid.Row="1" Grid.Column="1" Text="0" Foreground="Green" FontWeight="Bold" Padding="5"/>
+                            <TextBlock Grid.Row="2" Text="Online Hosts:" FontWeight="Bold" HorizontalAlignment="Left" Padding="5"/>
+                            <TextBlock x:Name="TB_OnlinelHostCount" Grid.Row="2" Grid.Column="1" Text="0" Foreground="Green" FontWeight="Bold" Padding="5"/>
+                            <TextBlock Grid.Row="3" Text="Offline Hosts:" FontWeight="Bold" HorizontalAlignment="Left" Padding="5"/>
+                            <TextBlock x:Name="TB_OfflHostCount" Grid.Row="3" Grid.Column="1" Text="0" Foreground="red" FontWeight="Bold" Padding="5"/>
+                        </Grid>                        
+                    </Label>
+                    <Label MinWidth="150" Margin="0">
+                        <Grid>
+                            <StackPanel Orientation="Vertical" Margin="5">
+                                <ScrollViewer MaxHeight="120"
+                                              VerticalScrollBarVisibility="Auto"
+                                              HorizontalScrollBarVisibility="Disabled">
+                                    <ItemsControl x:Name="IC_STOHostStatusChanges">
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate>
+                                                <TextBlock Text="{Binding}"
+                                                           HorizontalAlignment="Left"
+                                                           Margin="2"
+                                                           TextWrapping="Wrap" />
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                </ScrollViewer>
+                            </StackPanel>
+                        </Grid>
+                    </Label>
+                    <Label MinWidth="150" Margin="0">
+                        <Grid>
+                            <StackPanel Orientation="Vertical" Margin="5">
+                                <ScrollViewer MaxHeight="120"
+                                              VerticalScrollBarVisibility="Auto"
+                                              HorizontalScrollBarVisibility="Disabled">
+                                    <ItemsControl x:Name="IC_SANPortStatusChanges">
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate>
+                                                <TextBlock Text="{Binding}"
+                                                           HorizontalAlignment="Left"
+                                                           Margin="2"
+                                                           TextWrapping="Wrap" />
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                </ScrollViewer>
+                            </StackPanel>
+                        </Grid>
+                    </Label>
+                </WrapPanel>
+            </Grid>
+        </GroupBox>
+        <StackPanel Grid.Row="1" Margin="10,10,0,5" Orientation="Horizontal">
+            <CheckBox x:Name="CB_DashBoardSTO" Content="View Storages" IsChecked="True" Margin="2" FontSize="10" Style="{DynamicResource MainCheckBoxStyle}"/>
+            <CheckBox x:Name="CB_DashBoardSAN" Content="View SAN-Switches" IsChecked="False" Margin="10,2,0,2" FontSize="10" Style="{DynamicResource MainCheckBoxStyle}"/>
+            <CheckBox x:Name="CB_DashBoardPWR" Content="View PowerServer" IsChecked="False" Margin="10,2,0,2"  FontSize="10" Style="{DynamicResource MainCheckBoxStyle}"/>
+            <CheckBox x:Name="CB_DashBoardTape" Content="View TapeLibrary" IsChecked="False" Margin="10,2,0,2"  FontSize="10" Style="{DynamicResource MainCheckBoxStyle}"/>
+        </StackPanel>
+        <GroupBox Grid.Row="2" Header="Storage Info" MinWidth="400" MaxHeight="340" HorizontalAlignment="Left" Margin="10,10,0,0"  VerticalAlignment="Top" Visibility="{Binding ElementName=CB_DashBoardSTO, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
+            <ScrollViewer Margin="5" VerticalScrollBarVisibility="Auto">
+                <ItemsControl x:Name="IC_DashBoardSTODevice">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Button Style="{DynamicResource DashBoardBTNStyle}" Margin="0,5,5,5" MaxWidth="500" IsEnabled="True" ToolTipService.InitialShowDelay="10">
+                                <Grid Margin="5">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition MaxHeight="150"/>
+                                        <RowDefinition Height="20"/>
+                                    </Grid.RowDefinitions>
+                                    <Grid Grid.Row="0">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition />
+                                            <RowDefinition />
+                                            <RowDefinition />
+                                            <RowDefinition />
+                                            <RowDefinition />
+                                            <RowDefinition />
+                                            <RowDefinition />
+                                        </Grid.RowDefinitions>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition MaxWidth="90" />
+                                            <ColumnDefinition Width="auto"/>
+                                            <ColumnDefinition />
+                                        </Grid.ColumnDefinitions>
+                                        <Ellipse Grid.RowSpan="6" Width="65" Height="65" Fill="WhiteSmoke" Stretch="Uniform" Margin="5,0,10,0">
+                                            <Ellipse.Effect>
+                                                <DropShadowEffect Direction="320" ShadowDepth="2" Color="LightBlue" BlurRadius="5" />
+                                            </Ellipse.Effect>
+                                        </Ellipse>
+                                        <Ellipse Grid.RowSpan="6" Width="60" Height="60" Margin="5,0,10,0">
+                                           <Ellipse.Fill>
+                                               <ImageBrush ImageSource = "{Binding DataContext.STOIcon, RelativeSource={RelativeSource AncestorType=UserControl}}" Stretch="Uniform" />
+                                           </Ellipse.Fill>
+                                        </Ellipse>
+                                        <TextBlock
+                                            Grid.Column="1"
+                                            Style="{DynamicResource DashBoardTB1}"
+                                            HorizontalAlignment="Left"
+                                            VerticalAlignment="Center"
+                                            Text="ClusterName:" 
+                                            Margin="3,0"/>
+                                        <TextBlock
+                                            Grid.Column="2"
+                                            Style="{DynamicResource DashBoardTB1}"
+                                            HorizontalAlignment="Left"
+                                            VerticalAlignment="Center"
+                                            Text="{Binding ClusterName}"
+                                            Margin="0"/>
+                                        <TextBlock
+                                            Grid.Row="1"
+                                            Grid.Column="1"
+                                            Style="{DynamicResource DashBoardTB1}"
+                                            HorizontalAlignment="Left"
+                                            VerticalAlignment="Center"
+                                            Text="Status:" 
+                                            Margin="3,0"/>
+                                        <TextBlock
+                                            Grid.Row="1"
+                                            Grid.Column="2"
+                                            Style="{DynamicResource DashBoardTB1}"
+                                            HorizontalAlignment="Left"
+                                            VerticalAlignment="Center"
+                                            Text="{Binding Status}"
+                                            Margin="0"/>
+                                        <TextBlock
+                                            Grid.Row="2"
+                                            Grid.Column="1"
+                                            Style="{DynamicResource DashBoardTB1}"
+                                            HorizontalAlignment="Left"
+                                            VerticalAlignment="Center"
+                                            Text="MTM:" 
+                                            Margin="3,0"/>
+                                        <TextBlock
+                                            Grid.Row="2"
+                                            Grid.Column="2"
+                                            Style="{DynamicResource DashBoardTB1}"
+                                            HorizontalAlignment="Left"
+                                            VerticalAlignment="Center"
+                                            Text="{Binding ProdMTM}"
+                                            Margin="0"/>
+                                        <TextBlock
+                                            Grid.Row="3"
+                                            Grid.Column="1"
+                                            Style="{DynamicResource DashBoardTB1}"
+                                            HorizontalAlignment="Left"
+                                            VerticalAlignment="Center"
+                                            Text="SN:" 
+                                            Margin="3,0"/>
+                                        <TextBlock
+                                            Grid.Row="3"
+                                            Grid.Column="2"
+                                            Style="{DynamicResource DashBoardTB1}"
+                                            HorizontalAlignment="Left"
+                                            VerticalAlignment="Center"
+                                            Text="{Binding SerialNumber}"
+                                            Margin="0"/>
+                                        <TextBlock
+                                            Grid.Row="4"
+                                            Grid.Column="1"
+                                            Style="{DynamicResource DashBoardTB1}"
+                                            HorizontalAlignment="Left"
+                                            VerticalAlignment="Center"
+                                            Text="FW:" 
+                                            Margin="3,0"/>
+                                        <TextBlock
+                                            Grid.Row="4"
+                                            Grid.Column="2"
+                                            Style="{DynamicResource DashBoardTB1}"
+                                            HorizontalAlignment="Left"
+                                            VerticalAlignment="Center"
+                                            Text="{Binding CodeLevel}"
+                                            Margin="0"/>
+                                        <TextBlock
+                                            Grid.Row="5"
+                                            Grid.Column="1"
+                                            Style="{DynamicResource DashBoardTB1}"
+                                            HorizontalAlignment="Left"
+                                            VerticalAlignment="Center"
+                                            Text="Events:" 
+                                            Margin="3,0"/>
+                                        <TextBlock
+                                            Grid.Row="5"
+                                            Grid.Column="2"
+                                            Style="{DynamicResource DashBoardTB1}"
+                                            HorizontalAlignment="Left"
+                                            VerticalAlignment="Center"
+                                            Text="{Binding Events}"
+                                            Margin="0">
+                                                <TextBlock.Style>
+                                                    <Style TargetType="TextBlock">
+                                                    <Setter Property= "FontSize" Value="14"/>
+                                                    <Setter Property= "FontWeight" Value="Bold"/>
+                                                    <Setter Property= "Foreground" Value="Orange"/>
+                                                        <Style.Triggers>
+                                                            <Trigger Property ="Text" Value="0">
+                                                                <Setter Property= "Foreground" Value="Green"/>
+                                                            </Trigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </TextBlock.Style>
+                                                </TextBlock>
+                                        <StackPanel Grid.Row="6" Grid.ColumnSpan="3" Margin="5,0">
+                                            <Grid Margin="0,0,0,2">
+                                                <TextBlock Text="0" />
+                                                <TextBlock Text="{Binding MDiskTC}" HorizontalAlignment="Right"/>
+                                            </Grid>
+                                            <ProgressBar Height="5" BorderBrush="WhiteSmoke" Foreground="Teal" Maximum="{Binding MDiskTCfPGB}" Value="{Binding MDiskUC}">
+                                                <ProgressBar.Resources>
+                                                    <Style TargetType="{x:Type Border}">
+                                                        <Setter Property="CornerRadius" Value="2" />
+                                                    </Style>
+                                                </ProgressBar.Resources>
+                                            </ProgressBar>
+                                        </StackPanel>
+                                    </Grid>
+                                    <Grid Grid.Row="1">
+                                        <StackPanel Orientation="Horizontal" Margin="5,0" ToolTip="Last Changes">
+                                            <Image Source = "{Binding DataContext.ClockIcon96, RelativeSource={RelativeSource AncestorType=UserControl}}" Stretch="Uniform" VerticalAlignment="Bottom" HorizontalAlignment="Left" MaxHeight="30" />
+                                            <TextBlock Text="{Binding TimeStamp}" HorizontalAlignment="Right" Margin="5,2" />
+                                        </StackPanel>
+                                    </Grid>
+                                </Grid>
+                                <Button.ToolTip>
+                                    <ToolTip>
+                                        <StackPanel>
+                                            <TextBlock Text="{Binding MDiskTCfPGB, StringFormat=MDiskTotalCap: {0:D}TB}"/>
+                                            <TextBlock Text="{Binding MDiskUC, StringFormat=MDiskUsedCap: {0:D}TB}"/>
+
+                                            <StackPanel>
+                                                <StackPanel.Style>
+                                                    <Style TargetType="StackPanel">
+                                                        <Setter Property="Visibility" Value="Visible"/>
+                                                        <Style.Triggers>
+                                                            <DataTrigger Binding="{Binding EventDescriptionsText, TargetNullValue=''}" Value="">
+                                                                <Setter Property="Visibility" Value="Collapsed"/>
+                                                            </DataTrigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </StackPanel.Style>
+                                                <Separator Margin="0,4,0,4"/>
+                                                <TextBlock Text="Events:" Foreground="Orange"/>
+                                                <TextBlock Text="{Binding EventDescriptionsText}" TextWrapping="Wrap" MaxWidth="350"/>
+                                            </StackPanel>
+                                        </StackPanel>
+                                    </ToolTip>
+                                </Button.ToolTip>
+                            </Button>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapPanel />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                </ItemsControl>
+            </ScrollViewer>
+        </GroupBox>
+        <GroupBox Grid.Row="3" Header="Power Info" MinWidth="820" HorizontalAlignment="Left" Margin="10,10,0,0"  VerticalAlignment="Top" Visibility="{Binding ElementName=CB_DashBoardPWR, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
+            <ScrollViewer Margin="5" VerticalScrollBarVisibility="Auto">
+                <ItemsControl x:Name="IC_IBMPowerSysObjView">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Button Style="{DynamicResource DashBoardBTNStyle}" Margin="0,5,5,5" MaxWidth="500" IsEnabled="True" ToolTipService.InitialShowDelay="10">
+                                <Grid Margin="5">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition MaxHeight="150"/>
+                                        <RowDefinition Height="20"/>
+                                    </Grid.RowDefinitions>
+                                    <Grid Grid.Row="0">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition />
+                                            <RowDefinition />
+                                            <RowDefinition />
+                                            <RowDefinition />
+                                            <RowDefinition />
+                                            <RowDefinition />
+                                            <RowDefinition />
+                                        </Grid.RowDefinitions>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition MaxWidth="90" />
+                                            <ColumnDefinition Width="auto" />
+                                            <ColumnDefinition />
+                                        </Grid.ColumnDefinitions>
+                                        <Ellipse Grid.RowSpan="6" Width="65" Height="65" Fill="WhiteSmoke" Stretch="Uniform" Margin="5,0,10,0" >
+                                            <Ellipse.Effect>
+                                                <DropShadowEffect Direction="320" ShadowDepth="2" Color="LightBlue" BlurRadius="5" />
+                                            </Ellipse.Effect>
+                                        </Ellipse>
+                                        <Ellipse Grid.RowSpan="6" Width="60" Height="60" Margin="5,0,10,0">
+                                           <Ellipse.Fill>
+                                               <ImageBrush ImageSource = "{Binding DataContext.PowerIcon, RelativeSource={RelativeSource AncestorType=UserControl}}" Stretch="Uniform" />
+                                           </Ellipse.Fill>
+                                        </Ellipse>
+                                        <TextBlock
+                                            Grid.Column="1"
+                                            Style="{DynamicResource DashBoardTB1}"
+                                            HorizontalAlignment="Left"
+                                            VerticalAlignment="Center"
+                                            Text="Name:" 
+                                            Margin="3,0"/>
+                                        <TextBlock
+                                            Grid.Column="2"
+                                            Style="{DynamicResource DashBoardTB1}"
+                                            HorizontalAlignment="Left"
+                                            VerticalAlignment="Center"
+                                            Text="{Binding PWRSYSName}"
+                                            Margin="0"/>
+                                        <TextBlock
+                                            Grid.Row="1"
+                                            Grid.Column="1"
+                                            Style="{DynamicResource DashBoardTB1}"
+                                            HorizontalAlignment="Left"
+                                            VerticalAlignment="Center"
+                                            Text="Status:" 
+                                            Margin="3,0"/>
+                                        <TextBlock
+                                            Grid.Row="1"
+                                            Grid.Column="2"
+                                            Margin="1"
+                                            HorizontalAlignment="Left"
+                                            VerticalAlignment="Center"
+                                            FontWeight="Bold"
+                                            FontSize="14"
+                                            Text="{Binding PWRSYSStatus}">
+                                            <TextBlock.Style>
+                                                <Style TargetType="TextBlock">
+                                                    <Style.Triggers>
+                                                        <Trigger Property ="Text" Value="Power Off">
+                                                            <Setter Property= "Foreground" Value="Red"/>
+                                                        </Trigger>
+                                                        <Trigger Property ="Text" Value="operating">
+                                                            <Setter Property= "Foreground" Value="Green"/>
+                                                        </Trigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </TextBlock.Style>
+                                        </TextBlock>
+                                        <TextBlock
+                                            Grid.Row="2"
+                                            Grid.Column="1"
+                                            Style="{DynamicResource DashBoardTB1}"
+                                            HorizontalAlignment="Left"
+                                            VerticalAlignment="Center"
+                                            Text="MTM:" 
+                                            Margin="3,0"/>
+                                        <TextBlock
+                                            Grid.Row="2"
+                                            Grid.Column="2"
+                                            Style="{DynamicResource DashBoardTB1}"
+                                            HorizontalAlignment="Left"
+                                            VerticalAlignment="Center"
+                                            Text="{Binding PWRSYSProdMTM}"
+                                            Margin="0"/>
+                                        <TextBlock
+                                            Grid.Row="3"
+                                            Grid.Column="1"
+                                            Style="{DynamicResource DashBoardTB1}"
+                                            HorizontalAlignment="Left"
+                                            VerticalAlignment="Center"
+                                            Text="SN:" 
+                                            Margin="3,0"/>
+                                        <TextBlock
+                                            Grid.Row="3"
+                                            Grid.Column="2"
+                                            Style="{DynamicResource DashBoardTB1}"
+                                            HorizontalAlignment="Left"
+                                            VerticalAlignment="Center"
+                                            Text="{Binding PWRSYSSerialNumber}"
+                                            Margin="0"/>
+                                        <TextBlock
+                                            Grid.Row="4"
+                                            Grid.Column="1"
+                                            Style="{DynamicResource DashBoardTB1}"
+                                            HorizontalAlignment="Left"
+                                            VerticalAlignment="Center"
+                                            Text="EC Version:" 
+                                            Margin="3,0"/>
+                                        <TextBlock
+                                            Grid.Row="4"
+                                            Grid.Column="2"
+                                            Style="{DynamicResource DashBoardTB1}"
+                                            HorizontalAlignment="Left"
+                                            VerticalAlignment="Center"
+                                            Text="{Binding PWRSYSECNumber}"
+                                            Margin="0"/>
+                                        <TextBlock
+                                            Grid.Row="5"
+                                            Grid.Column="1"
+                                            Style="{DynamicResource DashBoardTB1}"
+                                            HorizontalAlignment="Left"
+                                            VerticalAlignment="Center"
+                                            Text="IPL Activated:" 
+                                            Margin="3,0"/>
+                                        <TextBlock
+                                            Grid.Row="5"
+                                            Grid.Column="2"
+                                            Style="{DynamicResource DashBoardTB1}"
+                                            HorizontalAlignment="Left"
+                                            VerticalAlignment="Center"
+                                            Text="{Binding PWRSYSIPLActiLev}"
+                                            Margin="0"/>
+                                    </Grid>
+                                    <Grid Grid.Row="1">
+                                        <StackPanel Orientation="Horizontal" Margin="5,0" ToolTip="Last Changes">
+                                            <Image Source = "{Binding DataContext.ClockIcon96, RelativeSource={RelativeSource AncestorType=UserControl}}" Stretch="Uniform" VerticalAlignment="Bottom" HorizontalAlignment="Left" MaxHeight="30" />
+                                            <TextBlock Text="{Binding TimeStamp}" HorizontalAlignment="Right" Margin="5,2" />
+                                        </StackPanel>
+                                    </Grid>
+                                </Grid>
+                            </Button>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapPanel />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                </ItemsControl>
+            </ScrollViewer>
+        </GroupBox>
+        <GroupBox Grid.Row="4" Header="SAN Info" MinWidth="400" MaxHeight="340" HorizontalAlignment="Left" Margin="10,10,0,0"  VerticalAlignment="Top" Visibility="{Binding ElementName=CB_DashBoardSAN, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
+            <ScrollViewer Margin="5" VerticalScrollBarVisibility="Auto">
+                <ItemsControl x:Name="IC_DashBoardSANDevice">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Button Style="{DynamicResource DashBoardBTNStyle}" Margin="0,5,5,5" MaxWidth="500" IsEnabled="True" ToolTipService.InitialShowDelay="10">
+                                <Grid Margin="5">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition MaxHeight="150"/>
+                                        <RowDefinition Height="20"/>
+                                    </Grid.RowDefinitions>
+                                    <Grid Grid.Row="0">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition />
+                                            <RowDefinition />
+                                            <RowDefinition />
+                                            <RowDefinition />
+                                            <RowDefinition />
+                                            <RowDefinition />
+                                            <RowDefinition />
+                                        </Grid.RowDefinitions>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition MaxWidth="90" />
+                                            <ColumnDefinition Width="auto"/>
+                                            <ColumnDefinition />
+                                        </Grid.ColumnDefinitions>
+                                        <Ellipse Grid.RowSpan="6" Width="65" Height="65" Fill="WhiteSmoke" Stretch="Uniform" Margin="5,0,10,0">
+                                            <Ellipse.Effect>
+                                                <DropShadowEffect Direction="320" ShadowDepth="2" Color="LightBlue" BlurRadius="5" />
+                                            </Ellipse.Effect>
+                                        </Ellipse>
+                                        <Ellipse Grid.RowSpan="6" Width="60" Height="60" Margin="5,0,10,0">
+                                           <Ellipse.Fill>
+                                               <ImageBrush ImageSource = "{Binding DataContext.BrocadeIcon, RelativeSource={RelativeSource AncestorType=UserControl}}" Stretch="Uniform" />
+                                           </Ellipse.Fill>
+                                        </Ellipse>
+                                        <TextBlock
+                                            Grid.Column="1"
+                                            Style="{DynamicResource DashBoardTB1}"
+                                            HorizontalAlignment="Left"
+                                            VerticalAlignment="Center"
+                                            Text="Name:" 
+                                            Margin="3,0"/>
+                                        <TextBlock
+                                            Grid.Column="2"
+                                            Style="{DynamicResource DashBoardTB1}"
+                                            HorizontalAlignment="Left"
+                                            VerticalAlignment="Center"
+                                            Text="{Binding Name}"
+                                            Margin="0"/>
+                                        <TextBlock
+                                            Grid.Row="1"
+                                            Grid.Column="1"
+                                            Style="{DynamicResource DashBoardTB1}"
+                                            HorizontalAlignment="Left"
+                                            VerticalAlignment="Center"
+                                            Text="Status:" 
+                                            Margin="3,0"/>
+                                        <TextBlock
+                                            Grid.Row="1"
+                                            Grid.Column="2"
+                                            Style="{DynamicResource DashBoardTB1}"
+                                            HorizontalAlignment="Left"
+                                            VerticalAlignment="Center"
+                                            Text="{Binding Status}"
+                                            Margin="0"/>
+                                        <TextBlock
+                                            Grid.Row="2"
+                                            Grid.Column="1"
+                                            Style="{DynamicResource DashBoardTB1}"
+                                            HorizontalAlignment="Left"
+                                            VerticalAlignment="Center"
+                                            Text="ProdName:" 
+                                            Margin="3,0"/>
+                                        <TextBlock
+                                            Grid.Row="2"
+                                            Grid.Column="2"
+                                            Style="{DynamicResource DashBoardTB1}"
+                                            HorizontalAlignment="Left"
+                                            VerticalAlignment="Center"
+                                            Text="{Binding BrocadeProdName}"
+                                            Margin="0"/>
+                                        <TextBlock
+                                            Grid.Row="3"
+                                            Grid.Column="1"
+                                            Style="{DynamicResource DashBoardTB1}"
+                                            HorizontalAlignment="Left"
+                                            VerticalAlignment="Center"
+                                            Text="MTM:" 
+                                            Margin="3,0"/>
+                                        <TextBlock
+                                            Grid.Row="3"
+                                            Grid.Column="2"
+                                            Style="{DynamicResource DashBoardTB1}"
+                                            HorizontalAlignment="Left"
+                                            VerticalAlignment="Center"
+                                            Text="{Binding MTM}"
+                                            Margin="0"/>
+                                        <TextBlock
+                                            Grid.Row="4"
+                                            Grid.Column="1"
+                                            Style="{DynamicResource DashBoardTB1}"
+                                            HorizontalAlignment="Left"
+                                            VerticalAlignment="Center"
+                                            Text="SN:" 
+                                            Margin="3,0"/>
+                                        <TextBlock
+                                            Grid.Row="4"
+                                            Grid.Column="2"
+                                            Style="{DynamicResource DashBoardTB1}"
+                                            HorizontalAlignment="Left"
+                                            VerticalAlignment="Center"
+                                            Text="{Binding SerialNumber}"
+                                            Margin="0"/>
+                                        <TextBlock
+                                            Grid.Row="5"
+                                            Grid.Column="1"
+                                            Style="{DynamicResource DashBoardTB1}"
+                                            HorizontalAlignment="Left"
+                                            VerticalAlignment="Center"
+                                            Text="FW:" 
+                                            Margin="3,0"/>
+                                        <TextBlock
+                                            Grid.Row="5"
+                                            Grid.Column="2"
+                                            Style="{DynamicResource DashBoardTB1}"
+                                            HorizontalAlignment="Left"
+                                            VerticalAlignment="Center"
+                                            Text="{Binding CodeLevel}"
+                                            Margin="0"/>
+                                    </Grid>
+                                    <Grid Grid.Row="1">
+                                        <StackPanel Orientation="Horizontal" Margin="5,0" ToolTip="Last Changes">
+                                            <Image Source = "{Binding DataContext.ClockIcon96, RelativeSource={RelativeSource AncestorType=UserControl}}" Stretch="Uniform" VerticalAlignment="Bottom" HorizontalAlignment="Left" MaxHeight="30" />
+                                            <TextBlock Text="{Binding TimeStamp}" HorizontalAlignment="Right" Margin="5,2" />
+                                        </StackPanel>
+                                    </Grid>
+                                </Grid>
+                            </Button>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapPanel />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                </ItemsControl>
+            </ScrollViewer>
+        </GroupBox>
+        <GroupBox Grid.Row="5" Header="Tape Info" MinWidth="400" MaxHeight="340" HorizontalAlignment="Left" Margin="10,10,0,0"  VerticalAlignment="Top" Visibility="{Binding ElementName=CB_DashBoardTape, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
+            <ScrollViewer Margin="5" VerticalScrollBarVisibility="Auto">
+                <ItemsControl x:Name="IC_DashBoardTapeDevice">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Button Style="{DynamicResource DashBoardBTNStyle}" Margin="0,5,5,5" MaxWidth="500" IsEnabled="True" ToolTipService.InitialShowDelay="10">
+                                <Grid Margin="5">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition MaxHeight="150"/>
+                                        <RowDefinition Height="20"/>
+                                    </Grid.RowDefinitions>
+                                    <Grid Grid.Row="0">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition />
+                                            <RowDefinition />
+                                            <RowDefinition />
+                                            <RowDefinition />
+                                            <RowDefinition />
+                                            <RowDefinition />
+                                            <RowDefinition />
+                                        </Grid.RowDefinitions>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition MaxWidth="90" />
+                                            <ColumnDefinition Width="auto"/>
+                                            <ColumnDefinition />
+                                        </Grid.ColumnDefinitions>
+                                        <Ellipse Grid.RowSpan="6" Width="65" Height="65" Fill="WhiteSmoke" Stretch="Uniform" Margin="5,0,10,0">
+                                            <Ellipse.Effect>
+                                                <DropShadowEffect Direction="320" ShadowDepth="2" Color="LightBlue" BlurRadius="5" />
+                                            </Ellipse.Effect>
+                                        </Ellipse>
+                                        <Ellipse Grid.RowSpan="6" Width="60" Height="60" Margin="5,0,10,0">
+                                           <Ellipse.Fill>
+                                               <ImageBrush ImageSource = "{Binding DataContext.IBMArchive, RelativeSource={RelativeSource AncestorType=UserControl}}" Stretch="Uniform" />
+                                           </Ellipse.Fill>
+                                        </Ellipse>
+                                        <TextBlock
+                                            Grid.Column="1"
+                                            Style="{DynamicResource DashBoardTB1}"
+                                            HorizontalAlignment="Left"
+                                            VerticalAlignment="Center"
+                                            Text="MTM:" 
+                                            Margin="3,0"/>
+                                        <TextBlock
+                                            Grid.Column="2"
+                                            Style="{DynamicResource DashBoardTB1}"
+                                            HorizontalAlignment="Left"
+                                            VerticalAlignment="Center"
+                                            Text="{Binding MTM}"
+                                            Margin="0"/>
+                                        <TextBlock
+                                            Grid.Row="1"
+                                            Grid.Column="1"
+                                            Style="{DynamicResource DashBoardTB1}"
+                                            HorizontalAlignment="Left"
+                                            VerticalAlignment="Center"
+                                            Text="SerialNumber:" 
+                                            Margin="3,0"/>
+                                        <TextBlock
+                                            Grid.Row="1"
+                                            Grid.Column="2"
+                                            Style="{DynamicResource DashBoardTB1}"
+                                            Margin="0"
+                                            HorizontalAlignment="Left"
+                                            VerticalAlignment="Center"
+                                            Text="{Binding SerialNumber}"/>
+                                        <TextBlock
+                                            Grid.Row="2"
+                                            Grid.Column="1"
+                                            Style="{DynamicResource DashBoardTB1}"
+                                            HorizontalAlignment="Left"
+                                            VerticalAlignment="Center"
+                                            Text="FW:" 
+                                            Margin="3,0"/>
+                                        <TextBlock
+                                            Grid.Row="2"
+                                            Grid.Column="2"
+                                            Style="{DynamicResource DashBoardTB1}"
+                                            HorizontalAlignment="Left"
+                                            VerticalAlignment="Center"
+                                            Text="{Binding BaseFWRevision}"
+                                            Margin="0"/>
+                                        <TextBlock
+                                            Grid.Row="3"
+                                            Grid.Column="1"
+                                            Style="{DynamicResource DashBoardTB1}"
+                                            HorizontalAlignment="Left"
+                                            VerticalAlignment="Center"
+                                            Text="LicensedCapacity:" 
+                                            Margin="3,0"/>
+                                        <TextBlock
+                                            Grid.Row="3"
+                                            Grid.Column="2"
+                                            Style="{DynamicResource DashBoardTB1}"
+                                            HorizontalAlignment="Left"
+                                            VerticalAlignment="Center"
+                                            Text="{Binding LicensedCapacity}"
+                                            Margin="0"/>
+                                        <TextBlock
+                                            Grid.Row="4"
+                                            Grid.Column="1"
+                                            Style="{DynamicResource DashBoardTB1}"
+                                            HorizontalAlignment="Left"
+                                            VerticalAlignment="Center"
+                                            Text="AssignedCartridges:" 
+                                            Margin="3,0"/>
+                                        <TextBlock
+                                            Grid.Row="4"
+                                            Grid.Column="2"
+                                            Style="{DynamicResource DashBoardTB1}"
+                                            HorizontalAlignment="Left"
+                                            VerticalAlignment="Center"
+                                            Text="{Binding AssignedCartridges}"
+                                            Margin="0"/>
+                                        <TextBlock
+                                            Grid.Row="5"
+                                            Grid.Column="1"
+                                            Style="{DynamicResource DashBoardTB1}"
+                                            HorizontalAlignment="Left"
+                                            VerticalAlignment="Center"
+                                            Text="SecCommunications:" 
+                                            Margin="3,0"/>
+                                        <TextBlock
+                                            Grid.Row="5"
+                                            Grid.Column="2"
+                                            Style="{DynamicResource DashBoardTB1}"
+                                            HorizontalAlignment="Left"
+                                            VerticalAlignment="Center"
+                                            Text="{Binding SecureCommunications}"
+                                            Margin="0"/>
+                                    </Grid>
+                                    <Grid Grid.Row="1">
+                                        <StackPanel Orientation="Horizontal" Margin="5,0" ToolTip="Last Changes">
+                                            <Image Source = "{Binding DataContext.ClockIcon96, RelativeSource={RelativeSource AncestorType=UserControl}}" Stretch="Uniform" VerticalAlignment="Bottom" HorizontalAlignment="Left" MaxHeight="30" />
+                                            <TextBlock Text="{Binding TimeStamp}" HorizontalAlignment="Right" Margin="5,2" />
+                                        </StackPanel>
+                                    </Grid>
+                                </Grid>
+                            </Button>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapPanel />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                </ItemsControl>
+            </ScrollViewer>
+        </GroupBox>
+        <StackPanel Grid.Row="6" Margin="10,10,0,5" Orientation="Horizontal">
+            <CheckBox x:Name="CB_DashBoardOnlineHosts" Content="View Online Hosts" Margin="2" FontSize="10" Style="{DynamicResource MainCheckBoxStyle}"/>
+            <CheckBox x:Name="CB_DashBoardOfflineHosts" Content="View Offline Hosts" Margin="10,2,0,2" FontSize="10" Style="{DynamicResource MainCheckBoxStyle}"/>
+        </StackPanel>
+        <GroupBox Grid.Row="7" Header="Online Hosts, Storage View" MinWidth="400" MaxHeight="280" HorizontalAlignment="Left" Margin="10,5,0,0"  VerticalAlignment="Top" Visibility="{Binding ElementName=CB_DashBoardOnlineHosts, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
+                <ScrollViewer Margin="5" VerticalScrollBarVisibility="Auto">
+                    <ItemsControl x:Name="IC_DashBoardOnlineHosts">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Button Style="{DynamicResource DashBoardBTNStyle}" Margin="0,5,5,5" Width="350" IsEnabled="True">
+                                    <Grid Margin="5">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition MaxHeight="100"/>
+                                            <RowDefinition Height="20"/>
+                                        </Grid.RowDefinitions>
+                                        <Grid Grid.Row="0">
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition />
+                                                <RowDefinition />
+                                                <RowDefinition />
+                                                <RowDefinition />
+                                                <RowDefinition />
+                                            </Grid.RowDefinitions>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition MaxWidth="90" />
+                                                <ColumnDefinition />
+                                                <ColumnDefinition />
+                                            </Grid.ColumnDefinitions>
+                                            <Ellipse Grid.RowSpan="4" Width="45" Height="45" Fill="WhiteSmoke" Stretch="Uniform" Margin="5,0,10,0">
+                                                <Ellipse.Effect>
+                                                    <DropShadowEffect Direction="320" ShadowDepth="2" Color="LightBlue" BlurRadius="5" />
+                                                </Ellipse.Effect>
+                                            </Ellipse>
+                                            <Ellipse Grid.RowSpan="4" Width="40" Height="40" Margin="5,0,10,0">
+                                               <Ellipse.Fill>
+                                                   <ImageBrush ImageSource = "{Binding HostIcon , Mode=TwoWay}" Stretch="Uniform" />
+                                               </Ellipse.Fill>
+                                            </Ellipse>
+                                            <TextBlock
+                                                Grid.Column="1"
+                                                Style="{DynamicResource DashBoardTB2}"
+                                                HorizontalAlignment="Left"
+                                                VerticalAlignment="Center"
+                                                Text="HostName:" 
+                                                Margin="8,0,5,0"/>
+                                            <TextBlock
+                                                Grid.Column="2"
+                                                Style="{DynamicResource DashBoardTB2}"
+                                                HorizontalAlignment="Left"
+                                                VerticalAlignment="Center"
+                                                Text="{Binding Name}"/>
+                                            <TextBlock
+                                                Grid.Row="1"
+                                                Grid.Column="1"
+                                                Style="{DynamicResource DashBoardTB2}"
+                                                HorizontalAlignment="Left"
+                                                VerticalAlignment="Center"
+                                                Text="HostClusterName:" 
+                                                Margin="8,0,5,0"/>
+                                            <TextBlock
+                                                Grid.Row="1"
+                                                Grid.Column="2"
+                                                Style="{DynamicResource DashBoardTB2}"
+                                                HorizontalAlignment="Left"
+                                                VerticalAlignment="Center"
+                                                Text="{Binding HostClusterName}"/>
+                                            <TextBlock
+                                                Grid.Row="2"
+                                                Grid.Column="1"
+                                                Style="{DynamicResource DashBoardTB2}"
+                                                HorizontalAlignment="Left"
+                                                VerticalAlignment="Center"
+                                                Text="Status:" 
+                                                Margin="8,0,5,0"/>
+                                            <TextBlock
+                                                Grid.Row="2"
+                                                Grid.Column="2"
+                                                Margin="1"
+                                                HorizontalAlignment="Left"
+                                                VerticalAlignment="Center"
+                                                FontWeight="Bold"
+                                                FontSize="12"
+                                                Text="{Binding Status}">
+                                                <TextBlock.Style>
+                                                    <Style TargetType="TextBlock">
+                                                        <Style.Triggers>
+                                                            <Trigger Property ="Text" Value="online">
+                                                                <Setter Property= "Foreground" Value="Green"/>
+                                                            </Trigger>
+                                                            <Trigger Property ="Text" Value="degraded">
+                                                                <Setter Property= "Foreground" Value="Orange"/>
+                                                            </Trigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </TextBlock.Style>
+                                                </TextBlock>
+                                            <TextBlock
+                                                Grid.Row="3"
+                                                Grid.Column="1"
+                                                Style="{DynamicResource DashBoardTB2}"
+                                                HorizontalAlignment="Left"
+                                                VerticalAlignment="Center"
+                                                Text="StorageName:" 
+                                                Margin="8,0,0,0"/>
+                                            <TextBlock
+                                                Grid.Row="3"
+                                                Grid.Column="2"
+                                                Style="{DynamicResource DashBoardTB2}"
+                                                HorizontalAlignment="Left"
+                                                VerticalAlignment="Center"
+                                                Text="{Binding STOName}"/>
+                                            <TextBlock
+                                                Grid.Row="4"
+                                                Grid.Column="1"
+                                                Style="{DynamicResource DashBoardTB2}"
+                                                HorizontalAlignment="Left"
+                                                VerticalAlignment="Center"
+                                                Text="SideName:" 
+                                                Margin="8,0,0,0"/>
+                                            <TextBlock
+                                                Grid.Row="4"
+                                                Grid.Column="2"
+                                                Style="{DynamicResource DashBoardTB2}"
+                                                HorizontalAlignment="Left"
+                                                VerticalAlignment="Center"
+                                                Text="{Binding SideName}"/>
+                                        </Grid>
+                                        <Grid Grid.Row="1">
+                                            <StackPanel Orientation="Horizontal" Margin="5,0" ToolTip="Last Changes">
+                                                <Image Source = "{Binding ClockIcon96 , Mode=TwoWay}" Stretch="Uniform" VerticalAlignment="Bottom" HorizontalAlignment="Left" MaxHeight="30" />
+                                                <TextBlock Text="{Binding TimeStamp}" HorizontalAlignment="Right" Margin="5,2" />
+                                            </StackPanel>
+                                        </Grid>
+                                    </Grid>
+                                </Button>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <WrapPanel />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                    </ItemsControl>
+                </ScrollViewer>
+        </GroupBox>
+        <GroupBox Grid.Row="8" Header="Offline Hosts, Storage View" MinWidth="400" MaxHeight="280" HorizontalAlignment="Left" Margin="10,5,0,0"  VerticalAlignment="Top" Visibility="{Binding ElementName=CB_DashBoardOfflineHosts, Path=IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
+                <ScrollViewer Margin="5" VerticalScrollBarVisibility="Auto">
+                    <ItemsControl x:Name="IC_DashBoardOfflineHosts">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Button Style="{DynamicResource DashBoardBTNStyle}" Margin="0,5,5,5" Width="350" IsEnabled="True">
+                                    <Grid Margin="5">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition MaxHeight="100"/>
+                                            <RowDefinition Height="20"/>
+                                        </Grid.RowDefinitions>
+                                        <Grid Grid.Row="0">
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition />
+                                                <RowDefinition />
+                                                <RowDefinition />
+                                                <RowDefinition />
+                                                <RowDefinition />
+                                            </Grid.RowDefinitions>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition MaxWidth="90" />
+                                                <ColumnDefinition />
+                                                <ColumnDefinition />
+                                            </Grid.ColumnDefinitions>
+                                            <Ellipse Grid.RowSpan="4" Width="45" Height="45" Fill="WhiteSmoke" Stretch="Uniform" Margin="5,0,10,0">
+                                                <Ellipse.Effect>
+                                                    <DropShadowEffect Direction="320" ShadowDepth="2" Color="LightBlue" BlurRadius="5" />
+                                                </Ellipse.Effect>
+                                            </Ellipse>
+                                            <Ellipse Grid.RowSpan="4" Width="40" Height="40" Margin="5,0,10,0">
+                                               <Ellipse.Fill>
+                                                   <ImageBrush ImageSource = "{Binding HostIcon , Mode=TwoWay}" Stretch="Uniform" />
+                                               </Ellipse.Fill>
+                                            </Ellipse>
+                                            <TextBlock
+                                                Grid.Column="1"
+                                                Style="{DynamicResource DashBoardTB2}"
+                                                HorizontalAlignment="Left"
+                                                VerticalAlignment="Center"
+                                                Text="HostName:" 
+                                                Margin="8,0,5,0"/>
+                                            <TextBlock
+                                                Grid.Column="2"
+                                                Style="{DynamicResource DashBoardTB2}"
+                                                HorizontalAlignment="Left"
+                                                VerticalAlignment="Center"
+                                                Text="{Binding Name}"/>
+                                            <TextBlock
+                                                Grid.Row="1"
+                                                Grid.Column="1"
+                                                Style="{DynamicResource DashBoardTB2}"
+                                                HorizontalAlignment="Left"
+                                                VerticalAlignment="Center"
+                                                Text="HostClusterName:" 
+                                                Margin="8,0,5,0"/>
+                                            <TextBlock
+                                                Grid.Row="1"
+                                                Grid.Column="2"
+                                                Style="{DynamicResource DashBoardTB2}"
+                                                HorizontalAlignment="Left"
+                                                VerticalAlignment="Center"
+                                                Text="{Binding HostClusterName}"/>
+                                            <TextBlock
+                                                Grid.Row="2"
+                                                Grid.Column="1"
+                                                Style="{DynamicResource DashBoardTB2}"
+                                                HorizontalAlignment="Left"
+                                                VerticalAlignment="Center"
+                                                Text="Status:" 
+                                                Margin="8,0,5,0"/>
+                                            <TextBlock
+                                                Grid.Row="2"
+                                                Grid.Column="2"
+                                                Margin="1"
+                                                HorizontalAlignment="Left"
+                                                VerticalAlignment="Center"
+                                                FontWeight="Bold"
+                                                FontSize="12"
+                                                Text="{Binding Status}">
+                                                <TextBlock.Style>
+                                                    <Style TargetType="TextBlock">
+                                                        <Style.Triggers>
+                                                            <Trigger Property ="Text" Value="offline">
+                                                                <Setter Property= "Foreground" Value="Red"/>
+                                                            </Trigger>
+                                                            <Trigger Property ="Text" Value="degraded">
+                                                                <Setter Property= "Foreground" Value="Orange"/>
+                                                            </Trigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </TextBlock.Style>
+                                                </TextBlock>
+                                            <TextBlock
+                                                Grid.Row="3"
+                                                Grid.Column="1"
+                                                Style="{DynamicResource DashBoardTB2}"
+                                                HorizontalAlignment="Left"
+                                                VerticalAlignment="Center"
+                                                Text="StorageName:" 
+                                                Margin="8,0,0,0"/>
+                                            <TextBlock
+                                                Grid.Row="3"
+                                                Grid.Column="2"
+                                                Style="{DynamicResource DashBoardTB2}"
+                                                HorizontalAlignment="Left"
+                                                VerticalAlignment="Center"
+                                                Text="{Binding STOName}"/>
+                                            <TextBlock
+                                                Grid.Row="4"
+                                                Grid.Column="1"
+                                                Style="{DynamicResource DashBoardTB2}"
+                                                HorizontalAlignment="Left"
+                                                VerticalAlignment="Center"
+                                                Text="SideName:" 
+                                                Margin="8,0,0,0"/>
+                                            <TextBlock
+                                                Grid.Row="4"
+                                                Grid.Column="2"
+                                                Style="{DynamicResource DashBoardTB2}"
+                                                HorizontalAlignment="Left"
+                                                VerticalAlignment="Center"
+                                                Text="{Binding SideName}"/>
+                                        </Grid>
+                                        <Grid Grid.Row="1">
+                                            <StackPanel Orientation="Horizontal" Margin="5,0" ToolTip="Last Changes">
+                                                <Image Source = "{Binding ClockIcon96 , Mode=TwoWay}" Stretch="Uniform" VerticalAlignment="Bottom" HorizontalAlignment="Left" MaxHeight="30" />
+                                                <TextBlock Text="{Binding TimeStamp}" HorizontalAlignment="Right" Margin="5,2" />
+                                            </StackPanel>
+                                        </Grid>
+                                    </Grid>
+                                </Button>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <WrapPanel />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                    </ItemsControl>
+                </ScrollViewer>
+        </GroupBox>
+    </Grid>
+    </ScrollViewer>
+</UserControl>

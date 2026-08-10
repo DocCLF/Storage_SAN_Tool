@@ -12,10 +12,10 @@
     RootModule = 'Storage_SAN_Tool.psm1'
     
     # Version number of this module.
-    ModuleVersion = '1.3.0'
+    ModuleVersion = '1.4.0'
     
     # Supported PSEditions
-    CompatiblePSEditions = @('Desktop')
+    CompatiblePSEditions = @('Desktop','Core')
     
     # ID used to uniquely identify this module
     GUID = 'df28ca15-8568-48f4-8eb4-29d96fd44bad'

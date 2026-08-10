@@ -11,48 +11,86 @@ function SST_JobMode {
     process {
         $SecData | ForEach-Object {
             <# Storage Area #>
-            if($_.DeviceTyp -eq "Storage"){
+            if($_.DeviceTyp -like "*Storage*"){
+                $Device = $_
                 <#Basis Storage Infos#>
-                $BaseStorageInfos = IBM_BaseStorageInfos -TD_Device_ConnectionTyp "plink" -TD_Device_DeviceIP $_.IPAddress -TD_Device_UserName $_.UserName -TD_Device_PW $([Net.NetworkCredential]::new('', $_.Password).Password) -TD_Storage $_.SVCorVF
                 try {
-                    SST_LiteDBControl -SST_InfoType "StorageBase" -SST_CollectedInformations $BaseStorageInfos
+                    Invoke-DeviceDataFetch -Device $Device -ExportPath $ExportPath -RESTFunc IBM_RESTBaseStorageInfos -SSHFunc IBM_SSHBaseStorageInfos  | Out-Null
                 }
                 catch {
                     <#Do this if a terminating exception happens#>
                     Write-Host $_.exception.message
-                    SST_ToolMessageCollector -TD_ToolMSGCollector "LiteDB - $($_.exception.message)" -TD_ToolMSGType Error -TD_Shown no
+                    SST_ToolMessageCollector -TD_ToolMSGCollector "CockPit JobMode Basis Storage - $($_.exception.message)" -TD_ToolMSGType Error -TD_Shown no
                 }
                 <#Storage Drive Infos#>
-                [array]$TD_DriveInfo = IBM_DriveInfo -TD_Line_ID $TD_DevCounter -TD_Device_ConnectionTyp $_.ConnectionTyp -TD_Device_UserName $_.UserName -TD_Device_DeviceName $_.DeviceName -TD_Device_DeviceIP $_.IPAddress -TD_Device_PW $([Net.NetworkCredential]::new('', $_.Password).Password) -TD_Device_SSHKeyPath $_.SSHKeyPath -TD_Storage $_.SVCorVF -TD_Exportpath $TD_tb_ExportPath.Text
                 try {
-                    SST_LiteDBControl -SST_InfoType "StorageDrive" -SST_CollectedInformations $TD_DriveInfo
+                    Invoke-DeviceDataFetch -Device $Device -ExportPath $ExportPath -RESTFunc IBM_RESTDriveInfo -SSHFunc IBM_SSHDriveInfo  | Out-Null
                 }
                 catch {
                     <#Do this if a terminating exception happens#>
                     Write-Host $_.exception.message
-                    SST_ToolMessageCollector -TD_ToolMSGCollector "LiteDB - $_.exception.message" -TD_ToolMSGType Error -TD_Shown no
+                    SST_ToolMessageCollector -TD_ToolMSGCollector "CockPit JobMode Storage Drive - $_.exception.message" -TD_ToolMSGType Error -TD_Shown no
                 }
                 <#Storage Host Infos#>
-                [array]$TD_Collected_HostInfoResult = IBM_HostInfo -TD_Line_ID $_.ID -TD_Device_ConnectionTyp $_.ConnectionTyp -TD_Device_UserName $_.UserName -TD_Device_DeviceIP $_.IPAddress -TD_Device_DeviceName $_.DeviceName -TD_Device_PW $([Net.NetworkCredential]::new('', $_.Password).Password) -TD_Storage $_.SVCorV -TD_Exportpath $TD_tb_ExportPath.Text
                 try {
-                    SST_LiteDBControl -SST_InfoType "StorageHostInfo" -SST_CollectedInformations $TD_Collected_HostInfoResult
+                    Invoke-DeviceDataFetch -Device $Device -ExportPath $ExportPath -RESTFunc IBM_RESTHostInfo -SSHFunc IBM_SSHHostInfo | Out-Null
                 }
                 catch {
                     <#Do this if a terminating exception happens#>
                     Write-Host $_.exception.message
-                    SST_ToolMessageCollector -TD_ToolMSGCollector "LiteDB - $($_.exception.message)" -TD_ToolMSGType Error -TD_Shown no
+                    SST_ToolMessageCollector -TD_ToolMSGCollector "CockPit JobMode Storage Host - $($_.exception.message)" -TD_ToolMSGType Error -TD_Shown no
+                }
+                <#Storage EventLog Infos#>
+                try {
+                    Invoke-DeviceDataFetch -Device $Device -ExportPath $ExportPath -RESTFunc IBM_RESTEventLog -SSHFunc IBM_SSHEventLog | Out-Null
+                }
+                catch {
+                    <#Do this if a terminating exception happens#>
+                    Write-Host $_.exception.message
+                    SST_ToolMessageCollector -TD_ToolMSGCollector "CockPit JobMode Storage Event Log - $($_.exception.message)" -TD_ToolMSGType Error -TD_Shown no
                 }
             }
             <# SAN Area #>
-            if($_.DeviceTyp -eq "SAN"){
-                $FOS_BasicSwitch = FOS_BasicSwitchInfos -TD_Line_ID $_.ID -TD_Device_ConnectionTyp $_.ConnectionTyp -TD_Device_UserName $_.UserName -TD_Device_DeviceName $_.DeviceName -TD_Device_DeviceIP $_.IPAddress -TD_Device_PW $([Net.NetworkCredential]::new('', $_.Password).Password) -TD_Device_SSHKeyPath $_.SSHKeyPath -TD_Exportpath $TD_tb_ExportPath.Text
+            if($_.DeviceTyp -like "*SAN*"){
+                $Device = $_
                 try {
-                    SST_LiteDBControl -SST_InfoType "SANBase" -SST_CollectedInformations $FOS_BasicSwitch
+                    Invoke-DeviceDataFetch -Device $Device -ExportPath $ExportPath -RESTFunc Get-BrocadeBaseInfo -SSHFunc FOS_SSHBasicSwitchInfos | Out-Null
                 }
                 catch {
                     <#Do this if a terminating exception happens#>
-                    SST_ToolMessageCollector -TD_ToolMSGCollector "LiteDB SANBase - $($_.exception.message)" -TD_ToolMSGType Error -TD_Shown no
+                    SST_ToolMessageCollector -TD_ToolMSGCollector "CockPit JobMode SAN Base - $($_.exception.message)" -TD_ToolMSGType Error -TD_Shown no
                 }
+            }
+            if($_.DeviceTyp -like "*Tape*"){
+                $Device = $_
+                try {
+                    $LibBaseInfo = Invoke_IBMTapeLibraryApi -Device $Device -Endpoint 'library/baseinfo'
+                    Start-Sleep -Seconds 1
+                    $LibInfo = Invoke_IBMTapeLibraryApi -Device $Device -Endpoint 'library'
+                    Start-Sleep -Seconds 1
+                    $MergeLibObj = Merge-PSCustomObject -InputObject @($($LibBaseInfo.BaseInfo), $LibInfo)
+                    SST_CustomerLibraryDBInsertTable -SST_InfoType "LibraryBaseInfo" -SST_CollectedInformations $MergeLibObj
+                }
+                catch {
+                    <#Do this if a terminating exception happens#>
+                    SST_ToolMessageCollector -TD_ToolMSGCollector "CockPit JobMode Tape Base - $($_.exception.message)" -TD_ToolMSGType Error -TD_Shown no
+                }
+
+            }
+            if($_.DeviceTyp -like "*Power*"){
+                $Device = $_
+                try {
+                    New-DeviceBlock -Device $Device -ExportPath $TD_TB_ExportPath.Text -RESTFunc HMC_RESTHMCConsole | Out-Null
+                    Start-Sleep -Seconds 1
+                    New-DeviceBlock -Device $Device -ExportPath $TD_TB_ExportPath.Text -RESTFunc HMC_RESTHMCManagedSystems | Out-Null
+                    Start-Sleep -Seconds 1
+                    New-DeviceBlock -Device $Device -ExportPath $TD_TB_ExportPath.Text -RESTFunc HMC_RESTHMCLogicalPartitions | Out-Null
+                }
+                catch {
+                    <#Do this if a terminating exception happens#>
+                    SST_ToolMessageCollector -TD_ToolMSGCollector "CockPit JobMode Power - $($_.exception.message)" -TD_ToolMSGType Error -TD_Shown no
+                }
+
             }
         }
     }
