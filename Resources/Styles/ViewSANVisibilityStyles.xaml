@@ -32,7 +32,7 @@
     </Style>
 
     <!-- Nur sichtbar, wenn Main.SelectedView == SANPortErrorShow -->
-    <Style x:Key="ShowWhenSANPortErrorShow" TargetType="ItemsControl">
+    <Style x:Key="ShowWhenSANPortErrorShow" TargetType="Grid">
         <Setter Property="Visibility" Value="Collapsed"/>
         <Style.Triggers>
             <DataTrigger Binding="{Binding Main.SelectedView}" Value="SANPortErrorShow">
@@ -42,7 +42,7 @@
     </Style>
 
     <!-- Nur sichtbar, wenn Main.SelectedView == SANSFPDetailsShow -->
-    <Style x:Key="ShowWhenSANSFPDetailsShow" TargetType="ItemsControl">
+    <Style x:Key="ShowWhenSANSFPDetailsShow" TargetType="Grid">
         <Setter Property="Visibility" Value="Collapsed"/>
         <Style.Triggers>
             <DataTrigger Binding="{Binding Main.SelectedView}" Value="SANSFPDetails">

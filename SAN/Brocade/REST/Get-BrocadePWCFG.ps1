@@ -2,7 +2,8 @@ function Get-BrocadePWCFG {
     [CmdletBinding()]
     param(
         [Parameter(Mandatory)]
-        $Device
+        $Device,
+        $TD_Exportpath = $null
     )
 
     $PB = New-ProgressBar
@@ -95,8 +96,9 @@ Please enter a user with sufficient permissions.
         }
 
         Write-ProgressBar -ProgressBar $PB -Activity 'Security information collected' -PercentComplete 100
-        Out-File -FilePath "$($TD_TB_ExportPath.Text)\PasswordPolicy_$($SwitchName)_$(Get-Date -Format "yyyy-MM-dd").csv" -InputObject $SwitchPasswordPolicyInfo
-        
+        if(-not [string]::IsNullOrWhiteSpace($TD_Exportpath)){
+            Out-File -FilePath "$($TD_Exportpath)\PasswordPolicy_$($SwitchName)_$(Get-Date -Format "yyyy-MM-dd").csv" -InputObject $SwitchPasswordPolicyInfo
+        }
     }
     finally {
         Close-ProgressBar -ProgressBar $PB

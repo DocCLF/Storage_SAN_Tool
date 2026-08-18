@@ -3,7 +3,8 @@ function Get-BrocadePortBufferStats {
     param(
         [Parameter(Mandatory)]
         $Device,
-        $RowCounter = 0
+        $RowCounter = 0,
+        $TD_Exportpath = $null
     )
     $PB = New-ProgressBar
     $FCPorts = Get-BrocadeFcPorts -Device $Device
@@ -53,7 +54,9 @@ function Get-BrocadePortBufferStats {
     }
     Write-ProgressBar -ProgressBar $PB -Activity "Create Obj completed" -PercentComplete 80
     try {
-        $FOS_PortBufferInfo | Export-Csv -Path "$($TD_TB_ExportPath.Text)\PortBufferShow_$($ChassisInfo.'vendor-serial-number')_$(Get-Date -Format "yyyy-MM-dd").csv" -NoTypeInformation -Append
+        if(-not [string]::IsNullOrWhiteSpace($TD_Exportpath)){
+            $FOS_PortBufferInfo | Export-Csv -Path "$($TD_Exportpath)\PortBufferShow_$($ChassisInfo.'vendor-serial-number')_$(Get-Date -Format "yyyy-MM-dd").csv" -NoTypeInformation -Append
+        }
     }
     catch {
         SST_ToolMessageCollector -TD_ToolMSGCollector "PortBufferShow: $($_.Exception.Message)" -TD_ToolMSGType "Warning" -TD_Shown "no"

@@ -362,125 +362,164 @@
           </ItemsControl.ItemTemplate>
         </ItemsControl>
         <!-- FOS_PortErrorShow -->
-        <ItemsControl Grid.Column="1" Grid.Row="1"
-                      ItemsSource="{Binding Main.DeviceToggles}"
-                      Style="{DynamicResource ShowWhenSANPortErrorShow}">
-          <ItemsControl.ItemsPanel>
-            <ItemsPanelTemplate>
-              <StackPanel/>
-            </ItemsPanelTemplate>
-          </ItemsControl.ItemsPanel>
+        <Grid Grid.Column="1" Grid.Row="1" Style="{DynamicResource ShowWhenSANPortErrorShow}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+ 
+            <!-- Toolbar für die FC-Port-Stats-Ansicht -->
+            <StackPanel Grid.Row="0"
+                        Orientation="Horizontal"
+                        HorizontalAlignment="left"
+                        Margin="5,5,5,0">
 
-          <ItemsControl.ItemTemplate>
-            <DataTemplate>
-              <DataGrid AutoGenerateColumns="False"
-                        ColumnWidth="*"
-                        HorizontalAlignment="Stretch"
-                        Margin="5"
-                        MaxWidth="960"
-                        MaxHeight="460"
-                        ItemsSource="{Binding SANPortErrorShowRows}"
-                        CanUserAddRows="False"
-                        Visibility="{Binding IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
-
-                <!-- Optional: Header pro Device -->
-                <DataGrid.GroupStyle>
-                  <GroupStyle/>
-                </DataGrid.GroupStyle>
-                <DataGrid.RowStyle>
-                    <Style TargetType="DataGridRow">
-                        <Style.Triggers>
-                            <DataTrigger Binding="{Binding IsVirtualFabricPort}" Value="True">
-                                <Setter Property="Background" Value="LightBlue"/>
-                            </DataTrigger>
-                        </Style.Triggers>
-                    </Style>
-                </DataGrid.RowStyle>
-                <DataGrid.Columns>
-                    <DataGridTextColumn Width="auto" Header="VFID" Binding ="{Binding VFIDDisplay}" IsReadOnly="True"/>
-                    <DataGridTextColumn Width="auto" Header="Port" Binding ="{Binding Port}" IsReadOnly="True"/> 
-                    <DataGridTextColumn Width="auto" Header="EncIn" Binding ="{Binding EncIn}" IsReadOnly="True">
-                        <DataGridTextColumn.CellStyle>
-                            <Style TargetType="DataGridCell">
-                                <Setter Property="ToolTip" Value="Number of encoding errors inside frames received (Rx)" />
-                            </Style>
-                        </DataGridTextColumn.CellStyle>
-                    </DataGridTextColumn>
-                    <DataGridTextColumn Width="auto" Header="CrcErr" Binding ="{Binding CrcErr}" IsReadOnly="True">
-                        <DataGridTextColumn.CellStyle>
-                            <Style TargetType="DataGridCell">
-                                <Setter Property="ToolTip" Value="Number of frames with CRC errors received (Rx)." />
-                            </Style>
-                        </DataGridTextColumn.CellStyle>
-                    </DataGridTextColumn>
-                    <DataGridTextColumn Width="auto" Header="TooShort" Binding ="{Binding TooShort}" IsReadOnly="True">
-                        <DataGridTextColumn.CellStyle>
-                            <Style TargetType="DataGridCell">
-                                <Setter Property="ToolTip" Value="Number of frames shorter than minimum received (Rx)." />
-                            </Style>
-                        </DataGridTextColumn.CellStyle>
-                    </DataGridTextColumn>
-                    <DataGridTextColumn Width="auto" Header="TooLong" Binding ="{Binding TooLong}" IsReadOnly="True">
-                        <DataGridTextColumn.CellStyle>
-                            <Style TargetType="DataGridCell">
-                                <Setter Property="ToolTip" Value="Number of frames longer than maximum received (Rx)." />
-                            </Style>
-                        </DataGridTextColumn.CellStyle>
-                    </DataGridTextColumn>
-                    <DataGridTextColumn Width="auto" Header="BadEOF" Binding ="{Binding BadEOF}" IsReadOnly="True">
-                        <DataGridTextColumn.CellStyle>
-                            <Style TargetType="DataGridCell">
-                                <Setter Property="ToolTip" Value="Number of frames with bad end-of-frame delimiters received (Rx)." />
-                            </Style>
-                        </DataGridTextColumn.CellStyle>
-                    </DataGridTextColumn>
-                    <DataGridTextColumn Width="auto" Header="EncOut" Binding ="{Binding EncOut}" IsReadOnly="True">
-                        <DataGridTextColumn.CellStyle>
-                            <Style TargetType="DataGridCell">
-                                <Setter Property="ToolTip" Value="Number of encoding error outside of frames received (Rx)." />
-                            </Style>
-                        </DataGridTextColumn.CellStyle>
-                    </DataGridTextColumn>
-                    <DataGridTextColumn Width="auto" Header="DiscC3" Binding ="{Binding DiscC3}" IsReadOnly="True">
-                        <DataGridTextColumn.CellStyle>
-                            <Style TargetType="DataGridCell">
-                                <Setter Property="ToolTip" Value="Number of Class 3 frames discarded (Rx)." />
-                            </Style>
-                        </DataGridTextColumn.CellStyle>
-                    </DataGridTextColumn>
-                    <DataGridTextColumn Width="auto" Header="LinkFail" Binding ="{Binding LinkFail}" IsReadOnly="True">
-                        <DataGridTextColumn.CellStyle>
-                            <Style TargetType="DataGridCell">
-                                <Setter Property="ToolTip" Value="Number of link failures (LF1 or LF2 states) received (Rx)." />
-                            </Style>
-                        </DataGridTextColumn.CellStyle>
-                    </DataGridTextColumn>
-                    <DataGridTextColumn Width="auto" Header="LossSync" Binding ="{Binding LossSync}" IsReadOnly="True">
-                        <DataGridTextColumn.CellStyle>
-                            <Style TargetType="DataGridCell">
-                                <Setter Property="ToolTip" Value="Number of times synchronization was lost (Rx)." />
-                            </Style>
-                        </DataGridTextColumn.CellStyle>
-                    </DataGridTextColumn>
-                    <DataGridTextColumn Width="auto" Header="LossSig" Binding ="{Binding LossSig}" IsReadOnly="True">
-                        <DataGridTextColumn.CellStyle>
-                            <Style TargetType="DataGridCell">
-                                <Setter Property="ToolTip" Value="Number of times a loss of signal was received (increments whenever an SFP is removed) (Rx)." />
-                            </Style>
-                        </DataGridTextColumn.CellStyle>
-                    </DataGridTextColumn>
-                    <DataGridTextColumn Width="auto" Header="StateTransitions" Binding ="{Binding StateTransitions}" IsReadOnly="True"/>
-                    <DataGridTextColumn Width="auto" Header="BBZero" Binding ="{Binding BBZero}" IsReadOnly="True"/>
-                    <DataGridTextColumn Width="auto" Header="FECuncorrected" Binding ="{Binding FECuncorrected}" IsReadOnly="True"/>
-                </DataGrid.Columns>
-              </DataGrid>
-            </DataTemplate>
-          </ItemsControl.ItemTemplate>
-        </ItemsControl>
+                <ToggleButton x:Name="BTN_SAN_OpenPortErrShowHistory"
+                        Style="{DynamicResource MainBtnStyle}"
+                        Content="Port Error Chart"
+                        MinWidth="130"
+                        Height="30"
+                        Padding="12,4"
+                        ToolTip="View historical BBzero, TX, and RX values for the SAN Ports"/>
+            </StackPanel>
+            <ItemsControl Grid.Row="1"
+                          ItemsSource="{Binding Main.DeviceToggles}">
+              <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                  <StackPanel/>
+                </ItemsPanelTemplate>
+              </ItemsControl.ItemsPanel>
+    
+              <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                  <DataGrid AutoGenerateColumns="False"
+                            ColumnWidth="*"
+                            HorizontalAlignment="Stretch"
+                            Margin="5"
+                            MaxWidth="960"
+                            MaxHeight="460"
+                            ItemsSource="{Binding SANPortErrorShowRows}"
+                            CanUserAddRows="False"
+                            Visibility="{Binding IsChecked, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
+    
+                    <!-- Optional: Header pro Device -->
+                    <DataGrid.GroupStyle>
+                      <GroupStyle/>
+                    </DataGrid.GroupStyle>
+                    <DataGrid.RowStyle>
+                        <Style TargetType="DataGridRow">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding IsVirtualFabricPort}" Value="True">
+                                    <Setter Property="Background" Value="LightBlue"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </DataGrid.RowStyle>
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Width="auto" Header="VFID" Binding ="{Binding VFIDDisplay}" IsReadOnly="True"/>
+                        <DataGridTextColumn Width="auto" Header="Port" Binding ="{Binding Port}" IsReadOnly="True"/> 
+                        <DataGridTextColumn Width="auto" Header="EncIn" Binding ="{Binding EncIn}" IsReadOnly="True">
+                            <DataGridTextColumn.CellStyle>
+                                <Style TargetType="DataGridCell">
+                                    <Setter Property="ToolTip" Value="Number of encoding errors inside frames received (Rx)" />
+                                </Style>
+                            </DataGridTextColumn.CellStyle>
+                        </DataGridTextColumn>
+                        <DataGridTextColumn Width="auto" Header="CrcErr" Binding ="{Binding CrcErr}" IsReadOnly="True">
+                            <DataGridTextColumn.CellStyle>
+                                <Style TargetType="DataGridCell">
+                                    <Setter Property="ToolTip" Value="Number of frames with CRC errors received (Rx)." />
+                                </Style>
+                            </DataGridTextColumn.CellStyle>
+                        </DataGridTextColumn>
+                        <DataGridTextColumn Width="auto" Header="TooShort" Binding ="{Binding TooShort}" IsReadOnly="True">
+                            <DataGridTextColumn.CellStyle>
+                                <Style TargetType="DataGridCell">
+                                    <Setter Property="ToolTip" Value="Number of frames shorter than minimum received (Rx)." />
+                                </Style>
+                            </DataGridTextColumn.CellStyle>
+                        </DataGridTextColumn>
+                        <DataGridTextColumn Width="auto" Header="TooLong" Binding ="{Binding TooLong}" IsReadOnly="True">
+                            <DataGridTextColumn.CellStyle>
+                                <Style TargetType="DataGridCell">
+                                    <Setter Property="ToolTip" Value="Number of frames longer than maximum received (Rx)." />
+                                </Style>
+                            </DataGridTextColumn.CellStyle>
+                        </DataGridTextColumn>
+                        <DataGridTextColumn Width="auto" Header="BadEOF" Binding ="{Binding BadEOF}" IsReadOnly="True">
+                            <DataGridTextColumn.CellStyle>
+                                <Style TargetType="DataGridCell">
+                                    <Setter Property="ToolTip" Value="Number of frames with bad end-of-frame delimiters received (Rx)." />
+                                </Style>
+                            </DataGridTextColumn.CellStyle>
+                        </DataGridTextColumn>
+                        <DataGridTextColumn Width="auto" Header="EncOut" Binding ="{Binding EncOut}" IsReadOnly="True">
+                            <DataGridTextColumn.CellStyle>
+                                <Style TargetType="DataGridCell">
+                                    <Setter Property="ToolTip" Value="Number of encoding error outside of frames received (Rx)." />
+                                </Style>
+                            </DataGridTextColumn.CellStyle>
+                        </DataGridTextColumn>
+                        <DataGridTextColumn Width="auto" Header="DiscC3" Binding ="{Binding DiscC3}" IsReadOnly="True">
+                            <DataGridTextColumn.CellStyle>
+                                <Style TargetType="DataGridCell">
+                                    <Setter Property="ToolTip" Value="Number of Class 3 frames discarded (Rx)." />
+                                </Style>
+                            </DataGridTextColumn.CellStyle>
+                        </DataGridTextColumn>
+                        <DataGridTextColumn Width="auto" Header="LinkFail" Binding ="{Binding LinkFail}" IsReadOnly="True">
+                            <DataGridTextColumn.CellStyle>
+                                <Style TargetType="DataGridCell">
+                                    <Setter Property="ToolTip" Value="Number of link failures (LF1 or LF2 states) received (Rx)." />
+                                </Style>
+                            </DataGridTextColumn.CellStyle>
+                        </DataGridTextColumn>
+                        <DataGridTextColumn Width="auto" Header="LossSync" Binding ="{Binding LossSync}" IsReadOnly="True">
+                            <DataGridTextColumn.CellStyle>
+                                <Style TargetType="DataGridCell">
+                                    <Setter Property="ToolTip" Value="Number of times synchronization was lost (Rx)." />
+                                </Style>
+                            </DataGridTextColumn.CellStyle>
+                        </DataGridTextColumn>
+                        <DataGridTextColumn Width="auto" Header="LossSig" Binding ="{Binding LossSig}" IsReadOnly="True">
+                            <DataGridTextColumn.CellStyle>
+                                <Style TargetType="DataGridCell">
+                                    <Setter Property="ToolTip" Value="Number of times a loss of signal was received (increments whenever an SFP is removed) (Rx)." />
+                                </Style>
+                            </DataGridTextColumn.CellStyle>
+                        </DataGridTextColumn>
+                        <DataGridTextColumn Width="auto" Header="StateTransitions" Binding ="{Binding StateTransitions}" IsReadOnly="True"/>
+                        <DataGridTextColumn Width="auto" Header="BBZero" Binding ="{Binding BBZero}" IsReadOnly="True"/>
+                        <DataGridTextColumn Width="auto" Header="FECuncorrected" Binding ="{Binding FECuncorrected}" IsReadOnly="True"/>
+                    </DataGrid.Columns>
+                  </DataGrid>
+                </DataTemplate>
+              </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </Grid>
         <!-- FOS_SFPDetails -->
+        <Grid Grid.Column="1" Grid.Row="1" Style="{DynamicResource ShowWhenSANSFPDetailsShow}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+ 
+            <!-- Toolbar für die FC-Port-Stats-Ansicht -->
+            <StackPanel Grid.Row="0"
+                        Orientation="Horizontal"
+                        HorizontalAlignment="left"
+                        Margin="5,5,5,0">
+
+                <ToggleButton x:Name="BTN_SAN_OpenSFPhowHistory"
+                        Style="{DynamicResource MainBtnStyle}"
+                        Content="SFP Stats Chart"
+                        MinWidth="130"
+                        Height="30"
+                        Padding="12,4"
+                        ToolTip="View historical TX and RX values for the SAN SFP Stats"/>
+            </StackPanel>
         <ItemsControl Grid.Column="1" Grid.Row="1"
-                      ItemsSource="{Binding Main.DeviceToggles}"
-                      Style="{DynamicResource ShowWhenSANSFPDetailsShow}">
+                      ItemsSource="{Binding Main.DeviceToggles}">
           <ItemsControl.ItemsPanel>
             <ItemsPanelTemplate>
               <StackPanel/>
@@ -544,6 +583,7 @@
             </DataTemplate>
           </ItemsControl.ItemTemplate>
         </ItemsControl>
+        </Grid>
         <!-- FOS_ZoneDetails -->
         <ItemsControl Grid.Column="1" Grid.Row="1"
                       ItemsSource="{Binding Main.DeviceToggles}"
@@ -1257,7 +1297,7 @@
             </ItemsControl.ItemTemplate>
 
         </ItemsControl>
-        <!-- IBM_UserInfo -->
+        <!-- FOS_UserInfo -->
         <ItemsControl Grid.Column="1" Grid.Row="1"
                       ItemsSource="{Binding Main.DeviceToggles}"
                       Style="{DynamicResource ShowWhenUserCFGCheck}">

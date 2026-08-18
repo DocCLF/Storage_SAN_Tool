@@ -2,7 +2,8 @@ function Get-BrocadeUserCFGOverview {
     [CmdletBinding()]
     param(
         [Parameter(Mandatory)]
-        $Device
+        $Device,
+        $TD_Exportpath = $null
     )
 
     $PB = New-ProgressBar
@@ -85,8 +86,9 @@ Please enter a user with sufficient permissions.
         }
 
         Write-ProgressBar -ProgressBar $PB -Activity 'Security information collected' -PercentComplete 100
-        Out-File -FilePath "$($TD_TB_ExportPath.Text)\UserConfiguration_$($SwitchName)_$(Get-Date -Format "yyyy-MM-dd").csv" -InputObject $UserConfiguration
-        
+        if(-not [string]::IsNullOrWhiteSpace($TD_Exportpath)){
+            Out-File -FilePath "$($TD_Exportpath)\UserConfiguration_$($SwitchName)_$(Get-Date -Format "yyyy-MM-dd").csv" -InputObject $UserConfiguration
+        }
     }
     finally {
         Close-ProgressBar -ProgressBar $PB

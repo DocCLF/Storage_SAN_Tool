@@ -4,7 +4,8 @@ function Get-BrocadeSensorOverview {
     param(
         [Parameter(Mandatory)]
         $Device,
-        $RowCounter = 0
+        $RowCounter = 0,
+        $TD_Exportpath = $null
     )
     $PB = New-ProgressBar
 
@@ -54,7 +55,9 @@ function Get-BrocadeSensorOverview {
     }
     Write-ProgressBar -ProgressBar $PB -Activity "Create Obj completed" -PercentComplete 90
     try {
-        Out-File -FilePath "$($TD_TB_ExportPath.Text)\FOS_SensorInfo_$($ChassisInfo.'vendor-serial-number')_$(Get-Date -Format "yyyy-MM-dd").csv" -InputObject $FOS_SensorInfo
+        if(-not [string]::IsNullOrWhiteSpace($TD_Exportpath)){
+            Out-File -FilePath "$($TD_Exportpath)\FOS_SensorInfo_$($ChassisInfo.'vendor-serial-number')_$(Get-Date -Format "yyyy-MM-dd").csv" -InputObject $FOS_SensorInfo
+        }
     }
     catch {
         <#Do this if a terminating exception happens#>

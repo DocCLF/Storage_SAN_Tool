@@ -46,7 +46,7 @@ function Invoke-DeviceDataFetch {
         try {
             <# It's okay for now, but we need a better solution #>
             if($Device.DeviceTyp -like "*SAN*"){
-                $FunResult = & $RESTFunc -Device $Device
+                $FunResult = & $RESTFunc -Device $Device -TD_Exportpath $ExportPath
             }else{
                 $FunResult = & $RESTFunc -TD_Line_ID $Device.ID -TD_Device_UserName $Device.UserName -TD_Device_DeviceIP $Device.IPAddress -TD_Device_PW $pw -TD_Exportpath $ExportPath
             }
@@ -548,5 +548,801 @@ function Test-SQLiteHasAnyData {
     }finally {
         if ($cmd) { $cmd.Dispose() }
         if ($countCmd) {$countCmd.Dispose()}
+    }
+}
+# Converts a capacity value with unit into bytes.
+function ConvertTo-ByteValue {
+    <#
+    .SYNOPSIS
+        Converts a capacity value with unit into bytes.
+
+    .DESCRIPTION
+        Converts capacity strings such as B, KB, MB, GB, TB or PB
+        into an Int64 byte value.
+
+        The function is independent of Storage, SAN or any specific
+        data source.
+
+    .PARAMETER Value
+        Capacity value to convert.
+
+        Examples:
+
+            19.99TB
+            850GB
+            512MB
+            1024B
+
+    .OUTPUTS
+        System.Int64
+
+        Returns $null for null or empty input.
+
+    .EXAMPLE
+        ConvertTo-ByteValue -Value '19.99TB'
+    #>
+
+    [CmdletBinding()]
+    param (
+        [Parameter(Mandatory)]
+        [AllowNull()]
+        $Value
+    )
+
+    if (
+        $null -eq $Value -or
+        $Value -is [DBNull] -or
+        [string]::IsNullOrWhiteSpace([string]$Value)
+    ) {
+        return $null
+    }
+
+    $CapacityText = ([string]$Value).Trim()
+
+    if (
+        $CapacityText -notmatch
+        '^(?<Number>[0-9]+(?:[\.,][0-9]+)?)\s*(?<Unit>B|KB|MB|GB|TB|PB)$'
+    ) {
+        throw "Capacity value '$Value' has an unsupported format."
+    }
+
+    $NumberText = $Matches.Number -replace ',', '.'
+
+    $Number = [decimal]::Parse(
+        $NumberText,
+        [System.Globalization.CultureInfo]::InvariantCulture
+    )
+
+    $Multiplier = switch ($Matches.Unit.ToUpperInvariant()) {
+        'B'  { [decimal]1 }
+        'KB' { [decimal]1024 }
+        'MB' { [decimal]1048576 }
+        'GB' { [decimal]1073741824 }
+        'TB' { [decimal]1099511627776 }
+        'PB' { [decimal]1125899906842624 }
+
+        default {
+            throw "Unsupported capacity unit '$($Matches.Unit)'."
+        }
+    }
+
+    return [int64]($Number * $Multiplier)
+}
+# Helper Func to Save Vdisk an VdiskAnalysis at one point
+function Save-StorageVolumeHistory {
+    [CmdletBinding()]
+    param (
+        [Parameter(Mandatory)]
+        [ValidateSet(
+            'Volume',
+            'Analysis'
+        )]
+        [string]$SourceType,
+
+        [Parameter(Mandatory)]
+        [ValidateNotNull()]
+        [object[]]$InputObject
+    )
+
+    switch ($SourceType) {
+
+        'Volume' {
+        
+            # -------------------------------------------------------------
+            # Only real volumes with a valid VdiskUID are relevant for
+            # the current volume inventory.
+            # -------------------------------------------------------------
+        
+            $CurrentVolumes = @(
+                $InputObject |
+                    Where-Object {
+                        $null -ne $_ -and
+                        $_.RowType -eq 'Volume' -and
+                        -not [string]::IsNullOrWhiteSpace(
+                            [string]$_.VdiskUID
+                        )
+                    }
+            )
+                
+            if ($CurrentVolumes.Count -eq 0) {
+            
+                Write-Warning (
+                    'Save-StorageVolumeHistory: ' +
+                    'No valid volumes with VdiskUID were supplied. ' +
+                    'Inventory synchronization was skipped.'
+                )
+            
+                return
+            }
+        
+            # -------------------------------------------------------------
+            # Build normalized inventory objects.
+            # -------------------------------------------------------------
+        
+            $InventoryData = @(
+                foreach ($Volume in $CurrentVolumes) {
+                
+                    [PSCustomObject]@{
+                        RowID        = [string]$Volume.RowID
+                        VolumeID     = [int]$Volume.ID
+                        VdiskUID     = [string]$Volume.VdiskUID
+                        VolumeName   = [string]$Volume.Name
+                    
+                        WWNN         = [string]$Volume.WWNN
+                        SerialNumber = [string]$Volume.SerialNumber
+                    }
+                }
+            )
+            
+            # -------------------------------------------------------------
+            # Hand normalized inventory data over to the DB layer.
+            # -------------------------------------------------------------
+            
+            $null = SST_CustomerSTODBInsertTable -SST_InfoType 'VolumeInventory' -SST_CollectedInformations $InventoryData
+        }
+
+        'Analysis' {
+
+            $CustomerNbr =
+                if (-not [string]::IsNullOrWhiteSpace($TD_TB_CustomerInfoName.Text)) {
+                    $TD_TB_CustomerInfoName.Text
+                }
+                else {
+                    $SST_NewDBObject.CustomerNumber
+                }
+            
+            $VolumeInventory = @(
+                Get-StorageVolumeInventory `
+                    -CustomerNbr $CustomerNbr `
+                    -OnlyActive
+            )
+            
+            $InventoryLookup = @{}
+            
+            foreach ($InventoryItem in $VolumeInventory) {
+            
+                $Key = '{0}|{1}' -f
+                    [string]$InventoryItem.SerialNumber,
+                    [string]$InventoryItem.VolumeID
+            
+                $InventoryLookup[$Key] = $InventoryItem
+            }
+
+            $HistoryData = @(
+                foreach ($Item in $InputObject) {
+                
+                    if ($null -eq $Item) {
+                        continue
+                    }
+                
+                    # -------------------------------------------------------------
+                    # Match current lsvdiskanalysis entry against the current
+                    # volume inventory.
+                    #
+                    # VolumeID is only used as a temporary join key together with
+                    # SerialNumber. The durable identity stored in history is
+                    # VdiskUID.
+                    # -------------------------------------------------------------
+                
+                    $LookupKey = '{0}|{1}' -f
+                        [string]$Item.SerialNumber,
+                        [string]$Item.ID
+                
+                    $InventoryItem =
+                        $InventoryLookup[$LookupKey]
+                
+                    if ($null -eq $InventoryItem) {
+                    
+                        Write-Warning (
+                            "No active volume inventory entry was found for " +
+                            "SerialNumber '$($Item.SerialNumber)' and " +
+                            "VolumeID '$($Item.ID)'. Analysis entry was skipped."
+                        )
+                    
+                        continue
+                    }
+                
+                    [PSCustomObject]@{
+                        RowID                   = [string]$InventoryItem.RowID
+                        VolumeID                = [string]$Item.ID
+                        VdiskUID                = [string]$InventoryItem.VdiskUID
+                        VolumeName              = [string]$InventoryItem.VolumeName
+                        State                   = [string]$Item.State
+                        AnalysisTime            = [string]$Item.AnalysisTime
+                    
+                        Capacity                = ConvertTo-ByteValue -Value $Item.Capacity
+                        ThinSize                = ConvertTo-ByteValue -Value $Item.ThinSize
+                        ThinSavings             = ConvertTo-ByteValue -Value $Item.ThinSavings
+                        ThinSavingsRatio        = [double]$Item.ThinSavingsRatio
+                    
+                        CompressedSize          = ConvertTo-ByteValue -Value $Item.CompressedSize
+                        CompressionSavings      = ConvertTo-ByteValue -Value $Item.CompressionSavings
+                        CompressionSavingsRatio = [double]$Item.CompressionSavingsRatio
+                    
+                        TotalSavings            = ConvertTo-ByteValue -Value $Item.TotalSavings
+                        TotalSavingsRatio       = [double]$Item.TotalSavingsRatio
+                    
+                        MarginOfError           = [double]$Item.MarginOfError
+                    
+                        WWNN                    = [string]$InventoryItem.WWNN
+                        SerialNumber            = [string]$InventoryItem.SerialNumber
+                    }
+                }
+            )
+
+            if ($HistoryData.Count -eq 0) {
+                return
+            }else {
+                $null = SST_CustomerSTODBInsertTable -SST_InfoType "VDiskAnalysis" -SST_CollectedInformations $HistoryData
+            }
+        
+            # DB writer comes next
+        }
+    }
+}
+#temp für alte kunden umgebungen
+function Update-IBMSTOFCPortStatsTableSchema {
+    <#
+    .SYNOPSIS
+        Creates or upgrades IBMSTOFCPortStatsTable to the current schema.
+
+    .DESCRIPTION
+        Handles three cases:
+
+        1. Table does not exist
+           -> Creates the current table.
+
+        2. Table exists and already contains RowID
+           -> Assumes the current schema and ensures the required index.
+
+        3. Legacy table exists without RowID
+           -> Creates a new table, migrates the existing data,
+              converts legacy TEXT values to INTEGER / REAL,
+              creates RowID from SerialNumber|WWNN|WWPN,
+              replaces the old table and creates the index.
+
+        The migration is executed inside a transaction.
+
+    .PARAMETER SQLiteDBConnection
+        Open System.Data.SQLite connection.
+    #>
+    [CmdletBinding()]
+    param (
+        [Parameter(Mandatory)]
+        [ValidateNotNull()]
+        $SQLiteDBConnection
+    )
+
+    $TableName =
+        'IBMSTOFCPortStatsTable'
+
+    $NewTableName =
+        'IBMSTOFCPortStatsTable_New'
+
+    # ---------------------------------------------------------------------
+    # Check whether table exists
+    # ---------------------------------------------------------------------
+
+    $CheckCommand =
+        $SQLiteDBConnection.CreateCommand()
+
+    try {
+        $CheckCommand.CommandText = @"
+SELECT COUNT(*)
+FROM sqlite_master
+WHERE type = 'table'
+  AND name = @TableName;
+"@
+
+        $null =
+            $CheckCommand.Parameters.AddWithValue(
+                '@TableName',
+                $TableName
+            )
+
+        $TableExists =
+            ([int]$CheckCommand.ExecuteScalar() -gt 0)
+    }
+    finally {
+        $CheckCommand.Dispose()
+    }
+
+    # ---------------------------------------------------------------------
+    # Table does not exist
+    #
+    # Create current schema directly.
+    # ---------------------------------------------------------------------
+
+    if (-not $TableExists) {
+
+        $CreateCommand =
+            $SQLiteDBConnection.CreateCommand()
+
+        try {
+            $CreateCommand.CommandText = @"
+CREATE TABLE IBMSTOFCPortStatsTable (
+    ID              INTEGER PRIMARY KEY AUTOINCREMENT,
+    CustomerNbr     TEXT NOT NULL,
+    RowID           TEXT NOT NULL,
+    NodeID          INTEGER,
+    NodeName        TEXT,
+    CardType        TEXT,
+    CardID          INTEGER,
+    PortID          INTEGER,
+    WWPN            TEXT NOT NULL,
+    LinkFailure     INTEGER,
+    LoseSync        INTEGER,
+    LoseSig         INTEGER,
+    PSErrCount      INTEGER,
+    InvTransErr     INTEGER,
+    CRCErr          INTEGER,
+    ZeroBtB         INTEGER,
+    SFPTemp         REAL,
+    TXPwr           REAL,
+    TXPwrLow        REAL,
+    RXPwr           REAL,
+    RXPwrLow        REAL,
+    SerialNumber    TEXT NOT NULL,
+    WWNN            TEXT NOT NULL,
+    TimeStamp       TEXT NOT NULL
+);
+"@
+
+            $CreateCommand.ExecuteNonQuery() |
+                Out-Null
+
+            $CreateCommand.CommandText = @"
+CREATE INDEX IF NOT EXISTS
+    IX_IBMSTOFCPortStats_RowID_TimeStamp
+ON IBMSTOFCPortStatsTable (
+    CustomerNbr,
+    RowID,
+    TimeStamp
+);
+"@
+
+            $CreateCommand.ExecuteNonQuery() |
+                Out-Null
+        }
+        finally {
+            $CreateCommand.Dispose()
+        }
+
+        Write-Verbose (
+            "Table '$TableName' was created using the current schema."
+        )
+
+        return
+    }
+
+    # ---------------------------------------------------------------------
+    # Read existing table columns
+    # ---------------------------------------------------------------------
+
+    $ColumnCommand =
+        $SQLiteDBConnection.CreateCommand()
+
+    try {
+        $ColumnCommand.CommandText =
+            "PRAGMA table_info($TableName);"
+
+        $Reader =
+            $ColumnCommand.ExecuteReader()
+
+        $ExistingColumns =
+            [System.Collections.Generic.List[string]]::new()
+
+        try {
+            while ($Reader.Read()) {
+
+                $ExistingColumns.Add(
+                    [string]$Reader['name']
+                )
+            }
+        }
+        finally {
+            $Reader.Close()
+            $Reader.Dispose()
+        }
+    }
+    finally {
+        $ColumnCommand.Dispose()
+    }
+
+    # ---------------------------------------------------------------------
+    # RowID exists
+    #
+    # This is our marker for the current FCPortStats schema.
+    # Only make sure that the index exists.
+    # ---------------------------------------------------------------------
+
+    if ($ExistingColumns -contains 'RowID') {
+
+        $IndexCommand =
+            $SQLiteDBConnection.CreateCommand()
+
+        try {
+            $IndexCommand.CommandText = @"
+CREATE INDEX IF NOT EXISTS
+    IX_IBMSTOFCPortStats_RowID_TimeStamp
+ON IBMSTOFCPortStatsTable (
+    CustomerNbr,
+    RowID,
+    TimeStamp
+);
+"@
+
+            $IndexCommand.ExecuteNonQuery() |
+                Out-Null
+        }
+        finally {
+            $IndexCommand.Dispose()
+        }
+
+        Write-Verbose (
+            "Table '$TableName' already uses the current schema."
+        )
+
+        return
+    }
+
+    # ---------------------------------------------------------------------
+    # Legacy table detected
+    # ---------------------------------------------------------------------
+
+    Write-Verbose (
+        "Legacy '$TableName' schema detected. Starting migration."
+    )
+
+    # ---------------------------------------------------------------------
+    # Check for legacy rows that cannot be migrated.
+    #
+    # These columns are required to build the new NOT NULL fields and RowID.
+    # ---------------------------------------------------------------------
+
+    $InvalidCommand =
+        $SQLiteDBConnection.CreateCommand()
+
+    try {
+        $InvalidCommand.CommandText = @"
+SELECT COUNT(*)
+FROM IBMSTOFCPortStatsTable
+WHERE SerialNumber IS NULL
+   OR TRIM(SerialNumber) = ''
+   OR WWNN IS NULL
+   OR TRIM(WWNN) = ''
+   OR WWPN IS NULL
+   OR TRIM(WWPN) = ''
+   OR CustomerNbr IS NULL
+   OR TRIM(CustomerNbr) = ''
+   OR TimeStamp IS NULL
+   OR TRIM(TimeStamp) = '';
+"@
+
+        $InvalidRowCount =
+            [int]$InvalidCommand.ExecuteScalar()
+    }
+    finally {
+        $InvalidCommand.Dispose()
+    }
+
+    if ($InvalidRowCount -gt 0) {
+        throw (
+            "Migration of '$TableName' cannot continue because " +
+            "$InvalidRowCount legacy row(s) contain empty values in " +
+            'CustomerNbr, SerialNumber, WWNN, WWPN or TimeStamp.'
+        )
+    }
+
+    # ---------------------------------------------------------------------
+    # Migration transaction
+    # ---------------------------------------------------------------------
+
+    $Transaction =
+        $SQLiteDBConnection.BeginTransaction()
+
+    try {
+
+        $MigrationCommand =
+            $SQLiteDBConnection.CreateCommand()
+
+        $MigrationCommand.Transaction =
+            $Transaction
+
+        try {
+
+            # -------------------------------------------------------------
+            # Remove an abandoned temporary table from a previous failed
+            # migration if one exists.
+            # -------------------------------------------------------------
+
+            $MigrationCommand.CommandText =
+                "DROP TABLE IF EXISTS $NewTableName;"
+
+            $MigrationCommand.ExecuteNonQuery() |
+                Out-Null
+
+            # -------------------------------------------------------------
+            # Create current table structure under temporary name
+            # -------------------------------------------------------------
+
+            $MigrationCommand.CommandText = @"
+CREATE TABLE $NewTableName (
+    ID              INTEGER PRIMARY KEY AUTOINCREMENT,
+    CustomerNbr     TEXT NOT NULL,
+    RowID           TEXT NOT NULL,
+    NodeID          INTEGER,
+    NodeName        TEXT,
+    CardType        TEXT,
+    CardID          INTEGER,
+    PortID          INTEGER,
+    WWPN            TEXT NOT NULL,
+    LinkFailure     INTEGER,
+    LoseSync        INTEGER,
+    LoseSig         INTEGER,
+    PSErrCount      INTEGER,
+    InvTransErr     INTEGER,
+    CRCErr           INTEGER,
+    ZeroBtB         INTEGER,
+    SFPTemp         REAL,
+    TXPwr           REAL,
+    TXPwrLow        REAL,
+    RXPwr           REAL,
+    RXPwrLow        REAL,
+    SerialNumber    TEXT NOT NULL,
+    WWNN            TEXT NOT NULL,
+    TimeStamp       TEXT NOT NULL
+);
+"@
+
+            $MigrationCommand.ExecuteNonQuery() |
+                Out-Null
+
+            # -------------------------------------------------------------
+            # Copy legacy data
+            #
+            # RowID:
+            #
+            #   SerialNumber|WWNN|WWPN
+            #
+            # New fields for which the legacy database has no source:
+            #
+            #   NodeID
+            #   NodeName
+            #   TXPwrLow
+            #   RXPwrLow
+            #
+            # remain NULL for migrated history.
+            #
+            # Empty legacy TEXT values are converted to NULL rather than
+            # becoming numeric zero.
+            # -------------------------------------------------------------
+
+            $MigrationCommand.CommandText = @"
+INSERT INTO $NewTableName (
+    ID,
+    CustomerNbr,
+    RowID,
+    NodeID,
+    NodeName,
+    CardType,
+    CardID,
+    PortID,
+    WWPN,
+    LinkFailure,
+    LoseSync,
+    LoseSig,
+    PSErrCount,
+    InvTransErr,
+    CRCErr,
+    ZeroBtB,
+    SFPTemp,
+    TXPwr,
+    TXPwrLow,
+    RXPwr,
+    RXPwrLow,
+    SerialNumber,
+    WWNN,
+    TimeStamp
+)
+SELECT
+    ID,
+    CustomerNbr,
+
+    SerialNumber || '|' || WWNN || '|' || WWPN,
+
+    NULL,
+    NULL,
+
+    CardType,
+
+    CASE
+        WHEN CardID IS NULL OR TRIM(CardID) = ''
+            THEN NULL
+        ELSE CAST(CardID AS INTEGER)
+    END,
+
+    CASE
+        WHEN PortID IS NULL OR TRIM(PortID) = ''
+            THEN NULL
+        ELSE CAST(PortID AS INTEGER)
+    END,
+
+    WWPN,
+
+    CASE
+        WHEN LinkFailure IS NULL OR TRIM(LinkFailure) = ''
+            THEN NULL
+        ELSE CAST(LinkFailure AS INTEGER)
+    END,
+
+    CASE
+        WHEN LoseSync IS NULL OR TRIM(LoseSync) = ''
+            THEN NULL
+        ELSE CAST(LoseSync AS INTEGER)
+    END,
+
+    CASE
+        WHEN LoseSig IS NULL OR TRIM(LoseSig) = ''
+            THEN NULL
+        ELSE CAST(LoseSig AS INTEGER)
+    END,
+
+    CASE
+        WHEN PSErrCount IS NULL OR TRIM(PSErrCount) = ''
+            THEN NULL
+        ELSE CAST(PSErrCount AS INTEGER)
+    END,
+
+    CASE
+        WHEN InvTransErr IS NULL OR TRIM(InvTransErr) = ''
+            THEN NULL
+        ELSE CAST(InvTransErr AS INTEGER)
+    END,
+
+    CASE
+        WHEN CRCErr IS NULL OR TRIM(CRCErr) = ''
+            THEN NULL
+        ELSE CAST(CRCErr AS INTEGER)
+    END,
+
+    CASE
+        WHEN ZeroBtB IS NULL OR TRIM(ZeroBtB) = ''
+            THEN NULL
+        ELSE CAST(ZeroBtB AS INTEGER)
+    END,
+
+    CASE
+        WHEN SFPTemp IS NULL OR TRIM(SFPTemp) = ''
+            THEN NULL
+        ELSE CAST(SFPTemp AS REAL)
+    END,
+
+    CASE
+        WHEN TXPwr IS NULL OR TRIM(TXPwr) = ''
+            THEN NULL
+        ELSE CAST(TXPwr AS REAL)
+    END,
+
+    NULL,
+
+    CASE
+        WHEN RXPwr IS NULL OR TRIM(RXPwr) = ''
+            THEN NULL
+        ELSE CAST(RXPwr AS REAL)
+    END,
+
+    NULL,
+
+    SerialNumber,
+    WWNN,
+    TimeStamp
+
+FROM IBMSTOFCPortStatsTable;
+"@
+
+            $MigrationCommand.ExecuteNonQuery() |
+                Out-Null
+
+            # -------------------------------------------------------------
+            # Verify that every old row reached the new table
+            # -------------------------------------------------------------
+
+            $MigrationCommand.CommandText =
+                'SELECT COUNT(*) FROM IBMSTOFCPortStatsTable;'
+
+            $OldRowCount =
+                [int]$MigrationCommand.ExecuteScalar()
+
+            $MigrationCommand.CommandText =
+                "SELECT COUNT(*) FROM $NewTableName;"
+
+            $NewRowCount =
+                [int]$MigrationCommand.ExecuteScalar()
+
+            if ($OldRowCount -ne $NewRowCount) {
+                throw (
+                    'FCPortStats migration row count mismatch. ' +
+                    "Old: $OldRowCount, New: $NewRowCount."
+                )
+            }
+
+            # -------------------------------------------------------------
+            # Replace legacy table
+            # -------------------------------------------------------------
+
+            $MigrationCommand.CommandText =
+                'DROP TABLE IBMSTOFCPortStatsTable;'
+
+            $MigrationCommand.ExecuteNonQuery() |
+                Out-Null
+
+            $MigrationCommand.CommandText =
+                "ALTER TABLE $NewTableName " +
+                'RENAME TO IBMSTOFCPortStatsTable;'
+
+            $MigrationCommand.ExecuteNonQuery() |
+                Out-Null
+
+            # -------------------------------------------------------------
+            # Create current index
+            # -------------------------------------------------------------
+
+            $MigrationCommand.CommandText = @"
+CREATE INDEX IF NOT EXISTS
+    IX_IBMSTOFCPortStats_RowID_TimeStamp
+ON IBMSTOFCPortStatsTable (
+    CustomerNbr,
+    RowID,
+    TimeStamp
+);
+"@
+
+            $MigrationCommand.ExecuteNonQuery() |
+                Out-Null
+        }
+        finally {
+            $MigrationCommand.Dispose()
+        }
+
+        $Transaction.Commit()
+
+        Write-Verbose (
+            "Migration of '$TableName' completed successfully."
+        )
+    }
+    catch {
+
+        try {
+            $Transaction.Rollback()
+        }
+        catch {
+            # Do not hide the original migration error.
+        }
+
+        throw
+    }
+    finally {
+        $Transaction.Dispose()
     }
 }

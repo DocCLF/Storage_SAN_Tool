@@ -41,6 +41,7 @@ function IBM_RESTVolumeInfo {
                 $IBMSTOSN = if($STONodeInfo.enclosure_serial_number[$i] -eq ""){$STONodeInfo.panel_name[$i]}else{$STONodeInfo.enclosure_serial_number[$i]}
             }
         }
+        $null = IBM_RESTVDiskAnalysis -Body $null -BaseUrl $BaseUrl -RESTInfo $RESTInfo -STOSN $IBMSTOSN -STOWWNN $IBMSTOWWNN -TD_Exportpath $TD_Exportpath
     }
 
     process{
@@ -61,7 +62,8 @@ function IBM_RESTVolumeInfo {
                                             RCID,RCName,VdiskUID,FCMapCount,CopyCount,FastWriteState,SECopyCount,RCChange,CompressedCopyCount,ParentMdiskGrpID,ParentMdiskGrpName,`
                                             OwnerID,OwnerName,Formatting,Encrypt,VolumeID,VolumeName,Function,VolumeGroupID,VolumeGroupName,Protocol,PreferredNodeID,PreferredNodeName,isSnapshot,`
                                             SnapshotCount,VolumeType,ReplicationMode,isSafeguardedSnapshot,SafeguardedSnapshotCount,SnapshotID,SnapshotName,ParentUID,SnapshotTime,ExpirationTime,`
-                                            SnapshotState,Safeguarded,VolumeSizeMismatch,Mirrored,WrittenCapacity,GroupKey,GroupName,RowType,RowOrder,WWNN,SerialNumber
+                                            SnapshotState,Safeguarded,VolumeSizeMismatch,Mirrored,WrittenCapacity,GroupKey,GroupName,RowType,RowOrder,CopyID,IsPrimary,Sync,AutoDelete,UsedCapacity,`
+                                            RealCapacity,FreeCapacity,Overallocation,EasyTier,EasyTierStatus,CompressedCopy,DeduplicatedCopy,WWNN,SerialNumber
 
             $TD_VDiskinfo.ID                         = $TD_DeviceInformation.id[$i]
             $TD_VDiskinfo.Name                       = $TD_DeviceInformation.name[$i]
@@ -120,6 +122,155 @@ function IBM_RESTVolumeInfo {
 
             # Display the volume on its own line.
             $TD_VDiskinfo
+
+            # --------------------------------------------------------
+            # Determine volume copies.
+            #
+            # A volume with more than one copy returns "many" for # properties such as mdisk_grp_name and type in lsvdisk.
+            #
+            # lsvdisk/<VolumeID> returns:
+            #
+            #   - the logical volume object
+            #   - one object for every volume copy
+            #
+            # Copy objects are identified by the copy_id property.
+            # --------------------------------------------------------
+
+            [int]$NextRowOrder = 1
+
+            if ([int]$TD_VDiskinfo.CopyCount -gt 1) {
+            
+                $VDiskDetail = @(SST_SpectrumSystemAPI -Endpoint "lsvdisk/$($TD_VDiskinfo.ID)" -Body $null -BaseUrl $BaseUrl -RESTInfo $RESTInfo)
+            
+                # ----------------------------------------------------
+                # Do not rely on array positions.
+                # Select only objects which really represent copies.
+                # ----------------------------------------------------
+            
+                $VolumeCopies = @($VDiskDetail |Where-Object {$null -ne $_ -and $_.PSObject.Properties['copy_id']} | Sort-Object {[int]$_.copy_id})
+                    
+                foreach ($Copy in $VolumeCopies) {
+                
+                    $CopyID = [string]$Copy.copy_id
+                    $IsPrimary = ([string]$Copy.primary -eq 'yes')
+                
+                    $CopyDisplayName = if ($IsPrimary) { "↳ Copy $CopyID *"}else {"↳ Copy $CopyID"}
+                    
+                    [PSCustomObject]@{
+                        RowID                     = "$IBMSTOSN|VOLUMECOPY|$($TD_VDiskinfo.VdiskUID)|$CopyID"
+                    
+                        ID                        = $CopyID
+                        Name                      = "Copy $CopyID"
+                        DisplayName               = $CopyDisplayName
+                    
+                        IOGroupID                 = $TD_VDiskinfo.IOGroupID
+                        IOGroupName               = $TD_VDiskinfo.IOGroupName
+                    
+                        Status                    = [string]$Copy.status
+                    
+                        MdiskGrpID                = [string]$Copy.mdisk_grp_id
+                        MdiskGrpName              = [string]$Copy.mdisk_grp_name
+                    
+                        Capacity                  = $TD_VDiskinfo.Capacity
+                        Type                      = [string]$Copy.type
+                    
+                        FCID                      = $null
+                        FCName                    = $null
+                        RCID                      = $null
+                        RCName                    = $null
+                    
+                        VdiskUID                  = $TD_VDiskinfo.VdiskUID
+                    
+                        FCMapCount                = $null
+                        CopyCount                 = $null
+                    
+                        FastWriteState            = [string]$Copy.fast_write_state
+                    
+                        SECopyCount               = $null
+                        RCChange                  = $null
+                        CompressedCopyCount       = $null
+                    
+                        ParentMdiskGrpID          = [string]$Copy.parent_mdisk_grp_id
+                        ParentMdiskGrpName        = [string]$Copy.parent_mdisk_grp_name
+                    
+                        OwnerID                   = $TD_VDiskinfo.OwnerID
+                        OwnerName                 = $TD_VDiskinfo.OwnerName
+                    
+                        Formatting                = $null
+                        Encrypt                   = [string]$Copy.encrypt
+                    
+                        VolumeID                  = $TD_VDiskinfo.ID
+                        VolumeName                = $TD_VDiskinfo.Name
+                    
+                        Function                  = $null
+                    
+                        VolumeGroupID             = $TD_VDiskinfo.VolumeGroupID
+                        VolumeGroupName           = $TD_VDiskinfo.VolumeGroupName
+                    
+                        Protocol                  = $TD_VDiskinfo.Protocol
+                    
+                        PreferredNodeID           = $TD_VDiskinfo.PreferredNodeID
+                        PreferredNodeName         = $TD_VDiskinfo.PreferredNodeName
+                    
+                        IsSnapshot                = $false
+                        SnapshotCount             = $null
+                    
+                        VolumeType                = 'Copy'
+                        ReplicationMode           = $TD_VDiskinfo.ReplicationMode
+                    
+                        IsSafeguardedSnapshot     = $false
+                        SafeguardedSnapshotCount  = $null
+                    
+                        SnapshotID                = $null
+                        SnapshotName              = $null
+                        ParentUID                 = $null
+                        SnapshotTime              = $null
+                        ExpirationTime            = $null
+                        SnapshotState             = $null
+                        Safeguarded               = $null
+                        VolumeSizeMismatch        = $null
+                        Mirrored                  = $null
+                        WrittenCapacity           = $null
+                    
+                        # ------------------------------------------------
+                        # Additional copy-specific information.
+                        # These properties must also be added to the
+                        # Select-Object definition above.
+                        # ------------------------------------------------
+                    
+                        CopyID                    = $CopyID
+                        IsPrimary                 = $IsPrimary
+                        Sync                      = [string]$Copy.sync
+                        AutoDelete                = [string]$Copy.auto_delete
+                    
+                        UsedCapacity              = [string]$Copy.used_capacity
+                        RealCapacity              = [string]$Copy.real_capacity
+                        FreeCapacity              = [string]$Copy.free_capacity
+                        Overallocation            = [string]$Copy.overallocation
+                    
+                        EasyTier                  = [string]$Copy.easy_tier
+                        EasyTierStatus            = [string]$Copy.easy_tier_status
+                    
+                        CompressedCopy            = [string]$Copy.compressed_copy
+                        DeduplicatedCopy          = [string]$Copy.deduplicated_copy
+                    
+                        # ------------------------------------------------
+                        # Belongs to exactly the same logical volume.
+                        # ------------------------------------------------
+                    
+                        GroupKey                  = "$IBMSTOSN|VOLUME|$($TD_VDiskinfo.ID)"
+                        GroupName                 = $TD_VDiskinfo.Name
+                    
+                        RowType                   = 'VolumeCopy'
+                        RowOrder                  = $NextRowOrder
+                    
+                        WWNN                      = $IBMSTOWWNN
+                        SerialNumber              = $IBMSTOSN
+                    }
+                
+                    $NextRowOrder++
+                }
+            }
 
             # --------------------------------------------------------
             # Determine snapshots of the current volume.
@@ -221,6 +372,9 @@ function IBM_RESTVolumeInfo {
     
     end {
         
+        if($TD_VDiskFuncResault.count -gt 0){
+            $null = Save-StorageVolumeHistory -SourceType 'Volume' -InputObject $TD_VDiskFuncResault
+        }
         Close-ProgressBar -ProgressBar $ProgressBar
         if($TD_Export -eq "yes"){
 

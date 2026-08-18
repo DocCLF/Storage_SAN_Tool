@@ -12,7 +12,7 @@
     RootModule = 'Storage_SAN_Tool.psm1'
     
     # Version number of this module.
-    ModuleVersion = '1.4.0'
+    ModuleVersion = '1.5.0'
     
     # Supported PSEditions
     CompatiblePSEditions = @('Desktop','Core')
@@ -111,7 +111,7 @@
             ReleaseNotes = 'https://github.com/DocCLF/ps_collection/blob/main/CHANGELOG.md'
     
             # Prerelease string of this module
-            # Prerelease = 'beta'
+             Prerelease = 'beta'
     
             # Flag to indicate whether the module requires explicit user acceptance for install/update/save
             # RequireLicenseAcceptance = $false

@@ -2,7 +2,8 @@ function GET-BrocadeAuditInfo {
     [CmdletBinding()]
     param(
         [Parameter(Mandatory)]
-        $Device
+        $Device,
+        $TD_Exportpath = $null
     )
 
     $PB = New-ProgressBar
@@ -58,8 +59,9 @@ Please enter a user with sufficient permissions.
 
 
 
-
-        Out-File -FilePath "$($TD_TB_ExportPath.Text)\SwitchAuditDumpInfo$($SwitchName)_$(Get-Date -Format "yyyy-MM-dd").csv" -InputObject $SwitchAuditDumpInfo
+        if(-not [string]::IsNullOrWhiteSpace($TD_Exportpath)){
+            Out-File -FilePath "$($TD_Exportpath)\SwitchAuditDumpInfo$($SwitchName)_$(Get-Date -Format "yyyy-MM-dd").csv" -InputObject $SwitchAuditDumpInfo
+        }
         
     }
     finally {

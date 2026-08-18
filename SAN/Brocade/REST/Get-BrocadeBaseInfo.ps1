@@ -2,7 +2,8 @@ function Get-BrocadeBaseInfo {
     [CmdletBinding()]
     param(
         [Parameter(Mandatory)]
-        $Device
+        $Device,
+        $TD_Exportpath = $null
     )
     $PB = New-ProgressBar
 
@@ -61,7 +62,9 @@ function Get-BrocadeBaseInfo {
     Write-ProgressBar -ProgressBar $PB -Activity "Create Obj completed" -PercentComplete 90
     try {
         SST_CustomerSANDBInsertTable -SST_InfoType "SANBase" -SST_CollectedInformations $FOS_SwGeneralInfos
-        Out-File -FilePath "$($TD_TB_ExportPath.Text)\BasicSwitchInfo_$($FOS_SwGeneralInfos.SwitchName)_$($FOS_SwGeneralInfos.ActiveZoneCFG)_$(Get-Date -Format "yyyy-MM-dd").csv" -InputObject $FOS_SwGeneralInfos
+        if(-not [string]::IsNullOrWhiteSpace($TD_Exportpath)){
+            Out-File -FilePath "$($TD_Exportpath)\BasicSwitchInfo_$($FOS_SwGeneralInfos.SwitchName)_$($FOS_SwGeneralInfos.ActiveZoneCFG)_$(Get-Date -Format "yyyy-MM-dd").csv" -InputObject $FOS_SwGeneralInfos
+        }
     }
     catch {
         <#Do this if a terminating exception happens#>

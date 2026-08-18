@@ -4,22 +4,32 @@ function Get-BrocadePortErrorStats {
     param(
         [Parameter(Mandatory)]
         $Device,
-        $RowCounter = 0
+        $TD_Exportpath = $null
     )
     $PB = New-ProgressBar
 
     $FCstatistics = Get-BrocadeFCstatistics -Device $Device
-    Write-ProgressBar -ProgressBar $PB -Activity "Get-FCstatistics completed" -PercentComplete 25
+    Write-ProgressBar -ProgressBar $PB -Activity "Get-FCstatistics completed" -PercentComplete 20
+    $SwitchInfo = Get-BrocadeSwitchInfo -Device $Device
+    Write-ProgressBar -ProgressBar $PB -Activity "Get-BrocadeSwitchInfo completed" -PercentComplete 33
     <# only needed for the SN #>
     $ChassisInfo = Get-BrocadeChassisInfo -Device $Device
     Write-ProgressBar -ProgressBar $PB -Activity "Get-ChassisInfo completed" -PercentComplete 50
 
     $VFID = if($Device.VFID){$Device.VFID}else{""}
     $VFIDDisplay = if($VFID){ $VFID }else{""}
+    $ChassisSN = $($ChassisInfo.'vendor-serial-number')
+    $SwitchName = $SwitchInfo.'user-friendly-name'
+    if ([string]::IsNullOrWhiteSpace($SwitchName)) {
+        $SwitchName = "Unknown_$($ChassisInfo.'vendor-serial-number')"
+    }
+    $SwitchWWNN = $SwitchInfo.name
 
     $FOS_PortErrorInfo = foreach($FCstatistic in $FCstatistics){
-        $RowCounter++
-        $RowID = "$($FCPorts.count)|$($Device.ID)|$RowCounter)"
+
+        $VFIDKey = if ($VFID) {[string]$VFID}else {'BASE'}
+        $Port = [string]$FCstatistic.name
+        $RowID = '{0}|{1}|{2}' -f $ChassisSN,$VFIDKey,$Port
 
         <# is required to display the other FIDs in the DG in a different color, for example #>
         $IsVirtualFabricPort = if($VFID -and $VFID -ne 128){ $true } else { $false }
@@ -28,7 +38,7 @@ function Get-BrocadePortErrorStats {
             IsVirtualFabricPort = $IsVirtualFabricPort
             VFID = $VFID 
             VFIDDisplay = $VFIDDisplay
-            Port = $FCstatistic.name
+            Port = $Port
             EncIn = $FCstatistic.'encoding-error-in'
             CrcErr = $FCstatistic.'crc-errors'
             TooShort = $FCstatistic.'truncated-frames'
@@ -43,11 +53,17 @@ function Get-BrocadePortErrorStats {
             BBZero = $FCstatistic.'bb-credit-zero'
             FECuncorrected = $FCstatistic.'fec-uncorrected'
             RowID = $RowID
+            SwitchName   = $SwitchName
+            SerialNumber = $ChassisSN
+            SwitchWWNN   = $SwitchWWNN
         }
     }
     Write-ProgressBar -ProgressBar $PB -Activity "Create Obj completed" -PercentComplete 75
     try {
-        $FOS_PortErrorInfo | Export-Csv -Path "$($TD_TB_ExportPath.Text)\FOS_PortErrorInfo_$($ChassisInfo.'vendor-serial-number')_$(Get-Date -Format "yyyy-MM-dd").csv" -NoTypeInformation -Append
+        SST_CustomerSANDBInsertTable -SST_InfoType "SANPortErrStats" -SST_CollectedInformations $FOS_PortErrorInfo
+        if(-not [string]::IsNullOrWhiteSpace($TD_Exportpath)){
+            $FOS_PortErrorInfo | Export-Csv -Path "$($TD_Exportpath)\FOS_PortErrorInfo_$($ChassisInfo.'vendor-serial-number')_$(Get-Date -Format "yyyy-MM-dd").csv" -NoTypeInformation -Append
+        }
     }
     catch {
         SST_ToolMessageCollector -TD_ToolMSGCollector "FOS_PortErrorInfo: $($_.Exception.Message)" -TD_ToolMSGType "Warning" -TD_Shown "no"

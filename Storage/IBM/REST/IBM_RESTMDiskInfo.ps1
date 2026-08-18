@@ -111,8 +111,9 @@ function IBM_RESTMDiskInfo {
     }
     
     end {
-
         Close-ProgressBar -ProgressBar $ProgressBar
+        SST_CustomerSTODBInsertTable -SST_InfoType "PoolCapacity" -SST_CollectedInformations $TD_MDiskInfoResault
+        
         if($TD_Export -eq "yes"){
             if([string]$TD_Exportpath -ne "$PSCommandPath\ToolLog\"){
                 $TD_MDiskInfoResault | Export-Csv -Path $TD_Exportpath\$($TD_Line_ID)_$($IBMSTOSN)_Mdisk_Result_$(Get-Date -Format "yyyy-MM-dd").csv -NoTypeInformation

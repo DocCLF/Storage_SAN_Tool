@@ -3,7 +3,8 @@ function Get-BrocadeEffectiveZoneShow {
     param(
         [Parameter(Mandatory)]
         $Device,
-        $RowCounter = 0
+        $RowCounter = 0,
+        $TD_Exportpath = $null
     )
     $PB = New-ProgressBar
 
@@ -112,7 +113,9 @@ function Get-BrocadeEffectiveZoneShow {
     }
     Write-ProgressBar -ProgressBar $PB -Activity "Create ZoneCollection completed" -PercentComplete 95
     try {
-        $FOS_ZoneCollection | Export-Csv -Path "$($TD_TB_ExportPath.Text)\ZoneShow_$($EffectiveResBase.'cfg-name')_$(Get-Date -Format "yyyy-MM-dd").csv" -NoTypeInformation
+        if(-not [string]::IsNullOrWhiteSpace($TD_Exportpath)){
+            $FOS_ZoneCollection | Export-Csv -Path "$($TD_Exportpath)\ZoneShow_$($EffectiveResBase.'cfg-name')_$(Get-Date -Format "yyyy-MM-dd").csv" -NoTypeInformation
+        }
     }
     catch {
         SST_ToolMessageCollector -TD_ToolMSGCollector "ZoneShow: $($_.Exception.Message)" -TD_ToolMSGType "Warning" -TD_Shown "no"

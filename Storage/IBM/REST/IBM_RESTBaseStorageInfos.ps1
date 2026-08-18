@@ -98,23 +98,64 @@ function IBM_RESTBaseStorageInfos {
     }
     
     end {
+
         Close-ProgressBar -ProgressBar $ProgressBar
+
+        # -------------------------------------------------------------
+        # Save Storage history.
+        # -------------------------------------------------------------
         SST_CustomerSTODBInsertTable -SST_InfoType "StorageBase" -SST_CollectedInformations $TD_StorageInfo
-        if([string]::IsNullOrEmpty($TD_Device_DeviceName)){$TD_Device_DeviceName = $TD_StorageInfo.SerialNumber}
+
+        # -------------------------------------------------------------
+        # Save / update current Storage inventory.
+        #
+        # The StorageInventory DB logic decides:
+        #
+        #   same SerialNumber
+        #       -> same physical Storage system
+        #
+        #   new SerialNumber + known WWNN
+        #       -> hardware replacement / migration
+        #       -> keep SystemIdentity
+        #
+        #   new SerialNumber + new WWNN
+        #       -> new Storage system
+        #       -> create new SystemIdentity
+        # -------------------------------------------------------------
+
+        if (@($TD_StorageInfo).Count -gt 0) {
+
+            $StorageInventoryData = @($TD_StorageInfo | Where-Object { $null -ne $_ -and -not [string]::IsNullOrWhiteSpace([string]$_.SerialNumber) -and -not [string]::IsNullOrWhiteSpace([string]$_.WWNN)} |
+                Group-Object SerialNumber | ForEach-Object {
+                    $StorageItem = $_.Group | Select-Object -First 1
+                
+                    [PSCustomObject]@{
+                        SerialNumber = [string]$StorageItem.SerialNumber
+                        WWNN         = [string]$StorageItem.WWNN
+                        ClusterName  = [string]$StorageItem.ClusterName
+                        ProdMTM      = [string]$StorageItem.ProdMTM
+                    }
+                }
+            )
+
+            if ($StorageInventoryData.Count -gt 0) {
+                $null = SST_CustomerSTODBInsertTable -SST_InfoType 'StorageInventory' -SST_CollectedInformations $StorageInventoryData
+            }
+        }
+
+        if ([string]::IsNullOrEmpty($TD_Device_DeviceName)) {$TD_Device_DeviceName = $TD_StorageInfo.SerialNumber}
+
         <# export y or n #>
-        if($TD_export -eq "yes"){
-            if([string]$TD_Exportpath -ne "$PSRootPath\ToolLog\"){
-                $TD_StorageInfo | Export-Csv -Path $TD_Exportpath\$($TD_Line_ID)_$($TD_Device_DeviceName)_StorageBaseInfo_$(Get-Date -Format "yyyy-MM-dd").csv -NoTypeInformation
-                SST_ToolMessageCollector -TD_ToolMSGCollector "$TD_Exportpath\$($TD_Line_ID)_$($TD_Device_DeviceName)_StorageBaseInfo_$(Get-Date -Format "yyyy-MM-dd").csv" -TD_ToolMSGType Debug -TD_Shown no
-            }else {
-                $TD_StorageInfo | Export-Csv -Path $PSScriptRoot\ToolLog\$($TD_Line_ID)_$($TD_Device_DeviceName)_StorageBaseInfo_$(Get-Date -Format "yyyy-MM-dd").csv -NoTypeInformation
-                SST_ToolMessageCollector -TD_ToolMSGCollector "$PSScriptRoot\ToolLog\$($TD_Line_ID)_$($TD_Device_DeviceName)_StorageBaseInfo_$(Get-Date -Format "yyyy-MM-dd").csv" -TD_ToolMSGType Debug -TD_Shown no
+        if ($TD_export -eq "yes") {
+            if ([string]::IsNullOrWhiteSpace($TD_Exportpath)) {
+                $TD_StorageInfo | Export-Csv -Path "$TD_Exportpath\$($TD_Line_ID)_$($TD_Device_DeviceName)_StorageBaseInfo_$(Get-Date -Format 'yyyy-MM-dd').csv" -NoTypeInformation
+                SST_ToolMessageCollector -TD_ToolMSGCollector "$TD_Exportpath\$($TD_Line_ID)_$($TD_Device_DeviceName)_StorageBaseInfo_$(Get-Date -Format 'yyyy-MM-dd').csv" -TD_ToolMSGType Debug -TD_Shown no
             }
         }
 
         [PSCustomObject]@{
-            StorageInfo     = $TD_StorageInfo
-            ConnectionTyp   = $TD_Device_ConnectionTyp
+            StorageInfo   = $TD_StorageInfo
+            ConnectionTyp = $TD_Device_ConnectionTyp
         }
     }
 }

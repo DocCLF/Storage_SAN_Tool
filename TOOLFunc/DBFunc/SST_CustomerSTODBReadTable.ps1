@@ -79,3 +79,84 @@ function STO_HostStateInfo {
         }
     }
 }
+
+function Get-StorageVolumeInventory {
+    [CmdletBinding()]
+    param (
+        [Parameter(Mandatory)]
+        [ValidatePattern('^\d{6}$')]
+        [string]$CustomerNbr,
+
+        [string]$SerialNumber,
+
+        [switch]$OnlyActive
+    )
+
+    $DBPath = Join-Path $PSRootPath "Resources\DBFolder\$CustomerNbr.db"
+
+    $SQLiteConnectionString = "Data Source=$DBPath;Version=3;Pooling=False;"
+
+    $SQLiteDBConnection = New-Object System.Data.SQLite.SQLiteConnection $SQLiteConnectionString
+
+    $SQLiteCommand = $null
+    $Reader = $null
+
+    try {
+
+        $SQLiteDBConnection.Open()
+        $SQLiteCommand = $SQLiteDBConnection.CreateCommand()
+        $WhereParts = [System.Collections.Generic.List[string]]::new()
+
+        $WhereParts.Add( 'CustomerNbr = @CustomerNbr')
+        $SQLiteCommand.Parameters.AddWithValue('@CustomerNbr',$CustomerNbr) | Out-Null
+
+        if (-not [string]::IsNullOrWhiteSpace($SerialNumber)) {
+            $WhereParts.Add('SerialNumber = @SerialNumber')
+            $SQLiteCommand.Parameters.AddWithValue('@SerialNumber',$SerialNumber) | Out-Null
+        }
+
+        if ($OnlyActive) {$WhereParts.Add('IsActive = 1')}
+
+        $SQLiteCommand.CommandText = "SELECT CustomerNbr,SerialNumber,WWNN,VolumeID,VdiskUID,VolumeName,RowID,IsActive,FirstSeen,LastSeen,TimeStamp FROM IBMSTOVolumeInventoryTable WHERE $($WhereParts -join ' AND ') ORDER BY SerialNumber,VolumeID;"
+        $Reader = $SQLiteCommand.ExecuteReader()
+        $Result = @(
+            while ($Reader.Read()) {
+
+                [PSCustomObject]@{
+                    CustomerNbr  = [string]$Reader['CustomerNbr']
+                    SerialNumber = [string]$Reader['SerialNumber']
+                    WWNN         = [string]$Reader['WWNN']
+                    VolumeID     = [string]$Reader['VolumeID']
+                    VdiskUID     = [string]$Reader['VdiskUID']
+                    VolumeName   = [string]$Reader['VolumeName']
+                    RowID        = [string]$Reader['RowID']
+                    IsActive     = [int]$Reader['IsActive']
+                    FirstSeen    = [string]$Reader['FirstSeen']
+                    LastSeen     = [string]$Reader['LastSeen']
+                    TimeStamp    = [string]$Reader['TimeStamp']
+                }
+            }
+        )
+        return $Result
+    }
+    catch {
+
+        Write-Host ('Get-StorageVolumeInventory Fehler: ' + $_.Exception.Message) -ForegroundColor Red
+        Write-Host $_.InvocationInfo.PositionMessage
+        Write-Host $_.Exception.ToString()
+
+        throw
+    }
+    finally {
+
+        if ($null -ne $Reader) {$Reader.Close(); $Reader.Dispose()}
+        if ($null -ne $SQLiteCommand) {$SQLiteCommand.Dispose()}
+        if ($null -ne $SQLiteDBConnection) {
+            if ($SQLiteDBConnection.State -ne [System.Data.ConnectionState]::Closed) {
+                $SQLiteDBConnection.Close()
+            }
+            $SQLiteDBConnection.Dispose()
+        }
+        [System.Data.SQLite.SQLiteConnection]::ClearAllPools()
+    }
+}

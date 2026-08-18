@@ -51,7 +51,7 @@
     </Style>
 
     <!-- Nur sichtbar, wenn Main.SelectedView == PoolVolumeInfo -->
-    <Style x:Key="ShowWhenPoolVolumeInfo" TargetType="ItemsControl">
+    <Style x:Key="ShowWhenPoolVolumeInfo" TargetType="Grid">
         <Setter Property="Visibility" Value="Collapsed"/>
         <Style.Triggers>
             <DataTrigger Binding="{Binding Main.SelectedView}" Value="PoolVolumeInfo">

@@ -10,7 +10,8 @@ function Get-BrocadeSwitchShow {
     param(
         [Parameter(Mandatory)]
         $Device,
-        $RowCounter = 0
+        $RowCounter = 0,
+        $TD_Exportpath = $null
     )
 
     $FCPorts    = Get-BrocadeFcPorts -Device $Device
@@ -166,7 +167,9 @@ function Get-BrocadeSwitchShow {
     }
         try {
             SST_CustomerSANDBInsertTable -SST_InfoType "SANPortInfo" -SST_CollectedInformations $FOS_SwitchShowInfo
-            $FOS_SwitchShowInfo | Export-Csv -Path "$($TD_TB_ExportPath.Text)\FOS_SwitchShowInfo_$($SerialNumber)_$(Get-Date -Format "yyyy-MM-dd").csv" -NoTypeInformation -Append
+            if(-not [string]::IsNullOrWhiteSpace($TD_Exportpath)){
+                $FOS_SwitchShowInfo | Export-Csv -Path "$($TD_Exportpath)\FOS_SwitchShowInfo_$($SerialNumber)_$(Get-Date -Format "yyyy-MM-dd").csv" -NoTypeInformation -Append
+            }
         }
         catch {
             <#Do this if a terminating exception happens#>

@@ -2,7 +2,8 @@ function GET-BrocadeSecureCheck {
     [CmdletBinding()]
     param(
         [Parameter(Mandatory)]
-        $Device
+        $Device,
+        $TD_Exportpath = $null
     )
 
     $PB = New-ProgressBar
@@ -118,9 +119,9 @@ Please enter a user with sufficient permissions.
             RestEndpoint               = 'running/brocade-security/sec-crypto-cfg'
             RowID                       = $RowID
         }
-
-        Out-File -FilePath "$($TD_TB_ExportPath.Text)\SwitchSecurityInfo_$($SwitchName)_$(Get-Date -Format "yyyy-MM-dd").csv" -InputObject $FOS_SwitchSecurityInfo
-        
+        if(-not [string]::IsNullOrWhiteSpace($TD_Exportpath)){
+            Out-File -FilePath "$($TD_Exportpath)\SwitchSecurityInfo_$($SwitchName)_$(Get-Date -Format "yyyy-MM-dd").csv" -InputObject $FOS_SwitchSecurityInfo
+        }
     }
     finally {
         Close-ProgressBar -ProgressBar $PB

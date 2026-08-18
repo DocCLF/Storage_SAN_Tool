@@ -110,10 +110,10 @@ function IBM_RESTDriveInfo {
         <# export y or n #>
         if($TD_export -eq "yes"){
             if([string]$TD_Exportpath -ne "$PSRootPath\ToolLog\"){
-                $TD_DriveOverview | Export-Csv -Path $TD_Exportpath\$($TD_Line_ID)_$($IBMSTOSN)_Drive_Overview_$(Get-Date -Format "yyyy-MM-dd").csv -NoTypeInformation
+                $TD_DriveOverview | Export-Csv -Path "$TD_Exportpath\$($TD_Line_ID)_$($IBMSTOSN)_Drive_Overview_$(Get-Date -Format "yyyy-MM-dd").csv" -NoTypeInformation
                 SST_ToolMessageCollector -TD_ToolMSGCollector "$TD_Exportpath\$($TD_Line_ID)_$($IBMSTOSN)_Drive_Overview_$(Get-Date -Format "yyyy-MM-dd").csv" -TD_ToolMSGType Debug -TD_Shown no
             }else {
-                $TD_DriveOverview | Export-Csv -Path $PSScriptRoot\ToolLog\$($TD_Line_ID)_$($IBMSTOSN)_Drive_Overview_$(Get-Date -Format "yyyy-MM-dd").csv -NoTypeInformation
+                $TD_DriveOverview | Export-Csv -Path "$PSScriptRoot\ToolLog\$($TD_Line_ID)_$($IBMSTOSN)_Drive_Overview_$(Get-Date -Format "yyyy-MM-dd").csv" -NoTypeInformation
                 SST_ToolMessageCollector -TD_ToolMSGCollector "$PSScriptRoot\ToolLog\$($TD_Line_ID)_$($IBMSTOSN)_Drive_Overview_$(Get-Date -Format "yyyy-MM-dd").csv" -TD_ToolMSGType Debug -TD_Shown no
             }
             Start-Sleep -Seconds 0.2

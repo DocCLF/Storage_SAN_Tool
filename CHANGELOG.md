@@ -1,18 +1,19 @@
 # Change Log
 ## [Unreleased]
-- History Data 
-- LineCharts
 - Additional support for errors in the event log
 - Replace TrimEnd(“.xaml”) with GetFileNameWithoutExtension
 - Clean up duplicate style loading
 - Consistently secure DB parameters using Get-DbValue/Get-SqlParameterValue
-- Remove or migrate legacy SSH code
 - Further separate the backend/core from WPF
     * switched to Avalonia to support additional operating systems
 
-# [v1.5.01_alpha] - 2026-08-07
+# [v1.5.02_beta] - 2026-08-07
 ### Added 
+ - LiveCharts
+ - History Data 
+ - Inventory Tabelle for SAN, STO, etc., if a Device, Volume etc. will be replaced or anything else
 ### Fixed
+- Remove or migrate legacy SSH code
 ### Changed
 - removed most of SSH Function
 
@@ -20,7 +21,7 @@
 
 
 All notable changes to this project will be documented in this file.
-# [v1.4.071_beta] - 2026-08-05
+# [v1.4.071] - 2026-08-05
 ### Added 
 - Support for IBM Tape (only via REST)
 - REST Function for IBM Storage

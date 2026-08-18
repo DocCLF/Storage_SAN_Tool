@@ -28,12 +28,39 @@ function SST_CustomerDeviceDBCreateTable {
         try {
             $SQLiteDBConnection.Open()
             $SQLiteCommandCreate = $SQLiteDBConnection.CreateCommand()
+
+            <# für alte tabellen #>
+            
+            #    $SST_SQLiteTabelQuery = "ALTER TABLE IBMSTOVolumeAnalysisTable ADD COLUMN VdiskUID TEXT;"
+            #
+            #    $SQLiteCommandCreate.CommandText = $SST_SQLiteTabelQuery
+            #    $SQLiteCommandCreate.ExecuteNonQuery() | Out-Null
+#
+            #    $SQLiteCommandCreate.CommandText = "CREATE INDEX IF NOT EXISTS IX_IBMSTOVolumeAnalysis_UID_TimeStamp ON IBMSTOVolumeAnalysisTable (CustomerNbr,SerialNumber,VdiskUID,TimeStamp);"
+            #    $SQLiteCommandCreate.ExecuteNonQuery() | Out-Null
+
             <# StorageBase #>
             try{     
                 $SST_SQLiteTabelQuery ="CREATE TABLE IF NOT EXISTS IBMSTOHWTable (ID INTEGER PRIMARY KEY AUTOINCREMENT, CustomerNbr TEXT NOT NULL, Name TEXT NOT NULL, ClusterName TEXT, Status TEXT NOT NULL, IOgroupid INTEGER, IOgroupName TEXT,`
                                         CodeLevel TEXT, ConfigNode TEXT, SideID INTEGER, SideName TEXT, ProdMTM TEXT, RecommendedPTF TEXT, MDiskTotalCapacity TEXT, MDiskFreeCapacity TEXT, MDiskUsedCapacity TEXT, PhysicalTotalCapacity TEXT,`
                                         PhysicalFreeCapacity TEXT, HostUnmap TEXT, BackendUnmap TEXT, Topology TEXT, Layer TEXT, QuorumMode TEXT, SerialNumber TEXT, WWNN TEXT NOT NULL, TimeStamp TEXT );"
                 $SQLiteCommandCreate.CommandText = $SST_SQLiteTabelQuery
+                $SQLiteCommandCreate.ExecuteNonQuery() | Out-Null
+            }catch{
+                Write-Host "SQL Fehler: $($_.Exception.Message)"
+                Write-Host $_.Exception.ToString()
+            }
+            <# StorageBase InventoryTable  #>
+            try{     
+                $SST_SQLiteTabelQuery ="CREATE TABLE IF NOT EXISTS IBMSTOSystemInventoryTable (ID INTEGER PRIMARY KEY AUTOINCREMENT,CustomerNbr TEXT NOT NULL,SystemIdentity TEXT NOT NULL,SerialNumber TEXT NOT NULL,WWNN TEXT NOT NULL,ClusterName TEXT,`
+                                        ProdMTM TEXT,IsActive INTEGER NOT NULL DEFAULT 1, FirstSeen TEXT NOT NULL,LastSeen TEXT NOT NULL,TimeStamp TEXT NOT NULL, UNIQUE (CustomerNbr, SystemIdentity));"
+                $SQLiteCommandCreate.CommandText = $SST_SQLiteTabelQuery
+                $SQLiteCommandCreate.ExecuteNonQuery() | Out-Null
+
+                $SQLiteCommandCreate.CommandText = "CREATE INDEX IF NOT EXISTS IX_IBMSTOSystemInventory_SN ON IBMSTOSystemInventoryTable (CustomerNbr,SerialNumber);"
+                $SQLiteCommandCreate.ExecuteNonQuery() | Out-Null
+
+                $SQLiteCommandCreate.CommandText = "CREATE INDEX IF NOT EXISTS IX_IBMSTOSystemInventory_WWNN ON IBMSTOSystemInventoryTable (CustomerNbr,WWNN);"
                 $SQLiteCommandCreate.ExecuteNonQuery() | Out-Null
             }catch{
                 Write-Host "SQL Fehler: $($_.Exception.Message)"
@@ -69,7 +96,17 @@ function SST_CustomerDeviceDBCreateTable {
                 Write-Host "SQL Fehler: $($_.Exception.Message)"
                 Write-Host $_.Exception.ToString()
             }
-            <# FCPortStats #>
+            #<# FCPortStats for "old" Customers #>
+            #try {
+            #
+            #    Update-IBMSTOFCPortStatsTableSchema -SQLiteDBConnection $SQLiteDBConnection
+            #
+            #}
+            #catch {
+            #    Write-Host "SQL Fehler: $($_.Exception.Message)"
+            #    Write-Host $_.Exception.ToString()
+            #}
+            #<# FCPortStats for new Customers #>
             try{
                 $SST_SQLiteTabelQuery ="CREATE TABLE IF NOT EXISTS IBMSTOFCPortStatsTable (ID INTEGER PRIMARY KEY AUTOINCREMENT, CustomerNbr TEXT NOT NULL, RowID TEXT NOT NULL,NodeID INTEGER, NodeName TEXT, CardType TEXT, CardID INTEGER, PortID INTEGER, WWPN TEXT NOT NULL,`
                                         LinkFailure INTEGER, LoseSync INTEGER, LoseSig INTEGER, PSErrCount INTEGER, InvTransErr INTEGER, CRCErr INTEGER, ZeroBtB INTEGER, SFPTemp REAL, TXPwr REAL, TXPwrLow REAL, RXPwr REAL, RXPwrLow REAL, SerialNumber TEXT NOT NULL,`
@@ -83,6 +120,68 @@ function SST_CustomerDeviceDBCreateTable {
                 Write-Host "SQL Fehler: $($_.Exception.Message)"
                 Write-Host $_.Exception.ToString()
             }
+            <# PoolCapacity #>
+            try {
+                $SST_SQLiteTabelQuery = "CREATE TABLE IF NOT EXISTS IBMSTOPoolCapacityTable (ID INTEGER PRIMARY KEY AUTOINCREMENT,CustomerNbr TEXT NOT NULL,RowID TEXT NOT NULL,PoolID TEXT NOT NULL,PoolName TEXT,Capacity INTEGER,FreeCapacity INTEGER,VirtualCapacity INTEGER,`
+                                            UsedCapacity INTEGER,RealCapacity INTEGER,Overallocation REAL,SerialNumber TEXT NOT NULL,WWNN TEXT NOT NULL,TimeStamp TEXT NOT NULL);"
+            
+                $SQLiteCommandCreate.CommandText = $SST_SQLiteTabelQuery
+                $SQLiteCommandCreate.ExecuteNonQuery() | Out-Null
+            
+                # Speeds up history queries for one pool over a time range.
+                $SQLiteCommandCreate.CommandText = "CREATE INDEX IF NOT EXISTS IX_IBMSTOPoolCapacity_RowID_TimeStamp ON IBMSTOPoolCapacityTable (CustomerNbr,RowID,TimeStamp);"
+            
+                $SQLiteCommandCreate.ExecuteNonQuery() | Out-Null
+            }
+            catch {
+                Write-Host "SQL Fehler: $($_.Exception.Message)"
+                Write-Host $_.Exception.ToString()
+            }
+            <# VolumeInventory #>
+            try {
+                $SST_SQLiteTabelQuery = "CREATE TABLE IF NOT EXISTS IBMSTOVolumeInventoryTable (ID INTEGER PRIMARY KEY AUTOINCREMENT,CustomerNbr TEXT NOT NULL,SerialNumber TEXT NOT NULL,WWNN TEXT,VolumeID INTEGER,VdiskUID TEXT NOT NULL,VolumeName TEXT,`
+                                            RowID TEXT,IsActive INTEGER NOT NULL DEFAULT 1, FirstSeen TEXT NOT NULL,LastSeen TEXT NOT NULL,TimeStamp TEXT NOT NULL,`
+                                        UNIQUE (CustomerNbr,SerialNumber,VdiskUID));"
+            
+                $SQLiteCommandCreate.CommandText = $SST_SQLiteTabelQuery
+                $SQLiteCommandCreate.ExecuteNonQuery() | Out-Null
+
+                # Fast lookup of the current active volume inventory per system.
+                $SQLiteCommandCreate.CommandText = "CREATE INDEX IF NOT EXISTS IX_IBMSTOVolumeInventory_Active ON IBMSTOVolumeInventoryTable (CustomerNbr,SerialNumber,IsActive);"
+                $SQLiteCommandCreate.ExecuteNonQuery() | Out-Null
+
+                # Fast lookup by current VolumeID within one Storage system.
+                #
+                # VolumeID is not the permanent identity, but it is useful when
+                # correlating lsvdisk with lsvdiskanalysis from the same scan.
+                $SQLiteCommandCreate.CommandText = "CREATE INDEX IF NOT EXISTS IX_IBMSTOVolumeInventory_VolumeID ON IBMSTOVolumeInventoryTable (CustomerNbr,SerialNumber,VolumeID);"
+                $SQLiteCommandCreate.ExecuteNonQuery() | Out-Null
+            
+            }
+            catch {
+                Write-Host "SQL Fehler: $($_.Exception.Message)"
+                Write-Host $_.Exception.ToString()
+            }
+            <# VolumeAnalysisTable #>
+            try {
+                $SST_SQLiteTabelQuery = "CREATE TABLE IF NOT EXISTS IBMSTOVolumeAnalysisTable (ID INTEGER PRIMARY KEY AUTOINCREMENT,CustomerNbr TEXT NOT NULL,RowID TEXT NOT NULL,VolumeID TEXT NOT NULL,VolumeName TEXT,State TEXT,AnalysisTime TEXT,Capacity INTEGER,`
+                                            ThinSize INTEGER,ThinSavings INTEGER,ThinSavingsRatio REAL,CompressedSize INTEGER,CompressionSavings INTEGER,CompressionSavingsRatio REAL,TotalSavings INTEGER,TotalSavingsRatio REAL,MarginOfError REAL,WWNN TEXT NOT NULL,`
+                                            SerialNumber TEXT NOT NULL,TimeStamp TEXT NOT NULL);"
+            
+                $SQLiteCommandCreate.CommandText = $SST_SQLiteTabelQuery
+                $SQLiteCommandCreate.ExecuteNonQuery() | Out-Null
+
+                $SQLiteCommandCreate.CommandText = "CREATE INDEX IF NOT EXISTS IX_IBMSTOVolumeAnalysis_UID_TimeStamp ON IBMSTOVolumeAnalysisTable (CustomerNbr,SerialNumber,VdiskUID,TimeStamp);"
+                $SQLiteCommandCreate.ExecuteNonQuery() | Out-Null
+
+                # Speeds up history queries for one pool over a time range.
+                $SQLiteCommandCreate.CommandText = "CREATE INDEX IF NOT EXISTS IX_IBMSTOVolumeAnalysis_RowID_TimeStamp ON IBMSTOVolumeAnalysisTable (CustomerNbr,RowID,TimeStamp);"
+                $SQLiteCommandCreate.ExecuteNonQuery() | Out-Null
+            }
+            catch {
+                Write-Host "SQL Fehler: $($_.Exception.Message)"
+                Write-Host $_.Exception.ToString()
+            }
             <# SANBase #>
             try{ 
                 $SST_SQLiteTabelQuery ="CREATE TABLE IF NOT EXISTS IBMSANHWTable (ID INTEGER PRIMARY KEY AUTOINCREMENT, CustomerNbr TEXT NOT NULL, Name TEXT NOT NULL, Status TEXT NOT NULL, BrocadeProdName TEXT, MTM TEXT, CodeLevel TEXT, SerialNumber TEXT, SwitchWWNN TEXT, VFID TEXT, VFenabled TEXT, VFsupported TEXT, TimeStamp TEXT );" 
@@ -92,11 +191,66 @@ function SST_CustomerDeviceDBCreateTable {
                 Write-Host "SQL Fehler: $($_.Exception.Message)"
                 Write-Host $_.Exception.ToString()
             }
+            <# SAN Switch InventoryTable #>
+            try {
+            
+                $SST_SQLiteTabelQuery = "CREATE TABLE IF NOT EXISTS SANSwitchInventoryTable (ID INTEGER PRIMARY KEY AUTOINCREMENT,CustomerNbr TEXT NOT NULL,SwitchWWNN TEXT NOT NULL,SwitchName TEXT,SerialNumber TEXT,IsActive INTEGER NOT NULL DEFAULT 1,`
+                                            FirstSeen TEXT NOT NULL,LastSeen TEXT NOT NULL,TimeStamp TEXT NOT NULL,UNIQUE (CustomerNbr,SwitchWWNN));"
+            
+                $SQLiteCommandCreate.CommandText = $SST_SQLiteTabelQuery
+                $SQLiteCommandCreate.ExecuteNonQuery() | Out-Null
+            
+                # -------------------------------------------------------------
+                # Fast lookup by WWNN.
+                # -------------------------------------------------------------
+                $SQLiteCommandCreate.CommandText = "CREATE INDEX IF NOT EXISTS IX_SANSwitchInventory_WWNN ON SANSwitchInventoryTable (CustomerNbr,SwitchWWNN);"
+                $SQLiteCommandCreate.ExecuteNonQuery() | Out-Null
+            
+                # -------------------------------------------------------------
+                # Fast lookup of currently active SAN switches.
+                # -------------------------------------------------------------
+                $SQLiteCommandCreate.CommandText = "CREATE INDEX IF NOT EXISTS IX_SANSwitchInventory_Active ON SANSwitchInventoryTable (CustomerNbr,IsActive);"
+                $SQLiteCommandCreate.ExecuteNonQuery() |Out-Null
+
+            }catch {
+            
+                Write-Host ("SQL Fehler: $($_.Exception.Message)")
+                Write-Host $_.Exception.ToString()
+            }
             <# SANPortInfo #>
             try{
                 $SST_SQLiteTabelQuery ="CREATE TABLE IF NOT EXISTS IBMSANPortInfoTable (ID INTEGER PRIMARY KEY AUTOINCREMENT, CustomerNbr TEXT NOT NULL, Port TEXT, State TEXT, Speed TEXT, PortConnect TEXT, VFID TEXT, SerialNumber TEXT, SwitchWWNN TEXT, TimeStamp TEXT );"
                 $SQLiteCommandCreate.CommandText = $SST_SQLiteTabelQuery
                 $SQLiteCommandCreate.ExecuteNonQuery()
+            }catch{
+                Write-Host "SQL Fehler: $($_.Exception.Message)"
+                Write-Host $_.Exception.ToString()
+            }
+            <# SANPortErrorStats #>
+            try{
+                $SST_SQLiteTabelQuery ="CREATE TABLE IF NOT EXISTS IBMSANPortErrorStatsTable (ID INTEGER PRIMARY KEY AUTOINCREMENT, CustomerNbr TEXT NOT NULL, RowID TEXT NOT NULL, SwitchName TEXT, SerialNumber TEXT NOT NULL, SwitchWWNN TEXT, VFID TEXT,`
+                                         Port TEXT NOT NULL, EncIn INTEGER, CrcErr INTEGER, TooShort INTEGER, TooLong INTEGER, BadEOF INTEGER, EncOut INTEGER, DiscC3 INTEGER, LinkFail INTEGER,LossSync INTEGER, LossSig INTEGER, StateTransitions INTEGER,`
+                                         BBZero INTEGER, FECuncorrected INTEGER, TimeStamp TEXT NOT NULL);"
+                $SQLiteCommandCreate.CommandText = $SST_SQLiteTabelQuery
+                $SQLiteCommandCreate.ExecuteNonQuery()
+
+                $SQLiteCommandCreate.CommandText = "CREATE INDEX IF NOT EXISTS IX_IBMSANPortErrorStats_RowID_TimeStamp ON IBMSANPortErrorStatsTable (CustomerNbr,RowID,TimeStamp);"            
+                $SQLiteCommandCreate.ExecuteNonQuery() | Out-Null
+
+            }catch{
+                Write-Host "SQL Fehler: $($_.Exception.Message)"
+                Write-Host $_.Exception.ToString()
+            }
+            <# Get-BrocadeSFPShow #>
+            try{
+                $SST_SQLiteTabelQuery = "CREATE TABLE IF NOT EXISTS SANSFPStatsTable (ID INTEGER PRIMARY KEY AUTOINCREMENT,CustomerNbr TEXT NOT NULL,RowID TEXT NOT NULL,SwitchName TEXT,SerialNumber TEXT NOT NULL,SwitchWWNN TEXT,VFID TEXT,Port TEXT NOT NULL,`
+                                        SFPUsed INTEGER,SFPTyp TEXT,Connector TEXT,Media TEXT,Vendor TEXT,PartNumber TEXT,SFPSerialNumber TEXT,SpeedRange TEXT,Temperature REAL,RxPower REAL,TxPower REAL,Voltage REAL,Wavelength REAL,PowerOnTime INTEGER,TimeStamp TEXT NOT NULL);"
+                $SQLiteCommandCreate.CommandText = $SST_SQLiteTabelQuery
+                $SQLiteCommandCreate.ExecuteNonQuery()
+
+                $SQLiteCommandCreate.CommandText = "CREATE INDEX IF NOT EXISTS IX_IBMSANSFPStats_RowID_TimeStamp ON SANSFPStatsTable (CustomerNbr,RowID,TimeStamp);"            
+                $SQLiteCommandCreate.ExecuteNonQuery() | Out-Null
+
             }catch{
                 Write-Host "SQL Fehler: $($_.Exception.Message)"
                 Write-Host $_.Exception.ToString()

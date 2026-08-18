@@ -288,6 +288,7 @@ $TD_BTN_ToolSettings.add_click({
         })
     }
     $TD_CB_SelectAllSTOCB.IsChecked = $false
+    if (Test-Path -Path "$PSRootPath\Resources\DBFolder\*" -Include *.db) {SST_CustomerDeviceDBCreateTable}
 })
 #endregion
 #region ToolSettingsBTN
@@ -386,6 +387,7 @@ $TD_BTN_ImportCred.add_click({
 #endregion
 #region LocalDB
 if($TD_BTN_DeleteDB.Visibility -eq "Visible"){$TD_BTN_ActivateDB.Visibility = "Collapsed"}
+
 $TD_BTN_ActivateDB.add_click({
     if(($TD_BTN_ActivateDB.Background -notlike "*FFFC4242")-and($TD_TB_CustomerInfoName.Background -notlike "*FFFA8C8C")){
         $DBName = $TD_TB_CustomerInfoName.Text
@@ -405,12 +407,6 @@ $TD_BTN_ActivateDB.add_click({
             $TD_BTN_DeleteDB.Background = "coral"
             if($TD_CB_CustomerYN.IsChecked){$TD_BTN_ActivateDB.Visibility = "Collapsed"}
             $SST_SQLiteCon.Close()
-            #$TD_CB_DataBaseChoice.ItemsSource = $null
-            #$TD_DataBaseChoice = @(Get-ChildItem "$PSRootPath\Resources\DBFolder\*" -Filter "*.db" | Select-Object -ExpandProperty Basename)
-            #Write-Host $TD_DataBaseChoice -ForegroundColor Green
-            #$TD_CB_DataBaseChoice.IsEnabled = $true
-            #$TD_CB_DataBaseChoice.ItemsSource = $TD_DataBaseChoice
-            #$TD_CB_DataBaseChoice.SelectedIndex = 0
             SST_CustomerDeviceDBCreateTable
         }
     }else {
@@ -610,7 +606,6 @@ $TD_BTN_ConnetionToPRISM.add_click({
             if ($SQLConnection.State -ne [System.Data.ConnectionState]::Closed) {
                 $SQLConnection.Close()
             }
-        
             $SQLConnection.Open()
         
             if ($SQLConnection.State -eq [System.Data.ConnectionState]::Open) {
@@ -692,9 +687,34 @@ $TD_BTN_IBM_BaseStorageInfo.add_click({
     $UCVMMain = $UCDataContext.Main
     <# if there a something in, its better to clean it up befor we use it again #>
     $UCVMMain.DeviceToggles.Clear()
+    $SuccessfulStorageSystems = [System.Collections.Generic.List[object]]::new()
+    $StorageInventoryScanComplete = $true
+
     foreach($TD_Creds in $TD_Credentials){
         $baseResult  = New-DeviceBlock -Device $TD_Creds -ExportPath $TD_TB_ExportPath.Text -RESTFunc IBM_RESTBaseStorageInfos -SSHFunc IBM_SSHBaseStorageInfos
         
+        $StorageInfo = @($baseResult.FuncResult.StorageInfo)
+
+        if ($StorageInfo.Count -eq 0) {        
+            # At least one configured Storage system could not be read.
+            # Do not deactivate inventory objects after this run.
+            $StorageInventoryScanComplete = $false
+        }else {
+        
+            foreach ($StorageSystem in $StorageInfo) {
+                if ($null -eq $StorageSystem -or [string]::IsNullOrWhiteSpace( [string]$StorageSystem.SerialNumber) -or [string]::IsNullOrWhiteSpace([string]$StorageSystem.WWNN)) {
+                    $StorageInventoryScanComplete = $false
+                    continue
+                }
+                $SuccessfulStorageSystems.Add(
+                    [PSCustomObject]@{
+                    SerialNumber = [string]$StorageSystem.SerialNumber
+                    WWNN = [string]$StorageSystem.WWNN
+                    }
+                )
+            }
+        }
+
         $dev = $baseResult.DeviceIdent
         $mapStorageInfo = @{
             ID             = 'ID'
@@ -734,6 +754,11 @@ $TD_BTN_IBM_BaseStorageInfo.add_click({
         $UCVMMain.DeviceToggles.Add($dev)
     }
     $UCVMMain.SelectedView = "Base"
+    if ($StorageInventoryScanComplete -and $SuccessfulStorageSystems.Count -gt 0) {
+        $null = SST_CustomerSTODBInsertTable -SST_InfoType 'StorageInventoryFinalize' -SST_CollectedInformations @($SuccessfulStorageSystems)
+    }else {
+        Write-Warning ('Storage inventory finalization was skipped because ' +'not all configured Storage systems could be read successfully.')
+    }
 })
 $TD_BTN_IBM_Eventlog.add_click({
     $TD_GB_SearchFilterSTO.Visibility="visible"
@@ -1289,6 +1314,8 @@ $TD_BTN_FOS_BasicSwitchInfo.add_click({
             SwitchState         = 'SwitchState'
             SwitchRole          = 'SwitchRole'
         }
+        $SuccessfulSANSwitches = [System.Collections.Generic.List[object]]::new()
+        $SANSwitchScanComplete = $true
 
         foreach ($TD_Creds in $TD_Credentials) {
 
@@ -1302,14 +1329,48 @@ $TD_BTN_FOS_BasicSwitchInfo.add_click({
                 $funcResult = @($funcResult) | Where-Object { $_ -is [System.Collections.IDictionary] -or $_.PSObject.Properties.Count -gt 0 } | Select-Object -First 1
             }
 
-            #if ($deviceIdent.PSObject.Properties.Match('IsChecked').Count -gt 0) {
-            #    $deviceIdent.IsChecked = $true
-            #}
-
+            if ($null -eq $funcResult) {
+                $SANSwitchScanComplete = $false
+            }else {
+            
+                $SwitchWWNN = [string]$funcResult.SwitchWWN
+                $SwitchName = [string]$funcResult.SwitchName
+                $SerialNumber = [string]$funcResult.SerialNumber
+                if ([string]::IsNullOrWhiteSpace($SwitchWWNN)) {
+                    $SANSwitchScanComplete = $false
+                }else {
+                    # ---------------------------------------------------------
+                    # Update current SAN Switch inventory.
+                    # ---------------------------------------------------------
+                    $SANInventoryData = @(
+                        [PSCustomObject]@{
+                            SwitchWWNN   = $SwitchWWNN
+                            SwitchName   = $SwitchName
+                            SerialNumber = $SerialNumber
+                        }
+                    )
+                    $null = SST_CustomerSANDBInsertTable -SST_InfoType 'SANSwitchInventory' -SST_CollectedInformations $SANInventoryData
+                    
+                    # ---------------------------------------------------------
+                    # Remember successfully scanned switch for finalization.
+                    # ---------------------------------------------------------
+                    $SuccessfulSANSwitches.Add([PSCustomObject]@{SwitchWWNN = $SwitchWWNN})
+                }
+            }
             Add-MappedKeyValueRows -Collection $deviceIdent.SANSwitchBaseRows -Source $funcResult -Map $mapSANSwitchInfo
 
             $UCVMMain.DeviceToggles.Add($deviceIdent)
         }
+        # -------------------------------------------------------------
+        # Finalize SAN Switch inventory only when every configured SAN switch could be read successfully.
+        # -------------------------------------------------------------
+        if ($SANSwitchScanComplete -and $SuccessfulSANSwitches.Count -gt 0) {
+        
+            $null = SST_CustomerSANDBInsertTable -SST_InfoType 'SANSwitchInventoryFinalize' -SST_CollectedInformations @($SuccessfulSANSwitches)
+        }else {
+            Write-Warning ('SAN Switch inventory finalization was skipped because ' + 'not all configured SAN switches could be read successfully.')
+        }
+
         $UCVMMain.SelectedView = "SANSwitchBase"
     }finally{
         SST_ToolMessageCollector -TD_ToolMSGCollector "Get-BrocadeBaseInfo done" -TD_ToolMSGType Message -TD_Shown yes
@@ -2960,7 +3021,7 @@ $TD_BTN_IBM_OpenSFPHistory.Add_Click({
             $CustomerNbr -notmatch '^\d{6}$'
         ) {
             [System.Windows.MessageBox]::Show(
-                'Es wurde keine gültige sechsstellige Kundennummer gefunden.',
+                'No valid six-digit customer number was found.',
                 'Storage SFP History',
                 [System.Windows.MessageBoxButton]::OK,
                 [System.Windows.MessageBoxImage]::Warning
@@ -2969,12 +3030,191 @@ $TD_BTN_IBM_OpenSFPHistory.Add_Click({
             return
         }
 
-        Show-StorageSFPHistory `
-            -CustomerNbr $CustomerNbr
+        Show-StorageSFPHistory -CustomerNbr $CustomerNbr
     }
     catch {
         Write-Host (
             "Storage SFP History konnte nicht geöffnet werden: " +
+            $_.Exception.Message
+        ) -ForegroundColor Red
+    }
+})
+$TD_BTN_IBM_OpenMDiskHistory.Add_Click({
+    try {
+        $CustomerNbr = $null
+
+        if (
+            $null -ne $TD_TB_CustomerInfoName -and
+            -not [string]::IsNullOrWhiteSpace(
+                [string]$TD_TB_CustomerInfoName.Text
+            )
+        ) {
+            $CustomerNbr = [string]$TD_TB_CustomerInfoName.Text
+        }
+        elseif (
+            $null -ne $SST_NewDBObject -and
+            -not [string]::IsNullOrWhiteSpace(
+                [string]$SST_NewDBObject.CustomerNumber
+            )
+        ) {
+            $CustomerNbr =
+                [string]$SST_NewDBObject.CustomerNumber
+        }
+
+        if (
+            [string]::IsNullOrWhiteSpace($CustomerNbr) -or
+            $CustomerNbr -notmatch '^\d{6}$'
+        ) {
+            [System.Windows.MessageBox]::Show(
+                'No valid six-digit customer number was found.',
+                'Storage MDisk History',
+                [System.Windows.MessageBoxButton]::OK,
+                [System.Windows.MessageBoxImage]::Warning
+            ) | Out-Null
+
+            return
+        }
+
+        Show-StoragePoolHistory -CustomerNbr $CustomerNbr
+    }
+    catch {
+        Write-Host (
+            "Unable to open Storage MDisk History: " +
+            $_.Exception.Message
+        ) -ForegroundColor Red
+    }
+})
+$TD_BTN_IBM_OpenVDiskHistory.add_click({
+    try {
+        $CustomerNbr = $null
+
+        if (
+            $null -ne $TD_TB_CustomerInfoName -and
+            -not [string]::IsNullOrWhiteSpace(
+                [string]$TD_TB_CustomerInfoName.Text
+            )
+        ) {
+            $CustomerNbr = [string]$TD_TB_CustomerInfoName.Text
+        }
+        elseif (
+            $null -ne $SST_NewDBObject -and
+            -not [string]::IsNullOrWhiteSpace(
+                [string]$SST_NewDBObject.CustomerNumber
+            )
+        ) {
+            $CustomerNbr =
+                [string]$SST_NewDBObject.CustomerNumber
+        }
+
+        if (
+            [string]::IsNullOrWhiteSpace($CustomerNbr) -or
+            $CustomerNbr -notmatch '^\d{6}$'
+        ) {
+            [System.Windows.MessageBox]::Show(
+                'No valid six-digit customer number was found.',
+                'Storage MDisk History',
+                [System.Windows.MessageBoxButton]::OK,
+                [System.Windows.MessageBoxImage]::Warning
+            ) | Out-Null
+
+            return
+        }
+
+        Show-StorageVolumeHistory -CustomerNbr $CustomerNbr
+    }
+    catch {
+        Write-Host (
+            "Unable to open Storage MDisk History: " +
+            $_.Exception.Message
+        ) -ForegroundColor Red
+    }
+})
+$TD_BTN_SAN_OpenPortErrShowHistory.add_click({
+    try {
+        $CustomerNbr = $null
+
+        if (
+            $null -ne $TD_TB_CustomerInfoName -and
+            -not [string]::IsNullOrWhiteSpace(
+                [string]$TD_TB_CustomerInfoName.Text
+            )
+        ) {
+            $CustomerNbr = [string]$TD_TB_CustomerInfoName.Text
+        }
+        elseif (
+            $null -ne $SST_NewDBObject -and
+            -not [string]::IsNullOrWhiteSpace(
+                [string]$SST_NewDBObject.CustomerNumber
+            )
+        ) {
+            $CustomerNbr =
+                [string]$SST_NewDBObject.CustomerNumber
+        }
+
+        if (
+            [string]::IsNullOrWhiteSpace($CustomerNbr) -or
+            $CustomerNbr -notmatch '^\d{6}$'
+        ) {
+            [System.Windows.MessageBox]::Show(
+                'No valid six-digit customer number was found.',
+                'SAN PortError History',
+                [System.Windows.MessageBoxButton]::OK,
+                [System.Windows.MessageBoxImage]::Warning
+            ) | Out-Null
+
+            return
+        }
+
+        Show-SANPortErrorHistory -CustomerNbr $CustomerNbr
+    }
+    catch {
+        Write-Host (
+            "Unable to open SAN PortError History: " +
+            $_.Exception.Message
+        ) -ForegroundColor Red
+    }
+})
+$TD_BTN_SAN_OpenSFPhowHistory.add_click({
+    try {
+        $CustomerNbr = $null
+
+        if (
+            $null -ne $TD_TB_CustomerInfoName -and
+            -not [string]::IsNullOrWhiteSpace(
+                [string]$TD_TB_CustomerInfoName.Text
+            )
+        ) {
+            $CustomerNbr = [string]$TD_TB_CustomerInfoName.Text
+        }
+        elseif (
+            $null -ne $SST_NewDBObject -and
+            -not [string]::IsNullOrWhiteSpace(
+                [string]$SST_NewDBObject.CustomerNumber
+            )
+        ) {
+            $CustomerNbr =
+                [string]$SST_NewDBObject.CustomerNumber
+        }
+
+        if (
+            [string]::IsNullOrWhiteSpace($CustomerNbr) -or
+            $CustomerNbr -notmatch '^\d{6}$'
+        ) {
+            [System.Windows.MessageBox]::Show(
+                'No valid six-digit customer number was found.',
+                'SAN PortError History',
+                [System.Windows.MessageBoxButton]::OK,
+                [System.Windows.MessageBoxImage]::Warning
+            ) | Out-Null
+
+            return
+        }
+
+        Show-SANSFPHistory -CustomerNbr $CustomerNbr
+    }
+    catch {
+        Write-Host (
+            "Unable to open SAN PortError History: " +
             $_.Exception.Message
         ) -ForegroundColor Red
     }
@@ -3051,10 +3291,13 @@ switch ($CockpitView) {
         catch {
             <#Do this if a terminating exception happens#>
             SST_ToolMessageCollector -TD_ToolMSGCollector $("Remove Files fail: $($_.Exception.Message)") -TD_ToolMSGType Error -TD_Shown no
+        }finally{
+            SST_ToolMessageCollector -TD_ToolMSGCollector $("End of GUI File with JobMode this will Exit now!") -TD_ToolMSGType Message -TD_Shown no
+            Exit
         }
-        Write-Debug -Message "Close the appl via CloseBtn"
+        #Write-Host "Close the appl via CloseBtn"
         #$MainWindow.Close()
-        #Exit
+        
     }
     Default {SST_ToolMessageCollector -TD_ToolMSGCollector $("Start Tool with Usercontrol $CockpitView ") -TD_ToolMSGType Message -TD_Shown no}
 }

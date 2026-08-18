@@ -2,7 +2,8 @@ function Get-BrocadeLicenseOverview {
     [CmdletBinding()]
     param(
         [Parameter(Mandatory)]
-        $Device
+        $Device,
+        $TD_Exportpath = $null
     )
     $PB = New-ProgressBar
 
@@ -43,7 +44,9 @@ function Get-BrocadeLicenseOverview {
     }
     Write-ProgressBar -ProgressBar $PB -Activity "Create Obj completed" -PercentComplete 85
     try {
-        Out-File -FilePath "$($TD_TB_ExportPath.Text)\PortLicenseShow_$($ChassisInfo.'vendor-serial-number')_$(Get-Date -Format "yyyy-MM-dd").csv" -InputObject $LicenseInfo
+        if(-not [string]::IsNullOrWhiteSpace($TD_Exportpath)){
+            Out-File -FilePath "$($TD_Exportpath)\PortLicenseShow_$($ChassisInfo.'vendor-serial-number')_$(Get-Date -Format "yyyy-MM-dd").csv" -InputObject $LicenseInfo
+        }
     }
     catch {
         SST_ToolMessageCollector -TD_ToolMSGCollector "LicenseInfo: $($_.Exception.Message)" -TD_ToolMSGType "Warning" -TD_Shown "no"
