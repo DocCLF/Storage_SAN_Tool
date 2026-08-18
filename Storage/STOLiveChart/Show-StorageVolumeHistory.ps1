@@ -1,19 +1,23 @@
-function Show-StorageSFPHistory {
+function Show-StorageVolumeHistory {
     <#
     .SYNOPSIS
-        Opens a Storage SFP history viewer.
+        Opens a Storage volume analysis history viewer.
 
     .DESCRIPTION
-        Opens the shared LiveCharts history viewer for Storage FC ports.
+        Loads the available Storage volumes and analysis metrics for a
+        customer and displays the selected historical metrics in a
+        LiveCharts chart.
 
-        The viewer uses the generic selector architecture:
+        The viewer supports:
 
-            Storage System
-                -> FC Port / SFP
-                    -> Metric / Series
+            Source Groups
+                Storage systems
 
-        Multiple ports and multiple compatible metrics may be displayed
-        simultaneously.
+            Sources
+                One or multiple Volumes
+
+            Series
+                One or multiple analysis metrics
 
         The shared history viewer XAML is provided by
         Get-LiveChartsHistoryViewXaml.
@@ -22,7 +26,7 @@ function Show-StorageSFPHistory {
         Customer number whose SQLite database should be used.
 
     .EXAMPLE
-        Show-StorageSFPHistory -CustomerNbr '123456'
+        Show-StorageVolumeHistory -CustomerNbr '123456'
     #>
 
     [CmdletBinding()]
@@ -49,13 +53,13 @@ function Show-StorageSFPHistory {
     Add-Type -AssemblyName WindowsBase
 
     # ---------------------------------------------------------------------
-    # Load shared History Viewer XAML
+    # Load shared history viewer XAML
     # ---------------------------------------------------------------------
 
     $Xaml =
         Get-LiveChartsHistoryViewXaml `
-            -WindowTitle 'Storage SFP History' `
-            -SourceLabel 'Storage-Port'
+            -WindowTitle 'Storage Volume Analysis History' `
+            -SourceLabel 'Storage-Volume'
 
     $XmlReader =
         [System.Xml.XmlReader]::Create(
@@ -81,7 +85,7 @@ function Show-StorageSFPHistory {
     }
 
     # ---------------------------------------------------------------------
-    # Load application styles
+    # Load common WPF resource dictionaries
     # ---------------------------------------------------------------------
 
     $StyleFiles = @(
@@ -89,17 +93,20 @@ function Show-StorageSFPHistory {
             Join-Path `
                 $PSRootPath `
                 'Resources\Styles\ColorStyle.xaml'
-        ),
+        )
+
         (
             Join-Path `
                 $PSRootPath `
                 'Resources\Styles\OtherControlStyle.xaml'
-        ),
+        )
+
         (
             Join-Path `
                 $PSRootPath `
                 'Resources\Styles\TextBoxStyle.xaml'
-        ),
+        )
+
         (
             Join-Path `
                 $PSRootPath `
@@ -112,10 +119,44 @@ function Show-StorageSFPHistory {
         -Path $StyleFiles
 
     # ---------------------------------------------------------------------
-    # Resolve legacy controls
+    # Resolve generic SourceGroup controls
+    # ---------------------------------------------------------------------
+
+    $SP_SourceGroupSelector =
+        $Window.FindName(
+            'SP_SourceGroupSelector'
+        )
+
+    $LB_SourceGroupSelector =
+        $Window.FindName(
+            'LB_SourceGroupSelector'
+        )
+
+    # ---------------------------------------------------------------------
+    # Resolve generic Source selector
+    # ---------------------------------------------------------------------
+
+    $LB_SourceSelector =
+        $Window.FindName(
+            'LB_SourceSelector'
+        )
+
+    # ---------------------------------------------------------------------
+    # Resolve generic Series selector
+    # ---------------------------------------------------------------------
+
+    $LB_SeriesSelector =
+        $Window.FindName(
+            'LB_SeriesSelector'
+        )
+
+    # ---------------------------------------------------------------------
+    # Resolve legacy source / comparison controls
     #
-    # These still exist in the shared XAML because other viewers may use
-    # them. Initialize-StorageSFPHistoryView collapses them for SFP.
+    # These controls are currently kept in the shared XAML for backwards
+    # compatibility with other history viewers.
+    #
+    # The Volume viewer hides them in its initializer.
     # ---------------------------------------------------------------------
 
     $CB_Source =
@@ -134,34 +175,7 @@ function Show-StorageSFPHistory {
         )
 
     # ---------------------------------------------------------------------
-    # Resolve generic selector controls
-    # ---------------------------------------------------------------------
-
-    # Storage Systems / Source Groups
-    $SP_SourceGroupSelector =
-        $Window.FindName(
-            'SP_SourceGroupSelector'
-        )
-
-    $LB_SourceGroupSelector =
-        $Window.FindName(
-            'LB_SourceGroupSelector'
-        )
-
-    # FC Ports / Sources
-    $LB_SourceSelector =
-        $Window.FindName(
-            'LB_SourceSelector'
-        )
-
-    # Metrics / Series
-    $LB_SeriesSelector =
-        $Window.FindName(
-            'LB_SeriesSelector'
-        )
-
-    # ---------------------------------------------------------------------
-    # Resolve common viewer controls
+    # Resolve preset / time controls
     # ---------------------------------------------------------------------
 
     $CB_Metric =
@@ -179,6 +193,10 @@ function Show-StorageSFPHistory {
             'BTN_Refresh'
         )
 
+    # ---------------------------------------------------------------------
+    # Resolve status and chart controls
+    # ---------------------------------------------------------------------
+
     $TB_Status =
         $Window.FindName(
             'TB_Status'
@@ -190,21 +208,18 @@ function Show-StorageSFPHistory {
         )
 
     # ---------------------------------------------------------------------
-    # Validate required controls
-    #
-    # This catches mismatches between shared XAML and viewer code before
-    # Initialize-StorageSFPHistoryView is called.
+    # Validate all required XAML controls
     # ---------------------------------------------------------------------
 
     $RequiredControls = @{
-        CB_Source              = $CB_Source
-        CHK_ComparisonMode     = $CHK_ComparisonMode
-        LB_ComparisonSources   = $LB_ComparisonSources
-
         SP_SourceGroupSelector = $SP_SourceGroupSelector
         LB_SourceGroupSelector = $LB_SourceGroupSelector
         LB_SourceSelector      = $LB_SourceSelector
         LB_SeriesSelector      = $LB_SeriesSelector
+
+        CB_Source              = $CB_Source
+        CHK_ComparisonMode     = $CHK_ComparisonMode
+        LB_ComparisonSources   = $LB_ComparisonSources
 
         CB_Metric              = $CB_Metric
         CB_TimeRange           = $CB_TimeRange
@@ -215,40 +230,32 @@ function Show-StorageSFPHistory {
 
     foreach ($ControlName in $RequiredControls.Keys) {
 
-        if ($null -eq $RequiredControls[$ControlName]) {
-
+        if (
+            $null -eq
+            $RequiredControls[$ControlName]
+        ) {
             throw (
-                "Das benötigte Control '$ControlName' " +
-                'wurde im XAML nicht gefunden.'
+                "Required control '$ControlName' " +
+                'was not found in XAML.'
             )
         }
     }
 
     # ---------------------------------------------------------------------
-    # Initialize SFP viewer
-    #
-    # Important:
-    #
-    # The generic Initialize parameters are intentionally named
-    # GroupSelectorListBox / GroupSelectorPanel.
-    #
-    # Here they receive the actual XAML controls:
-    #
-    #   GroupSelectorListBox -> LB_SourceGroupSelector
-    #   GroupSelectorPanel   -> SP_SourceGroupSelector
+    # Initialize Storage Volume history viewer
     # ---------------------------------------------------------------------
 
     $Initialized =
-        Initialize-StorageSFPHistoryView `
+        Initialize-StorageVolumeHistoryView `
             -CustomerNbr $CustomerNbr `
             -ViewRoot $Window `
-            -PortComboBox $CB_Source `
+            -VolumeComboBox $CB_Source `
             -ComparisonCheckBox $CHK_ComparisonMode `
             -ComparisonListBox $LB_ComparisonSources `
+            -SourceGroupPanel $SP_SourceGroupSelector `
+            -SourceGroupSelectorListBox $LB_SourceGroupSelector `
             -SourceSelectorListBox $LB_SourceSelector `
             -SeriesSelectorListBox $LB_SeriesSelector `
-            -GroupSelectorListBox $LB_SourceGroupSelector `
-            -GroupSelectorPanel $SP_SourceGroupSelector `
             -MetricComboBox $CB_Metric `
             -TimeRangeComboBox $CB_TimeRange `
             -StatusTextBlock $TB_Status `
@@ -270,16 +277,73 @@ function Show-StorageSFPHistory {
     catch {
 
         Write-Host (
-            'Storage SFP History ShowDialog Fehler: ' +
-            $_.Exception.Message
+            "Storage Volume History ShowDialog ERROR"
         ) -ForegroundColor Red
 
         Write-Host `
-            $_.InvocationInfo.PositionMessage
+            "`nMessage:" `
+            -ForegroundColor Yellow
 
         Write-Host `
-            $_.ScriptStackTrace `
-            -ForegroundColor DarkGray
+            $_.Exception.Message
+
+        Write-Host `
+            "`nException Type:" `
+            -ForegroundColor Yellow
+
+        Write-Host `
+            $_.Exception.GetType().FullName
+
+        Write-Host `
+            "`nFull Exception:" `
+            -ForegroundColor Yellow
+
+        Write-Host `
+            $_.Exception.ToString()
+
+        # -------------------------------------------------------------
+        # Walk through all InnerExceptions.
+        # -------------------------------------------------------------
+
+        $InnerException =
+            $_.Exception.InnerException
+
+        $Level =
+            1
+
+        while ($null -ne $InnerException) {
+
+            Write-Host (
+                "`nInnerException $Level"
+            ) -ForegroundColor Cyan
+
+            Write-Host 'Type:'
+
+            Write-Host `
+                $InnerException.GetType().FullName
+
+            Write-Host 'Message:'
+
+            Write-Host `
+                $InnerException.Message
+
+            Write-Host 'Full:'
+
+            Write-Host `
+                $InnerException.ToString()
+
+            $InnerException =
+                $InnerException.InnerException
+
+            $Level++
+        }
+
+        Write-Host `
+            "`nScriptStackTrace:" `
+            -ForegroundColor Yellow
+
+        Write-Host `
+            $_.ScriptStackTrace
 
         throw
     }

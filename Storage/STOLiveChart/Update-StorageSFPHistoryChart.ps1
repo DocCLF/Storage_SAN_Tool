@@ -1,48 +1,58 @@
 function Update-StorageSFPHistoryChart {
     <#
     .SYNOPSIS
-        Builds the LiveCharts data model for one or multiple IBM Storage FC ports.
+        Builds the LiveCharts data model for one or multiple Storage FC ports.
 
     .DESCRIPTION
-        Loads historical data for one or multiple Storage FC ports and
-        creates the LiveCharts series, axes and statistics for the selected
-        metric.
+        Loads historical SFP / FC-port data for one or multiple ports and
+        prepares one or multiple selected metrics.
 
-        A single-port request creates the normal Storage history view,
-        including optional reference series.
+        Supported combinations:
 
-        A multi-port request creates a comparison view for up to four
-        Storage FC ports using the same metric.
+            1 Source  x 1 Metric
+            1 Source  x n Metrics
+            n Sources x 1 Metric
+            n Sources x n Metrics
 
-        Counter metrics can be converted from cumulative values to delta
-        values depending on the configured ValueMode.
+        All selected metrics must belong to the same UnitGroup.
 
-        The function does not open a window and does not directly modify
-        a CartesianChart control.
+        Counter metrics may use a separate SourceMetric.
+
+        Example:
+
+            ZeroBtB
+                SourceMetric = ZeroBtB
+                ValueMode    = Raw
+
+            ZeroBtBDelta
+                SourceMetric = ZeroBtB
+                ValueMode    = Delta
+
+        This makes it possible to display both the cumulative counter and
+        the increase between measurements at the same time.
+
+        Delta calculation is performed in this function before display
+        conversion. ConvertTo-LiveChartsDisplayHistory therefore receives
+        temporary metric definitions with ValueMode 'Raw' so that calculated
+        Delta values are not converted a second time.
 
     .PARAMETER Request
-        Request object created by New-StorageSFPHistoryRequest.
+        Optional request object created by New-StorageSFPHistoryRequest.
 
-        The request may contain:
-
-            RowID
-                One Storage FC port.
-
-            RowIDs
-                One to four Storage FC ports.
+        Existing single-metric requests remain supported.
 
     .PARAMETER CustomerNbr
         Customer number used to locate the SQLite database.
 
-    .PARAMETER RowID
-        Stable Storage FC-port identifier:
+    .PARAMETER RowIDs
+        One or multiple stable FC-port identifiers:
 
             SerialNumber|WWNN|WWPN
 
-        Direct parameter calls currently support one port.
+        The alias RowID remains available for existing callers.
 
     .PARAMETER Metric
-        Storage metric to display.
+        One or multiple SFP metrics.
 
     .PARAMETER StartTime
         Beginning of the requested history range.
@@ -57,18 +67,7 @@ function Update-StorageSFPHistoryChart {
         Minimum distance between labels on the X axis.
 
     .OUTPUTS
-        PSCustomObject created by New-LiveChartsChartModel.
-
-    .EXAMPLE
-        $ChartData = Update-StorageSFPHistoryChart `
-            -CustomerNbr '123456' `
-            -RowID '78F27FR|5005076815000ADC|5005076815110adc' `
-            -Metric 'SFPTemp' `
-            -StartTime (Get-Date).AddDays(-7)
-
-    .EXAMPLE
-        $ChartData = Update-StorageSFPHistoryChart `
-            -Request $Request
+        PSCustomObject created by New-LiveChartsHistoryChartModel.
     #>
 
     [CmdletBinding(DefaultParameterSetName = 'ByParameters')]
@@ -91,15 +90,16 @@ function Update-StorageSFPHistoryChart {
             Mandatory,
             ParameterSetName = 'ByParameters'
         )]
-        [ValidateNotNullOrEmpty()]
-        [string]$RowID,
+        [Alias('RowID')]
+        [ValidateNotNull()]
+        [string[]]$RowIDs,
 
         [Parameter(
             Mandatory,
             ParameterSetName = 'ByParameters'
         )]
-        [ValidateNotNullOrEmpty()]
-        [string]$Metric,
+        [ValidateNotNull()]
+        [string[]]$Metric,
 
         [Parameter(ParameterSetName = 'ByParameters')]
         [datetime]$StartTime = (Get-Date).AddDays(-30),
@@ -116,7 +116,7 @@ function Update-StorageSFPHistoryChart {
     )
 
     # ---------------------------------------------------------------------
-    # Request normalisieren
+    # Normalize request
     # ---------------------------------------------------------------------
 
     if ($PSCmdlet.ParameterSetName -eq 'ByRequest') {
@@ -131,25 +131,49 @@ function Update-StorageSFPHistoryChart {
         )
 
         foreach ($PropertyName in $RequiredProperties) {
+
             if (-not $Request.PSObject.Properties[$PropertyName]) {
                 throw "Request property '$PropertyName' is missing."
             }
         }
 
-        $CustomerNbr         = [string]$Request.CustomerNbr
-        $Metric              = [string]$Request.Metric
-        $StartTime           = [datetime]$Request.StartTime
-        $EndTime             = [datetime]$Request.EndTime
-        $DateTimeLabelFormat = [string]$Request.DateTimeLabelFormat
-        $DateTimeStep        = [TimeSpan]$Request.DateTimeStep
+        $CustomerNbr =
+            [string]$Request.CustomerNbr
 
-        # Neue Requests verwenden RowIDs.
-        # RowID bleibt als Fallback für ältere Requests erhalten.
+        $Metric = @(
+            $Request.Metric |
+                Where-Object {
+                    -not [string]::IsNullOrWhiteSpace(
+                        [string]$_
+                    )
+                } |
+                ForEach-Object {
+                    [string]$_
+                }
+        )
+
+        $StartTime =
+            [datetime]$Request.StartTime
+
+        $EndTime =
+            [datetime]$Request.EndTime
+
+        $DateTimeLabelFormat =
+            [string]$Request.DateTimeLabelFormat
+
+        $DateTimeStep =
+            [TimeSpan]$Request.DateTimeStep
+
+        # -------------------------------------------------------------
+        # New requests may contain RowIDs.
+        # Existing requests using RowID remain supported.
+        # -------------------------------------------------------------
+
         if (
             $Request.PSObject.Properties['RowIDs'] -and
             $null -ne $Request.RowIDs
         ) {
-            $RequestedRowIDs = @(
+            $RowIDs = @(
                 $Request.RowIDs |
                     Where-Object {
                         -not [string]::IsNullOrWhiteSpace(
@@ -167,7 +191,7 @@ function Update-StorageSFPHistoryChart {
                 [string]$Request.RowID
             )
         ) {
-            $RequestedRowIDs = @(
+            $RowIDs = @(
                 [string]$Request.RowID
             )
         }
@@ -175,45 +199,18 @@ function Update-StorageSFPHistoryChart {
             throw "Request property 'RowID' or 'RowIDs' is missing."
         }
     }
-    else {
-        # Direkter Parameteraufruf bleibt zunächst ein Single-Port-Aufruf.
-        $RequestedRowIDs = @(
-            [string]$RowID
-        )
-    }
-
-    # Doppelte Ports entfernen.
-    $RequestedRowIDs = @(
-        $RequestedRowIDs |
-            Select-Object -Unique
-    )
-
-    if ($RequestedRowIDs.Count -eq 0) {
-        throw 'At least one valid RowID is required.'
-    }
-
-    if ($RequestedRowIDs.Count -gt 4) {
-        throw (
-            'A maximum of four Storage FC ports can be compared. ' +
-            "$($RequestedRowIDs.Count) RowIDs were supplied."
-        )
-    }
-
-    # RowID bleibt für das bestehende ChartModel erhalten.
-    # Bei einem Vergleich enthält es den ersten Port.
-    $RowID = [string]$RequestedRowIDs[0]
-
-    $IsComparison = (
-        $RequestedRowIDs.Count -gt 1
-    )
 
     # ---------------------------------------------------------------------
-    # LiveCharts und Request prüfen
+    # Initialize LiveCharts
     # ---------------------------------------------------------------------
 
     if (-not (Initialize-LiveCharts)) {
         throw 'LiveCharts could not be initialized.'
     }
+
+    # ---------------------------------------------------------------------
+    # Validate time range
+    # ---------------------------------------------------------------------
 
     if ($StartTime -gt $EndTime) {
         throw 'StartTime must not be later than EndTime.'
@@ -223,22 +220,233 @@ function Update-StorageSFPHistoryChart {
         throw 'DateTimeStep must be greater than zero.'
     }
 
-    # Storage-spezifische Metrikdefinition laden.
-    $MetricInfo = Get-StorageLiveChartsMetricInfo `
-        -Metric $Metric
+    # ---------------------------------------------------------------------
+    # Normalize requested RowIDs
+    # ---------------------------------------------------------------------
 
-    if ($null -eq $MetricInfo) {
+    $RequestedRowIDs = @(
+        $RowIDs |
+            Where-Object {
+                -not [string]::IsNullOrWhiteSpace(
+                    [string]$_
+                )
+            } |
+            ForEach-Object {
+                [string]$_
+            } |
+            Select-Object -Unique
+    )
+
+    if ($RequestedRowIDs.Count -eq 0) {
+        throw 'At least one Storage FC-port RowID is required.'
+    }
+
+    # 4 Sources x 3 Metrics = 12 Series.
+    if ($RequestedRowIDs.Count -gt 4) {
         throw (
-            "No metric information was found for Storage metric " +
-            "'$Metric'."
+            'A maximum of four Storage FC ports can currently be ' +
+            "displayed together. $($RequestedRowIDs.Count) RowIDs " +
+            'were supplied.'
         )
     }
 
     # ---------------------------------------------------------------------
-    # Bekannte Ports laden
+    # Normalize requested Metrics
+    # ---------------------------------------------------------------------
+
+    $RequestedMetrics = @(
+        $Metric |
+            Where-Object {
+                -not [string]::IsNullOrWhiteSpace(
+                    [string]$_
+                )
+            } |
+            ForEach-Object {
+                [string]$_
+            } |
+            Select-Object -Unique
+    )
+
+    if ($RequestedMetrics.Count -eq 0) {
+        throw 'At least one Storage SFP metric is required.'
+    }
+
+    # ---------------------------------------------------------------------
+    # Load original Metric definitions
     #
-    # Die Daten werden lediglich verwendet, um lesbare Seriennamen für
-    # die Vergleichsansicht zu erzeugen.
+    # IMPORTANT:
+    # These definitions retain their real ValueMode.
+    # ---------------------------------------------------------------------
+
+    $MetricDefinitions = @(
+        foreach ($MetricName in $RequestedMetrics) {
+
+            Get-StorageLiveChartsMetricInfo `
+                -Metric $MetricName
+        }
+    )
+
+    if ($MetricDefinitions.Count -eq 0) {
+        throw 'No usable Storage SFP metric definitions were found.'
+    }
+
+    # ---------------------------------------------------------------------
+    # Validate UnitGroup compatibility
+    # ---------------------------------------------------------------------
+
+    $UnitGroups = @(
+        $MetricDefinitions |
+            ForEach-Object {
+                [string]$_.UnitGroup
+            } |
+            Where-Object {
+                -not [string]::IsNullOrWhiteSpace($_)
+            } |
+            Select-Object -Unique
+    )
+
+    if ($UnitGroups.Count -gt 1) {
+        throw (
+            'Selected Storage SFP metrics must belong to the same ' +
+            'UnitGroup.'
+        )
+    }
+
+    # ---------------------------------------------------------------------
+    # Build runtime MetricInfo
+    # ---------------------------------------------------------------------
+
+    $IsMultiMetric =
+        ($MetricDefinitions.Count -gt 1)
+
+    if ($IsMultiMetric) {
+
+        $FirstMetric =
+            $MetricDefinitions[0]
+
+        $MinimumPaddingValues = @(
+            $MetricDefinitions |
+                ForEach-Object {
+
+                    if (
+                        $_.PSObject.Properties['MinimumPadding'] -and
+                        $null -ne $_.MinimumPadding
+                    ) {
+                        [double]$_.MinimumPadding
+                    }
+                }
+        )
+
+        if ($MinimumPaddingValues.Count -gt 0) {
+
+            $MinimumPadding = (
+                $MinimumPaddingValues |
+                    Measure-Object -Maximum
+            ).Maximum
+        }
+        else {
+
+            $MinimumPadding =
+                [double]1
+        }
+
+        $MetricInfo = [PSCustomObject]@{
+            Metric          = 'CustomSelection'
+            DisplayName     = [string]$FirstMetric.UnitGroup
+            Unit            = [string]$FirstMetric.Unit
+            UnitGroup       = [string]$FirstMetric.UnitGroup
+            Precision       = [int]$FirstMetric.Precision
+            ValueMode       = 'MultiMetric'
+            ValueDivisor    = [double]$FirstMetric.ValueDivisor
+            MinimumPadding  = [double]$MinimumPadding
+            ShowArea        = $false
+
+            Metrics = @(
+                $MetricDefinitions
+            )
+
+            ReferenceMetric = $null
+            ReferenceName   = $null
+            ReferenceColor  = $null
+        }
+    }
+    else {
+
+        $MetricInfo =
+            $MetricDefinitions[0]
+    }
+
+    # ---------------------------------------------------------------------
+    # Build DISPLAY metric definitions
+    #
+    # Delta calculation is already performed below.
+    #
+    # ConvertTo-LiveChartsDisplayHistory must therefore only perform
+    # display conversion such as ValueDivisor handling.
+    #
+    # It must NOT calculate Delta a second time.
+    # ---------------------------------------------------------------------
+
+    $DisplayMetricDefinitions = @(
+        foreach ($Definition in $MetricDefinitions) {
+
+            $CopiedDefinition =
+                [ordered]@{}
+
+            foreach ($Property in $Definition.PSObject.Properties) {
+
+                $CopiedDefinition[
+                    $Property.Name
+                ] =
+                    $Property.Value
+            }
+
+            # Prevent a second Delta conversion.
+            $CopiedDefinition['ValueMode'] =
+                'Raw'
+
+            [PSCustomObject]$CopiedDefinition
+        }
+    )
+
+    # ---------------------------------------------------------------------
+    # Build display-only MetricInfo
+    # ---------------------------------------------------------------------
+
+    if ($IsMultiMetric) {
+
+        $DisplayMetricInfoProperties =
+            [ordered]@{}
+
+        foreach ($Property in $MetricInfo.PSObject.Properties) {
+
+            $DisplayMetricInfoProperties[
+                $Property.Name
+            ] =
+                $Property.Value
+        }
+
+        # MultiMetric must remain MultiMetric on the parent object.
+        $DisplayMetricInfoProperties['ValueMode'] =
+            'MultiMetric'
+
+        # But every individual metric is already prepared.
+        $DisplayMetricInfoProperties['Metrics'] =
+            @($DisplayMetricDefinitions)
+
+        $DisplayMetricInfo =
+            [PSCustomObject]$DisplayMetricInfoProperties
+    }
+    else {
+
+        $DisplayMetricInfo =
+            $DisplayMetricDefinitions[0]
+    }
+
+    # ---------------------------------------------------------------------
+    # Load known Ports once
+    #
+    # Used only for readable Series names.
     # ---------------------------------------------------------------------
 
     $AvailablePorts = @(
@@ -246,21 +454,65 @@ function Update-StorageSFPHistoryChart {
             -CustomerNbr $CustomerNbr
     )
 
-    # Enthält eine Definition pro tatsächlich nutzbarem Port.
-    $SeriesDefinitions = @()
+    # ---------------------------------------------------------------------
+    # Helper:
+    # Create a stable key for matching raw and calculated History objects.
+    #
+    # Prefer database ID when available.
+    # Fall back to TimeStamp.
+    # ---------------------------------------------------------------------
 
-    # Gesamte dargestellte Historie.
-    $AllChartHistory = @()
+    $GetHistoryKey = {
 
-    # Alle Werte aller tatsächlich dargestellten Ports.
-    # Wird für Y-Achse und Vergleichsstatistik verwendet.
-    $MetricValues = @()
+        param (
+            $HistoryItem
+        )
+
+        if ($null -eq $HistoryItem) {
+            return $null
+        }
+
+        if (
+            $HistoryItem.PSObject.Properties['ID'] -and
+            $null -ne $HistoryItem.ID
+        ) {
+            return (
+                'ID|{0}' -f
+                [string]$HistoryItem.ID
+            )
+        }
+
+        if (
+            $HistoryItem.PSObject.Properties['TimeStamp'] -and
+            $null -ne $HistoryItem.TimeStamp
+        ) {
+            return (
+                'TS|{0}' -f
+                ([datetime]$HistoryItem.TimeStamp).Ticks
+            )
+        }
+
+        return $null
+
+    }.GetNewClosure()
 
     # ---------------------------------------------------------------------
-    # Historien der angeforderten Ports laden
+    # Prepare result collections
+    # ---------------------------------------------------------------------
+
+    $SeriesDefinitions = @()
+    $AllChartHistory   = @()
+    $MetricValues      = @()
+
+    # ---------------------------------------------------------------------
+    # Build one prepared History per selected Port
     # ---------------------------------------------------------------------
 
     foreach ($CurrentRowID in $RequestedRowIDs) {
+
+        # -------------------------------------------------------------
+        # Load raw history
+        # -------------------------------------------------------------
 
         $RawHistory = @(
             Get-SFPHistory `
@@ -272,42 +524,309 @@ function Update-StorageSFPHistoryChart {
 
         if ($RawHistory.Count -eq 0) {
 
-            # Im Vergleich darf ein einzelner Port ohne Daten übersprungen
-            # werden. Die übrigen Ports können weiterhin dargestellt werden.
-            if ($IsComparison) {
-                Write-Warning (
-                    "No Storage SFP history was found for RowID " +
-                    "'$CurrentRowID'. The port was skipped."
-                )
+            Write-Warning (
+                "No Storage SFP history was found for RowID " +
+                "'$CurrentRowID' in the selected time range."
+            )
+
+            continue
+        }
+
+        # -------------------------------------------------------------
+        # Sort raw history once.
+        # -------------------------------------------------------------
+
+        $SortedRawHistory = @(
+            $RawHistory |
+                Sort-Object TimeStamp
+        )
+
+        # -------------------------------------------------------------
+        # Create an independent copy of the RAW history.
+        #
+        # This is the common chart history.
+        #
+        # IMPORTANT:
+        # Original database values are retained here.
+        #
+        # Example:
+        #
+        #   ZeroBtB = 596916051
+        #
+        # They must never be overwritten merely because another selected
+        # metric uses ZeroBtB as its SourceMetric.
+        # -------------------------------------------------------------
+
+        $CurrentChartHistory = @(
+            foreach ($HistoryItem in $SortedRawHistory) {
+
+                if ($null -eq $HistoryItem) {
+                    continue
+                }
+
+                $CopiedProperties =
+                    [ordered]@{}
+
+                foreach ($Property in $HistoryItem.PSObject.Properties) {
+
+                    $CopiedProperties[
+                        $Property.Name
+                    ] =
+                        $Property.Value
+                }
+
+                [PSCustomObject]$CopiedProperties
+            }
+        )
+
+        # -------------------------------------------------------------
+        # Prepare calculated metrics
+        # -------------------------------------------------------------
+
+        foreach ($Definition in $MetricDefinitions) {
+
+            $MetricName =
+                [string]$Definition.Metric
+
+            # ---------------------------------------------------------
+            # Resolve actual source property.
+            #
+            # Example:
+            #
+            #   Metric       = ZeroBtBDelta
+            #   SourceMetric = ZeroBtB
+            # ---------------------------------------------------------
+
+            $SourceMetric =
+                if (
+                    $Definition.PSObject.Properties['SourceMetric'] -and
+                    -not [string]::IsNullOrWhiteSpace(
+                        [string]$Definition.SourceMetric
+                    )
+                ) {
+                    [string]$Definition.SourceMetric
+                }
+                else {
+                    $MetricName
+                }
+
+            # ---------------------------------------------------------
+            # RAW metric
+            #
+            # Normally Metric and SourceMetric are identical.
+            #
+            # If they differ, expose the source value under the display
+            # metric name without modifying the original source property.
+            # ---------------------------------------------------------
+
+            if (
+                -not $Definition.PSObject.Properties['ValueMode'] -or
+                [string]$Definition.ValueMode -ne 'Delta'
+            ) {
+
+                if ($MetricName -ne $SourceMetric) {
+
+                    foreach ($HistoryItem in $CurrentChartHistory) {
+
+                        if ($null -eq $HistoryItem) {
+                            continue
+                        }
+
+                        $SourceProperty =
+                            $HistoryItem.PSObject.Properties[
+                                $SourceMetric
+                            ]
+
+                        $SourceValue =
+                            if ($null -ne $SourceProperty) {
+                                $SourceProperty.Value
+                            }
+                            else {
+                                $null
+                            }
+
+                        $HistoryItem |
+                            Add-Member `
+                                -MemberType NoteProperty `
+                                -Name $MetricName `
+                                -Value $SourceValue `
+                                -Force
+                    }
+                }
 
                 continue
             }
 
-            throw (
-                "No Storage SFP history was found for RowID " +
-                "'$CurrentRowID' between '$StartTime' and '$EndTime'."
-            )
-        }
+            # ---------------------------------------------------------
+            # DELTA metric
+            #
+            # Calculate from the untouched raw history.
+            #
+            # The returned objects may contain the Delta in SourceMetric,
+            # but these objects are temporary and never replace the common
+            # CurrentChartHistory.
+            # ---------------------------------------------------------
 
-        # Standardmäßig werden die unveränderten DB-Werte dargestellt.
-        $CurrentChartHistory = $RawHistory
-
-        # Kumulative Counter für die Anzeige in Änderungen pro Messung
-        # umwandeln.
-        if (
-            $MetricInfo.PSObject.Properties['ValueMode'] -and
-            [string]$MetricInfo.ValueMode -eq 'Delta'
-        ) {
-            $CurrentChartHistory = @(
+            $DeltaHistory = @(
                 ConvertTo-LiveChartsDeltaHistory `
-                    -History $RawHistory `
-                    -Metric $Metric
+                    -History $SortedRawHistory `
+                    -Metric $SourceMetric
             )
+
+            # ---------------------------------------------------------
+            # Build lookup:
+            #
+            # History key -> calculated Delta value
+            # ---------------------------------------------------------
+
+            $DeltaValues =
+                @{}
+
+            foreach ($DeltaItem in $DeltaHistory) {
+
+                if ($null -eq $DeltaItem) {
+                    continue
+                }
+
+                $HistoryKey =
+                    & $GetHistoryKey $DeltaItem
+
+                if ([string]::IsNullOrWhiteSpace($HistoryKey)) {
+                    continue
+                }
+
+                $DeltaProperty =
+                    $DeltaItem.PSObject.Properties[
+                        $SourceMetric
+                    ]
+
+                if ($null -eq $DeltaProperty) {
+                    continue
+                }
+
+                $DeltaValues[$HistoryKey] =
+                    $DeltaProperty.Value
+            }
+
+            # ---------------------------------------------------------
+            # Add Delta to the common History.
+            #
+            # Example:
+            #
+            #   ZeroBtB      = 596916051
+            #   ZeroBtBDelta = 852404
+            #
+            # ZeroBtB stays untouched.
+            # ---------------------------------------------------------
+
+            foreach ($HistoryItem in $CurrentChartHistory) {
+
+                if ($null -eq $HistoryItem) {
+                    continue
+                }
+
+                $HistoryKey =
+                    & $GetHistoryKey $HistoryItem
+
+                $DeltaValue =
+                    $null
+
+                if (
+                    -not [string]::IsNullOrWhiteSpace(
+                        $HistoryKey
+                    ) -and
+                    $DeltaValues.ContainsKey(
+                        $HistoryKey
+                    )
+                ) {
+                    $DeltaValue =
+                        $DeltaValues[$HistoryKey]
+                }
+
+                if ($MetricName -ne $SourceMetric) {
+
+                    # -------------------------------------------------
+                    # Derived Delta metric.
+                    #
+                    # Example:
+                    #
+                    #   ZeroBtBDelta
+                    #
+                    # Add a new property and preserve ZeroBtB.
+                    # -------------------------------------------------
+
+                    $HistoryItem |
+                        Add-Member `
+                            -MemberType NoteProperty `
+                            -Name $MetricName `
+                            -Value $DeltaValue `
+                            -Force
+                }
+                else {
+
+                    # -------------------------------------------------
+                    # Legacy Delta metric.
+                    #
+                    # Existing metrics such as LinkFailure currently
+                    # use the same property name for Source and display.
+                    #
+                    # For these metrics the property itself intentionally
+                    # contains the calculated Delta.
+                    # -------------------------------------------------
+
+                    $MetricProperty =
+                        $HistoryItem.PSObject.Properties[
+                            $MetricName
+                        ]
+
+                    if ($null -ne $MetricProperty) {
+
+                        $MetricProperty.Value =
+                            $DeltaValue
+                    }
+                    else {
+
+                        $HistoryItem |
+                            Add-Member `
+                                -MemberType NoteProperty `
+                                -Name $MetricName `
+                                -Value $DeltaValue `
+                                -Force
+                    }
+                }
+            }
         }
 
-        # -----------------------------------------------------------------
-        # Numerische Werte der aktuellen Metrik extrahieren
-        # -----------------------------------------------------------------
+        # -------------------------------------------------------------
+        # Convert prepared values into chart-ready display values.
+        #
+        # IMPORTANT:
+        #
+        # Use DisplayMetricInfo here.
+        #
+        # Delta values have already been calculated above, therefore the
+        # display converter sees every individual metric as Raw.
+        # -------------------------------------------------------------
+
+        $CurrentChartHistory = @(
+            ConvertTo-LiveChartsDisplayHistory `
+                -History $CurrentChartHistory `
+                -MetricInfo $DisplayMetricInfo
+        )
+
+        if ($CurrentChartHistory.Count -eq 0) {
+
+            Write-Warning (
+                "No usable chart history could be created for " +
+                "RowID '$CurrentRowID'."
+            )
+
+            continue
+        }
+
+        # -------------------------------------------------------------
+        # Collect numeric values for all selected metrics
+        # -------------------------------------------------------------
 
         $CurrentMetricValues = @(
             foreach ($HistoryItem in $CurrentChartHistory) {
@@ -316,64 +835,68 @@ function Update-StorageSFPHistoryChart {
                     continue
                 }
 
-                $MetricProperty =
-                    $HistoryItem.PSObject.Properties[$Metric]
+                foreach ($Definition in $MetricDefinitions) {
 
-                if ($null -eq $MetricProperty) {
-                    continue
-                }
+                    $MetricName =
+                        [string]$Definition.Metric
 
-                $RawValue = $MetricProperty.Value
+                    $MetricProperty =
+                        $HistoryItem.PSObject.Properties[
+                            $MetricName
+                        ]
 
-                if (
-                    $null -eq $RawValue -or
-                    $RawValue -is [DBNull] -or
-                    [string]::IsNullOrWhiteSpace(
-                        [string]$RawValue
-                    )
-                ) {
-                    continue
-                }
+                    if ($null -eq $MetricProperty) {
+                        continue
+                    }
 
-                try {
-                    [double]$RawValue
-                }
-                catch {
-                    Write-Warning (
-                        "Value '$RawValue' of metric '$Metric' for " +
-                        "RowID '$CurrentRowID' could not be converted " +
-                        'to Double and was skipped.'
-                    )
+                    $RawValue =
+                        $MetricProperty.Value
+
+                    if (
+                        $null -eq $RawValue -or
+                        $RawValue -is [DBNull] -or
+                        [string]::IsNullOrWhiteSpace(
+                            [string]$RawValue
+                        )
+                    ) {
+                        continue
+                    }
+
+                    try {
+                        [double]$RawValue
+                    }
+                    catch {
+                        Write-Warning (
+                            "Value '$RawValue' of metric '$MetricName' " +
+                            "for RowID '$CurrentRowID' could not be " +
+                            'converted to Double and was skipped.'
+                        )
+                    }
                 }
             }
         )
 
         if ($CurrentMetricValues.Count -eq 0) {
 
-            if ($IsComparison) {
-                Write-Warning (
-                    "RowID '$CurrentRowID' contains no usable values " +
-                    "for metric '$Metric'. The port was skipped."
-                )
-
-                continue
-            }
-
-            throw (
-                "The Storage history contains no usable values for " +
-                "metric '$Metric'."
+            Write-Warning (
+                "RowID '$CurrentRowID' contains no usable values for " +
+                'the selected metric(s).'
             )
+
+            continue
         }
 
-        # -----------------------------------------------------------------
-        # Lesbaren Namen für die Vergleichsserie erzeugen
-        # -----------------------------------------------------------------
+        # -------------------------------------------------------------
+        # Resolve readable Port name
+        # -------------------------------------------------------------
 
-        $PortInfo = $AvailablePorts |
-            Where-Object {
-                [string]$_.RowID -eq [string]$CurrentRowID
-            } |
-            Select-Object -First 1
+        $PortInfo =
+            $AvailablePorts |
+                Where-Object {
+                    [string]$_.RowID -eq
+                    [string]$CurrentRowID
+                } |
+                Select-Object -First 1
 
         if (
             $null -ne $PortInfo -and
@@ -382,303 +905,117 @@ function Update-StorageSFPHistoryChart {
             $null -ne $PortInfo.NodeID -and
             $null -ne $PortInfo.PortID
         ) {
-            # Systemunabhängige Kurzbezeichnung:
-            #
-            #   Node1 P1
-            #   Node2 P4
-            #
-            $SeriesName = 'Node{0} P{1}' -f
-                $PortInfo.NodeID,
-                $PortInfo.PortID
+            $SeriesName =
+                'Node{0} P{1}' -f
+                    $PortInfo.NodeID,
+                    $PortInfo.PortID
         }
         elseif (
             $null -ne $PortInfo -and
+            $PortInfo.PSObject.Properties['DisplayName'] -and
             -not [string]::IsNullOrWhiteSpace(
                 [string]$PortInfo.DisplayName
             )
         ) {
-            # Fallback auf den vollständigen Portnamen.
             $SeriesName =
                 [string]$PortInfo.DisplayName
         }
         else {
-            # Letzter Fallback: WWPN aus der RowID verwenden.
+
             $RowIDParts =
                 [string]$CurrentRowID -split '\|'
 
             if ($RowIDParts.Count -ge 3) {
+
                 $SeriesName =
                     [string]$RowIDParts[2]
             }
             else {
+
                 $SeriesName =
                     [string]$CurrentRowID
             }
         }
 
-        # Eine Definition pro Port für die MultiSeries-Funktion erzeugen.
-        $SeriesDefinitions += [PSCustomObject]@{
-            RowID   = [string]$CurrentRowID
-            Name    = $SeriesName
-            History = $CurrentChartHistory
-        }
+        # -------------------------------------------------------------
+        # Add prepared Source
+        # -------------------------------------------------------------
 
-        $AllChartHistory += $CurrentChartHistory
-        $MetricValues    += $CurrentMetricValues
+        $SeriesDefinitions +=
+            [PSCustomObject]@{
+                RowID   = [string]$CurrentRowID
+                Name    = $SeriesName
+                History = $CurrentChartHistory
+            }
+
+        $AllChartHistory +=
+            $CurrentChartHistory
+
+        $MetricValues +=
+            $CurrentMetricValues
     }
 
     # ---------------------------------------------------------------------
-    # Ergebnis der History-Aufbereitung prüfen
+    # Validate prepared Sources
     # ---------------------------------------------------------------------
 
     if ($SeriesDefinitions.Count -eq 0) {
         throw (
-            "No usable Storage SFP histories were found for metric " +
-            "'$Metric'."
+            'No usable Storage SFP histories were found for the ' +
+            'requested Sources.'
         )
     }
 
     if ($MetricValues.Count -eq 0) {
         throw (
-            "The Storage history contains no usable values for " +
-            "metric '$Metric'."
+            'The Storage SFP histories contain no usable values for ' +
+            'the selected metric(s): ' +
+            ($RequestedMetrics -join ', ')
         )
     }
 
-    # Der bisherige Single-Port-Code arbeitet weiterhin mit ChartHistory.
-    # Bei einem Vergleich entspricht diese Variable nur dem ersten Port.
-    $ChartHistory = @(
-        $SeriesDefinitions[0].History
-    )
-
     # ---------------------------------------------------------------------
-    # Optionale Referenzwerte
+    # Determine actual comparison mode
     #
-    # Referenzlinien werden momentan bewusst nur in der Einzelansicht
-    # dargestellt. In einer Vergleichsansicht würden identische Grenzlinien
-    # pro Port keinen zusätzlichen Nutzen bringen.
+    # A requested Port without History may have been skipped.
+    # Therefore use the number of actually usable Sources.
     # ---------------------------------------------------------------------
 
-    $ReferenceMetricValues = @()
+    $IsComparison =
+        ($SeriesDefinitions.Count -gt 1)
 
-    if (
-        -not $IsComparison -and
-        -not [string]::IsNullOrWhiteSpace(
-            [string]$MetricInfo.ReferenceMetric
-        )
-    ) {
-        $ReferenceMetric =
-            [string]$MetricInfo.ReferenceMetric
+    $PrimaryRowID =
+        [string]$SeriesDefinitions[0].RowID
 
-        $ReferenceMetricValues = @(
-            foreach ($HistoryItem in $ChartHistory) {
-
-                if ($null -eq $HistoryItem) {
-                    continue
-                }
-
-                $ReferenceProperty =
-                    $HistoryItem.PSObject.Properties[
-                        $ReferenceMetric
-                    ]
-
-                if ($null -eq $ReferenceProperty) {
-                    continue
-                }
-
-                $RawValue =
-                    $ReferenceProperty.Value
-
-                if (
-                    $null -eq $RawValue -or
-                    $RawValue -is [DBNull] -or
-                    [string]::IsNullOrWhiteSpace(
-                        [string]$RawValue
-                    )
-                ) {
-                    continue
-                }
-
-                try {
-                    [double]$RawValue
-                }
-                catch {
-                    Write-Warning (
-                        "Value '$RawValue' of reference metric " +
-                        "'$ReferenceMetric' could not be converted " +
-                        'to Double and was skipped.'
-                    )
-                }
+    $UsableRowIDs = @(
+        $SeriesDefinitions |
+            ForEach-Object {
+                [string]$_.RowID
             }
-        )
-    }
-
-    # ---------------------------------------------------------------------
-    # Gemeinsame Wertebasis für die Y-Achse erzeugen
-    # ---------------------------------------------------------------------
-
-    $AxisValues = @(
-        $MetricValues
-
-        if ($ReferenceMetricValues.Count -gt 0) {
-            $ReferenceMetricValues
-        }
     )
 
     # ---------------------------------------------------------------------
-    # Serien erzeugen
-    # ---------------------------------------------------------------------
-
-    if ($IsComparison) {
-        $SeriesCollection =
-            New-LiveChartsMultiSeriesCollection `
-                -SeriesDefinitions $SeriesDefinitions `
-                -MetricInfo $MetricInfo `
-                -MaximumSeries 4
-    }
-    else {
-        $SeriesCollection =
-            New-LiveChartsSeriesCollection `
-                -History $ChartHistory `
-                -MetricInfo $MetricInfo
-    }
-
-    # ---------------------------------------------------------------------
-    # X-Achse erzeugen
-    # ---------------------------------------------------------------------
-
-    $XAxis = New-LiveChartsDateTimeAxis `
-        -Name 'Zeit' `
-        -LabelFormat $DateTimeLabelFormat `
-        -MinStep $DateTimeStep
-
-    # ---------------------------------------------------------------------
-    # Y-Achse erzeugen
-    # ---------------------------------------------------------------------
-
-    $MinimumPadding = 1
-
-    if (
-        $MetricInfo.PSObject.Properties.Match(
-            'MinimumPadding'
-        ).Count -gt 0 -and
-        $null -ne $MetricInfo.MinimumPadding
-    ) {
-        $MinimumPadding =
-            [double]$MetricInfo.MinimumPadding
-    }
-
-    $YAxis = New-LiveChartsValueAxis `
-        -Name $MetricInfo.DisplayName `
-        -Unit $MetricInfo.Unit `
-        -Values $AxisValues `
-        -MinimumPadding $MinimumPadding
-
-    # LiveCharts erwartet Collections für die Achsen.
-    $XAxisCollection =
-        [System.Collections.Generic.List[
-            LiveChartsCore.SkiaSharpView.Axis
-        ]]::new()
-
-    $YAxisCollection =
-        [System.Collections.Generic.List[
-            LiveChartsCore.SkiaSharpView.Axis
-        ]]::new()
-
-    $XAxisCollection.Add($XAxis)
-    $YAxisCollection.Add($YAxis)
-
-    # ---------------------------------------------------------------------
-    # Statistik erzeugen
-    # ---------------------------------------------------------------------
-
-    if ($IsComparison) {
-
-        # Bei mehreren Ports existiert kein eindeutiger einzelner
-        # "aktueller Wert".
-        #
-        # Minimum, Maximum und Durchschnitt beziehen sich deshalb auf
-        # sämtliche dargestellten Messpunkte.
-        $Measurement = $MetricValues |
-            Measure-Object `
-                -Minimum `
-                -Maximum `
-                -Average
-
-        $Statistics = [PSCustomObject]@{
-            CurrentValue = $null
-            MinimumValue = [double]$Measurement.Minimum
-            MaximumValue = [double]$Measurement.Maximum
-            AverageValue = [double]$Measurement.Average
-            PointCount   = $MetricValues.Count
-        }
-    }
-    else {
-        $Statistics = New-LiveChartsStatistics `
-            -History $ChartHistory `
-            -Metric $Metric `
-            -Values $MetricValues
-    }
-
-    # ---------------------------------------------------------------------
-    # History für das ChartModel festlegen
+    # Build generic chart model
     #
-    # Single:
-    #   Historie des ausgewählten Ports
+    # IMPORTANT:
     #
-    # Comparison:
-    #   Historien sämtlicher tatsächlich dargestellter Ports
+    # The ORIGINAL MetricInfo is passed here.
+    #
+    # DisplayMetricInfo was used only for value conversion.
     # ---------------------------------------------------------------------
 
-    if ($IsComparison) {
-        $ModelHistory = $AllChartHistory
-    }
-    else {
-        $ModelHistory = $ChartHistory
-    }
-
-    # ---------------------------------------------------------------------
-    # Gemeinsames Chart-Modell erzeugen
-    # ---------------------------------------------------------------------
-
-    $ChartModel = New-LiveChartsChartModel `
-        -Series $SeriesCollection `
-        -XAxes $XAxisCollection `
-        -YAxes $YAxisCollection `
-        -History $ModelHistory `
+    return New-LiveChartsHistoryChartModel `
+        -SeriesDefinitions $SeriesDefinitions `
+        -AllChartHistory $AllChartHistory `
+        -MetricValues $MetricValues `
         -MetricInfo $MetricInfo `
-        -Statistics $Statistics `
         -CustomerNbr $CustomerNbr `
-        -RowID $RowID `
-        -Metric $Metric `
+        -RowID $PrimaryRowID `
+        -RowIDs $UsableRowIDs `
+        -Metric ([string]$MetricInfo.Metric) `
         -StartTime $StartTime `
-        -EndTime $EndTime
-
-    # Zusätzliche Informationen für Single-/Vergleichsansicht.
-    $ChartModel |
-        Add-Member `
-            -MemberType NoteProperty `
-            -Name RowIDs `
-            -Value ([string[]]$RequestedRowIDs) `
-            -Force
-
-    $ChartModel |
-        Add-Member `
-            -MemberType NoteProperty `
-            -Name IsComparison `
-            -Value $IsComparison `
-            -Force
-
-    # Tatsächlich dargestellte Ports zählen.
-    #
-    # Das kann kleiner als RequestedRowIDs.Count sein, wenn einzelne
-    # Vergleichsports im gewählten Zeitraum keine nutzbaren Daten besitzen.
-    $ChartModel |
-        Add-Member `
-            -MemberType NoteProperty `
-            -Name PortCount `
-            -Value $SeriesDefinitions.Count `
-            -Force
-
-    return $ChartModel
+        -EndTime $EndTime `
+        -DateTimeLabelFormat $DateTimeLabelFormat `
+        -DateTimeStep $DateTimeStep `
+        -IsComparison $IsComparison
 }

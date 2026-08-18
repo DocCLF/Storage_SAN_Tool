@@ -1,19 +1,21 @@
-function Show-StorageSFPHistory {
+function Show-StoragePoolHistory {
     <#
     .SYNOPSIS
-        Opens a Storage SFP history viewer.
+        Opens a Storage pool capacity history viewer.
 
     .DESCRIPTION
-        Opens the shared LiveCharts history viewer for Storage FC ports.
+        Opens the shared LiveCharts history viewer for Storage pools.
 
         The viewer uses the generic selector architecture:
 
             Storage System
-                -> FC Port / SFP
+                -> Storage Pool
                     -> Metric / Series
 
-        Multiple ports and multiple compatible metrics may be displayed
+        Multiple pools and multiple compatible metrics may be displayed
         simultaneously.
+
+        CapacityOverview remains available as a Quick-Preset.
 
         The shared history viewer XAML is provided by
         Get-LiveChartsHistoryViewXaml.
@@ -22,7 +24,7 @@ function Show-StorageSFPHistory {
         Customer number whose SQLite database should be used.
 
     .EXAMPLE
-        Show-StorageSFPHistory -CustomerNbr '123456'
+        Show-StoragePoolHistory -CustomerNbr '123456'
     #>
 
     [CmdletBinding()]
@@ -54,8 +56,8 @@ function Show-StorageSFPHistory {
 
     $Xaml =
         Get-LiveChartsHistoryViewXaml `
-            -WindowTitle 'Storage SFP History' `
-            -SourceLabel 'Storage-Port'
+            -WindowTitle 'Storage Pool Capacity History' `
+            -SourceLabel 'Storage-Pool'
 
     $XmlReader =
         [System.Xml.XmlReader]::Create(
@@ -114,8 +116,8 @@ function Show-StorageSFPHistory {
     # ---------------------------------------------------------------------
     # Resolve legacy controls
     #
-    # These still exist in the shared XAML because other viewers may use
-    # them. Initialize-StorageSFPHistoryView collapses them for SFP.
+    # These controls still exist in the shared XAML but are hidden by
+    # Initialize-StoragePoolHistoryView.
     # ---------------------------------------------------------------------
 
     $CB_Source =
@@ -137,7 +139,7 @@ function Show-StorageSFPHistory {
     # Resolve generic selector controls
     # ---------------------------------------------------------------------
 
-    # Storage Systems / Source Groups
+    # Storage Systems
     $SP_SourceGroupSelector =
         $Window.FindName(
             'SP_SourceGroupSelector'
@@ -148,7 +150,7 @@ function Show-StorageSFPHistory {
             'LB_SourceGroupSelector'
         )
 
-    # FC Ports / Sources
+    # Storage Pools
     $LB_SourceSelector =
         $Window.FindName(
             'LB_SourceSelector'
@@ -192,57 +194,89 @@ function Show-StorageSFPHistory {
     # ---------------------------------------------------------------------
     # Validate required controls
     #
-    # This catches mismatches between shared XAML and viewer code before
-    # Initialize-StorageSFPHistoryView is called.
+    # This catches mismatches between the shared XAML and the Pool viewer
+    # immediately instead of failing later during initialization.
     # ---------------------------------------------------------------------
 
     $RequiredControls = @{
-        CB_Source              = $CB_Source
-        CHK_ComparisonMode     = $CHK_ComparisonMode
-        LB_ComparisonSources   = $LB_ComparisonSources
 
-        SP_SourceGroupSelector = $SP_SourceGroupSelector
-        LB_SourceGroupSelector = $LB_SourceGroupSelector
-        LB_SourceSelector      = $LB_SourceSelector
-        LB_SeriesSelector      = $LB_SeriesSelector
+        # Legacy controls
+        CB_Source =
+            $CB_Source
 
-        CB_Metric              = $CB_Metric
-        CB_TimeRange           = $CB_TimeRange
-        BTN_Refresh            = $BTN_Refresh
-        TB_Status              = $TB_Status
-        Chart                  = $Chart
+        CHK_ComparisonMode =
+            $CHK_ComparisonMode
+
+        LB_ComparisonSources =
+            $LB_ComparisonSources
+
+        # Generic selectors
+        SP_SourceGroupSelector =
+            $SP_SourceGroupSelector
+
+        LB_SourceGroupSelector =
+            $LB_SourceGroupSelector
+
+        LB_SourceSelector =
+            $LB_SourceSelector
+
+        LB_SeriesSelector =
+            $LB_SeriesSelector
+
+        # Common controls
+        CB_Metric =
+            $CB_Metric
+
+        CB_TimeRange =
+            $CB_TimeRange
+
+        BTN_Refresh =
+            $BTN_Refresh
+
+        TB_Status =
+            $TB_Status
+
+        Chart =
+            $Chart
     }
 
     foreach ($ControlName in $RequiredControls.Keys) {
 
-        if ($null -eq $RequiredControls[$ControlName]) {
+        if (
+            $null -eq
+            $RequiredControls[$ControlName]
+        ) {
 
             throw (
-                "Das benötigte Control '$ControlName' " +
-                'wurde im XAML nicht gefunden.'
+                "Required control '$ControlName' " +
+                'was not found in XAML.'
             )
         }
     }
 
     # ---------------------------------------------------------------------
-    # Initialize SFP viewer
+    # Initialize Pool viewer
     #
-    # Important:
+    # Mapping between generic initializer parameters and actual XAML:
     #
-    # The generic Initialize parameters are intentionally named
-    # GroupSelectorListBox / GroupSelectorPanel.
+    #   GroupSelectorPanel
+    #       -> SP_SourceGroupSelector
     #
-    # Here they receive the actual XAML controls:
+    #   GroupSelectorListBox
+    #       -> LB_SourceGroupSelector
     #
-    #   GroupSelectorListBox -> LB_SourceGroupSelector
-    #   GroupSelectorPanel   -> SP_SourceGroupSelector
+    #   SourceSelectorListBox
+    #       -> LB_SourceSelector
+    #
+    #   SeriesSelectorListBox
+    #       -> LB_SeriesSelector
     # ---------------------------------------------------------------------
 
     $Initialized =
-        Initialize-StorageSFPHistoryView `
+        Initialize-StoragePoolHistoryView `
             -CustomerNbr $CustomerNbr `
             -ViewRoot $Window `
-            -PortComboBox $CB_Source `
+            -PoolComboBox $CB_Source `
             -ComparisonCheckBox $CHK_ComparisonMode `
             -ComparisonListBox $LB_ComparisonSources `
             -SourceSelectorListBox $LB_SourceSelector `
@@ -270,7 +304,7 @@ function Show-StorageSFPHistory {
     catch {
 
         Write-Host (
-            'Storage SFP History ShowDialog Fehler: ' +
+            'Storage Pool History ShowDialog Fehler: ' +
             $_.Exception.Message
         ) -ForegroundColor Red
 

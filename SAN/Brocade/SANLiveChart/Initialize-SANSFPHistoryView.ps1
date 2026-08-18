@@ -1,28 +1,38 @@
-function Initialize-StorageSFPHistoryView {
+function Initialize-SANSFPHistoryView {
     <#
     .SYNOPSIS
-        Initializes the Storage SFP history viewer.
+        Initializes the SAN SFP history viewer.
 
     .DESCRIPTION
-        Initializes the SFP history viewer using the generic
+        Initializes the SAN SFP history viewer using the generic
         LiveCharts selector architecture.
 
         Selection hierarchy:
 
-            Storage System
-                -> FC Port / SFP
+            SAN Switch
+                -> Port
                     -> Metric / Series
 
         Multiple ports and multiple compatible metrics can be displayed
         simultaneously.
 
-        Metrics from different UnitGroups cannot be selected together.
+        Compatible metric groups:
 
-        The Storage-System selector is only visible when ports from more
-        than one Storage system are available.
+            Temperature
+            OpticalPower
+                -> RxPower
+                -> TxPower
+            Voltage
 
-        The former single-port / comparison controls are retained only as
-        legacy controls and are hidden by this initializer.
+        Metrics from different UnitGroups cannot be displayed on the
+        same Y axis.
+
+        The SAN-Switch selector is only visible when ports from more than
+        one switch are available.
+
+        Legacy single-source / comparison controls are retained only for
+        compatibility with the shared XAML and are hidden by this
+        initializer.
 
     .PARAMETER CustomerNbr
         Six-digit customer number.
@@ -40,22 +50,19 @@ function Initialize-StorageSFPHistoryView {
         Legacy comparison ListBox. Hidden by this initializer.
 
     .PARAMETER SourceSelectorListBox
-        Multi-select list containing the available Storage FC ports.
+        Multi-select list containing the available SAN SFP ports.
 
     .PARAMETER SeriesSelectorListBox
-        Multi-select list containing the available SFP metrics.
+        Multi-select list containing the available SAN SFP metrics.
 
     .PARAMETER GroupSelectorListBox
-        List containing the available Storage systems.
+        List containing the available SAN switches.
 
     .PARAMETER GroupSelectorPanel
-        Container of the Storage-System selector. It is collapsed when
-        only one Storage system is available.
+        Container of the SAN-switch selector.
 
     .PARAMETER MetricComboBox
-        Quick metric selector. Selecting an entry resets the Series
-        selection to that single metric. Additional compatible metrics
-        may afterwards be selected in the Series selector.
+        Quick metric selector.
 
     .PARAMETER TimeRangeComboBox
         ComboBox containing the available time ranges.
@@ -125,18 +132,18 @@ function Initialize-StorageSFPHistoryView {
     )
 
     # ---------------------------------------------------------------------
-    # Load available Storage FC ports
+    # Load available SAN SFP ports
     # ---------------------------------------------------------------------
 
     $Ports = @(
-        Get-StorageSFPHistoryPorts `
+        Get-SANSFPHistoryPorts `
             -CustomerNbr $CustomerNbr
     )
 
     if ($Ports.Count -eq 0) {
 
         $StatusTextBlock.Text = (
-            "Keine Storage-SFP-History-Daten für Kunde " +
+            "Keine SAN-SFP-History-Daten für Kunde " +
             "$CustomerNbr gefunden."
         )
 
@@ -144,11 +151,7 @@ function Initialize-StorageSFPHistoryView {
     }
 
     # ---------------------------------------------------------------------
-    # Build generic Source selector
-    #
-    # SourceKey   = RowID
-    # DisplayName = readable Port name
-    # SourceGroup = Storage SerialNumber
+    # Build generic source selector
     # ---------------------------------------------------------------------
 
     $SourceSelectorModel =
@@ -159,16 +162,7 @@ function Initialize-StorageSFPHistoryView {
             -GroupProperty 'SerialNumber'
 
     # ---------------------------------------------------------------------
-    # Build Storage-System Group selector
-    #
-    # Get-LiveChartsSourceGroups already returns:
-    #
-    #   GroupKey
-    #   DisplayName
-    #   SourceCount
-    #   IsSelected
-    #
-    # Get-LiveChartsFilteredSources expects an object containing Groups.
+    # Build SAN-Switch group selector
     # ---------------------------------------------------------------------
 
     $SourceGroups = @(
@@ -181,24 +175,46 @@ function Initialize-StorageSFPHistoryView {
             Groups = $SourceGroups
         }
 
+    foreach ($Group in $GroupSelectorModel.Groups) {
+
+        $MatchingPort =
+            $Ports |
+                Where-Object {
+                    [string]$_.SerialNumber -eq
+                    [string]$Group.GroupKey
+                } |
+                Select-Object -First 1
+
+        if (
+            $null -ne $MatchingPort -and
+            -not [string]::IsNullOrWhiteSpace(
+                [string]$MatchingPort.SwitchName
+            )
+        ) {
+
+            $Group.DisplayName =
+                [string]$MatchingPort.SwitchName
+        }
+    }
+
     # ---------------------------------------------------------------------
-    # Load available metrics
+    # Load metrics
     # ---------------------------------------------------------------------
 
     $Metrics = @(
-        Get-StorageLiveChartsMetricInfo -All
+        Get-SANSFPLiveChartsMetricInfo -All
     )
 
     if ($Metrics.Count -eq 0) {
 
         $StatusTextBlock.Text =
-            'Es wurden keine Storage-SFP-Metriken gefunden.'
+            'Es wurden keine SAN-SFP-Metriken gefunden.'
 
         return $false
     }
 
     # ---------------------------------------------------------------------
-    # Load available time ranges
+    # Load time ranges
     # ---------------------------------------------------------------------
 
     $TimeRanges = @(
@@ -212,10 +228,6 @@ function Initialize-StorageSFPHistoryView {
 
         return $false
     }
-
-    # ---------------------------------------------------------------------
-    # Determine default time range
-    # ---------------------------------------------------------------------
 
     $DefaultTimeRanges = @(
         $TimeRanges |
@@ -232,7 +244,7 @@ function Initialize-StorageSFPHistoryView {
         $DefaultTimeRanges[0]
 
     # ---------------------------------------------------------------------
-    # Build generic Series selector
+    # Build Series selector
     # ---------------------------------------------------------------------
 
     $SelectorModel =
@@ -240,21 +252,20 @@ function Initialize-StorageSFPHistoryView {
             -MetricDefinitions $Metrics
 
     # ---------------------------------------------------------------------
-    # Select SFP Temperature as initial metric
+    # Default metric
+    #
+    # RX Power is a useful initial SFP health metric.
     # ---------------------------------------------------------------------
 
     $DefaultMetric =
         $Metrics |
             Where-Object {
-                $_.Metric -eq 'SFPTemp'
+                $_.Metric -eq 'RxPower'
             } |
             Select-Object -First 1
 
     if ($null -eq $DefaultMetric) {
-
-        $DefaultMetric =
-            $Metrics |
-                Select-Object -First 1
+        $DefaultMetric = $Metrics[0]
     }
 
     foreach ($SeriesItem in $SelectorModel.Series) {
@@ -296,9 +307,7 @@ function Initialize-StorageSFPHistoryView {
         $GroupSelectorModel.Groups
 
     # ---------------------------------------------------------------------
-    # Hide old comparison controls
-    #
-    # SourceSelectorListBox now handles both single and multiple ports.
+    # Hide legacy controls
     # ---------------------------------------------------------------------
 
     $ComparisonCheckBox.IsChecked =
@@ -317,7 +326,7 @@ function Initialize-StorageSFPHistoryView {
         [System.Windows.Visibility]::Collapsed
 
     # ---------------------------------------------------------------------
-    # Show Storage-System selector only when multiple systems exist
+    # Show group selector only for multiple SAN switches
     # ---------------------------------------------------------------------
 
     if ($GroupSelectorModel.Groups.Count -gt 1) {
@@ -332,7 +341,7 @@ function Initialize-StorageSFPHistoryView {
     }
 
     # ---------------------------------------------------------------------
-    # Default control selections
+    # Default selections
     # ---------------------------------------------------------------------
 
     $PortComboBox.SelectedIndex =
@@ -345,8 +354,32 @@ function Initialize-StorageSFPHistoryView {
         $DefaultTimeRange
 
     # ---------------------------------------------------------------------
-    # Helper:
-    # Return selected ports that belong to currently enabled groups.
+    # Select first visible SAN SFP port
+    # ---------------------------------------------------------------------
+
+    $InitialSources = @(
+        Get-LiveChartsFilteredSources `
+            -SourceSelectorModel $SourceSelectorModel `
+            -GroupSelectorModel $GroupSelectorModel
+    )
+
+    if ($InitialSources.Count -gt 0) {
+
+        if (
+            $InitialSources[0].PSObject.Properties[
+                'IsSelected'
+            ]
+        ) {
+
+            $InitialSources[0].IsSelected =
+                $true
+        }
+    }
+
+    $SourceSelectorListBox.Items.Refresh()
+
+    # ---------------------------------------------------------------------
+    # Helper: selected ports
     # ---------------------------------------------------------------------
 
     $GetSelectedPorts = {
@@ -379,8 +412,7 @@ function Initialize-StorageSFPHistoryView {
     }.GetNewClosure()
 
     # ---------------------------------------------------------------------
-    # Helper:
-    # Refresh visible Sources after Storage-System filter changes.
+    # Helper: refresh visible ports after switch selection
     # ---------------------------------------------------------------------
 
     $RefreshSourceSelector = {
@@ -400,14 +432,18 @@ function Initialize-StorageSFPHistoryView {
 
     # ---------------------------------------------------------------------
     # Common chart update action
-    #
-    # SourceSelector and SeriesSelector are authoritative.
     # ---------------------------------------------------------------------
 
     $UpdateChart = {
 
+        $StatusTextBlock.Foreground =
+            [System.Windows.Media.Brushes]::Black
+
+        $StatusTextBlock.FontWeight =
+            [System.Windows.FontWeights]::Normal
+
         # -------------------------------------------------------------
-        # Recalculate compatible metric UnitGroups
+        # Recalculate compatible Series
         # -------------------------------------------------------------
 
         $null =
@@ -417,7 +453,7 @@ function Initialize-StorageSFPHistoryView {
         $SeriesSelectorListBox.Items.Refresh()
 
         # -------------------------------------------------------------
-        # Resolve selected metrics
+        # Selected metrics
         # -------------------------------------------------------------
 
         $SelectedMetricDefinitions = @(
@@ -441,7 +477,7 @@ function Initialize-StorageSFPHistoryView {
         )
 
         # -------------------------------------------------------------
-        # Resolve selected Sources
+        # Selected ports
         # -------------------------------------------------------------
 
         $SelectedPorts = @(
@@ -451,19 +487,33 @@ function Initialize-StorageSFPHistoryView {
         if ($SelectedPorts.Count -eq 0) {
 
             $StatusTextBlock.Text =
-                'Bitte mindestens einen Storage-Port auswählen.'
+                'Bitte mindestens einen SAN-SFP-Port auswählen.'
+
+            return
+        }
+
+        if ($SelectedPorts.Count -gt 4) {
+
+            $StatusTextBlock.Text =
+                'Es können maximal vier SAN-SFP-Ports gleichzeitig angezeigt werden.'
 
             return
         }
 
         # -------------------------------------------------------------
-        # Keep maximum Source count consistent with backend
+        # Limit total Series
         # -------------------------------------------------------------
 
-        if ($SelectedPorts.Count -gt 4) {
+        $ExpectedSeriesCount =
+            $SelectedPorts.Count *
+            $SelectedMetricDefinitions.Count
 
-            $StatusTextBlock.Text =
-                'Es können maximal vier Storage-Ports gleichzeitig angezeigt werden.'
+        if ($ExpectedSeriesCount -gt 12) {
+
+            $StatusTextBlock.Text = (
+                'Die aktuelle Auswahl würde {0} Series erzeugen. ' +
+                'Maximal 12 sind gleichzeitig möglich.'
+            ) -f $ExpectedSeriesCount
 
             return
         }
@@ -476,7 +526,7 @@ function Initialize-StorageSFPHistoryView {
         )
 
         # -------------------------------------------------------------
-        # Resolve selected time range
+        # Time range
         # -------------------------------------------------------------
 
         $SelectedTimeRange =
@@ -501,16 +551,14 @@ function Initialize-StorageSFPHistoryView {
         try {
 
             if ($null -ne $RefreshButton) {
-
-                $RefreshButton.IsEnabled =
-                    $false
+                $RefreshButton.IsEnabled = $false
             }
 
             $StatusTextBlock.Text =
-                'SFP-History wird geladen …'
+                'SAN-SFP-History wird geladen …'
 
             $ChartData =
-                Update-StorageSFPHistoryChart `
+                Update-SANSFPHistoryChart `
                     -CustomerNbr $CustomerNbr `
                     -RowIDs $SelectedRowIDs `
                     -Metric $MetricNames `
@@ -524,7 +572,7 @@ function Initialize-StorageSFPHistoryView {
                     )
 
             # ---------------------------------------------------------
-            # Prepare formatted values for the shared XAML
+            # Shared formatting
             # ---------------------------------------------------------
 
             $Unit =
@@ -618,7 +666,7 @@ function Initialize-StorageSFPHistoryView {
                     -Force
 
             # ---------------------------------------------------------
-            # Update viewer
+            # Update View
             # ---------------------------------------------------------
 
             $ViewRoot.DataContext =
@@ -649,7 +697,7 @@ function Initialize-StorageSFPHistoryView {
                 "Fehler: $($_.Exception.Message)"
 
             Write-Host (
-                "Storage SFP History Fehler: " +
+                'SAN SFP History Fehler: ' +
                 "$($_.Exception.Message)"
             ) -ForegroundColor Red
 
@@ -663,9 +711,7 @@ function Initialize-StorageSFPHistoryView {
         finally {
 
             if ($null -ne $RefreshButton) {
-
-                $RefreshButton.IsEnabled =
-                    $true
+                $RefreshButton.IsEnabled = $true
             }
         }
 
@@ -673,11 +719,6 @@ function Initialize-StorageSFPHistoryView {
 
     # ---------------------------------------------------------------------
     # Quick metric preset
-    #
-    # Selecting an item in the Metric ComboBox resets the Series selection
-    # to that one metric.
-    #
-    # Additional compatible metrics can afterwards be added manually.
     # ---------------------------------------------------------------------
 
     $ApplyMetricPreset = {
@@ -708,10 +749,7 @@ function Initialize-StorageSFPHistoryView {
     }.GetNewClosure()
 
     # ---------------------------------------------------------------------
-    # Series CheckBox handler
-    #
-    # PreviewMouseUp is used instead of AddHandler because PowerShell/WPF
-    # had overload problems with routed ToggleButton events.
+    # Series checkbox handler
     # ---------------------------------------------------------------------
 
     $SeriesSelectorListBox.Add_PreviewMouseUp({
@@ -728,6 +766,7 @@ function Initialize-StorageSFPHistoryView {
                 $Current -is
                 [System.Windows.Controls.CheckBox]
             ) {
+
                 $CheckBox =
                     $Current
 
@@ -752,7 +791,6 @@ function Initialize-StorageSFPHistoryView {
             return
         }
 
-        # Wait until the TwoWay binding has updated IsSelected.
         $UpdateAction =
             [System.Action]{
 
@@ -768,7 +806,7 @@ function Initialize-StorageSFPHistoryView {
     }.GetNewClosure())
 
     # ---------------------------------------------------------------------
-    # Source CheckBox handler
+    # Source checkbox handler
     # ---------------------------------------------------------------------
 
     $SourceSelectorListBox.Add_PreviewMouseUp({
@@ -785,6 +823,7 @@ function Initialize-StorageSFPHistoryView {
                 $Current -is
                 [System.Windows.Controls.CheckBox]
             ) {
+
                 $CheckBox =
                     $Current
 
@@ -812,7 +851,6 @@ function Initialize-StorageSFPHistoryView {
         $ClickedItem =
             $CheckBox.DataContext
 
-        # Wait until the TwoWay binding has applied the new state.
         $UpdateAction =
             [System.Action]{
 
@@ -828,6 +866,7 @@ function Initialize-StorageSFPHistoryView {
                             'IsSelected'
                         ]
                     ) {
+
                         $ClickedItem.IsSelected =
                             $false
                     }
@@ -835,7 +874,7 @@ function Initialize-StorageSFPHistoryView {
                     $SourceSelectorListBox.Items.Refresh()
 
                     $StatusTextBlock.Text =
-                        'Es können maximal vier Storage-Ports gleichzeitig angezeigt werden.'
+                        'Es können maximal vier SAN-SFP-Ports gleichzeitig angezeigt werden.'
 
                     return
                 }
@@ -852,7 +891,7 @@ function Initialize-StorageSFPHistoryView {
     }.GetNewClosure())
 
     # ---------------------------------------------------------------------
-    # Storage-System Group CheckBox handler
+    # SAN Switch group checkbox handler
     # ---------------------------------------------------------------------
 
     $GroupSelectorListBox.Add_PreviewMouseUp({
@@ -869,6 +908,7 @@ function Initialize-StorageSFPHistoryView {
                 $Current -is
                 [System.Windows.Controls.CheckBox]
             ) {
+
                 $CheckBox =
                     $Current
 
@@ -896,7 +936,6 @@ function Initialize-StorageSFPHistoryView {
         $UpdateAction =
             [System.Action]{
 
-                # Refresh the list of visible ports.
                 & $RefreshSourceSelector
 
                 $VisibleSources = @(
@@ -904,11 +943,6 @@ function Initialize-StorageSFPHistoryView {
                         -SourceSelectorModel $SourceSelectorModel `
                         -GroupSelectorModel $GroupSelectorModel
                 )
-
-                # -----------------------------------------------------
-                # If the active groups contain no selected Source,
-                # automatically select the first visible one.
-                # -----------------------------------------------------
 
                 $SelectedPorts = @(
                     & $GetSelectedPorts
@@ -927,6 +961,7 @@ function Initialize-StorageSFPHistoryView {
                             'IsSelected'
                         ]
                     ) {
+
                         $FirstVisibleSource.IsSelected =
                             $true
                     }
@@ -946,7 +981,7 @@ function Initialize-StorageSFPHistoryView {
     }.GetNewClosure())
 
     # ---------------------------------------------------------------------
-    # Register normal events
+    # Normal events
     # ---------------------------------------------------------------------
 
     if ($null -ne $RefreshButton) {

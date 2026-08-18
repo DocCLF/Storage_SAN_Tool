@@ -88,85 +88,85 @@ function Update-StorageSFPHistoryViewer {
         $RefreshButton
     )
 
-    # SelectionChanged wird bereits während des Befüllens der ComboBoxen
-    # ausgelöst. Zu diesem Zeitpunkt sind eventuell noch nicht alle
-    # benötigten Auswahlen vorhanden.
-$ComparisonEnabled =
-    ($ComparisonCheckBox.IsChecked -eq $true)
+    # SelectionChanged is triggered while the combo boxes are still being populated.
+    # At this point, not all
+    # required selections may be available yet.
+        $ComparisonEnabled =
+            ($ComparisonCheckBox.IsChecked -eq $true)
 
-if (
-    $null -eq $MetricComboBox.SelectedItem -or
-    $null -eq $TimeRangeComboBox.SelectedItem
-) {
-    return
-}
-
-if (
-    -not $ComparisonEnabled -and
-    $null -eq $PortComboBox.SelectedItem
-) {
-    return
-}
-
-if (
-    $ComparisonEnabled -and
-    $ComparisonListBox.SelectedItems.Count -lt 2
-) {
-    $StatusTextBlock.Text =
-        'Bitte mindestens zwei Storage-Ports für den Vergleich auswählen.'
-
-    return
-}
-
-    try {
-        if ($null -ne $RefreshButton) {
-            $RefreshButton.IsEnabled = $false
+        if (
+            $null -eq $MetricComboBox.SelectedItem -or
+            $null -eq $TimeRangeComboBox.SelectedItem
+        ) {
+            return
         }
 
-        $StatusTextBlock.Text = 'History wird geladen …'
+        if (
+            -not $ComparisonEnabled -and
+            $null -eq $PortComboBox.SelectedItem
+        ) {
+            return
+        }
 
-$SelectedMetric    = $MetricComboBox.SelectedItem
-$SelectedTimeRange = $TimeRangeComboBox.SelectedItem
+        if (
+            $ComparisonEnabled -and
+            $ComparisonListBox.SelectedItems.Count -lt 2
+        ) {
+            $StatusTextBlock.Text =
+                'Bitte mindestens zwei Storage-Ports für den Vergleich auswählen.'
+        
+            return
+        }
 
-$SelectedPort  = $null
-$SelectedPorts = @()
+            try {
+                if ($null -ne $RefreshButton) {
+                    $RefreshButton.IsEnabled = $false
+                }
+            
+                $StatusTextBlock.Text = 'History wird geladen …'
+            
+        $SelectedMetric    = $MetricComboBox.SelectedItem
+        $SelectedTimeRange = $TimeRangeComboBox.SelectedItem
+            
+        $SelectedPort  = $null
+        $SelectedPorts = @()
 
-if ($ComparisonEnabled) {
-    $SelectedPorts = @(
-        $ComparisonListBox.SelectedItems
-    )
-}
-else {
-    $SelectedPort = $PortComboBox.SelectedItem
-}
+        if ($ComparisonEnabled) {
+            $SelectedPorts = @(
+                $ComparisonListBox.SelectedItems
+            )
+        }
+        else {
+            $SelectedPort = $PortComboBox.SelectedItem
+        }
 
-        # Ausgewählten Port prüfen.
-$RequiredPortProperties = @(
-    'RowID'
-    'DisplayName'
-)
+        # Check the selected port.
+        $RequiredPortProperties = @(
+            'RowID'
+            'DisplayName'
+        )
 
-if ($ComparisonEnabled) {
-    foreach ($CurrentPort in $SelectedPorts) {
-        foreach ($PropertyName in $RequiredPortProperties) {
-            if (-not $CurrentPort.PSObject.Properties[$PropertyName]) {
-                throw (
-                    "Selected comparison port property " +
-                    "'$PropertyName' is missing."
-                )
+        if ($ComparisonEnabled) {
+            foreach ($CurrentPort in $SelectedPorts) {
+                foreach ($PropertyName in $RequiredPortProperties) {
+                    if (-not $CurrentPort.PSObject.Properties[$PropertyName]) {
+                        throw (
+                            "Selected comparison port property " +
+                            "'$PropertyName' is missing."
+                        )
+                    }
+                }
             }
         }
-    }
-}
-else {
-    foreach ($PropertyName in $RequiredPortProperties) {
-        if (-not $SelectedPort.PSObject.Properties[$PropertyName]) {
-            throw "Selected port property '$PropertyName' is missing."
+        else {
+            foreach ($PropertyName in $RequiredPortProperties) {
+                if (-not $SelectedPort.PSObject.Properties[$PropertyName]) {
+                    throw "Selected port property '$PropertyName' is missing."
+                }
+            }
         }
-    }
-}
 
-        # Ausgewählte Metrik prüfen.
+        # Check the selected metric.
         $RequiredMetricProperties = @(
             'Metric'
             'DisplayName'
@@ -178,7 +178,7 @@ else {
             }
         }
 
-        # Ausgewählten Zeitraum prüfen.
+        # Check the selected time period.
         $RequiredTimeRangeProperties = @(
             'Duration'
             'LabelFormat'
@@ -197,35 +197,35 @@ else {
             [TimeSpan]$SelectedTimeRange.Duration
         )
 
-        # Request für den ausgewählten Port, die Metrik und den Zeitraum bauen.
-if ($ComparisonEnabled) {
-    $SelectedRowIDs = @(
-        foreach ($CurrentPort in $SelectedPorts) {
-            [string]$CurrentPort.RowID
+        # Build a request for the selected port, metric, and time period.
+        if ($ComparisonEnabled) {
+            $SelectedRowIDs = @(
+                foreach ($CurrentPort in $SelectedPorts) {
+                    [string]$CurrentPort.RowID
+                }
+            )
+            
+            $Request = New-StorageSFPHistoryRequest `
+                -CustomerNbr $CustomerNbr `
+                -RowIDs $SelectedRowIDs `
+                -Metric ([string]$SelectedMetric.Metric) `
+                -StartTime $StartTime `
+                -EndTime $EndTime `
+                -DateTimeLabelFormat ([string]$SelectedTimeRange.LabelFormat) `
+                -DateTimeStep ([TimeSpan]$SelectedTimeRange.DateTimeStep)
         }
-    )
+        else {
+            $Request = New-StorageSFPHistoryRequest `
+                -CustomerNbr $CustomerNbr `
+                -RowID ([string]$SelectedPort.RowID) `
+                -Metric ([string]$SelectedMetric.Metric) `
+                -StartTime $StartTime `
+                -EndTime $EndTime `
+                -DateTimeLabelFormat ([string]$SelectedTimeRange.LabelFormat) `
+                -DateTimeStep ([TimeSpan]$SelectedTimeRange.DateTimeStep)
+        }
 
-    $Request = New-StorageSFPHistoryRequest `
-        -CustomerNbr $CustomerNbr `
-        -RowIDs $SelectedRowIDs `
-        -Metric ([string]$SelectedMetric.Metric) `
-        -StartTime $StartTime `
-        -EndTime $EndTime `
-        -DateTimeLabelFormat ([string]$SelectedTimeRange.LabelFormat) `
-        -DateTimeStep ([TimeSpan]$SelectedTimeRange.DateTimeStep)
-}
-else {
-    $Request = New-StorageSFPHistoryRequest `
-        -CustomerNbr $CustomerNbr `
-        -RowID ([string]$SelectedPort.RowID) `
-        -Metric ([string]$SelectedMetric.Metric) `
-        -StartTime $StartTime `
-        -EndTime $EndTime `
-        -DateTimeLabelFormat ([string]$SelectedTimeRange.LabelFormat) `
-        -DateTimeStep ([TimeSpan]$SelectedTimeRange.DateTimeStep)
-}
-
-        # Chartdaten erzeugen.
+        # Generate chart data.
         $ChartData = Update-StorageSFPHistoryChart `
             -Request $Request
 
@@ -233,14 +233,14 @@ else {
             throw 'Update-StorageSFPHistoryChart returned no chart data.'
         }
 
-        # PowerShell kann Collections bei der Rückgabe einer Funktion
-        # automatisch auflösen:
+        # PowerShell can automatically resolve collections when a function returns
+        # a result:
         #
-        #   eine Serie  -> einzelnes LineSeries-Objekt
-        #   zwei Serien -> Object[]
+        #   one series  -> a single LineSeries object
+        #   two series -> Object[]
         #
-        # LiveCharts erwartet jedoch immer eine Collection. Deshalb werden
-        # Series und Achsen hier zuverlässig neu typisiert.
+        # However, LiveCharts always expects a collection. Therefore,
+        # series and axes are reliably retyped here.
 
         $NormalizedSeries =
             [System.Collections.Generic.List[
@@ -299,8 +299,8 @@ else {
             throw 'The chart model contains no usable Y axis.'
         }
 
-        # Die möglicherweise aufgelösten Eigenschaften durch die
-        # typisierten Collections ersetzen.
+        # Replace the properties that may have been resolved with the
+        # typed collections.
         $ChartData |
             Add-Member `
                 -MemberType NoteProperty `
@@ -354,7 +354,7 @@ else {
             return "$FormattedValue $Unit"
         }
 
-        # Für die GUI vorbereitete Statistiktexte hinzufügen.
+        # Add statistical texts formatted for the GUI.
         $ChartData |
             Add-Member `
                 -MemberType NoteProperty `
@@ -390,27 +390,27 @@ else {
                 -Value ([string]$ChartData.PointCount) `
                 -Force
 
-        # Aktuelle Auswahl ebenfalls im DataContext hinterlegen.
-$ChartData |
-    Add-Member `
-        -MemberType NoteProperty `
-        -Name SelectedPort `
-        -Value $SelectedPort `
-        -Force
+        # Also store the current selection in the DataContext.
+        $ChartData |
+            Add-Member `
+                -MemberType NoteProperty `
+                -Name SelectedPort `
+                -Value $SelectedPort `
+                -Force
 
-$ChartData |
-    Add-Member `
-        -MemberType NoteProperty `
-        -Name SelectedPorts `
-        -Value $SelectedPorts `
-        -Force
+        $ChartData |
+            Add-Member `
+                -MemberType NoteProperty `
+                -Name SelectedPorts `
+                -Value $SelectedPorts `
+                -Force
 
-$ChartData |
-    Add-Member `
-        -MemberType NoteProperty `
-        -Name ComparisonEnabled `
-        -Value $ComparisonEnabled `
-        -Force
+        $ChartData |
+            Add-Member `
+                -MemberType NoteProperty `
+                -Name ComparisonEnabled `
+                -Value $ComparisonEnabled `
+                -Force
 
         $ChartData |
             Add-Member `
@@ -426,20 +426,20 @@ $ChartData |
                 -Value $SelectedTimeRange `
                 -Force
 
-        # Die normalen XAML-Bindings aktualisieren damit:
+        # Update the standard XAML bindings as follows:
         #
         #   Series="{Binding Series}"
         #   XAxes="{Binding XAxes}"
         #   YAxes="{Binding YAxes}"
         #
-        # Ein direkter Zugriff auf CartesianChart ist wegen des
-        # ToolTip/Tooltip-Konflikts nicht erforderlich.
+        # Direct access to CartesianChart is not required due to the
+        # ToolTip/Tooltip conflict.
         $Window.DataContext = $ChartData
 
 if ($ComparisonEnabled) {
     $StatusTextBlock.Text = (
         '{0} Ports | {1} | {2} Messpunkte | {3:dd.MM.yyyy HH:mm:ss} bis {4:dd.MM.yyyy HH:mm:ss}' -f
-        $ChartData.PortCount,
+        $ChartData.SourceCount,
         $SelectedMetric.DisplayName,
         $ChartData.PointCount,
         $StartTime,
@@ -462,13 +462,13 @@ else {
     catch {
         $ErrorMessage = [string]$_.Exception.Message
 
-        # Ein leerer Zeitraum ist kein technischer Fehler.
+        # An empty time slot is not a technical error.
         if ($ErrorMessage -like 'No Storage SFP history was found*') {
             $SelectedPort      = $PortComboBox.SelectedItem
             $SelectedTimeRange = $TimeRangeComboBox.SelectedItem
 
-            # Alte Chartdaten entfernen, damit keine Werte einer vorherigen
-            # Auswahl unter dem neuen Port oder Zeitraum angezeigt werden.
+            # Remove old chart data so that values from a previous
+            # selection are not displayed under the new port or time period.
             $EmptySeries =
                 [System.Collections.Generic.List[
                     LiveChartsCore.ISeries
@@ -506,7 +506,7 @@ else {
             return
         }
 
-        # Echte technische Fehler ausführlich ausgeben.
+        # Provide detailed output for actual technical errors.
         $StatusTextBlock.Text = "Fehler: $ErrorMessage"
 
         Write-Host (

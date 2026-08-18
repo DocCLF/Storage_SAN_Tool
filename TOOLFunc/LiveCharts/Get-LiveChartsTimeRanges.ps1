@@ -32,12 +32,30 @@ function Get-LiveChartsTimeRanges {
         }
 
         [PSCustomObject]@{
+            Key          = 'Last6Hours'
+            DisplayName  = 'Letzte 6 Stunden'
+            Duration     = [TimeSpan]::FromHours(6)
+            LabelFormat  = 'HH:mm'
+            DateTimeStep = [TimeSpan]::FromHours(1)
+            Default      = $true
+        }
+
+        [PSCustomObject]@{
+            Key          = 'Last12Hours'
+            DisplayName  = 'Letzte 12 Stunden'
+            Duration     = [TimeSpan]::FromHours(12)
+            LabelFormat  = 'HH:mm'
+            DateTimeStep = [TimeSpan]::FromHours(1)
+            Default      = $false
+        }
+
+        [PSCustomObject]@{
             Key          = 'Last24Hours'
             DisplayName  = 'Letzte 24 Stunden'
             Duration     = [TimeSpan]::FromHours(24)
             LabelFormat  = 'HH:mm'
             DateTimeStep = [TimeSpan]::FromHours(2)
-            Default      = $true
+            Default      = $false
         }
 
         [PSCustomObject]@{

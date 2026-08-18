@@ -16,12 +16,15 @@ function ConvertTo-LiveChartsDeltaHistory {
                 73, 73, 75, 75, 78
 
             Delta:
-                 0,  0,  2,  0,  3
+                null, 0, 2, 0, 3
 
-        If the current value is lower than the previous value,
-        a counter reset is assumed. In that case,
-        the current value is used as the delta instead of returning a
-        negative value.
+        The first measurement has no previous measurement and therefore
+        receives no delta value.
+
+        If the current value is lower than the previous value, a counter
+        reset is assumed. In that case the delta is set to null because
+        the actual increase since the previous measurement cannot be
+        determined reliably.
 
     .PARAMETER History
         Historical objects containing TimeStamp and the selected metric.
@@ -33,9 +36,10 @@ function ConvertTo-LiveChartsDeltaHistory {
         PSCustomObject[]
 
     .EXAMPLE
-        $DeltaHistory = ConvertTo-LiveChartsDeltaHistory `
-            -History $History `
-            -Metric 'CRCErr'
+        $DeltaHistory =
+            ConvertTo-LiveChartsDeltaHistory `
+                -History $History `
+                -Metric 'CRCErr'
     #>
 
     [CmdletBinding()]
@@ -53,9 +57,12 @@ function ConvertTo-LiveChartsDeltaHistory {
         throw 'The History collection does not contain any entries.'
     }
 
-    $SampleItem = $History |
-        Where-Object { $null -ne $_ } |
-        Select-Object -First 1
+    $SampleItem =
+        $History |
+            Where-Object {
+                $null -ne $_
+            } |
+            Select-Object -First 1
 
     if ($null -eq $SampleItem) {
         throw 'The History collection contains no valid objects.'
@@ -66,72 +73,156 @@ function ConvertTo-LiveChartsDeltaHistory {
     }
 
     if (-not $SampleItem.PSObject.Properties[$Metric]) {
-        throw "The history objects do not contain the metric property '$Metric'."
+        throw (
+            "The history objects do not contain the metric property " +
+            "'$Metric'."
+        )
     }
 
-    $PreviousValue = $null
+    $PreviousValue =
+        $null
 
     $DeltaHistory = @(
-        foreach ($HistoryItem in ($History | Sort-Object TimeStamp)) {
+        foreach (
+            $HistoryItem in (
+                $History |
+                    Sort-Object TimeStamp
+            )
+        ) {
+
             if ($null -eq $HistoryItem) {
                 continue
             }
 
             $MetricProperty =
-                $HistoryItem.PSObject.Properties[$Metric]
+                $HistoryItem.PSObject.Properties[
+                    $Metric
+                ]
 
             if ($null -eq $MetricProperty) {
                 continue
             }
 
-            $RawValue = $MetricProperty.Value
+            $RawValue =
+                $MetricProperty.Value
+
+            # ---------------------------------------------------------
+            # Create an independent copy first.
+            #
+            # This is important because even if the selected metric is
+            # null or invalid, the original time point may still be
+            # required by other metrics in MultiMetric mode.
+            # ---------------------------------------------------------
+
+            $CopiedProperties =
+                [ordered]@{}
+
+            foreach (
+                $Property in
+                $HistoryItem.PSObject.Properties
+            ) {
+
+                $CopiedProperties[
+                    $Property.Name
+                ] =
+                    $Property.Value
+            }
+
+            # ---------------------------------------------------------
+            # Missing current value
+            # ---------------------------------------------------------
 
             if (
                 $null -eq $RawValue -or
                 $RawValue -is [DBNull] -or
-                [string]::IsNullOrWhiteSpace([string]$RawValue)
+                [string]::IsNullOrWhiteSpace(
+                    [string]$RawValue
+                )
             ) {
+
+                $CopiedProperties[$Metric] =
+                    $null
+
+                [PSCustomObject]$CopiedProperties
+
                 continue
             }
+
+            # ---------------------------------------------------------
+            # Convert cumulative counter value
+            # ---------------------------------------------------------
 
             try {
-                $CurrentValue = [double]$RawValue
+
+                $CurrentValue =
+                    [double]$RawValue
             }
             catch {
+
                 Write-Warning (
                     "Value '$RawValue' of metric '$Metric' could not " +
-                    'be converted to Double and was skipped.'
+                    'be converted to Double. The delta was set to null.'
                 )
+
+                $CopiedProperties[$Metric] =
+                    $null
+
+                [PSCustomObject]$CopiedProperties
 
                 continue
             }
 
+            # ---------------------------------------------------------
+            # Calculate delta
+            # ---------------------------------------------------------
+
             if ($null -eq $PreviousValue) {
-                # There is no previous measurement available for the first measurement.
-                $DeltaValue = [double]0
+
+                # No previous measurement exists.
+                #
+                # The current cumulative value must not be interpreted
+                # as events that occurred in the current interval.
+                $DeltaValue =
+                    $null
             }
             elseif ($CurrentValue -ge $PreviousValue) {
-                $DeltaValue = $CurrentValue - $PreviousValue
+
+                $DeltaValue =
+                    $CurrentValue -
+                    $PreviousValue
             }
             else {
-                # The reading has been reset.
-                # Negative delta values would be technically misleading.
-                $DeltaValue = $CurrentValue
+
+                # Counter decreased.
+                #
+                # This normally indicates a counter reset, switch restart
+                # or similar event. The actual interval delta cannot be
+                # determined reliably.
+                $DeltaValue =
+                    $null
             }
 
-            # Create an independent copy of the original object.
-            $CopiedProperties = [ordered]@{}
+            # ---------------------------------------------------------
+            # Replace only the selected metric
+            # ---------------------------------------------------------
 
-            foreach ($Property in $HistoryItem.PSObject.Properties) {
-                $CopiedProperties[$Property.Name] = $Property.Value
+            if ($null -eq $DeltaValue) {
+
+                $CopiedProperties[$Metric] =
+                    $null
             }
+            else {
 
-            # Replace only the selected metric with the delta.
-            $CopiedProperties[$Metric] = [double]$DeltaValue
+                $CopiedProperties[$Metric] =
+                    [double]$DeltaValue
+            }
 
             [PSCustomObject]$CopiedProperties
 
-            $PreviousValue = $CurrentValue
+            # Current cumulative value becomes the reference for the next
+            # measurement, even after a reset.
+            $PreviousValue =
+                $CurrentValue
         }
     )
 

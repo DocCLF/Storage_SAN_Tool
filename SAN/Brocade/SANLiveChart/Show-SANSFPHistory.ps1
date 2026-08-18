@@ -1,15 +1,15 @@
-function Show-StorageSFPHistory {
+function Show-SANSFPHistory {
     <#
     .SYNOPSIS
-        Opens a Storage SFP history viewer.
+        Opens the SAN SFP history viewer.
 
     .DESCRIPTION
-        Opens the shared LiveCharts history viewer for Storage FC ports.
+        Opens the shared LiveCharts history viewer for Brocade SAN SFPs.
 
         The viewer uses the generic selector architecture:
 
-            Storage System
-                -> FC Port / SFP
+            SAN Switch
+                -> Port
                     -> Metric / Series
 
         Multiple ports and multiple compatible metrics may be displayed
@@ -22,7 +22,7 @@ function Show-StorageSFPHistory {
         Customer number whose SQLite database should be used.
 
     .EXAMPLE
-        Show-StorageSFPHistory -CustomerNbr '123456'
+        Show-SANSFPHistory -CustomerNbr '349872'
     #>
 
     [CmdletBinding()]
@@ -54,8 +54,9 @@ function Show-StorageSFPHistory {
 
     $Xaml =
         Get-LiveChartsHistoryViewXaml `
-            -WindowTitle 'Storage SFP History' `
-            -SourceLabel 'Storage-Port'
+            -WindowTitle 'SAN SFP History' `
+            -SourceLabel 'SAN-SFP-Port'`
+            -SourceGroupLabel 'SAN Switches'
 
     $XmlReader =
         [System.Xml.XmlReader]::Create(
@@ -113,9 +114,6 @@ function Show-StorageSFPHistory {
 
     # ---------------------------------------------------------------------
     # Resolve legacy controls
-    #
-    # These still exist in the shared XAML because other viewers may use
-    # them. Initialize-StorageSFPHistoryView collapses them for SFP.
     # ---------------------------------------------------------------------
 
     $CB_Source =
@@ -137,7 +135,6 @@ function Show-StorageSFPHistory {
     # Resolve generic selector controls
     # ---------------------------------------------------------------------
 
-    # Storage Systems / Source Groups
     $SP_SourceGroupSelector =
         $Window.FindName(
             'SP_SourceGroupSelector'
@@ -148,13 +145,11 @@ function Show-StorageSFPHistory {
             'LB_SourceGroupSelector'
         )
 
-    # FC Ports / Sources
     $LB_SourceSelector =
         $Window.FindName(
             'LB_SourceSelector'
         )
 
-    # Metrics / Series
     $LB_SeriesSelector =
         $Window.FindName(
             'LB_SeriesSelector'
@@ -191,9 +186,6 @@ function Show-StorageSFPHistory {
 
     # ---------------------------------------------------------------------
     # Validate required controls
-    #
-    # This catches mismatches between shared XAML and viewer code before
-    # Initialize-StorageSFPHistoryView is called.
     # ---------------------------------------------------------------------
 
     $RequiredControls = @{
@@ -225,21 +217,11 @@ function Show-StorageSFPHistory {
     }
 
     # ---------------------------------------------------------------------
-    # Initialize SFP viewer
-    #
-    # Important:
-    #
-    # The generic Initialize parameters are intentionally named
-    # GroupSelectorListBox / GroupSelectorPanel.
-    #
-    # Here they receive the actual XAML controls:
-    #
-    #   GroupSelectorListBox -> LB_SourceGroupSelector
-    #   GroupSelectorPanel   -> SP_SourceGroupSelector
+    # Initialize SAN SFP viewer
     # ---------------------------------------------------------------------
 
     $Initialized =
-        Initialize-StorageSFPHistoryView `
+        Initialize-SANSFPHistoryView `
             -CustomerNbr $CustomerNbr `
             -ViewRoot $Window `
             -PortComboBox $CB_Source `
@@ -270,7 +252,7 @@ function Show-StorageSFPHistory {
     catch {
 
         Write-Host (
-            'Storage SFP History ShowDialog Fehler: ' +
+            'SAN SFP History ShowDialog Fehler: ' +
             $_.Exception.Message
         ) -ForegroundColor Red
 

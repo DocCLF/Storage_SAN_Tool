@@ -1,15 +1,15 @@
-function Show-StorageSFPHistory {
+function Show-SANPortErrorHistory {
     <#
     .SYNOPSIS
-        Opens a Storage SFP history viewer.
+        Opens the Brocade SAN port-error history viewer.
 
     .DESCRIPTION
-        Opens the shared LiveCharts history viewer for Storage FC ports.
+        Opens the shared LiveCharts history viewer for Brocade SAN ports.
 
         The viewer uses the generic selector architecture:
 
-            Storage System
-                -> FC Port / SFP
+            SAN Switch
+                -> Port
                     -> Metric / Series
 
         Multiple ports and multiple compatible metrics may be displayed
@@ -22,7 +22,7 @@ function Show-StorageSFPHistory {
         Customer number whose SQLite database should be used.
 
     .EXAMPLE
-        Show-StorageSFPHistory -CustomerNbr '123456'
+        Show-SANPortErrorHistory -CustomerNbr '123456'
     #>
 
     [CmdletBinding()]
@@ -54,8 +54,9 @@ function Show-StorageSFPHistory {
 
     $Xaml =
         Get-LiveChartsHistoryViewXaml `
-            -WindowTitle 'Storage SFP History' `
-            -SourceLabel 'Storage-Port'
+            -WindowTitle 'SAN Port Error History' `
+            -SourceLabel 'SAN-Port'`
+            -SourceGroupLabel 'SAN Switches'
 
     $XmlReader =
         [System.Xml.XmlReader]::Create(
@@ -114,8 +115,8 @@ function Show-StorageSFPHistory {
     # ---------------------------------------------------------------------
     # Resolve legacy controls
     #
-    # These still exist in the shared XAML because other viewers may use
-    # them. Initialize-StorageSFPHistoryView collapses them for SFP.
+    # These are still part of the shared XAML but are hidden by
+    # Initialize-SANPortErrorHistoryView.
     # ---------------------------------------------------------------------
 
     $CB_Source =
@@ -137,7 +138,7 @@ function Show-StorageSFPHistory {
     # Resolve generic selector controls
     # ---------------------------------------------------------------------
 
-    # Storage Systems / Source Groups
+    # SAN Switches / Source Groups
     $SP_SourceGroupSelector =
         $Window.FindName(
             'SP_SourceGroupSelector'
@@ -148,13 +149,13 @@ function Show-StorageSFPHistory {
             'LB_SourceGroupSelector'
         )
 
-    # FC Ports / Sources
+    # SAN Ports / Sources
     $LB_SourceSelector =
         $Window.FindName(
             'LB_SourceSelector'
         )
 
-    # Metrics / Series
+    # Error metrics / Series
     $LB_SeriesSelector =
         $Window.FindName(
             'LB_SeriesSelector'
@@ -191,9 +192,6 @@ function Show-StorageSFPHistory {
 
     # ---------------------------------------------------------------------
     # Validate required controls
-    #
-    # This catches mismatches between shared XAML and viewer code before
-    # Initialize-StorageSFPHistoryView is called.
     # ---------------------------------------------------------------------
 
     $RequiredControls = @{
@@ -225,21 +223,11 @@ function Show-StorageSFPHistory {
     }
 
     # ---------------------------------------------------------------------
-    # Initialize SFP viewer
-    #
-    # Important:
-    #
-    # The generic Initialize parameters are intentionally named
-    # GroupSelectorListBox / GroupSelectorPanel.
-    #
-    # Here they receive the actual XAML controls:
-    #
-    #   GroupSelectorListBox -> LB_SourceGroupSelector
-    #   GroupSelectorPanel   -> SP_SourceGroupSelector
+    # Initialize SAN viewer
     # ---------------------------------------------------------------------
 
     $Initialized =
-        Initialize-StorageSFPHistoryView `
+        Initialize-SANPortErrorHistoryView `
             -CustomerNbr $CustomerNbr `
             -ViewRoot $Window `
             -PortComboBox $CB_Source `
@@ -270,7 +258,7 @@ function Show-StorageSFPHistory {
     catch {
 
         Write-Host (
-            'Storage SFP History ShowDialog Fehler: ' +
+            'SAN Port Error History ShowDialog Fehler: ' +
             $_.Exception.Message
         ) -ForegroundColor Red
 
