@@ -86,15 +86,13 @@ function Get-SFPHistory {
     )
 
     if ($StartTime -gt $EndTime) {
-        throw 'StartTime must not be later than EndTime.'
+        SST_ToolMessageCollector -TD_ToolMSGCollector ("StartTime must not be later than EndTime.") -TD_ToolMSGType "Warning" -TD_Shown "yes"
     }
 
-    $DBPath = Join-Path `
-        -Path $PSRootPath `
-        -ChildPath "Resources\DBFolder\$CustomerNbr.db"
+    $DBPath = Join-Path -Path $PSRootPath -ChildPath "Resources\DBFolder\$CustomerNbr.db"
 
     if (-not (Test-Path -LiteralPath $DBPath -PathType Leaf)) {
-        throw "SQLite database not found: $DBPath"
+        SST_ToolMessageCollector -TD_ToolMSGCollector ("SQLite database not found: $DBPath") -TD_ToolMSGType "Error" -TD_Shown "yes"
     }
 
     $SQLiteConnection = $null
@@ -111,173 +109,71 @@ function Get-SFPHistory {
 
         $SQLiteCommand = $SQLiteConnection.CreateCommand()
 
-        $SQLiteCommand.CommandText = @"
-SELECT
-    ID,
-    CustomerNbr,
-    RowID,
-    NodeID,
-    NodeName,
-    CardType,
-    CardID,
-    PortID,
-    WWPN,
+        $SQLiteCommand.CommandText = "SELECT ID,CustomerNbr,RowID,NodeID,NodeName,CardType,CardID,PortID,WWPN,LinkFailure,LoseSync,LoseSig,PSErrCount,InvTransErr,CRCErr,ZeroBtB,SFPTemp,TXPwr,TXPwrLow,RXPwr,RXPwrLow,SerialNumber,WWNN,TimeStamp`
+                                        FROM IBMSTOFCPortStatsTable WHERE CustomerNbr = @CustomerNbr AND RowID = @RowID AND TimeStamp >= @StartTime AND TimeStamp <= @EndTime ORDER BY TimeStamp ASC;"
 
-    LinkFailure,
-    LoseSync,
-    LoseSig,
-    PSErrCount,
-    InvTransErr,
-    CRCErr,
-    ZeroBtB,
-
-    SFPTemp,
-    TXPwr,
-    TXPwrLow,
-    RXPwr,
-    RXPwrLow,
-
-    SerialNumber,
-    WWNN,
-    TimeStamp
-FROM IBMSTOFCPortStatsTable
-WHERE CustomerNbr = @CustomerNbr
-  AND RowID        = @RowID
-  AND TimeStamp   >= @StartTime
-  AND TimeStamp   <= @EndTime
-ORDER BY TimeStamp ASC;
-"@
-
-        $SQLiteCommand.Parameters.AddWithValue(
-            '@CustomerNbr',
-            $CustomerNbr
-        ) | Out-Null
-
-        $SQLiteCommand.Parameters.AddWithValue(
-            '@RowID',
-            $RowID
-        ) | Out-Null
-
-        $SQLiteCommand.Parameters.AddWithValue(
-            '@StartTime',
-            $StartTime.ToString('yyyy-MM-dd HH:mm:ss')
-        ) | Out-Null
-
-        $SQLiteCommand.Parameters.AddWithValue(
-            '@EndTime',
-            $EndTime.ToString('yyyy-MM-dd HH:mm:ss')
-        ) | Out-Null
+        $SQLiteCommand.Parameters.AddWithValue('@CustomerNbr',$CustomerNbr) | Out-Null
+        $SQLiteCommand.Parameters.AddWithValue('@RowID',$RowID) | Out-Null
+        $SQLiteCommand.Parameters.AddWithValue('@StartTime',$StartTime.ToString('yyyy-MM-dd HH:mm:ss')) | Out-Null
+        $SQLiteCommand.Parameters.AddWithValue('@EndTime',$EndTime.ToString('yyyy-MM-dd HH:mm:ss')) | Out-Null
 
         $SQLiteReader = $SQLiteCommand.ExecuteReader()
 
         $Result = while ($SQLiteReader.Read()) {
             [PSCustomObject]@{
-                ID = if ($SQLiteReader.IsDBNull(
-                        $SQLiteReader.GetOrdinal('ID')
-                    )) {
+                ID = if ($SQLiteReader.IsDBNull($SQLiteReader.GetOrdinal('ID'))) {
                     $null
-                }
-                else {
+                }else {
                     [long]$SQLiteReader['ID']
                 }
 
                 CustomerNbr = [string]$SQLiteReader['CustomerNbr']
                 RowID       = [string]$SQLiteReader['RowID']
 
-                NodeID = if ($SQLiteReader.IsDBNull(
-                        $SQLiteReader.GetOrdinal('NodeID')
-                    )) {
+                NodeID = if ($SQLiteReader.IsDBNull($SQLiteReader.GetOrdinal('NodeID'))) {
                     $null
-                }
-                else {
+                }else {
                     [string]$SQLiteReader['NodeID']
                 }
 
-                NodeName = if ($SQLiteReader.IsDBNull(
-                        $SQLiteReader.GetOrdinal('NodeName')
-                    )) {
+                NodeName = if ($SQLiteReader.IsDBNull($SQLiteReader.GetOrdinal('NodeName'))) {
                     $null
-                }
-                else {
+                }else {
                     [string]$SQLiteReader['NodeName']
                 }
 
-                CardType = if ($SQLiteReader.IsDBNull(
-                        $SQLiteReader.GetOrdinal('CardType')
-                    )) {
+                CardType = if ($SQLiteReader.IsDBNull($SQLiteReader.GetOrdinal('CardType'))) {
                     $null
-                }
-                else {
+                }else {
                     [string]$SQLiteReader['CardType']
                 }
 
-                CardID = if ($SQLiteReader.IsDBNull(
-                        $SQLiteReader.GetOrdinal('CardID')
-                    )) {
+                CardID = if ($SQLiteReader.IsDBNull($SQLiteReader.GetOrdinal('CardID'))) {
                     $null
-                }
-                else {
+                }else {
                     [long]$SQLiteReader['CardID']
                 }
 
-                PortID = if ($SQLiteReader.IsDBNull(
-                        $SQLiteReader.GetOrdinal('PortID')
-                    )) {
+                PortID = if ($SQLiteReader.IsDBNull($SQLiteReader.GetOrdinal('PortID'))) {
                     $null
-                }
-                else {
+                }else {
                     [long]$SQLiteReader['PortID']
                 }
 
                 WWPN = [string]$SQLiteReader['WWPN']
 
-                LinkFailure = Get-SQLiteNullableInt64 `
-                    -Reader $SQLiteReader `
-                    -ColumnName 'LinkFailure'
-
-                LoseSync = Get-SQLiteNullableInt64 `
-                    -Reader $SQLiteReader `
-                    -ColumnName 'LoseSync'
-
-                LoseSig = Get-SQLiteNullableInt64 `
-                    -Reader $SQLiteReader `
-                    -ColumnName 'LoseSig'
-
-                PSErrCount = Get-SQLiteNullableInt64 `
-                    -Reader $SQLiteReader `
-                    -ColumnName 'PSErrCount'
-
-                InvTransErr = Get-SQLiteNullableInt64 `
-                    -Reader $SQLiteReader `
-                    -ColumnName 'InvTransErr'
-
-                CRCErr = Get-SQLiteNullableInt64 `
-                    -Reader $SQLiteReader `
-                    -ColumnName 'CRCErr'
-
-                ZeroBtB = Get-SQLiteNullableInt64 `
-                    -Reader $SQLiteReader `
-                    -ColumnName 'ZeroBtB'
-
-                SFPTemp = Get-SQLiteNullableDouble `
-                    -Reader $SQLiteReader `
-                    -ColumnName 'SFPTemp'
-
-                TXPwr = Get-SQLiteNullableDouble `
-                    -Reader $SQLiteReader `
-                    -ColumnName 'TXPwr'
-
-                TXPwrLow = Get-SQLiteNullableDouble `
-                    -Reader $SQLiteReader `
-                    -ColumnName 'TXPwrLow'
-
-                RXPwr = Get-SQLiteNullableDouble `
-                    -Reader $SQLiteReader `
-                    -ColumnName 'RXPwr'
-
-                RXPwrLow = Get-SQLiteNullableDouble `
-                    -Reader $SQLiteReader `
-                    -ColumnName 'RXPwrLow'
+                LinkFailure = Get-SQLiteNullableInt64 -Reader $SQLiteReader -ColumnName 'LinkFailure'
+                LoseSync = Get-SQLiteNullableInt64 -Reader $SQLiteReader -ColumnName 'LoseSync'
+                LoseSig = Get-SQLiteNullableInt64 -Reader $SQLiteReader -ColumnName 'LoseSig'
+                PSErrCount = Get-SQLiteNullableInt64 -Reader $SQLiteReader -ColumnName 'PSErrCount'
+                InvTransErr = Get-SQLiteNullableInt64 -Reader $SQLiteReader -ColumnName 'InvTransErr'
+                CRCErr = Get-SQLiteNullableInt64 -Reader $SQLiteReader -ColumnName 'CRCErr'
+                ZeroBtB = Get-SQLiteNullableInt64 -Reader $SQLiteReader -ColumnName 'ZeroBtB'
+                SFPTemp = Get-SQLiteNullableDouble -Reader $SQLiteReader -ColumnName 'SFPTemp'
+                TXPwr = Get-SQLiteNullableDouble -Reader $SQLiteReader -ColumnName 'TXPwr'
+                TXPwrLow = Get-SQLiteNullableDouble -Reader $SQLiteReader -ColumnName 'TXPwrLow'
+                RXPwr = Get-SQLiteNullableDouble -Reader $SQLiteReader -ColumnName 'RXPwr'
+                RXPwrLow = Get-SQLiteNullableDouble -Reader $SQLiteReader -ColumnName 'RXPwrLow'
 
                 SerialNumber = [string]$SQLiteReader['SerialNumber']
                 WWNN         = [string]$SQLiteReader['WWNN']
@@ -293,7 +189,7 @@ ORDER BY TimeStamp ASC;
         return $Result
     }
     catch {
-        throw "Reading the SFP history failed: $($_.Exception.Message)"
+        SST_ToolMessageCollector -TD_ToolMSGCollector ("Reading the SFP history failed: $($_.Exception.Message)") -TD_ToolMSGType "Error" -TD_Shown "yes"
     }
     finally {
         if ($SQLiteReader) {
@@ -301,9 +197,7 @@ ORDER BY TimeStamp ASC;
             $SQLiteReader.Dispose()
         }
 
-        if ($SQLiteCommand) {
-            $SQLiteCommand.Dispose()
-        }
+        if ($SQLiteCommand) {$SQLiteCommand.Dispose()}
 
         if ($SQLiteConnection) {
             $SQLiteConnection.Close()
@@ -362,12 +256,10 @@ function Get-StorageSFPHistoryPorts {
         [string]$NodeID
     )
 
-    $DBPath = Join-Path `
-        -Path $PSRootPath `
-        -ChildPath "Resources\DBFolder\$CustomerNbr.db"
+    $DBPath = Join-Path -Path $PSRootPath -ChildPath "Resources\DBFolder\$CustomerNbr.db"
 
     if (-not (Test-Path -LiteralPath $DBPath -PathType Leaf)) {
-        throw "SQLite database not found: $DBPath"
+        SST_ToolMessageCollector -TD_ToolMSGCollector ("SQLite database not found: $DBPath") -TD_ToolMSGType "Error" -TD_Shown "yes"
     }
 
     $SQLiteConnection = $null
@@ -377,8 +269,7 @@ function Get-StorageSFPHistoryPorts {
     try {
         $ConnectionString = "Data Source=$DBPath;Version=3;Pooling=False;"
 
-        $SQLiteConnection =
-            [System.Data.SQLite.SQLiteConnection]::new($ConnectionString)
+        $SQLiteConnection = [System.Data.SQLite.SQLiteConnection]::new($ConnectionString)
 
         $SQLiteConnection.Open()
 
@@ -388,95 +279,45 @@ function Get-StorageSFPHistoryPorts {
 
         $WhereClauses.Add('CustomerNbr = @CustomerNbr')
 
-        if (-not [string]::IsNullOrWhiteSpace($SerialNumber)) {
-            $WhereClauses.Add('SerialNumber = @SerialNumber')
-        }
+        if (-not [string]::IsNullOrWhiteSpace($SerialNumber)) {$WhereClauses.Add('SerialNumber = @SerialNumber')}
 
-        if (-not [string]::IsNullOrWhiteSpace($NodeID)) {
-            $WhereClauses.Add('NodeID = @NodeID')
-        }
+        if (-not [string]::IsNullOrWhiteSpace($NodeID)) {$WhereClauses.Add('NodeID = @NodeID')}
 
         $WhereText = $WhereClauses -join "`n  AND "
 
-        $SQLiteCommand.CommandText = @"
-SELECT
-    RowID,
-    SerialNumber,
-    NodeID,
-    NodeName,
-    CardType,
-    CardID,
-    PortID,
-    WWNN,
-    WWPN,
-    MIN(TimeStamp) AS FirstMeasurement,
-    MAX(TimeStamp) AS LastMeasurement,
-    COUNT(*) AS MeasurementCount
-FROM IBMSTOFCPortStatsTable
-WHERE $WhereText
-GROUP BY
-    RowID,
-    SerialNumber,
-    NodeID,
-    NodeName,
-    CardType,
-    CardID,
-    PortID,
-    WWNN,
-    WWPN
-ORDER BY
-    SerialNumber ASC,
-    CAST(NodeID AS INTEGER) ASC,
-    CAST(PortID AS INTEGER) ASC;
-"@
+        $SQLiteCommand.CommandText = "SELECT RowID,SerialNumber,NodeID,NodeName,CardType,CardID,PortID,WWNN,WWPN,MIN(TimeStamp) AS FirstMeasurement,MAX(TimeStamp) AS LastMeasurement,COUNT(*) AS MeasurementCount`
+                                        FROM IBMSTOFCPortStatsTable WHERE $WhereText GROUP BY RowID,SerialNumber,NodeID,NodeName,CardType,CardID,PortID,WWNN,WWPN`
+                                        ORDER BY SerialNumber ASC,CAST(NodeID AS INTEGER) ASC,CAST(PortID AS INTEGER) ASC;"
 
-        $SQLiteCommand.Parameters.AddWithValue(
-            '@CustomerNbr',
-            $CustomerNbr
-        ) | Out-Null
-
+        $SQLiteCommand.Parameters.AddWithValue('@CustomerNbr',$CustomerNbr) | Out-Null
         if (-not [string]::IsNullOrWhiteSpace($SerialNumber)) {
-            $SQLiteCommand.Parameters.AddWithValue(
-                '@SerialNumber',
-                $SerialNumber
-            ) | Out-Null
+            $SQLiteCommand.Parameters.AddWithValue('@SerialNumber',$SerialNumber) | Out-Null
         }
-
         if (-not [string]::IsNullOrWhiteSpace($NodeID)) {
-            $SQLiteCommand.Parameters.AddWithValue(
-                '@NodeID',
-                $NodeID
-            ) | Out-Null
+            $SQLiteCommand.Parameters.AddWithValue('@NodeID',$NodeID) | Out-Null
         }
 
         $SQLiteReader = $SQLiteCommand.ExecuteReader()
 
         $Result = while ($SQLiteReader.Read()) {
             $FirstMeasurementRaw =
-                if ($SQLiteReader.IsDBNull(
-                        $SQLiteReader.GetOrdinal('FirstMeasurement')
-                    )) {
+                if ($SQLiteReader.IsDBNull($SQLiteReader.GetOrdinal('FirstMeasurement'))) {
                     $null
-                }
-                else {
+                }else {
                     [string]$SQLiteReader['FirstMeasurement']
                 }
 
             $LastMeasurementRaw =
-                if ($SQLiteReader.IsDBNull(
-                        $SQLiteReader.GetOrdinal('LastMeasurement')
-                    )) {
+                if ($SQLiteReader.IsDBNull($SQLiteReader.GetOrdinal('LastMeasurement'))) {
                     $null
-                }
-                else {
+                }else {
                     [string]$SQLiteReader['LastMeasurement']
                 }
 
             $FirstMeasurement =
                 if ([string]::IsNullOrWhiteSpace($FirstMeasurementRaw)) {
                     $null
-                }
-                else {
+                }else {
                     [datetime]::ParseExact(
                         $FirstMeasurementRaw,
                         'yyyy-MM-dd HH:mm:ss',
@@ -487,8 +328,7 @@ ORDER BY
             $LastMeasurement =
                 if ([string]::IsNullOrWhiteSpace($LastMeasurementRaw)) {
                     $null
-                }
-                else {
+                }else {
                     [datetime]::ParseExact(
                         $LastMeasurementRaw,
                         'yyyy-MM-dd HH:mm:ss',
@@ -560,7 +400,6 @@ ORDER BY
         [System.Data.SQLite.SQLiteConnection]::ClearAllPools()
     }
 }
-
 function Get-StoragePoolCapacityHistory {
     <#
     .SYNOPSIS
@@ -615,15 +454,13 @@ function Get-StoragePoolCapacityHistory {
     )
 
     if ($StartTime -gt $EndTime) {
-        throw 'StartTime must not be later than EndTime.'
+        SST_ToolMessageCollector -TD_ToolMSGCollector ("StartTime must not be later than EndTime.") -TD_ToolMSGType "Error" -TD_Shown "yes"
     }
 
-    $DBPath = Join-Path `
-        -Path $PSRootPath `
-        -ChildPath "Resources\DBFolder\$CustomerNbr.db"
+    $DBPath = Join-Path -Path $PSRootPath -ChildPath "Resources\DBFolder\$CustomerNbr.db"
 
     if (-not (Test-Path -LiteralPath $DBPath -PathType Leaf)) {
-        throw "SQLite database not found: $DBPath"
+        SST_ToolMessageCollector -TD_ToolMSGCollector ("SQLite database not found: $DBPath") -TD_ToolMSGType "Error" -TD_Shown "yes"
     }
 
     $SQLiteConnection = $null
@@ -631,71 +468,23 @@ function Get-StoragePoolCapacityHistory {
     $SQLiteReader     = $null
 
     try {
-        $ConnectionString =
-            "Data Source=$DBPath;Version=3;Pooling=False;"
+        $ConnectionString = "Data Source=$DBPath;Version=3;Pooling=False;"
 
-        $SQLiteConnection =
-            [System.Data.SQLite.SQLiteConnection]::new(
-                $ConnectionString
-            )
+        $SQLiteConnection = [System.Data.SQLite.SQLiteConnection]::new($ConnectionString)
 
         $SQLiteConnection.Open()
 
-        $SQLiteCommand =
-            $SQLiteConnection.CreateCommand()
+        $SQLiteCommand =$SQLiteConnection.CreateCommand()
 
-        $SQLiteCommand.CommandText = @"
-SELECT
-    ID,
-    CustomerNbr,
-    RowID,
-    PoolID,
-    PoolName,
+        $SQLiteCommand.CommandText = "SELECT ID,CustomerNbr,RowID,PoolID,PoolName,Capacity,FreeCapacity,VirtualCapacity,UsedCapacity,RealCapacity,Overallocation,SerialNumber,WWNN,TimeStamp`
+                                        FROM IBMSTOPoolCapacityTable WHERE CustomerNbr = @CustomerNbr AND RowID = @RowID AND TimeStamp >= @StartTime AND TimeStamp <= @EndTime ORDER BY TimeStamp ASC;"
 
-    Capacity,
-    FreeCapacity,
-    VirtualCapacity,
-    UsedCapacity,
-    RealCapacity,
-    Overallocation,
+        $SQLiteCommand.Parameters.AddWithValue('@CustomerNbr',$CustomerNbr) | Out-Null
+        $SQLiteCommand.Parameters.AddWithValue('@RowID',$RowID) | Out-Null
+        $SQLiteCommand.Parameters.AddWithValue('@StartTime',$StartTime.ToString('yyyy-MM-dd HH:mm:ss')) | Out-Null
+        $SQLiteCommand.Parameters.AddWithValue('@EndTime',$EndTime.ToString('yyyy-MM-dd HH:mm:ss')) | Out-Null
 
-    SerialNumber,
-    WWNN,
-    TimeStamp
-FROM IBMSTOPoolCapacityTable
-WHERE CustomerNbr = @CustomerNbr
-  AND RowID        = @RowID
-  AND TimeStamp   >= @StartTime
-  AND TimeStamp   <= @EndTime
-ORDER BY TimeStamp ASC;
-"@
-
-        $SQLiteCommand.Parameters.AddWithValue(
-            '@CustomerNbr',
-            $CustomerNbr
-        ) | Out-Null
-
-        $SQLiteCommand.Parameters.AddWithValue(
-            '@RowID',
-            $RowID
-        ) | Out-Null
-
-        $SQLiteCommand.Parameters.AddWithValue(
-            '@StartTime',
-            $StartTime.ToString(
-                'yyyy-MM-dd HH:mm:ss'
-            )
-        ) | Out-Null
-
-        $SQLiteCommand.Parameters.AddWithValue(
-            '@EndTime',
-            $EndTime.ToString(
-                'yyyy-MM-dd HH:mm:ss'
-            )
-        ) | Out-Null
-
-        $SQLiteReader =
-            $SQLiteCommand.ExecuteReader()
+        $SQLiteReader = $SQLiteCommand.ExecuteReader()
 
         $Result = while ($SQLiteReader.Read()) {
 
@@ -704,59 +493,28 @@ ORDER BY TimeStamp ASC;
                     -Reader $SQLiteReader `
                     -ColumnName 'ID'
 
-                CustomerNbr =
-                    [string]$SQLiteReader['CustomerNbr']
+                CustomerNbr = [string]$SQLiteReader['CustomerNbr']
 
-                RowID =
-                    [string]$SQLiteReader['RowID']
+                RowID = [string]$SQLiteReader['RowID']
 
-                PoolID =
-                    [string]$SQLiteReader['PoolID']
+                PoolID = [string]$SQLiteReader['PoolID']
 
                 PoolName =
-                    if (
-                        $SQLiteReader.IsDBNull(
-                            $SQLiteReader.GetOrdinal(
-                                'PoolName'
-                            )
-                        )
-                    ) {
+                    if ($SQLiteReader.IsDBNull($SQLiteReader.GetOrdinal('PoolName'))) {
                         $null
-                    }
-                    else {
+                    }else {
                         [string]$SQLiteReader['PoolName']
                     }
 
-                Capacity = Get-SQLiteNullableInt64 `
-                    -Reader $SQLiteReader `
-                    -ColumnName 'Capacity'
+                Capacity = Get-SQLiteNullableInt64 -Reader $SQLiteReader -ColumnName 'Capacity'
+                FreeCapacity = Get-SQLiteNullableInt64 -Reader $SQLiteReader -ColumnName 'FreeCapacity'
+                VirtualCapacity = Get-SQLiteNullableInt64 -Reader $SQLiteReader -ColumnName 'VirtualCapacity'
+                UsedCapacity = Get-SQLiteNullableInt64 -Reader $SQLiteReader -ColumnName 'UsedCapacity'
+                RealCapacity = Get-SQLiteNullableInt64 -Reader $SQLiteReader -ColumnName 'RealCapacity'
+                Overallocation = Get-SQLiteNullableDouble -Reader $SQLiteReader -ColumnName 'Overallocation'
 
-                FreeCapacity = Get-SQLiteNullableInt64 `
-                    -Reader $SQLiteReader `
-                    -ColumnName 'FreeCapacity'
-
-                VirtualCapacity = Get-SQLiteNullableInt64 `
-                    -Reader $SQLiteReader `
-                    -ColumnName 'VirtualCapacity'
-
-                UsedCapacity = Get-SQLiteNullableInt64 `
-                    -Reader $SQLiteReader `
-                    -ColumnName 'UsedCapacity'
-
-                RealCapacity = Get-SQLiteNullableInt64 `
-                    -Reader $SQLiteReader `
-                    -ColumnName 'RealCapacity'
-
-                Overallocation = Get-SQLiteNullableDouble `
-                    -Reader $SQLiteReader `
-                    -ColumnName 'Overallocation'
-
-                SerialNumber =
-                    [string]$SQLiteReader['SerialNumber']
-
-                WWNN =
-                    [string]$SQLiteReader['WWNN']
-
+                SerialNumber = [string]$SQLiteReader['SerialNumber']
+                WWNN = [string]$SQLiteReader['WWNN']
                 TimeStamp = [datetime]::ParseExact(
                     [string]$SQLiteReader['TimeStamp'],
                     'yyyy-MM-dd HH:mm:ss',
@@ -766,28 +524,20 @@ ORDER BY TimeStamp ASC;
         }
 
         return $Result
-    }
-    catch {
+    }catch {
         throw (
-            "Reading the Storage pool capacity history failed: " +
-            "$($_.Exception.Message)"
+            SST_ToolMessageCollector -TD_ToolMSGCollector ("Reading the Storage pool capacity history failed: " + "$($_.Exception.Message)") -TD_ToolMSGType "Error" -TD_Shown "yes"
         )
-    }
-    finally {
+    }finally {
         if ($null -ne $SQLiteReader) {
             $SQLiteReader.Close()
             $SQLiteReader.Dispose()
         }
 
-        if ($null -ne $SQLiteCommand) {
-            $SQLiteCommand.Dispose()
-        }
+        if ($null -ne $SQLiteCommand) {$SQLiteCommand.Dispose()}
 
         if ($null -ne $SQLiteConnection) {
-            if (
-                $SQLiteConnection.State -ne
-                [System.Data.ConnectionState]::Closed
-            ) {
+            if ($SQLiteConnection.State -ne [System.Data.ConnectionState]::Closed) {
                 $SQLiteConnection.Close()
             }
 
@@ -835,7 +585,7 @@ function Get-StoragePoolHistoryPools {
         -ChildPath "Resources\DBFolder\$CustomerNbr.db"
 
     if (-not (Test-Path -LiteralPath $DBPath -PathType Leaf)) {
-        throw "SQLite database not found: $DBPath"
+        SST_ToolMessageCollector -TD_ToolMSGCollector ("SQLite database not found: $DBPath") -TD_ToolMSGType "Error" -TD_Shown "yes"
     }
 
     $SQLiteConnection = $null
@@ -843,128 +593,62 @@ function Get-StoragePoolHistoryPools {
     $SQLiteReader     = $null
 
     try {
-        $ConnectionString =
-            "Data Source=$DBPath;Version=3;Pooling=False;"
+        $ConnectionString = "Data Source=$DBPath;Version=3;Pooling=False;"
 
-        $SQLiteConnection =
-            [System.Data.SQLite.SQLiteConnection]::new(
-                $ConnectionString
-            )
+        $SQLiteConnection = [System.Data.SQLite.SQLiteConnection]::new($ConnectionString)
 
         $SQLiteConnection.Open()
 
-        $SQLiteCommand =
-            $SQLiteConnection.CreateCommand()
+        $SQLiteCommand = $SQLiteConnection.CreateCommand()
 
-        $WhereClauses =
-            [System.Collections.Generic.List[string]]::new()
+        $WhereClauses = [System.Collections.Generic.List[string]]::new()
 
-        $WhereClauses.Add(
-            'CustomerNbr = @CustomerNbr'
-        )
+        $WhereClauses.Add('CustomerNbr = @CustomerNbr')
 
-        if (
-            -not [string]::IsNullOrWhiteSpace(
-                $SerialNumber
-            )
-        ) {
-            $WhereClauses.Add(
-                'SerialNumber = @SerialNumber'
-            )
+        if (-not [string]::IsNullOrWhiteSpace($SerialNumber)) {
+                $WhereClauses.Add('SerialNumber = @SerialNumber')
         }
 
-        $WhereText =
-            $WhereClauses -join "`n  AND "
+        $WhereText = $WhereClauses -join "`n  AND "
 
-        $SQLiteCommand.CommandText = @"
-SELECT
-    RowID,
-    PoolID,
-    PoolName,
-    SerialNumber,
-    WWNN,
+        $SQLiteCommand.CommandText = "SELECT RowID, PoolID, PoolName, SerialNumber, WWNN, MIN(TimeStamp) AS FirstMeasurement, MAX(TimeStamp) AS LastMeasurement, COUNT(*) AS MeasurementCount FROM IBMSTOPoolCapacityTable WHERE $WhereText`
+                                        GROUP BY RowID,PoolID,PoolName,SerialNumber,WWNN ORDER BY SerialNumber ASC, CAST(PoolID AS INTEGER) ASC;"
 
-    MIN(TimeStamp) AS FirstMeasurement,
-    MAX(TimeStamp) AS LastMeasurement,
-    COUNT(*) AS MeasurementCount
+        $SQLiteCommand.Parameters.AddWithValue('@CustomerNbr',$CustomerNbr) | Out-Null
 
-FROM IBMSTOPoolCapacityTable
-WHERE $WhereText
-
-GROUP BY
-    RowID,
-    PoolID,
-    PoolName,
-    SerialNumber,
-    WWNN
-
-ORDER BY
-    SerialNumber ASC,
-    CAST(PoolID AS INTEGER) ASC;
-"@
-
-        $SQLiteCommand.Parameters.AddWithValue(
-            '@CustomerNbr',
-            $CustomerNbr
-        ) | Out-Null
-
-        if (
-            -not [string]::IsNullOrWhiteSpace(
-                $SerialNumber
-            )
-        ) {
+        if (-not [string]::IsNullOrWhiteSpace($SerialNumber)) {
             $SQLiteCommand.Parameters.AddWithValue(
                 '@SerialNumber',
                 $SerialNumber
             ) | Out-Null
         }
 
-        $SQLiteReader =
-            $SQLiteCommand.ExecuteReader()
+        $SQLiteReader = $SQLiteCommand.ExecuteReader()
 
         $Result = while ($SQLiteReader.Read()) {
 
             $FirstMeasurementRaw =
-                if (
-                    $SQLiteReader.IsDBNull(
-                        $SQLiteReader.GetOrdinal(
-                            'FirstMeasurement'
-                        )
-                    )
-                ) {
+                if ($SQLiteReader.IsDBNull($SQLiteReader.GetOrdinal('FirstMeasurement'))) {
                     $null
-                }
-                else {
+                }else {
                     [string]$SQLiteReader[
                         'FirstMeasurement'
                     ]
                 }
 
             $LastMeasurementRaw =
-                if (
-                    $SQLiteReader.IsDBNull(
-                        $SQLiteReader.GetOrdinal(
-                            'LastMeasurement'
-                        )
-                    )
-                ) {
+                if ($SQLiteReader.IsDBNull($SQLiteReader.GetOrdinal('LastMeasurement'))) {
                     $null
-                }
-                else {
+                }else {
                     [string]$SQLiteReader[
                         'LastMeasurement'
                     ]
                 }
 
             $FirstMeasurement =
-                if (
-                    [string]::IsNullOrWhiteSpace(
-                        $FirstMeasurementRaw
-                    )
-                ) {
+                if ([string]::IsNullOrWhiteSpace($FirstMeasurementRaw)) {
                     $null
-                }
-                else {
+                }else {
                     [datetime]::ParseExact(
                         $FirstMeasurementRaw,
                         'yyyy-MM-dd HH:mm:ss',
@@ -973,14 +657,9 @@ ORDER BY
                 }
 
             $LastMeasurement =
-                if (
-                    [string]::IsNullOrWhiteSpace(
-                        $LastMeasurementRaw
-                    )
-                ) {
+                if ([string]::IsNullOrWhiteSpace($LastMeasurementRaw)) {
                     $null
-                }
-                else {
+                }else {
                     [datetime]::ParseExact(
                         $LastMeasurementRaw,
                         'yyyy-MM-dd HH:mm:ss',
@@ -988,23 +667,12 @@ ORDER BY
                     )
                 }
 
-            $RowIDValue =
-                [string]$SQLiteReader['RowID']
-
-            $PoolIDValue =
-                [string]$SQLiteReader['PoolID']
-
-            $PoolNameValue =
-                [string]$SQLiteReader['PoolName']
-
-            $SerialValue =
-                [string]$SQLiteReader['SerialNumber']
-
-            $WWNNValue =
-                [string]$SQLiteReader['WWNN']
-
-            $MeasurementCount =
-                [long]$SQLiteReader['MeasurementCount']
+            $RowIDValue = [string]$SQLiteReader['RowID']
+            $PoolIDValue = [string]$SQLiteReader['PoolID']
+            $PoolNameValue = [string]$SQLiteReader['PoolName']
+            $SerialValue = [string]$SQLiteReader['SerialNumber']
+            $WWNNValue = [string]$SQLiteReader['WWNN']
+            $MeasurementCount = [long]$SQLiteReader['MeasurementCount']
 
             [PSCustomObject]@{
                 CustomerNbr      = $CustomerNbr
@@ -1018,7 +686,7 @@ ORDER BY
                 LastMeasurement  = $LastMeasurement
                 MeasurementCount = $MeasurementCount
 
-                DisplayName = '{0} – Pool {1} – {2}' -f (
+                DisplayName = '{0} – {1}' -f (
                     $SerialValue,
                     $PoolIDValue,
                     $PoolNameValue
@@ -1027,14 +695,9 @@ ORDER BY
         }
 
         return $Result
-    }
-    catch {
-        throw (
-            "Reading the available Storage pool histories failed: " +
-            "$($_.Exception.Message)"
-        )
-    }
-    finally {
+    }catch {
+        SST_ToolMessageCollector -TD_ToolMSGCollector ("Reading the available Storage pool histories failed: " + "$($_.Exception.Message)") -TD_ToolMSGType "Warning" -TD_Shown "no"
+    }finally {
         if ($null -ne $SQLiteReader) {
             $SQLiteReader.Close()
             $SQLiteReader.Dispose()
@@ -1045,10 +708,7 @@ ORDER BY
         }
 
         if ($null -ne $SQLiteConnection) {
-            if (
-                $SQLiteConnection.State -ne
-                [System.Data.ConnectionState]::Closed
-            ) {
+            if ($SQLiteConnection.State -ne [System.Data.ConnectionState]::Closed) {
                 $SQLiteConnection.Close()
             }
 
@@ -1058,7 +718,6 @@ ORDER BY
         [System.Data.SQLite.SQLiteConnection]::ClearAllPools()
     }
 }
-
 function Get-StorageVolumeAnalysisHistory {
     <#
     .SYNOPSIS
@@ -1472,7 +1131,6 @@ ORDER BY
         [System.Data.SQLite.SQLiteConnection]::ClearAllPools()
     }
 }
-
 function Get-StorageVolumeHistoryVolumes {
     <#
     .SYNOPSIS
@@ -1517,9 +1175,7 @@ function Get-StorageVolumeHistoryVolumes {
         [string]$SerialNumber
     )
 
-    $DBPath = Join-Path `
-        -Path $PSRootPath `
-        -ChildPath "Resources\DBFolder\$CustomerNbr.db"
+    $DBPath = Join-Path -Path $PSRootPath -ChildPath "Resources\DBFolder\$CustomerNbr.db"
 
     if (-not (Test-Path -LiteralPath $DBPath -PathType Leaf)) {
         throw "SQLite database not found: $DBPath"
@@ -1531,47 +1187,28 @@ function Get-StorageVolumeHistoryVolumes {
 
     try {
 
-        $ConnectionString =
-            "Data Source=$DBPath;Version=3;Pooling=False;"
+        $ConnectionString = "Data Source=$DBPath;Version=3;Pooling=False;"
 
-        $SQLiteConnection =
-            [System.Data.SQLite.SQLiteConnection]::new(
-                $ConnectionString
-            )
+        $SQLiteConnection = [System.Data.SQLite.SQLiteConnection]::new($ConnectionString)
 
         $SQLiteConnection.Open()
 
-        $SQLiteCommand =
-            $SQLiteConnection.CreateCommand()
+        $SQLiteCommand = $SQLiteConnection.CreateCommand()
 
         # -------------------------------------------------------------
         # Build optional inventory filters.
         # -------------------------------------------------------------
+        $WhereClauses = [System.Collections.Generic.List[string]]::new()
 
-        $WhereClauses =
-            [System.Collections.Generic.List[string]]::new()
+        $WhereClauses.Add('I.CustomerNbr = @CustomerNbr')
 
-        $WhereClauses.Add(
-            'I.CustomerNbr = @CustomerNbr'
-        )
+        $WhereClauses.Add('I.IsActive = 1')
 
-        $WhereClauses.Add(
-            'I.IsActive = 1'
-        )
-
-        if (
-            -not [string]::IsNullOrWhiteSpace(
-                $SerialNumber
-            )
-        ) {
-
-            $WhereClauses.Add(
-                'I.SerialNumber = @SerialNumber'
-            )
+        if (-not [string]::IsNullOrWhiteSpace($SerialNumber)) {
+            $WhereClauses.Add('I.SerialNumber = @SerialNumber')
         }
 
-        $WhereText =
-            $WhereClauses -join "`n  AND "
+        $WhereText = $WhereClauses -join "`n  AND "
 
         # -------------------------------------------------------------
         # Inventory is the authoritative source for:
@@ -1588,116 +1225,48 @@ function Get-StorageVolumeHistoryVolumes {
         #   CustomerNbr + SerialNumber + VdiskUID
         #
         # LEFT JOIN is intentional:
-        # a newly discovered volume may already exist in the inventory
-        # before its first analysis measurement was written.
+        # a newly discovered volume may already exist in the inventory before its first analysis measurement was written.
         # -------------------------------------------------------------
+        $SQLiteCommand.CommandText = "SELECT I.RowID, I.VolumeID, I.VdiskUID, I.VolumeName, I.SerialNumber, I.WWNN, I.IsActive, MIN(A.TimeStamp) AS FirstMeasurement, MAX(A.TimeStamp) AS LastMeasurement, COUNT(A.ID) AS MeasurementCount`
+                                        FROM IBMSTOVolumeInventoryTable I LEFT JOIN IBMSTOVolumeAnalysisTable A ON  A.CustomerNbr  = I.CustomerNbr AND A.SerialNumber = I.SerialNumber AND A.VdiskUID = I.VdiskUID WHERE $WhereText`
+                                        GROUP BY I.CustomerNbr, I.SerialNumber, I.VdiskUID, I.RowID, I.VolumeID, I.VolumeName, I.WWNN, I.IsActive`
+                                        ORDER BY I.SerialNumber ASC, CAST(I.VolumeID AS INTEGER) ASC;"
 
-        $SQLiteCommand.CommandText = @"
-SELECT
-    I.RowID,
-    I.VolumeID,
-    I.VdiskUID,
-    I.VolumeName,
-    I.SerialNumber,
-    I.WWNN,
-    I.IsActive,
+        $SQLiteCommand.Parameters.AddWithValue('@CustomerNbr',$CustomerNbr) | Out-Null
 
-    MIN(A.TimeStamp) AS FirstMeasurement,
-    MAX(A.TimeStamp) AS LastMeasurement,
-    COUNT(A.ID)      AS MeasurementCount
-
-FROM IBMSTOVolumeInventoryTable I
-
-LEFT JOIN IBMSTOVolumeAnalysisTable A
-    ON  A.CustomerNbr  = I.CustomerNbr
-    AND A.SerialNumber = I.SerialNumber
-    AND A.VdiskUID     = I.VdiskUID
-
-WHERE
-    $WhereText
-
-GROUP BY
-    I.CustomerNbr,
-    I.SerialNumber,
-    I.VdiskUID,
-    I.RowID,
-    I.VolumeID,
-    I.VolumeName,
-    I.WWNN,
-    I.IsActive
-
-ORDER BY
-    I.SerialNumber ASC,
-    CAST(I.VolumeID AS INTEGER) ASC;
-"@
-
-        $SQLiteCommand.Parameters.AddWithValue(
-            '@CustomerNbr',
-            $CustomerNbr
-        ) | Out-Null
-
-        if (
-            -not [string]::IsNullOrWhiteSpace(
-                $SerialNumber
-            )
-        ) {
-
-            $SQLiteCommand.Parameters.AddWithValue(
-                '@SerialNumber',
-                $SerialNumber
-            ) | Out-Null
+        if (-not [string]::IsNullOrWhiteSpace($SerialNumber)) {
+            $SQLiteCommand.Parameters.AddWithValue('@SerialNumber',$SerialNumber) | Out-Null
         }
 
-        $SQLiteReader =
-            $SQLiteCommand.ExecuteReader()
+        $SQLiteReader = $SQLiteCommand.ExecuteReader()
 
         $Result = while ($SQLiteReader.Read()) {
 
             # ---------------------------------------------------------
             # Read nullable history timestamps.
             # ---------------------------------------------------------
-
             $FirstMeasurementRaw =
-                if (
-                    $SQLiteReader.IsDBNull(
-                        $SQLiteReader.GetOrdinal(
-                            'FirstMeasurement'
-                        )
-                    )
-                ) {
+                if ($SQLiteReader.IsDBNull($SQLiteReader.GetOrdinal('FirstMeasurement'))) {
                     $null
-                }
-                else {
+                }else {
                     [string]$SQLiteReader[
                         'FirstMeasurement'
                     ]
                 }
 
             $LastMeasurementRaw =
-                if (
-                    $SQLiteReader.IsDBNull(
-                        $SQLiteReader.GetOrdinal(
-                            'LastMeasurement'
-                        )
-                    )
-                ) {
+                if ($SQLiteReader.IsDBNull($SQLiteReader.GetOrdinal('LastMeasurement'))) {
                     $null
-                }
-                else {
+                }else {
                     [string]$SQLiteReader[
                         'LastMeasurement'
                     ]
                 }
 
             $FirstMeasurement =
-                if (
-                    [string]::IsNullOrWhiteSpace(
-                        $FirstMeasurementRaw
-                    )
-                ) {
+                if ([string]::IsNullOrWhiteSpace($FirstMeasurementRaw)) {
                     $null
-                }
-                else {
+                }else {
                     [datetime]::ParseExact(
                         $FirstMeasurementRaw,
                         'yyyy-MM-dd HH:mm:ss',
@@ -1706,14 +1275,9 @@ ORDER BY
                 }
 
             $LastMeasurement =
-                if (
-                    [string]::IsNullOrWhiteSpace(
-                        $LastMeasurementRaw
-                    )
-                ) {
+                if ([string]::IsNullOrWhiteSpace($LastMeasurementRaw)) {
                     $null
-                }
-                else {
+                }else {
                     [datetime]::ParseExact(
                         $LastMeasurementRaw,
                         'yyyy-MM-dd HH:mm:ss',
@@ -1724,32 +1288,17 @@ ORDER BY
             # ---------------------------------------------------------
             # Current inventory identity.
             # ---------------------------------------------------------
-
-            $RowIDValue =
-                [string]$SQLiteReader['RowID']
-
-            $VolumeIDValue =
-                [string]$SQLiteReader['VolumeID']
-
-            $VdiskUIDValue =
-                [string]$SQLiteReader['VdiskUID']
-
-            $VolumeNameValue =
-                [string]$SQLiteReader['VolumeName']
-
-            $SerialValue =
-                [string]$SQLiteReader['SerialNumber']
-
-            $WWNNValue =
-                [string]$SQLiteReader['WWNN']
-
-            $MeasurementCount =
-                [long]$SQLiteReader['MeasurementCount']
+            $RowIDValue = [string]$SQLiteReader['RowID']
+            $VolumeIDValue = [string]$SQLiteReader['VolumeID']
+            $VdiskUIDValue = [string]$SQLiteReader['VdiskUID']
+            $VolumeNameValue = [string]$SQLiteReader['VolumeName']
+            $SerialValue = [string]$SQLiteReader['SerialNumber']
+            $WWNNValue = [string]$SQLiteReader['WWNN']
+            $MeasurementCount = [long]$SQLiteReader['MeasurementCount']
 
             # ---------------------------------------------------------
             # Return selector model.
             # ---------------------------------------------------------
-
             [PSCustomObject]@{
                 CustomerNbr      = $CustomerNbr
 
@@ -1767,7 +1316,7 @@ ORDER BY
                 LastMeasurement  = $LastMeasurement
                 MeasurementCount = $MeasurementCount
 
-                DisplayName = '{0} – Volume {1} – {2}' -f (
+                DisplayName = '{0} – {1}' -f (
                     $SerialValue,
                     $VolumeIDValue,
                     $VolumeNameValue
@@ -1776,34 +1325,21 @@ ORDER BY
         }
 
         return $Result
-    }
-    catch {
-
-        throw (
-            "Reading the available Storage volume histories failed: " +
-            "$($_.Exception.Message)"
-        )
-    }
-    finally {
+    }catch {
+        SST_ToolMessageCollector -TD_ToolMSGCollector ("Reading the available Storage volume histories failed: " + "$($_.Exception.Message)") -TD_ToolMSGType "Warning" -TD_Shown "no"
+    }finally {
 
         if ($null -ne $SQLiteReader) {
             $SQLiteReader.Close()
             $SQLiteReader.Dispose()
         }
 
-        if ($null -ne $SQLiteCommand) {
-            $SQLiteCommand.Dispose()
-        }
+        if ($null -ne $SQLiteCommand) {$SQLiteCommand.Dispose()}
 
         if ($null -ne $SQLiteConnection) {
-
-            if (
-                $SQLiteConnection.State -ne
-                [System.Data.ConnectionState]::Closed
-            ) {
+            if ($SQLiteConnection.State -ne [System.Data.ConnectionState]::Closed) {
                 $SQLiteConnection.Close()
             }
-
             $SQLiteConnection.Dispose()
         }
 

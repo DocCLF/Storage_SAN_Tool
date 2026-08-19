@@ -68,15 +68,15 @@ function Update-StorageVolumeAnalysisChart {
     )
 
     if (-not (Initialize-LiveCharts)) {
-        throw 'LiveCharts could not be initialized.'
+        SST_ToolMessageCollector -TD_ToolMSGCollector ('LiveCharts could not be initialized.') -TD_ToolMSGType 'Error' -TD_Shown 'yes'
     }
 
     if ($StartTime -gt $EndTime) {
-        throw 'StartTime must not be later than EndTime.'
+        SST_ToolMessageCollector -TD_ToolMSGCollector ('StartTime must not be later than EndTime.') -TD_ToolMSGType 'Error' -TD_Shown 'yes'
     }
 
     if ($DateTimeStep -le [TimeSpan]::Zero) {
-        throw 'DateTimeStep must be greater than zero.'
+        SST_ToolMessageCollector -TD_ToolMSGCollector ('DateTimeStep must be greater than zero.') -TD_ToolMSGType 'Error' -TD_Shown 'yes'
     }
 
     # ---------------------------------------------------------------------
@@ -97,7 +97,7 @@ function Update-StorageVolumeAnalysisChart {
     )
 
     if ($RequestedRowIDs.Count -eq 0) {
-        throw 'At least one volume RowID is required.'
+        SST_ToolMessageCollector -TD_ToolMSGCollector ('At least one volume RowID is required.') -TD_ToolMSGType 'Warning' -TD_Shown 'yes'
     }
 
     # ---------------------------------------------------------------------
@@ -118,7 +118,7 @@ function Update-StorageVolumeAnalysisChart {
     )
 
     if ($RequestedMetrics.Count -eq 0) {
-        throw 'At least one volume metric is required.'
+        SST_ToolMessageCollector -TD_ToolMSGCollector ('At least one volume metric is required.') -TD_ToolMSGType 'Warning' -TD_Shown 'yes'
     }
 
     # ---------------------------------------------------------------------
@@ -134,7 +134,7 @@ function Update-StorageVolumeAnalysisChart {
     )
 
     if ($MetricDefinitions.Count -eq 0) {
-        throw 'No usable Storage volume metric definitions were found.'
+        SST_ToolMessageCollector -TD_ToolMSGCollector ('No usable Storage volume metric definitions were found.') -TD_ToolMSGType 'Warning' -TD_Shown 'yes'
     }
 
     # ---------------------------------------------------------------------
@@ -153,22 +153,18 @@ function Update-StorageVolumeAnalysisChart {
     )
 
     if ($UnitGroups.Count -gt 1) {
-        throw (
-            'Selected volume metrics must belong to the same UnitGroup.'
-        )
+        SST_ToolMessageCollector -TD_ToolMSGCollector ('Selected volume metrics must belong to the same UnitGroup.') -TD_ToolMSGType 'Debug' -TD_Shown 'yes'
     }
 
     # ---------------------------------------------------------------------
     # Build runtime MetricInfo
     # ---------------------------------------------------------------------
 
-    $IsMultiMetric =
-        ($MetricDefinitions.Count -gt 1)
+    $IsMultiMetric = ($MetricDefinitions.Count -gt 1)
 
     if ($IsMultiMetric) {
 
-        $FirstMetric =
-            $MetricDefinitions[0]
+        $FirstMetric = $MetricDefinitions[0]
 
         $MinimumPadding = @(
             $MetricDefinitions |
@@ -196,19 +192,14 @@ function Update-StorageVolumeAnalysisChart {
             MinimumPadding  = [double]$MinimumPadding
             ShowArea        = $false
 
-            Metrics = @(
-                $MetricDefinitions
-            )
+            Metrics = @($MetricDefinitions)
 
             ReferenceMetric = $null
             ReferenceName   = $null
             ReferenceColor  = $null
         }
-    }
-    else {
-
-        $MetricInfo =
-            $MetricDefinitions[0]
+    }else {
+        $MetricInfo = $MetricDefinitions[0]
     }
 
     # ---------------------------------------------------------------------
@@ -234,20 +225,10 @@ function Update-StorageVolumeAnalysisChart {
         # Load raw history
         # -------------------------------------------------------------
 
-        $RawHistory = @(
-            Get-StorageVolumeAnalysisHistory `
-                -CustomerNbr $CustomerNbr `
-                -RowID $CurrentRowID `
-                -StartTime $StartTime `
-                -EndTime $EndTime
-        )
+        $RawHistory = @(Get-StorageVolumeAnalysisHistory -CustomerNbr $CustomerNbr -RowID $CurrentRowID -StartTime $StartTime -EndTime $EndTime)
 
         if ($RawHistory.Count -eq 0) {
-            Write-Warning (
-                "No Storage volume analysis history was found for " +
-                "RowID '$CurrentRowID' in the selected time range."
-            )
-
+            SST_ToolMessageCollector -TD_ToolMSGCollector ("No Storage volume analysis history was found for " + "RowID '$CurrentRowID' in the selected time range.") -TD_ToolMSGType 'Warning' -TD_Shown 'yes'
             continue
         }
 
@@ -255,18 +236,10 @@ function Update-StorageVolumeAnalysisChart {
         # Convert DB values into display values
         # -------------------------------------------------------------
 
-        $ChartHistory = @(
-            ConvertTo-LiveChartsDisplayHistory `
-                -History $RawHistory `
-                -MetricInfo $MetricInfo
-        )
+        $ChartHistory = @(ConvertTo-LiveChartsDisplayHistory -History $RawHistory -MetricInfo $MetricInfo)
 
         if ($ChartHistory.Count -eq 0) {
-            Write-Warning (
-                "No usable chart history could be created for " +
-                "RowID '$CurrentRowID'."
-            )
-
+            SST_ToolMessageCollector -TD_ToolMSGCollector ("No usable chart history could be created for " + "RowID '$CurrentRowID'.") -TD_ToolMSGType 'Warning' -TD_Shown 'yes'
             continue
         }
 
@@ -282,49 +255,29 @@ function Update-StorageVolumeAnalysisChart {
 
             foreach ($Definition in $MetricDefinitions) {
 
-                $MetricName =
-                    [string]$Definition.Metric
+                $MetricName = [string]$Definition.Metric
 
-                if (
-                    [string]::IsNullOrWhiteSpace(
-                        $MetricName
-                    )
-                ) {
+                if ([string]::IsNullOrWhiteSpace($MetricName)) {
                     continue
                 }
 
-                $MetricProperty =
-                    $HistoryItem.PSObject.Properties[
-                        $MetricName
-                    ]
+                $MetricProperty = $HistoryItem.PSObject.Properties[$MetricName]
 
                 if ($null -eq $MetricProperty) {
                     continue
                 }
 
-                $RawValue =
-                    $MetricProperty.Value
+                $RawValue = $MetricProperty.Value
 
-                if (
-                    $null -eq $RawValue -or
-                    $RawValue -is [DBNull] -or
-                    [string]::IsNullOrWhiteSpace(
-                        [string]$RawValue
-                    )
-                ) {
+                if ($null -eq $RawValue -or $RawValue -is [DBNull] -or [string]::IsNullOrWhiteSpace([string]$RawValue)) {
                     continue
                 }
 
                 try {
-                    $MetricValues +=
-                        [double]$RawValue
+                    $MetricValues += [double]$RawValue
                 }
                 catch {
-                    Write-Warning (
-                        "Value '$RawValue' of metric '$MetricName' " +
-                        "for RowID '$CurrentRowID' could not be " +
-                        'converted to Double and was skipped.'
-                    )
+                    SST_ToolMessageCollector -TD_ToolMSGCollector ("Value '$RawValue' of metric '$MetricName' " + "for RowID '$CurrentRowID' could not be " + 'converted to Double and was skipped.') -TD_ToolMSGType 'Warning' -TD_Shown 'yes'
                 }
             }
         }
@@ -372,18 +325,13 @@ function Update-StorageVolumeAnalysisChart {
     # ---------------------------------------------------------------------
 
     if ($SeriesDefinitions.Count -eq 0) {
-        throw (
-            'No usable Storage volume histories were found for the ' +
-            'requested sources.'
-        )
+        SST_ToolMessageCollector -TD_ToolMSGCollector ('No Storage volume analysis history was found for the ' + 'requested source(s) in the selected time range.') -TD_ToolMSGType 'Warning' -TD_Shown 'yes'
+        return
     }
 
     if ($MetricValues.Count -eq 0) {
-        throw (
-            'The Storage volume histories contain no usable values for ' +
-            'the selected metric(s): ' +
-            ($RequestedMetrics -join ', ')
-        )
+        SST_ToolMessageCollector -TD_ToolMSGCollector ('Storage volume history data was found, but no usable values ' + 'exist for the selected metric(s): ' + ($RequestedMetrics -join ', ')) -TD_ToolMSGType 'Warning' -TD_Shown 'yes'
+        return
     }
 
     # ---------------------------------------------------------------------
