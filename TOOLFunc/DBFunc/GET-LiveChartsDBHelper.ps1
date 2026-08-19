@@ -688,7 +688,6 @@ function Get-StoragePoolHistoryPools {
 
                 DisplayName = '{0} – {1}' -f (
                     $SerialValue,
-                    $PoolIDValue,
                     $PoolNameValue
                 )
             }
@@ -779,15 +778,13 @@ function Get-StorageVolumeAnalysisHistory {
     )
 
     if ($StartTime -gt $EndTime) {
-        throw 'StartTime must not be later than EndTime.'
+        SST_ToolMessageCollector -TD_ToolMSGCollector ("StartTime must not be later than EndTime.") -TD_ToolMSGType "Error" -TD_Shown "yes"
     }
 
-    $DBPath = Join-Path `
-        -Path $PSRootPath `
-        -ChildPath "Resources\DBFolder\$CustomerNbr.db"
+    $DBPath = Join-Path -Path $PSRootPath -ChildPath "Resources\DBFolder\$CustomerNbr.db"
 
     if (-not (Test-Path -LiteralPath $DBPath -PathType Leaf)) {
-        throw "SQLite database not found: $DBPath"
+        SST_ToolMessageCollector -TD_ToolMSGCollector ("SQLite database not found: $DBPath") -TD_ToolMSGType "Error" -TD_Shown "yes"
     }
 
     $SQLiteConnection = $null
@@ -821,57 +818,23 @@ function Get-StorageVolumeAnalysisHistory {
         $SQLiteCommand =
             $SQLiteConnection.CreateCommand()
 
-        $SQLiteCommand.CommandText = @"
-SELECT
-    SerialNumber,
-    VdiskUID,
-    VolumeID,
-    VolumeName,
-    RowID,
-    WWNN
-FROM IBMSTOVolumeInventoryTable
-WHERE
-    CustomerNbr = @CustomerNbr
-    AND RowID = @RowID
-    AND IsActive = 1
-LIMIT 1;
-"@
+        $SQLiteCommand.CommandText = "SELECT SerialNumber,VdiskUID,VolumeID,VolumeName,RowID,WWNN FROM IBMSTOVolumeInventoryTable`
+                                        WHERE CustomerNbr = @CustomerNbr AND RowID = @RowID AND IsActive = 1 LIMIT 1;"
 
-        $SQLiteCommand.Parameters.AddWithValue(
-            '@CustomerNbr',
-            $CustomerNbr
-        ) | Out-Null
+        $SQLiteCommand.Parameters.AddWithValue('@CustomerNbr',$CustomerNbr) | Out-Null
+        $SQLiteCommand.Parameters.AddWithValue('@RowID',$RowID) | Out-Null
 
-        $SQLiteCommand.Parameters.AddWithValue(
-            '@RowID',
-            $RowID
-        ) | Out-Null
-
-        $SQLiteReader =
-            $SQLiteCommand.ExecuteReader()
+        $SQLiteReader = $SQLiteCommand.ExecuteReader()
 
         if (-not $SQLiteReader.Read()) {
-
-            throw (
-                "No active Storage volume inventory entry was found " +
-                "for RowID '$RowID'."
-            )
+            SST_ToolMessageCollector -TD_ToolMSGCollector ( "No active Storage volume inventory entry was found " + "for RowID '$RowID'.") -TD_ToolMSGType "Warning" -TD_Shown "yes"
         }
 
-        $ResolvedSerialNumber =
-            [string]$SQLiteReader['SerialNumber']
-
-        $ResolvedVdiskUID =
-            [string]$SQLiteReader['VdiskUID']
-
-        $ResolvedVolumeID =
-            [string]$SQLiteReader['VolumeID']
-
-        $ResolvedVolumeName =
-            [string]$SQLiteReader['VolumeName']
-
-        $ResolvedWWNN =
-            [string]$SQLiteReader['WWNN']
+        $ResolvedSerialNumber = [string]$SQLiteReader['SerialNumber']
+        $ResolvedVdiskUID = [string]$SQLiteReader['VdiskUID']
+        $ResolvedVolumeID = [string]$SQLiteReader['VolumeID']
+        $ResolvedVolumeName = [string]$SQLiteReader['VolumeName']
+        $ResolvedWWNN = [string]$SQLiteReader['WWNN']
 
         $SQLiteReader.Close()
         $SQLiteReader.Dispose()
@@ -880,16 +843,8 @@ LIMIT 1;
         $SQLiteCommand.Dispose()
         $SQLiteCommand = $null
 
-        if (
-            [string]::IsNullOrWhiteSpace(
-                $ResolvedVdiskUID
-            )
-        ) {
-
-            throw (
-                "The active inventory entry for RowID '$RowID' " +
-                'does not contain a VdiskUID.'
-            )
+        if ([string]::IsNullOrWhiteSpace($ResolvedVdiskUID)) {
+            SST_ToolMessageCollector -TD_ToolMSGCollector ("The active inventory entry for RowID '$RowID' " + 'does not contain a VdiskUID.') -TD_ToolMSGType "Warning" -TD_Shown "yes"
         }
 
         # -------------------------------------------------------------
@@ -899,194 +854,69 @@ LIMIT 1;
         $SQLiteCommand =
             $SQLiteConnection.CreateCommand()
 
-        $SQLiteCommand.CommandText = @"
-SELECT
-    ID,
-    CustomerNbr,
-    RowID,
-    VolumeID,
-    VdiskUID,
-    VolumeName,
-    State,
-    AnalysisTime,
+        $SQLiteCommand.CommandText = "SELECT ID,CustomerNbr,RowID,VolumeID,VdiskUID,VolumeName,State,AnalysisTime,Capacity,ThinSize,ThinSavings,ThinSavingsRatio,CompressedSize,CompressionSavings,CompressionSavingsRatio,TotalSavings,`
+                                        TotalSavingsRatio,MarginOfError,SerialNumber,WWNN,TimeStamp FROM IBMSTOVolumeAnalysisTable`
+                                        WHERE CustomerNbr  = @CustomerNbr AND SerialNumber = @SerialNumber AND VdiskUID = @VdiskUID AND TimeStamp >= @StartTime AND TimeStamp <= @EndTime ORDER BY TimeStamp ASC;"
 
-    Capacity,
-    ThinSize,
-    ThinSavings,
-    ThinSavingsRatio,
-    CompressedSize,
-    CompressionSavings,
-    CompressionSavingsRatio,
-    TotalSavings,
-    TotalSavingsRatio,
-    MarginOfError,
+        $SQLiteCommand.Parameters.AddWithValue('@CustomerNbr',$CustomerNbr) | Out-Null
+        $SQLiteCommand.Parameters.AddWithValue('@SerialNumber',$ResolvedSerialNumber) | Out-Null
+        $SQLiteCommand.Parameters.AddWithValue('@VdiskUID',$ResolvedVdiskUID) | Out-Null
+        $SQLiteCommand.Parameters.AddWithValue('@StartTime',$StartTime.ToString('yyyy-MM-dd HH:mm:ss')) | Out-Null
+        $SQLiteCommand.Parameters.AddWithValue('@EndTime',$EndTime.ToString('yyyy-MM-dd HH:mm:ss')) | Out-Null
 
-    SerialNumber,
-    WWNN,
-    TimeStamp
-
-FROM IBMSTOVolumeAnalysisTable
-
-WHERE
-    CustomerNbr  = @CustomerNbr
-    AND SerialNumber = @SerialNumber
-    AND VdiskUID = @VdiskUID
-    AND TimeStamp >= @StartTime
-    AND TimeStamp <= @EndTime
-
-ORDER BY
-    TimeStamp ASC;
-"@
-
-        $SQLiteCommand.Parameters.AddWithValue(
-            '@CustomerNbr',
-            $CustomerNbr
-        ) | Out-Null
-
-        $SQLiteCommand.Parameters.AddWithValue(
-            '@SerialNumber',
-            $ResolvedSerialNumber
-        ) | Out-Null
-
-        $SQLiteCommand.Parameters.AddWithValue(
-            '@VdiskUID',
-            $ResolvedVdiskUID
-        ) | Out-Null
-
-        $SQLiteCommand.Parameters.AddWithValue(
-            '@StartTime',
-            $StartTime.ToString(
-                'yyyy-MM-dd HH:mm:ss'
-            )
-        ) | Out-Null
-
-        $SQLiteCommand.Parameters.AddWithValue(
-            '@EndTime',
-            $EndTime.ToString(
-                'yyyy-MM-dd HH:mm:ss'
-            )
-        ) | Out-Null
-
-        $SQLiteReader =
-            $SQLiteCommand.ExecuteReader()
+        $SQLiteReader = $SQLiteCommand.ExecuteReader()
 
         $Result = while ($SQLiteReader.Read()) {
 
             [PSCustomObject]@{
-                ID = Get-SQLiteNullableInt64 `
-                    -Reader $SQLiteReader `
-                    -ColumnName 'ID'
+                ID = Get-SQLiteNullableInt64 -Reader $SQLiteReader -ColumnName 'ID'
 
-                CustomerNbr =
-                    [string]$SQLiteReader['CustomerNbr']
-
-                RowID =
-                    [string]$SQLiteReader['RowID']
-
-                VolumeID =
-                    [string]$SQLiteReader['VolumeID']
+                CustomerNbr = [string]$SQLiteReader['CustomerNbr']
+                RowID = [string]$SQLiteReader['RowID']
+                VolumeID = [string]$SQLiteReader['VolumeID']
 
                 VdiskUID =
-                    if (
-                        $SQLiteReader.IsDBNull(
-                            $SQLiteReader.GetOrdinal(
-                                'VdiskUID'
-                            )
-                        )
-                    ) {
+                    if ($SQLiteReader.IsDBNull($SQLiteReader.GetOrdinal('VdiskUID'))) {
                         $null
-                    }
-                    else {
+                    }else {
                         [string]$SQLiteReader['VdiskUID']
                     }
 
                 VolumeName =
-                    if (
-                        $SQLiteReader.IsDBNull(
-                            $SQLiteReader.GetOrdinal(
-                                'VolumeName'
-                            )
-                        )
-                    ) {
+                    if ($SQLiteReader.IsDBNull($SQLiteReader.GetOrdinal('VolumeName'))) {
                         $null
-                    }
-                    else {
+                    }else {
                         [string]$SQLiteReader['VolumeName']
                     }
 
                 State =
-                    if (
-                        $SQLiteReader.IsDBNull(
-                            $SQLiteReader.GetOrdinal(
-                                'State'
-                            )
-                        )
-                    ) {
+                    if ($SQLiteReader.IsDBNull($SQLiteReader.GetOrdinal('State'))) {
                         $null
-                    }
-                    else {
+                    }else {
                         [string]$SQLiteReader['State']
                     }
 
                 AnalysisTime =
-                    if (
-                        $SQLiteReader.IsDBNull(
-                            $SQLiteReader.GetOrdinal(
-                                'AnalysisTime'
-                            )
-                        )
-                    ) {
+                    if ($SQLiteReader.IsDBNull($SQLiteReader.GetOrdinal('AnalysisTime'))) {
                         $null
-                    }
-                    else {
+                    }else {
                         [string]$SQLiteReader['AnalysisTime']
                     }
 
-                Capacity = Get-SQLiteNullableInt64 `
-                    -Reader $SQLiteReader `
-                    -ColumnName 'Capacity'
+                Capacity = Get-SQLiteNullableInt64 -Reader $SQLiteReader -ColumnName 'Capacity'
+                ThinSize = Get-SQLiteNullableInt64 -Reader $SQLiteReader -ColumnName 'ThinSize'
+                ThinSavings = Get-SQLiteNullableInt64 -Reader $SQLiteReader -ColumnName 'ThinSavings'
+                ThinSavingsRatio = Get-SQLiteNullableDouble -Reader $SQLiteReader -ColumnName 'ThinSavingsRatio'
+                CompressedSize = Get-SQLiteNullableInt64 -Reader $SQLiteReader -ColumnName 'CompressedSize'
+                CompressionSavings = Get-SQLiteNullableInt64 -Reader $SQLiteReader -ColumnName 'CompressionSavings'
+                CompressionSavingsRatio = Get-SQLiteNullableDouble -Reader $SQLiteReader -ColumnName 'CompressionSavingsRatio'
+                TotalSavings = Get-SQLiteNullableInt64 -Reader $SQLiteReader -ColumnName 'TotalSavings'
+                TotalSavingsRatio = Get-SQLiteNullableDouble -Reader $SQLiteReader -ColumnName 'TotalSavingsRatio'
+                MarginOfError = Get-SQLiteNullableDouble -Reader $SQLiteReader -ColumnName 'MarginOfError'
 
-                ThinSize = Get-SQLiteNullableInt64 `
-                    -Reader $SQLiteReader `
-                    -ColumnName 'ThinSize'
+                SerialNumber = [string]$SQLiteReader['SerialNumber']
 
-                ThinSavings = Get-SQLiteNullableInt64 `
-                    -Reader $SQLiteReader `
-                    -ColumnName 'ThinSavings'
-
-                ThinSavingsRatio = Get-SQLiteNullableDouble `
-                    -Reader $SQLiteReader `
-                    -ColumnName 'ThinSavingsRatio'
-
-                CompressedSize = Get-SQLiteNullableInt64 `
-                    -Reader $SQLiteReader `
-                    -ColumnName 'CompressedSize'
-
-                CompressionSavings = Get-SQLiteNullableInt64 `
-                    -Reader $SQLiteReader `
-                    -ColumnName 'CompressionSavings'
-
-                CompressionSavingsRatio = Get-SQLiteNullableDouble `
-                    -Reader $SQLiteReader `
-                    -ColumnName 'CompressionSavingsRatio'
-
-                TotalSavings = Get-SQLiteNullableInt64 `
-                    -Reader $SQLiteReader `
-                    -ColumnName 'TotalSavings'
-
-                TotalSavingsRatio = Get-SQLiteNullableDouble `
-                    -Reader $SQLiteReader `
-                    -ColumnName 'TotalSavingsRatio'
-
-                MarginOfError = Get-SQLiteNullableDouble `
-                    -Reader $SQLiteReader `
-                    -ColumnName 'MarginOfError'
-
-                SerialNumber =
-                    [string]$SQLiteReader['SerialNumber']
-
-                WWNN =
-                    [string]$SQLiteReader['WWNN']
+                WWNN = [string]$SQLiteReader['WWNN']
 
                 TimeStamp = [datetime]::ParseExact(
                     [string]$SQLiteReader['TimeStamp'],
@@ -1097,33 +927,19 @@ ORDER BY
         }
 
         return $Result
-    }
-    catch {
-
-        throw (
-            "Reading the Storage volume analysis history failed: " +
-            "$($_.Exception.Message)"
-        )
-    }
-    finally {
+    }catch {
+        SST_ToolMessageCollector -TD_ToolMSGCollector ("Reading the Storage volume analysis history failed: " + "$($_.Exception.Message)") -TD_ToolMSGType "Warning" -TD_Shown "yes"
+    }finally{
 
         if ($null -ne $SQLiteReader) {
             $SQLiteReader.Close()
             $SQLiteReader.Dispose()
         }
 
-        if ($null -ne $SQLiteCommand) {
-            $SQLiteCommand.Dispose()
-        }
+        if ($null -ne $SQLiteCommand) {$SQLiteCommand.Dispose()}
 
         if ($null -ne $SQLiteConnection) {
-
-            if (
-                $SQLiteConnection.State -ne
-                [System.Data.ConnectionState]::Closed
-            ) {
-                $SQLiteConnection.Close()
-            }
+            if ($SQLiteConnection.State -ne [System.Data.ConnectionState]::Closed) {$SQLiteConnection.Close()}
 
             $SQLiteConnection.Dispose()
         }
@@ -1318,7 +1134,6 @@ function Get-StorageVolumeHistoryVolumes {
 
                 DisplayName = '{0} – {1}' -f (
                     $SerialValue,
-                    $VolumeIDValue,
                     $VolumeNameValue
                 )
             }
