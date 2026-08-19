@@ -28,9 +28,16 @@ function Get-BrocadePortErrorStats {
     $FOS_PortErrorInfo = foreach($FCstatistic in $FCstatistics){
 
         $VFIDKey = if ($VFID) {[string]$VFID}else {'BASE'}
+        # Skip invalid FC statistic entries without a usable port name.
+        # Without a port number no unique SAN port RowID can be created.
+        if ([string]::IsNullOrWhiteSpace($Port)) {
+            SST_ToolMessageCollector -TD_ToolMSGCollector ("Get-BrocadePortErrorStats: FC statistic entry without " + "a valid port name was skipped on switch '$SwitchName' " + "($ChassisSN).") -TD_ToolMSGType "Debug" -TD_Shown "no"
+            continue
+        }
         $Port = [string]$FCstatistic.name
-        $RowID = '{0}|{1}|{2}' -f $ChassisSN,$VFIDKey,$Port
 
+        $RowID = '{0}|{1}|{2}' -f $ChassisSN,$VFIDKey,$Port
+        [string]::IsNullOrWhiteSpace
         <# is required to display the other FIDs in the DG in a different color, for example #>
         $IsVirtualFabricPort = if($VFID -and $VFID -ne 128){ $true } else { $false }
 

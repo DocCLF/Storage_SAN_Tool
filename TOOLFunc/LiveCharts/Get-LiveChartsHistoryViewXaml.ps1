@@ -211,7 +211,7 @@ function Get-LiveChartsHistoryViewXaml {
 
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="220"/>
+                <ColumnDefinition Width="auto"/>
             </Grid.ColumnDefinitions>
 
             <!-- ========================================================= -->
