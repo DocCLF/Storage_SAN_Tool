@@ -1,4 +1,4 @@
-function Get-SQLiteNullableDouble {
+﻿function Get-SQLiteNullableDouble {
     [CmdletBinding()]
     param (
         [Parameter(Mandatory)]

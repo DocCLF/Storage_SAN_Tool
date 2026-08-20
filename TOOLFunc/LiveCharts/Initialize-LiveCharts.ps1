@@ -10,6 +10,10 @@ function Initialize-LiveCharts {
         The function also adds the selected directory to the process PATH
         so that the native SkiaSharp and HarfBuzz DLLs can be resolved.
 
+        Windows PowerShell 5.1 additionally registers an assembly resolver.
+        This is required because LiveChartsCore 2.0.5 contains dependencies
+        referencing different SkiaSharp assembly versions.
+
     .OUTPUTS
         System.Boolean
 
@@ -33,10 +37,6 @@ function Initialize-LiveCharts {
     )
 
     try {
-        # If the WPF chart type is already available, no second load is needed.
-        if ('LiveChartsCore.SkiaSharpView.WPF.CartesianChart' -as [type]) {
-            return $true
-        }
 
         if ([string]::IsNullOrWhiteSpace($ModuleRoot)) {
             throw 'The module root path is empty.'
@@ -46,39 +46,159 @@ function Initialize-LiveCharts {
             throw "The module root path does not exist: $ModuleRoot"
         }
 
-        # Windows PowerShell 5.1 uses the .NET Framework assemblies.
-        # PowerShell 7 uses the modern .NET assemblies.
+        # -----------------------------------------------------------------
+        # Select runtime-specific dependency folder
+        # -----------------------------------------------------------------
+
         if ($PSVersionTable.PSEdition -eq 'Desktop') {
+
+            # Windows PowerShell 5.1 / .NET Framework
             $RuntimeFolder = 'PWSH5'
         }
         elseif ($PSVersionTable.PSEdition -eq 'Core') {
+
+            # PowerShell 7 / modern .NET
             $RuntimeFolder = 'PWSH7'
         }
         else {
-            throw "Unsupported PowerShell edition: $($PSVersionTable.PSEdition)"
+            throw (
+                "Unsupported PowerShell edition: " +
+                "$($PSVersionTable.PSEdition)"
+            )
         }
 
-        $LiveChartsPath = Join-Path -Path $ModuleRoot -ChildPath "Resources\LiveChartsCore\$RuntimeFolder"
+        $LiveChartsPath =
+            Join-Path `
+                -Path $ModuleRoot `
+                -ChildPath "Resources\LiveChartsCore\$RuntimeFolder"
 
-        if (-not (Test-Path -LiteralPath $LiveChartsPath -PathType Container)) {
-            throw "The LiveCharts directory does not exist: $LiveChartsPath"
+        if (
+            -not (
+                Test-Path `
+                    -LiteralPath $LiveChartsPath `
+                    -PathType Container
+            )
+        ) {
+            throw (
+                "The LiveCharts directory does not exist: " +
+                $LiveChartsPath
+            )
         }
 
-        # LiveCharts/SkiaSharp native assets are currently provided only for x64.
+        # -----------------------------------------------------------------
+        # x64 validation
+        # -----------------------------------------------------------------
+
+        # LiveCharts/SkiaSharp native assets are currently provided only
+        # for x64.
         if (-not [Environment]::Is64BitProcess) {
-            throw 'LiveCharts requires a 64-bit PowerShell process because only the x64 native DLLs are included.'
+            throw (
+                'LiveCharts requires a 64-bit PowerShell process because ' +
+                'only the x64 native DLLs are included.'
+            )
         }
+
+        # -----------------------------------------------------------------
+        # Native DLL search path
+        # -----------------------------------------------------------------
 
         # Native DLLs such as libSkiaSharp.dll and libHarfBuzzSharp.dll
         # must be discoverable by the Windows DLL loader.
-        $PathEntries = $env:PATH -split ';'
+        $PathEntries =
+            $env:PATH -split ';'
 
         if ($PathEntries -notcontains $LiveChartsPath) {
-            $env:PATH = "$LiveChartsPath;$env:PATH"
+            $env:PATH =
+                "$LiveChartsPath;$env:PATH"
         }
 
-        # All expected files are checked before the first assembly is loaded.
-        # This avoids partially loading the dependency chain.
+        # -----------------------------------------------------------------
+        # Windows PowerShell 5.1 assembly resolver
+        #
+        # LiveChartsCore.SkiaSharpView 2.0.5 references older SkiaSharp
+        # assembly versions internally, while the WPF package uses the
+        # newer SkiaSharp 3.119 assemblies.
+        #
+        # A normal .NET application resolves this through NuGet / binding
+        # redirects. A PowerShell module has no module-specific app.config,
+        # therefore Windows PowerShell 5.1 resolves these assemblies
+        # explicitly from the PWSH5 folder.
+        #
+        # PowerShell 7 does NOT use this resolver.
+        # -----------------------------------------------------------------
+
+        if ($PSVersionTable.PSEdition -eq 'Desktop') {
+
+            if (-not ('SST.LiveChartsAssemblyResolver' -as [type])) {
+
+                Add-Type -TypeDefinition @"
+using System;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+
+namespace SST
+{
+    public static class LiveChartsAssemblyResolver
+    {
+        private static string assemblyPath;
+        private static bool registered = false;
+
+        public static void Register(string path)
+        {
+            assemblyPath = path;
+
+            if (registered)
+                return;
+
+            AppDomain.CurrentDomain.AssemblyResolve += ResolveAssembly;
+            registered = true;
+        }
+
+        private static Assembly ResolveAssembly(
+            object sender,
+            ResolveEventArgs args)
+        {
+            AssemblyName requested =
+                new AssemblyName(args.Name);
+
+            // Reuse an assembly which is already loaded with the same
+            // simple assembly name. The version may intentionally differ.
+            Assembly loaded =
+                AppDomain.CurrentDomain
+                    .GetAssemblies()
+                    .FirstOrDefault(
+                        a => a.GetName().Name == requested.Name
+                    );
+
+            if (loaded != null)
+                return loaded;
+
+            string file =
+                Path.Combine(
+                    assemblyPath,
+                    requested.Name + ".dll"
+                );
+
+            if (!File.Exists(file))
+                return null;
+
+            return Assembly.LoadFrom(file);
+        }
+    }
+}
+"@
+            }
+
+            [SST.LiveChartsAssemblyResolver]::Register(
+                $LiveChartsPath
+            )
+        }
+
+        # -----------------------------------------------------------------
+        # Common dependencies for PowerShell 5.1 and PowerShell 7
+        # -----------------------------------------------------------------
+
         $RequiredFiles = @(
             'OpenTK.dll'
             'GLWpfControl.dll'
@@ -94,15 +214,41 @@ function Initialize-LiveCharts {
             'libHarfBuzzSharp.dll'
         )
 
-        $MissingFiles = foreach ($RequiredFile in $RequiredFiles) {
-            $RequiredPath = Join-Path -Path $LiveChartsPath -ChildPath $RequiredFile
+        # -----------------------------------------------------------------
+        # Additional .NET Framework dependencies required only by
+        # Windows PowerShell 5.1.
+        # -----------------------------------------------------------------
 
-            if (-not (Test-Path -LiteralPath $RequiredPath -PathType Leaf)) {
-                $RequiredPath
-            }
+        if ($PSVersionTable.PSEdition -eq 'Desktop') {
+        
+            $RequiredFiles += @(
+                'System.Runtime.CompilerServices.Unsafe.dll'
+                'System.Memory.dll'
+            )
         }
 
-        if ($MissingFiles) {
+        $MissingFiles = @(
+            foreach ($RequiredFile in $RequiredFiles) {
+
+                $RequiredPath =
+                    Join-Path `
+                        -Path $LiveChartsPath `
+                        -ChildPath $RequiredFile
+
+                if (
+                    -not (
+                        Test-Path `
+                            -LiteralPath $RequiredPath `
+                            -PathType Leaf
+                    )
+                ) {
+                    $RequiredPath
+                }
+            }
+        )
+
+        if ($MissingFiles.Count -gt 0) {
+
             throw @"
 The following LiveCharts dependencies are missing:
 
@@ -110,11 +256,24 @@ $($MissingFiles -join [Environment]::NewLine)
 "@
         }
 
-        # Managed assemblies are loaded from the lowest-level dependencies
-        # up to the WPF-specific LiveCharts assembly.
+        # -----------------------------------------------------------------
+        # If the final WPF chart type is already available, all required
+        # assemblies have already been loaded in this process.
         #
-        # Native DLLs are not loaded through Assembly.LoadFrom().
-        # They are resolved automatically through the process PATH.
+        # This check is intentionally performed AFTER the PS5 resolver has
+        # been registered.
+        # -----------------------------------------------------------------
+
+        if (
+            'LiveChartsCore.SkiaSharpView.WPF.CartesianChart' -as [type]
+        ) {
+            return $true
+        }
+
+        # -----------------------------------------------------------------
+        # Managed assemblies used by both PowerShell editions
+        # -----------------------------------------------------------------
+            
         $ManagedAssemblies = @(
             'OpenTK.dll'
             'GLWpfControl.dll'
@@ -127,37 +286,94 @@ $($MissingFiles -join [Environment]::NewLine)
             'LiveChartsCore.SkiaSharpView.dll'
             'LiveChartsCore.SkiaSharpView.WPF.dll'
         )
+            
+        # -----------------------------------------------------------------
+        # Additional managed dependencies for Windows PowerShell 5.1
+        #
+        # These are required by SkiaSharp 3.119 when running on the
+        # .NET Framework hosted by Windows PowerShell 5.1.
+        #
+        # PowerShell 7 resolves these through its modern .NET runtime and
+        # must not require private copies in the PWSH7 directory.
+        # -----------------------------------------------------------------
+            
+        if ($PSVersionTable.PSEdition -eq 'Desktop') {
+        
+            # Insert the framework dependencies before SkiaSharp is loaded.
+            $ManagedAssemblies = @(
+                'OpenTK.dll'
+                'GLWpfControl.dll'
+                'System.Runtime.CompilerServices.Unsafe.dll'
+                'System.Memory.dll'
+                'HarfBuzzSharp.dll'
+                'SkiaSharp.dll'
+                'SkiaSharp.HarfBuzz.dll'
+                'SkiaSharp.Views.Desktop.Common.dll'
+                'SkiaSharp.Views.WPF.dll'
+                'LiveChartsCore.dll'
+                'LiveChartsCore.SkiaSharpView.dll'
+                'LiveChartsCore.SkiaSharpView.WPF.dll'
+            )
+        }
 
         foreach ($AssemblyName in $ManagedAssemblies) {
-            $AssemblyPath = Join-Path -Path $LiveChartsPath -ChildPath $AssemblyName
 
-            # Avoid loading an assembly again when it already exists
-            # in the current AppDomain.
-            $ExistingAssembly = [AppDomain]::CurrentDomain.GetAssemblies() |
-                Where-Object {
-                    $_.GetName().Name -eq
-                    [System.IO.Path]::GetFileNameWithoutExtension($AssemblyName)
-                } |
-                Select-Object -First 1
+            $AssemblyPath =
+                Join-Path `
+                    -Path $LiveChartsPath `
+                    -ChildPath $AssemblyName
 
-            if ($ExistingAssembly) {
+            $ExpectedAssemblyName =
+                [System.IO.Path]::GetFileNameWithoutExtension(
+                    $AssemblyName
+                )
+
+            # Avoid loading the same assembly more than once.
+            $ExistingAssembly =
+                [AppDomain]::CurrentDomain.GetAssemblies() |
+                    Where-Object {
+                        $_.GetName().Name -eq
+                        $ExpectedAssemblyName
+                    } |
+                    Select-Object -First 1
+
+            if ($null -ne $ExistingAssembly) {
                 continue
             }
 
-            [System.Reflection.Assembly]::LoadFrom($AssemblyPath) | Out-Null
+            [System.Reflection.Assembly]::LoadFrom(
+                $AssemblyPath
+            ) |
+                Out-Null
         }
 
-        # Final validation of the type needed by the XAML parser.
-        if (-not ('LiveChartsCore.SkiaSharpView.WPF.CartesianChart' -as [type])) {
-            throw 'The LiveCharts assemblies were loaded, but CartesianChart is still unavailable.'
+        # -----------------------------------------------------------------
+        # Final validation
+        # -----------------------------------------------------------------
+
+        if (
+            -not (
+                'LiveChartsCore.SkiaSharpView.WPF.CartesianChart' -as [type]
+            )
+        ) {
+            throw (
+                'The LiveCharts assemblies were loaded, but ' +
+                'CartesianChart is still unavailable.'
+            )
         }
 
-        Write-Verbose "LiveCharts successfully loaded from: $LiveChartsPath"
+        Write-Verbose (
+            "LiveCharts successfully loaded from: $LiveChartsPath"
+        )
 
         return $true
     }
     catch {
-        Write-Host "LiveCharts initialization failed: $($_.Exception.Message)" -ForegroundColor Red
+
+        Write-Host (
+            "LiveCharts initialization failed: " +
+            "$($_.Exception.Message)"
+        ) -ForegroundColor Red
 
         Write-Host $_.Exception.ToString()
 

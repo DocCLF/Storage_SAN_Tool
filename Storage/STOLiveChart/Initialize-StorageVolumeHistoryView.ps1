@@ -1,4 +1,4 @@
-function Initialize-StorageVolumeHistoryView {
+﻿function Initialize-StorageVolumeHistoryView {
     <#
     .SYNOPSIS
         Initializes the Storage volume analysis history viewer.
@@ -298,6 +298,54 @@ function Initialize-StorageVolumeHistoryView {
     $TimeRangeComboBox.SelectedItem =
         $DefaultTimeRange
 
+
+    # ---------------------------------------------------------------------
+    # Capture module functions used inside closures.
+    #
+    # Windows PowerShell 5.1 may not resolve functions from the original
+    # module scope when ScriptBlocks are created with GetNewClosure().
+    #
+    # Therefore every external function used from a closure is captured
+    # explicitly and invoked with the call operator (&).
+    # ---------------------------------------------------------------------
+
+    $Fn_GetLiveChartsFilteredSources =
+        ${function:Get-LiveChartsFilteredSources}
+
+    $Fn_UpdateLiveChartsSeriesSelectorState =
+        ${function:Update-LiveChartsSeriesSelectorState}
+
+    $Fn_GetLiveChartsSelectedMetricDefinitions =
+        ${function:Get-LiveChartsSelectedMetricDefinitions}
+
+    $Fn_UpdateStorageVolumeAnalysisChart =
+        ${function:Update-StorageVolumeAnalysisChart}
+
+    # Fail early if one of the required functions is not available.
+    $RequiredClosureFunctions = [ordered]@{
+        'Get-LiveChartsFilteredSources' =
+            $Fn_GetLiveChartsFilteredSources
+
+        'Update-LiveChartsSeriesSelectorState' =
+            $Fn_UpdateLiveChartsSeriesSelectorState
+
+        'Get-LiveChartsSelectedMetricDefinitions' =
+            $Fn_GetLiveChartsSelectedMetricDefinitions
+
+        'Update-StorageVolumeAnalysisChart' =
+            $Fn_UpdateStorageVolumeAnalysisChart
+    }
+
+    foreach ($RequiredFunction in $RequiredClosureFunctions.GetEnumerator()) {
+
+        if ($null -eq $RequiredFunction.Value) {
+            throw (
+                "Required LiveCharts function '$($RequiredFunction.Key)' " +
+                'could not be captured for the Volume viewer closure.'
+            )
+        }
+    }
+
     # ---------------------------------------------------------------------
     # Update visible Sources according to SourceGroup filter
     # ---------------------------------------------------------------------
@@ -305,7 +353,7 @@ function Initialize-StorageVolumeHistoryView {
     $UpdateSourceFilter = {
 
         $FilteredSourceItems = @(
-            Get-LiveChartsFilteredSources `
+            & $Fn_GetLiveChartsFilteredSources `
                 -SourceSelectorModel $SourceSelectorModel `
                 -GroupSelectorModel $GroupSelectorModel
         )
@@ -360,7 +408,7 @@ function Initialize-StorageVolumeHistoryView {
         # -------------------------------------------------------------
 
         $null =
-            Update-LiveChartsSeriesSelectorState `
+            & $Fn_UpdateLiveChartsSeriesSelectorState `
                 -SelectorModel $SelectorModel
 
         $SeriesSelectorListBox.Items.Refresh()
@@ -373,7 +421,7 @@ function Initialize-StorageVolumeHistoryView {
         # -------------------------------------------------------------
 
         $FilteredSourceItems = @(
-            Get-LiveChartsFilteredSources `
+            & $Fn_GetLiveChartsFilteredSources `
                 -SourceSelectorModel $SourceSelectorModel `
                 -GroupSelectorModel $GroupSelectorModel
         )
@@ -416,7 +464,7 @@ function Initialize-StorageVolumeHistoryView {
         # -------------------------------------------------------------
 
         $SelectedMetricDefinitions = @(
-            Get-LiveChartsSelectedMetricDefinitions `
+            & $Fn_GetLiveChartsSelectedMetricDefinitions `
                 -SelectorModel $SelectorModel
         )
 
@@ -470,7 +518,7 @@ function Initialize-StorageVolumeHistoryView {
                 'History wird geladen …'
 
             $ChartData =
-                Update-StorageVolumeAnalysisChart `
+                & $Fn_UpdateStorageVolumeAnalysisChart `
                     -CustomerNbr $CustomerNbr `
                     -RowIDs $RequestedRowIDs `
                     -Metric $MetricNames `
@@ -696,7 +744,7 @@ function Initialize-StorageVolumeHistoryView {
         }
 
         $null =
-            Update-LiveChartsSeriesSelectorState `
+            & $Fn_UpdateLiveChartsSeriesSelectorState `
                 -SelectorModel $SelectorModel
 
         $SeriesSelectorListBox.Items.Refresh()

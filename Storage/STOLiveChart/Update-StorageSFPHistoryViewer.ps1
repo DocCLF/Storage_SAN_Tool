@@ -1,4 +1,4 @@
-function Update-StorageSFPHistoryViewer {
+﻿function Update-StorageSFPHistoryViewer {
     <#
     .SYNOPSIS
         Updates the Storage SFP history viewer.

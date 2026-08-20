@@ -1,4 +1,4 @@
-function New-LiveChartsHistoryChartModel {
+﻿function New-LiveChartsHistoryChartModel {
     <#
     .SYNOPSIS
         Creates a complete LiveCharts history chart model.
@@ -332,69 +332,17 @@ function New-LiveChartsHistoryChartModel {
     # ---------------------------------------------------------------------
     # Determine effective DateTime step
     #
-    # The configured DateTimeStep describes the preferred spacing.
-    # When only a small part of the selected range contains data,
-    # reduce the step so that useful labels remain visible.
+    # DateTimeStep is defined centrally by Get-LiveChartsTimeRanges and
+    # already matches the complete visible StartTime / EndTime range.
+    #
+    # Do not derive the axis step from the actual measurement span.
+    # A history range may contain only a few closely spaced measurements,
+    # while the requested chart window is much larger. Reducing MinStep
+    # from that small measurement span would create excessive X-axis
+    # labels across the full requested time window.
     # ---------------------------------------------------------------------
 
-    $EffectiveDateTimeStep =
-        $DateTimeStep
-
-    $TimeStamps = @(
-        $ModelHistory |
-            Where-Object {
-                $null -ne $_ -and
-                $_.PSObject.Properties['TimeStamp'] -and
-                $null -ne $_.TimeStamp
-            } |
-            ForEach-Object {
-                [datetime]$_.TimeStamp
-            }
-    )
-
-    if ($TimeStamps.Count -ge 2) {
-
-        $FirstTimeStamp = (
-            $TimeStamps |
-                Measure-Object -Minimum
-        ).Minimum
-
-        $LastTimeStamp = (
-            $TimeStamps |
-                Measure-Object -Maximum
-        ).Maximum
-
-        $VisibleDuration =
-            $LastTimeStamp - $FirstTimeStamp
-
-        if ($VisibleDuration -gt [TimeSpan]::Zero) {
-
-            # Aim for approximately five visible X-axis intervals.
-            $DynamicTicks = [long](
-                $VisibleDuration.Ticks / 5
-            )
-
-            # Do not go below one minute.
-            $MinimumTicks =
-                [TimeSpan]::FromMinutes(1).Ticks
-
-            if ($DynamicTicks -lt $MinimumTicks) {
-                $DynamicTicks =
-                    $MinimumTicks
-            }
-
-            $DynamicStep =
-                [TimeSpan]::FromTicks(
-                    $DynamicTicks
-                )
-
-            # Only reduce the configured step.
-            if ($DynamicStep -lt $EffectiveDateTimeStep) {
-                $EffectiveDateTimeStep =
-                    $DynamicStep
-            }
-        }
-    }
+    $EffectiveDateTimeStep = $DateTimeStep
 
     # ---------------------------------------------------------------------
     # Create X axis

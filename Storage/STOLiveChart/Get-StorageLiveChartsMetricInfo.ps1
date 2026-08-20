@@ -1,4 +1,4 @@
-function Get-StorageLiveChartsMetricInfo {
+﻿function Get-StorageLiveChartsMetricInfo {
     <#
     .SYNOPSIS
         Returns LiveCharts metric metadata for Storage SFP history data.
@@ -43,7 +43,7 @@ function Get-StorageLiveChartsMetricInfo {
         Name of one specific Storage SFP metric.
 
     .PARAMETER All
-        Returns all available Storage SFP metrics.
+        Returns all available Storage SFP metrics. 
 
     .OUTPUTS
         PSCustomObject

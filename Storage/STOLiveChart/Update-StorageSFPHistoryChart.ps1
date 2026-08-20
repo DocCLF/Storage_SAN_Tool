@@ -1,4 +1,4 @@
-function Update-StorageSFPHistoryChart {
+﻿function Update-StorageSFPHistoryChart {
     <#
     .SYNOPSIS
         Builds the LiveCharts data model for one or multiple Storage FC ports.
@@ -463,15 +463,17 @@ function Update-StorageSFPHistoryChart {
     # ---------------------------------------------------------------------
 
     $GetHistoryKey = {
-
+    
         param (
             $HistoryItem
         )
-
+    
         if ($null -eq $HistoryItem) {
             return $null
         }
-
+    
+        # Prefer database ID because it uniquely identifies the
+        # measurement inside the history table.
         if (
             $HistoryItem.PSObject.Properties['ID'] -and
             $null -ne $HistoryItem.ID
@@ -481,7 +483,8 @@ function Update-StorageSFPHistoryChart {
                 [string]$HistoryItem.ID
             )
         }
-
+    
+        # Fall back to the timestamp when no database ID exists.
         if (
             $HistoryItem.PSObject.Properties['TimeStamp'] -and
             $null -ne $HistoryItem.TimeStamp
@@ -491,10 +494,9 @@ function Update-StorageSFPHistoryChart {
                 ([datetime]$HistoryItem.TimeStamp).Ticks
             )
         }
-
+    
         return $null
-
-    }.GetNewClosure()
+    }
 
     # ---------------------------------------------------------------------
     # Prepare result collections

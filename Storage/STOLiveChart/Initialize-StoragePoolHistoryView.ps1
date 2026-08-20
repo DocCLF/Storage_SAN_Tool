@@ -1,4 +1,4 @@
-function Initialize-StoragePoolHistoryView {
+﻿function Initialize-StoragePoolHistoryView {
     <#
     .SYNOPSIS
         Initializes the Storage pool capacity history viewer.
@@ -418,6 +418,60 @@ function Initialize-StoragePoolHistoryView {
     $TimeRangeComboBox.SelectedItem =
         $DefaultTimeRange
 
+
+    # ---------------------------------------------------------------------
+    # Capture module functions used inside closures.
+    #
+    # Windows PowerShell 5.1 may not resolve functions from the original
+    # module scope when ScriptBlocks are created with GetNewClosure().
+    #
+    # Therefore every external function used from a closure is captured
+    # explicitly and invoked with the call operator (&).
+    # ---------------------------------------------------------------------
+
+    $Fn_GetLiveChartsSelectedSources =
+        ${function:Get-LiveChartsSelectedSources}
+
+    $Fn_GetLiveChartsFilteredSources =
+        ${function:Get-LiveChartsFilteredSources}
+
+    $Fn_UpdateLiveChartsSeriesSelectorState =
+        ${function:Update-LiveChartsSeriesSelectorState}
+
+    $Fn_GetLiveChartsSelectedMetricDefinitions =
+        ${function:Get-LiveChartsSelectedMetricDefinitions}
+
+    $Fn_UpdateStoragePoolCapacityChart =
+        ${function:Update-StoragePoolCapacityChart}
+
+    # Fail early if one of the required functions is not available.
+    $RequiredClosureFunctions = [ordered]@{
+        'Get-LiveChartsSelectedSources' =
+            $Fn_GetLiveChartsSelectedSources
+
+        'Get-LiveChartsFilteredSources' =
+            $Fn_GetLiveChartsFilteredSources
+
+        'Update-LiveChartsSeriesSelectorState' =
+            $Fn_UpdateLiveChartsSeriesSelectorState
+
+        'Get-LiveChartsSelectedMetricDefinitions' =
+            $Fn_GetLiveChartsSelectedMetricDefinitions
+
+        'Update-StoragePoolCapacityChart' =
+            $Fn_UpdateStoragePoolCapacityChart
+    }
+
+    foreach ($RequiredFunction in $RequiredClosureFunctions.GetEnumerator()) {
+
+        if ($null -eq $RequiredFunction.Value) {
+            throw (
+                "Required LiveCharts function '$($RequiredFunction.Key)' " +
+                'could not be captured for the Pool viewer closure.'
+            )
+        }
+    }
+
     # ---------------------------------------------------------------------
     # Helper:
     # Return selected pools that belong to enabled Storage-System groups.
@@ -440,7 +494,7 @@ function Initialize-StoragePoolHistoryView {
         }
 
         $SelectedPools = @(
-            Get-LiveChartsSelectedSources `
+            & $Fn_GetLiveChartsSelectedSources `
                 -SelectorModel $SourceSelectorModel |
                 Where-Object {
                     [string]$_.SerialNumber -in
@@ -460,7 +514,7 @@ function Initialize-StoragePoolHistoryView {
     $RefreshSourceSelector = {
 
         $FilteredSources = @(
-            Get-LiveChartsFilteredSources `
+            & $Fn_GetLiveChartsFilteredSources `
                 -SourceSelectorModel $SourceSelectorModel `
                 -GroupSelectorModel $GroupSelectorModel
         )
@@ -483,7 +537,7 @@ function Initialize-StoragePoolHistoryView {
         # -------------------------------------------------------------
 
         $null =
-            Update-LiveChartsSeriesSelectorState `
+            & $Fn_UpdateLiveChartsSeriesSelectorState `
                 -SelectorModel $SelectorModel
 
         $SeriesSelectorListBox.Items.Refresh()
@@ -493,7 +547,7 @@ function Initialize-StoragePoolHistoryView {
         # -------------------------------------------------------------
 
         $SelectedMetricDefinitions = @(
-            Get-LiveChartsSelectedMetricDefinitions `
+            & $Fn_GetLiveChartsSelectedMetricDefinitions `
                 -SelectorModel $SelectorModel
         )
 
@@ -588,7 +642,7 @@ function Initialize-StoragePoolHistoryView {
             if ($SelectedRowIDs.Count -eq 1) {
 
                 $ChartData =
-                    Update-StoragePoolCapacityChart `
+                    & $Fn_UpdateStoragePoolCapacityChart `
                         -CustomerNbr $CustomerNbr `
                         -RowID $SelectedRowIDs[0] `
                         -Metric $MetricNames `
@@ -604,7 +658,7 @@ function Initialize-StoragePoolHistoryView {
             else {
 
                 $ChartData =
-                    Update-StoragePoolCapacityChart `
+                    & $Fn_UpdateStoragePoolCapacityChart `
                         -CustomerNbr $CustomerNbr `
                         -RowIDs $SelectedRowIDs `
                         -Metric $MetricNames `
@@ -824,7 +878,7 @@ function Initialize-StoragePoolHistoryView {
         }
 
         $null =
-            Update-LiveChartsSeriesSelectorState `
+            & $Fn_UpdateLiveChartsSeriesSelectorState `
                 -SelectorModel $SelectorModel
 
         $SeriesSelectorListBox.Items.Refresh()
@@ -1026,7 +1080,7 @@ function Initialize-StoragePoolHistoryView {
                 & $RefreshSourceSelector
 
                 $VisibleSources = @(
-                    Get-LiveChartsFilteredSources `
+                    & $Fn_GetLiveChartsFilteredSources `
                         -SourceSelectorModel $SourceSelectorModel `
                         -GroupSelectorModel $GroupSelectorModel
                 )
