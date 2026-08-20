@@ -2,22 +2,32 @@
 ## [Unreleased]
 - Additional support for errors in the event log
 - Replace TrimEnd(“.xaml”) with GetFileNameWithoutExtension
-- Clean up duplicate style loading
 - Consistently secure DB parameters using Get-DbValue/Get-SqlParameterValue
 - Further separate the backend/core from WPF
     * switched to Avalonia to support additional operating systems
 
-# [v1.5.02_beta] - 2026-08-07
+# [v1.5.05_beta] - 2026-08-20
 ### Added 
- - LiveCharts
- - History Data 
+ - LiveCharts (Not perfect yet, but it's a start)
+ - History Data in DB and LiveCharts
  - Inventory Tabelle for SAN, STO, etc., if a Device, Volume etc. will be replaced or anything else
+
 ### Fixed
 - Remove or migrate legacy SSH code
+- Performance Impact on Systems with More Than 1,000 Volumes
+- Performance Improvements for STO FCPort Infos
+- GUI view for REST function Get-BrocadePortErrorStats
+- Some errors when connecting LiveCharts to PowerShell 5.1
+- Some general display errors in LiveCharts
+
 ### Changed
 - removed most of SSH Function
+- displaying STO-Volumes in DG
+- removed quite a bit of unnecessary code
 
 ### Known Bugs
+- Get-BrocadeSwitchShow has no ProgBar
+- If more than one customer database is created, the switch may not always work.
 
 
 All notable changes to this project will be documented in this file.
