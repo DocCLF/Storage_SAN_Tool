@@ -1,4 +1,4 @@
-function Get-SANSFPHistoryPorts {
+﻿function Get-SANSFPHistoryPorts {
     <#
     .SYNOPSIS
         Returns available SAN SFP history ports for one customer.

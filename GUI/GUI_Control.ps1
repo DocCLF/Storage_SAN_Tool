@@ -991,15 +991,111 @@ $TD_BTN_IBM_PoolVolumeInfo.add_click({
 
         Add-MappedRows -Collection $dev.VolumeRows -Source $VolumeResult -IdProperty 'RowID' -Map $mapVolumeInfo
 
+        # ---------------------------------------------------------------------
+        # Detect volumes containing copies or snapshots
+        # ---------------------------------------------------------------------
+        $GroupsWithChildren = @{}
+
+        # First pass:
+        # Collect every GroupKey which contains at least one child row.
+        foreach ($Row in $dev.VolumeRows) {
+        
+            if (($Row.RowType -eq 'VolumeCopy') -or ($Row.RowType -eq 'Snapshot')) {
+                if (-not [string]::IsNullOrWhiteSpace([string]$Row.GroupKey)) {
+                    $GroupsWithChildren[$Row.GroupKey] = $true
+                }
+            }
+        }
+
+
+        # Add expand/collapse state to parent volume rows.
+        foreach ($Row in $dev.VolumeRows) {
+            if ($Row.RowType -ne 'Volume') {continue}
+        
+            $HasChildren = $GroupsWithChildren.ContainsKey($Row.GroupKey)
+        
+            # Add HasChildren only if the property does not already exist.
+            if (-not $Row.PSObject.Properties['HasChildren']) {
+                $Row | Add-Member -MemberType NoteProperty -Name 'HasChildren' -Value $HasChildren
+            }else {
+                $Row.HasChildren = $HasChildren
+            }
+        
+            # IsExpanded will later control whether the child rows of this volume are visible.
+            # For now we initialize it with $true so Stage 2a does not change the current DataGrid representation.
+            if (-not $Row.PSObject.Properties['IsExpanded']) {
+                $Row | Add-Member -MemberType NoteProperty -Name 'IsExpanded' -Value $true
+            }
+        }
+
+        # ---------------------------------------------------------------------
+        # Link copy/snapshot rows to their parent volume
+        # ---------------------------------------------------------------------
+        $VolumeParentLookup = @{}
+
+        foreach ($Row in $dev.VolumeRows) {
+            if (($Row.RowType -eq 'Volume') -and (-not [string]::IsNullOrWhiteSpace([string]$Row.GroupKey))) {
+                $VolumeParentLookup[$Row.GroupKey] = $Row
+            }
+        }
+
+        foreach ($Row in $dev.VolumeRows) {
+            if (($Row.RowType -eq 'VolumeCopy') -or ($Row.RowType -eq 'Snapshot')) {
+            
+                $ParentVolume = $null
+            
+                if (-not [string]::IsNullOrWhiteSpace([string]$Row.GroupKey) -and $VolumeParentLookup.ContainsKey($Row.GroupKey)) {
+                    $ParentVolume = $VolumeParentLookup[$Row.GroupKey]
+                }
+            
+                if (-not $Row.PSObject.Properties['ParentVolume']) {
+                    $Row | Add-Member -MemberType NoteProperty -Name 'ParentVolume' -Value $ParentVolume
+                }else {
+                    $Row.ParentVolume = $ParentVolume
+                }
+            }
+        }
+
+
+        # ---------------------------------------------------------------------
+        # Configure Volume CollectionView
+        # ---------------------------------------------------------------------
         $VolumeView = [System.Windows.Data.CollectionViewSource]::GetDefaultView($dev.VolumeRows)
+
+        # Remove existing grouping/sorting rules in case the view is reused.
         $VolumeView.GroupDescriptions.Clear()
         $VolumeView.SortDescriptions.Clear()
-        $VolumeView.GroupDescriptions.Add(
-            [System.Windows.Data.PropertyGroupDescription]::new('GroupKey')
-        )
+
+        # Preserve Volume -> Copy/Snapshot -> next Volume order
         $VolumeView.SortDescriptions.Add(
-            [System.ComponentModel.SortDescription]::new('RowOrder', [System.ComponentModel.ListSortDirection]::Ascending)
+            [System.ComponentModel.SortDescription]::new(
+                'RowOrder',
+                [System.ComponentModel.ListSortDirection]::Ascending
+            )
         )
+
+        # Child rows are visible only while their parent volume is expanded.
+        $VolumeView.Filter = {
+            param($Row)
+
+            if ($null -eq $Row) {return $true}
+        
+            # Volumes are always visible
+            if ($Row.RowType -eq 'Volume') {
+                return $true
+            }
+        
+            # Copies / snapshots follow their parent volume
+            if (($Row.RowType -eq 'VolumeCopy') -or ($Row.RowType -eq 'Snapshot')) {
+                # Keep orphan rows visible instead of silently hiding data.
+                if ($null -eq $Row.ParentVolume) {
+                    return $true
+                }
+                return [bool]$Row.ParentVolume.IsExpanded
+            }
+            return $true
+        }
+
         $UCVMMain.DeviceToggles.Add($dev)
         
     }
@@ -1319,7 +1415,7 @@ $TD_BTN_FOS_BasicSwitchInfo.add_click({
 
         foreach ($TD_Creds in $TD_Credentials) {
 
-            $FunctionResult = New-DeviceBlock -Device $TD_Creds -ExportPath $TD_TB_ExportPath.Text -RESTFunc Get-BrocadeBaseInfo -SSHFunc FOS_SSHBasicSwitchInfos
+            $FunctionResult = New-DeviceBlock -Device $TD_Creds -ExportPath $TD_TB_ExportPath.Text -RESTFunc Get-BrocadeBaseInfo -SSHFunc $null
 
             $deviceIdent = $FunctionResult['DeviceIdent']
             $funcResult  = $FunctionResult['FuncResult']
@@ -1404,7 +1500,7 @@ $TD_BTN_FOS_SwitchShow.add_click({
                 
                     $TD_Creds | Add-Member -NotePropertyName VFID -NotePropertyValue $VFID -Force
 
-                    $TmpResult = New-DeviceBlock -Device $TD_Creds -ExportPath $TD_TB_ExportPath.Text -RESTFunc Get-BrocadeSwitchShow -SSHFunc FOS_SSHSwitchShowInfo
+                    $TmpResult = New-DeviceBlock -Device $TD_Creds -ExportPath $TD_TB_ExportPath.Text -RESTFunc Get-BrocadeSwitchShow -SSHFunc $null
 
                     if(!($FunctionResult)){
                         $FunctionResult = $TmpResult
@@ -1423,7 +1519,7 @@ $TD_BTN_FOS_SwitchShow.add_click({
                     $TD_Creds.PSObject.Properties.Remove('VFID')
                 }
 
-                $FunctionResult = New-DeviceBlock -Device $TD_Creds -ExportPath $TD_TB_ExportPath.Text -RESTFunc Get-BrocadeSwitchShow -SSHFunc FOS_SSHSwitchShowInfo
+                $FunctionResult = New-DeviceBlock -Device $TD_Creds -ExportPath $TD_TB_ExportPath.Text -RESTFunc Get-BrocadeSwitchShow -SSHFunc $null
 
                 $AllSwitchShowRows += @($FunctionResult.FuncResult)
             }
@@ -1481,7 +1577,7 @@ $TD_BTN_FOS_PortBufferShow.add_click({
                 
                     $TD_Creds | Add-Member -NotePropertyName VFID -NotePropertyValue $VFID -Force
 
-                    $TmpResult = New-DeviceBlock -Device $TD_Creds -ExportPath $TD_TB_ExportPath.Text -RESTFunc Get-BrocadePortBufferStats -SSHFunc FOS_SSHPortbufferShowInfo
+                    $TmpResult = New-DeviceBlock -Device $TD_Creds -ExportPath $TD_TB_ExportPath.Text -RESTFunc Get-BrocadePortBufferStats -SSHFunc $null
 
                     if(!($FunctionResult)){
                         $FunctionResult = $TmpResult
@@ -1500,7 +1596,7 @@ $TD_BTN_FOS_PortBufferShow.add_click({
                     $TD_Creds.PSObject.Properties.Remove('VFID')
                 }
 
-                $FunctionResult = New-DeviceBlock -Device $TD_Creds -ExportPath $TD_TB_ExportPath.Text -RESTFunc Get-BrocadePortBufferStats -SSHFunc FOS_SSHPortbufferShowInfo
+                $FunctionResult = New-DeviceBlock -Device $TD_Creds -ExportPath $TD_TB_ExportPath.Text -RESTFunc Get-BrocadePortBufferStats -SSHFunc $null
 
                 $AllPortBufferRows += @($FunctionResult.FuncResult)
             }
@@ -1564,7 +1660,7 @@ $TD_BTN_FOS_PortErrorShow.add_click({
                 
                     $TD_Creds | Add-Member -NotePropertyName VFID -NotePropertyValue $VFID -Force
 
-                    $TmpResult = New-DeviceBlock -Device $TD_Creds -ExportPath $TD_TB_ExportPath.Text -RESTFunc Get-BrocadePortErrorStats -SSHFunc FOS_SSHPortErrShowInfos
+                    $TmpResult = New-DeviceBlock -Device $TD_Creds -ExportPath $TD_TB_ExportPath.Text -RESTFunc Get-BrocadePortErrorStats -SSHFunc $null
 
                     if(!($FunctionResult)){
                         $FunctionResult = $TmpResult
@@ -1583,7 +1679,7 @@ $TD_BTN_FOS_PortErrorShow.add_click({
                     $TD_Creds.PSObject.Properties.Remove('VFID')
                 }
 
-                $FunctionResult = New-DeviceBlock -Device $TD_Creds -ExportPath $TD_TB_ExportPath.Text -RESTFunc Get-BrocadePortErrorStats -SSHFunc FOS_SSHPortErrShowInfos
+                $FunctionResult = New-DeviceBlock -Device $TD_Creds -ExportPath $TD_TB_ExportPath.Text -RESTFunc Get-BrocadePortErrorStats -SSHFunc $null
 
                 $AllErrorsShowRows += @($FunctionResult.FuncResult)
             }
@@ -1647,7 +1743,7 @@ $TD_BTN_FOS_SFPHealthShow.add_click({
                 
                     $TD_Creds | Add-Member -NotePropertyName VFID -NotePropertyValue $VFID -Force
 
-                    $TmpResult = New-DeviceBlock -Device $TD_Creds -ExportPath $TD_TB_ExportPath.Text -RESTFunc Get-BrocadeSFPShow -SSHFunc FOS_SSHSFPDetails
+                    $TmpResult = New-DeviceBlock -Device $TD_Creds -ExportPath $TD_TB_ExportPath.Text -RESTFunc Get-BrocadeSFPShow -SSHFunc $null
 
                     if(!($FunctionResult)){
                         $FunctionResult = $TmpResult
@@ -1666,7 +1762,7 @@ $TD_BTN_FOS_SFPHealthShow.add_click({
                     $TD_Creds.PSObject.Properties.Remove('VFID')
                 }
 
-                $FunctionResult = New-DeviceBlock -Device $TD_Creds -ExportPath $TD_TB_ExportPath.Text -RESTFunc Get-BrocadeSFPShow -SSHFunc FOS_SSHSFPDetails
+                $FunctionResult = New-DeviceBlock -Device $TD_Creds -ExportPath $TD_TB_ExportPath.Text -RESTFunc Get-BrocadeSFPShow -SSHFunc $null
 
                 $AllSFPRows += @($FunctionResult.FuncResult)
             }
@@ -1961,7 +2057,7 @@ $TD_BTN_FOS_ZoneDetailsShow.add_click({
                 
                     $TD_Creds | Add-Member -NotePropertyName VFID -NotePropertyValue $VFID -Force
                 
-                    $TmpResult = New-DeviceBlock -Device $TD_Creds -ExportPath $TD_TB_ExportPath.Text -RESTFunc Get-BrocadeEffectiveZoneShow -SSHFunc FOS_SSHZoneDetails
+                    $TmpResult = New-DeviceBlock -Device $TD_Creds -ExportPath $TD_TB_ExportPath.Text -RESTFunc Get-BrocadeEffectiveZoneShow -SSHFunc $null
                 
                     if(!($FunctionResult)){
                         $FunctionResult = $TmpResult
@@ -1974,7 +2070,7 @@ $TD_BTN_FOS_ZoneDetailsShow.add_click({
                     $TD_Creds.PSObject.Properties.Remove('VFID')
                 }
             
-                $FunctionResult = New-DeviceBlock -Device $TD_Creds -ExportPath $TD_TB_ExportPath.Text -RESTFunc Get-BrocadeEffectiveZoneShow -SSHFunc FOS_SSHZoneDetails
+                $FunctionResult = New-DeviceBlock -Device $TD_Creds -ExportPath $TD_TB_ExportPath.Text -RESTFunc Get-BrocadeEffectiveZoneShow -SSHFunc $null
             
                 $AllZoneRows += @($FunctionResult.FuncResult)
             }
@@ -2018,7 +2114,7 @@ $TD_BTN_FOS_PortLicenseShow.add_click({
         $UCVMMain.DeviceToggles.Clear()
         foreach($TD_Creds in $TD_Credentials){
 
-            $FunctionResult = New-DeviceBlock -Device $TD_Creds -ExportPath $TD_TB_ExportPath.Text -RESTFunc Get-BrocadeLicenseOverview -SSHFunc FOS_SSHPortLicenseShowInfo
+            $FunctionResult = New-DeviceBlock -Device $TD_Creds -ExportPath $TD_TB_ExportPath.Text -RESTFunc Get-BrocadeLicenseOverview -SSHFunc $null
             # Links = Propertyname im PSCustomObject (das bindet dein XAML)
             # Rechts = Propertyname im Source-Objekt
             $dev = $FunctionResult.DeviceIdent
@@ -2074,7 +2170,7 @@ $TD_BTN_FOS_SensorShow.add_click({
         $UCVMMain.DeviceToggles.Clear()
         foreach($TD_Creds in $TD_Credentials){
 
-            $FunctionResult = New-DeviceBlock -Device $TD_Creds -ExportPath $TD_TB_ExportPath.Text -RESTFunc Get-BrocadeSensorOverview -SSHFunc FOS_SSHSensorShow
+            $FunctionResult = New-DeviceBlock -Device $TD_Creds -ExportPath $TD_TB_ExportPath.Text -RESTFunc Get-BrocadeSensorOverview -SSHFunc $null
             # Links = Propertyname im PSCustomObject (das bindet dein XAML)
             # Rechts = Propertyname im Source-Objekt
             $Sensor = $FunctionResult.FuncResult
@@ -3305,7 +3401,112 @@ switch ($CockpitView) {
 if ($Global:HostStatusChanges.Count -eq 0) {$Global:HostStatusChanges.Add("No Host Status changes since the last check.")}
 if ($Global:SANPortStatusChanges.Count -eq 0) {$Global:SANPortStatusChanges.Add("No SAN Port Status changes since the last check.")}
 
+
+# ---------------------------------------------------------------------
+# Handle expand/collapse clicks from dynamically generated volume rows.
+#
+# The ToggleButtons are created inside a DataTemplate and therefore
+# cannot be accessed directly with FindName/Add_Click.
+# ButtonBase.Click is a routed event, so we handle it once at MainWindow.
+# ---------------------------------------------------------------------
+
+# ---------------------------------------------------------------------
+# Expand / Collapse handler for VolumeCopy / Snapshot rows
+# ---------------------------------------------------------------------
+
+$VolumeExpandClickHandler = [System.Windows.RoutedEventHandler]{
+
+    param(
+        $Sender,
+        $EventArgs
+    )
+
+    # Start with the element that was actually clicked.
+    $ClickedElement = $EventArgs.OriginalSource
+
+    # Walk upwards until the ToggleButton is found.
+    while (($null -ne $ClickedElement) -and ($ClickedElement -isnot [System.Windows.Controls.Primitives.ToggleButton])) {
+
+        if ($ClickedElement -isnot [System.Windows.DependencyObject]) {
+            return
+        }
+        $ClickedElement = [System.Windows.Media.VisualTreeHelper]::GetParent($ClickedElement)
+    }
+
+    # No ToggleButton found.
+    if ($null -eq $ClickedElement) {return}
+
+    $Button = $ClickedElement
+
+    # Ignore all other ToggleButtons in the UserControl.
+    if ($Button.Uid -ne 'VolumeExpandButton') {
+        return
+    }
+
+    $VolumeRow = $Button.Tag
+    if ($null -eq $VolumeRow) {
+        return
+    }
+    if (-not $VolumeRow.PSObject.Properties['HasChildren']) {
+        return
+    }
+    if (-not [bool]$VolumeRow.HasChildren) {
+        return
+    }
+    if ($VolumeRow.RowType -ne 'Volume') {
+        return
+    }
+
+    # ToggleButton already changed IsChecked.
+    $VolumeRow.IsExpanded = [bool]$Button.IsChecked
+
+
+    # -------------------------------------------------------------
+    # Find owning DataGrid
+    # -------------------------------------------------------------
+
+    $Parent = $Button
+
+    while (($null -ne $Parent) -and ($Parent -isnot [System.Windows.Controls.DataGrid])) {
+        $Parent = [System.Windows.Media.VisualTreeHelper]::GetParent($Parent)
+    }
+
+    if ($null -eq $Parent) {
+        return
+    }
+
+
+    # -------------------------------------------------------------
+    # Refresh the CollectionView.
+    #
+    # The filter evaluates:
+    #
+    #   $Row.ParentVolume.IsExpanded
+    #
+    # and therefore hides/shows VolumeCopy and Snapshot rows.
+    # -------------------------------------------------------------
+    $VolumeView = [System.Windows.Data.CollectionViewSource]::GetDefaultView($Parent.ItemsSource)
+
+    if ($null -ne $VolumeView) {
+        $VolumeView.Refresh()
+    }
+    $EventArgs.Handled = $true
+}
+
+
+# Register directly on the IBM Storage UserControl.
+#
+# The third parameter ($true) is important:
+# receive the routed Click event even if another WPF element already marked it as handled.
+$TD_UserControl_IBMSTO.AddHandler(
+    [System.Windows.Controls.Primitives.ButtonBase]::ClickEvent,
+    $VolumeExpandClickHandler,
+    $true
+)
+
+
 Get-Variable TD_* |Out-Null
+
 #region show MainWindow
 $MainWindow.showDialog()
 $MainWindow.activate()

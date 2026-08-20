@@ -58,7 +58,7 @@ function IBM_RESTVolumeInfo {
             <# Max requests/sec to command endpoints = 10 -.- #>
             if ($i % 8 -eq 0) { Start-Sleep -Milliseconds 1500 }
             <# Node Info#>
-            $TD_VDiskinfo = "" | Select-Object RowID,ID,Name,IOGroupID,IOGroupName,Status,MdiskGrpID,MdiskGrpName,Capacity,Type,FCID,FCName,`
+            $TD_VDiskinfo = "" | Select-Object RowID,ID,Name,DisplayName,IOGroupID,IOGroupName,Status,MdiskGrpID,MdiskGrpName,Capacity,Type,FCID,FCName,`
                                             RCID,RCName,VdiskUID,FCMapCount,CopyCount,FastWriteState,SECopyCount,RCChange,CompressedCopyCount,ParentMdiskGrpID,ParentMdiskGrpName,`
                                             OwnerID,OwnerName,Formatting,Encrypt,VolumeID,VolumeName,Function,VolumeGroupID,VolumeGroupName,Protocol,PreferredNodeID,PreferredNodeName,isSnapshot,`
                                             SnapshotCount,VolumeType,ReplicationMode,isSafeguardedSnapshot,SafeguardedSnapshotCount,SnapshotID,SnapshotName,ParentUID,SnapshotTime,ExpirationTime,`
@@ -67,6 +67,8 @@ function IBM_RESTVolumeInfo {
 
             $TD_VDiskinfo.ID                         = $TD_DeviceInformation.id[$i]
             $TD_VDiskinfo.Name                       = $TD_DeviceInformation.name[$i]
+            # Common GUI display property. For a normal volume, DisplayName is simply the actual volume name.
+            $TD_VDiskinfo.DisplayName                = $TD_VDiskinfo.Name
             $TD_VDiskinfo.IOGroupID                  = $TD_DeviceInformation.IO_group_id[$i]
             $TD_VDiskinfo.IOGroupName                = $TD_DeviceInformation.IO_group_name[$i]
             $TD_VDiskinfo.Status                     = $TD_DeviceInformation.status[$i]
@@ -377,17 +379,10 @@ function IBM_RESTVolumeInfo {
         }
         Close-ProgressBar -ProgressBar $ProgressBar
         if($TD_Export -eq "yes"){
-
-            if([string]$TD_Exportpath -ne "$PSCommandPath\ToolLog\"){
+            if([string]::IsNullOrWhiteSpace($TD_Exportpath)){
                 $TD_VDiskFuncResault | Export-Csv -Path $TD_Exportpath\$($TD_Line_ID)_$($IBMSTOSN)_Volume_Result_$(Get-Date -Format "yyyy-MM-dd").csv -NoTypeInformation
                 SST_ToolMessageCollector -TD_ToolMSGCollector "$TD_Exportpath\$($TD_Line_ID)_$($IBMSTOSN)_Volume_Result_$(Get-Date -Format "yyyy-MM-dd").csv" -TD_ToolMSGType Debug
-            }else {
-                $TD_VDiskFuncResault | Export-Csv -Path $PSCommandPath\ToolLog\$($TD_Line_ID)_$($IBMSTOSN)_Volume_Result_$(Get-Date -Format "yyyy-MM-dd").csv -NoTypeInformation
-                SST_ToolMessageCollector -TD_ToolMSGCollector "$PSCommandPath\ToolLog\$($TD_Line_ID)_$($IBMSTOSN)_Volume_Result_$(Get-Date -Format "yyyy-MM-dd").csv" -TD_ToolMSGType Debug
             }
-        }else {
-            <# output on the promt #>
-            return $TD_VDiskFuncResault
         }
         return $TD_VDiskFuncResault
     }

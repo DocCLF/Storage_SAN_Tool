@@ -38,7 +38,6 @@ function IBM_RESTFCPortInfo {
         [int]$imax = $STONodeInfo.Count
         for ($i = 0; $i -lt $imax; $i++) {
             if($STONodeInfo.config_node[$i] -eq "yes"){
-                #$IBMSTOWWNN = $STONodeInfo.WWNN[$i] <# not needed here#>
                 $IBMSTOSN = if($STONodeInfo.enclosure_serial_number[$i] -eq ""){$STONodeInfo.panel_name[$i]}else{$STONodeInfo.enclosure_serial_number[$i]}
             }
         }
@@ -64,16 +63,14 @@ function IBM_RESTFCPortInfo {
             $TD_FCPortInfoWWNN = $($TD_FCPortInfo.WWNN).Substring($TD_FCPortInfo.WWNN.Length -4)
 
             for ($ni = 0; $ni -lt $inbr; $ni++) {
-            <# Max requests/sec to command endpoints = 10 -.- #>
-            if ($ni % 8 -eq 0) { Start-Sleep -Milliseconds 1500 }
+
                 $TD_LSPortFCWWPN = $($TD_SecondDeviceInformation.WWPN[$ni])
                 $TD_LSPortFCWWPNEnd = $TD_LSPortFCWWPN.Substring($TD_LSPortFCWWPN.Length -4)
                 
                 <# Infos from lsportfc #>
                 if($TD_FCPortInfoWWNN -ne $TD_LSPortFCWWPNEnd){continue}
-                if($TD_FCPortInfo.WWPN -eq $TD_LSPortFCWWPN){[bool]$TD_WWPNaEqual = $true}
 
-                if(($TD_WWPNaEqual)-and ($($TD_FCPortInfo.PortID) -eq $($TD_SecondDeviceInformation.port_id[$ni]))){
+                if (($TD_FCPortInfo.WWPN -eq $TD_LSPortFCWWPN) -and ($TD_FCPortInfo.PortID -eq $TD_SecondDeviceInformation.port_id[$ni])) {
                     $TD_FCPortInfo.CardID             = $TD_SecondDeviceInformation.adapter_location[$ni]
                     $TD_FCPortInfo.CardPortID         = $TD_SecondDeviceInformation.adapter_port_id[$ni]
                     $TD_FCPortInfo.Speed              = $TD_SecondDeviceInformation.port_speed[$ni]

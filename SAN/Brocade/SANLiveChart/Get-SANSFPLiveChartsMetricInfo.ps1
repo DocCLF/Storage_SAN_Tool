@@ -1,4 +1,4 @@
-function Get-SANSFPLiveChartsMetricInfo {
+﻿function Get-SANSFPLiveChartsMetricInfo {
     <#
     .SYNOPSIS
         Returns LiveCharts metric definitions for SAN SFP history.
@@ -29,7 +29,7 @@ function Get-SANSFPLiveChartsMetricInfo {
         Get-SANSFPLiveChartsMetricInfo -All
 
     .EXAMPLE
-        Get-SANSFPLiveChartsMetricInfo -Metric 'RxPower'
+        Get-SANSFPLiveChartsMetricInfo -Metric 'RxPower' 
     #>
 
     [CmdletBinding()]

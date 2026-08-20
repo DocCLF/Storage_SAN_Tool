@@ -1,4 +1,4 @@
-function Initialize-SANPortErrorHistoryView {
+﻿function Initialize-SANPortErrorHistoryView {
     <#
     .SYNOPSIS
         Initializes the SAN port-error history viewer.
@@ -390,6 +390,58 @@ function Initialize-SANPortErrorHistoryView {
     $SourceSelectorListBox.Items.Refresh()
 
     # ---------------------------------------------------------------------
+    # Capture module functions used inside closures.
+    #
+    # Windows PowerShell 5.1 may not resolve functions from the original
+    # module scope when ScriptBlocks are created with GetNewClosure().
+    #
+    # Capture all external functions used by the following closures and
+    # invoke them later with the call operator (&).
+    # ---------------------------------------------------------------------
+
+    $Fn_GetLiveChartsSelectedSources =
+        ${function:Get-LiveChartsSelectedSources}
+
+    $Fn_GetLiveChartsFilteredSources =
+        ${function:Get-LiveChartsFilteredSources}
+
+    $Fn_UpdateLiveChartsSeriesSelectorState =
+        ${function:Update-LiveChartsSeriesSelectorState}
+
+    $Fn_GetLiveChartsSelectedMetricDefinitions =
+        ${function:Get-LiveChartsSelectedMetricDefinitions}
+
+    $Fn_UpdateSANPortErrorHistoryChart =
+        ${function:Update-SANPortErrorHistoryChart}
+
+    # Fail early if one of the required functions could not be captured.
+    $RequiredClosureFunctions = [ordered]@{
+        'Get-LiveChartsSelectedSources' =
+            $Fn_GetLiveChartsSelectedSources
+
+        'Get-LiveChartsFilteredSources' =
+            $Fn_GetLiveChartsFilteredSources
+
+        'Update-LiveChartsSeriesSelectorState' =
+            $Fn_UpdateLiveChartsSeriesSelectorState
+
+        'Get-LiveChartsSelectedMetricDefinitions' =
+            $Fn_GetLiveChartsSelectedMetricDefinitions
+
+        'Update-SANPortErrorHistoryChart' =
+            $Fn_UpdateSANPortErrorHistoryChart
+    }
+
+    foreach ($RequiredFunction in $RequiredClosureFunctions.GetEnumerator()) {
+        if ($null -eq $RequiredFunction.Value) {
+            throw (
+                "Required LiveCharts function '$($RequiredFunction.Key)' " +
+                'could not be captured for the viewer closure.'
+            )
+        }
+    }
+
+    # ---------------------------------------------------------------------
     # Helper:
     # Return selected ports belonging to active switch groups.
     # ---------------------------------------------------------------------
@@ -411,7 +463,7 @@ function Initialize-SANPortErrorHistoryView {
         }
 
         $SelectedPorts = @(
-            Get-LiveChartsSelectedSources `
+            & $Fn_GetLiveChartsSelectedSources `
                 -SelectorModel $SourceSelectorModel |
                 Where-Object {
                     [string]$_.SerialNumber -in
@@ -431,7 +483,7 @@ function Initialize-SANPortErrorHistoryView {
     $RefreshSourceSelector = {
 
         $FilteredSources = @(
-            Get-LiveChartsFilteredSources `
+            & $Fn_GetLiveChartsFilteredSources `
                 -SourceSelectorModel $SourceSelectorModel `
                 -GroupSelectorModel $GroupSelectorModel
         )
@@ -461,7 +513,7 @@ function Initialize-SANPortErrorHistoryView {
         # -------------------------------------------------------------
 
         $null =
-            Update-LiveChartsSeriesSelectorState `
+            & $Fn_UpdateLiveChartsSeriesSelectorState `
                 -SelectorModel $SelectorModel
 
         $SeriesSelectorListBox.Items.Refresh()
@@ -471,7 +523,7 @@ function Initialize-SANPortErrorHistoryView {
         # -------------------------------------------------------------
 
         $SelectedMetricDefinitions = @(
-            Get-LiveChartsSelectedMetricDefinitions `
+            & $Fn_GetLiveChartsSelectedMetricDefinitions `
                 -SelectorModel $SelectorModel
         )
 
@@ -590,7 +642,7 @@ function Initialize-SANPortErrorHistoryView {
                 'SAN-Port-Error-History wird geladen …'
 
             $ChartData =
-                Update-SANPortErrorHistoryChart `
+                & $Fn_UpdateSANPortErrorHistoryChart `
                     -CustomerNbr $CustomerNbr `
                     -RowIDs $SelectedRowIDs `
                     -Metric $MetricNames `
@@ -773,7 +825,7 @@ function Initialize-SANPortErrorHistoryView {
         }
 
         $null =
-            Update-LiveChartsSeriesSelectorState `
+            & $Fn_UpdateLiveChartsSeriesSelectorState `
                 -SelectorModel $SelectorModel
 
         $SeriesSelectorListBox.Items.Refresh()
@@ -973,7 +1025,7 @@ function Initialize-SANPortErrorHistoryView {
                 & $RefreshSourceSelector
 
                 $VisibleSources = @(
-                    Get-LiveChartsFilteredSources `
+                    & $Fn_GetLiveChartsFilteredSources `
                         -SourceSelectorModel $SourceSelectorModel `
                         -GroupSelectorModel $GroupSelectorModel
                 )

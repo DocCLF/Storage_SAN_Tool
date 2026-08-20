@@ -1,4 +1,4 @@
-function Get-SANPortErrorHistoryPorts {
+﻿function Get-SANPortErrorHistoryPorts {
     <#
     .SYNOPSIS
         Returns all Brocade SAN ports with available port-error history.

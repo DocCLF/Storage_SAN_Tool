@@ -1,4 +1,4 @@
-function Get-SANPortErrorLiveChartsMetricInfo {
+﻿function Get-SANPortErrorLiveChartsMetricInfo {
     <#
     .SYNOPSIS
         Returns LiveCharts metric definitions for Brocade SAN port errors.

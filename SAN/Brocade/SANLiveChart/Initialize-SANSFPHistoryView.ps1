@@ -1,4 +1,4 @@
-function Initialize-SANSFPHistoryView {
+﻿function Initialize-SANSFPHistoryView {
     <#
     .SYNOPSIS
         Initializes the SAN SFP history viewer.
@@ -379,6 +379,58 @@ function Initialize-SANSFPHistoryView {
     $SourceSelectorListBox.Items.Refresh()
 
     # ---------------------------------------------------------------------
+    # Capture module functions used inside closures.
+    #
+    # Windows PowerShell 5.1 may not resolve functions from the original
+    # module scope when ScriptBlocks are created with GetNewClosure().
+    #
+    # Capture all external functions used by the following closures and
+    # invoke them later with the call operator (&).
+    # ---------------------------------------------------------------------
+
+    $Fn_GetLiveChartsSelectedSources =
+        ${function:Get-LiveChartsSelectedSources}
+
+    $Fn_GetLiveChartsFilteredSources =
+        ${function:Get-LiveChartsFilteredSources}
+
+    $Fn_UpdateLiveChartsSeriesSelectorState =
+        ${function:Update-LiveChartsSeriesSelectorState}
+
+    $Fn_GetLiveChartsSelectedMetricDefinitions =
+        ${function:Get-LiveChartsSelectedMetricDefinitions}
+
+    $Fn_UpdateSANSFPHistoryChart =
+        ${function:Update-SANSFPHistoryChart}
+
+    # Fail early if one of the required functions could not be captured.
+    $RequiredClosureFunctions = [ordered]@{
+        'Get-LiveChartsSelectedSources' =
+            $Fn_GetLiveChartsSelectedSources
+
+        'Get-LiveChartsFilteredSources' =
+            $Fn_GetLiveChartsFilteredSources
+
+        'Update-LiveChartsSeriesSelectorState' =
+            $Fn_UpdateLiveChartsSeriesSelectorState
+
+        'Get-LiveChartsSelectedMetricDefinitions' =
+            $Fn_GetLiveChartsSelectedMetricDefinitions
+
+        'Update-SANSFPHistoryChart' =
+            $Fn_UpdateSANSFPHistoryChart
+    }
+
+    foreach ($RequiredFunction in $RequiredClosureFunctions.GetEnumerator()) {
+        if ($null -eq $RequiredFunction.Value) {
+            throw (
+                "Required LiveCharts function '$($RequiredFunction.Key)' " +
+                'could not be captured for the viewer closure.'
+            )
+        }
+    }
+
+    # ---------------------------------------------------------------------
     # Helper: selected ports
     # ---------------------------------------------------------------------
 
@@ -399,7 +451,7 @@ function Initialize-SANSFPHistoryView {
         }
 
         $SelectedPorts = @(
-            Get-LiveChartsSelectedSources `
+            & $Fn_GetLiveChartsSelectedSources `
                 -SelectorModel $SourceSelectorModel |
                 Where-Object {
                     [string]$_.SerialNumber -in
@@ -418,7 +470,7 @@ function Initialize-SANSFPHistoryView {
     $RefreshSourceSelector = {
 
         $FilteredSources = @(
-            Get-LiveChartsFilteredSources `
+            & $Fn_GetLiveChartsFilteredSources `
                 -SourceSelectorModel $SourceSelectorModel `
                 -GroupSelectorModel $GroupSelectorModel
         )
@@ -447,7 +499,7 @@ function Initialize-SANSFPHistoryView {
         # -------------------------------------------------------------
 
         $null =
-            Update-LiveChartsSeriesSelectorState `
+            & $Fn_UpdateLiveChartsSeriesSelectorState `
                 -SelectorModel $SelectorModel
 
         $SeriesSelectorListBox.Items.Refresh()
@@ -457,7 +509,7 @@ function Initialize-SANSFPHistoryView {
         # -------------------------------------------------------------
 
         $SelectedMetricDefinitions = @(
-            Get-LiveChartsSelectedMetricDefinitions `
+            & $Fn_GetLiveChartsSelectedMetricDefinitions `
                 -SelectorModel $SelectorModel
         )
 
@@ -558,7 +610,7 @@ function Initialize-SANSFPHistoryView {
                 'SAN-SFP-History wird geladen …'
 
             $ChartData =
-                Update-SANSFPHistoryChart `
+                & $Fn_UpdateSANSFPHistoryChart `
                     -CustomerNbr $CustomerNbr `
                     -RowIDs $SelectedRowIDs `
                     -Metric $MetricNames `
@@ -739,7 +791,7 @@ function Initialize-SANSFPHistoryView {
         }
 
         $null =
-            Update-LiveChartsSeriesSelectorState `
+            & $Fn_UpdateLiveChartsSeriesSelectorState `
                 -SelectorModel $SelectorModel
 
         $SeriesSelectorListBox.Items.Refresh()
@@ -939,7 +991,7 @@ function Initialize-SANSFPHistoryView {
                 & $RefreshSourceSelector
 
                 $VisibleSources = @(
-                    Get-LiveChartsFilteredSources `
+                    & $Fn_GetLiveChartsFilteredSources `
                         -SourceSelectorModel $SourceSelectorModel `
                         -GroupSelectorModel $GroupSelectorModel
                 )

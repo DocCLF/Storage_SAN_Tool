@@ -164,7 +164,7 @@ function SST_CustomerDeviceDBCreateTable {
             }
             <# VolumeAnalysisTable #>
             try {
-                $SST_SQLiteTabelQuery = "CREATE TABLE IF NOT EXISTS IBMSTOVolumeAnalysisTable (ID INTEGER PRIMARY KEY AUTOINCREMENT,CustomerNbr TEXT NOT NULL,RowID TEXT NOT NULL,VolumeID TEXT NOT NULL,VolumeName TEXT,State TEXT,AnalysisTime TEXT,Capacity INTEGER,`
+                $SST_SQLiteTabelQuery = "CREATE TABLE IF NOT EXISTS IBMSTOVolumeAnalysisTable (ID INTEGER PRIMARY KEY AUTOINCREMENT,CustomerNbr TEXT NOT NULL,RowID TEXT NOT NULL,VolumeID TEXT NOT NULL,VdiskUID TEXT,VolumeName TEXT,State TEXT,AnalysisTime TEXT,Capacity INTEGER,`
                                             ThinSize INTEGER,ThinSavings INTEGER,ThinSavingsRatio REAL,CompressedSize INTEGER,CompressionSavings INTEGER,CompressionSavingsRatio REAL,TotalSavings INTEGER,TotalSavingsRatio REAL,MarginOfError REAL,WWNN TEXT NOT NULL,`
                                             SerialNumber TEXT NOT NULL,TimeStamp TEXT NOT NULL);"
             

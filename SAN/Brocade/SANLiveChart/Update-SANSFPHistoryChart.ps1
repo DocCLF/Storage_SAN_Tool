@@ -1,4 +1,4 @@
-function Update-SANSFPHistoryChart {
+﻿function Update-SANSFPHistoryChart {
     <#
     .SYNOPSIS
         Builds the LiveCharts model for SAN SFP history.

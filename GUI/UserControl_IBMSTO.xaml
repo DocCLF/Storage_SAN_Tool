@@ -723,118 +723,160 @@
                          Margin="5,8,5,0"
                          Visibility="{Binding IsChecked, Converter={StaticResource BooleanToVisibilityConverter}}"/>
 
-                  <!-- IP Volume Grid -->
-                    <DataGrid AutoGenerateColumns="False"
-                              ColumnWidth="*"
-                              HorizontalAlignment="Stretch"
-                              Margin="5"
-                              MaxWidth="1024"
-                              MaxHeight="460"
-                              ItemsSource="{Binding VolumeRows}"
-                              CanUserAddRows="False"
-                              HeadersVisibility="Column"
-                              GridLinesVisibility="Horizontal"
-                              Visibility="{Binding IsChecked,
-                                                   Converter={StaticResource BooleanToVisibilityConverter},
-                                                   FallbackValue=Collapsed}">
+                <!-- IBM Volume Grid -->
+                <DataGrid AutoGenerateColumns="False"
+                          ColumnWidth="*"
+                          HorizontalAlignment="Stretch"
+                          Margin="5"
+                          MaxWidth="1024"
+                          MaxHeight="460"
+                          ItemsSource="{Binding VolumeRows}"
+                          CanUserAddRows="False"
+                          HeadersVisibility="Column"
+                          GridLinesVisibility="Horizontal"
 
-                        <DataGrid.GroupStyle>
-                            <GroupStyle>
-                                <GroupStyle.ContainerStyle>
-                                    <Style TargetType="{x:Type GroupItem}">
-                                        <Setter Property="Margin"
-                                                Value="0,4,0,4"/>
-                                        <Setter Property="Template">
-                                            <Setter.Value>
-                                                <ControlTemplate TargetType="{x:Type GroupItem}">
-                                                    <Expander IsExpanded="True">
-                                                        <Expander.Header>
-                                                            <Border Background="LightSteelBlue"
-                                                                    BorderBrush="SteelBlue"
-                                                                    BorderThickness="0,0,0,1"
-                                                                    Padding="8,4">
-                                                                <StackPanel Orientation="Horizontal">
-                                                                    <TextBlock Text="Volume: "
-                                                                               FontWeight="Bold"/>
-                                                                    <TextBlock Text="{Binding Items[0].GroupName}"
-                                                                               FontWeight="Bold"/>
-                                                                    <TextBlock Text="  |  Einträge: "
-                                                                               Margin="12,0,0,0"/>
-                                                                    <TextBlock Text="{Binding ItemCount}"/>
-                                                                </StackPanel>
-                                                            </Border>
-                                                        </Expander.Header>
-                                                        <ItemsPresenter/>
-                                                    </Expander>
-                                                </ControlTemplate>
-                                            </Setter.Value>
-                                        </Setter>
-                                    </Style>
-                                </GroupStyle.ContainerStyle>
-                            </GroupStyle>
-                        </DataGrid.GroupStyle>
+                          EnableRowVirtualization="True"
+                          EnableColumnVirtualization="True"
+                          VirtualizingPanel.IsVirtualizing="True"
+                          VirtualizingPanel.VirtualizationMode="Recycling"
+                          ScrollViewer.CanContentScroll="True"
 
-                        <DataGrid.RowStyle>
-                            <Style TargetType="DataGridRow">
-                                <Setter Property="ToolTip"
-                                        Value="{Binding RowType}"/>
-                                <Style.Triggers>
-                                    <!-- Online-Volume -->
-                                    <MultiDataTrigger>
-                                        <MultiDataTrigger.Conditions>
-                                            <Condition Binding="{Binding Status}"
-                                                       Value="online"/>
-                                            <Condition Binding="{Binding RowType}"
-                                                       Value="Volume"/>
-                                        </MultiDataTrigger.Conditions>
+                          Visibility="{Binding IsChecked,
+                                               Converter={StaticResource BooleanToVisibilityConverter},
+                                               FallbackValue=Collapsed}">
 
-                                        <Setter Property="Background"
-                                                Value="LightGreen"/>
-                                    </MultiDataTrigger>
-                                    <!-- Offline-Volume -->
-                                    <MultiDataTrigger>
-                                        <MultiDataTrigger.Conditions>
-                                            <Condition Binding="{Binding Status}"
-                                                       Value="offline"/>
-                                            <Condition Binding="{Binding RowType}"
-                                                       Value="Volume"/>
-                                        </MultiDataTrigger.Conditions>
+                    <!--
+                        No GroupStyle here anymore.
 
-                                        <Setter Property="Background"
-                                                Value="Red"/>
-                                    </MultiDataTrigger>
-                                    <!-- Visually Distinguish Snapshots -->
-                                    <DataTrigger Binding="{Binding RowType}"
-                                                 Value="Snapshot">
+                        Normal volumes are displayed as normal DataGrid rows.
+                        Volume copies and snapshots remain directly below their
+                        associated volume because IBM_RESTVolumeInfo already creates
+                        the required RowOrder.
+                    -->
+                    <DataGrid.RowStyle>
+                        <Style TargetType="DataGridRow">
 
-                                        <Setter Property="Background"
-                                                Value="Gainsboro"/>
+                            <!-- Useful while developing/debugging -->
+                            <Setter Property="ToolTip"
+                                    Value="{Binding RowType}"/>
 
-                                        <Setter Property="FontStyle"
-                                                Value="Italic"/>
+                            <Style.Triggers>
 
-                                        <Setter Property="Foreground"
-                                                Value="DarkSlateGray"/>
-                                    </DataTrigger>
+                                <!-- ================================ -->
+                                <!-- NORMAL VOLUME                    -->
+                                <!-- ================================ -->
+                                <!-- Online Volume -->
+                                <MultiDataTrigger>
+                                    <MultiDataTrigger.Conditions>
+                                        <Condition Binding="{Binding Status}" Value="online"/>
+                                        <Condition Binding="{Binding RowType}" Value="Volume"/>
+                                    </MultiDataTrigger.Conditions>
 
-                                </Style.Triggers>
-                            </Style>
-                        </DataGrid.RowStyle>
-                        <DataGrid.Columns>
-                            <DataGridTextColumn Width="Auto" Header="Volume / Snapshot" Binding="{Binding DisplayName}" IsReadOnly="True"/>
-                            <DataGridTextColumn Width="Auto" Header="IO Group" Binding="{Binding IOGroupName}" IsReadOnly="True"/>
-                            <DataGridTextColumn Width="Auto" Header="Status" Binding="{Binding Status}" IsReadOnly="True"/>
-                            <DataGridTextColumn Width="Auto" Header="Pool" Binding="{Binding MdiskGrpName}" IsReadOnly="True"/>
-                            <DataGridTextColumn Width="Auto" Header="Volume Grp" Binding="{Binding VolumeGroupName}" IsReadOnly="True"/>
-                            <DataGridTextColumn Width="Auto" Header="Capacity" Binding="{Binding Capacity}" IsReadOnly="True"/>
-                            <DataGridTextColumn Width="Auto" Header="Protocol" Binding="{Binding Protocol}" IsReadOnly="True"/>
-                            <DataGridTextColumn Width="Auto" Header="VolumeType" Binding="{Binding VolumeType}" IsReadOnly="True"/>
-                            <DataGridTextColumn Width="Auto" Header="Safeguarded" Binding="{Binding Safeguarded}" IsReadOnly="True"/>
-                            <DataGridTextColumn Width="Auto" Header="Snapshot Time" Binding="{Binding SnapshotTime}" IsReadOnly="True"/>
-                            <DataGridTextColumn Width="Auto" Header="Expiration" Binding="{Binding ExpirationTime}" IsReadOnly="True"/>
-                            <DataGridTextColumn Width="Auto" Header="Volume UID / Snapshot ID" Binding="{Binding VdiskUID}" IsReadOnly="True"/>
-                        </DataGrid.Columns>
-                    </DataGrid>
+                                    <Setter Property="Background" Value="LightGreen"/>
+                                </MultiDataTrigger>
+
+                                <!-- Offline Volume -->
+                                <MultiDataTrigger>
+                                    <MultiDataTrigger.Conditions>
+                                        <Condition Binding="{Binding Status}" Value="offline"/>
+                                        <Condition Binding="{Binding RowType}" Value="Volume"/>
+                                    </MultiDataTrigger.Conditions>
+
+                                    <Setter Property="Background" Value="Red"/>
+                                </MultiDataTrigger>
+
+
+                                <!-- ================================ -->
+                                <!-- VOLUME COPY                      -->
+                                <!-- ================================ -->
+                                <!-- Child row representing a volume copy -->
+                                <DataTrigger Binding="{Binding RowType}" Value="VolumeCopy">
+                                    <Setter Property="Background" Value="WhiteSmoke"/>
+                                    <Setter Property="Foreground" Value="DarkSlateGray"/>
+                                </DataTrigger>
+
+
+                                <!-- ================================ -->
+                                <!-- SNAPSHOT                         -->
+                                <!-- ================================ -->
+                                <DataTrigger Binding="{Binding RowType}" Value="Snapshot">
+                                    <Setter Property="Background" Value="Gainsboro"/>
+                                    <Setter Property="FontStyle" Value="Italic"/>
+                                    <Setter Property="Foreground" Value="DarkSlateGray"/>
+                                </DataTrigger>
+
+                            </Style.Triggers>
+                        </Style>
+                    </DataGrid.RowStyle>
+
+
+                    <DataGrid.Columns>
+
+                <DataGridTemplateColumn Width="Auto"
+                                        Header="Volume / Snapshot"
+                                        IsReadOnly="True">
+
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+
+                            <StackPanel Orientation="Horizontal">
+
+                                <ToggleButton Width="18"
+                                              Height="18"
+                                              Margin="0,0,4,0"
+                                              Padding="0"
+                                              Focusable="False"
+                                              Uid="VolumeExpandButton"
+                                              IsChecked="{Binding IsExpanded}"
+                                              Tag="{Binding}">
+
+                                    <ToggleButton.Style>
+                                        <Style TargetType="ToggleButton">
+
+                                            <!-- Default: hidden and collapsed -->
+                                            <Setter Property="Visibility" Value="Collapsed"/>
+                                            <Setter Property="Content" Value="▶"/>
+
+                                            <Style.Triggers>
+
+                                                <!-- Only volumes with children get an expand button -->
+                                                <DataTrigger Binding="{Binding HasChildren}" Value="True">
+                                                    <Setter Property="Visibility" Value="Visible"/>
+                                                </DataTrigger>
+
+                                                <!-- Use the actual ToggleButton state for the symbol -->
+                                                <Trigger Property="IsChecked" Value="True">
+                                                    <Setter Property="Content" Value="▼"/>
+                                                </Trigger>
+
+                                            </Style.Triggers>
+
+                                        </Style>
+                                    </ToggleButton.Style>
+
+                                </ToggleButton>
+
+                                <TextBlock Text="{Binding DisplayName}" VerticalAlignment="Center"/>
+
+                            </StackPanel>
+
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+
+                </DataGridTemplateColumn>
+                        <DataGridTextColumn Width="Auto" Header="IO Group" Binding="{Binding IOGroupName}" IsReadOnly="True"/>
+                        <DataGridTextColumn Width="Auto" Header="Status" Binding="{Binding Status}" IsReadOnly="True"/>
+                        <DataGridTextColumn Width="Auto" Header="Pool" Binding="{Binding MdiskGrpName}" IsReadOnly="True"/>
+                        <DataGridTextColumn Width="Auto" Header="Volume Grp" Binding="{Binding VolumeGroupName}" IsReadOnly="True"/>
+                        <DataGridTextColumn Width="Auto" Header="Capacity" Binding="{Binding Capacity}" IsReadOnly="True"/>
+                        <DataGridTextColumn Width="Auto" Header="Protocol" Binding="{Binding Protocol}" IsReadOnly="True"/>
+                        <DataGridTextColumn Width="Auto" Header="VolumeType" Binding="{Binding VolumeType}" IsReadOnly="True"/>
+                        <DataGridTextColumn Width="Auto" Header="Safeguarded" Binding="{Binding Safeguarded}" IsReadOnly="True"/>
+                        <DataGridTextColumn Width="Auto" Header="Snapshot Time" Binding="{Binding SnapshotTime}" IsReadOnly="True"/>
+                        <DataGridTextColumn Width="Auto" Header="Expiration" Binding="{Binding ExpirationTime}" IsReadOnly="True"/>
+                        <DataGridTextColumn Width="Auto" Header="Volume UID / Snapshot ID" Binding="{Binding VdiskUID}" IsReadOnly="True"/>
+                    </DataGrid.Columns>
+                </DataGrid>
                   </StackPanel>
                 </DataTemplate>
               </ItemsControl.ItemTemplate>

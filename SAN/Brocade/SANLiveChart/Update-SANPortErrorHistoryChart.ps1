@@ -1,4 +1,4 @@
-function Update-SANPortErrorHistoryChart {
+﻿function Update-SANPortErrorHistoryChart {
     <#
     .SYNOPSIS
         Builds the LiveCharts data model for one or multiple Brocade SAN ports.
