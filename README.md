@@ -1,11 +1,16 @@
 # Foreword/personal comment
-
-<ins>Before connecting to your devices</ins> with the tool for the first time,<br/> it has proven useful to do this beforehand from a PowerShell console via putty in order to save the host key properly.
-Although it is possible to have the tool do this itself, in my opinion this is not efficient or clean enough, so it will only be included in a later version.
-
-<ins>**SSH via key is currently not supported!**</ins><br/>
+<ins>**SSH via key is not supported!**</ins><br/>
 I am aware that not everyone likes this or that the use of plink with user/password prompts seems too insecure, <br/>
-which is why I strongly recommend <ins>**ONLY using MONITORING USERS**</ins>, which are completely sufficient for this module!
+which is why I strongly recommend <ins>**ONLY using MONITORING USERS**</ins>, which are completely sufficient for this module!  
+
+<ins>Note on Future Connection Methods</ins><br/>
+Starting with version 1.4.x, the focus will increasingly shift to communication via the REST API. The 1.4.x version series will also be the last to support plink/SSH as a fallback option.
+Starting with version 1.5.x, all key functions will access supported systems exclusively via the REST API using token-based authentication.<br/>
+
+
+> [!Important]
+> **The previous connection method via plink/SSH will no longer be supported starting with version 1.5.x.**
+
 
 
 # How to install (offline, because the module is not yet available on PowerShell Gallery)
@@ -40,7 +45,7 @@ Example:
 
 Depending on your system settings, different messages may be displayed, so it may be necessary to take the following measures.
 
-Starting with version 1.3.x, it is necessary to unlock the DB files!
+Starting with version 1.3.x, it may be necessary to unlock the DB files; please pay attention to the output from the prompt.
 
 Shown here in a PowerShell 5.1 session, but this can be adopted for PowerShell 7 with customized paths.
 Please note that this is an administrative session!
