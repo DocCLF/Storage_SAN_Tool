@@ -15,6 +15,7 @@ function IBM_SSHBackUpConfig {
         [string]$TD_Device_DeviceIP,
         [string]$TD_Device_PW,
         [string]$TD_Device_SSHKeyPath,
+        $TD_Device_ConnectionTyp = $null,
         [string]$TD_Exportpath = ".\"
     )
     
@@ -37,12 +38,17 @@ function IBM_SSHBackUpConfig {
         Start-Sleep -Seconds 0.5
         $TD_BUResault = $TD_BUInfo.TrimStart('.')
         pscp -unsafe -pw $TD_Device_PW $TD_Device_UserName@$($TD_Device_DeviceIP):/dumps/svc.config.backup* $TD_Exportpath
+
+        if((Get-ChildItem -Path "$TD_Exportpath" -Include svc.config.backup.*).Name | ForEach-Object {Test-Path $TD_Exportpath -Include $_}){
+            pscp -unsafe -pw $TD_Device_PW $TD_Device_UserName@$($TD_Device_DeviceIP):/dumps/svcconfig/svc.config.backup* $TD_Exportpath
+        }
+        $CountedFiles = (Get-ChildItem -Path "$TD_Exportpath\*" -Include svc.config.backup.*).Count
     }
 
     end {
         $IBM_STOSysBackUpInfos.Add('RowID',"$($TD_Device_UserName.count)|$TD_Line_ID")
         $IBM_STOSysBackUpInfos.Add('DeviceName',$TD_Device_DeviceName)
-        $IBM_STOSysBackUpInfos.Add('BackUpMsg',$TD_BUResault)
+        $IBM_STOSysBackUpInfos.Add('BackUpMsg',"$TD_BUResault`n" + " $CountedFiles Files in: $TD_Exportpath")
         Close-ProgressBar -ProgressBar $ProgressBar
         SST_ToolMessageCollector -TD_ToolMSGCollector "IBM_BackUpConfig End block" -TD_ToolMSGType Debug
         return $IBM_STOSysBackUpInfos
