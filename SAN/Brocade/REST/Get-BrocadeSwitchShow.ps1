@@ -12,21 +12,27 @@ function Get-BrocadeSwitchShow {
         $Device,
         $RowCounter = 0
     )
-
+    $PB = New-ProgressBar
     $FCPorts    = Get-BrocadeFcPorts -Device $Device
+    Write-ProgressBar -ProgressBar $PB -Activity "Get-BrocadeFcPorts completed" -PercentComplete 5
     $SFP        = Get-BrocadeSfp -Device $Device
+    Write-ProgressBar -ProgressBar $PB -Activity "Get-BrocadeSfp completed" -PercentComplete 18
     $NameServer = Get-BrocadeNameServer -Device $Device
+    Write-ProgressBar -ProgressBar $PB -Activity "Get-BrocadeNameServer completed" -PercentComplete 36
     $Aliases    = Get-BrocadeAliases -Device $Device
+    Write-ProgressBar -ProgressBar $PB -Activity "Get-BrocadeAliases completed" -PercentComplete 40
     <# needed for DB #>
     $SwitchInfo = Get-BrocadeSwitchInfo -Device $Device
+    Write-ProgressBar -ProgressBar $PB -Activity "Get-BrocadeSwitchInfo completed" -PercentComplete 52
     $ChassisInfo = Get-BrocadeChassisInfo -Device $Device
+    Write-ProgressBar -ProgressBar $PB -Activity "Get-BrocadeChassisInfo completed" -PercentComplete 59
     $SwitchWWNN = $SwitchInfo.name
     $SerialNumber = $ChassisInfo.'vendor-serial-number'
     
     <# needed for VFID #>
     $VFID = if($Device.VFID){$Device.VFID}else{""}
     $VFIDDisplay = if($VFID){ $VFID }else{""}
-
+    Write-ProgressBar -ProgressBar $PB -Activity "Build the Object, start" -PercentComplete 68
     $FOS_SwitchShowInfo = foreach($Port in $FCPorts){
         $RowCounter++
         $RowID = "$($FCPorts.Count)|$($Device.ID)|$RowCounter"
@@ -164,6 +170,7 @@ function Get-BrocadeSwitchShow {
             RowID = $RowID
         }
     }
+    Write-ProgressBar -ProgressBar $PB -Activity "Build the Object, end" -PercentComplete 80
         try {
             SST_CustomerSANDBInsertTable -SST_InfoType "SANPortInfo" -SST_CollectedInformations $FOS_SwitchShowInfo
             $FOS_SwitchShowInfo | Export-Csv -Path "$($TD_TB_ExportPath.Text)\FOS_SwitchShowInfo_$($SerialNumber)_$(Get-Date -Format "yyyy-MM-dd").csv" -NoTypeInformation -Append
@@ -171,6 +178,8 @@ function Get-BrocadeSwitchShow {
         catch {
             <#Do this if a terminating exception happens#>
             SST_ToolMessageCollector -TD_ToolMSGCollector "FOS_SwitchShowInfo: $($_.Exception.Message)" -TD_ToolMSGType "Warning" -TD_Shown "no"
+        }finally{
+            Close-ProgressBar -ProgressBar $PB
         }
         return $FOS_SwitchShowInfo
 }

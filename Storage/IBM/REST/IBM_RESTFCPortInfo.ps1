@@ -65,7 +65,7 @@ function IBM_RESTFCPortInfo {
 
             for ($ni = 0; $ni -lt $inbr; $ni++) {
             <# Max requests/sec to command endpoints = 10 -.- #>
-            if ($ni % 8 -eq 0) { Start-Sleep -Milliseconds 1500 }
+            if (($ni -ge 8) -and ($ni % 8 -eq 0)) { Start-Sleep -Milliseconds 1500 }
                 $TD_LSPortFCWWPN = $($TD_SecondDeviceInformation.WWPN[$ni])
                 $TD_LSPortFCWWPNEnd = $TD_LSPortFCWWPN.Substring($TD_LSPortFCWWPN.Length -4)
                 
