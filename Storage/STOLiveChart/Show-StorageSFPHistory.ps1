@@ -35,7 +35,6 @@ function Show-StorageSFPHistory {
     # ---------------------------------------------------------------------
     # Initialize LiveCharts
     # ---------------------------------------------------------------------
-
     if (-not (Initialize-LiveCharts)) {
         throw 'LiveCharts could not be initialized.'
     }
@@ -43,7 +42,6 @@ function Show-StorageSFPHistory {
     # ---------------------------------------------------------------------
     # Load required WPF assemblies
     # ---------------------------------------------------------------------
-
     Add-Type -AssemblyName PresentationFramework
     Add-Type -AssemblyName PresentationCore
     Add-Type -AssemblyName WindowsBase
@@ -51,65 +49,35 @@ function Show-StorageSFPHistory {
     # ---------------------------------------------------------------------
     # Load shared History Viewer XAML
     # ---------------------------------------------------------------------
+    $Xaml = Get-LiveChartsHistoryViewXaml -WindowTitle 'Storage SFP History' -SourceLabel 'Storage-Port'
 
-    $Xaml =
-        Get-LiveChartsHistoryViewXaml `
-            -WindowTitle 'Storage SFP History' `
-            -SourceLabel 'Storage-Port'
-
-    $XmlReader =
-        [System.Xml.XmlReader]::Create(
-            (
-                New-Object System.IO.StringReader(
-                    $Xaml
-                )
-            )
-        )
+    $XmlReader = [System.Xml.XmlReader]::Create((New-Object System.IO.StringReader($Xaml)))
 
     try {
-
-        $Window =
-            [System.Windows.Markup.XamlReader]::Load(
-                $XmlReader
-            )
-    }
-    finally {
-
-        if ($null -ne $XmlReader) {
-            $XmlReader.Dispose()
-        }
+        $Window = [System.Windows.Markup.XamlReader]::Load($XmlReader)
+    }finally {
+        if ($null -ne $XmlReader) {$XmlReader.Dispose()}
     }
 
     # ---------------------------------------------------------------------
     # Load application styles
     # ---------------------------------------------------------------------
-
     $StyleFiles = @(
         (
-            Join-Path `
-                $PSRootPath `
-                'Resources\Styles\ColorStyle.xaml'
+            Join-Path $PSRootPath 'Resources\Styles\ColorStyle.xaml'
         ),
         (
-            Join-Path `
-                $PSRootPath `
-                'Resources\Styles\OtherControlStyle.xaml'
+            Join-Path $PSRootPath 'Resources\Styles\OtherControlStyle.xaml'
         ),
         (
-            Join-Path `
-                $PSRootPath `
-                'Resources\Styles\TextBoxStyle.xaml'
+            Join-Path $PSRootPath 'Resources\Styles\TextBoxStyle.xaml'
         ),
         (
-            Join-Path `
-                $PSRootPath `
-                'Resources\Styles\ButtonStyle.xaml'
+            Join-Path $PSRootPath 'Resources\Styles\ButtonStyle.xaml'
         )
     )
 
-    Import-WpfResourceDictionaries `
-        -Target $Window `
-        -Path $StyleFiles
+    Import-WpfResourceDictionaries -Target $Window -Path $StyleFiles
 
     # ---------------------------------------------------------------------
     # Resolve legacy controls
@@ -117,77 +85,31 @@ function Show-StorageSFPHistory {
     # These still exist in the shared XAML because other viewers may use
     # them. Initialize-StorageSFPHistoryView collapses them for SFP.
     # ---------------------------------------------------------------------
-
-    $CB_Source =
-        $Window.FindName(
-            'CB_Source'
-        )
-
-    $CHK_ComparisonMode =
-        $Window.FindName(
-            'CHK_ComparisonMode'
-        )
-
-    $LB_ComparisonSources =
-        $Window.FindName(
-            'LB_ComparisonSources'
-        )
+    $CB_Source = $Window.FindName('CB_Source')
+    $CHK_ComparisonMode = $Window.FindName('CHK_ComparisonMode')
+    $LB_ComparisonSources = $Window.FindName('LB_ComparisonSources')
 
     # ---------------------------------------------------------------------
     # Resolve generic selector controls
     # ---------------------------------------------------------------------
-
     # Storage Systems / Source Groups
-    $SP_SourceGroupSelector =
-        $Window.FindName(
-            'SP_SourceGroupSelector'
-        )
-
-    $LB_SourceGroupSelector =
-        $Window.FindName(
-            'LB_SourceGroupSelector'
-        )
+    $SP_SourceGroupSelector = $Window.FindName('SP_SourceGroupSelector')
+    $LB_SourceGroupSelector = $Window.FindName('LB_SourceGroupSelector')
 
     # FC Ports / Sources
-    $LB_SourceSelector =
-        $Window.FindName(
-            'LB_SourceSelector'
-        )
+    $LB_SourceSelector = $Window.FindName('LB_SourceSelector')
 
     # Metrics / Series
-    $LB_SeriesSelector =
-        $Window.FindName(
-            'LB_SeriesSelector'
-        )
+    $LB_SeriesSelector = $Window.FindName('LB_SeriesSelector')
 
     # ---------------------------------------------------------------------
     # Resolve common viewer controls
     # ---------------------------------------------------------------------
-
-    $CB_Metric =
-        $Window.FindName(
-            'CB_Metric'
-        )
-
-    $CB_TimeRange =
-        $Window.FindName(
-            'CB_TimeRange'
-        )
-
-    $BTN_Refresh =
-        $Window.FindName(
-            'BTN_Refresh'
-        )
-
-    $TB_Status =
-        $Window.FindName(
-            'TB_Status'
-        )
-
-    $Chart =
-        $Window.FindName(
-            'Chart'
-        )
+    $CB_Metric = $Window.FindName('CB_Metric')
+    $CB_TimeRange = $Window.FindName('CB_TimeRange')
+    $BTN_Refresh = $Window.FindName('BTN_Refresh')
+    $TB_Status = $Window.FindName('TB_Status')
+    $Chart = $Window.FindName('Chart')
 
     # ---------------------------------------------------------------------
     # Validate required controls
@@ -195,7 +117,6 @@ function Show-StorageSFPHistory {
     # This catches mismatches between shared XAML and viewer code before
     # Initialize-StorageSFPHistoryView is called.
     # ---------------------------------------------------------------------
-
     $RequiredControls = @{
         CB_Source              = $CB_Source
         CHK_ComparisonMode     = $CHK_ComparisonMode
@@ -216,11 +137,7 @@ function Show-StorageSFPHistory {
     foreach ($ControlName in $RequiredControls.Keys) {
 
         if ($null -eq $RequiredControls[$ControlName]) {
-
-            throw (
-                "Das benötigte Control '$ControlName' " +
-                'wurde im XAML nicht gefunden.'
-            )
+            SST_ToolMessageCollector -TD_ToolMSGCollector ("Das benötigte Control $ControlName" +  "wurde im XAML nicht gefunden.") -TD_ToolMSGType Error -TD_Shown yes
         }
     }
 
@@ -229,17 +146,14 @@ function Show-StorageSFPHistory {
     #
     # Important:
     #
-    # The generic Initialize parameters are intentionally named
-    # GroupSelectorListBox / GroupSelectorPanel.
+    # The generic Initialize parameters are intentionally named GroupSelectorListBox / GroupSelectorPanel.
     #
     # Here they receive the actual XAML controls:
     #
     #   GroupSelectorListBox -> LB_SourceGroupSelector
     #   GroupSelectorPanel   -> SP_SourceGroupSelector
     # ---------------------------------------------------------------------
-
-    $Initialized =
-        Initialize-StorageSFPHistoryView `
+    $Initialized = Initialize-StorageSFPHistoryView `
             -CustomerNbr $CustomerNbr `
             -ViewRoot $Window `
             -PortComboBox $CB_Source `
@@ -254,33 +168,17 @@ function Show-StorageSFPHistory {
             -StatusTextBlock $TB_Status `
             -RefreshButton $BTN_Refresh
 
-    if (-not $Initialized) {
-        return
-    }
+    if (-not $Initialized) {return}
 
     # ---------------------------------------------------------------------
     # Show viewer
     # ---------------------------------------------------------------------
-
     try {
-
-        $Window.ShowDialog() |
-            Out-Null
-    }
-    catch {
-
-        Write-Host (
-            'Storage SFP History ShowDialog Fehler: ' +
-            $_.Exception.Message
-        ) -ForegroundColor Red
-
-        Write-Host `
-            $_.InvocationInfo.PositionMessage
-
-        Write-Host `
-            $_.ScriptStackTrace `
-            -ForegroundColor DarkGray
-
+        $Window.ShowDialog() | Out-Null
+    }catch {
+        SST_ToolMessageCollector -TD_ToolMSGCollector ("Storage SFP History ShowDialog Fehler:" + "$($_.Exception.Message)") -TD_ToolMSGType Error -TD_Shown yes
+        Write-Host $_.InvocationInfo.PositionMessage
+        Write-Host $_.ScriptStackTrace -ForegroundColor DarkGray
         throw
     }
 }
