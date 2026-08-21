@@ -1410,8 +1410,9 @@
 
                   <TextBlock Text="{Binding BackUpInfoText}"
                              TextWrapping="Wrap"
-                             MaxWidth ="400"
+                             MaxWidth ="480"
                              Style="{DynamicResource MainTextblockStyle}"
+                             FontSize="16"
                              Margin="5,8,5,0"
                              Visibility="{Binding IsChecked, Converter={StaticResource BooleanToVisibilityConverter}}"/>
                 </StackPanel>

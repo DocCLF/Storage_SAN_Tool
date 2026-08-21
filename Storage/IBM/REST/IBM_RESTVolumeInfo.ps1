@@ -55,7 +55,7 @@ function IBM_RESTVolumeInfo {
 
         $TD_VDiskFuncResault = for ($i = 0; $i -lt $imax; $i++) {
             <# Max requests/sec to command endpoints = 10 -.- #>
-            if ($i % 8 -eq 0) { Start-Sleep -Milliseconds 1500 }
+            if (($i -ge 12) -and ($i % 12 -eq 0)) { Start-Sleep -Milliseconds 1200 }
             <# Node Info#>
             $TD_VDiskinfo = "" | Select-Object RowID,ID,Name,IOGroupID,IOGroupName,Status,MdiskGrpID,MdiskGrpName,Capacity,Type,FCID,FCName,`
                                             RCID,RCName,VdiskUID,FCMapCount,CopyCount,FastWriteState,SECopyCount,RCChange,CompressedCopyCount,ParentMdiskGrpID,ParentMdiskGrpName,`
@@ -224,16 +224,10 @@ function IBM_RESTVolumeInfo {
         Close-ProgressBar -ProgressBar $ProgressBar
         if($TD_Export -eq "yes"){
 
-            if([string]$TD_Exportpath -ne "$PSCommandPath\ToolLog\"){
+            if([string]::IsNullOrWhiteSpace($TD_Exportpath)){
                 $TD_VDiskFuncResault | Export-Csv -Path $TD_Exportpath\$($TD_Line_ID)_$($IBMSTOSN)_Volume_Result_$(Get-Date -Format "yyyy-MM-dd").csv -NoTypeInformation
                 SST_ToolMessageCollector -TD_ToolMSGCollector "$TD_Exportpath\$($TD_Line_ID)_$($IBMSTOSN)_Volume_Result_$(Get-Date -Format "yyyy-MM-dd").csv" -TD_ToolMSGType Debug
-            }else {
-                $TD_VDiskFuncResault | Export-Csv -Path $PSCommandPath\ToolLog\$($TD_Line_ID)_$($IBMSTOSN)_Volume_Result_$(Get-Date -Format "yyyy-MM-dd").csv -NoTypeInformation
-                SST_ToolMessageCollector -TD_ToolMSGCollector "$PSCommandPath\ToolLog\$($TD_Line_ID)_$($IBMSTOSN)_Volume_Result_$(Get-Date -Format "yyyy-MM-dd").csv" -TD_ToolMSGType Debug
             }
-        }else {
-            <# output on the promt #>
-            return $TD_VDiskFuncResault
         }
         return $TD_VDiskFuncResault
     }

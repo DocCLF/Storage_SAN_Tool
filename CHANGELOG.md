@@ -11,13 +11,13 @@
     * switched to Avalonia to support additional operating systems
 
 All notable changes to this project will be documented in this file.
-# [v1.4.071_beta] - 2026-08-05
+# [v1.4.1] - 2026-08-18
 ### Added 
 - Support for IBM Tape (only via REST)
 - REST Function for IBM Storage
 - REST Function for IBM Power
 - REST Function for IBM Tape
-- REST Function for Brocade SAN Switches (min. FOS 9.0 / lower FOS 9.0 is using cli-Standard (but cil will removed))
+- REST Function for Brocade SAN Switches (min. FOS 9.0 / lower FOS 9.0 is using cli-Standard (but cil will removed in v1.5.x))
 - UseBasicParsing for Powershell 5.1 
 - TextBox for Customer Number (who is needed for Local DB)
 - Search filters have been added where useful.
