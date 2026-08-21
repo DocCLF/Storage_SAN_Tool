@@ -37,7 +37,7 @@ function Get-LiveChartsTimeRanges {
             Duration     = [TimeSpan]::FromHours(6)
             LabelFormat  = 'HH:mm'
             DateTimeStep = [TimeSpan]::FromHours(1)
-            Default      = $true
+            Default      = $false
         }
 
         [PSCustomObject]@{
@@ -55,7 +55,7 @@ function Get-LiveChartsTimeRanges {
             Duration     = [TimeSpan]::FromHours(24)
             LabelFormat  = 'HH:mm'
             DateTimeStep = [TimeSpan]::FromHours(2)
-            Default      = $false
+            Default      = $true
         }
 
         [PSCustomObject]@{
