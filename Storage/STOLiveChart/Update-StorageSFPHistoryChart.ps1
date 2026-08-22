@@ -281,8 +281,7 @@
     $MetricDefinitions = @(
         foreach ($MetricName in $RequestedMetrics) {
 
-            Get-StorageLiveChartsMetricInfo `
-                -Metric $MetricName
+            Get-StorageLiveChartsMetricInfo -Metric $MetricName
         }
     )
 
