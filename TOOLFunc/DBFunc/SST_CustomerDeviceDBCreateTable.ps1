@@ -31,7 +31,7 @@ function SST_CustomerDeviceDBCreateTable {
 
             <# für alte tabellen #>
             
-            #    $SST_SQLiteTabelQuery = "ALTER TABLE IBMSTOVolumeAnalysisTable ADD COLUMN VdiskUID TEXT;"
+            #    $SST_SQLiteTabelQuery = "ALTER TABLE IBMSTOFCPortStatsTable ADD COLUMN SFPTempHt REAL;"
             #
             #    $SQLiteCommandCreate.CommandText = $SST_SQLiteTabelQuery
             #    $SQLiteCommandCreate.ExecuteNonQuery() | Out-Null
@@ -109,7 +109,7 @@ function SST_CustomerDeviceDBCreateTable {
             #<# FCPortStats for new Customers #>
             try{
                 $SST_SQLiteTabelQuery ="CREATE TABLE IF NOT EXISTS IBMSTOFCPortStatsTable (ID INTEGER PRIMARY KEY AUTOINCREMENT, CustomerNbr TEXT NOT NULL, RowID TEXT NOT NULL,NodeID INTEGER, NodeName TEXT, CardType TEXT, CardID INTEGER, PortID INTEGER, WWPN TEXT NOT NULL,`
-                                        LinkFailure INTEGER, LoseSync INTEGER, LoseSig INTEGER, PSErrCount INTEGER, InvTransErr INTEGER, CRCErr INTEGER, ZeroBtB INTEGER, SFPTemp REAL, TXPwr REAL, TXPwrLow REAL, RXPwr REAL, RXPwrLow REAL, SerialNumber TEXT NOT NULL,`
+                                        LinkFailure INTEGER, LoseSync INTEGER, LoseSig INTEGER, PSErrCount INTEGER, InvTransErr INTEGER, CRCErr INTEGER, ZeroBtB INTEGER, SFPTemp REAL, SFPTempHt REAL, TXPwr REAL, TXPwrLow REAL, RXPwr REAL, RXPwrLow REAL, SerialNumber TEXT NOT NULL,`
                                         WWNN TEXT NOT NULL, TimeStamp TEXT NOT NULL);" 
                 $SQLiteCommandCreate.CommandText = $SST_SQLiteTabelQuery
                 $SQLiteCommandCreate.ExecuteNonQuery()

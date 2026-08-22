@@ -344,8 +344,8 @@ function SST_CustomerSTODBInsertTable {
                     foreach ($SST_CollectedInformation in $SST_CollectedInformations){
                         $SQLiteCommand.Parameters.Clear()
                         
-                        $SQLiteCommand.CommandText ="INSERT INTO IBMSTOFCPortStatsTable (CustomerNbr,RowID,NodeID,NodeName,CardType,CardID,PortID,WWPN,LinkFailure,LoseSync,LoseSig,PSErrCount,InvTransErr,CRCErr,ZeroBtB,SFPTemp,TXPwr,TXPwrLow,RXPwr,RXPwrLow,WWNN,SerialNumber,TimeStamp)`
-                                                        VALUES (@CustomerNbr,@RowID,@NodeID,@NodeName,@CardType,@CardID,@PortID,@WWPN,@LinkFailure,@LoseSync,@LoseSig,@PSErrCount,@InvTransErr,@CRCErr,@ZeroBtB,@SFPTemp,@TXPwr,@TXPwrLow,@RXPwr,@RXPwrLow,@WWNN,@SerialNumber,@TimeStamp);"
+                        $SQLiteCommand.CommandText ="INSERT INTO IBMSTOFCPortStatsTable (CustomerNbr,RowID,NodeID,NodeName,CardType,CardID,PortID,WWPN,LinkFailure,LoseSync,LoseSig,PSErrCount,InvTransErr,CRCErr,ZeroBtB,SFPTemp,SFPTempHt,TXPwr,TXPwrLow,RXPwr,RXPwrLow,WWNN,SerialNumber,TimeStamp)`
+                                                        VALUES (@CustomerNbr,@RowID,@NodeID,@NodeName,@CardType,@CardID,@PortID,@WWPN,@LinkFailure,@LoseSync,@LoseSig,@PSErrCount,@InvTransErr,@CRCErr,@ZeroBtB,@SFPTemp,@SFPTempHt,@TXPwr,@TXPwrLow,@RXPwr,@RXPwrLow,@WWNN,@SerialNumber,@TimeStamp);"
                         $SQLiteCommand.Parameters.AddWithValue("@CustomerNbr", $Customer) | Out-Null
                         $SQLiteCommand.Parameters.AddWithValue("@RowID", $SST_CollectedInformation.RowID) | Out-Null
                         $SQLiteCommand.Parameters.AddWithValue("@NodeID", $SST_CollectedInformation.NodeID) | Out-Null
@@ -362,6 +362,7 @@ function SST_CustomerSTODBInsertTable {
                         $SQLiteCommand.Parameters.AddWithValue("@CRCErr", $SST_CollectedInformation.CRCErr) | Out-Null
                         $SQLiteCommand.Parameters.AddWithValue("@ZeroBtB", $SST_CollectedInformation.ZeroBtB) | Out-Null
                         $SQLiteCommand.Parameters.AddWithValue("@SFPTemp", $SST_CollectedInformation.SFPTemp) | Out-Null
+                        $SQLiteCommand.Parameters.AddWithValue("@SFPTempHt", $SST_CollectedInformation.SFPTempHt) | Out-Null
                         $SQLiteCommand.Parameters.AddWithValue("@TXPwr", $SST_CollectedInformation.TXPwr) | Out-Null
                         $SQLiteCommand.Parameters.AddWithValue("@TXPwrLow", $SST_CollectedInformation.TXPwrLow) | Out-Null
                         $SQLiteCommand.Parameters.AddWithValue("@RXPwr", $SST_CollectedInformation.RXPwr) | Out-Null

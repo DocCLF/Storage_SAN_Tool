@@ -89,9 +89,9 @@
             ShowArea         = $true
             ValueMode        = 'Raw'
 
-            ReferenceMetric  = $null
-            ReferenceName    = $null
-            ReferenceColor   = $null
+            ReferenceMetric  = 'SFPTempHt'
+            ReferenceName    = 'SFP High Temp'
+            ReferenceColor   = '#E74C3C'
         }
 
         # -----------------------------------------------------------------

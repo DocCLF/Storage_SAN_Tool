@@ -898,6 +898,7 @@ CREATE TABLE IBMSTOFCPortStatsTable (
     CRCErr          INTEGER,
     ZeroBtB         INTEGER,
     SFPTemp         REAL,
+    SFPTempHt       REAL,
     TXPwr           REAL,
     TXPwrLow        REAL,
     RXPwr           REAL,
@@ -1105,6 +1106,7 @@ CREATE TABLE $NewTableName (
     CRCErr           INTEGER,
     ZeroBtB         INTEGER,
     SFPTemp         REAL,
+    SFPTempHt       REAL,
     TXPwr           REAL,
     TXPwrLow        REAL,
     RXPwr           REAL,
@@ -1157,6 +1159,7 @@ INSERT INTO $NewTableName (
     CRCErr,
     ZeroBtB,
     SFPTemp,
+    SFPTempHt,
     TXPwr,
     TXPwrLow,
     RXPwr,
@@ -1236,6 +1239,12 @@ SELECT
         WHEN SFPTemp IS NULL OR TRIM(SFPTemp) = ''
             THEN NULL
         ELSE CAST(SFPTemp AS REAL)
+    END,
+    
+    CASE
+        WHEN SFPTempHt IS NULL OR TRIM(SFPTempHt) = ''
+            THEN NULL
+        ELSE CAST(SFPTempHt AS REAL)
     END,
 
     CASE

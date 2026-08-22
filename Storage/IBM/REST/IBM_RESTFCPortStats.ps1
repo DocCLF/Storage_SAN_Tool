@@ -52,7 +52,7 @@ function IBM_RESTFCPortStats {
             [int]$iNodemax = $TD_DeviceInformation.Count 
             for ($ndr = 0; $ndr -lt $iNodemax; $ndr++) {
                 if($($TD_DeviceInformation.type[$ndr]) -ne "FC"){continue}
-                $TD_PortStatsSplitInfos = "" | Select-Object RowID,NodeID,SerialNumber,NodeName,WWNN,CardType,CardID,PortID,WWPN,LinkFailure,LoseSync,LoseSig,PSErrCount,InvTransErr,CRCErr,ZeroBtB,SFPTemp,TXPwr,TXPwrlow,RXPwr,RXPwrlow
+                $TD_PortStatsSplitInfos = "" | Select-Object RowID,NodeID,SerialNumber,NodeName,WWNN,CardType,CardID,PortID,WWPN,LinkFailure,LoseSync,LoseSig,PSErrCount,InvTransErr,CRCErr,ZeroBtB,SFPTemp,SFPTempHt,TXPwr,TXPwrlow,RXPwr,RXPwrlow
                 #Write-Host  $IBMSTOName $NodeID -ForegroundColor Yellow                   
                 $TD_PortStatsSplitInfos.CardType    = $TD_DeviceInformation.type[$ndr]
                 $TD_PortStatsSplitInfos.CardID      = $TD_DeviceInformation.type_id[$ndr]
@@ -66,6 +66,7 @@ function IBM_RESTFCPortStats {
                 $TD_PortStatsSplitInfos.CRCErr      = $TD_DeviceInformation.icrc[$ndr]
                 $TD_PortStatsSplitInfos.ZeroBtB     = $TD_DeviceInformation.bbcz[$ndr]
                 $TD_PortStatsSplitInfos.SFPTemp     = $TD_DeviceInformation.tmp[$ndr]
+                $TD_PortStatsSplitInfos.SFPTempHt   = $TD_DeviceInformation.tmpht[$ndr]
                 $TD_PortStatsSplitInfos.TXPwr       = $TD_DeviceInformation.txpwr[$ndr]
                 $TD_PortStatsSplitInfos.TXPwrLow    = $TD_DeviceInformation.txpwrlt[$ndr]
                 $TD_PortStatsSplitInfos.RXPwr       = $TD_DeviceInformation.rxpwr[$ndr]

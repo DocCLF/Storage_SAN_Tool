@@ -109,7 +109,7 @@ function Get-SFPHistory {
 
         $SQLiteCommand = $SQLiteConnection.CreateCommand()
 
-        $SQLiteCommand.CommandText = "SELECT ID,CustomerNbr,RowID,NodeID,NodeName,CardType,CardID,PortID,WWPN,LinkFailure,LoseSync,LoseSig,PSErrCount,InvTransErr,CRCErr,ZeroBtB,SFPTemp,TXPwr,TXPwrLow,RXPwr,RXPwrLow,SerialNumber,WWNN,TimeStamp`
+        $SQLiteCommand.CommandText = "SELECT ID,CustomerNbr,RowID,NodeID,NodeName,CardType,CardID,PortID,WWPN,LinkFailure,LoseSync,LoseSig,PSErrCount,InvTransErr,CRCErr,ZeroBtB,SFPTemp,SFPTempHt,TXPwr,TXPwrLow,RXPwr,RXPwrLow,SerialNumber,WWNN,TimeStamp`
                                         FROM IBMSTOFCPortStatsTable WHERE CustomerNbr = @CustomerNbr AND RowID = @RowID AND TimeStamp >= @StartTime AND TimeStamp <= @EndTime ORDER BY TimeStamp ASC;"
 
         $SQLiteCommand.Parameters.AddWithValue('@CustomerNbr',$CustomerNbr) | Out-Null
@@ -170,6 +170,7 @@ function Get-SFPHistory {
                 CRCErr = Get-SQLiteNullableInt64 -Reader $SQLiteReader -ColumnName 'CRCErr'
                 ZeroBtB = Get-SQLiteNullableInt64 -Reader $SQLiteReader -ColumnName 'ZeroBtB'
                 SFPTemp = Get-SQLiteNullableDouble -Reader $SQLiteReader -ColumnName 'SFPTemp'
+                SFPTempHt = Get-SQLiteNullableDouble -Reader $SQLiteReader -ColumnName 'SFPTempHt'
                 TXPwr = Get-SQLiteNullableDouble -Reader $SQLiteReader -ColumnName 'TXPwr'
                 TXPwrLow = Get-SQLiteNullableDouble -Reader $SQLiteReader -ColumnName 'TXPwrLow'
                 RXPwr = Get-SQLiteNullableDouble -Reader $SQLiteReader -ColumnName 'RXPwr'
@@ -185,7 +186,7 @@ function Get-SFPHistory {
                 )
             }
         }
-
+        
         return $Result
     }
     catch {
