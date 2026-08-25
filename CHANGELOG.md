@@ -6,11 +6,13 @@
 - Further separate the backend/core from WPF
     * switched to Avalonia to support additional operating systems
 
-# [v1.5.05_beta] - 2026-08-24
+# [v1.5.05_beta] - 2026-08-25
 ### Added 
  - LiveCharts (Not perfect yet, but it's a start)
  - History Data in DB and LiveCharts
  - Inventory Tabelle for SAN, STO, etc., if a Device, Volume etc. will be replaced or anything else
+ - More tooltips for various data grids
+ - Progress Bar to SwitchShow
 
 ### Fixed
 - Remove or migrate legacy SSH code
