@@ -4,7 +4,7 @@ function IBM_SSHCleanUpDumps {
         [Parameter(Mandatory)]
         [Int16]$TD_Line_ID,
         [Parameter(Mandatory)]
-        [string]$TD_Device_ConnectionTyp,
+        [string]$TD_Device_ConnectionTyp = $null,
         [Parameter(Mandatory)]
         [string]$TD_Device_UserName,
         [string]$TD_DeviceName,

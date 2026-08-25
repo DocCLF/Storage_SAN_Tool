@@ -1469,7 +1469,8 @@
 
                   <TextBlock Text="{Binding DumpInfoText}"
                              TextWrapping="Wrap"
-                             MaxWidth ="400"
+                             MaxWidth ="480"
+                             FontSize = "16"
                              Style="{DynamicResource MainTextblockStyle}"
                              Margin="5,8,5,0"
                              Visibility="{Binding IsChecked, Converter={StaticResource BooleanToVisibilityConverter}}"/>
@@ -1497,7 +1498,8 @@
 
                   <TextBlock Text="{Binding BackUpInfoText}"
                              TextWrapping="Wrap"
-                             MaxWidth ="400"
+                             MaxWidth ="480"
+                             FontSize = "16"
                              Style="{DynamicResource MainTextblockStyle}"
                              Margin="5,8,5,0"
                              Visibility="{Binding IsChecked, Converter={StaticResource BooleanToVisibilityConverter}}"/>

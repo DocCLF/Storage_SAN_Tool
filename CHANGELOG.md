@@ -6,7 +6,7 @@
 - Further separate the backend/core from WPF
     * switched to Avalonia to support additional operating systems
 
-# [v1.5.05_beta] - 2026-08-20
+# [v1.5.05_beta] - 2026-08-24
 ### Added 
  - LiveCharts (Not perfect yet, but it's a start)
  - History Data in DB and LiveCharts
@@ -24,6 +24,7 @@
 - removed most of SSH Function
 - displaying STO-Volumes in DG
 - removed quite a bit of unnecessary code
+- BackUpFunction Path Update for SV 9.1.x and later
 
 ### Known Bugs
 - Get-BrocadeSwitchShow has no ProgBar
