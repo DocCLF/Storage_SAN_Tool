@@ -494,6 +494,7 @@
                                     <Setter Property="ToolTip" Value="The total number of state transitions on a specified port." />
                                 </Style>
                             </DataGridTextColumn.CellStyle>
+                        </DataGridTextColumn>
                         <DataGridTextColumn Width="auto" Header="BBZero" Binding ="{Binding BBZero}" IsReadOnly="True">
                             <DataGridTextColumn.CellStyle>
                                 <Style TargetType="DataGridCell">
