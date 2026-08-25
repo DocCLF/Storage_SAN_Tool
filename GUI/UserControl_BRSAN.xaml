@@ -488,9 +488,26 @@
                                 </Style>
                             </DataGridTextColumn.CellStyle>
                         </DataGridTextColumn>
-                        <DataGridTextColumn Width="auto" Header="StateTransitions" Binding ="{Binding StateTransitions}" IsReadOnly="True"/>
-                        <DataGridTextColumn Width="auto" Header="BBZero" Binding ="{Binding BBZero}" IsReadOnly="True"/>
-                        <DataGridTextColumn Width="auto" Header="FECuncorrected" Binding ="{Binding FECuncorrected}" IsReadOnly="True"/>
+                        <DataGridTextColumn Width="auto" Header="StateTransitions" Binding ="{Binding StateTransitions}" IsReadOnly="True">
+                            <DataGridTextColumn.CellStyle>
+                                <Style TargetType="DataGridCell">
+                                    <Setter Property="ToolTip" Value="The total number of state transitions on a specified port." />
+                                </Style>
+                            </DataGridTextColumn.CellStyle>
+                        <DataGridTextColumn Width="auto" Header="BBZero" Binding ="{Binding BBZero}" IsReadOnly="True">
+                            <DataGridTextColumn.CellStyle>
+                                <Style TargetType="DataGridCell">
+                                    <Setter Property="ToolTip" Value="The number of transitions in and out of the BB credit zero state." />
+                                </Style>
+                            </DataGridTextColumn.CellStyle>
+                        </DataGridTextColumn>
+                        <DataGridTextColumn Width="auto" Header="FECuncorrected" Binding ="{Binding FECuncorrected}" IsReadOnly="True">
+                            <DataGridTextColumn.CellStyle>
+                                <Style TargetType="DataGridCell">
+                                    <Setter Property="ToolTip" Value="The counter denotes the number of frames uncorrected by the FEC block for the port. The value is zero when fec-active-v2 is false" />
+                                </Style>
+                            </DataGridTextColumn.CellStyle>
+                        </DataGridTextColumn>
                     </DataGrid.Columns>
                   </DataGrid>
                 </DataTemplate>
@@ -1370,7 +1387,7 @@
                                              <Ellipse Grid.RowSpan="10" Width="90" Height="90">
                                                 <Ellipse.Fill>
                                                     <ImageBrush 
-                                                        ImageSource="{Binding DataContext.STOIcon, RelativeSource={RelativeSource AncestorType=UserControl}}" 
+                                                        ImageSource="{Binding DataContext.BrocadeIcon, RelativeSource={RelativeSource AncestorType=UserControl}}" 
                                                         Stretch="Uniform" />
                                                 </Ellipse.Fill>
                                             </Ellipse>
