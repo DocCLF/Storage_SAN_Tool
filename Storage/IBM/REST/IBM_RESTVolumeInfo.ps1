@@ -9,6 +9,8 @@ function IBM_RESTVolumeInfo {
         [string]$TD_Device_PW,
         [string]$TD_Export = "yes",
         [string]$TD_Exportpath,
+        [int]$ThrottleEvery = 20,
+        [int]$ThrottleDelayMs = 1200,
         $body = @{} <# This is the only part you are allowed to change. #>
     )
     
@@ -45,6 +47,8 @@ function IBM_RESTVolumeInfo {
     }
 
     process{
+
+
         [int]$imax = $TD_DeviceInformation.Count
         $TD_VolumeSnapshots = @()
 
@@ -56,7 +60,9 @@ function IBM_RESTVolumeInfo {
 
         $TD_VDiskFuncResault = for ($i = 0; $i -lt $imax; $i++) {
             <# Max requests/sec to command endpoints = 10 -.- #>
-            if ($i % 8 -eq 0) { Start-Sleep -Milliseconds 1500 }
+            if (($ThrottleEvery -gt 0) -and ($ThrottleDelayMs -gt 0) -and ($i -gt 0) -and (($i % $ThrottleEvery) -eq 0)) {
+                Start-Sleep -Milliseconds $ThrottleDelayMs
+            }
             <# Node Info#>
             $TD_VDiskinfo = "" | Select-Object RowID,ID,Name,DisplayName,IOGroupID,IOGroupName,Status,MdiskGrpID,MdiskGrpName,Capacity,Type,FCID,FCName,`
                                             RCID,RCName,VdiskUID,FCMapCount,CopyCount,FastWriteState,SECopyCount,RCChange,CompressedCopyCount,ParentMdiskGrpID,ParentMdiskGrpName,`
@@ -156,7 +162,7 @@ function IBM_RESTVolumeInfo {
                     $CopyID = [string]$Copy.copy_id
                     $IsPrimary = ([string]$Copy.primary -eq 'yes')
                 
-                    $CopyDisplayName = if ($IsPrimary) { "↳ Copy $CopyID *"}else {"↳ Copy $CopyID"}
+                    $CopyDisplayName = if ($IsPrimary) { "â†³ Copy $CopyID *"}else {"â†³ Copy $CopyID"}
                     
                     [PSCustomObject]@{
                         RowID                     = "$IBMSTOSN|VOLUMECOPY|$($TD_VDiskinfo.VdiskUID)|$CopyID"
@@ -302,7 +308,7 @@ function IBM_RESTVolumeInfo {
                         RowID                     = "$IBMSTOSN|SNAPSHOT|$SnapshotIdentity"
                         ID                        = $Snapshot.snapshot_id
                         Name                      = $Snapshot.snapshot_name
-                        DisplayName               = "↳ $($Snapshot.snapshot_name)"
+                        DisplayName               = "â†³ $($Snapshot.snapshot_name)"
                         IOGroupID                 = $TD_VDiskinfo.IOGroupID
                         IOGroupName               = $TD_VDiskinfo.IOGroupName
                         Status                    = $Snapshot.state
@@ -379,6 +385,7 @@ function IBM_RESTVolumeInfo {
         }
         Close-ProgressBar -ProgressBar $ProgressBar
         if($TD_Export -eq "yes"){
+
             if([string]::IsNullOrWhiteSpace($TD_Exportpath)){
                 $TD_VDiskFuncResault | Export-Csv -Path $TD_Exportpath\$($TD_Line_ID)_$($IBMSTOSN)_Volume_Result_$(Get-Date -Format "yyyy-MM-dd").csv -NoTypeInformation
                 SST_ToolMessageCollector -TD_ToolMSGCollector "$TD_Exportpath\$($TD_Line_ID)_$($IBMSTOSN)_Volume_Result_$(Get-Date -Format "yyyy-MM-dd").csv" -TD_ToolMSGType Debug
