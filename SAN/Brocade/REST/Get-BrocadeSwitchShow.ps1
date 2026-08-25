@@ -13,14 +13,20 @@ function Get-BrocadeSwitchShow {
         $RowCounter = 0,
         $TD_Exportpath = $null
     )
-
+    $PB = New-ProgressBar
     $FCPorts    = Get-BrocadeFcPorts -Device $Device
+    Write-ProgressBar -ProgressBar $PB -Activity "Get-BrocadeFcPorts completed" -PercentComplete 12
     $SFP        = Get-BrocadeSfp -Device $Device
+    Write-ProgressBar -ProgressBar $PB -Activity "Get-BrocadeSfp completed" -PercentComplete 21
     $NameServer = Get-BrocadeNameServer -Device $Device
+    Write-ProgressBar -ProgressBar $PB -Activity "Get-BrocadeNameServer completed" -PercentComplete 33
     $Aliases    = Get-BrocadeAliases -Device $Device
+    Write-ProgressBar -ProgressBar $PB -Activity "Get-BrocadeAliases completed" -PercentComplete 38
     <# needed for DB #>
     $SwitchInfo = Get-BrocadeSwitchInfo -Device $Device
+    Write-ProgressBar -ProgressBar $PB -Activity "Get-BrocadeSwitchInfo completed" -PercentComplete 44
     $ChassisInfo = Get-BrocadeChassisInfo -Device $Device
+    Write-ProgressBar -ProgressBar $PB -Activity "Get-BrocadeChassisInfo completed" -PercentComplete 56
     $SwitchWWNN = $SwitchInfo.name
     $SerialNumber = $ChassisInfo.'vendor-serial-number'
     
@@ -165,6 +171,7 @@ function Get-BrocadeSwitchShow {
             RowID = $RowID
         }
     }
+    Write-ProgressBar -ProgressBar $PB -Activity "Get-BrocadeChassisInfo completed" -PercentComplete 76
         try {
             SST_CustomerSANDBInsertTable -SST_InfoType "SANPortInfo" -SST_CollectedInformations $FOS_SwitchShowInfo
             if(-not [string]::IsNullOrWhiteSpace($TD_Exportpath)){
@@ -174,6 +181,8 @@ function Get-BrocadeSwitchShow {
         catch {
             <#Do this if a terminating exception happens#>
             SST_ToolMessageCollector -TD_ToolMSGCollector "FOS_SwitchShowInfo: $($_.Exception.Message)" -TD_ToolMSGType "Warning" -TD_Shown "no"
+        }finally{
+            Close-ProgressBar -ProgressBar $PB
         }
         return $FOS_SwitchShowInfo
 }
